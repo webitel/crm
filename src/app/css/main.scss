@@ -8,9 +8,10 @@ body {
   min-height: 100%;
 }
 
-#app {
-  min-width: 100%;
-  min-height: 100%;
+.wt-page-wrapper {
+  flex-grow: 1;
+  display: flex;
+  background-color: var(--page-bg-color);
 }
 
 * {

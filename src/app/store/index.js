@@ -1,4 +1,5 @@
 import { createStore } from 'vuex';
+import contacts from '../../modules/contacts/store/contacts';
 import userinfo from '../../modules/userinfo/store/userinfo';
 
 export default createStore({
@@ -8,6 +9,7 @@ export default createStore({
     },
   },
   modules: {
+    contacts,
     userinfo,
   },
 });

@@ -1,1 +1,5 @@
-export default {};
+export default {
+  contacts: {
+    contact: 'Контакт | Контакти',
+  },
+};

@@ -75,12 +75,12 @@ const apps = computed(() => {
 });
 
 const nav = computed(() => {
-  const scorecards = {
+  const contacts = {
     value: CrmSections.CONTACTS,
     name: t(`WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CONTACTS}`),
     route: '/contacts',
   };
-  const nav = [scorecards];
+  const nav = [contacts];
   return nav.filter((nav) => checkAccess({ name: nav.value }));
 });
 
@@ -107,9 +107,22 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.object-content-wrap {
+.object-wrap {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+}
+
+.object {
   flex-grow: 1;
   display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  width: 100%;
+}
+
+.object-content-wrap {
+  flex-grow: 1;
 }
 
 .wt-navigation-bar {
