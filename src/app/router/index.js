@@ -44,24 +44,24 @@ const routes = [
       component: TheContacts,
       // beforeEnter: checkRouteAccess,
     },
-      // {
-      //   path: 'scorecards/:id',
-      //   name: `${CrmSections.CONTACTS}-edit`,
-      //   component: OpenedScorecard,
-      //   beforeEnter: checkRouteAccess,
-      //   meta: {
-      //     modifyMode: 'edit',
-      //   },
-      // },
-      // {
-      //   path: 'scorecards/new',
-      //   name: `${AuditorSections.SCORECARDS}-new`,
-      //   component: OpenedScorecard,
-      //   beforeEnter: checkRouteAccess,
-      //   meta: {
-      //     modifyMode: 'create',
-      //   },
-      // },
+      {
+        path: 'contacts/:id',
+        name: `${CrmSections.CONTACTS}-edit`,
+        // component: OpenedScorecard,
+        beforeEnter: checkRouteAccess,
+        meta: {
+          modifyMode: 'edit',
+        },
+      },
+      {
+        path: 'contacts/new',
+        name: `${CrmSections.SCORECARDS}-new`,
+        // component: OpenedScorecard,
+        beforeEnter: checkRouteAccess,
+        meta: {
+          modifyMode: 'create',
+        },
+      },
     ],
   },
   {

@@ -11,22 +11,22 @@ export default [
   {
     value: 'owner',
     locale: 'locale for owner',
-    show: true,
-    field: 'owner',
+    show: false,
+    field: 'managers',
     sort: SortSymbols.NONE,
   },
   {
-    value: 'description',
+    value: 'about',
     locale: 'vocabulary.description',
     show: true,
-    field: 'description',
+    field: 'about',
     sort: SortSymbols.NONE,
   },
   {
-    value: 'label',
+    value: 'labels',
     locale: 'vocabulary.label',
     show: true,
-    field: 'label',
+    field: 'labels',
     sort: SortSymbols.NONE,
   },
 ];

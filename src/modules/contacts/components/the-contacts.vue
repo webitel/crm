@@ -27,17 +27,26 @@
           <template v-slot:name="{ item }">
             <wt-item-link
               :id="item.id"
-              :route-name="namespace"
-            >{{ item.name }}
+              :route-name="CrmSections.CONTACTS"
+            >{{ item.name.commonName }}
             </wt-item-link>
           </template>
-          <template v-slot:description="{ item }">
-            {{ item.description }}
+          <template v-slot:labels="{ item }">
+            <div
+              v-if="item.labels"
+              class="contacts-labels-wrapper"
+            >
+              <wt-chip
+                v-for="({ label, id }) of item.labels.data"
+                :key="id"
+              >{{ label }}
+              </wt-chip>
+            </div>
           </template>
           <template v-slot:actions="{ item }">
             <wt-item-link
               :id="item.id"
-              :route-name="namespace"
+              :route-name="CrmSections.CONTACTS"
             >
               <wt-icon-action
                 v-if="hasEditAccess"
@@ -64,9 +73,10 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { useAccess } from '../../../app/composables/useAccess';
-import FilterPagination from '../modules/filters/filter-pagination.vue';
 
 const baseNamespace = 'contacts';
 
@@ -92,7 +102,7 @@ const {
   hasDeleteAccess,
 } = useAccess();
 
-const filtersNamespace = computed(() => `${namespace}/filters`);
+const { filtersNamespace } = useTableFilters(namespace);
 
 const path = computed(() => [
   { name: t('contacts.contact', 2), route: '/' },
@@ -105,19 +115,38 @@ function create() {
 
 <style lang="scss" scoped>
 .contacts {
+  max-height: 100%;
+
   :deep(.wt-page-wrapper__main) {
     display: flex;
     flex-direction: column;
+    max-height: 100%;
+    min-height: 0;
   }
 
   .table-wrapper {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-xs);
+    max-height: 100%;
+    min-height: 0;
   }
 
   .wt-table {
     flex-grow: 1;
+
+    :deep(.wt-table__head) {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
   }
+}
+
+.contacts-labels-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2xs);
 }
 </style>

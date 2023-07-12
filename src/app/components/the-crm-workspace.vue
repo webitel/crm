@@ -110,19 +110,20 @@ onMounted(() => {
 .object-wrap {
   display: flex;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
 }
 
 .object {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100%;
   width: 100%;
 }
 
 .object-content-wrap {
-  flex-grow: 1;
+  flex: 1;
+  min-height: 0;
 }
 
 .wt-navigation-bar {
