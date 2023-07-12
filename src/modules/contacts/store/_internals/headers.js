@@ -16,17 +16,17 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
+    value: 'labels',
+    locale: ['vocabulary.labels', 1],
+    show: true,
+    field: 'labels',
+    sort: SortSymbols.NONE,
+  },
+  {
     value: 'about',
     locale: 'vocabulary.description',
     show: true,
     field: 'about',
-    sort: SortSymbols.NONE,
-  },
-  {
-    value: 'labels',
-    locale: 'vocabulary.label',
-    show: true,
-    field: 'labels',
     sort: SortSymbols.NONE,
   },
 ];

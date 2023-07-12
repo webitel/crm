@@ -34,7 +34,6 @@ const getList = async (params) => {
     starToSearch('q'),
     camelToSnake(),
   ]);
-  console.log(fields);
   try {
     const response = await service.searchContacts(
       page,

@@ -16,7 +16,11 @@
     <template v-slot:main>
       <wt-loader v-show="isLoading"></wt-loader>
 
-      <div v-show="!isLoading" class="table-wrapper">
+      <wt-dummy
+        v-if="!isLoading && showDummy"
+      ></wt-dummy>
+
+      <div v-show="!isLoading && !showDummy" class="table-wrapper">
         <wt-table
           :headers="headers"
           :data="dataList"
@@ -71,7 +75,9 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
@@ -82,6 +88,8 @@ const baseNamespace = 'contacts';
 
 const { t } = useI18n();
 const router = useRouter();
+
+const store = useStore();
 
 const {
   namespace,
@@ -108,6 +116,21 @@ const path = computed(() => [
   { name: t('contacts.contact', 2), route: '/' },
 ]);
 
+// we need to check if there's any filters which actually filter data before showing "no data" dummy
+const showDummy = computed(() => {
+  if (dataList.value.length) return false;
+  const filters = store.getters[`${namespace}/GET_FILTERS`];
+  const defaultFilters = ['page', 'size', 'sort', 'fields'];
+  const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
+    if (defaultFilters.includes(filter)) return dynamic;
+    return {
+      ...dynamic,
+      [filter]: filters[filter],
+    };
+  }, {});
+  return isEmpty(dynamicFilters);
+});
+
 function create() {
   return router.push({ name: `${CrmSections.CONTACTS}-new` });
 }
@@ -131,6 +154,10 @@ function create() {
     gap: var(--spacing-xs);
     max-height: 100%;
     min-height: 0;
+  }
+
+  .wt-dummy {
+    flex-grow: 1;
   }
 
   .wt-table {
