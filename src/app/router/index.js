@@ -84,6 +84,7 @@ router.beforeEach((to, from, next) => {
   if (!(to.fullPath === '/auth')) {
     if (!token) {
       next('/auth');
+      return;
     }
   }
   next();
