@@ -5,6 +5,8 @@ import Auth from '@webitel/ui-sdk/src/modules/Userinfo/components/the-auth.vue';
 import store from '../store';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
+import OpenedContact
+  from '../../modules/contacts/components/opened-contact.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
 
 const checkAppAccess = (to, from, next) => {
@@ -47,20 +49,8 @@ const routes = [
       {
         path: 'contacts/:id',
         name: `${CrmSections.CONTACTS}-edit`,
-        // component: OpenedScorecard,
-        beforeEnter: checkRouteAccess,
-        meta: {
-          modifyMode: 'edit',
-        },
-      },
-      {
-        path: 'contacts/new',
-        name: `${CrmSections.SCORECARDS}-new`,
-        // component: OpenedScorecard,
-        beforeEnter: checkRouteAccess,
-        meta: {
-          modifyMode: 'create',
-        },
+        component: OpenedContact,
+        // beforeEnter: checkRouteAccess,
       },
     ],
   },

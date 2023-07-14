@@ -113,6 +113,7 @@ const {
 const { filtersNamespace } = useTableFilters(namespace);
 
 const path = computed(() => [
+  { name: t('crm') },
   { name: t('contacts.contact', 2), route: '/' },
 ]);
 
@@ -138,15 +139,6 @@ function create() {
 
 <style lang="scss" scoped>
 .contacts {
-  max-height: 100%;
-
-  :deep(.wt-page-wrapper__main) {
-    display: flex;
-    flex-direction: column;
-    max-height: 100%;
-    min-height: 0;
-  }
-
   .table-wrapper {
     flex-grow: 1;
     display: flex;
