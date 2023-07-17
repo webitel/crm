@@ -131,10 +131,6 @@ const showDummy = computed(() => {
   }, {});
   return isEmpty(dynamicFilters);
 });
-
-function create() {
-  return router.push({ name: `${CrmSections.CONTACTS}-new` });
-}
 </script>
 
 <style lang="scss" scoped>
