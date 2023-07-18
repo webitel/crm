@@ -2,6 +2,7 @@
 node_modules
 /dist
 /coverage
+jest.json
 
 
 # local env files

@@ -16,7 +16,6 @@ import getDefaultGetListResponse
   from '../../../app/api/defaults/getDefaultGetListResponse';
 import configuration from '../../../app/api/openAPIConfig';
 import instance from '../../../app/api/instance';
-import contacts from '../store/contacts';
 
 const service = new ContactsApiFactory(configuration, '', instance);
 

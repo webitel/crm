@@ -9,15 +9,7 @@ import ApiStoreModule
 import ContactsAPI from '../api/ContactsAPI';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
-
-const cardState = {
-  itemInstance: {
-  },
-};
-
-const tableGetters = {
-  REQUIRED_FIELDS: () => ['id'],
-};
+import emails from '../modules/emails/store/emails';
 
 const api = new ApiStoreModule()
   .generateAPIActions(ContactsAPI)
@@ -25,11 +17,11 @@ const api = new ApiStoreModule()
 
 const table = new TableStoreModule({ headers })
   .setChildModules({ api, filters })
-  .getModule({ getters: tableGetters });
+  .getModule();
 
 const card = new CardStoreModule()
-  .setChildModules({ api })
-  .getModule({ state: cardState });
+  .setChildModules({ api, emails })
+  .getModule();
 
 const contacts = new BaseStoreModule()
   .setChildModules({ table, card })

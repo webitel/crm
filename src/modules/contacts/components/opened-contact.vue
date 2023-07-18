@@ -21,7 +21,7 @@
           :labels="itemInstance.labels ? itemInstance.labels.data : []"
         ></opened-contact-general>
         <opened-contact-tabs
-          :namespace="baseNamespace"
+          :namespace="namespace"
         ></opened-contact-tabs>
       </div>
     </template>
@@ -43,6 +43,7 @@ const route = useRoute();
 const { t } = useI18n();
 
 const {
+  namespace,
   id,
   itemInstance,
 

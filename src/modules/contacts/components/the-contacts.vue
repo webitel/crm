@@ -134,31 +134,6 @@ const showDummy = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.contacts {
-  .table-wrapper {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    max-height: 100%;
-    min-height: 0;
-  }
-
-  .wt-dummy {
-    flex-grow: 1;
-  }
-
-  .wt-table {
-    flex-grow: 1;
-
-    :deep(.wt-table__head) {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-  }
-}
-
 .contacts-labels-wrapper {
   display: flex;
   flex-wrap: wrap;
