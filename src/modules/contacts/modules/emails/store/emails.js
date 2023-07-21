@@ -14,6 +14,16 @@ const getters = {
 };
 
 const actions = {
+  ADD_EMAIL: async (context, { itemInstance }) => {
+    try {
+      await context.dispatch('api/POST_ITEM', {
+        parentId: context.getters.PARENT_ID,
+        itemInstance,
+      });
+    } finally {
+      await context.dispatch('LOAD_DATA_LIST');
+    }
+  },
   UPDATE_EMAIL: async (context, { etag, itemInstance }) => {
     try {
       await context.dispatch('api/UPD_ITEM', {

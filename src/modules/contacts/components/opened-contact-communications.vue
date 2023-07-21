@@ -18,7 +18,6 @@
     </header>
     <the-emails
       :namespace="emailsNamespace"
-      @edit="handleEdit"
     ></the-emails>
   </section>
 </template>
@@ -44,13 +43,10 @@ const { t } = useI18n();
 
 const isCommunicationPopup = ref(false);
 
-function handleEdit() {
-
-}
-
-function saveCommunication({ value, type, destination }) {
-  const itemInstance = { type, [value]: destination };
-  if (value === 'email') return store.dispatch(`${emailsNamespace}`, itemInstance);
+function saveCommunication({ channel, type, destination }) {
+  const itemInstance = { type, [channel]: destination };
+  if (channel === 'email') return store.dispatch(`${emailsNamespace}/table/ADD_EMAIL`, { itemInstance });
+  throw TypeError(`Unknown communication channel: ${channel}`);
 }
 </script>
 

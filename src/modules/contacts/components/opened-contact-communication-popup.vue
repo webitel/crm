@@ -7,7 +7,10 @@
   >
     <template v-slot:header>
       {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('contacts.communications.communications', 1).toLowerCase() }}
+      {{
+        t('contacts.communications.communications', 1)
+        .toLowerCase()
+      }}
     </template>
     <template v-slot:main>
       <form
@@ -16,6 +19,7 @@
         <wt-select
           :value="channel"
           :options="channelOptions"
+          :disabled="mode === 'update'"
           :v="v$.draft.channel"
           :label="t('contacts.communications.channel')"
           :clearable="false"
@@ -63,13 +67,11 @@ Although this popup actually represents emails, phones or messaging item card,
 I decided not to provide these modules with "card" store and features because
 I think it would be too overcomplicated because these 3 modules have shared communications
 popup (by UI design, "Add" button is higher on component hierarchy than entity table itself)
-So that if I decided to pass card functionality to this popup, I must also
-pass dynamic namespace TODO
  */
 import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, email } from '@vuelidate/validators';
 import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 
 const props = defineProps({
@@ -112,18 +114,21 @@ const getDefaultDraft = () => ({
 const draft = reactive(getDefaultDraft());
 const isLoading = ref(false);
 
-const v$ = useVuelidate(computed(() => (
-  {
+const v$ = useVuelidate(computed(() => {
+  const destination = { required };
+  if (draft.channel === 'email') destination.email = email;
+  return {
     draft: {
       channel: { required },
       type: { required },
-      destination: { required },
+      destination,
     },
-  })), { draft }, { $autoDirty: true });
+  };
+}), { draft }, { $autoDirty: true });
 
 v$.value.$touch();
 
-const mode = computed(() => props.editedInstance ? 'update' : 'create');
+const mode = computed(() => (props.editedInstance ? 'update' : 'create'));
 
 const channel = computed(() => channelOptions.find(({ value }) => draft.channel === value));
 
