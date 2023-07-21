@@ -55,6 +55,46 @@ const getList = async (params) => {
   }
 };
 
+const fieldsToSend = ['email', 'type'];
+
+const add = async ({ parentId, itemInstance }) => {
+  const item = applyTransform(itemInstance, [
+    sanitize(fieldsToSend),
+    camelToSnake(),
+  ]);
+  try {
+    const response = await service.mergeEmails(parentId, [item]);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      handleUnauthorized,
+      notify,
+    ]);
+  }
+};
+const update = async ({ itemInstance, etag: id, parentId }) => {
+  const item = applyTransform(itemInstance, [
+    sanitize(fieldsToSend),
+    camelToSnake(),
+  ]);
+  try {
+    const response = await service.updateEmail(parentId, id, item);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+      log,
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      handleUnauthorized,
+      notify,
+    ]);
+  }
+};
+
 export default {
   getList,
+  add,
+  update,
 };

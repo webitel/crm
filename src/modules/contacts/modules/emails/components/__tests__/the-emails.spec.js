@@ -7,7 +7,7 @@ describe('TheEmails', () => {
   it('renders a component', () => {
     const wrapper = shallowMount(TheEmails, {
       props: {
-        namespace: 'contacts/card',
+        namespace: 'contacts/card/emails',
       },
       global: {
         plugins: [store, router],

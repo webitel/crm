@@ -8,6 +8,8 @@ export default {
     },
     communications: {
       communications: 'Засіб зв\'язку | Засоби зв\'язку',
+      channel: 'Канал',
+      destination: 'Призначення',
     },
   },
 };

@@ -8,6 +8,8 @@ export default {
     },
     communications: {
       communications: 'Communication option | Communication options',
+      channel: 'Channel',
+      destination: 'Destination',
     },
   },
 };
