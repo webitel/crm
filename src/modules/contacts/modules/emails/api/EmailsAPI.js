@@ -3,7 +3,7 @@ import applyTransform, {
   log,
   camelToSnake, handleUnauthorized,
   merge, notify,
-  sanitize, snakeToCamel, starToSearch,
+  sanitize, snakeToCamel, starToSearch, mergeEach,
 } from '@webitel/ui-sdk/src/api/transformers';
 import { EmailsApiFactory } from 'webitel-sdk';
 import getDefaultGetListResponse
@@ -14,6 +14,10 @@ import instance from '../../../../../app/api/instance';
 const service = new EmailsApiFactory(configuration, '', instance);
 
 const getList = async (params) => {
+  const defaultObject = {
+    primary: false,
+  };
+
   const fieldsToSend = ['parentId', 'page', 'size', 'q', 'sort', 'fields', 'id'];
   const {
     parentId,
@@ -27,7 +31,6 @@ const getList = async (params) => {
     sanitize(fieldsToSend),
     merge(getDefaultGetParams()),
     starToSearch('q'),
-    log,
   ]);
   try {
     const response = await service.listEmails(
@@ -44,7 +47,9 @@ const getList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: data,
+      items: applyTransform(data, [
+        mergeEach(defaultObject),
+      ]),
       next,
     };
   } catch (err) {
@@ -55,7 +60,7 @@ const getList = async (params) => {
   }
 };
 
-const fieldsToSend = ['email', 'type'];
+const fieldsToSend = ['email', 'type', 'primary'];
 
 const add = async ({ parentId, itemInstance }) => {
   const item = applyTransform(itemInstance, [
@@ -83,7 +88,24 @@ const update = async ({ itemInstance, etag: id, parentId }) => {
     const response = await service.updateEmail(parentId, id, item);
     return applyTransform(response.data, [
       snakeToCamel(),
-      log,
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      handleUnauthorized,
+      notify,
+    ]);
+  }
+};
+
+const patch = async ({ parentId, changes, etag }) => {
+  const body = applyTransform(changes, [
+    sanitize(fieldsToSend),
+    camelToSnake(),
+  ]);
+  try {
+    const response = await service.updateEmail(parentId, etag, body);
+    return applyTransform(response.data, [
+      snakeToCamel(),
     ]);
   } catch (err) {
     throw applyTransform(err, [
@@ -110,5 +132,6 @@ export default {
   getList,
   add,
   update,
+  patch,
   delete: deleteItem,
 };

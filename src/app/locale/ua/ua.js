@@ -10,6 +10,7 @@ export default {
       communications: 'Засіб зв\'язку | Засоби зв\'язку',
       channel: 'Канал',
       destination: 'Призначення',
+      setAsPrimary: 'Встановити як основний',
     },
   },
 };

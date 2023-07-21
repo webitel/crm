@@ -11,7 +11,6 @@
       v-if="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
-      @confirm="confirmDelete"
       @close="closeDelete"
     ></delete-confirmation-popup>
 
@@ -36,6 +35,7 @@
             icon="tick"
             color="success"
           ></wt-icon>
+          <div v-else></div>
         </template>
         <template v-slot:type="{ item }">
           {{ item.type.name }}
@@ -95,6 +95,7 @@ const {
   headers,
   error,
 
+  patchProperty,
   deleteData,
   sort,
 } = useTableStore(props.namespace);
@@ -113,7 +114,6 @@ const {
   deleteCallback,
 
   askDeleteConfirmation,
-  confirmDelete,
   closeDelete,
 } = useDeleteConfirmationPopup();
 
@@ -124,15 +124,26 @@ const showDummy = computed(() => !dataList.value.length);
 const actionOptions = computed(() => {
   return [
     {
+      text: t('contacts.communications.setAsPrimary'),
+      handler: ({ item, index }) => setAsPrimary({ item, index }),
+    },
+    {
       text: t('reusable.edit'),
       handler: ({ item }) => editedItem.value = item,
     },
     {
       text: t('reusable.delete'),
-      handler: ({ item }) => askDeleteConfirmation({ deleted: item, callback: deleteData }),
+      handler: ({ item }) => askDeleteConfirmation({
+        deleted: item,
+        callback: () => deleteData(item),
+      }),
     },
   ];
 });
+
+function setAsPrimary({ item, index }) {
+  return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
+}
 
 function updateEmail(draft) {
   return store.dispatch(`${namespace}/UPDATE_EMAIL`, {

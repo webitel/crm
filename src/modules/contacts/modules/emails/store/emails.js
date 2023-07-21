@@ -14,6 +14,18 @@ const getters = {
 };
 
 const actions = {
+  SET_AS_PRIMARY: async (context, { item }) => {
+    /*
+     can't use default table patch action because default action is changing UI value,
+     so there's would be 2 primary records which is incorrect :)
+    */
+    try {
+      const changes = { primary: true };
+      await context.dispatch('api/PATCH_ITEM', { context, etag: item.etag, changes });
+    } finally {
+      await context.dispatch('LOAD_DATA_LIST');
+    }
+  },
   ADD_EMAIL: async (context, { itemInstance }) => {
     try {
       await context.dispatch('api/POST_ITEM', {

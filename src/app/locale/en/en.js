@@ -10,6 +10,7 @@ export default {
       communications: 'Communication option | Communication options',
       channel: 'Channel',
       destination: 'Destination',
+      setAsPrimary: 'Set as primary',
     },
   },
 };
