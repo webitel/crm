@@ -7,6 +7,14 @@
       @close="editedItem = null"
     ></communication-popup>
 
+    <delete-confirmation-popup
+      v-if="isConfirmationPopup"
+      :callback="deleteCallback"
+      :delete-count="deleteCount"
+      @confirm="confirmDelete"
+      @close="closeDelete"
+    ></delete-confirmation-popup>
+
     <wt-loader v-show="isLoading"></wt-loader>
 
     <wt-dummy
@@ -60,6 +68,11 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useStore } from 'vuex';
 import { useAccess } from '../../../../../app/composables/useAccess';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
@@ -94,13 +107,30 @@ const {
 
 const { filtersNamespace } = useTableFilters(namespace);
 
+const {
+  isVisible: isConfirmationPopup,
+  deleteCount,
+  deleteCallback,
+
+  askDeleteConfirmation,
+  confirmDelete,
+  closeDelete,
+} = useDeleteConfirmationPopup();
+
 const editedItem = ref(null);
 
 const showDummy = computed(() => !dataList.value.length);
 
 const actionOptions = computed(() => {
   return [
-    { text: t('reusable.edit'), handler: ({ item }) => editedItem.value = item },
+    {
+      text: t('reusable.edit'),
+      handler: ({ item }) => editedItem.value = item,
+    },
+    {
+      text: t('reusable.delete'),
+      handler: ({ item }) => askDeleteConfirmation({ deleted: item, callback: deleteData }),
+    },
   ];
 });
 

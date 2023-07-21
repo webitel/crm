@@ -93,8 +93,22 @@ const update = async ({ itemInstance, etag: id, parentId }) => {
   }
 };
 
+const deleteItem = async ({ id, etag, parentId }) => {
+  try {
+    const response = await service.deleteEmail(parentId, etag);
+    return applyTransform(response.data, [
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      handleUnauthorized,
+      notify,
+    ]);
+  }
+};
+
 export default {
   getList,
   add,
   update,
+  delete: deleteItem,
 };
