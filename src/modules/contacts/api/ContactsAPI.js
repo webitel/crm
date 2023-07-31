@@ -60,7 +60,7 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId: id }) => {
-  const fields = ['name', 'about', 'labels'];
+  const fields = ['name', 'about', 'labels', 'etag'];
   const defaultObject = {};
   try {
     const response = await service.locateContact(id, fields);
@@ -76,7 +76,49 @@ const get = async ({ itemId: id }) => {
   }
 };
 
+const fieldsToSend = ['name', 'about'];
+
+const add = async ({ itemInstance }) => {
+  const item = applyTransform(itemInstance, [
+    sanitize(fieldsToSend),
+    camelToSnake(),
+    log,
+  ]);
+  try {
+    const response = await service.createContact(item);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      handleUnauthorized,
+      notify,
+    ]);
+  }
+};
+
+const update = async ({ itemInstance }) => {
+  const { etag } = itemInstance;
+  const item = applyTransform(itemInstance, [
+    sanitize(fieldsToSend),
+    camelToSnake(),
+  ]);
+  try {
+    const response = await service.updateContact(etag, item);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      handleUnauthorized,
+      notify,
+    ]);
+  }
+};
+
 export default {
   getList,
   get,
+  add,
+  update,
 };

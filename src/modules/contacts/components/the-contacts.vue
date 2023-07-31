@@ -4,6 +4,14 @@
     :actions-panel="false"
   >
     <template v-slot:header>
+      <contact-popup
+        v-if="isContactPopup"
+        :namespace="baseNamespace"
+        :id="editedContactId"
+        @saved="loadData"
+        @close="closeContactPopup"
+      ></contact-popup>
+
       <wt-page-header
         :primary-action="create"
         :secondary-text="$t('reusable.delete')"
@@ -48,15 +56,11 @@
             </div>
           </template>
           <template v-slot:actions="{ item }">
-            <wt-item-link
-              :id="item.id"
-              :route-name="CrmSections.CONTACTS"
-            >
-              <wt-icon-action
-                v-if="hasEditAccess"
-                action="edit"
-              ></wt-icon-action>
-            </wt-item-link>
+            <wt-icon-action
+              v-if="hasEditAccess"
+              action="edit"
+              @click="edit(item)"
+            ></wt-icon-action>
             <wt-icon-action
               v-if="hasDeleteAccess"
               action="delete"
@@ -73,7 +77,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -83,6 +87,7 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { useAccess } from '../../../app/composables/useAccess';
+import ContactPopup from './contact-popup.vue';
 
 const baseNamespace = 'contacts';
 
@@ -100,6 +105,7 @@ const {
   isNext,
   error,
 
+  loadData,
   deleteData,
   sort,
 } = useTableStore(baseNamespace);
@@ -111,6 +117,9 @@ const {
 } = useAccess();
 
 const { filtersNamespace } = useTableFilters(namespace);
+
+const isContactPopup = ref(false);
+const editedContactId = ref(null);
 
 const path = computed(() => [
   { name: t('crm') },
@@ -131,6 +140,19 @@ const showDummy = computed(() => {
   }, {});
   return isEmpty(dynamicFilters);
 });
+
+function create() {
+  isContactPopup.value = true;
+}
+function edit({ id }) {
+  editedContactId.value = id;
+  isContactPopup.value = true;
+}
+
+function closeContactPopup() {
+  isContactPopup.value = false;
+  editedContactId.value = null;
+}
 </script>
 
 <style lang="scss" scoped>
