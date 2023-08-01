@@ -62,11 +62,20 @@ const getList = async (params) => {
 const get = async ({ itemId: id }) => {
   const fields = ['name', 'about', 'labels', 'etag'];
   const defaultObject = {};
+  const itemResponseHandler = (item) => {
+    return {
+      ...item,
+      labels: item.labels?.data || [],
+      managers: item.managers?.data || [],
+      timezones: item.timezones?.data || [],
+    };
+  };
   try {
     const response = await service.locateContact(id, fields);
     return applyTransform(response.data, [
       snakeToCamel(),
       merge(defaultObject),
+      itemResponseHandler,
     ]);
   } catch (err) {
     throw applyTransform(err, [
@@ -76,7 +85,7 @@ const get = async ({ itemId: id }) => {
   }
 };
 
-const fieldsToSend = ['name', 'about'];
+const fieldsToSend = ['name', 'labels', 'about'];
 
 const add = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [

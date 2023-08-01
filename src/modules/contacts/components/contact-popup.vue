@@ -32,7 +32,8 @@
         <wt-tags-input
           :value="itemInstance.labels"
           :label="t('vocabulary.labels', 1)"
-          :search-method="() => ({ items: [] })"
+          :search-method="LabelsAPI.getList"
+          taggable
           @input="setItemProp({ path: 'labels', value: $event })"
         ></wt-tags-input>
         <wt-textarea
@@ -61,11 +62,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
+import LabelsAPI from '../api/LabelsAPI';
 
 const props = defineProps({
   namespace: {
@@ -137,5 +139,9 @@ if (props.id) initializeEdit();
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+
+  :deep(.multiselect__content-wrapper) {
+    max-height: 240px !important; // override default vue-multiselect styles, applied as attribute
+  }
 }
 </style>
