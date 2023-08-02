@@ -33,6 +33,8 @@
           :value="itemInstance.labels"
           :label="t('vocabulary.labels', 1)"
           :search-method="LabelsAPI.getList"
+          option-label="label"
+          track-by="label"
           taggable
           @input="setItemProp({ path: 'labels', value: $event })"
         ></wt-tags-input>

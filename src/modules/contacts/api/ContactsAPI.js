@@ -4,7 +4,7 @@ import applyTransform, {
   starToSearch,
   camelToSnake,
   snakeToCamel,
-  handleUnauthorized,
+  
   notify,
   sanitize,
 } from '@webitel/ui-sdk/src/api/transformers';
@@ -53,7 +53,7 @@ const getList = async (params) => {
     };
   } catch (err) {
     throw applyTransform(err, [
-      handleUnauthorized,
+      
       notify,
     ]);
   }
@@ -79,7 +79,7 @@ const get = async ({ itemId: id }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-      handleUnauthorized,
+      
       notify,
     ]);
   }
@@ -100,7 +100,7 @@ const add = async ({ itemInstance }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-      handleUnauthorized,
+      
       notify,
     ]);
   }
@@ -119,7 +119,7 @@ const update = async ({ itemInstance }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-      handleUnauthorized,
+      
       notify,
     ]);
   }
