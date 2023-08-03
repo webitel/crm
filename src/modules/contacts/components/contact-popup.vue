@@ -20,13 +20,13 @@
         <wt-select
           :value="itemInstance.timezones"
           :label="t('date.timezone', 1)"
-          :search-method="() => ({ items: [] })"
+          :search-method="TimezonesAPI.getList"
           @input="setItemProp({ path: 'timezones', value: $event })"
         ></wt-select>
         <wt-select
           :value="itemInstance.managers"
           :label="t('contacts.manager', 1)"
-          :search-method="() => ({ items: [] })"
+          :search-method="UsersAPI.getLookup"
           @input="setItemProp({ path: 'managers', value: $event })"
         ></wt-select>
         <wt-tags-input
@@ -70,6 +70,8 @@ import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import LabelsAPI from '../api/LabelsAPI';
+import TimezonesAPI from '../api/TimezonesAPI';
+import UsersAPI from '../api/UsersAPI';
 
 const props = defineProps({
   namespace: {
