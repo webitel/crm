@@ -10,6 +10,7 @@ import ContactsAPI from '../api/ContactsAPI';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
 import emails from '../modules/emails/store/emails';
+import permissions from '../modules/permissions/store/permissions';
 
 const cardState = {
   itemInstance: {
@@ -32,7 +33,7 @@ const table = new TableStoreModule({ headers })
   .getModule();
 
 const card = new CardStoreModule()
-  .setChildModules({ api, emails })
+  .setChildModules({ api, emails, permissions })
   .getModule({ state: cardState });
 
 const contacts = new BaseStoreModule()

@@ -5,18 +5,17 @@
       :tabs="tabs"
       @change="changeTab"
     ></wt-tabs>
-    <component
+    <router-view
       class="opened-contact-tab"
-      :is="currentTab.component"
       :namespace="namespace"
-    ></component>
+    ></router-view>
   </article>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import Communications from './opened-contact-communications.vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
   namespace: {
@@ -26,8 +25,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-
-const currentTab = ref({});
+const router = useRouter();
+const route = useRoute();
 
 const tabs = computed(() => [
   // {
@@ -37,24 +36,27 @@ const tabs = computed(() => [
   {
     text: t('contacts.communications.communications', 2),
     value: 'communications',
-    component: Communications,
+    pathName: 'communications',
   },
   // {
   //   text: t('vocabulary.variables', 2),
   //   value: 'variables',
   // },
-  // {
-  //   text: t('vocabulary.permissions', 2),
-  //   value: 'permissions',
-  // },
+  {
+    text: t('vocabulary.permissions', 2),
+    value: 'permissions',
+    pathName: 'permissions'
+  },
 ]);
 
+const currentTab = computed(() => tabs.value.find(({ pathName }) => pathName === route.name));
+
 function changeTab(tab) {
-  currentTab.value = tab;
+  return router.push({ name: tab.pathName });
 }
 
 function initializeTab() {
-  changeTab(tabs.value[0]);
+  if (!currentTab.value) changeTab(tabs.value[0]);
 }
 
 onMounted(() => {
@@ -69,6 +71,7 @@ onMounted(() => {
   flex-direction: column;
   gap: var(--spacing-sm);
   min-height: 0;
+  min-width: 0;
   padding: var(--spacing-sm);
   box-shadow: var(--elevation-10);
 

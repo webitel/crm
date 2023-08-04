@@ -1,0 +1,71 @@
+import {
+  getDefaultGetListResponse,
+  getDefaultGetParams,
+} from '@webitel/ui-sdk/src/api/defaults';
+import applyTransform, {
+  camelToSnake,
+  merge, notify, snakeToCamel,
+  starToSearch, log, sanitize,
+  generateUrl, mergeEach,
+} from '@webitel/ui-sdk/src/api/transformers';
+import instance from '../../../../../app/api/instance';
+
+const baseUrl = '/contacts';
+
+const getList = async (params) => {
+  const fieldsToSend = ['page', 'size', 'q', 'fields', 'id'];
+
+  const listResponseHandler = (items) => items.map((item) => ({
+    ...item,
+    access: {
+      x: {
+        id: ((item.granted.match(/x/g) || []).length + 1),
+        rule: 'x'.repeat((item.granted.match(/x/g) || []).length),
+      },
+      r: {
+        id: ((item.granted.match(/r/g) || []).length + 1),
+        rule: 'r'.repeat((item.granted.match(/r/g) || []).length),
+      },
+      w: {
+        id: ((item.granted.match(/w/g) || []).length + 1),
+        rule: 'w'.repeat((item.granted.match(/w/g) || []).length),
+      },
+      d: {
+        id: ((item.granted.match(/d/g) || []).length + 1),
+        rule: 'd'.repeat((item.granted.match(/d/g) || []).length),
+      },
+    },
+  }));
+
+  const url = applyTransform(params, [
+    merge(getDefaultGetParams()),
+    starToSearch('search'),
+    (params) => ({ ...params, q: params.search }),
+    sanitize(fieldsToSend),
+    camelToSnake(),
+    generateUrl(`${baseUrl}/${params.parentId}/acl`),
+  ]);
+  try {
+    const response = await instance.get(url);
+    const { items, next } = applyTransform(response.data, [
+      snakeToCamel(),
+      merge(getDefaultGetListResponse()),
+    ]);
+    return {
+      items: applyTransform(items, [
+        listResponseHandler,
+      ]),
+      next,
+    };
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
+const PermissionsAPI = {
+  getList,
+};
+
+export default PermissionsAPI;

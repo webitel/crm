@@ -32,13 +32,14 @@
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { onMounted, onUnmounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useClose } from '../../../app/composables/useClose';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
 
 const baseNamespace = 'contacts';
 
+const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
@@ -51,8 +52,6 @@ const {
   setId,
   resetState,
 } = useCardStore(baseNamespace);
-
-const { close } = useClose();
 
 const path = computed(() => {
   const baseUrl = '/contacts';
@@ -71,6 +70,10 @@ async function initializeCard() {
   const { id: itemId } = route.params;
   await setId(itemId);
   return loadItem();
+}
+
+function close() {
+  return router.push('/contacts');
 }
 
 onMounted(() => initializeCard());

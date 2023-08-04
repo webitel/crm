@@ -8,6 +8,10 @@ import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import OpenedContact
   from '../../modules/contacts/components/opened-contact.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
+import ContactCommunications
+  from '../../modules/contacts/components/opened-contact-communications.vue';
+import ContactPermissions
+  from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -51,6 +55,18 @@ const routes = [
         name: `${CrmSections.CONTACTS}-edit`,
         component: OpenedContact,
         // beforeEnter: checkRouteAccess,
+        children: [
+          {
+            path: 'communications',
+            name: 'communications',
+            component: ContactCommunications,
+          },
+          {
+            path: 'permissions',
+            name: 'permissions',
+            component: ContactPermissions,
+          },
+        ],
       },
     ],
   },
