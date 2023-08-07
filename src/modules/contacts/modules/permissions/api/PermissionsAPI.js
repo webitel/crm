@@ -64,8 +64,28 @@ const getList = async (params) => {
   }
 };
 
+const patch = async ({ changes, id, parentId }) => {
+  const body = applyTransform(changes, [
+    camelToSnake(),
+  ]);
+  let url = `contacts/${parentId}/acl`;
+  if (id) url += `/${id}`;
+  try {
+    const response = await instance.patch(url, body);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+      log,
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
 const PermissionsAPI = {
   getList,
+  patch,
 };
 
 export default PermissionsAPI;

@@ -1,3 +1,6 @@
+import AccessMode
+  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+
 export default {
   crm: 'CRM',
   contacts: {
@@ -11,6 +14,16 @@ export default {
       channel: 'Канал',
       destination: 'Назначение',
       setAsPrimary: 'Установить как основной',
+    },
+  },
+  permissions: {
+    read: 'Читать',
+    edit: 'Редактировать',
+    delete: 'Удалить',
+    accessMode: {
+      [AccessMode.FORBIDDEN]: 'Запрещено',
+      [AccessMode.ALLOW]: 'Разрешено',
+      [AccessMode.MANAGE]: 'Управление',
     },
   },
 };

@@ -1,5 +1,4 @@
 import { shallowMount } from '@vue/test-utils';
-import { useRouter, useRoute } from 'vue-router'
 import OpenedContactTabs from '../opened-contact-tabs.vue';
 
 jest.mock('vue-router', () => ({
