@@ -3,6 +3,7 @@ import BaseFilterSchema
 import FiltersStoreModule
   from '@webitel/ui-sdk/src/modules/Filters/store/FiltersStoreModule';
 import router from '../../../../../app/router';
+import SearchMode from '../enums/SearchMode.enum';
 
 const state = {
   page: new BaseFilterSchema({
@@ -15,9 +16,9 @@ const state = {
   }),
   sort: new BaseFilterSchema(),
   q: new BaseFilterSchema(),
-  name: new BaseFilterSchema(),
-  labels: new BaseFilterSchema(),
-  about: new BaseFilterSchema(),
+  [SearchMode.NAME]: new BaseFilterSchema(),
+  [SearchMode.LABELS]: new BaseFilterSchema(),
+  [SearchMode.ABOUT]: new BaseFilterSchema(),
 };
 
 const getters = {
