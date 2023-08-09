@@ -20,6 +20,9 @@ export default {
     read: 'Read',
     edit: 'Edit',
     delete: 'Delete',
+    granteePopup: {
+      title: 'Add grantee',
+    },
     accessMode: {
       [AccessMode.ALLOW]: 'Allow',
       [AccessMode.FORBIDDEN]: 'Forbidden',

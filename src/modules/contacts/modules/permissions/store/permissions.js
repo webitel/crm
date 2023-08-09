@@ -57,21 +57,20 @@ const actions = {
       await context.dispatch('LOAD_DATA_LIST');
     }
   },
-  ADD_ROLE_PERMISSIONS: async (context, role) => {
+  GRANT_PERMISSIONS: async (context, grantee) => {
     const changes = [{
-      grantee: +role.id,
+      grantee: +grantee.id,
       grants: 'r',
     }];
     try {
       await context.dispatch('PATCH_ACCESS_MODE', { changes });
-    } catch {
     } finally {
       await context.dispatch('LOAD_DATA_LIST');
     }
   },
   PATCH_ACCESS_MODE: (context, { item, changes }) => context.dispatch('api/PATCH_ITEM', {
     context,
-    id: item.id,
+    id: item ? item.id : null,
     changes,
   }),
 };

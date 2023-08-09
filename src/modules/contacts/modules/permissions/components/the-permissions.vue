@@ -1,5 +1,21 @@
 <template>
   <div class="permissions">
+    <header class="permissions-header">
+      <grantee-popup
+        v-if="isGranteePopup"
+        :callback="grantPermissions"
+        @close="isGranteePopup = false"
+      ></grantee-popup>
+      <wt-icon-action
+        action="add"
+        @click="isGranteePopup = true"
+      ></wt-icon-action>
+      <wt-icon-action
+        action="refresh"
+        @click="loadData"
+      ></wt-icon-action>
+    </header>
+
     <wt-loader v-show="isLoading"></wt-loader>
 
     <div v-show="!isLoading" class="table-wrapper">
@@ -63,12 +79,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { useI18n } from 'vue-i18n';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useStore } from 'vuex';
+import GranteePopup from './permissions-tab-grantee-popup.vue';
 import AccessMode from '../enums/AccessMode.enum';
 
 const props = defineProps({
@@ -90,12 +107,15 @@ const {
   error,
   isNext,
 
+  loadData,
   patchProperty,
   deleteData,
   sort,
 } = useTableStore(`${props.namespace}/permissions`);
 
 const { filtersNamespace } = useTableFilters(namespace);
+
+const isGranteePopup = ref(false);
 
 const modifiedDataList = computed(() => {
   return dataList.value.map((item) => {
@@ -117,9 +137,10 @@ const accessOptions = computed(() => {
   }));
 });
 
-function changeCreateAccessMode(payload) {
-  return store.dispatch(`${namespace}/CHANGE_CREATE_ACCESS_MODE`, payload);
+function grantPermissions(payload) {
+  return store.dispatch(`${namespace}/GRANT_PERMISSIONS`, payload);
 }
+
 function changeReadAccessMode(payload) {
   return store.dispatch(`${namespace}/CHANGE_READ_ACCESS_MODE`, payload);
 }
@@ -132,6 +153,19 @@ function changeDeleteAccessMode(payload) {
 </script>
 
 <style lang="scss" scoped>
+.permissions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.permissions-header {
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .permissions-role-column {
   display: flex;
   align-items: center;

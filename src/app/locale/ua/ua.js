@@ -20,6 +20,9 @@ export default {
     read: 'Читати',
     edit: 'Редагувати',
     delete: 'Видаляти',
+    granteePopup: {
+      title: 'Додати отримувача',
+    },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Заборонено',
       [AccessMode.ALLOW]: 'Дозволено',
