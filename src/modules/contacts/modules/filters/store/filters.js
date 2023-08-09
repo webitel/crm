@@ -15,6 +15,9 @@ const state = {
   }),
   sort: new BaseFilterSchema(),
   q: new BaseFilterSchema(),
+  name: new BaseFilterSchema(),
+  labels: new BaseFilterSchema(),
+  about: new BaseFilterSchema(),
 };
 
 const getters = {

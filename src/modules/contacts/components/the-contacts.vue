@@ -19,6 +19,11 @@
         :hide-secondary="!hasDeleteAccess"
       >
         <wt-headline-nav :path="path"></wt-headline-nav>
+        <template v-slot:actions>
+          <filter-search
+            :namespace="filtersNamespace"
+          ></filter-search>
+        </template>
       </wt-page-header>
     </template>
     <template v-slot:main>
@@ -88,6 +93,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
+import FilterSearch from '../modules/filters/components/filter-search.vue';
 
 const baseNamespace = 'contacts';
 
