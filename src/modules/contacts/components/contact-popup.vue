@@ -6,42 +6,42 @@
   >
     <template v-slot:title>
       {{ t('reusable.new') }}
-      {{ t('crm.contacts.contacts', 1) }}
+      {{ t('contacts.contact', 1) }}
     </template>
     <template v-slot:main>
       <form class="contact-popup-form">
         <wt-input
-          :value="itemInstance.name.commonName"
+          :value="draft.name.commonName"
           :label="t('reusable.name')"
-          :v="v$.itemInstance.name.commonName"
+          :v="v$.draft.name.commonName"
           required
-          @input="setItemProp({ path: 'name.commonName', value: $event })"
+          @input="draft.name.commonName = $event"
         ></wt-input>
         <wt-select
-          :value="itemInstance.timezones"
+          :value="draft.timezones"
           :label="t('date.timezone', 1)"
           :search-method="TimezonesAPI.getList"
-          @input="setItemProp({ path: 'timezones', value: $event })"
+          @input="draft.timezones = $event"
         ></wt-select>
         <wt-select
-          :value="itemInstance.managers"
+          :value="draft.managers"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @input="setItemProp({ path: 'managers', value: $event })"
+          @input="draft.managers = $event"
         ></wt-select>
         <wt-tags-input
-          :value="itemInstance.labels"
+          :value="draft.labels"
           :label="t('vocabulary.labels', 1)"
           :search-method="LabelsAPI.getList"
           option-label="label"
           track-by="label"
           taggable
-          @input="setItemProp({ path: 'labels', value: $event })"
+          @input="draft.labels = $event"
         ></wt-tags-input>
         <wt-textarea
-          :value="itemInstance.about"
+          :value="draft.about"
           :label="t('vocabulary.description')"
-          @input="setItemProp({ path: 'about', value: $event })"
+          @input="draft.about = $event"
         ></wt-textarea>
       </form>
     </template>
@@ -68,16 +68,12 @@ import { computed, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import LabelsAPI from '../api/LabelsAPI';
 import TimezonesAPI from '../api/TimezonesAPI';
 import UsersAPI from '../api/UsersAPI';
+import ContactsAPI from '../api/ContactsAPI';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
   id: {
     // if id is passed, that's an edit
     type: [String, null],
@@ -86,32 +82,29 @@ const props = defineProps({
 const emit = defineEmits(['saved', 'close']);
 
 const { t } = useI18n();
-const {
-  namespace,
-  itemInstance,
-
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
-  setItemProp,
-} = useCardStore(props.namespace);
+const draft = ref({
+  name: {
+    commonName: '',
+  },
+  timezones: [],
+  managers: [],
+  labels: [],
+  about: '',
+});
 
 const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
+  draft: {
     name: {
       commonName: { required },
     },
   },
-})), { itemInstance }, { $autoDirty: true });
+})), { draft }, { $autoDirty: true });
 
 v$.value.$touch();
 
 const isSaving = ref(false);
 
-async function close() {
-  await resetState();
+function close() {
   emit('close');
 }
 
@@ -119,9 +112,9 @@ async function save() {
   try {
     isSaving.value = false;
     if (props.id) {
-      await updateItem();
+      await ContactsAPI.update({ itemInstance: { ...draft.value, id: props.id } });
     } else {
-      await addItem();
+      await ContactsAPI.add({ itemInstance: draft.value });
     }
     emit('saved');
     close();
@@ -130,12 +123,11 @@ async function save() {
   }
 }
 
-async function initializeEdit() {
-  await setId(props.id);
-  await loadItem();
+async function loadItem(id = props.id) {
+  draft.value = await ContactsAPI.get({ itemId: id });
 }
 
-if (props.id) initializeEdit();
+if (props.id) loadItem(props.id);
 </script>
 
 <style lang="scss" scoped>

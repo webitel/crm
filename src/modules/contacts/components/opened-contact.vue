@@ -12,13 +12,21 @@
       </wt-page-header>
     </template>
     <template v-slot:main>
+      <contact-popup
+        v-if="isContactPopup"
+        :namespace="baseNamespace"
+        :id="id"
+        @saved="loadItem"
+        @close="isContactPopup = false"
+      ></contact-popup>
       <div class="opened-contact-content">
         <opened-contact-general
           :common-name="itemInstance.name ? itemInstance.name.commonName : ''"
-          :timezones="itemInstance.timezones ? itemInstance.timezones.data : []"
-          :managers="itemInstance.managers ? itemInstance.managers.data : []"
+          :timezones="itemInstance.timezones ? itemInstance.timezones : []"
+          :managers="itemInstance.managers ? itemInstance.managers : []"
           :about="itemInstance.about"
-          :labels="itemInstance.labels ? itemInstance.labels.data : []"
+          :labels="itemInstance.labels ? itemInstance.labels : []"
+          @edit="isContactPopup = true"
         ></opened-contact-general>
         <opened-contact-tabs
           :namespace="namespace"
@@ -30,10 +38,10 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { onMounted, onUnmounted, computed } from 'vue';
+import { onMounted, onUnmounted, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useClose } from '../../../app/composables/useClose';
+import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
 
@@ -52,6 +60,8 @@ const {
   setId,
   resetState,
 } = useCardStore(baseNamespace);
+
+const isContactPopup = ref(false);
 
 const path = computed(() => {
   const baseUrl = '/contacts';

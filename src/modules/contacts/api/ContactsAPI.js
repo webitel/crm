@@ -77,7 +77,6 @@ const getList = async (params) => {
     };
   } catch (err) {
     throw applyTransform(err, [
-
       notify,
     ]);
   }
@@ -103,7 +102,6 @@ const get = async ({ itemId: id }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-
       notify,
     ]);
   }

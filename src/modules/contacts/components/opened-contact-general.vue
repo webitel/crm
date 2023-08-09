@@ -3,7 +3,7 @@
     <wt-context-menu
       class="opened-contact-general-options"
       :options="actionOptions"
-      @click="$event.handler()"
+      @click="$event.option.handler()"
     >
       <template v-slot:activator>
         <wt-tooltip>

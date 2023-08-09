@@ -15,7 +15,6 @@ const state = {
     defaultValue: 10,
   }),
   sort: new BaseFilterSchema(),
-  q: new BaseFilterSchema(),
   [SearchMode.NAME]: new BaseFilterSchema(),
   [SearchMode.LABELS]: new BaseFilterSchema(),
   [SearchMode.ABOUT]: new BaseFilterSchema(),
