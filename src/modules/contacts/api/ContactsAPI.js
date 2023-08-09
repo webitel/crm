@@ -4,7 +4,7 @@ import applyTransform, {
   starToSearch,
   camelToSnake,
   snakeToCamel,
-  
+
   notify,
   sanitize,
 } from '@webitel/ui-sdk/src/api/transformers';
@@ -16,11 +16,33 @@ import getDefaultGetListResponse
   from '../../../app/api/defaults/getDefaultGetListResponse';
 import configuration from '../../../app/api/openAPIConfig';
 import instance from '../../../app/api/instance';
+import SearchMode from '../modules/filters/enums/SearchMode.enum';
 
 const service = new ContactsApiFactory(configuration, '', instance);
 
 const getList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'qin'];
+  let searchValue = '';
+  let searchKey = '';
+
+  if (params.filters[SearchMode.NAME]) {
+    searchValue = params.filters[SearchMode.NAME];
+    searchKey = SearchMode.NAME;
+  }
+  if (params.filters[SearchMode.LABELS]) {
+    searchValue = params.filters[SearchMode.LABELS];
+    searchKey = SearchMode.LABELS;
+  }
+  if (params.filters[SearchMode.ABOUT]) {
+    searchValue = params.filters[SearchMode.ABOUT];
+    searchKey = SearchMode.ABOUT;
+  }
+
+  const changedParams = {
+    ...params,
+    q: searchValue,
+    qin: searchKey,
+  };
   const {
     page,
     size,
@@ -28,7 +50,8 @@ const getList = async (params) => {
     sort,
     fields,
     id,
-  } = applyTransform(params, [
+    qin,
+  } = applyTransform(changedParams, [
     sanitize(fieldsToSend),
     merge(getDefaultGetParams()),
     starToSearch('q'),
@@ -42,6 +65,7 @@ const getList = async (params) => {
       sort,
       fields,
       id,
+      qin,
     );
     const { data, next } = applyTransform(response.data, [
       snakeToCamel(),
@@ -53,7 +77,7 @@ const getList = async (params) => {
     };
   } catch (err) {
     throw applyTransform(err, [
-      
+
       notify,
     ]);
   }
@@ -79,7 +103,7 @@ const get = async ({ itemId: id }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-      
+
       notify,
     ]);
   }
@@ -100,7 +124,7 @@ const add = async ({ itemInstance }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-      
+
       notify,
     ]);
   }
@@ -119,7 +143,7 @@ const update = async ({ itemInstance }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-      
+
       notify,
     ]);
   }
