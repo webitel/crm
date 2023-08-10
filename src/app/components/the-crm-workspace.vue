@@ -66,10 +66,14 @@ const apps = computed(() => {
     name: WebitelApplications.ANALYTICS,
     href: process.env.VUE_APP_GRAFANA_URL,
   };
+  const crm = {
+    name: WebitelApplications.CRM,
+    href: process.env.VUE_APP_CRM_URL,
+  };
 
   const config = inject('$config');
 
-  const allApps = [admin, supervisor, agent, history, audit];
+  const allApps = [admin, supervisor, agent, history, audit, crm];
   if (config?.ON_SITE) allApps.push(grafana);
   return allApps.filter(({ name }) => checkAccess(name));
 });
