@@ -29,6 +29,13 @@
     <template v-slot:main>
       <wt-loader v-show="isLoading"></wt-loader>
 
+      <delete-confirmation-popup
+        v-show="isDeleteConfirmationPopup"
+        :delete-count="deleteCount"
+        :callback="deleteCallback"
+        @close="closeDelete"
+      ></delete-confirmation-popup>
+
       <wt-dummy
         v-if="!isLoading && showDummy"
       ></wt-dummy>
@@ -69,6 +76,10 @@
             <wt-icon-action
               v-if="hasDeleteAccess"
               action="delete"
+              @click="askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })"
             ></wt-icon-action>
           </template>
         </wt-table>
@@ -89,8 +100,13 @@ import { useStore } from 'vuex';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
 import FilterSearch from '../modules/filters/components/filter-search.vue';
@@ -121,6 +137,15 @@ const {
   hasEditAccess,
   hasDeleteAccess,
 } = useAccess();
+
+const {
+  isVisible: isDeleteConfirmationPopup,
+  deleteCount,
+  deleteCallback,
+
+  askDeleteConfirmation,
+  closeDelete,
+} = useDeleteConfirmationPopup();
 
 const { filtersNamespace } = useTableFilters(namespace);
 
