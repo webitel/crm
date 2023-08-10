@@ -25,16 +25,14 @@ const getList = async (params) => {
   let searchValue = '';
   let searchKey = '';
 
-  if (params.filters[SearchMode.NAME]) {
-    searchValue = params.filters[SearchMode.NAME];
+  if (params[SearchMode.NAME]) {
+    searchValue = params[SearchMode.NAME];
     searchKey = SearchMode.NAME;
-  }
-  if (params.filters[SearchMode.LABELS]) {
-    searchValue = params.filters[SearchMode.LABELS];
+  } else if (params[SearchMode.LABELS]) {
+    searchValue = params[SearchMode.LABELS];
     searchKey = SearchMode.LABELS;
-  }
-  if (params.filters[SearchMode.ABOUT]) {
-    searchValue = params.filters[SearchMode.ABOUT];
+  } else if (params[SearchMode.ABOUT]) {
+    searchValue = params[SearchMode.ABOUT];
     searchKey = SearchMode.ABOUT;
   }
 
@@ -43,6 +41,7 @@ const getList = async (params) => {
     q: searchValue,
     qin: searchKey,
   };
+
   const {
     page,
     size,
