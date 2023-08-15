@@ -16,6 +16,7 @@
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 const props = defineProps({
   namespace: {
@@ -36,7 +37,7 @@ const tabs = computed(() => [
   {
     text: t('contacts.communications.communications', 2),
     value: 'communications',
-    pathName: 'communications',
+    pathName: `${CrmSections.CONTACTS}-communications`,
   },
   // {
   //   text: t('vocabulary.variables', 2),
@@ -45,14 +46,14 @@ const tabs = computed(() => [
   {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
-    pathName: 'permissions'
+    pathName: `${CrmSections.CONTACTS}-permissions`
   },
 ]);
 
 const currentTab = computed(() => tabs.value.find(({ pathName }) => pathName === route.name));
 
 function changeTab(tab) {
-  return router.push({ name: tab.pathName });
+    return router.push({ name: tab.pathName });
 }
 
 function initializeTab() {

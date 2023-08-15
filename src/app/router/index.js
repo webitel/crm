@@ -23,7 +23,9 @@ const checkAppAccess = (to, from, next) => {
 };
 
 const checkRouteAccess = ((to, from, next) => {
-  const hasReadAccess = store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to });
+  // has Role Section Access AND (Select role permissions || ObAC permissions access)
+  const hasReadAccess = store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to })
+  && store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
   if (hasReadAccess) {
     next();
   } else {
@@ -42,28 +44,28 @@ const routes = [
     name: 'crm-workspace',
     redirect: { name: CrmSections.CONTACTS },
     component: TheCrmWorkspace,
-    // beforeEnter: checkAppAccess,
+    beforeEnter: checkAppAccess,
     children: [
       {
       path: 'contacts',
       name: CrmSections.CONTACTS,
       component: TheContacts,
-      // beforeEnter: checkRouteAccess,
+      beforeEnter: checkRouteAccess,
     },
       {
         path: 'contacts/:id',
         name: `${CrmSections.CONTACTS}-edit`,
         component: OpenedContact,
-        // beforeEnter: checkRouteAccess,
+        beforeEnter: checkRouteAccess,
         children: [
           {
             path: 'communications',
-            name: 'communications',
+            name: `${CrmSections.CONTACTS}-communications`,
             component: ContactCommunications,
           },
           {
             path: 'permissions',
-            name: 'permissions',
+            name: `${CrmSections.CONTACTS}-permissions`,
             component: ContactPermissions,
           },
         ],
