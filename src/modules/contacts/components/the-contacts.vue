@@ -15,6 +15,7 @@
       <wt-page-header
         :primary-action="create"
         :secondary-text="$t('reusable.delete')"
+        :secondary-action="deleteSelectedItems"
         :hide-primary="!hasCreateAccess"
         :hide-secondary="!hasDeleteAccess"
       >
@@ -36,12 +37,12 @@
         @close="closeDelete"
       ></delete-confirmation-popup>
 
-      <wt-dummy
-        v-if="!isLoading && showDummy"
-      ></wt-dummy>
+<!--      <wt-dummy-->
+<!--        v-if="!isLoading && showDummy"-->
+<!--      ></wt-dummy>-->
 
-      <div v-show="!isLoading && !showDummy" class="table-wrapper">
-        <wt-table
+      <div v-show="!isLoading" class="table-wrapper">
+        <w-table
           :headers="headers"
           :data="dataList"
           :grid-actions="hasEditAccess || hasDeleteAccess"
@@ -66,6 +67,7 @@
               >{{ label }}
               </wt-chip>
             </div>
+            <p> isSelected: {{ item._isSelected }}</p>
           </template>
           <template v-slot:actions="{ item }">
             <wt-icon-action
@@ -82,7 +84,7 @@
                 })"
             ></wt-icon-action>
           </template>
-        </wt-table>
+        </w-table>
         <filter-pagination
           :namespace="filtersNamespace"
           :is-next="isNext"
@@ -95,7 +97,6 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -109,12 +110,12 @@ import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
+import wTable from './w-table';
 import FilterSearch from '../modules/filters/components/filter-search.vue';
 
 const baseNamespace = 'contacts';
 
 const { t } = useI18n();
-const router = useRouter();
 
 const store = useStore();
 
@@ -130,6 +131,7 @@ const {
   loadData,
   deleteData,
   sort,
+  setHeaders,
 } = useTableStore(baseNamespace);
 
 const {
@@ -147,6 +149,8 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+console.log('dataList', dataList);
+
 const { filtersNamespace } = useTableFilters(namespace);
 
 const isContactPopup = ref(false);
@@ -158,19 +162,19 @@ const path = computed(() => [
 ]);
 
 // we need to check if there's any filters which actually filter data before showing "no data" dummy
-const showDummy = computed(() => {
-  if (dataList.value.length) return false;
-  const filters = store.getters[`${namespace}/GET_FILTERS`];
-  const defaultFilters = ['page', 'size', 'sort', 'fields'];
-  const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
-    if (defaultFilters.includes(filter)) return dynamic;
-    return {
-      ...dynamic,
-      [filter]: filters[filter],
-    };
-  }, {});
-  return isEmpty(dynamicFilters);
-});
+// const showDummy = computed(() => {
+//   if (dataList.value.length) return false;
+//   const filters = store.getters[`${namespace}/GET_FILTERS`];
+//   const defaultFilters = ['page', 'size', 'sort', 'fields'];
+//   const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
+//     if (defaultFilters.includes(filter)) return dynamic;
+//     return {
+//       ...dynamic,
+//       [filter]: filters[filter],
+//     };
+//   }, {});
+//   return isEmpty(dynamicFilters);
+// });
 
 function create() {
   isContactPopup.value = true;
@@ -178,6 +182,16 @@ function create() {
 function edit({ id }) {
   editedContactId.value = id;
   isContactPopup.value = true;
+}
+
+const selectedItems = computed(() => (
+  dataList.value.filter((item) => item._isSelected)));
+
+function deleteSelectedItems() {
+  return selectedItems.value.length && askDeleteConfirmation({
+    deleted: selectedItems.value,
+    callback: () => deleteData([...selectedItems.value]),
+  });
 }
 
 function closeContactPopup() {
