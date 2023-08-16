@@ -15,8 +15,8 @@
       <wt-page-header
         :primary-action="create"
         :secondary-text="$t('reusable.delete')"
-        :hide-primary="!hasCreateAccess"
-        :hide-secondary="!hasDeleteAccess"
+        :hide-primary="!hasObacCreateAccess"
+        :hide-secondary="!hasObacDeleteAccess"
       >
         <wt-headline-nav :path="path"></wt-headline-nav>
         <template v-slot:actions>
@@ -37,7 +37,7 @@
         <wt-table
           :headers="headers"
           :data="dataList"
-          :grid-actions="hasEditAccess || hasDeleteAccess"
+          :grid-actions="hasObacEditAccess || hasObacDeleteAccess"
           sortable
           @sort="sort"
         >
@@ -62,12 +62,12 @@
           </template>
           <template v-slot:actions="{ item }">
             <wt-icon-action
-              v-if="hasEditAccess"
+              v-if="item.access.edit"
               action="edit"
               @click="edit(item)"
             ></wt-icon-action>
             <wt-icon-action
-              v-if="hasDeleteAccess"
+              v-if="item.access.delete"
               action="delete"
             ></wt-icon-action>
           </template>
@@ -117,9 +117,9 @@ const {
 } = useTableStore(baseNamespace);
 
 const {
-  hasCreateAccess,
-  hasEditAccess,
-  hasDeleteAccess,
+  hasObacCreateAccess,
+  hasObacEditAccess,
+  hasObacDeleteAccess,
 } = useAccess();
 
 const { filtersNamespace } = useTableFilters(namespace);

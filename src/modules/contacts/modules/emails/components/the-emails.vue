@@ -24,7 +24,7 @@
       <wt-table
         :headers="headers"
         :data="dataList"
-        :grid-actions="hasEditAccess || hasDeleteAccess"
+        :grid-actions="hasRbacEditAccess"
         :selectable="false"
         sortable
         @sort="sort"
@@ -101,9 +101,7 @@ const {
 } = useTableStore(props.namespace);
 
 const {
-  hasCreateAccess,
-  hasEditAccess,
-  hasDeleteAccess,
+  hasRbacEditAccess,
 } = useAccess();
 
 const { filtersNamespace } = useTableFilters(namespace);

@@ -24,13 +24,17 @@ const cardState = {
   },
 };
 
+const tableGetters = {
+  REQUIRED_FIELDS: () => ['mode'],
+};
+
 const api = new ApiStoreModule()
   .generateAPIActions(ContactsAPI)
   .getModule();
 
 const table = new TableStoreModule({ headers })
   .setChildModules({ api, filters })
-  .getModule();
+  .getModule({ getters: tableGetters });
 
 const card = new CardStoreModule()
   .setChildModules({ api, emails, permissions })
