@@ -49,7 +49,7 @@
       >
         <td v-if="selectable" class="wt-table__td wt-table__td--checkbox">
           <wt-checkbox
-            v-model="row._isSelected"
+            v-model:selected="row._isSelected"
           ></wt-checkbox>
         </td>
 
@@ -88,6 +88,7 @@
 
 <script>
 import getNextSortOrder from '@webitel/ui-sdk/src/components/organisms/wt-table/_internals/getSortOrder';
+import wCheckbox from './w-checkbox.vue';
 
 export default {
   name: 'w-table',
@@ -113,9 +114,10 @@ export default {
       default: true,
     },
   },
-
+  components: {
+    wCheckbox,
+  },
   data: () => ({}),
-  emits: ['change', 'click'],
   computed: {
     isAllSelected() {
       return this.data.every((item) => item._isSelected);
