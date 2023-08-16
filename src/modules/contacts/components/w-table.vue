@@ -4,10 +4,10 @@
       <thead class="wt-table__head">
       <tr :style="columnsStyle" class="wt-table__tr wt-table__tr__head">
         <th v-if="selectable" class="wt-table__th wt-table__th--checkbox">
-          <wt-checkbox
+          <w-checkbox
             :selected="isAllSelected"
             @change="selectAll"
-          ></wt-checkbox>
+          ></w-checkbox>
         </th>
         <th
           v-for="(col, key) of dataHeaders"
@@ -48,9 +48,10 @@
         class="wt-table__tr wt-table__tr__body"
       >
         <td v-if="selectable" class="wt-table__td wt-table__td--checkbox">
-          <wt-checkbox
-            v-model:selected="row._isSelected"
-          ></wt-checkbox>
+          <w-checkbox
+            :selected="row._isSelected"
+            @change="row._isSelected = !row._isSelected"
+          ></w-checkbox>
         </td>
 
         <td

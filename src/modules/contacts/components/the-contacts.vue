@@ -174,6 +174,10 @@ const showDummy = computed(() => {
   return isEmpty(dynamicFilters);
 });
 
+const selectedItems = computed(() => (
+  dataList.value.filter((item) => item._isSelected)
+));
+
 function create() {
   isContactPopup.value = true;
 }
@@ -185,6 +189,13 @@ function edit({ id }) {
 function closeContactPopup() {
   isContactPopup.value = false;
   editedContactId.value = null;
+}
+
+function deleteSelectedItems() {
+  return selectedItems.value.length && askDeleteConfirmation({
+    deleted: selectedItems.value,
+    callback: () => deleteData([...selectedItems.value]),
+  });
 }
 </script>
 
