@@ -7,6 +7,16 @@ describe('OpenedContactGeneral', () => {
       props: {
         commonName: 'jest',
       },
+      global: {
+        provide: {
+          access: {
+            value: {
+              hasRbacEditAccess: true,
+              hasRbacDeleteAccess: true,
+            },
+          },
+        },
+      },
     });
     expect(wrapper.isVisible()).toBe(true);
   });
