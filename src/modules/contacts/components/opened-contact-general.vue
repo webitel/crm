@@ -75,9 +75,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, toRefs } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAccess } from '../../../app/composables/useAccess';
+
+const access = inject('access');
 
 const props = defineProps({
   commonName: {
@@ -100,13 +101,6 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  access: {
-    type: Object,
-    default: () => ({
-      edit: false,
-      delete: false,
-    }),
-  },
 });
 
 const emit = defineEmits([
@@ -115,23 +109,19 @@ const emit = defineEmits([
 ]);
 
 const { t } = useI18n();
-const {
-  hasRbacEditAccess,
-  hasRbacDeleteAccess,
-} = useAccess();
 
 const actionOptions = computed(() => {
   const editAction = {
     text: t('reusable.edit'),
     icon: 'edit',
     handler: () => emit('edit'),
-    disabled: !hasRbacEditAccess.value,
+    disabled: !access.value.hasRbacEditAccess,
   };
   const deleteAction = {
     text: t('reusable.delete'),
     icon: 'bucket',
     handler: () => emit('delete'),
-    disabled: !hasRbacDeleteAccess.value,
+    disabled: !access.value.hasRbacDeleteAccess,
   };
   return [
     editAction,

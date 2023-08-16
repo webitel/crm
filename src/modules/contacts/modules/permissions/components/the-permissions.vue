@@ -7,7 +7,7 @@
         @close="isGranteePopup = false"
       ></grantee-popup>
       <wt-icon-action
-        v-if="hasRbacEditAccess"
+        v-if="access.hasRbacEditAccess"
         action="add"
         @click="isGranteePopup = true"
       ></wt-icon-action>
@@ -23,7 +23,7 @@
       <wt-table
         :headers="headers"
         :data="modifiedDataList"
-        :grid-actions="hasRbacEditAccess"
+        :grid-actions="access.hasRbacEditAccess"
         :selectable="false"
         sortable
         @sort="sort"
@@ -41,7 +41,7 @@
 
         <template v-slot:read="{ item }">
           <wt-select
-            v-if="hasRbacEditAccess"
+            v-if="access.hasRbacEditAccess"
             :value="item.access.r"
             :options="accessOptions"
             :clearable="false"
@@ -52,7 +52,7 @@
 
         <template v-slot:edit="{ item }">
           <wt-select
-            v-if="hasRbacEditAccess"
+            v-if="access.hasRbacEditAccess"
             :value="item.access.w"
             :options="accessOptions"
             :clearable="false"
@@ -63,7 +63,7 @@
 
         <template v-slot:delete="{ item }">
           <wt-select
-            v-if="hasRbacEditAccess"
+            v-if="access.hasRbacEditAccess"
             :value="item.access.d"
             :options="accessOptions"
             :clearable="false"
@@ -87,15 +87,16 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { useI18n } from 'vue-i18n';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useStore } from 'vuex';
-import { useAccess } from '../../../../../app/composables/useAccess';
 import GranteePopup from './permissions-tab-grantee-popup.vue';
 import AccessMode from '../enums/AccessMode.enum';
+
+const access = inject('access');
 
 const props = defineProps({
   namespace: {
@@ -123,8 +124,6 @@ const {
 } = useTableStore(`${props.namespace}/permissions`);
 
 const { filtersNamespace } = useTableFilters(namespace);
-
-const { hasRbacEditAccess } = useAccess();
 
 const isGranteePopup = ref(false);
 

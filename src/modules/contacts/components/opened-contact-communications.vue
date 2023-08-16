@@ -12,7 +12,7 @@
       >{{ t('vocabulary.emails', 2) }}
       </wt-button>
       <wt-button
-        v-if="hasRbacEditAccess"
+        v-if="access.hasRbacEditAccess"
         @click="isCommunicationPopup = true"
       >{{ t('reusable.add') }}
       </wt-button>
@@ -24,12 +24,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { useAccess } from '../../../app/composables/useAccess';
 import TheEmails from '../modules/emails/components/the-emails.vue';
 import AddCommunicationPopup from './opened-contact-communication-popup.vue';
+
+const access = inject('access');
 
 const props = defineProps({
   namespace: {
@@ -42,7 +43,6 @@ const emailsNamespace = `${props.namespace}/emails`;
 
 const store = useStore();
 const { t } = useI18n();
-const { hasRbacEditAccess } = useAccess();
 
 const isCommunicationPopup = ref(false);
 
