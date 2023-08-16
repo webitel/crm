@@ -24,7 +24,7 @@
       <wt-table
         :headers="headers"
         :data="dataList"
-        :grid-actions="hasEditAccess || hasDeleteAccess"
+        :grid-actions="access.hasRbacEditAccess"
         :selectable="false"
         sortable
         @sort="sort"
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
@@ -74,8 +74,9 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useStore } from 'vuex';
-import { useAccess } from '../../../../../app/composables/useAccess';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
+
+const access = inject('access');
 
 const props = defineProps({
   namespace: {
@@ -99,12 +100,6 @@ const {
   deleteData,
   sort,
 } = useTableStore(props.namespace);
-
-const {
-  hasCreateAccess,
-  hasEditAccess,
-  hasDeleteAccess,
-} = useAccess();
 
 const { filtersNamespace } = useTableFilters(namespace);
 

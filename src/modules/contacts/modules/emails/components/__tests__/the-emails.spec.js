@@ -11,6 +11,12 @@ describe('TheEmails', () => {
       },
       global: {
         plugins: [store, router],
+        provide: {
+          access: {
+            hasRbacEditAccess: true,
+            hasRbacDeleteAccess: true,
+          },
+        },
       },
     });
     expect(wrapper.isVisible()).toBe(true);

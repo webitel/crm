@@ -7,6 +7,14 @@ describe('OpenedContactCommunications', () => {
       props: {
         namespace: 'jest',
       },
+      global: {
+        provide: {
+          access: {
+            hasRbacEditAccess: true,
+            hasRbacDeleteAccess: true,
+          },
+        },
+      },
     });
     expect(wrapper.isVisible()).toBe(true);
   });

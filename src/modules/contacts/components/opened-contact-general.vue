@@ -15,6 +15,16 @@
           {{ t('vocabulary.options', 2) }}
         </wt-tooltip>
       </template>
+      <template v-slot:option="option">
+        <div class="opened-contact-general-option">
+          <wt-icon
+            :icon="option.icon"
+            :disabled="option.disabled"
+          ></wt-icon>
+
+          {{ option.text }}
+        </div>
+      </template>
     </wt-context-menu>
 
     <wt-avatar
@@ -65,8 +75,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, toRefs } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+const access = inject('access');
 
 const props = defineProps({
   commonName: {
@@ -99,9 +111,21 @@ const emit = defineEmits([
 const { t } = useI18n();
 
 const actionOptions = computed(() => {
+  const editAction = {
+    text: t('reusable.edit'),
+    icon: 'edit',
+    handler: () => emit('edit'),
+    disabled: !access.value.hasRbacEditAccess,
+  };
+  const deleteAction = {
+    text: t('reusable.delete'),
+    icon: 'bucket',
+    handler: () => emit('delete'),
+    disabled: !access.value.hasRbacDeleteAccess,
+  };
   return [
-    { text: t('reusable.edit'), handler: () => emit('edit') },
-    { text: t('reusable.delete'), handler: () => emit('delete') },
+    editAction,
+    deleteAction,
   ];
 });
 </script>
@@ -118,6 +142,12 @@ const actionOptions = computed(() => {
 
 .opened-contact-general-options {
   align-self: flex-end;
+
+  .opened-contact-general-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
 }
 
 .opened-contact-general-name {

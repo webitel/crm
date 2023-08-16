@@ -10,7 +10,7 @@ authAPI.setInstance(instance);
 userinfoAPI.setInstance(instance);
 
 const state = {
-  thisApp: WebitelApplications.AUDIT,
+  thisApp: WebitelApplications.CRM,
 };
 
 const getters = {

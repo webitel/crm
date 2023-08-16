@@ -20,6 +20,14 @@ import SearchMode from '../modules/filters/enums/SearchMode.enum';
 
 const service = new ContactsApiFactory(configuration, '', instance);
 
+const formatAccessMode = (item) => ({
+  ...item,
+  access: {
+    edit: item.mode.includes('w'),
+    delete: item.mode.includes('d'),
+  },
+});
+
 const getList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'qin'];
   let searchValue = '';
@@ -71,7 +79,9 @@ const getList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: data,
+      items: applyTransform(data, [
+        (items) => items.map((item) => formatAccessMode(item)),
+      ]),
       next,
     };
   } catch (err) {
@@ -82,7 +92,7 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId: id }) => {
-  const fields = ['name', 'about', 'labels', 'etag'];
+  const fields = ['name', 'about', 'labels', 'etag', 'mode'];
   const defaultObject = {};
   const itemResponseHandler = (item) => {
     return {
@@ -98,6 +108,7 @@ const get = async ({ itemId: id }) => {
       snakeToCamel(),
       merge(defaultObject),
       itemResponseHandler,
+      formatAccessMode,
     ]);
   } catch (err) {
     throw applyTransform(err, [

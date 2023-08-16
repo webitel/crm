@@ -38,7 +38,7 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { onMounted, onUnmounted, computed, ref } from 'vue';
+import { onMounted, onUnmounted, computed, ref, provide, reactive, readonly } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import ContactPopup from './contact-popup.vue';
@@ -60,6 +60,11 @@ const {
   setId,
   resetState,
 } = useCardStore(baseNamespace);
+
+provide('access', computed(() => ({
+  hasRbacEditAccess: itemInstance.value?.access?.edit,
+  hasRbacDeleteAccess: itemInstance.value?.access?.delete,
+})));
 
 const isContactPopup = ref(false);
 
