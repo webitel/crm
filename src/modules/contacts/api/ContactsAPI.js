@@ -161,7 +161,6 @@ const deleteContact = async ({ id }) => {
   try {
     const response = await service.deleteContact(id);
     return applyTransform(response.data, [
-      log,
     ]);
   } catch (err) {
     throw applyTransform(err, [

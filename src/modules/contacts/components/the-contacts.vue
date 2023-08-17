@@ -49,6 +49,7 @@
           sortable
           @sort="sort"
         >
+          hasObacDeleteAccess: {{ hasObacDeleteAccess }}
           <template v-slot:name="{ item }">
             <wt-item-link
               :id="item.id"
@@ -148,7 +149,6 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-
 const { filtersNamespace } = useTableFilters(namespace);
 
 const isContactPopup = ref(false);
@@ -175,7 +175,7 @@ const showDummy = computed(() => {
 });
 
 const selectedItems = computed(() => (
-  dataList.value.filter((item) => item._isSelected)
+  dataList.value.filter((item) => item._isSelected && item.access.delete)
 ));
 
 function create() {
