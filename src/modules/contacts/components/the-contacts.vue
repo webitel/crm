@@ -49,7 +49,6 @@
           sortable
           @sort="sort"
         >
-          hasObacDeleteAccess: {{ hasObacDeleteAccess }}
           <template v-slot:name="{ item }">
             <wt-item-link
               :id="item.id"
@@ -174,7 +173,7 @@ const showDummy = computed(() => {
   return isEmpty(dynamicFilters);
 });
 
-const selectedItems = computed(() => (
+const itemsForDelete = computed(() => (
   dataList.value.filter((item) => item._isSelected && item.access.delete)
 ));
 
@@ -192,9 +191,9 @@ function closeContactPopup() {
 }
 
 function deleteSelectedItems() {
-  return selectedItems.value.length && askDeleteConfirmation({
-    deleted: selectedItems.value,
-    callback: () => deleteData([...selectedItems.value]),
+  return itemsForDelete.value.length && askDeleteConfirmation({
+    deleted: itemsForDelete.value,
+    callback: () => deleteData([...itemsForDelete.value]),
   });
 }
 </script>
