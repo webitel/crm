@@ -16,6 +16,7 @@
         :primary-action="create"
         :secondary-text="$t('reusable.delete')"
         :secondary-action="deleteSelectedItems"
+        :secondary-disabled="!itemsForDelete.length"
         :hide-primary="!hasObacCreateAccess"
         :hide-secondary="!hasObacDeleteAccess"
       >
@@ -191,7 +192,7 @@ function closeContactPopup() {
 }
 
 function deleteSelectedItems() {
-  return itemsForDelete.value.length && askDeleteConfirmation({
+  return askDeleteConfirmation({
     deleted: itemsForDelete.value,
     callback: () => deleteData([...itemsForDelete.value]),
   });
