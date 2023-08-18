@@ -29,6 +29,7 @@
 
     <wt-avatar
       size="3xl"
+      :username="commonName"
     ></wt-avatar>
 
     <p class="opened-contact-general-name">{{ commonName }}</p>
