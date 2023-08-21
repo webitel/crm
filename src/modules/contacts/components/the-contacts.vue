@@ -16,7 +16,7 @@
         :primary-action="create"
         :secondary-text="$t('reusable.delete')"
         :secondary-action="deleteSelectedItems"
-        :secondary-disabled="!itemsForDelete.length"
+        :secondary-disabled="!deletableSelectedItems.length"
         :hide-primary="!hasObacCreateAccess"
         :hide-secondary="!hasObacDeleteAccess"
       >
@@ -174,7 +174,7 @@ const showDummy = computed(() => {
   return isEmpty(dynamicFilters);
 });
 
-const itemsForDelete = computed(() => (
+const deletableSelectedItems = computed(() => (
   dataList.value.filter((item) => item._isSelected && item.access.delete)
 ));
 
@@ -193,8 +193,8 @@ function closeContactPopup() {
 
 function deleteSelectedItems() {
   return askDeleteConfirmation({
-    deleted: itemsForDelete.value,
-    callback: () => deleteData([...itemsForDelete.value]),
+    deleted: deletableSelectedItems.value,
+    callback: () => deleteData([...deletableSelectedItems.value]),
   });
 }
 </script>
