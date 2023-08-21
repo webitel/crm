@@ -51,11 +51,18 @@
           @sort="sort"
         >
           <template v-slot:name="{ item }">
-            <wt-item-link
-              :id="item.id"
-              :route-name="CrmSections.CONTACTS"
-            >{{ item.name.commonName }}
-            </wt-item-link>
+            <div class="username-wrapper">
+              <wt-avatar
+                size="sm"
+                :username="item.name.commonName"
+              ></wt-avatar>
+              <wt-item-link
+                :id="item.id"
+                :route-name="CrmSections.CONTACTS"
+              >
+                {{ item.name.commonName }}
+              </wt-item-link>
+            </div>
           </template>
           <template v-slot:labels="{ item }">
             <div
@@ -181,6 +188,7 @@ const deletableSelectedItems = computed(() => (
 function create() {
   isContactPopup.value = true;
 }
+
 function edit({ id }) {
   editedContactId.value = id;
   isContactPopup.value = true;
@@ -200,6 +208,16 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
+.username-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+
+  .wt-avatar {
+    flex: 0 0 var(--avatar-size--size-sm);
+  }
+}
+
 .contacts-labels-wrapper {
   display: flex;
   flex-wrap: wrap;
