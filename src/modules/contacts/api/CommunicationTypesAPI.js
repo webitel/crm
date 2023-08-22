@@ -4,7 +4,7 @@ import {
 } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
   camelToSnake,
-  
+
   merge, notify, sanitize, snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers';
@@ -22,6 +22,7 @@ const getList = async (params) => {
     sort,
     fields,
     id,
+    channel,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -35,6 +36,7 @@ const getList = async (params) => {
       sort,
       fields,
       id,
+      channel,
     );
     const { items, next } = applyTransform(response.data, [
       snakeToCamel(),
@@ -46,7 +48,7 @@ const getList = async (params) => {
     };
   } catch (err) {
     throw applyTransform(err, [
-      
+
       notify,
     ]);
   }

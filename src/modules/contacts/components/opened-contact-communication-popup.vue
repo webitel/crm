@@ -28,9 +28,10 @@
           @input="draft.channel = $event.value"
         ></wt-select>
         <wt-select
+          ref="TypeSelect"
           :value="draft.type"
           :v="v$.draft.type"
-          :search-method="CommunicationTypesAPI.getLookup"
+          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: channel.filterField })"
           :clearable="false"
           :label="t('objects.communicationType', 1)"
           required
@@ -68,10 +69,11 @@ I decided not to provide these modules with "card" store and features because
 I think it would be too overcomplicated because these 3 modules have shared communications
 popup (by UI design, "Add" button is higher on component hierarchy than entity table itself)
  */
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email } from '@vuelidate/validators';
+import { EngineCommunicationChannels } from 'webitel-sdk';
 import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 
 const props = defineProps({
@@ -94,14 +96,17 @@ const channelOptions = [
   {
     value: 'phone',
     locale: ['vocabulary.phones', 1],
+    filterField: EngineCommunicationChannels.Phone,
   },
   {
     value: 'email',
     locale: ['vocabulary.emails', 1],
+    filterField: EngineCommunicationChannels.Email,
   },
   {
     value: 'messaging',
     locale: 'vocabulary.messaging',
+    filterField: EngineCommunicationChannels.Messaging,
   },
 ];
 
@@ -113,6 +118,7 @@ const getDefaultDraft = () => ({
 
 const draft = reactive(getDefaultDraft());
 const isLoading = ref(false);
+const TypeSelect = ref(null);
 
 const v$ = useVuelidate(computed(() => {
   const destination = { required };
@@ -153,6 +159,11 @@ async function save() {
     isLoading.value = false;
   }
 }
+
+watch(channel, () => {
+  draft.type = {}; // reset selected type, because it has another channel
+  TypeSelect.value.fetchOptions(); // load types by newly changed channel filter
+});
 </script>
 
 <style lang="scss" scoped>
