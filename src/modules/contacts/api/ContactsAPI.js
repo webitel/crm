@@ -28,10 +28,26 @@ const formatAccessMode = (item) => ({
   },
 });
 
+const preRequestHandler = (item) => ({
+  ...item,
+  variables: {
+    data: [
+      ...item.variables,
+    ]
+  }
+});
+
 const getList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'qin'];
   let searchValue = '';
   let searchKey = '';
+
+  const itemResponseHandler = (item) => ({
+    ...item,
+    variables: {
+      ...item.variables.data,
+    },
+  });
 
   if (params[SearchMode.NAME]) {
     searchValue = params[SearchMode.NAME];
@@ -77,6 +93,7 @@ const getList = async (params) => {
     const { data, next } = applyTransform(response.data, [
       snakeToCamel(),
       merge(getDefaultGetListResponse()),
+      itemResponseHandler,
     ]);
     return {
       items: applyTransform(data, [
@@ -92,7 +109,7 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId: id }) => {
-  const fields = ['name', 'about', 'labels', 'etag', 'mode'];
+  const fields = ['name', 'about', 'labels', 'etag', 'mode', 'variables'];
   const defaultObject = {};
   const itemResponseHandler = (item) => {
     return {
@@ -121,6 +138,7 @@ const fieldsToSend = ['name', 'labels', 'about'];
 
 const add = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
+    preRequestHandler,
     sanitize(fieldsToSend),
     camelToSnake(),
     log,
@@ -141,6 +159,7 @@ const add = async ({ itemInstance }) => {
 const update = async ({ itemInstance }) => {
   const { etag } = itemInstance;
   const item = applyTransform(itemInstance, [
+    preRequestHandler,
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);

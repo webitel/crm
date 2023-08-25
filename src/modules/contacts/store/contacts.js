@@ -21,6 +21,7 @@ const cardState = {
     managers: [],
     labels: [],
     about: '',
+    variables: [],
   },
 };
 

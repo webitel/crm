@@ -39,10 +39,11 @@ const tabs = computed(() => [
     value: 'communications',
     pathName: `${CrmSections.CONTACTS}-communications`,
   },
-  // {
-  //   text: t('vocabulary.variables', 2),
-  //   value: 'variables',
-  // },
+  {
+    text: t('vocabulary.variables', 2),
+    value: 'variables',
+    pathName: `${CrmSections.CONTACTS}-variables`,
+  },
   {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
