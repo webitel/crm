@@ -34,8 +34,8 @@
           :labels="itemInstance.labels ? itemInstance.labels : []"
           @edit="isContactPopup = true"
           @delete="askDeleteConfirmation({
-              deleted: [itemInstance.value],
-              callback: () => deleteItem(itemInstance.value),
+              deleted: [itemInstance],
+              callback: () => deleteContact(itemInstance),
             })"
         ></opened-contact-general>
         <opened-contact-tabs
@@ -47,16 +47,15 @@
 </template>
 
 <script setup>
-// import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
-  useDeleteConfirmationPopup
+  useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { onMounted, onUnmounted, computed, ref, provide, reactive, readonly } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useCardStore } from '../store/useCardStore';
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
@@ -115,6 +114,11 @@ async function initializeCard() {
 
 function close() {
   return router.push('/contacts');
+}
+
+function deleteContact(item) {
+  deleteItem(item);
+  close();
 }
 
 onMounted(() => initializeCard());

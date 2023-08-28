@@ -1,13 +1,11 @@
 import TableStoreModule
   from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
-// import CardStoreModule
-//   from '@webitel/ui-sdk/src/modules/CardStoreModule/store/CardStoreModule';
+import CardStoreModule
+  from '@webitel/ui-sdk/src/modules/CardStoreModule/store/CardStoreModule';
 import BaseStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 import ApiStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
-import CardStoreModule
-  from './CardStoreModule';
 import ContactsAPI from '../api/ContactsAPI';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
