@@ -116,8 +116,8 @@ function close() {
   return router.push('/contacts');
 }
 
-function deleteContact(item) {
-  deleteItem(item);
+async function deleteContact(item) {
+  await deleteItem(item);
   close();
 }
 
