@@ -15,6 +15,7 @@
           :label="t('reusable.name')"
           :v="v$.draft.name.commonName"
           required
+          prevent-trim
           @input="draft.name.commonName = $event"
         ></wt-input>
         <wt-select
