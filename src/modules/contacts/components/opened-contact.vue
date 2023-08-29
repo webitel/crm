@@ -19,6 +19,12 @@
         @saved="loadItem"
         @close="isContactPopup = false"
       ></contact-popup>
+      <delete-confirmation-popup
+        v-show="isDeleteConfirmationPopup"
+        :delete-count="deleteCount"
+        :callback="deleteCallback"
+        @close="closeDelete"
+      ></delete-confirmation-popup>
       <div class="opened-contact-content">
         <opened-contact-general
           :common-name="itemInstance.name ? itemInstance.name.commonName : ''"
@@ -27,6 +33,10 @@
           :about="itemInstance.about"
           :labels="itemInstance.labels ? itemInstance.labels : []"
           @edit="isContactPopup = true"
+          @delete="askDeleteConfirmation({
+              deleted: [itemInstance],
+              callback: () => deleteContact(itemInstance),
+            })"
         ></opened-contact-general>
         <opened-contact-tabs
           :namespace="namespace"
@@ -38,6 +48,11 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { onMounted, onUnmounted, computed, ref, provide, reactive, readonly } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -59,7 +74,17 @@ const {
   loadItem,
   setId,
   resetState,
+  deleteItem,
 } = useCardStore(baseNamespace);
+
+const {
+  isVisible: isDeleteConfirmationPopup,
+  deleteCount,
+  deleteCallback,
+
+  askDeleteConfirmation,
+  closeDelete,
+} = useDeleteConfirmationPopup();
 
 provide('access', computed(() => ({
   hasRbacEditAccess: itemInstance.value?.access?.edit,
@@ -89,6 +114,11 @@ async function initializeCard() {
 
 function close() {
   return router.push('/contacts');
+}
+
+async function deleteContact(item) {
+  await deleteItem(item);
+  close();
 }
 
 onMounted(() => initializeCard());
