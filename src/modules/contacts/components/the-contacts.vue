@@ -114,8 +114,9 @@ import {
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+// import DeleteConfirmationPopup
+//   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import DeleteConfirmationPopup from './delete-confirmation-popup.vue';
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
 import FilterSearch from '../modules/filters/components/filter-search.vue';
