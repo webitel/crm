@@ -5,8 +5,8 @@
     @close="close"
   >
     <template v-slot:title>
-      {{ t('reusable.new') }}
-      {{ t('contacts.contact', 1) }}
+      {{ props.id ? t('reusable.edit') : t('reusable.new') }}
+      {{ t('contacts.contact', 1).toLowerCase() }}
     </template>
     <template v-slot:main>
       <form class="contact-popup-form">
