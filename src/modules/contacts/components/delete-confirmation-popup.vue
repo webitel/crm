@@ -1,7 +1,7 @@
 <template>
   <wt-popup
     class="delete-confirmation-popup"
-    width="332"
+    width="500"
     @close="close"
   >
     <template v-slot:title>{{ $t('webitelUI.deleteConfirmationPopup.title') }}</template>
