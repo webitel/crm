@@ -1,5 +1,7 @@
 <template>
-  <form class="filter-search">
+  <form
+    class="filter-search"
+    @submit.prevent>
     <wt-search-bar
       :value="localValue"
       debounce
