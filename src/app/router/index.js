@@ -12,6 +12,8 @@ import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import ContactPermissions
   from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
+import ContactVariables
+  from '../../modules/contacts/modules/variables/components/the-variables.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -62,6 +64,11 @@ const routes = [
             path: 'communications',
             name: `${CrmSections.CONTACTS}-communications`,
             component: ContactCommunications,
+          },
+          {
+            path: 'variables',
+            name: `${CrmSections.CONTACTS}-variables`,
+            component: ContactVariables,
           },
           {
             path: 'permissions',
