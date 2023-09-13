@@ -92,7 +92,7 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId: id }) => {
-  const fields = ['name', 'about', 'labels', 'etag', 'mode'];
+  const fields = ['name', 'about', 'labels', 'etag', 'mode', 'managers', 'created_by'];
   const defaultObject = {};
   const itemResponseHandler = (item) => {
     return {
@@ -117,7 +117,7 @@ const get = async ({ itemId: id }) => {
   }
 };
 
-const fieldsToSend = ['name', 'labels', 'about'];
+const fieldsToSend = ['name', 'labels', 'about', 'managers'];
 
 const add = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [

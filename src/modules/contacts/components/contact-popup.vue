@@ -25,10 +25,11 @@
           @input="draft.timezones = $event"
         ></wt-select>
         <wt-select
-          :value="draft.managers"
+          :value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @input="draft.managers = $event"
+          @input="draft.managers[0].user = $event"
+          @reset="resetManagers"
         ></wt-select>
         <wt-tags-input
           :value="draft.labels"
@@ -65,7 +66,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -88,9 +89,12 @@ const draft = ref({
     commonName: '',
   },
   timezones: [],
-  managers: [],
+  managers: [{
+    user: '',
+  }],
   labels: [],
   about: '',
+  createdBy: '',
 });
 
 const v$ = useVuelidate(computed(() => ({
@@ -129,6 +133,25 @@ async function loadItem(id = props.id) {
 }
 
 if (props.id) loadItem(props.id);
+
+function setManagersOnDefault() {
+  if(!draft.value.managers.length && draft.value.createdBy) {
+    draft.value.managers.push({
+      user: {
+        ...draft.value.createdBy,
+      },
+    });
+  }
+};
+
+function resetManagers() {
+  draft.value.managers = [];
+  draft.value.createdBy = '';
+}
+
+watch(() => draft.value.managers, () => {
+  setManagersOnDefault();
+});
 </script>
 
 <style lang="scss" scoped>

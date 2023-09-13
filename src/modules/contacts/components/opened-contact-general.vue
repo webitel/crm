@@ -49,7 +49,7 @@
       <p class="opened-contact-general-item__title">
         {{ t('contacts.manager', 1) }}
       </p>
-      <p class="opened-contact-general-item__value">{{ managers[0] }}</p>
+      <p class="opened-contact-general-item__value">{{ managers[0].user.name }}</p>
     </div>
 
     <wt-divider v-if="managers.length"></wt-divider>
