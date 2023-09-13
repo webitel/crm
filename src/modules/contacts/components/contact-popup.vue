@@ -66,10 +66,11 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 import LabelsAPI from '../api/LabelsAPI';
 import TimezonesAPI from '../api/TimezonesAPI';
 import UsersAPI from '../api/UsersAPI';
@@ -82,6 +83,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['saved', 'close']);
+const store = useStore();
 
 const { t } = useI18n();
 const draft = ref({
@@ -109,6 +111,8 @@ v$.value.$touch();
 
 const isSaving = ref(false);
 
+const userinfo = computed(() => store.state.userinfo);
+
 function close() {
   emit('close');
 }
@@ -135,12 +139,23 @@ async function loadItem(id = props.id) {
 if (props.id) loadItem(props.id);
 
 function setManagersOnDefault() {
-  if(!draft.value.managers.length && draft.value.createdBy) {
-    draft.value.managers.push({
+  if (draft.value.createdBy && !draft.value.managers?.length) {
+    draft.value.managers = [{
       user: {
         ...draft.value.createdBy,
       },
-    });
+    }];
+  };
+};
+
+function setManagersOnDefaultForNewContact() {
+  if (!props.id) {
+    draft.value.managers = [{
+      user: {
+        id: userinfo.value.userId,
+        name: userinfo.value.username,
+      },
+    }];
   }
 };
 
@@ -151,6 +166,10 @@ function resetManagers() {
 
 watch(() => draft.value.managers, () => {
   setManagersOnDefault();
+});
+
+onMounted(() => {
+  setManagersOnDefaultForNewContact();
 });
 </script>
 
