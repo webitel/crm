@@ -92,7 +92,8 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId: id }) => {
-  const fields = ['name', 'about', 'labels', 'etag', 'mode', 'managers', 'created_by'];
+  const fields = ['name', 'about', 'labels', 'etag', 'mode', 'managers'];
+
   const defaultObject = {};
   const itemResponseHandler = (item) => {
     return {
@@ -119,11 +120,19 @@ const get = async ({ itemId: id }) => {
 
 const fieldsToSend = ['name', 'labels', 'about', 'managers'];
 
+const sanitizeManagers = (itemInstance) => {
+  // handle many managers and even no managers field cases
+  const managers = (itemInstance.managers ||
+    []).filter(({ user } = {}) => user.id);
+  return { ...itemInstance, managers };
+};
+
 const add = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
+    sanitizeManagers,
     sanitize(fieldsToSend),
     camelToSnake(),
-    log,
+
   ]);
   try {
     const response = await service.createContact(item);
@@ -132,7 +141,6 @@ const add = async ({ itemInstance }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-
       notify,
     ]);
   }
@@ -141,6 +149,7 @@ const add = async ({ itemInstance }) => {
 const update = async ({ itemInstance }) => {
   const { etag } = itemInstance;
   const item = applyTransform(itemInstance, [
+    sanitizeManagers,
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
@@ -151,7 +160,6 @@ const update = async ({ itemInstance }) => {
     ]);
   } catch (err) {
     throw applyTransform(err, [
-
       notify,
     ]);
   }
@@ -160,8 +168,7 @@ const update = async ({ itemInstance }) => {
 const deleteContact = async ({ id }) => {
   try {
     const response = await service.deleteContact(id);
-    return applyTransform(response.data, [
-    ]);
+    return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [
       notify,

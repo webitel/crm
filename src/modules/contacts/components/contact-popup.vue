@@ -28,8 +28,7 @@
           :value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @input="draft.managers[0].user = $event"
-          @reset="resetManagers"
+          @input="draft.managers[0] = { user: $event }"
         ></wt-select>
         <wt-tags-input
           :value="draft.labels"
@@ -83,17 +82,18 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['saved', 'close']);
-const store = useStore();
 
 const { t } = useI18n();
+const store = useStore();
+
+const userinfo = computed(() => store.state.userinfo);
+
 const draft = ref({
   name: {
     commonName: '',
   },
   timezones: [],
-  managers: [{
-    user: '',
-  }],
+  managers: [],
   labels: [],
   about: '',
   createdBy: '',
@@ -110,8 +110,6 @@ const v$ = useVuelidate(computed(() => ({
 v$.value.$touch();
 
 const isSaving = ref(false);
-
-const userinfo = computed(() => store.state.userinfo);
 
 function close() {
   emit('close');
@@ -132,45 +130,21 @@ async function save() {
   }
 }
 
+function setDefaultManager() {
+  draft.value.managers[0] = {
+    user: {
+      id: userinfo.value.userId,
+      name: userinfo.value.username,
+    },
+  };
+}
+
 async function loadItem(id = props.id) {
   draft.value = await ContactsAPI.get({ itemId: id });
 }
 
 if (props.id) loadItem(props.id);
-
-function setManagersOnDefault() {
-  if (draft.value.createdBy && !draft.value.managers?.length) {
-    draft.value.managers = [{
-      user: {
-        ...draft.value.createdBy,
-      },
-    }];
-  };
-};
-
-function setManagersOnDefaultForNewContact() {
-  if (!props.id) {
-    draft.value.managers = [{
-      user: {
-        id: userinfo.value.userId,
-        name: userinfo.value.username,
-      },
-    }];
-  }
-};
-
-function resetManagers() {
-  draft.value.managers = [];
-  draft.value.createdBy = '';
-}
-
-watch(() => draft.value.managers, () => {
-  setManagersOnDefault();
-});
-
-onMounted(() => {
-  setManagersOnDefaultForNewContact();
-});
+else setDefaultManager();
 </script>
 
 <style lang="scss" scoped>
