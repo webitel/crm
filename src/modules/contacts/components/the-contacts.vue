@@ -64,6 +64,9 @@
               </wt-item-link>
             </div>
           </template>
+          <template v-slot:managers="{ item }">
+            {{ item.managers?.data[0].user.name }}
+          </template>
           <template v-slot:labels="{ item }">
             <div
               v-if="item.labels"
