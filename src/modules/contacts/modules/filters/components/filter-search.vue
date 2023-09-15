@@ -7,30 +7,31 @@
       debounce
       @search="setLocalValue($event)"
     >
-    </wt-search-bar>
-    <wt-context-menu
-      :options="searchModeOptions"
-      @click="changeMode($event.option)"
-    >
-      <template v-slot:activator>
-        <wt-tooltip>
+      <template v-slot:additional-actions>
+        <wt-context-menu
+          :options="searchModeOptions"
+          @click="changeMode($event.option)"
+        >
           <template v-slot:activator>
-            <wt-icon-btn
-              v-if="!localValue"
-              icon="filter"
-            ></wt-icon-btn>
+            <wt-tooltip>
+              <template v-slot:activator>
+                <wt-icon-btn
+                  icon="filter"
+                ></wt-icon-btn>
+              </template>
+              {{ $t('webitelUI.searchBar.settingsHint') }}
+            </wt-tooltip>
           </template>
-          {{ $t('webitelUI.searchBar.settingsHint') }}
-        </wt-tooltip>
+          <template v-slot:option="{ value, text }">
+            <wt-radio
+              :label="text"
+              :selected="filterQuery === value"
+              :value="true"
+            ></wt-radio>
+          </template>
+        </wt-context-menu>
       </template>
-      <template v-slot:option="{ value, text }">
-        <wt-radio
-          :label="text"
-          :selected="filterQuery === value"
-          :value="true"
-        ></wt-radio>
-      </template>
-    </wt-context-menu>
+    </wt-search-bar>
   </form>
 </template>
 
@@ -111,15 +112,4 @@ onMounted(() => restoreSearchMode());
 </script>
 
 <style lang="scss" scoped>
-.filter-search {
-  position: relative;
-  z-index: 2;
-
-  .wt-context-menu {
-    position: absolute;
-    top: 50%;
-    right: var(--spacing-xs);
-    transform: translateY(-50%);
-  }
-}
 </style>
