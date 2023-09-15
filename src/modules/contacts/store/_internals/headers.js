@@ -9,9 +9,9 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'owner',
-    locale: 'locale for owner',
-    show: false,
+    value: 'managers',
+    locale: ['contacts.manager', 1],
+    show: true,
     field: 'managers',
     sort: SortSymbols.NONE,
   },
