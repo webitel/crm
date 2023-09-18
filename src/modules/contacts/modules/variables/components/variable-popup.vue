@@ -29,7 +29,7 @@
     <template v-slot:actions>
       <wt-button
         :loading="isLoading"
-        :disabled="v$.invalid"
+        :disabled="v$.$invalid"
         @click="props.callback(draft)"
       >{{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
       </wt-button>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -79,6 +79,8 @@ const v$ = useVuelidate(computed(() => ({
 })), { draft }, { $autoDirty: true });
 
 v$.value.$touch();
+
+const isValid = toRef(v$);
 
 const mode = computed(() => (props.editedInstance ? 'update' : 'create'));
 

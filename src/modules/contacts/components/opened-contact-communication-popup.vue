@@ -48,7 +48,7 @@
     </template>
     <template v-slot:actions>
       <wt-button
-        :disabled="v$.invalid"
+        :disabled="v$.$invalid"
         :loading="isLoading"
         @click="save"
       >{{ t('reusable.save') }}
