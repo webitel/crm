@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, toRef } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -79,8 +79,6 @@ const v$ = useVuelidate(computed(() => ({
 })), { draft }, { $autoDirty: true });
 
 v$.value.$touch();
-
-const isValid = toRef(v$);
 
 const mode = computed(() => (props.editedInstance ? 'update' : 'create'));
 
