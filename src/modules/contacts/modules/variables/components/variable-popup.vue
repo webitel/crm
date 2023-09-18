@@ -29,7 +29,7 @@
     <template v-slot:actions>
       <wt-button
         :loading="isLoading"
-        :disabled="v$.invalid"
+        :disabled="v$.$invalid"
         @click="props.callback(draft)"
       >{{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
       </wt-button>
