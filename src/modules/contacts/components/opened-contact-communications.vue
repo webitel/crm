@@ -9,10 +9,14 @@
       <wt-button
         v-for="(tab) of tabs"
         :key="tab.value"
-        color="secondary"
+        :color=" currentTab.value === tab.value ? 'secondary' : 'secondary-50'"
         wide
         @click="currentTab = tab"
-      >{{ tab.label }}
+      >
+        <wt-icon
+          :icon="tab.icon"
+        ></wt-icon>
+        {{ tab.label }}
       </wt-button>
       <wt-button
         v-if="access.hasRbacEditAccess"
@@ -56,12 +60,14 @@ const tabs = computed(() => [
     label: t('vocabulary.phones', 2),
     component: ThePhones,
     namespace: phonesNamespace,
+    icon: 'call',
   },
   {
     value: 'emails',
     label: t('vocabulary.emails', 2),
     component: TheEmails,
     namespace: emailsNamespace,
+    icon: 'email',
   },
 ]);
 
@@ -88,5 +94,12 @@ function saveCommunication({ channel, type, destination }) {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+
+  .wt-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2xs);
+  }
 }
 </style>
