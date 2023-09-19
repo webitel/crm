@@ -7,7 +7,7 @@
         @close="isGranteePopup = false"
       ></grantee-popup>
       <wt-icon-action
-        v-if="access.hasRbacEditAccess"
+        :disabled="!access.hasRbacEditAccess"
         action="add"
         @click="isGranteePopup = true"
       ></wt-icon-action>
@@ -23,7 +23,6 @@
       <wt-table
         :headers="headers"
         :data="modifiedDataList"
-        :grid-actions="access.hasRbacEditAccess"
         :selectable="false"
         sortable
         @sort="sort"
@@ -73,6 +72,7 @@
         </template>
         <template v-slot:actions="{ item }">
           <wt-icon-action
+            :disabled="!access.hasRbacEditAccess"
             action="delete"
             @click="changeReadAccessMode({ item, mode: { id: AccessMode.FORBIDDEN }})"
           ></wt-icon-action>

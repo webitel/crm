@@ -12,7 +12,7 @@
       >{{ t('vocabulary.emails', 2) }}
       </wt-button>
       <wt-button
-        v-if="access.hasRbacEditAccess"
+        :disabled="!access.hasRbacEditAccess"
         @click="isCommunicationPopup = true"
       >{{ t('reusable.add') }}
       </wt-button>
