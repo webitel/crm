@@ -112,6 +112,7 @@ v$.value.$touch();
 const isSaving = ref(false);
 
 function close() {
+  console.log('test');
   emit('close');
 }
 
