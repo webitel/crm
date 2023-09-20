@@ -22,16 +22,14 @@
           :value="draft.timezones"
           :label="t('date.timezone', 1)"
           :search-method="TimezonesAPI.getList"
-          @input="draft.timezones = $event"
+          @input="draft.timezones = $event.id ? $event : {}"
         ></wt-select>
-        {{ draft.timezones }}
         <wt-select
           :value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @input="draft.managers[0] = { user: $event }"
+          @input="draft.managers[0] = $event.id ? { user: $event } : {}"
         ></wt-select>
-        {{ draft.managers[0]?.user }}
         <wt-tags-input
           :value="draft.labels"
           :label="t('vocabulary.labels', 1)"
