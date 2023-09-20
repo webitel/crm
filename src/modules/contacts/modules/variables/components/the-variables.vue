@@ -8,7 +8,7 @@
         @close="handleEditedItem"
       ></variable-popup>
       <wt-icon-action
-        v-if="access.hasRbacEditAccess"
+        :disabled="!access.hasRbacEditAccess"
         action="add"
         @click="isVariablePopup = true"
       ></wt-icon-action>
@@ -29,7 +29,6 @@
       <wt-table
         :headers="headers"
         :data="dataList"
-        :grid-actions="access.hasRbacEditAccess"
         :selectable="false"
         sortable
         @sort="sort"
@@ -42,10 +41,12 @@
         </template>
         <template v-slot:actions="{ item }">
           <wt-icon-action
+            :disabled="!access.hasRbacEditAccess"
             action="edit"
             @click="handleEditedItem(item)"
           ></wt-icon-action>
           <wt-icon-action
+            :disabled="!access.hasRbacEditAccess"
             action="delete"
             @click="askDeleteConfirmation({
                   deleted: [item],

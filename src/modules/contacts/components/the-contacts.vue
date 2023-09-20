@@ -16,9 +16,8 @@
         :primary-action="create"
         :secondary-text="$t('reusable.delete')"
         :secondary-action="deleteSelectedItems"
-        :secondary-disabled="!deletableSelectedItems.length"
-        :hide-primary="!hasObacCreateAccess"
-        :hide-secondary="!hasObacDeleteAccess"
+        :secondary-disabled="!hasObacDeleteAccess || !deletableSelectedItems.length"
+        :primary-disabled="!hasObacCreateAccess"
       >
         <wt-headline-nav :path="path"></wt-headline-nav>
         <template v-slot:actions>
@@ -46,7 +45,6 @@
         <wt-table
           :headers="headers"
           :data="dataList"
-          :grid-actions="hasObacEditAccess || hasObacDeleteAccess"
           sortable
           @sort="sort"
         >
@@ -81,12 +79,12 @@
           </template>
           <template v-slot:actions="{ item }">
             <wt-icon-action
-              v-if="item.access.edit"
+              :disabled="!item.access.edit"
               action="edit"
               @click="edit(item)"
             ></wt-icon-action>
             <wt-icon-action
-              v-if="item.access.delete"
+              :disabled="!item.access.delete"
               action="delete"
               @click="askDeleteConfirmation({
                   deleted: [item],
