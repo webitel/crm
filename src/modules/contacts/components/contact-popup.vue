@@ -24,12 +24,14 @@
           :search-method="TimezonesAPI.getList"
           @input="draft.timezones = $event"
         ></wt-select>
+        {{ draft.timezones }}
         <wt-select
           :value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
           @input="draft.managers[0] = { user: $event }"
         ></wt-select>
+        {{ draft.managers[0]?.user }}
         <wt-tags-input
           :value="draft.labels"
           :label="t('vocabulary.labels', 1)"
