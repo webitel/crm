@@ -24,7 +24,6 @@
       <wt-table
         :headers="headers"
         :data="dataList"
-        :grid-actions="access.hasRbacEditAccess"
         :selectable="false"
         sortable
         @sort="sort"
@@ -120,14 +119,17 @@ const actionOptions = computed(() => {
   return [
     {
       text: t('contacts.communications.setAsPrimary'),
+      disabled: !access.value.hasRbacEditAccess,
       handler: ({ item, index }) => setAsPrimary({ item, index }),
     },
     {
       text: t('reusable.edit'),
+      disabled: !access.value.hasRbacEditAccess,
       handler: ({ item }) => editedItem.value = item,
     },
     {
       text: t('reusable.delete'),
+      disabled: !access.value.hasRbacEditAccess,
       handler: ({ item }) => askDeleteConfirmation({
         deleted: item,
         callback: () => deleteData(item),
