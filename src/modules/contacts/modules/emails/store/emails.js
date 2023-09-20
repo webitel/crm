@@ -27,10 +27,11 @@ const actions = {
     }
   },
   ADD_EMAIL: async (context, { itemInstance }) => {
+    const primary = !context.state.dataList.length;
     try {
       await context.dispatch('api/POST_ITEM', {
         parentId: context.getters.PARENT_ID,
-        itemInstance,
+        itemInstance: { ...itemInstance, primary },
       });
     } finally {
       await context.dispatch('LOAD_DATA_LIST');

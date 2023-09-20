@@ -3,6 +3,7 @@
     <header class="opened-contact-communications-header">
       <add-communication-popup
         v-if="isCommunicationPopup"
+        :initial-channel="currentTab.channel"
         :callback="saveCommunication"
         @close="isCommunicationPopup = false"
       ></add-communication-popup>
@@ -61,6 +62,7 @@ const tabs = computed(() => [
     component: ThePhones,
     namespace: phonesNamespace,
     icon: 'call',
+    channel: 'number', // must be same as comm popup channel
   },
   {
     value: 'emails',
@@ -68,6 +70,7 @@ const tabs = computed(() => [
     component: TheEmails,
     namespace: emailsNamespace,
     icon: 'email',
+    channel: 'email', // must be same as comm popup channel
   },
 ]);
 

@@ -84,6 +84,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  initialChannel: {
+    type: String,
+    default: 'number',
+  },
 });
 
 const emit = defineEmits([
@@ -111,7 +115,7 @@ const channelOptions = [
 ];
 
 const getDefaultDraft = () => ({
-  channel: channelOptions[0].value,
+  channel: channelOptions.find(({ value }) => value === props.initialChannel).value,
   type: {},
   destination: '',
 });

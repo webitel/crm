@@ -28,34 +28,37 @@
         sortable
         @sort="sort"
       >
-        <template v-slot:primary="{ item }">
+        <template v-slot:primary="{ item, index }">
           <wt-icon
             v-if="item.primary"
             icon="tick"
             color="success"
           ></wt-icon>
-          <div v-else></div>
+          <wt-icon-btn
+            v-else
+            :disabled="!access.hasRbacEditAccess"
+            class="set-primary-btn"
+            icon="tick"
+            @click="setAsPrimary({ item, index })"
+          ></wt-icon-btn>
         </template>
         <template v-slot:type="{ item }">
           {{ item.type.name }}
         </template>
         <template v-slot:actions="{ item, index }">
-          <wt-context-menu
-            class="opened-contact-general-options"
-            :options="actionOptions"
-            @click="$event.option.handler({ item, index })"
-          >
-            <template v-slot:activator>
-              <wt-tooltip>
-                <template v-slot:activator>
-                  <wt-icon-btn
-                    icon="options"
-                  ></wt-icon-btn>
-                </template>
-                {{ t('vocabulary.options', 2) }}
-              </wt-tooltip>
-            </template>
-          </wt-context-menu>
+          <wt-icon-action
+            :disabled="!access.hasRbacEditAccess"
+            action="edit"
+            @click="editedItem = item"
+          ></wt-icon-action>
+          <wt-icon-action
+            :disabled="!access.hasRbacEditAccess"
+            action="delete"
+            @click="askDeleteConfirmation({
+              deleted: item,
+              callback: () => deleteData(item),
+            })"
+          ></wt-icon-action>
         </template>
       </wt-table>
     </div>
@@ -115,29 +118,6 @@ const editedItem = ref(null);
 
 const showDummy = computed(() => !dataList.value.length);
 
-const actionOptions = computed(() => {
-  return [
-    {
-      text: t('contacts.communications.setAsPrimary'),
-      disabled: !access.value.hasRbacEditAccess,
-      handler: ({ item, index }) => setAsPrimary({ item, index }),
-    },
-    {
-      text: t('reusable.edit'),
-      disabled: !access.value.hasRbacEditAccess,
-      handler: ({ item }) => editedItem.value = item,
-    },
-    {
-      text: t('reusable.delete'),
-      disabled: !access.value.hasRbacEditAccess,
-      handler: ({ item }) => askDeleteConfirmation({
-        deleted: item,
-        callback: () => deleteData(item),
-      }),
-    },
-  ];
-});
-
 function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
 }
@@ -152,5 +132,14 @@ function updatePhone({ channel, destination, ...rest }) {
 </script>
 
 <style lang="scss" scoped>
+.set-primary-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
 
+  .wt-table__tr:hover & {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
 </style>
