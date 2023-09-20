@@ -94,12 +94,12 @@ const { t } = useI18n();
 
 const channelOptions = [
   {
-    value: 'number',
+    value: 'number', // should be same as backend field for destination
     locale: ['vocabulary.phones', 1],
     filterField: EngineCommunicationChannels.Phone,
   },
   {
-    value: 'email',
+    value: 'email', // should be same as backend field for destination
     locale: ['vocabulary.emails', 1],
     filterField: EngineCommunicationChannels.Email,
   },
