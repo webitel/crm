@@ -27,12 +27,10 @@
       </template>
     </wt-context-menu>
 
-    <div>
-      <wt-avatar
-        size="3xl"
-        :username="commonName"
-      ></wt-avatar>
-    </div>
+    <wt-avatar
+      size="3xl"
+      :username="commonName"
+    ></wt-avatar>
 
     <p class="opened-contact-general-name">{{ commonName }}</p>
 
@@ -134,13 +132,17 @@ const actionOptions = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.wt-avatar {
+  flex-shrink: 0;
+}
+
 .opened-contact-general {
   @extend %wt-scrollbar;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-sm);
   overflow: auto;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .opened-contact-general-options {
