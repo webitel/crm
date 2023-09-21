@@ -27,10 +27,12 @@
       </template>
     </wt-context-menu>
 
-    <wt-avatar
-      size="3xl"
-      :username="commonName"
-    ></wt-avatar>
+    <div>
+      <wt-avatar
+        size="3xl"
+        :username="commonName"
+      ></wt-avatar>
+    </div>
 
     <p class="opened-contact-general-name">{{ commonName }}</p>
 
