@@ -148,6 +148,7 @@ else setDefaultManager();
 </script>
 
 <style lang="scss" scoped>
+//Needed to save the same interval between required and not required inputs in popup.
 .wt-select, .wt-tags-input {
   margin-bottom: calc(var(--input-info-margin) + var(--input-info-min-height));
 }
