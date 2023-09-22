@@ -148,6 +148,10 @@ else setDefaultManager();
 </script>
 
 <style lang="scss" scoped>
+.wt-select, .wt-tags-input {
+  margin-bottom: calc(var(--input-info-margin) + var(--input-info-min-height));
+}
+
 .contact-popup-form {
   display: flex;
   flex-direction: column;
