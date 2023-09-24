@@ -69,7 +69,7 @@ const getList = async (params) => {
       page,
       size,
       q,
-      sort,
+      sort || '+name',
       fields,
       id,
       qin,
