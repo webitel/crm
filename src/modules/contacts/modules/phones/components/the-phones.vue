@@ -1,9 +1,9 @@
 <template>
-  <div class="emails">
+  <div class="phones">
     <communication-popup
       v-if="editedItem"
       :edited-instance="editedItem"
-      :callback="updateEmail"
+      :callback="updatePhone"
       @close="editedItem = null"
     ></communication-popup>
 
@@ -122,9 +122,9 @@ function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
 }
 
-function updateEmail({ channel, destination, ...rest }) {
+function updatePhone({ channel, destination, ...rest }) {
   const itemInstance = { ...rest, [channel]: destination };
-  return store.dispatch(`${namespace}/UPDATE_EMAIL`, {
+  return store.dispatch(`${namespace}/UPDATE_PHONE`, {
     itemInstance,
     etag: editedItem.value.etag,
   });

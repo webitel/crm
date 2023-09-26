@@ -4,7 +4,7 @@ import ApiStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
 import BaseStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
-import EmailsAPI from '../api/EmailsAPI';
+import PhonesAPI from '../api/PhonesAPI';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
 
@@ -26,7 +26,7 @@ const actions = {
       await context.dispatch('LOAD_DATA_LIST');
     }
   },
-  ADD_EMAIL: async (context, { itemInstance }) => {
+  ADD_PHONE: async (context, { itemInstance }) => {
     const primary = !context.state.dataList.length;
     try {
       await context.dispatch('api/POST_ITEM', {
@@ -37,7 +37,7 @@ const actions = {
       await context.dispatch('LOAD_DATA_LIST');
     }
   },
-  UPDATE_EMAIL: async (context, { etag, itemInstance }) => {
+  UPDATE_PHONE: async (context, { etag, itemInstance }) => {
     try {
       await context.dispatch('api/UPD_ITEM', {
         parentId: context.getters.PARENT_ID,
@@ -51,15 +51,15 @@ const actions = {
 };
 
 const api = new ApiStoreModule()
-.generateAPIActions(EmailsAPI)
+.generateAPIActions(PhonesAPI)
 .getModule();
 
 const table = new TableStoreModule({ headers })
 .setChildModules({ api, filters })
 .getModule({ getters, actions });
 
-const emails = new BaseStoreModule()
+const phones = new BaseStoreModule()
 .setChildModules({ table })
 .getModule();
 
-export default emails;
+export default phones;

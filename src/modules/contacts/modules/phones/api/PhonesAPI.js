@@ -1,17 +1,16 @@
 import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
-  log,
   camelToSnake,
   merge, notify,
   sanitize, snakeToCamel, starToSearch, mergeEach,
 } from '@webitel/ui-sdk/src/api/transformers';
-import { EmailsApiFactory } from 'webitel-sdk';
+import { PhonesApiFactory } from 'webitel-sdk';
 import getDefaultGetListResponse
   from '../../../../../app/api/defaults/getDefaultGetListResponse';
 import configuration from '../../../../../app/api/openAPIConfig';
 import instance from '../../../../../app/api/instance';
 
-const service = new EmailsApiFactory(configuration, '', instance);
+const service = new PhonesApiFactory(configuration, '', instance);
 
 const getList = async (params) => {
   const defaultObject = {
@@ -33,7 +32,7 @@ const getList = async (params) => {
     starToSearch('q'),
   ]);
   try {
-    const response = await service.listEmails(
+    const response = await service.listPhones(
       parentId,
       page,
       size,
@@ -59,7 +58,7 @@ const getList = async (params) => {
   }
 };
 
-const fieldsToSend = ['email', 'type', 'primary'];
+const fieldsToSend = ['number', 'type', 'primary'];
 
 const add = async ({ parentId, itemInstance }) => {
   const item = applyTransform(itemInstance, [
@@ -67,7 +66,7 @@ const add = async ({ parentId, itemInstance }) => {
     camelToSnake(),
   ]);
   try {
-    const response = await service.mergeEmails(parentId, [item]);
+    const response = await service.mergePhones(parentId, [item]);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);
@@ -77,13 +76,13 @@ const add = async ({ parentId, itemInstance }) => {
     ]);
   }
 };
-const update = async ({ itemInstance, etag: id, parentId }) => {
+const update = async ({ itemInstance, etag, parentId }) => {
   const item = applyTransform(itemInstance, [
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
   try {
-    const response = await service.updateEmail(parentId, id, item);
+    const response = await service.updatePhone(parentId, etag, item);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);
@@ -100,7 +99,7 @@ const patch = async ({ parentId, changes, etag }) => {
     camelToSnake(),
   ]);
   try {
-    const response = await service.updateEmail(parentId, etag, body);
+    const response = await service.updatePhone(parentId, etag, body);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);
@@ -113,7 +112,7 @@ const patch = async ({ parentId, changes, etag }) => {
 
 const deleteItem = async ({ id, etag, parentId }) => {
   try {
-    const response = await service.deleteEmail(parentId, etag);
+    const response = await service.deletePhone(parentId, etag);
     return applyTransform(response.data, [
     ]);
   } catch (err) {
