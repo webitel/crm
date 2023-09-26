@@ -54,6 +54,8 @@ module.exports = defineConfig({
   },
 
   chainWebpack: (config) => {
+    config.resolve.alias.set('vue', '@vue/compat');
+
     config.module
     .rule('svg')
     .exclude.add(/^(.*sprite).*\.svg/); // same as in svg-sprite-loader
