@@ -31,7 +31,8 @@
       <wt-loader v-show="isLoading"></wt-loader>
 
       <wt-dummy
-        v-if="!isLoading && showDummy"
+        v-if="!isLoading && dummy"
+        :src="dummy.src"
       ></wt-dummy>
 
       <delete-confirmation-popup
@@ -41,7 +42,7 @@
         @close="closeDelete"
       ></delete-confirmation-popup>
 
-      <div v-show="!isLoading && !showDummy" class="table-wrapper">
+      <div v-show="!isLoading && !dummy" class="table-wrapper">
         <wt-table
           :headers="headers"
           :data="dataList"
@@ -120,6 +121,9 @@ import DeleteConfirmationPopup
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
 import FilterSearch from '../modules/filters/components/filter-search.vue';
+import { useDummy } from '../composables/useDummy';
+import getNamespacedState
+  from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 
 const baseNamespace = 'contacts';
 
@@ -168,18 +172,34 @@ const path = computed(() => [
 ]);
 
 // we need to check if there's any filters which actually filter data before showing "no data" dummy
-const showDummy = computed(() => {
-  if (dataList.value.length) return false;
-  const filters = store.getters[`${namespace}/GET_FILTERS`];
-  const defaultFilters = ['page', 'size', 'sort', 'fields'];
-  const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
-    if (defaultFilters.includes(filter)) return dynamic;
-    return {
-      ...dynamic,
-      [filter]: filters[filter],
-    };
-  }, {});
-  return isEmpty(dynamicFilters);
+// const showDummy = computed(() => {
+//   if (dataList.value.length) return false;
+//   const filters = store.getters[`${namespace}/GET_FILTERS`];
+//   const defaultFilters = ['page', 'size', 'sort', 'fields'];
+//   const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
+//     if (defaultFilters.includes(filter)) return dynamic;
+//     return {
+//       ...dynamic,
+//       [filter]: filters[filter],
+//     };
+//   }, {});
+//   return isEmpty(dynamicFilters);
+// });
+
+const page = computed(() => getNamespacedState(store.state, namespace).filters.page.value);
+
+function setFilter(payload) {
+  return store.dispatch(`${namespace}/filters/SET_FILTER`, payload);
+}
+
+function setPage(value) {
+  return setFilter({ value, filter: 'page' });
+}
+
+const { dummy } = useDummy({
+  namespace,
+  page: page.value,
+  setPage,
 });
 
 const deletableSelectedItems = computed(() => (
