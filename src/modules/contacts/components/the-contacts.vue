@@ -33,7 +33,7 @@
       <wt-dummy
         v-if="!isLoading && !dataList.length"
         :src="dummy.src"
-        :text="$t(dummy.text)"
+        :text="dummy.text"
       ></wt-dummy>
 
       <delete-confirmation-popup
@@ -171,7 +171,7 @@ const path = computed(() => [
 ]);
 
 // we need to check if there's any filters which actually filter data before showing "no data" dummy
-const dummy = computed(() => {
+const isEmptyFilters = computed(() => {
   if (dataList.value.length) return false;
   const filters = store.getters[`${namespace}/GET_FILTERS`];
   const defaultFilters = ['page', 'size', 'sort', 'fields'];
@@ -182,9 +182,19 @@ const dummy = computed(() => {
       [filter]: filters[filter],
     };
   }, {});
-  return {
-    src: isEmpty(dynamicFilters) ? '' : dummyPic,
-    text: isEmpty(dynamicFilters) ? '' : 'vocabulary.emptyResultSearch',
+  return isEmpty(dynamicFilters);
+});
+
+// [WTEL-3776]
+// display different images when no contacts have been created yet (default img)
+// and when the filter didn't produce results
+const dummy = computed(() => {
+  return !isEmptyFilters.value ? {
+    src: dummyPic,
+    text: t('vocabulary.emptyResultSearch'),
+  } : {
+    src: '',
+    text: '',
   };
 });
 
