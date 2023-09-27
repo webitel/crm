@@ -1,6 +1,6 @@
 import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
-  camelToSnake, 
+  camelToSnake,
   merge, notify,
   sanitize, snakeToCamel, starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers';
@@ -22,7 +22,7 @@ const getList = async (params) => {
   } = applyTransform(params, [
     sanitize(fieldsToSend),
     merge(getDefaultGetParams()),
-    starToSearch('q'),
+    starToSearch('search'),
     camelToSnake(),
   ]);
   try {
@@ -41,7 +41,7 @@ const getList = async (params) => {
     };
   } catch (err) {
     throw applyTransform(err, [
-      
+
       notify,
     ]);
   }
