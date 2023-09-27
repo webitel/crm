@@ -14,6 +14,12 @@ export default {
       channel: 'Канал',
       destination: 'Назначение',
       setAsPrimary: 'Установить как основной',
+      emails: {
+        dummy: 'Электронные адреса еще не добавлены',
+      },
+      phones: {
+        dummy: 'Телефонные номера еще не добавлены',
+      },
     },
   },
   permissions: {
