@@ -171,7 +171,11 @@ const path = computed(() => [
 ]);
 
 // we need to check if there's any filters which actually filter data before showing "no data" dummy
-const isEmptyFilters = computed(() => {
+
+// [WTEL-3776]
+// display different images when no contacts have been created yet (default img)
+// and when the filter didn't produce results
+const dummy = computed(() => {
   if (dataList.value.length) return false;
   const filters = store.getters[`${namespace}/GET_FILTERS`];
   const defaultFilters = ['page', 'size', 'sort', 'fields'];
@@ -182,19 +186,11 @@ const isEmptyFilters = computed(() => {
       [filter]: filters[filter],
     };
   }, {});
-  return isEmpty(dynamicFilters);
-});
+  const isEmptyFilters = isEmpty(dynamicFilters);
 
-// [WTEL-3776]
-// display different images when no contacts have been created yet (default img)
-// and when the filter didn't produce results
-const dummy = computed(() => {
-  return !isEmptyFilters.value ? {
-    src: dummyPic,
-    text: t('vocabulary.emptyResultSearch'),
-  } : {
-    src: '',
-    text: '',
+  return {
+    src: isEmptyFilters ? '' : dummyPic,
+    text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
   };
 });
 
