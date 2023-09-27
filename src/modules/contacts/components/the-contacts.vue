@@ -8,7 +8,7 @@
         v-if="isContactPopup"
         :namespace="baseNamespace"
         :id="editedContactId"
-        @saved="loadData"
+        @saved="saved"
         @close="closeContactPopup"
       ></contact-popup>
 
@@ -193,6 +193,10 @@ function create() {
 function edit({ id }) {
   editedContactId.value = id;
   isContactPopup.value = true;
+}
+
+function saved(id) {
+  router.push(`/${CrmSections.CONTACTS}/${id}`);
 }
 
 function closeContactPopup() {

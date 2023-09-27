@@ -112,19 +112,19 @@ v$.value.$touch();
 const isSaving = ref(false);
 
 function close() {
-  console.log('test');
   emit('close');
 }
 
 async function save() {
+  let newContact = '';
   try {
     isSaving.value = false;
     if (props.id) {
       await ContactsAPI.update({ itemInstance: { ...draft.value, id: props.id } });
     } else {
-      await ContactsAPI.add({ itemInstance: draft.value });
+      newContact = await ContactsAPI.add({ itemInstance: draft.value });
     }
-    emit('saved');
+    emit('saved', props.id || newContact.id);
     close();
   } finally {
     isSaving.value = false;
