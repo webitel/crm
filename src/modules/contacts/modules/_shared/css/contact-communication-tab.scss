@@ -1,0 +1,15 @@
+.contact-communication-tab {
+  flex-grow: 1;
+  display: flex;
+
+  .set-primary-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+
+    .wt-table__tr:hover & {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
