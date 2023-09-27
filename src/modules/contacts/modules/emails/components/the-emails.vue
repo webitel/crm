@@ -1,5 +1,5 @@
 <template>
-  <div class="emails">
+  <div class="contact-communication-tab emails">
     <communication-popup
       v-if="editedItem"
       :edited-instance="editedItem"
@@ -18,6 +18,8 @@
 
     <wt-dummy
       v-if="!isLoading && showDummy"
+      :src="dummyPic"
+      :text="t('contacts.communications.emails.dummy')"
     ></wt-dummy>
 
     <div v-show="!isLoading && !showDummy" class="table-wrapper">
@@ -76,6 +78,7 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useStore } from 'vuex';
+import dummyPic from '../assets/email-dummy.svg';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
 
 const access = inject('access');
@@ -132,14 +135,5 @@ function updateEmail({ channel, destination, ...rest }) {
 </script>
 
 <style lang="scss" scoped>
-.set-primary-btn {
-  opacity: 0;
-  pointer-events: none;
-  transition: var(--transition);
-
-  .wt-table__tr:hover & {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
+@import '../../_shared/css/contact-communication-tab';
 </style>

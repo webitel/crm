@@ -14,6 +14,12 @@ export default {
       channel: 'Channel',
       destination: 'Destination',
       setAsPrimary: 'Set as primary',
+      emails: {
+        dummy: 'There are no email addresses yet',
+      },
+      phones: {
+        dummy: 'There are no phone numbers yet',
+      },
     },
   },
   permissions: {
