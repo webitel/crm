@@ -31,7 +31,9 @@
       <wt-loader v-show="isLoading"></wt-loader>
 
       <wt-dummy
-        v-if="!isLoading && showDummy"
+        v-if="!isLoading && !dataList.length"
+        :src="dummy.src"
+        :text="dummy.text"
       ></wt-dummy>
 
       <delete-confirmation-popup
@@ -41,7 +43,7 @@
         @close="closeDelete"
       ></delete-confirmation-popup>
 
-      <div v-show="!isLoading && !showDummy" class="table-wrapper">
+      <div v-show="!isLoading && dataList.length" class="table-wrapper">
         <wt-table
           :headers="headers"
           :data="dataList"
@@ -120,6 +122,7 @@ import DeleteConfirmationPopup
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
 import FilterSearch from '../modules/filters/components/filter-search.vue';
+import dummyPic from '../../../app/assets/dummy-pic.svg';
 
 const baseNamespace = 'contacts';
 
@@ -168,7 +171,11 @@ const path = computed(() => [
 ]);
 
 // we need to check if there's any filters which actually filter data before showing "no data" dummy
-const showDummy = computed(() => {
+
+// [WTEL-3776]
+// display different images when no contacts have been created yet (default img)
+// and when the filter didn't produce results
+const dummy = computed(() => {
   if (dataList.value.length) return false;
   const filters = store.getters[`${namespace}/GET_FILTERS`];
   const defaultFilters = ['page', 'size', 'sort', 'fields'];
@@ -179,7 +186,12 @@ const showDummy = computed(() => {
       [filter]: filters[filter],
     };
   }, {});
-  return isEmpty(dynamicFilters);
+  const isEmptyFilters = isEmpty(dynamicFilters);
+
+  return {
+    src: isEmptyFilters ? '' : dummyPic,
+    text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
+  };
 });
 
 const deletableSelectedItems = computed(() => (
