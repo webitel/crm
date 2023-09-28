@@ -54,7 +54,7 @@ const tabs = computed(() => [
 const currentTab = computed(() => tabs.value.find(({ pathName }) => pathName === route.name));
 
 function changeTab(tab) {
-    return router.push({ name: tab.pathName });
+  return router.push({ name: tab.pathName });
 }
 
 function initializeTab() {

@@ -14,6 +14,12 @@ export default {
       channel: 'Канал',
       destination: 'Призначення',
       setAsPrimary: 'Встановити як основний',
+      emails: {
+        dummy: 'Електронні адреси ще не додано',
+      },
+      phones: {
+        dummy: 'Телефонні номери ще не додано',
+      },
     },
   },
   permissions: {

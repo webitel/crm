@@ -19,6 +19,7 @@
     <wt-dummy
       v-if="!isLoading && showDummy"
       :src="dummyPic"
+      :text="t('contacts.communications.emails.dummy')"
     ></wt-dummy>
 
     <div v-show="!isLoading && !showDummy" class="table-wrapper">
