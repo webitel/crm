@@ -18,6 +18,8 @@ const getList = async (params) => {
     page,
     size,
     search,
+    sort,
+    fields,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -28,6 +30,8 @@ const getList = async (params) => {
       page,
       size,
       search,
+      sort,
+      fields,
     );
     const { items, next } = applyTransform(response.data, [
       snakeToCamel(),
@@ -44,8 +48,14 @@ const getList = async (params) => {
   }
 };
 
+const getLookup = (params) => getList({
+  ...params,
+  fields: params.fields || ['id', 'name'],
+});
+
 const TimezonesAPI = {
   getList,
+  getLookup,
 };
 
 export default TimezonesAPI;
