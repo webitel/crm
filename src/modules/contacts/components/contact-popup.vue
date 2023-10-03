@@ -19,10 +19,10 @@
           @input="draft.name.commonName = $event"
         ></wt-input>
         <wt-select
-          :value="draft.timezones"
+          :value="draft.timezones[0]?.timezone"
           :label="t('date.timezone', 1)"
-          :search-method="TimezonesAPI.getList"
-          @input="draft.timezones = $event"
+          :search-method="TimezonesAPI.getLookup"
+          @input="draft.timezones[0] = { timezone: $event }"
         ></wt-select>
         <wt-select
           :value="draft.managers[0]?.user"
