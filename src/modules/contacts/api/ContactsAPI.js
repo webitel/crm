@@ -92,7 +92,7 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId: id }) => {
-  const fields = ['name', 'about', 'labels', 'etag', 'mode', 'managers'];
+  const fields = ['name', 'about', 'labels', 'etag', 'mode', 'managers', 'timezones'];
 
   const defaultObject = {};
   const itemResponseHandler = (item) => {
@@ -118,7 +118,7 @@ const get = async ({ itemId: id }) => {
   }
 };
 
-const fieldsToSend = ['name', 'labels', 'about', 'managers'];
+const fieldsToSend = ['name', 'labels', 'about', 'managers', 'timezones'];
 
 const sanitizeManagers = (itemInstance) => {
   // handle many managers and even no managers field cases
@@ -127,9 +127,17 @@ const sanitizeManagers = (itemInstance) => {
   return { ...itemInstance, managers };
 };
 
+const sanitizeTimezones = (itemInstance) => {
+  // handle many timezones and even no timezones field cases
+  const timezones = (itemInstance.timezones ||
+    []).filter(({ timezone } = {}) => timezone.id);
+  return { ...itemInstance, timezones };
+};
+
 const add = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
     sanitizeManagers,
+    sanitizeTimezones,
     sanitize(fieldsToSend),
     camelToSnake(),
 
@@ -150,6 +158,7 @@ const update = async ({ itemInstance }) => {
   const { etag } = itemInstance;
   const item = applyTransform(itemInstance, [
     sanitizeManagers,
+    sanitizeTimezones,
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
