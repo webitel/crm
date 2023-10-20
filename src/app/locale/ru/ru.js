@@ -35,7 +35,4 @@ export default {
       [AccessMode.MANAGE]: 'Управление',
     },
   },
-  filters: {
-    variableSearchHint: 'Формат запроса: "ключ=значение"',
-  },
 };

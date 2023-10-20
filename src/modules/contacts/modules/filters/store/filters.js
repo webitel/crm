@@ -18,7 +18,7 @@ const state = {
   [SearchMode.NAME]: new BaseFilterSchema(),
   [SearchMode.LABELS]: new BaseFilterSchema(),
   [SearchMode.ABOUT]: new BaseFilterSchema(),
-  [SearchMode.VARIABLE]: new BaseFilterSchema(),
+  [SearchMode.VARIABLES]: new BaseFilterSchema(),
 };
 
 const getters = {

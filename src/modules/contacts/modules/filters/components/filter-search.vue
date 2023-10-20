@@ -19,7 +19,7 @@
             <wt-tooltip>
               <template v-slot:activator>
                 <wt-icon-btn
-                  :color="options.invalid ? 'danger' : 'default'"
+                  :color="options.invalid ? 'error' : 'default'"
                   icon="filter"
                 ></wt-icon-btn>
               </template>
@@ -50,7 +50,7 @@ import {
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import variableSearchValidator from '../../../../../utils/validators/variableSearchValidator';
+import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator';
 import SearchMode from '../enums/SearchMode.enum';
 
 const props = defineProps({
@@ -79,7 +79,7 @@ const searchModeOptions = computed(() => [
     text: t('vocabulary.description'),
   },
   {
-    value: SearchMode.VARIABLE,
+    value: SearchMode.VARIABLES,
     text: t('vocabulary.variables', 1),
   },
 ]);
@@ -90,8 +90,8 @@ const filterSchema = computed(() => (
 
 const searchBarHint = computed(() => {
   switch (filterQuery.value) {
-    case SearchMode.VARIABLE:
-      return t('filters.variableSearchHint');
+    case SearchMode.VARIABLES:
+      return t('webitelUI.searchBar.variableSearchHint');
     default:
       return null;
   }
@@ -99,7 +99,7 @@ const searchBarHint = computed(() => {
 
 const v$ = useVuelidate(computed(() => {
   return {
-    localValue: filterQuery.value === SearchMode.VARIABLE ? { variableSearchValidator } : {},
+    localValue: filterQuery.value === SearchMode.VARIABLES ? { variableSearchValidator } : {},
   };
 }), { localValue }, { $autoDirty: true });
 

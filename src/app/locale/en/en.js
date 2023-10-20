@@ -35,7 +35,4 @@ export default {
       [AccessMode.MANAGE]: 'Allow with delegation',
     },
   },
-  filters: {
-    variableSearchHint: 'Query format: "key=value"',
-  },
 };
