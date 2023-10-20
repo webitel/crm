@@ -40,7 +40,7 @@
       <p class="opened-contact-general-item__title">
         {{ t('date.timezone', 1) }}
       </p>
-      <p class="opened-contact-general-item__value">{{ timezones[0] }}</p>
+      <p class="opened-contact-general-item__value">{{ timezones[0].timezone.name }}</p>
     </div>
 
     <wt-divider v-if="timezones.length"></wt-divider>
