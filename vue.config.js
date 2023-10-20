@@ -38,6 +38,7 @@ process.env.VUE_APP_APPLICATION_HUB_URL = process.env.NODE_ENV === 'production'
 process.env.VUE_APP_PACKAGE_VERSION = require('./package.json').version;
 
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -54,6 +55,9 @@ module.exports = defineConfig({
   },
 
   chainWebpack: (config) => {
+    config.plugin('polyfills')
+    .use(new NodePolyfillPlugin({ includeAliases: ['process'] }));
+
     config.resolve.alias.set('vue', '@vue/compat');
 
     config.module
