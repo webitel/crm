@@ -42,6 +42,9 @@ const getList = async (params) => {
   } else if (params[SearchMode.ABOUT]) {
     searchValue = params[SearchMode.ABOUT];
     searchKey = SearchMode.ABOUT;
+  } else if (params[SearchMode.VARIABLE]) {
+    searchValue = params[SearchMode.VARIABLE];
+    searchKey = 'variables';
   }
 
   const changedParams = {
@@ -49,6 +52,16 @@ const getList = async (params) => {
     q: searchValue,
     qin: searchKey,
   };
+
+  const transformations = [
+    sanitize(fieldsToSend),
+    merge(getDefaultGetParams()),
+    camelToSnake(),
+  ];
+
+  if (searchKey !== 'variables') {
+    transformations.push(starToSearch('q'));
+  }
 
   const {
     page,
@@ -58,12 +71,8 @@ const getList = async (params) => {
     fields,
     id,
     qin,
-  } = applyTransform(changedParams, [
-    sanitize(fieldsToSend),
-    merge(getDefaultGetParams()),
-    starToSearch('q'),
-    camelToSnake(),
-  ]);
+  } = applyTransform(changedParams, transformations);
+
   try {
     const response = await service.searchContacts(
       page,
