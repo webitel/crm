@@ -25,6 +25,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@happy-dom/jest-environment": "^12.9.1",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
@@ -43,6 +44,7 @@
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
     "husky": "^8.0.3",
     "jest": "^27.0.5",
+    "jest-mock-axios": "^4.7.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
