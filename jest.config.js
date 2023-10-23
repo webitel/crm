@@ -13,5 +13,6 @@ module.exports = {
   setupFiles: [
     './tests/config/config.js',
   ],
+  testEnvironment: '@happy-dom/jest-environment',
   // setupFilesAfterEnv: ['./tests/config/jest.config.js'],
 };
