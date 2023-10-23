@@ -1,13 +1,16 @@
 <template>
   <form
     class="filter-search"
-    @submit.prevent>
+    @submit.prevent
+  >
     <wt-search-bar
+      :hint="searchBarHint"
+      :v="v$.localValue"
       :value="localValue"
       debounce
       @search="setLocalValue($event)"
     >
-      <template v-slot:additional-actions>
+      <template v-slot:additional-actions="options">
         <wt-context-menu
           :options="searchModeOptions"
           @click="changeMode($event.option)"
@@ -16,6 +19,7 @@
             <wt-tooltip>
               <template v-slot:activator>
                 <wt-icon-btn
+                  :color="options.invalid ? 'error' : 'default'"
                   icon="filter"
                 ></wt-icon-btn>
               </template>
@@ -36,6 +40,7 @@
 </template>
 
 <script setup>
+import { useVuelidate } from '@vuelidate/core';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import {
   watch,
@@ -45,6 +50,7 @@ import {
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator';
 import SearchMode from '../enums/SearchMode.enum';
 
 const props = defineProps({
@@ -72,11 +78,32 @@ const searchModeOptions = computed(() => [
     value: SearchMode.ABOUT,
     text: t('vocabulary.description'),
   },
+  {
+    value: SearchMode.VARIABLES,
+    text: t('vocabulary.variables', 1),
+  },
 ]);
 
 const filterQuery = ref(SearchMode.NAME);
 const filterSchema = computed(() => (
   getNamespacedState(store.state, `${props.namespace}`)[filterQuery.value]));
+
+const searchBarHint = computed(() => {
+  switch (filterQuery.value) {
+    case SearchMode.VARIABLES:
+      return t('webitelUI.searchBar.variableSearchHint');
+    default:
+      return null;
+  }
+});
+
+const v$ = useVuelidate(computed(() => {
+  return {
+    localValue: filterQuery.value === SearchMode.VARIABLES ? { variableSearchValidator } : {},
+  };
+}), { localValue }, { $autoDirty: true });
+
+v$.value.$touch();
 
 function getValue(filter) {
   return store.getters[`${props.namespace}/GET_FILTER`](filter);
