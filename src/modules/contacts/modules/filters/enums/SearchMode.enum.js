@@ -3,6 +3,7 @@ const SearchMode = Object.freeze({
   LABELS: 'labels',
   ABOUT: 'about',
   VARIABLES: 'variables',
+  DESTINATION: 'destination',
 });
 
 export default SearchMode;
