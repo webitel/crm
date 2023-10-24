@@ -6,6 +6,7 @@ export default {
   contacts: {
     contact: 'Контакт | Контакти',
     manager: 'Власник | Власники',
+    destination: 'Призначення',
     timeline: {
       timeline: 'Хронологія',
     },
