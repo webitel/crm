@@ -42,6 +42,9 @@ const getList = async (params) => {
   } else if (params[SearchMode.ABOUT]) {
     searchValue = params[SearchMode.ABOUT];
     searchKey = SearchMode.ABOUT;
+  } else if (params[SearchMode.VARIABLES]) {
+    searchValue = params[SearchMode.VARIABLES];
+    searchKey = SearchMode.VARIABLES;
   }
 
   const changedParams = {
@@ -49,6 +52,17 @@ const getList = async (params) => {
     q: searchValue,
     qin: searchKey,
   };
+
+  const transformations = [
+    sanitize(fieldsToSend),
+    merge(getDefaultGetParams()),
+    camelToSnake(),
+  ];
+
+  // This code needed for adding starToSearch method to applyTransform while searchKey !== SearchMode.VARIABLES because '*' in variables search mode brokes backend logic.
+  if (searchKey !== SearchMode.VARIABLES) {
+    transformations.push(starToSearch('q'));
+  }
 
   const {
     page,
@@ -58,12 +72,8 @@ const getList = async (params) => {
     fields,
     id,
     qin,
-  } = applyTransform(changedParams, [
-    sanitize(fieldsToSend),
-    merge(getDefaultGetParams()),
-    starToSearch('q'),
-    camelToSnake(),
-  ]);
+  } = applyTransform(changedParams, transformations);
+
   try {
     const response = await service.searchContacts(
       page,
