@@ -9,8 +9,7 @@
     </template>
     <template v-slot:main>
       <grantee-select
-        :value="grantee"
-        @input="grantee = $event"
+        :grantee="grantee"
       ></grantee-select>
     </template>
     <template v-slot:actions>
@@ -69,7 +68,14 @@ async function save() {
     isLoading.value = false;
   }
 }
+
+const loadRoles = (params) => RolesAPI.getList({ ...params, fields: ['id', 'name', 'user'] });
 </script>
 
 <style lang="scss" scoped>
+.wt-select.grantee-select .grantee-select-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
 </style>
