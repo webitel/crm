@@ -69,6 +69,7 @@ async function save() {
     isLoading.value = false;
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
