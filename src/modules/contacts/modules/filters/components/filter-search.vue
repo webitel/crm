@@ -50,7 +50,7 @@ import {
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator';
+import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
 import SearchMode from '../enums/SearchMode.enum';
 
 const props = defineProps({
