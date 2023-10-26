@@ -9,7 +9,8 @@
     </template>
     <template v-slot:main>
       <grantee-select
-        :grantee="grantee"
+        :value="grantee"
+        @input="grantee = $event"
       ></grantee-select>
     </template>
     <template v-slot:actions>

@@ -1,13 +1,13 @@
 <template>
   <wt-select
+    v-bind="$attrs"
+    :clearable="false"
+    :label="t('objects.grantee', 1)"
+    :search-method="loadRoles"
+    :value="props.value"
     class="grantee-select"
     option-label="name"
-    :search-method="loadRoles"
-    :label="t('objects.grantee', 1)"
-    :clearable="false"
-    v-bind="$attrs"
-    :value="granteeValue"
-    @input="granteeValue = $event"
+    @input="emit('input', $event)"
   >
     <template v-slot:singleLabel="{ option, optionLabel }">
       <span class="grantee-select-option">
@@ -31,20 +31,19 @@
 </template>
 
 <script setup>
-import { toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import RolesAPI from '../api/RolesAPI';
 
-const { t } = useI18n();
-
 const props = defineProps({
-  grantee: {
+  value: {
     required: true,
     type: Object,
   },
 });
 
-const granteeValue = toRef(props.grantee.value);
+const emit = defineEmits(['input']);
+
+const { t } = useI18n();
 
 const loadRoles = (params) => RolesAPI.getList({ ...params, fields: ['id', 'name', 'user'] });
 </script>
