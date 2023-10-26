@@ -10,7 +10,8 @@
       <wt-button
         v-for="(tab) of tabs"
         :key="tab.value"
-        :color=" currentTab.value === tab.value ? 'secondary' : 'secondary-50'"
+        :disabled="currentTab.value === tab.value"
+        :color="currentTab.value !== tab.value && 'secondary'"
         wide
         @click="currentTab = tab"
       >
