@@ -6,6 +6,7 @@ export default {
   contacts: {
     contact: 'Contact | Contacts',
     manager: 'Owner | Owners',
+    destination: 'Destination',
     timeline: {
       timeline: 'Timeline',
     },

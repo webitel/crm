@@ -82,6 +82,10 @@ const searchModeOptions = computed(() => [
     value: SearchMode.VARIABLES,
     text: t('vocabulary.variables', 1),
   },
+  {
+    value: SearchMode.DESTINATION,
+    text: t('contacts.destination'),
+  },
 ]);
 
 const filterQuery = ref(SearchMode.NAME);

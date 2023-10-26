@@ -45,6 +45,9 @@ const getList = async (params) => {
   } else if (params[SearchMode.VARIABLES]) {
     searchValue = params[SearchMode.VARIABLES];
     searchKey = SearchMode.VARIABLES;
+  } else if (params[SearchMode.DESTINATION]) {
+    searchValue = params[SearchMode.DESTINATION];
+    searchKey = 'emails,phones';
   }
 
   const changedParams = {

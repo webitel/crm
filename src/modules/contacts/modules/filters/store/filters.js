@@ -19,6 +19,7 @@ const state = {
   [SearchMode.LABELS]: new BaseFilterSchema(),
   [SearchMode.ABOUT]: new BaseFilterSchema(),
   [SearchMode.VARIABLES]: new BaseFilterSchema(),
+  [SearchMode.DESTINATION]: new BaseFilterSchema(),
 };
 
 const getters = {
