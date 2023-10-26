@@ -4,7 +4,7 @@
     :clearable="false"
     :label="t('objects.grantee', 1)"
     :search-method="loadRoles"
-    :value="props.value"
+    :value="value"
     class="grantee-select"
     option-label="name"
     @input="emit('input', $event)"
