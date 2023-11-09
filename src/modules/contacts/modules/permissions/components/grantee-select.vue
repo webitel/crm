@@ -31,6 +31,7 @@
 </template>
 
 <script setup>
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { useI18n } from 'vue-i18n';
 import RolesAPI from '../api/RolesAPI';
 
@@ -45,7 +46,9 @@ const emit = defineEmits(['input']);
 
 const { t } = useI18n();
 
-const loadRoles = (params) => RolesAPI.getList({ ...params, fields: ['id', 'name', 'user'] });
+const baseNamespace = 'contacts';
+const { id } = useCardStore(baseNamespace);
+const loadRoles = (params) => RolesAPI.getList(id.value, { ...params, fields: ['id', 'name', 'user'] });
 </script>
 
 <style lang="scss" scoped>
