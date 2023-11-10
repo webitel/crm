@@ -9,6 +9,7 @@
     </template>
     <template v-slot:main>
       <grantee-select
+        :id="id"
         :value="grantee"
         @input="grantee = $event"
       ></grantee-select>
@@ -30,9 +31,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import GranteeSelect from './grantee-select.vue';
 
@@ -47,6 +49,9 @@ const emit = defineEmits([
 ]);
 
 const { t } = useI18n();
+
+const baseNamespace = 'contacts';
+const { id } = useCardStore(baseNamespace);
 
 const grantee = ref({});
 const isLoading = ref(false);
