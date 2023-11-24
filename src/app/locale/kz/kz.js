@@ -4,26 +4,26 @@ import AccessMode
 export default {
   crm: 'CRM',
   contacts: {
-    contact: 'Контакт | Контактілер',
+    contact: 'Байланыс | Байланыстар',
     manager: 'Иесі | Иелері',
     timeline: {
       timeline: 'Хронология',
     },
     communications: {
-      communications: 'Байланыс құралдары',
+      communications: 'Байланыс құралы | Байланыс құралдары',
       channel: 'Арна',
-      destination: 'Мақсат',
-      setAsPrimary: 'Негізгі ретінде орнату',
+      destination: 'Тағайындау',
+      setAsPrimary: 'Негізгісі ретінде орнату',
     },
   },
   permissions: {
     read: 'Оқу',
-    edit: 'Өңдеу',
+    edit: 'Редакциялау',
     delete: 'Жою',
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Тыйым салынған',
-      [AccessMode.ALLOW]: 'Рұқсат',
-      [AccessMode.MANAGE]: 'Бақылау',
+      [AccessMode.ALLOW]: 'Рұқсат берілген',
+      [AccessMode.MANAGE]: 'Басқару',
     },
   },
 };
