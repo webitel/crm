@@ -4,6 +4,7 @@
       <wt-app-header>
         <wt-notifications-bar></wt-notifications-bar>
         <wt-navigation-bar :current-app="currentApp" :nav="nav"></wt-navigation-bar>
+        <wt-dark-mode-switcher />
         <wt-app-navigator :apps="apps" :current-app="currentApp"></wt-app-navigator>
         <wt-header-actions
           :build-info="{ release, build }"
@@ -27,6 +28,7 @@ import authAPI from '@webitel/ui-sdk/src/modules/Userinfo/api/auth';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 
 const release = process.env.VUE_APP_PACKAGE_VERSION;
 const build = process.env.VUE_APP_BUILD_NUMBER;
@@ -130,7 +132,7 @@ onMounted(() => {
   min-height: 0;
 }
 
-.wt-navigation-bar {
+.wt-dark-mode-switcher {
   margin-right: auto;
 }
 </style>

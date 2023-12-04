@@ -6,12 +6,12 @@ body {
   display: flex;
   min-width: 100%;
   min-height: 100%;
+  color: var(--text-main-color);
 }
 
 .wt-page-wrapper {
   flex-grow: 1;
   display: flex;
-  background-color: var(--page-bg-color);
   max-height: 100%;
 
   :deep(.wt-page-wrapper__main) {
