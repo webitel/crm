@@ -3,9 +3,17 @@
     <section class="object">
       <wt-app-header>
         <wt-notifications-bar></wt-notifications-bar>
-        <wt-navigation-bar :current-app="currentApp" :nav="nav"></wt-navigation-bar>
+        <wt-navigation-bar
+          :current-app="currentApp"
+          :nav="nav"
+          :dark-mode="darkMode"
+        ></wt-navigation-bar>
         <wt-dark-mode-switcher />
-        <wt-app-navigator :apps="apps" :current-app="currentApp"></wt-app-navigator>
+        <wt-app-navigator
+          :apps="apps"
+          :current-app="currentApp"
+          :dark-mode="darkMode"
+        ></wt-app-navigator>
         <wt-header-actions
           :build-info="{ release, build }"
           :user="userinfo"
@@ -39,7 +47,8 @@ const router = useRouter();
 const userinfo = computed(() => store.state.userinfo);
 const currentApp = userinfo.value.thisApp;
 
-const checkAccess = store.getters['userinfo/CHECK_APP_ACCESS'];
+const checkAccess = computed(() => store.getters['userinfo/CHECK_APP_ACCESS']);
+const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 const { t } = useI18n();
 
@@ -77,7 +86,7 @@ const apps = computed(() => {
 
   const allApps = [admin, supervisor, agent, history, audit, crm];
   if (config?.ON_SITE) allApps.push(grafana);
-  return allApps.filter(({ name }) => checkAccess(name));
+  return allApps.filter(({ name }) => checkAccess.value(name));
 });
 
 const nav = computed(() => {
@@ -87,7 +96,7 @@ const nav = computed(() => {
     route: '/contacts',
   };
   const nav = [contacts];
-  return nav.filter((nav) => checkAccess({ name: nav.value }));
+  return nav.filter((nav) => checkAccess.value({ name: nav.value }));
 });
 
 function settings() {
