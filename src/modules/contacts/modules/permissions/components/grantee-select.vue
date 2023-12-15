@@ -39,7 +39,6 @@ const props = defineProps({
     required: true,
     type: Object,
   },
-
   id: {
     required: true,
     type: String,

@@ -33,7 +33,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import GranteeSelect from './grantee-select.vue';
@@ -42,6 +41,10 @@ const props = defineProps({
   callback: {
     type: Function,
   },
+  id: {
+    type: String,
+    required: true,
+  },
 });
 
 const emit = defineEmits([
@@ -49,9 +52,6 @@ const emit = defineEmits([
 ]);
 
 const { t } = useI18n();
-
-const baseNamespace = 'contacts';
-const { id } = useCardStore(baseNamespace);
 
 const grantee = ref({});
 const isLoading = ref(false);
