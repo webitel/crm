@@ -20,7 +20,6 @@ export default [
     locale: ['vocabulary.labels', 1],
     show: true,
     field: 'labels',
-    sort: SortSymbols.NONE,
   },
   {
     value: 'about',
