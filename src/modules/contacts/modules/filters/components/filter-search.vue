@@ -80,7 +80,7 @@ const searchModeOptions = computed(() => [
   },
   {
     value: SearchMode.VARIABLES,
-    text: t('vocabulary.variables', 1),
+    text: t('contacts.attributes', 1),
   },
   {
     value: SearchMode.DESTINATION,
