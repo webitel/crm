@@ -22,6 +22,7 @@ export default {
         dummy: 'Телефонні номери ще не додано',
       },
     },
+    attributes: 'Атрибут | Атрибути',
   },
   permissions: {
     read: 'Читати',

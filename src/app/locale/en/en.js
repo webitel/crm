@@ -22,6 +22,7 @@ export default {
         dummy: 'There are no phone numbers yet',
       },
     },
+    attributes: 'Attribute | Attributes',
   },
   permissions: {
     read: 'Read',

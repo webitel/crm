@@ -6,7 +6,7 @@
   >
     <template v-slot:header>
       {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('vocabulary.variables', 1).toLowerCase() }}
+      {{ t('contacts.attributes', 1).toLowerCase() }}
     </template>
     <template v-slot:main>
       <form>
