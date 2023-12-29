@@ -23,7 +23,10 @@
 
     <wt-loader v-show="isLoading"></wt-loader>
 
-    <wt-dummy v-if="!isLoading && showDummy"></wt-dummy>
+    <wt-dummy
+      v-if="!isLoading && showDummy"
+      :dark-mode="darkMode"
+    ></wt-dummy>
 
     <div v-show="!isLoading && !showDummy" class="table-wrapper">
       <wt-table
@@ -112,6 +115,7 @@ const {
 const editedItem = ref(null);
 const isVariablePopup = ref(false);
 const showDummy = computed(() => !dataList.value.length);
+const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 async function save(item) {
   try {

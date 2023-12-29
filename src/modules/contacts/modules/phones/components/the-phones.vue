@@ -18,7 +18,7 @@
 
     <wt-dummy
       v-if="!isLoading && showDummy"
-      :src="dummyPic"
+      :src="darkMode ? dummyDark : dummyLight"
       :text="t('contacts.communications.phones.dummy')"
     ></wt-dummy>
 
@@ -78,7 +78,8 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useStore } from 'vuex';
-import dummyPic from '../assets/phone-dummy.svg';
+import dummyLight from '../assets/phone-dummy-light.svg';
+import dummyDark from '../assets/phone-dummy-dark.svg';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
 
 const access = inject('access');
@@ -120,6 +121,7 @@ const {
 const editedItem = ref(null);
 
 const showDummy = computed(() => !dataList.value.length);
+const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });

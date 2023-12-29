@@ -122,7 +122,8 @@ import DeleteConfirmationPopup
 import { useAccess } from '../../../app/composables/useAccess';
 import ContactPopup from './contact-popup.vue';
 import FilterSearch from '../modules/filters/components/filter-search.vue';
-import dummyPic from '../../../app/assets/dummy-pic.svg';
+import dummyLight from '../../../app/assets/dummy-light.svg';
+import dummyDark from '../../../app/assets/dummy-dark.svg';
 
 const baseNamespace = 'contacts';
 
@@ -169,6 +170,8 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('contacts.contact', 2), route: '/' },
 ]);
+const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
+const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));
 
 // we need to check if there's any filters which actually filter data before showing "no data" dummy
 
@@ -189,7 +192,7 @@ const dummy = computed(() => {
   const isEmptyFilters = isEmpty(dynamicFilters);
 
   return {
-    src: isEmptyFilters ? '' : dummyPic,
+    src: isEmptyFilters ? '' : dummyPic.value,
     text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
   };
 });
