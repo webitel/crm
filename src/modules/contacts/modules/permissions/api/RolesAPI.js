@@ -10,9 +10,9 @@ import applyTransform, {
 } from '@webitel/ui-sdk/src/api/transformers';
 import instance from '../../../../../app/api/instance';
 
-const baseUrl = '/roles';
+const baseUrl = '/roles/objects/contacts/records';
 
-const getList = async (params) => {
+const getList = async (id, params) => {
   const fieldsToSend = ['page', 'size', 'q', 'fields', 'id'];
 
   const url = applyTransform(params, [
@@ -21,7 +21,7 @@ const getList = async (params) => {
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(baseUrl),
+    generateUrl(`${baseUrl}/${id}`),
   ]);
   try {
     const response = await instance.get(url);

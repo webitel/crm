@@ -9,6 +9,7 @@
     </template>
     <template v-slot:main>
       <grantee-select
+        :id="id"
         :value="grantee"
         @input="grantee = $event"
       ></grantee-select>
@@ -30,15 +31,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import GranteeSelect from './grantee-select.vue';
 
 const props = defineProps({
   callback: {
     type: Function,
+  },
+  id: {
+    type: String,
+    required: true,
   },
 });
 
