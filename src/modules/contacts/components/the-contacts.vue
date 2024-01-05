@@ -34,6 +34,7 @@
         v-if="!isLoading && !dataList.length"
         :src="dummy.src"
         :text="dummy.text"
+        :dark-mode="darkMode"
       ></wt-dummy>
 
       <delete-confirmation-popup
