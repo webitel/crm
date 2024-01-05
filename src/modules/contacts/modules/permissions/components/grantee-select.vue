@@ -3,7 +3,7 @@
     v-bind="$attrs"
     :clearable="false"
     :label="t('objects.grantee', 1)"
-    :search-method="loadRoles"
+    :search-method="getAvailableGrantees"
     :value="value"
     class="grantee-select"
     option-label="name"
@@ -31,7 +31,10 @@
 </template>
 
 <script setup>
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 import RolesAPI from '../api/RolesAPI';
 
 const props = defineProps({
@@ -39,13 +42,28 @@ const props = defineProps({
     required: true,
     type: Object,
   },
+  namespace: {
+    type: String,
+    required: true,
+  },
 });
 
 const emit = defineEmits(['input']);
 
 const { t } = useI18n();
 
-const loadRoles = (params) => RolesAPI.getList({ ...params, fields: ['id', 'name', 'user'] });
+const store = useStore();
+const dataList = computed(() => getNamespacedState(store.state, props.namespace).dataList);
+
+async function getAvailableGrantees(params) {
+  const roles = await RolesAPI.getList({
+    ...params,
+    fields: ['id', 'name', 'user'],
+  });
+  const usedRoles = dataList.value;
+  roles.items = roles.items.filter((role) => !usedRoles.some((usedRole) => usedRole.grantee.id === role.id));
+  return roles;
+}
 </script>
 
 <style lang="scss" scoped>
