@@ -235,7 +235,7 @@ function deleteSelectedItems() {
   gap: var(--spacing-xs);
 
   .wt-avatar {
-    flex: 0 0 var(--avatar-size--size-sm);
+    flex: 0 0 var(--wt-avatar-size--size-sm);
   }
 }
 
