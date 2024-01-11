@@ -6,7 +6,7 @@ import WebitelUi from './app/plugins/webitel-ui';
 import store from './app/store';
 
 const fetchConfig = async () => {
-  const response = await fetch(`${process.env.BASE_URL}config.json`);
+  const response = await fetch(`${import.meta.env.BASE_URL}/config.json`);
   return response.json();
 };
 

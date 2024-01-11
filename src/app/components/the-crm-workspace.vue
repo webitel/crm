@@ -41,8 +41,8 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 
-const release = process.env.VUE_APP_PACKAGE_VERSION;
-const build = process.env.VUE_APP_BUILD_NUMBER;
+const release = import.meta.env.VITE_PACKAGE_VERSION;
+const build = import.meta.env.VITE_BUILD_NUMBER;
 
 const store = useStore();
 const router = useRouter();
@@ -58,31 +58,31 @@ const { t } = useI18n();
 const apps = computed(() => {
   const agent = {
     name: WebitelApplications.AGENT,
-    href: process.env.VUE_APP_AGENT_URL,
+    href: import.meta.env.VITE_AGENT_URL,
   };
   const supervisor = {
     name: WebitelApplications.SUPERVISOR,
-    href: process.env.VUE_APP_SUPERVISOR_URL,
+    href: import.meta.env.VITE_SUPERVISOR_URL,
   };
   const history = {
     name: WebitelApplications.HISTORY,
-    href: process.env.VUE_APP_HISTORY_URL,
+    href: import.meta.env.VITE_HISTORY_URL,
   };
   const audit = {
     name: WebitelApplications.AUDIT,
-    href: process.env.VUE_APP_AUDIT_URL,
+    href: import.meta.env.VITE_AUDIT_URL,
   };
   const admin = {
     name: WebitelApplications.ADMIN,
-    href: process.env.VUE_APP_ADMIN_URL,
+    href: import.meta.env.VITE_ADMIN_URL,
   };
   const grafana = {
     name: WebitelApplications.ANALYTICS,
-    href: process.env.VUE_APP_GRAFANA_URL,
+    href: import.meta.env.VITE_GRAFANA_URL,
   };
   const crm = {
     name: WebitelApplications.CRM,
-    href: process.env.VUE_APP_CRM_URL,
+    href: import.meta.env.VITE_CRM_URL,
   };
 
   const config = inject('$config');
@@ -103,7 +103,7 @@ const nav = computed(() => {
 });
 
 function settings() {
-  const settingsUrl = process.env.VUE_APP_SETTINGS_URL;
+  const settingsUrl = import.meta.env.VITE_SETTINGS_URL;
   window.open(settingsUrl);
 }
 

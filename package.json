@@ -3,17 +3,16 @@
   "version": "23.12.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "dependencies": {
     "@vue/compat": "^3.3.9",
     "@vuelidate/core": "^2.0.0",
     "@vuelidate/validators": "^2.0.2",
     "@webitel/ui-sdk": "^24.2.2",
-    "axios": "^0.27.2",
+    "axios": "^1.6.5",
     "core-js": "^3.8.3",
     "deep-equal": "^2.2.1",
     "lodash": "^4.17.21",
@@ -26,33 +25,22 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
-    "@happy-dom/jest-environment": "^12.9.1",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-unit-jest": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "@vue/eslint-config-airbnb": "^6.0.0",
+    "@vitejs/plugin-vue": "5.0.3",
     "@vue/test-utils": "^2.0.0-0",
-    "@vue/vue3-jest": "^27.0.0-alpha.1",
-    "babel-jest": "^27.0.6",
     "babel-preset-vite": "^1.1.0",
-    "bamboo-jest-reporter": "^1.0.3",
-    "eslint": "^7.32.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-vue": "^8.0.3",
-    "eslint-plugin-vuejs-accessibility": "^1.1.0",
+    "eslint-plugin-vue": "^8.7.1",
     "husky": "^8.0.3",
-    "jest": "^27.0.5",
-    "jest-mock-axios": "^4.7.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "sass": "^1.32.7",
-    "sass-loader": "^12.0.0",
-    "svg-sprite-loader": "^6.0.11",
+    "vite": "^5.0.11",
+    "vite-plugin-node-polyfills": "^0.19.0",
+    "vite-plugin-svg-sprite": "^0.5.1",
     "webpack-bundle-analyzer": "^4.9.0"
   },
   "overrides": {
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "axios": "^1.6.5"
   }
 }
