@@ -10,6 +10,8 @@ const fetchConfig = async () => {
   return response.json();
 };
 
+console.warn('ENV', import.meta.env, process.env, process?.env?.VUE_APP_API_URL || import.meta.env.VITE_API_URL);
+
 const initApp = () => createApp(App)
 .use(store)
 .use(router)
