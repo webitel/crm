@@ -2,12 +2,12 @@
   <main class="object-wrap">
     <section class="object">
       <wt-app-header>
-        <wt-notifications-bar></wt-notifications-bar>
+        <wt-notifications-bar />
         <wt-navigation-bar
           :current-app="currentApp"
           :nav="nav"
           :dark-mode="darkMode"
-        ></wt-navigation-bar>
+        />
         <wt-logo
           :dark-mode="darkMode"
         />
@@ -16,7 +16,7 @@
           :apps="apps"
           :current-app="currentApp"
           :dark-mode="darkMode"
-        ></wt-app-navigator>
+        />
         <wt-header-actions
           :build-info="{ release, build }"
           :user="userinfo"

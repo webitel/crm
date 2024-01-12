@@ -4,11 +4,11 @@
     width="480"
     @close="close"
   >
-    <template v-slot:title>
+    <template #title>
       {{ props.id ? t('reusable.edit') : t('reusable.new') }}
       {{ t('contacts.contact', 1).toLowerCase() }}
     </template>
-    <template v-slot:main>
+    <template #main>
       <form class="contact-popup-form">
         <wt-input
           :value="draft.name.commonName"
@@ -17,19 +17,19 @@
           required
           prevent-trim
           @input="draft.name.commonName = $event"
-        ></wt-input>
+        />
         <wt-select
           :value="draft.timezones[0]?.timezone"
           :label="t('date.timezone', 1)"
           :search-method="TimezonesAPI.getLookup"
           @input="draft.timezones[0] = { timezone: $event }"
-        ></wt-select>
+        />
         <wt-select
           :value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
           @input="draft.managers[0] = { user: $event }"
-        ></wt-select>
+        />
         <wt-tags-input
           :value="draft.labels"
           :label="t('vocabulary.labels', 1)"
@@ -38,15 +38,15 @@
           track-by="label"
           taggable
           @input="draft.labels = $event"
-        ></wt-tags-input>
+        />
         <wt-textarea
           :value="draft.about"
           :label="t('vocabulary.description')"
           @input="draft.about = $event"
-        ></wt-textarea>
+        />
       </form>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <wt-button
         :disabled="v$.$invalid"
         :loading="isSaving"

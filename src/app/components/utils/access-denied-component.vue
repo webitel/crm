@@ -2,7 +2,7 @@
   <wt-error-page
     type="403"
     @back="goToApplicationHub"
-  ></wt-error-page>
+  />
 </template>
 
 <script setup>

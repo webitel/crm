@@ -6,12 +6,12 @@
         :edited-instance="editedItem"
         :callback="save"
         @close="handleEditedItem"
-      ></variable-popup>
+      />
       <wt-icon-action
         :disabled="!access.hasRbacEditAccess"
         action="add"
         @click="isVariablePopup = true"
-      ></wt-icon-action>
+      />
     </header>
 
     <delete-confirmation-popup
@@ -19,16 +19,19 @@
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
-    ></delete-confirmation-popup>
+    />
 
-    <wt-loader v-show="isLoading"></wt-loader>
+    <wt-loader v-show="isLoading" />
 
     <wt-dummy
       v-if="!isLoading && showDummy"
       :dark-mode="darkMode"
-    ></wt-dummy>
+    />
 
-    <div v-show="!isLoading && !showDummy" class="table-wrapper">
+    <div
+      v-show="!isLoading && !showDummy"
+      class="table-wrapper"
+    >
       <wt-table
         :headers="headers"
         :data="dataList"
@@ -36,32 +39,32 @@
         sortable
         @sort="sort"
       >
-        <template v-slot:key="{ item }">
+        <template #key="{ item }">
           {{ item.key }}
         </template>
-        <template v-slot:value="{ item }">
+        <template #value="{ item }">
           {{ item.value }}
         </template>
-        <template v-slot:actions="{ item }">
+        <template #actions="{ item }">
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="edit"
             @click="handleEditedItem(item)"
-          ></wt-icon-action>
+          />
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="delete"
             @click="askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })"
-          ></wt-icon-action>
+              deleted: [item],
+              callback: () => deleteData(item),
+            })"
+          />
         </template>
       </wt-table>
       <filter-pagination
         :namespace="filtersNamespace"
         :is-next="isNext"
-      ></filter-pagination>
+      />
     </div>
   </div>
 </template>

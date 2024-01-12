@@ -5,21 +5,24 @@
         v-if="isGranteePopup"
         :callback="grantPermissions"
         @close="isGranteePopup = false"
-      ></grantee-popup>
+      />
       <wt-icon-action
         :disabled="!access.hasRbacEditAccess"
         action="add"
         @click="isGranteePopup = true"
-      ></wt-icon-action>
+      />
       <wt-icon-action
         action="refresh"
         @click="loadData"
-      ></wt-icon-action>
+      />
     </header>
 
-    <wt-loader v-show="isLoading"></wt-loader>
+    <wt-loader v-show="isLoading" />
 
-    <div v-show="!isLoading" class="table-wrapper">
+    <div
+      v-show="!isLoading"
+      class="table-wrapper"
+    >
       <wt-table
         :headers="headers"
         :data="modifiedDataList"
@@ -27,61 +30,60 @@
         sortable
         @sort="sort"
       >
-
-        <template v-slot:grantee="{ item }">
+        <template #grantee="{ item }">
           <div class="permissions-role-column">
             <wt-icon
               :icon="item.grantee.user ? 'user' : 'role'"
               color="active"
-            ></wt-icon>
+            />
             {{ item.grantee.name }}
           </div>
         </template>
 
-        <template v-slot:read="{ item }">
+        <template #read="{ item }">
           <wt-select
             v-if="access.hasRbacEditAccess"
             :value="item.access.r"
             :options="accessOptions"
             :clearable="false"
             @input="changeReadAccessMode({ item, mode: $event })"
-          ></wt-select>
+          />
           <span v-else>{{ item.access.r.name }}</span>
         </template>
 
-        <template v-slot:edit="{ item }">
+        <template #edit="{ item }">
           <wt-select
             v-if="access.hasRbacEditAccess"
             :value="item.access.w"
             :options="accessOptions"
             :clearable="false"
             @input="changeUpdateAccessMode({ item, mode: $event })"
-          ></wt-select>
+          />
           <span v-else>{{ item.access.w.name }}</span>
         </template>
 
-        <template v-slot:delete="{ item }">
+        <template #delete="{ item }">
           <wt-select
             v-if="access.hasRbacEditAccess"
             :value="item.access.d"
             :options="accessOptions"
             :clearable="false"
             @input="changeDeleteAccessMode({ item, mode: $event })"
-          ></wt-select>
+          />
           <span v-else>{{ item.access.d.name }}</span>
         </template>
-        <template v-slot:actions="{ item }">
+        <template #actions="{ item }">
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="delete"
             @click="changeReadAccessMode({ item, mode: { id: AccessMode.FORBIDDEN }})"
-          ></wt-icon-action>
+          />
         </template>
       </wt-table>
       <filter-pagination
         :namespace="filtersNamespace"
         :is-next="isNext"
-      ></filter-pagination>
+      />
     </div>
   </div>
 </template>

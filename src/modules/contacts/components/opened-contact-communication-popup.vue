@@ -5,14 +5,14 @@
     overflow
     @close="close"
   >
-    <template v-slot:header>
+    <template #header>
       {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
       {{
         t('contacts.communications.communications', 1)
-        .toLowerCase()
+          .toLowerCase()
       }}
     </template>
-    <template v-slot:main>
+    <template #main>
       <form
         class="opened-contact-add-communication-popup-form"
       >
@@ -26,7 +26,7 @@
           track-by="value"
           required
           @input="draft.channel = $event.value"
-        ></wt-select>
+        />
         <wt-select
           ref="TypeSelect"
           :value="draft.type"
@@ -36,27 +36,29 @@
           :label="t('objects.communicationType', 1)"
           required
           @input="draft.type = $event"
-        ></wt-select>
+        />
         <wt-input
           v-model="draft.destination"
           :v="v$.draft.destination"
           :clearable="false"
           :label="t('contacts.communications.destination')"
           required
-        ></wt-input>
+        />
       </form>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <wt-button
         :disabled="v$.$invalid"
         :loading="isLoading"
         @click="save"
-      >{{ t('reusable.save') }}
+      >
+        {{ t('reusable.save') }}
       </wt-button>
       <wt-button
         color="secondary"
         @click="close"
-      >{{ t('reusable.cancel') }}
+      >
+        {{ t('reusable.cancel') }}
       </wt-button>
     </template>
   </wt-popup>

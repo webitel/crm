@@ -5,24 +5,27 @@
       :edited-instance="editedItem"
       :callback="updateEmail"
       @close="editedItem = null"
-    ></communication-popup>
+    />
 
     <delete-confirmation-popup
       v-if="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
-    ></delete-confirmation-popup>
+    />
 
-    <wt-loader v-show="isLoading"></wt-loader>
+    <wt-loader v-show="isLoading" />
 
     <wt-dummy
       v-if="!isLoading && showDummy"
       :src="darkMode ? dummyDark : dummyLight"
       :text="t('contacts.communications.emails.dummy')"
-    ></wt-dummy>
+    />
 
-    <div v-show="!isLoading && !showDummy" class="table-wrapper">
+    <div
+      v-show="!isLoading && !showDummy"
+      class="table-wrapper"
+    >
       <wt-table
         :headers="headers"
         :data="dataList"
@@ -30,29 +33,29 @@
         sortable
         @sort="sort"
       >
-        <template v-slot:primary="{ item, index }">
+        <template #primary="{ item, index }">
           <wt-icon
             v-if="item.primary"
             icon="tick"
             color="success"
-          ></wt-icon>
+          />
           <wt-icon-btn
             v-else
             :disabled="!access.hasRbacEditAccess"
             class="set-primary-btn"
             icon="tick"
             @click="setAsPrimary({ item, index })"
-          ></wt-icon-btn>
+          />
         </template>
-        <template v-slot:type="{ item }">
+        <template #type="{ item }">
           {{ item.type.name }}
         </template>
-        <template v-slot:actions="{ item, index }">
+        <template #actions="{ item, index }">
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="edit"
             @click="editedItem = item"
-          ></wt-icon-action>
+          />
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="delete"
@@ -60,7 +63,7 @@
               deleted: item,
               callback: () => deleteData(item),
             })"
-          ></wt-icon-action>
+          />
         </template>
       </wt-table>
     </div>

@@ -6,7 +6,7 @@
         :initial-channel="currentTab.channel"
         :callback="saveCommunication"
         @close="isCommunicationPopup = false"
-      ></add-communication-popup>
+      />
       <wt-button
         v-for="(tab) of tabs"
         :key="tab.value"
@@ -17,19 +17,20 @@
       >
         <wt-icon
           :icon="tab.icon"
-        ></wt-icon>
+        />
         {{ tab.label }}
       </wt-button>
       <wt-button
         :disabled="!access.hasRbacEditAccess"
         @click="isCommunicationPopup = true"
-      >{{ t('reusable.add') }}
+      >
+        {{ t('reusable.add') }}
       </wt-button>
     </header>
     <component
       :is="currentTab.component"
       :namespace="currentTab.namespace"
-    ></component>
+    />
   </section>
 </template>
 

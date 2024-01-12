@@ -3,14 +3,14 @@
     class="contacts"
     :actions-panel="false"
   >
-    <template v-slot:header>
+    <template #header>
       <contact-popup
         v-if="isContactPopup"
-        :namespace="baseNamespace"
         :id="editedContactId"
+        :namespace="baseNamespace"
         @saved="saved"
         @close="closeContactPopup"
-      ></contact-popup>
+      />
 
       <wt-page-header
         :primary-action="create"
@@ -19,44 +19,47 @@
         :secondary-disabled="!hasObacDeleteAccess || !deletableSelectedItems.length"
         :primary-disabled="!hasObacCreateAccess"
       >
-        <wt-headline-nav :path="path"></wt-headline-nav>
-        <template v-slot:actions>
+        <wt-headline-nav :path="path" />
+        <template #actions>
           <filter-search
             :namespace="filtersNamespace"
-          ></filter-search>
+          />
         </template>
       </wt-page-header>
     </template>
-    <template v-slot:main>
-      <wt-loader v-show="isLoading"></wt-loader>
+    <template #main>
+      <wt-loader v-show="isLoading" />
 
       <wt-dummy
         v-if="!isLoading && !dataList.length"
         :src="dummy.src"
         :text="dummy.text"
         :dark-mode="darkMode"
-      ></wt-dummy>
+      />
 
       <delete-confirmation-popup
         v-show="isDeleteConfirmationPopup"
         :delete-count="deleteCount"
         :callback="deleteCallback"
         @close="closeDelete"
-      ></delete-confirmation-popup>
+      />
 
-      <div v-show="!isLoading && dataList.length" class="table-wrapper">
+      <div
+        v-show="!isLoading && dataList.length"
+        class="table-wrapper"
+      >
         <wt-table
           :headers="headers"
           :data="dataList"
           sortable
           @sort="sort"
         >
-          <template v-slot:name="{ item }">
+          <template #name="{ item }">
             <div class="username-wrapper">
               <wt-avatar
                 size="sm"
                 :username="item.name.commonName"
-              ></wt-avatar>
+              />
               <wt-item-link
                 :id="item.id"
                 :route-name="CrmSections.CONTACTS"
@@ -65,10 +68,10 @@
               </wt-item-link>
             </div>
           </template>
-          <template v-slot:managers="{ item }">
+          <template #managers="{ item }">
             {{ item.managers?.data[0].user.name }}
           </template>
-          <template v-slot:labels="{ item }">
+          <template #labels="{ item }">
             <div
               v-if="item.labels"
               class="contacts-labels-wrapper"
@@ -76,30 +79,31 @@
               <wt-chip
                 v-for="({ label, id }) of item.labels.data"
                 :key="id"
-              >{{ label }}
+              >
+                {{ label }}
               </wt-chip>
             </div>
           </template>
-          <template v-slot:actions="{ item }">
+          <template #actions="{ item }">
             <wt-icon-action
               :disabled="!item.access.edit"
               action="edit"
               @click="edit(item)"
-            ></wt-icon-action>
+            />
             <wt-icon-action
               :disabled="!item.access.delete"
               action="delete"
               @click="askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })"
-            ></wt-icon-action>
+                deleted: [item],
+                callback: () => deleteData(item),
+              })"
+            />
           </template>
         </wt-table>
         <filter-pagination
           :namespace="filtersNamespace"
           :is-next="isNext"
-        ></filter-pagination>
+        />
       </div>
     </template>
   </wt-page-wrapper>

@@ -3,28 +3,28 @@
     class="opened-contact"
     :actions-panel="false"
   >
-    <template v-slot:header>
+    <template #header>
       <wt-page-header
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path"></wt-headline-nav>
+        <wt-headline-nav :path="path" />
       </wt-page-header>
     </template>
-    <template v-slot:main>
+    <template #main>
       <contact-popup
         v-if="isContactPopup"
-        :namespace="baseNamespace"
         :id="id"
+        :namespace="baseNamespace"
         @saved="loadItem"
         @close="isContactPopup = false"
-      ></contact-popup>
+      />
       <delete-confirmation-popup
         v-show="isDeleteConfirmationPopup"
         :delete-count="deleteCount"
         :callback="deleteCallback"
         @close="closeDelete"
-      ></delete-confirmation-popup>
+      />
       <div class="opened-contact-content">
         <opened-contact-general
           :common-name="itemInstance.name ? itemInstance.name.commonName : ''"
@@ -34,13 +34,13 @@
           :labels="itemInstance.labels ? itemInstance.labels : []"
           @edit="isContactPopup = true"
           @delete="askDeleteConfirmation({
-              deleted: [itemInstance],
-              callback: () => deleteContact(itemInstance),
-            })"
-        ></opened-contact-general>
+            deleted: [itemInstance],
+            callback: () => deleteContact(itemInstance),
+          })"
+        />
         <opened-contact-tabs
           :namespace="namespace"
-        ></opened-contact-tabs>
+        />
       </div>
     </template>
   </wt-page-wrapper>
