@@ -4,6 +4,7 @@
       <grantee-popup
         v-if="isGranteePopup"
         :callback="grantPermissions"
+        :namespace="namespace"
         @close="isGranteePopup = false"
       />
       <wt-icon-action

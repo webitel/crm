@@ -9,6 +9,7 @@
     </template>
     <template #main>
       <grantee-select
+        :namespace="namespace"
         :value="grantee"
         @input="grantee = $event"
       />
@@ -41,6 +42,10 @@ import GranteeSelect from './grantee-select.vue';
 const props = defineProps({
   callback: {
     type: Function,
+  },
+  namespace: {
+    type: String,
+    required: true,
   },
 });
 
