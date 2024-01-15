@@ -39,13 +39,17 @@ const props = defineProps({
     required: true,
     type: Object,
   },
+  id: {
+    required: true,
+    type: String,
+  }
 });
 
 const emit = defineEmits(['input']);
 
 const { t } = useI18n();
 
-const loadRoles = (params) => RolesAPI.getList({ ...params, fields: ['id', 'name', 'user'] });
+const loadRoles = (params) => RolesAPI.getList(props.id, { ...params, fields: ['id', 'name', 'user'] });
 </script>
 
 <style lang="scss" scoped>

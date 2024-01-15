@@ -3,6 +3,7 @@
     <header class="permissions-header">
       <grantee-popup
         v-if="isGranteePopup"
+        :id="id"
         :callback="grantPermissions"
         @close="isGranteePopup = false"
       />
@@ -89,6 +90,7 @@
 </template>
 
 <script setup>
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, inject, ref } from 'vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
@@ -109,6 +111,10 @@ const props = defineProps({
 
 const { t } = useI18n();
 const store = useStore();
+
+const namespacedState = computed(() => (
+  getNamespacedState(store.state, `${props.namespace}`)));
+const id = computed(() => namespacedState.value.itemId);
 
 const {
   namespace,
