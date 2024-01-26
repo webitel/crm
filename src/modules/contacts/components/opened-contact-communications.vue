@@ -1,12 +1,12 @@
 <template>
   <section class="opened-contact-communications">
     <header class="opened-contact-communications-header">
-      <add-communication-popup
-        v-if="isCommunicationPopup"
-        :initial-channel="currentTab.channel"
-        :callback="saveCommunication"
-        @close="isCommunicationPopup = false"
-      ></add-communication-popup>
+<!--      <add-communication-popup-->
+<!--        v-if="isCommunicationPopup"-->
+<!--        :initial-channel="currentTab.channel"-->
+<!--        :callback="saveCommunication"-->
+<!--        @close="isCommunicationPopup = false"-->
+<!--      ></add-communication-popup>-->
       <wt-button
         v-for="(tab) of tabs"
         :key="tab.value"
@@ -20,11 +20,11 @@
         ></wt-icon>
         {{ tab.label }}
       </wt-button>
-      <wt-button
-        :disabled="!access.hasRbacEditAccess"
-        @click="isCommunicationPopup = true"
-      >{{ t('reusable.add') }}
-      </wt-button>
+<!--      <wt-button-->
+<!--        :disabled="!access.hasRbacEditAccess"-->
+<!--        @click="isCommunicationPopup = true"-->
+<!--      >{{ t('reusable.add') }}-->
+<!--      </wt-button>-->
     </header>
     <component
       :is="currentTab.component"
@@ -39,7 +39,7 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import TheEmails from '../modules/emails/components/the-emails.vue';
 import ThePhones from '../modules/phones/components/the-phones.vue';
-import AddCommunicationPopup from './opened-contact-communication-popup.vue';
+// import AddCommunicationPopup from './opened-contact-communication-popup.vue';
 
 const access = inject('access');
 
@@ -77,14 +77,14 @@ const tabs = computed(() => [
 
 const currentTab = ref(tabs.value[0]);
 
-const isCommunicationPopup = ref(false);
+// const isCommunicationPopup = ref(false);
 
-function saveCommunication({ channel, type, destination }) {
-  const itemInstance = { type, [channel]: destination };
-  if (channel === 'email') return store.dispatch(`${emailsNamespace}/table/ADD_EMAIL`, { itemInstance });
-  if (channel === 'number') return store.dispatch(`${phonesNamespace}/table/ADD_PHONE`, { itemInstance });
-  throw TypeError(`Unknown communication channel: ${channel}`);
-}
+// function saveCommunication({ channel, type, destination }) {
+//   const itemInstance = { type, [channel]: destination };
+//   if (channel === 'email') return store.dispatch(`${emailsNamespace}/table/ADD_EMAIL`, { itemInstance });
+//   if (channel === 'number') return store.dispatch(`${phonesNamespace}/table/ADD_PHONE`, { itemInstance });
+//   throw TypeError(`Unknown communication channel: ${channel}`);
+// }
 </script>
 
 <style lang="scss" scoped>
