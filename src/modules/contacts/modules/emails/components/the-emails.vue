@@ -1,11 +1,11 @@
 <template>
   <div class="contact-communication-tab emails">
-    <add-communication-popup
-      v-if="isCommunicationPopup"
-      initial-channel="email"
-      :callback="saveEmail"
-      @close="isCommunicationPopup = false"
-    />
+<!--    <add-communication-popup-->
+<!--      v-if="isCommunicationPopup"-->
+<!--      initial-channel="email"-->
+<!--      :callback="saveEmail"-->
+<!--      @close="isCommunicationPopup = false"-->
+<!--    />-->
 
     <communication-popup
       v-if="editedItem"
@@ -95,7 +95,7 @@ import {
 import { useStore } from 'vuex';
 import dummyLight from '../assets/email-dummy-light.svg';
 import dummyDark from '../assets/email-dummy-dark.svg';
-import AddCommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
+import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
 
 const access = inject('access');
 
