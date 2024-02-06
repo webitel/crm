@@ -48,7 +48,7 @@
         sortable
         @sort="sort"
       >
-        <template v-slot:primary="{ item, index }">
+        <template #primary="{ item, index }">
           <wt-icon
             v-if="item.primary"
             icon="tick"
@@ -62,10 +62,10 @@
             @click="setAsPrimary({ item, index })"
           />
         </template>
-        <template v-slot:type="{ item }">
+        <template #type="{ item }">
           {{ item.type.name }}
         </template>
-        <template v-slot:actions="{ item, index }">
+        <template #actions="{ item, index }">
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="edit"

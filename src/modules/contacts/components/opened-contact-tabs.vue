@@ -4,11 +4,11 @@
       :current="currentTab"
       :tabs="tabs"
       @change="changeTab"
-    ></wt-tabs>
+    />
     <router-view
       class="opened-contact-tab"
       :namespace="namespace"
-    ></router-view>
+    />
   </article>
 </template>
 

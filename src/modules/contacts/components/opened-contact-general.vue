@@ -5,22 +5,22 @@
       :options="actionOptions"
       @click="$event.option.handler()"
     >
-      <template v-slot:activator>
+      <template #activator>
         <wt-tooltip>
-          <template v-slot:activator>
+          <template #activator>
             <wt-icon-btn
               icon="options"
-            ></wt-icon-btn>
+            />
           </template>
           {{ t('vocabulary.options', 2) }}
         </wt-tooltip>
       </template>
-      <template v-slot:option="option">
+      <template #option="option">
         <div class="opened-contact-general-option">
           <wt-icon
             :icon="option.icon"
             :disabled="option.disabled"
-          ></wt-icon>
+          />
 
           {{ option.text }}
         </div>
@@ -30,45 +30,66 @@
     <wt-avatar
       size="3xl"
       :username="commonName"
-    ></wt-avatar>
+    />
 
-    <p class="opened-contact-general-name">{{ commonName }}</p>
+    <p class="opened-contact-general-name">
+      {{ commonName }}
+    </p>
 
-    <wt-divider></wt-divider>
+    <wt-divider />
 
-    <div class="opened-contact-general-item" v-if="timezones.length">
+    <div
+      v-if="timezones.length"
+      class="opened-contact-general-item"
+    >
       <p class="opened-contact-general-item__title">
         {{ t('date.timezone', 1) }}
       </p>
-      <p class="opened-contact-general-item__value">{{ timezones[0].timezone.name }}</p>
+      <p class="opened-contact-general-item__value">
+        {{ timezones[0].timezone.name }}
+      </p>
     </div>
 
-    <wt-divider v-if="timezones.length"></wt-divider>
+    <wt-divider v-if="timezones.length" />
 
-    <div class="opened-contact-general-item" v-if="managers.length">
+    <div
+      v-if="managers.length"
+      class="opened-contact-general-item"
+    >
       <p class="opened-contact-general-item__title">
         {{ t('contacts.manager', 1) }}
       </p>
-      <p class="opened-contact-general-item__value">{{ managers[0].user.name }}</p>
+      <p class="opened-contact-general-item__value">
+        {{ managers[0].user.name }}
+      </p>
     </div>
 
-    <wt-divider v-if="managers.length"></wt-divider>
+    <wt-divider v-if="managers.length" />
 
-    <div class="opened-contact-general-item" v-if="about">
+    <div
+      v-if="about"
+      class="opened-contact-general-item"
+    >
       <p class="opened-contact-general-item__title">
         {{ t('vocabulary.description') }}
       </p>
-      <p class="opened-contact-general-item__value">{{ about }}</p>
+      <p class="opened-contact-general-item__value">
+        {{ about }}
+      </p>
     </div>
 
-    <wt-divider v-if="about"></wt-divider>
+    <wt-divider v-if="about" />
 
-    <div class="opened-contact-general-item" v-if="labels.length">
+    <div
+      v-if="labels.length"
+      class="opened-contact-general-item"
+    >
       <div class="opened-contact-general-item__value opened-contact-general-item__value--labels">
         <wt-chip
           v-for="({ label, id }) of labels"
           :key="id"
-        >{{ label }}
+        >
+          {{ label }}
         </wt-chip>
       </div>
     </div>

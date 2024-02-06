@@ -17,7 +17,7 @@
       >
         <wt-icon
           :icon="tab.icon"
-        ></wt-icon>
+        />
         {{ tab.label }}
       </wt-button>
 <!--      <wt-button-->
@@ -29,7 +29,7 @@
     <component
       :is="currentTab.component"
       :namespace="currentTab.namespace"
-    ></component>
+    />
   </section>
 </template>
 

@@ -4,11 +4,11 @@
     overflow
     @close="close"
   >
-    <template v-slot:header>
+    <template #header>
       {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
       {{ t('contacts.attributes', 1).toLowerCase() }}
     </template>
-    <template v-slot:main>
+    <template #main>
       <form>
         <wt-input
           v-model="draft.key"
@@ -16,27 +16,29 @@
           :clearable="false"
           :label="t('vocabulary.keys',1)"
           required
-        ></wt-input>
+        />
         <wt-input
           v-model="draft.value"
           :v="v$.draft.value"
           :clearable="false"
           :label="t('vocabulary.values',1)"
           required
-        ></wt-input>
+        />
       </form>
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <wt-button
         :loading="isLoading"
         :disabled="v$.$invalid"
         @click="props.callback(draft)"
-      >{{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
+      >
+        {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
       </wt-button>
       <wt-button
         color="secondary"
         @click="close"
-      >{{ t('reusable.cancel') }}
+      >
+        {{ t('reusable.cancel') }}
       </wt-button>
     </template>
   </wt-popup>

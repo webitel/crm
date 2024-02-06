@@ -9,21 +9,21 @@
     option-label="name"
     @input="emit('input', $event)"
   >
-    <template v-slot:singleLabel="{ option, optionLabel }">
+    <template #singleLabel="{ option, optionLabel }">
       <span class="grantee-select-option">
         <wt-icon
           :icon="option.user ? 'user' : 'role'"
           color="active"
-        ></wt-icon>
+        />
         {{ option[optionLabel] || option }}
       </span>
     </template>
-    <template v-slot:option="{ option, optionLabel }">
+    <template #option="{ option, optionLabel }">
       <span class="grantee-select-option">
         <wt-icon
           :icon="option.user ? 'user' : 'role'"
           color="active"
-        ></wt-icon>
+        />
         {{ option[optionLabel] || option }}
       </span>
     </template>

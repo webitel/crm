@@ -4,26 +4,28 @@
     overflow
     @close="close"
   >
-    <template v-slot:title>
+    <template #title>
       {{ t('permissions.granteePopup.title') }}
     </template>
-    <template v-slot:main>
+    <template #main>
       <grantee-select
         :value="grantee"
         @input="grantee = $event"
-      ></grantee-select>
+      />
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <wt-button
         :disabled="v$.$invalid"
         :loading="isLoading"
         @click="save"
-      >{{ $t('reusable.add') }}
+      >
+        {{ $t('reusable.add') }}
       </wt-button>
       <wt-button
         color="secondary"
         @click="close"
-      >{{ $t('reusable.close') }}
+      >
+        {{ $t('reusable.close') }}
       </wt-button>
     </template>
   </wt-popup>
