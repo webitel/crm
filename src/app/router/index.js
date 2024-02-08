@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import Auth from '@webitel/ui-sdk/src/modules/Userinfo/components/the-auth.vue';
+// import Auth from '@webitel/ui-sdk/src/modules/Userinfo/components/the-auth.vue';
+import Auth from '../../auth-test.vue';
 import store from '../store';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
@@ -49,11 +50,11 @@ const routes = [
     beforeEnter: checkAppAccess,
     children: [
       {
-      path: 'contacts',
-      name: CrmSections.CONTACTS,
-      component: TheContacts,
-      beforeEnter: checkRouteAccess,
-    },
+        path: 'contacts',
+        name: CrmSections.CONTACTS,
+        component: TheContacts,
+        beforeEnter: checkRouteAccess,
+      },
       {
         path: 'contacts/:id',
         name: `${CrmSections.CONTACTS}-edit`,
@@ -85,6 +86,7 @@ const routes = [
     component: AccessDenied,
   },
 ];
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
