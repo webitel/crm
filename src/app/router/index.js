@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-// import Auth from '@webitel/ui-sdk/src/modules/Userinfo/components/the-auth.vue';
-import Auth from '../../auth-test.vue';
+import Auth from '@webitel/ui-sdk/src/modules/Userinfo/components/the-auth.vue';
 import store from '../store';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
@@ -28,7 +27,7 @@ const checkAppAccess = (to, from, next) => {
 const checkRouteAccess = ((to, from, next) => {
   // has Role Section Access AND (Select role permissions || ObAC permissions access)
   const hasReadAccess = store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to })
-  && store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
+    && store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
   if (hasReadAccess) {
     next();
   } else {
@@ -86,7 +85,6 @@ const routes = [
     component: AccessDenied,
   },
 ];
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
