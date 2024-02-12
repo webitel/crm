@@ -160,9 +160,4 @@ function close() {
   flex-direction: column;
   gap: var(--spacing-xs);
 }
-
-.opened-contact-communication-popup-actions {
-  display: flex;
-  gap: var(--spacing-sm);
-}
 </style>
