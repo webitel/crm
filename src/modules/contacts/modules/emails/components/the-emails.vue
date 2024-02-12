@@ -1,17 +1,14 @@
 <template>
   <div class="contact-communication-tab emails">
-<!--    <add-communication-popup-->
-<!--      v-if="isCommunicationPopup"-->
-<!--      initial-channel="email"-->
-<!--      :callback="saveEmail"-->
-<!--      @close="isCommunicationPopup = false"-->
-<!--    />-->
 
     <communication-popup
       v-if="isCommunicationPopup"
       :item="editedItem"
       :filter-field="EngineCommunicationChannels.Email"
-      :label="t('vocabulary.emails', 1)"
+      :label="t('contacts.communications.emails.title')"
+      channel="email"
+      @save="saveEmail"
+      @update="updateEmail"
       @close="closePopup"
     />
 
@@ -153,22 +150,24 @@ function saveEmail({ type, destination }) {
   return store.dispatch(`${namespace}/ADD_EMAIL`, { itemInstance });
 }
 
+function updateEmail({ channel, destination, ...rest }) {
+  const itemInstance = { ...rest, email: destination };
+  return store.dispatch(`${namespace}/UPDATE_EMAIL`, {
+    itemInstance,
+    etag: editedItem.value.etag,
+  });
+}
+
 function edit(item) {
   editedItem.value = item;
   isCommunicationPopup.value = true;
 }
 
-// function updateEmail({ channel, destination, ...rest }) {
-//   const itemInstance = { ...rest, [channel]: destination };
-//   return store.dispatch(`${namespace}/UPDATE_EMAIL`, {
-//     itemInstance,
-//     etag: editedItem.value.etag,
-//   });
-// }
-
 function closePopup() {
   isCommunicationPopup.value = false;
+  editedItem.value = null
 }
+
 </script>
 
 <style lang="scss" scoped>

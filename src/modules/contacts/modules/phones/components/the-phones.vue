@@ -1,17 +1,14 @@
 <template>
   <div class="contact-communication-tab phones">
-    <add-communication-popup
-      v-if="isCommunicationPopup"
-      initial-channel="number"
-      :callback="savePhone"
-      @close="isCommunicationPopup = false"
-    />
 
     <communication-popup
-      v-if="editedItem"
-      :edited-instance="editedItem"
-      :callback="updatePhone"
-      @close="editedItem = null"
+      v-if="isCommunicationPopup"
+      :item="editedItem"
+      :filter-field="EngineCommunicationChannels.Phone"
+      :label="t('contacts.communications.phones.title')"
+      @save="savePhone"
+      :update="updatePhone"
+      @close="closePopup"
     />
 
     <delete-confirmation-popup
@@ -69,7 +66,7 @@
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="edit"
-            @click="editedItem = item"
+            @click="edit(item)"
           />
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
@@ -98,7 +95,8 @@ import {
 import { useStore } from 'vuex';
 import dummyLight from '../assets/phone-dummy-light.svg';
 import dummyDark from '../assets/phone-dummy-dark.svg';
-import AddCommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
+import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
+import { EngineCommunicationChannels } from 'webitel-sdk';
 
 const access = inject('access');
 
@@ -137,7 +135,6 @@ const {
 } = useDeleteConfirmationPopup();
 
 const editedItem = ref(null);
-
 const isCommunicationPopup = ref(false);
 
 const showDummy = computed(() => !dataList.value.length);
@@ -153,12 +150,22 @@ function savePhone({ type, destination }) {
 }
 
 function updatePhone({ channel, destination, ...rest }) {
-  const itemInstance = { ...rest, [channel]: destination };
+  const itemInstance = { ...rest, number: destination };
   return store.dispatch(`${namespace}/UPDATE_PHONE`, {
     itemInstance,
     etag: editedItem.value.etag,
   });
 }
+function edit(item) {
+  editedItem.value = item;
+  isCommunicationPopup.value = true;
+}
+
+function closePopup() {
+  isCommunicationPopup.value = false;
+  editedItem.value = null
+}
+
 </script>
 
 <style lang="scss" scoped>
