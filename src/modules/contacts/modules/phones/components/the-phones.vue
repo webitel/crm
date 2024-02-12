@@ -6,8 +6,7 @@
       :item="editedItem"
       :filter-field="EngineCommunicationChannels.Phone"
       :label="t('contacts.communications.phones.title')"
-      @save="savePhone"
-      :update="updatePhone"
+      :namespace="namespace"
       @close="closePopup"
     />
 
@@ -144,18 +143,6 @@ function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
 }
 
-function savePhone({ type, destination }) {
-  const itemInstance = { type, number: destination };
-  return store.dispatch(`${namespace}/ADD_PHONE`, { itemInstance });
-}
-
-function updatePhone({ channel, destination, ...rest }) {
-  const itemInstance = { ...rest, number: destination };
-  return store.dispatch(`${namespace}/UPDATE_PHONE`, {
-    itemInstance,
-    etag: editedItem.value.etag,
-  });
-}
 function edit(item) {
   editedItem.value = item;
   isCommunicationPopup.value = true;

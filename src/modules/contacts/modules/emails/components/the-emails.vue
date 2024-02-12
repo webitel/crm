@@ -6,9 +6,8 @@
       :item="editedItem"
       :filter-field="EngineCommunicationChannels.Email"
       :label="t('contacts.communications.emails.title')"
+      :namespace="namespace"
       channel="email"
-      @save="saveEmail"
-      @update="updateEmail"
       @close="closePopup"
     />
 
@@ -143,19 +142,6 @@ const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
-}
-
-function saveEmail({ type, destination }) {
-  const itemInstance = { type, email: destination };
-  return store.dispatch(`${namespace}/ADD_EMAIL`, { itemInstance });
-}
-
-function updateEmail({ channel, destination, ...rest }) {
-  const itemInstance = { ...rest, email: destination };
-  return store.dispatch(`${namespace}/UPDATE_EMAIL`, {
-    itemInstance,
-    etag: editedItem.value.etag,
-  });
 }
 
 function edit(item) {
