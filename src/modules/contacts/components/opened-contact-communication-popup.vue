@@ -7,7 +7,7 @@
   >
     <template #header>
       {{ item ? t('reusable.edit') : t('reusable.add') }}
-      {{ props.label.toLowerCase() ||
+      {{ currentCommunication.locale.toLowerCase() ||
         t('contacts.communications.communications', 1).toLowerCase()
       }}
     </template>
@@ -19,7 +19,7 @@
           ref="TypeSelect"
           :value="draft.type"
           :v="v$.draft.type"
-          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: props.filterField })"
+          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: currentCommunication.filterField })"
           :clearable="false"
           :label="t('objects.communicationType', 1)"
           required
@@ -59,6 +59,7 @@ import { required, email } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
+import { EngineCommunicationChannels } from 'webitel-sdk';
 
 const { t } = useI18n();
 const store = useStore();
@@ -72,20 +73,42 @@ const props = defineProps({
     type: String,
     default: 'number',
   },
-  filterField: {
-    type: String,
-    required: true,
-  },
   namespace: {
     type: String,
     required: true,
   },
-  label: {
-    type: String,
-  },
 });
 
 const emit = defineEmits(['close']);
+
+const isLoading = ref(false);
+const isSaving = ref(false);
+const TypeSelect = ref(null);
+
+const communicationOptions = [
+  {
+    value: 'email', // should be same as backend field for destination
+    locale: t('contacts.communications.emails.title'),
+    filterField: EngineCommunicationChannels.Email,
+    addNamespace: `${props.namespace}/ADD_EMAIL`,
+    updateNamespace: `${props.namespace}/UPDATE_EMAIL`,
+  },
+  {
+    value: 'number',
+    locale: t('contacts.communications.phones.title'),
+    filterField: EngineCommunicationChannels.Phone,
+    addNamespace: `${props.namespace}/ADD_PHONE`,
+    updateNamespace: `${props.namespace}/UPDATE_PHONE`,
+  },
+  // {
+  //   value: 'messaging',
+  //   locale: ,
+  //   filterField: EngineCommunicationChannels.Messaging,
+  //   namespace: ,
+  // },
+];
+
+const currentCommunication = ref(communicationOptions.find((option) => option.value === props.channel));
 
 
 const getDefaultDraft = () => ({
@@ -93,11 +116,6 @@ const getDefaultDraft = () => ({
   type: {},
   destination: '',
 });
-
-
-const isLoading = ref(false);
-const isSaving = ref(false);
-const TypeSelect = ref(null);
 
 const draft = reactive(getDefaultDraft());
 
@@ -122,6 +140,7 @@ v$.value.$touch();
 if (props.item) initDraft();
 
 async function save() {
+
   try {
     isSaving.value = true;
     if (props.item) {
@@ -137,12 +156,12 @@ async function save() {
 
 function addItem({ type, destination }) {
   const itemInstance = { type, [props.channel]: destination };
-  return store.dispatch(`${props.namespace}/ADD_${props.filterField.toUpperCase()}`, { itemInstance });
+  return store.dispatch(`${currentCommunication.value.addNamespace}`, { itemInstance });
 }
 
 function updateItem({ channel, destination, ...rest }) {
   const itemInstance = { ...rest, [props.channel]: destination };
-  return store.dispatch(`${props.namespace}/UPDATE_${props.filterField.toUpperCase()}`, {
+  return store.dispatch(`${currentCommunication.value.updateNamespace}`, {
     itemInstance,
     etag: props.item.etag,
   });

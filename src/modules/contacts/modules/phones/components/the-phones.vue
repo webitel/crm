@@ -4,8 +4,6 @@
     <communication-popup
       v-if="isCommunicationPopup"
       :item="editedItem"
-      :filter-field="EngineCommunicationChannels.Phone"
-      :label="t('contacts.communications.phones.title')"
       :namespace="namespace"
       @close="closePopup"
     />
@@ -95,7 +93,6 @@ import { useStore } from 'vuex';
 import dummyLight from '../assets/phone-dummy-light.svg';
 import dummyDark from '../assets/phone-dummy-dark.svg';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
-import { EngineCommunicationChannels } from 'webitel-sdk';
 
 const access = inject('access');
 
