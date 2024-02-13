@@ -16,11 +16,11 @@ export default {
       destination: 'Destination',
       setAsPrimary: 'Set as primary',
       emails: {
-        title: 'the email',
+        title: 'The email',
         dummy: 'There are no email addresses yet',
       },
       phones: {
-        title: 'the phone number',
+        title: 'The phone number',
         dummy: 'There are no phone numbers yet',
       },
     },

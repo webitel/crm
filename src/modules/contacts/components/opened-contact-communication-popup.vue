@@ -108,9 +108,6 @@ const communicationOptions = [
   // },
 ];
 
-const currentCommunication = ref(communicationOptions.find((option) => option.value === props.channel));
-
-
 const getDefaultDraft = () => ({
   channel: props.channel,
   type: {},
@@ -118,6 +115,10 @@ const getDefaultDraft = () => ({
 });
 
 const draft = reactive(getDefaultDraft());
+
+const currentCommunication = computed(() => {
+  return communicationOptions.find((option) => option.value === props.channel);
+});
 
 const v$ = useVuelidate(computed(() => {
   const destination = props.channel === 'email' ? { required, email } : { required };
