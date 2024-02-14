@@ -1,10 +1,11 @@
 <template>
   <div class="contact-communication-tab phones">
+
     <communication-popup
-      v-if="editedItem"
-      :edited-instance="editedItem"
-      :callback="updatePhone"
-      @close="editedItem = null"
+      v-if="isCommunicationPopup"
+      :item="editedItem"
+      :namespace="namespace"
+      @close="closePopup"
     />
 
     <delete-confirmation-popup
@@ -13,6 +14,14 @@
       :delete-count="deleteCount"
       @close="closeDelete"
     />
+
+    <header class="contact-communication-tab-header">
+      <wt-icon-action
+        :disabled="!access.hasRbacEditAccess"
+        action="add"
+        @click="isCommunicationPopup = true"
+      />
+    </header>
 
     <wt-loader v-show="isLoading" />
 
@@ -54,7 +63,7 @@
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="edit"
-            @click="editedItem = item"
+            @click="edit(item)"
           />
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
@@ -122,6 +131,7 @@ const {
 } = useDeleteConfirmationPopup();
 
 const editedItem = ref(null);
+const isCommunicationPopup = ref(false);
 
 const showDummy = computed(() => !dataList.value.length);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
@@ -130,13 +140,16 @@ function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
 }
 
-function updatePhone({ channel, destination, ...rest }) {
-  const itemInstance = { ...rest, [channel]: destination };
-  return store.dispatch(`${namespace}/UPDATE_PHONE`, {
-    itemInstance,
-    etag: editedItem.value.etag,
-  });
+function edit(item) {
+  editedItem.value = item;
+  isCommunicationPopup.value = true;
 }
+
+function closePopup() {
+  isCommunicationPopup.value = false;
+  editedItem.value = null
+}
+
 </script>
 
 <style lang="scss" scoped>

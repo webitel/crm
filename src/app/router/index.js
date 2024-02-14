@@ -27,7 +27,7 @@ const checkAppAccess = (to, from, next) => {
 const checkRouteAccess = ((to, from, next) => {
   // has Role Section Access AND (Select role permissions || ObAC permissions access)
   const hasReadAccess = store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to })
-  && store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
+    && store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
   if (hasReadAccess) {
     next();
   } else {
@@ -49,11 +49,11 @@ const routes = [
     beforeEnter: checkAppAccess,
     children: [
       {
-      path: 'contacts',
-      name: CrmSections.CONTACTS,
-      component: TheContacts,
-      beforeEnter: checkRouteAccess,
-    },
+        path: 'contacts',
+        name: CrmSections.CONTACTS,
+        component: TheContacts,
+        beforeEnter: checkRouteAccess,
+      },
       {
         path: 'contacts/:id',
         name: `${CrmSections.CONTACTS}-edit`,
