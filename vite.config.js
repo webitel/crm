@@ -8,13 +8,13 @@ import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  // const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, process.cwd(), '');
 
   return defineConfig({
     base: '/crm',
     define: {
-      // 'process.env': JSON.parse(JSON.stringify(env)
-      // .replaceAll('VITE_', 'VUE_APP_')),
+      'process.env': JSON.parse(JSON.stringify(env)
+      .replaceAll('VITE_', 'VUE_APP_')),
     },
     server: {
       host: true,
