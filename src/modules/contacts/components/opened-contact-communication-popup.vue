@@ -6,10 +6,7 @@
     @close="close"
   >
     <template #header>
-      {{ item ? t('reusable.edit') : t('reusable.add') }}
-      {{ currentCommunication.locale.toLowerCase() ||
-        t('contacts.communications.communications', 1).toLowerCase()
-      }}
+      {{ item ? currentCommunication.updateLocale : currentCommunication.addLocale }}
     </template>
     <template #main>
       <form
@@ -88,14 +85,16 @@ const TypeSelect = ref(null);
 const communicationOptions = [
   {
     value: 'email', // should be same as backend field for destination
-    locale: t('contacts.communications.emails.title'),
+    addLocale: t('contacts.communications.emails.addTitle'),
+    updateLocale: t('contacts.communications.emails.editTitle'),
     filterField: EngineCommunicationChannels.Email,
     addNamespace: `${props.namespace}/ADD_EMAIL`,
     updateNamespace: `${props.namespace}/UPDATE_EMAIL`,
   },
   {
     value: 'number',
-    locale: t('contacts.communications.phones.title'),
+    addLocale: t('contacts.communications.phones.addTitle'),
+    updateLocale: t('contacts.communications.phones.editTitle'),
     filterField: EngineCommunicationChannels.Phone,
     addNamespace: `${props.namespace}/ADD_PHONE`,
     updateNamespace: `${props.namespace}/UPDATE_PHONE`,
