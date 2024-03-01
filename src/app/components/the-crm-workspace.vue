@@ -41,7 +41,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 
-const release = process.env.npm_package_version;;
+const release = process.env.npm_package_version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
 
 const store = useStore();
