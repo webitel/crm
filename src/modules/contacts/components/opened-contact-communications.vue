@@ -28,6 +28,7 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import TheEmails from '../modules/emails/components/the-emails.vue';
 import ThePhones from '../modules/phones/components/the-phones.vue';
+import TheMessaging from '../modules/messaging/components/the-messaging.vue';
 
 const access = inject('access');
 
@@ -40,6 +41,7 @@ const props = defineProps({
 
 const emailsNamespace = `${props.namespace}/emails`;
 const phonesNamespace = `${props.namespace}/phones`;
+const messagingNamespace = `${props.namespace}/messaging`;
 
 const store = useStore();
 const { t } = useI18n();
@@ -52,6 +54,14 @@ const tabs = computed(() => [
     namespace: phonesNamespace,
     icon: 'call',
     channel: 'number', // must be same as comm popup channel
+  },
+  {
+    value: 'messaging',
+    label: t('vocabulary.messaging'),
+    component: TheMessaging,
+    namespace: messagingNamespace,
+    icon: 'chat',
+    channel: 'messaging', // must be same as comm popup channel
   },
   {
     value: 'emails',
