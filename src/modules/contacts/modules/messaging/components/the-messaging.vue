@@ -20,7 +20,7 @@
         sortable
         @sort="sort"
       >
-        <template #id="{ item }">
+        <template #icon="{ item }">
           <wt-icon
             :icon="iconType[item.protocol]"
           />

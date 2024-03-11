@@ -2,9 +2,9 @@ import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
 export default [
   {
-    value: 'id',
+    value: 'icon',
     show: true,
-    width: '30px',
+    width: '24px',
   },
   {
     value: 'protocol',
