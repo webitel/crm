@@ -62,7 +62,20 @@ const routes = [
         children: [
           {
             path: 'communications',
+            redirect: {
+              name: `${CrmSections.CONTACTS}-communications-phones`
+            },
             name: `${CrmSections.CONTACTS}-communications`,
+            component: ContactCommunications,
+          },
+          {
+            path: 'communications/phones',
+            name: `${CrmSections.CONTACTS}-communications-phones`,
+            component: ContactCommunications,
+          },
+          {
+            path: 'communications/emails',
+            name: `${CrmSections.CONTACTS}-communications-emails`,
             component: ContactCommunications,
           },
           {
