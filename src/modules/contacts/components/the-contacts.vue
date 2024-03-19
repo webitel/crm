@@ -61,8 +61,7 @@
                 :username="item.name.commonName"
               />
               <wt-item-link
-                :id="item.id"
-                :route-name="CrmSections.CONTACTS"
+                  :link="communicationsLink(item)"
               >
                 {{ item.name.commonName }}
               </wt-item-link>
@@ -213,6 +212,11 @@ function create() {
 function edit({ id }) {
   editedContactId.value = id;
   isContactPopup.value = true;
+}
+
+function communicationsLink({ id }) {
+  const routeName = CrmSections.CONTACTS;
+  return { name: `${routeName}-communications`, params: { id } };
 }
 
 function saved(id) {
