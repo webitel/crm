@@ -7,7 +7,7 @@
         :disabled="currentTab.value === tab.value"
         :color="currentTab.value !== tab.value && 'secondary'"
         wide
-        @click="currentTab = tab"
+        @click="changeTab(tab)"
       >
         <wt-icon
           :icon="tab.icon"
@@ -23,9 +23,11 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, inject, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import TheEmails from '../modules/emails/components/the-emails.vue';
 import ThePhones from '../modules/phones/components/the-phones.vue';
 
@@ -43,6 +45,8 @@ const phonesNamespace = `${props.namespace}/phones`;
 
 const store = useStore();
 const { t } = useI18n();
+const router = useRouter();
+const route = useRoute();
 
 const tabs = computed(() => [
   {
@@ -52,6 +56,7 @@ const tabs = computed(() => [
     namespace: phonesNamespace,
     icon: 'call',
     channel: 'number', // must be same as comm popup channel
+    pathName: `${CrmSections.CONTACTS}-communications-phones`,
   },
   {
     value: 'emails',
@@ -60,10 +65,15 @@ const tabs = computed(() => [
     namespace: emailsNamespace,
     icon: 'email',
     channel: 'email', // must be same as comm popup channel
+    pathName: `${CrmSections.CONTACTS}-communications-emails`,
   },
 ]);
 
-const currentTab = ref(tabs.value[0]);
+const currentTab = computed(() => tabs.value.find(({ pathName }) => pathName === route.name))
+
+function changeTab(tab) {
+  return router.push({ name: tab.pathName });
+}
 
 </script>
 

@@ -51,19 +51,13 @@ const tabs = computed(() => [
   },
 ]);
 
-const currentTab = computed(() => tabs.value.find(({ pathName }) => pathName === route.name));
+const currentTab = computed(() => {
+  return tabs.value.find(({ pathName }) => route?.matched?.find(({name}) => name === pathName));
+});
 
 function changeTab(tab) {
   return router.push({ name: tab.pathName });
 }
-
-function initializeTab() {
-  if (!currentTab.value) changeTab(tabs.value[0]);
-}
-
-onMounted(() => {
-  initializeTab();
-});
 </script>
 
 <style lang="scss" scoped>
