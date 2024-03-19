@@ -52,23 +52,12 @@ const tabs = computed(() => [
 ]);
 
 const currentTab = computed(() => {
-  if(route?.name?.includes('communications')) {
-    return tabs.value.find(tab => tab.value === 'communications')
-  }
-  return tabs.value.find(({ pathName }) => pathName === route.name)
+  return tabs.value.find(({ pathName }) => route?.matched?.find(({name}) => name === pathName));
 });
 
 function changeTab(tab) {
   return router.push({ name: tab.pathName });
 }
-
-function initializeTab() {
-  if (!currentTab.value) changeTab(tabs.value[0]);
-}
-
-onMounted(() => {
-  initializeTab();
-});
 </script>
 
 <style lang="scss" scoped>

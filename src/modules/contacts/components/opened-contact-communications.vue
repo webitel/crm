@@ -69,20 +69,11 @@ const tabs = computed(() => [
   },
 ]);
 
-const currentTab = ref({});
+const currentTab = computed(() => tabs.value.find(({ pathName }) => pathName === route.name))
 
 function changeTab(tab) {
-  currentTab.value = tab;
   return router.push({ name: tab.pathName });
 }
-
-function initializeCommunicationsTab() {
-   currentTab.value = tabs.value.find(({ pathName }) => pathName === route.name)
-}
-
-onMounted(() => {
-  initializeCommunicationsTab();
-});
 
 </script>
 
