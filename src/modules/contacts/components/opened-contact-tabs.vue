@@ -52,7 +52,7 @@ const tabs = computed(() => [
 ]);
 
 const currentTab = computed(() => {
-  if(route.name.includes('communications')) {
+  if(route?.name?.includes('communications')) {
     return tabs.value.find(tab => tab.value === 'communications')
   }
   return tabs.value.find(({ pathName }) => pathName === route.name)
