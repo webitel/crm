@@ -1,3 +1,5 @@
+import ChatGatewayProvider
+  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
 
@@ -24,6 +26,19 @@ export default {
         addTitle: 'Add the phone number',
         editTitle: 'Edit the phone number',
         dummy: 'There are no phone numbers yet',
+      },
+      messaging: {
+        gateway: 'Gateway',
+        provider: 'Provider ',
+        dummy: 'There is no messaging options yet',
+        messengers: {
+          [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
+          [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
+          [ChatGatewayProvider.MESSENGER]: 'Meta',
+          [ChatGatewayProvider.VIBER]: 'Viber',
+          [ChatGatewayProvider.WEBCHAT]: 'Web chat',
+          [ChatGatewayProvider.INFOBIP]: 'Infobip',
+        },
       },
     },
     attributes: 'Attribute | Attributes',

@@ -23,13 +23,14 @@
 </template>
 
 <script setup>
-import { computed, inject, ref, onMounted } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import TheEmails from '../modules/emails/components/the-emails.vue';
 import ThePhones from '../modules/phones/components/the-phones.vue';
+import TheMessaging from '../modules/messaging/components/the-messaging.vue';
 
 const access = inject('access');
 
@@ -42,6 +43,7 @@ const props = defineProps({
 
 const emailsNamespace = `${props.namespace}/emails`;
 const phonesNamespace = `${props.namespace}/phones`;
+const messagingNamespace = `${props.namespace}/messaging`;
 
 const store = useStore();
 const { t } = useI18n();
@@ -57,6 +59,15 @@ const tabs = computed(() => [
     icon: 'call',
     channel: 'number', // must be same as comm popup channel
     pathName: `${CrmSections.CONTACTS}-communications-phones`,
+  },
+  {
+    value: 'messaging',
+    label: t('vocabulary.messaging'),
+    component: TheMessaging,
+    namespace: messagingNamespace,
+    icon: 'chat',
+    channel: 'messaging', // must be same as comm popup channel
+    pathName: `${CrmSections.CONTACTS}-communications-messaging`,
   },
   {
     value: 'emails',

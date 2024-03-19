@@ -74,13 +74,17 @@ const routes = [
                 component: ContactCommunications,
               },
               {
+                path: 'messaging',
+                name: `${CrmSections.CONTACTS}-communications-messaging`,
+                component: ContactCommunications,
+              },
+              {
                 path: 'emails',
                 name: `${CrmSections.CONTACTS}-communications-emails`,
                 component: ContactCommunications,
               },
             ],
           },
-
           {
             path: 'variables',
             name: `${CrmSections.CONTACTS}-variables`,

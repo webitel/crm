@@ -1,3 +1,5 @@
+import ChatGatewayProvider
+  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
 
@@ -24,6 +26,19 @@ export default {
         addTitle: 'Додати номер телефону',
         editTitle: 'Редагувати номер телефону',
         dummy: 'Телефонні номери ще не додано',
+      },
+      messaging: {
+        gateway: 'Шлюз',
+        provider: 'Провайдер',
+        dummy: 'Поки ще було текстових діалогів',
+        messengers: {
+          [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
+          [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Застосунок',
+          [ChatGatewayProvider.MESSENGER]: 'Meta',
+          [ChatGatewayProvider.VIBER]: 'Viber',
+          [ChatGatewayProvider.WEBCHAT]: 'Web chat',
+          [ChatGatewayProvider.INFOBIP]: 'Infobip',
+        },
       },
     },
     attributes: 'Атрибут | Атрибути',
