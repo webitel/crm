@@ -30,7 +30,7 @@ export default {
       messaging: {
         gateway: 'Шлюз',
         provider: 'Провайдер',
-        dummy: 'Поки ще було текстових діалогів',
+        dummy: 'Поки ще не було текстових діалогів',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Застосунок',

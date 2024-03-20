@@ -30,7 +30,7 @@ export default {
       messaging: {
         gateway: 'Gateway',
         provider: 'Provider ',
-        dummy: 'There is no messaging options yet',
+        dummy: 'There are no messaging options yet',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
