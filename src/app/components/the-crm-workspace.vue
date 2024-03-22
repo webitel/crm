@@ -37,7 +37,6 @@
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { computed, inject, onMounted } from 'vue';
 import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/WebitelApplications.enum';
-import authAPI from '@webitel/ui-sdk/src/modules/Userinfo/api/auth';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -111,9 +110,12 @@ function settings() {
   window.open(settingsUrl);
 }
 
+function logout() {
+  return store.dispatch('userinfo/LOGOUT');
+}
+
 async function logoutUser() {
-  await authAPI.logout();
-  await router.replace('/auth');
+  return logout();
 }
 
 function setLanguage() {
