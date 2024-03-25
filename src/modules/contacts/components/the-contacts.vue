@@ -220,7 +220,7 @@ function communicationsLink({ id }) {
 }
 
 function saved(id) {
-  router.push(`/${CrmSections.CONTACTS}/${id}`);
+  router.push(`/${CrmSections.CONTACTS}/${id}/communications`);
 }
 
 function closeContactPopup() {
