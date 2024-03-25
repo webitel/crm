@@ -49,6 +49,19 @@ const getList = async (params) => {
   }
 };
 
+const deleteItem = async ({ id, parentId }) => {
+  try {
+    const response = await service.deleteIMClient(parentId, id);
+    return applyTransform(response.data, [
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
 export default {
   getList,
+  delete: deleteItem,
 };

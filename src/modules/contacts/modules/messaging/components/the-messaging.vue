@@ -1,6 +1,13 @@
 <template>
   <div class="contact-communication-tab">
 
+    <delete-confirmation-popup
+      v-if="isConfirmationPopup"
+      :callback="deleteCallback"
+      :delete-count="deleteCount"
+      @close="closeDelete"
+    />
+
     <wt-loader v-show="isLoading" />
 
     <wt-dummy
@@ -31,6 +38,16 @@
         <template #app="{ item }">
           {{ item.app.name }}
         </template>
+        <template #actions="{ item }">
+          <wt-icon-action
+            :disabled="!access.hasRbacEditAccess"
+            action="delete"
+            @click="askDeleteConfirmation({
+              deleted: item,
+              callback: () => deleteData(item),
+            })"
+          />
+        </template>
       </wt-table>
     </div>
   </div>
@@ -42,6 +59,11 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import dummyLight from '../assets/messaging-dummy-light.svg';
@@ -67,10 +89,20 @@ const {
   headers,
   error,
 
+  deleteData,
   sort,
 } = useTableStore(props.namespace);
 
 const { filtersNamespace } = useTableFilters(namespace);
+
+const {
+  isVisible: isConfirmationPopup,
+  deleteCount,
+  deleteCallback,
+
+  askDeleteConfirmation,
+  closeDelete,
+} = useDeleteConfirmationPopup();
 
 const showDummy = computed(() => !dataList.value.length);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
