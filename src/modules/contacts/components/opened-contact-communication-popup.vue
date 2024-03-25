@@ -99,12 +99,6 @@ const communicationOptions = [
     addNamespace: `${props.namespace}/ADD_PHONE`,
     updateNamespace: `${props.namespace}/UPDATE_PHONE`,
   },
-  // {
-  //   value: 'messaging',
-  //   text: ,
-  //   filterField: EngineCommunicationChannels.Messaging,
-  //   namespace: ,
-  // },
 ];
 
 const getDefaultDraft = () => ({
