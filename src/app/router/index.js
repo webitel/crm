@@ -53,6 +53,7 @@ const routes = [
         name: `${CrmSections.CONTACTS}-edit`,
         component: OpenedContact,
         beforeEnter: checkRouteAccess,
+        redirect: { name: `${CrmSections.CONTACTS}-communications` },
         children: [
           {
             path: 'communications',
