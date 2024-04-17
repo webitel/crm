@@ -7,6 +7,7 @@ import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import OpenedContact
   from '../../modules/contacts/components/opened-contact.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
+import ContactTimeline from '../../modules/contacts/modules/timeline/components/the-timeline.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import ContactPermissions
@@ -53,8 +54,13 @@ const routes = [
         name: `${CrmSections.CONTACTS}-edit`,
         component: OpenedContact,
         beforeEnter: checkRouteAccess,
-        redirect: { name: `${CrmSections.CONTACTS}-communications` },
+        redirect: { name: `${CrmSections.CONTACTS}-timeline` },
         children: [
+          {
+            path: 'timeline',
+            name: `${CrmSections.CONTACTS}-timeline`,
+            component: ContactTimeline,
+          },
           {
             path: 'communications',
             redirect: {
