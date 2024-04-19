@@ -1,38 +1,45 @@
 <template>
-  <div class="timeline">
-    <timeline-header
-      v-if="isShowHeader"
-      :namespace="namespace"
-      :filtersNamespace="filtersNamespace"
-    ></timeline-header>
+  <timeline-container>
+    <template #header>
+      <timeline-header
+        v-if="isShowHeader"
+        :filtersNamespace="filtersNamespace"
+        :namespace="namespace"
+      ></timeline-header>
+    </template>
 
-    <wt-dummy
-      v-if="!isLoading && isEmptyDataList"
-      :src="darkMode ? dummyDark : dummyLight"
-    />
+    <template #content>
+      <wt-loader
+        v-if="isLoading"
+      />
 
-    <div class="timeline__wrapper">
+      <wt-dummy
+        v-else-if="isEmptyDataList"
+        :src="darkMode ? dummyDark : dummyLight"
+      />
+
       <timeline-day
         v-for="(day, idx) of dataList"
-        :key="idx"
+        :key="day.dateTimestamp"
         :day="day"
-        :is-last-day="dataList.length - 1 === idx"
+        :last-day="dataList.length - 1 === idx"
       ></timeline-day>
-    </div>
-  </div>
+    </template>
+  </timeline-container>
 
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import TimelineHeader from './timeline-header.vue';
-import TimelineDay from './timeline-day.vue';
-import dummyLight from '../assets/timeline-dummy-light.svg';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import TimelineContainer from './timeline-container.vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
+import dummyLight from '../assets/timeline-dummy-light.svg';
+import TimelineDay from './day-row/day-timeline-row-section.vue';
+import TimelineHeader from './timeline-header.vue';
 
 const props = defineProps({
   namespace: {
@@ -59,14 +66,5 @@ const isShowHeader = computed(() => !isEmptyDataList.value || (isEmptyDataList.v
 </script>
 
 <style lang="scss" scoped>
-.timeline {
-  display: flex;
-  flex-direction: column;
 
-  &__wrapper {
-    @extend %wt-scrollbar;
-    overflow: auto;
-    padding: var(--spacing-sm);
-  }
-}
 </style>
