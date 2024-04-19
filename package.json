@@ -9,6 +9,7 @@
     "test:unit": "vitest",
     "lint:fix": "eslint --fix --ext .js,.vue src"
   },
+  "type": "module",
   "dependencies": {
     "@vue/compat": "^3.3.9",
     "@vuelidate/core": "^2.0.0",

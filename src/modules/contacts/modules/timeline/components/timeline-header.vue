@@ -22,7 +22,7 @@ import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedS
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import EventTypeFilter from './utils/event-type-filter.vue';
+import EventTypeFilter from './event-type-filter.vue';
 import timelineEventTypes from './enums/timelineEventTypes.enum';
 
 const props = defineProps({
