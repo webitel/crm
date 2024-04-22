@@ -12,35 +12,38 @@
       </wt-page-header>
     </template>
     <template #main>
-      <contact-popup
-        v-if="isContactPopup"
-        :id="id"
-        :namespace="baseNamespace"
-        @saved="loadItem"
-        @close="isContactPopup = false"
-      />
-      <delete-confirmation-popup
-        v-show="isDeleteConfirmationPopup"
-        :delete-count="deleteCount"
-        :callback="deleteCallback"
-        @close="closeDelete"
-      />
-      <div class="opened-contact-content">
-        <opened-contact-general
-          :common-name="itemInstance.name ? itemInstance.name.commonName : ''"
-          :timezones="itemInstance.timezones ? itemInstance.timezones : []"
-          :managers="itemInstance.managers ? itemInstance.managers : []"
-          :about="itemInstance.about"
-          :labels="itemInstance.labels ? itemInstance.labels : []"
-          @edit="isContactPopup = true"
-          @delete="askDeleteConfirmation({
+      <wt-loader v-if="isLoading "/>
+      <div v-else>
+        <contact-popup
+          v-if="isContactPopup"
+          :id="id"
+          :namespace="baseNamespace"
+          @saved="loadItem"
+          @close="isContactPopup = false"
+        />
+        <delete-confirmation-popup
+          v-show="isDeleteConfirmationPopup"
+          :delete-count="deleteCount"
+          :callback="deleteCallback"
+          @close="closeDelete"
+        />
+        <div class="opened-contact-content">
+          <opened-contact-general
+            :common-name="itemInstance.name ? itemInstance.name.commonName : ''"
+            :timezones="itemInstance.timezones ? itemInstance.timezones : []"
+            :managers="itemInstance.managers ? itemInstance.managers : []"
+            :about="itemInstance.about"
+            :labels="itemInstance.labels ? itemInstance.labels : []"
+            @edit="isContactPopup = true"
+            @delete="askDeleteConfirmation({
             deleted: [itemInstance],
             callback: () => deleteContact(itemInstance),
           })"
-        />
-        <opened-contact-tabs
-          :namespace="namespace"
-        />
+          />
+          <opened-contact-tabs
+            :namespace="namespace"
+          />
+        </div>
       </div>
     </template>
   </wt-page-wrapper>
@@ -93,6 +96,8 @@ provide('access', computed(() => ({
 
 const isContactPopup = ref(false);
 
+const isLoading = ref(true);
+
 const path = computed(() => {
   const baseUrl = '/contacts';
 
@@ -107,9 +112,17 @@ const path = computed(() => {
 });
 
 async function initializeCard() {
-  const { id: itemId } = route.params;
-  await setId(itemId);
-  return loadItem();
+  try {
+    isLoading.value = true;
+
+    const { id: itemId } = route.params;
+    await setId(itemId);
+    await loadItem();
+  } finally {
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 500);
+  }
 }
 
 function close() {

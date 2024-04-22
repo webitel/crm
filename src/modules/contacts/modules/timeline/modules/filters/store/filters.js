@@ -5,25 +5,25 @@ import FiltersStoreModule
 import router from '../../../../../../../app/router';
 
 const state = {
-  page: new BaseFilterSchema({
-    value: 1,
-    defaultValue: 1,
-  }),
-  size: new BaseFilterSchema({
-    value: 10,
-    defaultValue: 10,
-  }),
   type: new BaseFilterSchema({
-    value: null,
-    defaultValue: null,
+    value: [],
+    defaultValue: ['chat', 'call'], // FIXME use enum
   }),
 };
 
 const getters = {
   ROUTER: () => router,
-  TABLE_NAMESPACE: () => 'contacts/card/timeline/table',
+  TABLE_NAMESPACE: () => '',
 };
 
-const filters = new FiltersStoreModule().getModule({ state, getters });
+const actions = {
+  LOAD_DATA_LIST: () => {},
+};
+
+const filters = new FiltersStoreModule().getModule({
+  state,
+  getters,
+  actions,
+});
 
 export default filters;

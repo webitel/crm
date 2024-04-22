@@ -46,5 +46,6 @@ const getList = async (params) => {
   }
 };
 
-
-export default {getList}
+export default {
+  getList,
+};
