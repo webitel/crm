@@ -1,7 +1,7 @@
 <template>
   <div class="chat-task-timeline-row">
     <timeline-row>
-      <template v-slot:before-content>
+      <template #before-content>
         <timeline-row-info
           :timestamp="createdAt"
         >
@@ -9,8 +9,8 @@
             {{ time }}
           </template>
 
-          <template #subtitle="{ weekDay }">
-            {{ weekDay }}
+          <template #subtitle>
+            <timeline-task-status />
           </template>
         </timeline-row-info>
       </template>
@@ -99,6 +99,7 @@ import TimelineRowDuration from '../utils/timeline-row-duration.vue';
 import TimelineRowInfo from '../utils/timeline-row-info.vue';
 import TimelineRowInitiator from '../utils/timeline-row-initiator.vue';
 import TimelineRow from '../utils/timeline-row.vue';
+import TimelineTaskStatus from '../utils/timeline-task-status.vue';
 
 const props = defineProps({
   item: {

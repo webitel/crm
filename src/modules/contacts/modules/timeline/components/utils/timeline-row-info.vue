@@ -22,6 +22,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   timestamp: {
@@ -30,6 +31,8 @@ const props = defineProps({
   },
 });
 
+const { d } = useI18n();
+
 const timestampTime = computed(() => {
   const date = new Date(+props.timestamp);
   return date.toLocaleTimeString();
@@ -37,12 +40,12 @@ const timestampTime = computed(() => {
 
 const timestampWeekDay = computed(() => {
   const date = new Date(+props.timestamp);
-  return date.toLocaleString('en', { weekday: 'short' }).toLowerCase();
+  return d(date, { weekday: 'long' });
 });
 
 const timestampMonth = computed(() => {
   const date = new Date(+props.timestamp);
-  return date.toLocaleString('en', { month: 'short' }).toLowerCase();
+  return d(date, { month: 'short' });
 });
 
 const timesScope = computed(() => {
@@ -56,5 +59,8 @@ const timesScope = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-// TODO
+.timeline-row-info-title,
+.timeline-row-info-subtitle {
+  @extend %typo-subtitle-2;
+}
 </style>

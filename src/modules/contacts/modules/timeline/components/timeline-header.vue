@@ -32,7 +32,7 @@ const props = defineProps({
   },
 });
 
-const { t } = useI18n();
+const { d, t } = useI18n();
 const store = useStore();
 
 const activeFilters = computed(() => getNamespacedState(store.state, props.filtersNamespace).type.value);
@@ -41,16 +41,16 @@ const isDisplayHeader = computed(() => props.list.length || (!props.list.length 
 const dateFrom = computed(() => props.list[props.list.length - 1]?.dayTimestamp);
 const dateTo = computed(() => props.list[0]?.dayTimestamp);
 
-const displayedDateFrom = computed(() => dateFrom.value || (new Date().setMonth(new Date().getMonth() - 1)));////Math.floor
+const displayedDateFrom = computed(() => dateFrom.value || (new Date().setMonth(new Date().getMonth() - 1)));
 const displayedDateTo = computed(() => dateTo.value || (new Date().getTime()));
 
 const durationTimeline = computed(() => `${formatDate(displayedDateFrom.value)} - ${formatDate(displayedDateTo.value)}`);
 
-function formatDate(date) { ///i18n
+function formatDate(date) {
   const fullDate = new Date(+date);
-  const mouth = fullDate.toLocaleString('en', { month: 'short' }).toLowerCase();
-  const year = fullDate.toLocaleString('en', { year: 'numeric' });
-  return t(`contacts.timeline.mouth.${mouth}`) + ' ' + year;
+  const mouth = d(fullDate, { month: 'long' });
+  const year = d(fullDate, { year: 'numeric' });
+  return `${mouth} ${year}`;
 }
 </script>
 

@@ -1,11 +1,12 @@
 <template>
   <component
     :is="state.component"
+    :color="state.color"
     @click="emit('click')"
   >
     {{ text }}
   </component>
-  <wt-divider
+  <timeline-separator
     :color="state.color"
   />
 </template>
@@ -13,6 +14,7 @@
 <script setup>
 import { computed } from 'vue';
 import TimelinePinType from '../../enums/TimelinePinType.enum.js';
+import TimelineSeparator from './timeline-separator.vue';
 
 const props = defineProps({
   type: {
@@ -80,10 +82,6 @@ const stateMap = {
 
 };
 
-const text = computed(() => {
-  return props.text && '123'; // day number
-});
-
 const state = computed(() => {
   if (props.collapsed) {
     return stateMap[TimelinePinType.CLOSE];
@@ -93,7 +91,4 @@ const state = computed(() => {
 </script>
 
 <style scoped lang="scss">
-.wt-divider {
-  //transform: ;
-}
 </style>
