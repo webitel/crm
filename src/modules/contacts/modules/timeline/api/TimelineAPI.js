@@ -28,7 +28,7 @@ const getList = async (params) => {
       parentId,
       dateFrom,
       dateTo,
-      type,
+      // type,
     );
     const { days, next } = applyTransform(response.data, [
       snakeToCamel(),

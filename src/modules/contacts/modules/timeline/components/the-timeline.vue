@@ -1,10 +1,10 @@
 <template>
   <timeline-container>
     <template #header>
-<!--      <timeline-header-->
-<!--        :list="dataList"-->
-<!--        :filtersNamespace="filtersNamespace"-->
-<!--      ></timeline-header>-->
+      <timeline-header
+        :namespace="timelineNamespace"
+        :list="dataList"
+      />
     </template>
 
     <template #content>
@@ -51,8 +51,6 @@ const store = useStore();
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 const timelineNamespace = `${props.namespace}/timeline`;
-
-const { namespace: filtersNamespace } = useTableFilters(timelineNamespace);
 
 const dataList = computed(() => getNamespacedState(store.state, timelineNamespace).dataList);
 const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);

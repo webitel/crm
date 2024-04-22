@@ -4,29 +4,29 @@
     class="timeline-header">
     <p class="timeline-header-duration">{{ durationTimeline }}</p>
     <div class="timeline-header-actions">
-      <timeline-task-filter-container
-        :list="list"
-        :active-filters="activeFilters"
-        :filtersNamespace="filtersNamespace">
-      </timeline-task-filter-container>
-
+      <timeline-task-type-filter
+        :namespace="filtersNamespace"
+        :calls-count="taskCounters[WebitelContactsTimelineEventType.Call]"
+        :chats-count="taskCounters[WebitelContactsTimelineEventType.Chat]"
+      />
       <button class="timeline-header-collapse">{{ t('contacts.collapseAll') }}</button>
     </div>
   </header>
 
 </template>
 <script setup>
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import TimelineTaskFilterContainer from '../modules/filters/components/timeline-task-filter-container.vue';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
 
 const props = defineProps({
   list: {
     type: Array,
   },
-  filtersNamespace: {
+  namespace: {
     type: String,
     required: true,
   },
@@ -35,8 +35,21 @@ const props = defineProps({
 const { t } = useI18n();
 const store = useStore();
 
-const activeFilters = computed(() => getNamespacedState(store.state, props.filtersNamespace).type.value);
-const isDisplayHeader = computed(() => props.list.length || (!props.list.length && activeFilters.value));
+const { filtersNamespace } = useTableFilters(props.namespace);
+
+const isDisplayHeader = computed(() => props.list.length || (!props.list.length));
+
+const taskCounters = computed(() => {
+  return props.list.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
+    return {
+      [WebitelContactsTimelineEventType.Call]: acc[WebitelContactsTimelineEventType.Call] + +callsCount,
+      [WebitelContactsTimelineEventType.Chat]: acc[WebitelContactsTimelineEventType.Chat] + +chatsCount,
+    };
+  }, {
+    [WebitelContactsTimelineEventType.Call]: 0,
+    [WebitelContactsTimelineEventType.Chat]: 0,
+  });
+});
 
 const dateFrom = computed(() => props.list[props.list.length - 1]?.dayTimestamp);
 const dateTo = computed(() => props.list[0]?.dayTimestamp);
