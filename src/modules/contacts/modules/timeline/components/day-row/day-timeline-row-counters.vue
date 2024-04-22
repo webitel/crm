@@ -1,13 +1,15 @@
 <template>
   <div class="day-timeline-row-counters">
     <div class="day-timeline-row-counters__wrapper">
-      <span>Calls: {{ props.callsCount }}</span>
-      <span>Chats: {{ props.chatsCount }}</span>
+      <span>{{ `${t('channel.type.call')}: ${props.callsCount} `}}</span>
+      <span>{{ `${t('channel.type.chat')}: ${props.chatsCount} `}}</span>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
 const props = defineProps({
   callsCount: {
     type: Number,
@@ -18,6 +20,8 @@ const props = defineProps({
     default: 0,
   },
 });
+
+const { t } = useI18n();
 </script>
 
 <style scoped lang="scss">
@@ -25,10 +29,10 @@ const props = defineProps({
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-}
 
-.day-timeline-row-counters__wrapper {
-  display: flex;
-  gap: var(--spacing-xs);
+  &__wrapper {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
 }
 </style>

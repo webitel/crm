@@ -1,14 +1,6 @@
-const timelineEventTypes = Object.freeze([
-  {
-    type: 'calls',
-    iconName: 'call',
-    countName: 'callsCount',
-  },
-  {
-    type: 'chats',
-    iconName: 'chat',
-    countName: 'chatsCount',
-  },
-]);
+const timelineEventTypes = Object.freeze({
+  CALLS: 'сalls',
+  CHATS: 'сhats',
+});
 
 export default timelineEventTypes;

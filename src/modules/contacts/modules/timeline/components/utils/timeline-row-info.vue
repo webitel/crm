@@ -37,20 +37,20 @@ const timestampTime = computed(() => {
 
 const timestampWeekDay = computed(() => {
   const date = new Date(+props.timestamp);
-  return date.toLocaleDateString();
+  return date.toLocaleString('en', { weekday: 'short' }).toLowerCase();
 });
 
 const timestampMonth = computed(() => {
   const date = new Date(+props.timestamp);
-  return date.toLocaleDateString();
+  return date.toLocaleString('en', { month: 'short' }).toLowerCase();
 });
 
 const timesScope = computed(() => {
   return {
     timestamp: props.timestamp,
-    time: timestampTime,
-    weekDay: timestampWeekDay,
-    month: timestampMonth,
+    time: timestampTime.value,
+    weekDay: timestampWeekDay.value,
+    month: timestampMonth.value,
   };
 });
 </script>

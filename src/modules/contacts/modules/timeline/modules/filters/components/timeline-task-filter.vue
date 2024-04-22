@@ -1,10 +1,10 @@
-<template>
-  <div class="event-type-filter">
+ <template>
+  <div class="timeline-task-filter">
     <wt-checkbox
       :selected="selected"
       @change="changeValue"></wt-checkbox>
     <wt-icon :icon="icon"></wt-icon>
-    <p class="event-type-filter__count">({{count}})</p>
+    <p class="timeline-task-filter__count">({{count}})</p>
   </div>
 </template>
 <script setup>
@@ -34,7 +34,7 @@ function changeValue(value) {
 </script>
 
 <style lang="scss" scoped>
-.event-type-filter{
+.timeline-task-filter{
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-xs);
