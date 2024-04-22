@@ -4,10 +4,9 @@
       <timeline-row-info
         :timestamp="timestamp"
       >
-        <template #title="timesScope">{{ timesScope.weekDay }}</template>
-        <template #subtitle="timesScope">{{ timesScope.month }}</template>
+        <template #title="{ weekDay }">{{ weekDay }}</template>
+       <template #subtitle="{ month }">{{ month }}</template>
       </timeline-row-info>
-      {{ props.timestamp }}
     </template>
     <template #pin>
       <timeline-pin
@@ -23,13 +22,6 @@
       />
     </template>
   </timeline-row>
-
-
-  <!--    // TODO -> day-task-line -->
-  <!--      <template v-slot:before-content>-->
-  <!--        <p class="timeline-day__title">{{ t(`contacts.timeline.dayWeek.${dayWeek}`) }}</p>-->
-  <!--        <p class="timeline-day__title">{{ t(`contacts.timeline.mouth.${mouth}`) }}</p>-->
-  <!--      </template>-->
 </template>
 
 <script setup>
@@ -59,7 +51,6 @@ const emit = defineEmits([
   'toggle',
 ]);
 
-// TODO -> day-task-line
 const dayNumber = computed(() => new Date(+props.timestamp).getDate());
 
 </script>

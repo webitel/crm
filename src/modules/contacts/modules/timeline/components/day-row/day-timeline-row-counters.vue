@@ -31,6 +31,7 @@ const { t } = useI18n();
   justify-content: flex-end;
 
   &__wrapper {
+    @extend %typo-body-2;
     display: flex;
     gap: var(--spacing-xs);
   }

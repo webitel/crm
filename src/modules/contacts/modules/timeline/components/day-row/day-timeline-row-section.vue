@@ -4,13 +4,12 @@
       :timestamp="day.dayTimestamp"
       :calls-count="day.callsCount"
       :chats-count="day.chatsCount"
-      :last-day="lastDay"
       @toggle="opened = !opened"
     />
 
     <div v-if="opened">
       <task-timeline-row
-        v-for="(item) of day.items"
+        v-for="(item) of props.day.items"
         :item="item"
         :key="item.id"
       ></task-timeline-row>
@@ -26,10 +25,6 @@ import TaskTimelineRow from '../task-row/task-timeline-row.vue';
 const props = defineProps({
   day: {
     type: Object,
-  },
-  lastDay: {
-    type: Boolean,
-    default: false,
   },
 });
 

@@ -18,10 +18,9 @@
       />
 
       <day-timeline-row-section
-        v-for="(day, idx) of dataList"
+        v-for="day of dataList"
         :key="day.dateTimestamp"
         :day="day"
-        :last-day="dataList.length - 1 === idx"
       ></day-timeline-row-section>
     </template>
   </timeline-container>
