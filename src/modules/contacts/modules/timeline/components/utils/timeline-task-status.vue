@@ -11,12 +11,13 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import TimelineTaskStatusEnum from '../../enums/TimelineTaskStatus.enum.js';
 
 const props = defineProps({
   status: {
     type: String,
-    default: 'started',
-    options: ['started', 'missed', 'transferred', 'ended'],
+    default: TimelineTaskStatusEnum.STARTED,
+    options: [TimelineTaskStatusEnum.STARTED, TimelineTaskStatusEnum.MISSED, TimelineTaskStatusEnum.TRANSFERRED, TimelineTaskStatusEnum.ENDED],
   },
 });
 
@@ -24,9 +25,9 @@ const { t } = useI18n();
 
 const statusColor = computed(() => {
   switch (props.status) {
-    case 'started':
+    case TimelineTaskStatusEnum.STARTED:
       return 'success';
-    case 'transferred':
+    case TimelineTaskStatusEnum.TRANSFERRED:
       return 'transfer';
     default:
       return 'error';

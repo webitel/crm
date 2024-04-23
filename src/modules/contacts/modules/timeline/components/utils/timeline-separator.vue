@@ -21,7 +21,7 @@ const props = defineProps({
   display: block;
   background-color: var(--btn-secondary-color);
   bottom: 0;
-  left: 50%;
+ //// left: 50%;
   transform: translate(50%, 0);
 
   &--success {

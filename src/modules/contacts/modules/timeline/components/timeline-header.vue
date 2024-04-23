@@ -15,17 +15,16 @@
 
 </template>
 <script setup>
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
 
 const props = defineProps({
   list: {
     type: Array,
+    default: () => [],
   },
   namespace: {
     type: String,
@@ -34,15 +33,13 @@ const props = defineProps({
 });
 
 const { d, t } = useI18n();
-const store = useStore();
 
 const { filtersNamespace } = useTableFilters(props.namespace);
 
 const isDisplayHeader = computed(() => props.list.length || (!props.list.length));
 
 const taskCounters = computed(() => {
-  const arr = !isEmpty(props.list) ? props.list : [];
-    return arr.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
+    return props.list.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
         return {
           [WebitelContactsTimelineEventType.Call]: acc[WebitelContactsTimelineEventType.Call] + +callsCount,
           [WebitelContactsTimelineEventType.Chat]: acc[WebitelContactsTimelineEventType.Chat] + +chatsCount,

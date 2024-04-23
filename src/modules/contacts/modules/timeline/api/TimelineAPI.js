@@ -21,7 +21,7 @@ const listHandler = (items) => {
         type: item.type || WebitelContactsTimelineEventType.Chat,
       }))
     }));
-  } return copy;
+  } return [];
 }
 
   const getList = async (params) => {

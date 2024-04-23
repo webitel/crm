@@ -21,11 +21,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+}
 
-  .timeline-content {
-    @extend %wt-scrollbar;
-    overflow: auto;
-    padding: var(--spacing-sm);
-  }
+.timeline-content {
+  @extend %wt-scrollbar;
+  overflow: auto;
+  padding: var(--spacing-sm);
 }
 </style>

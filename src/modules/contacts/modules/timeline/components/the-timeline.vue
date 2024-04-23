@@ -28,10 +28,9 @@
 </template>
 
 <script setup>
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import TimelineContainer from './timeline-container.vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
