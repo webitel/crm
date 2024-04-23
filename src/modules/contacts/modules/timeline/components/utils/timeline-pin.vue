@@ -1,7 +1,7 @@
 <template>
   <component
     :is="state.component"
-    :color="state.color"
+    v-bind="state"
     @click="emit('click')"
   >
     {{ text }}
@@ -13,7 +13,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import TimelinePinType from '../../enums/TimelinePinType.enum.js';
+import TimelinePinTypeEnum from '../../enums/TimelinePinType.enum.js';
 import TimelineSeparator from './timeline-separator.vue';
 
 const props = defineProps({
@@ -35,49 +35,55 @@ const props = defineProps({
 const emit = defineEmits(['click']);
 
 const stateMap = {
-  [TimelinePinType.DAY]: {
+  [TimelinePinTypeEnum.DAY]: {
     component: 'wt-button',
     color: 'secondary',
   },
-  [TimelinePinType.CLOSE]: {
+  [TimelinePinTypeEnum.CLOSE]: {
     component: 'wt-rounded-action',
     icon: 'close'
   },
-  [TimelinePinType.CHAT]: {
+  [TimelinePinTypeEnum.CHAT]: {
     component: 'wt-rounded-action',
     color: 'chat',
     icon: 'chat',
     filled: true,
+    rounded: true,
   },
-  [TimelinePinType.CALL_INBOUND]: {
+  [TimelinePinTypeEnum.CALL_INBOUND]: {
     component: 'wt-rounded-action',
     color: 'primary',
     icon: 'call-inbound',
     filled: true,
+    rounded: true,
   },
-  [TimelinePinType.CALL_OUTBOUND]: {
+  [TimelinePinTypeEnum.CALL_OUTBOUND]: {
     component: 'wt-rounded-action',
     color: 'success',
-    icon: 'call-inbound',
+    icon: 'call-outbound',
     filled: true,
+    rounded: true,
   },
-  [TimelinePinType.CALL_MISSED]: {
+  [TimelinePinTypeEnum.CALL_MISSED]: {
     component: 'wt-rounded-action',
     color: 'error',
     icon: 'call-missed',
     filled: true,
+    rounded: true,
   },
-  [TimelinePinType.CALL_INBOUND_ON_IVR]: {
+  [TimelinePinTypeEnum.CALL_INBOUND_ON_IVR]: {
     component: 'wt-rounded-action',
     color: 'primary',
     icon: 'call-inbound',
     filled: true,
+    rounded: true,
   },
-  [TimelinePinType.CALL_MISSED_ON_QUEUE]: {
+  [TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE]: {
     component: 'wt-rounded-action',
     color: 'error',
     icon: 'call-missed',
     filled: true,
+    rounded: true,
   },
 
 };

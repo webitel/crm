@@ -1,50 +1,45 @@
 <template>
-  <div>
-    <div v-if="isCallInboundFromIvrType">
+  <div class="timeline-row-initiator">
+    <div v-if="type === TimelinePinTypeEnum.CALL_INBOUND_ON_IVR">
       <wt-icon
-        icon="account"
+        icon="bot"
       ></wt-icon>
-      <p>{{name}}</p>
+      <p>{{ text }}</p>
     </div>
 
-    <div v-else-if="isCallMissedFromQueueType">
+    <div v-else-if="type === TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE">
       <wt-chip
         color="secondary"
-      >{{name}}</wt-chip>
+      >{{text}}</wt-chip>
     </div>
 
     <div v-else>
-      <div class="event-initiator-name-user">
+      <div class="timeline-row-initiator-user">
         <wt-avatar
           size="sm"
-          :username="name" />
-        <p class="event-initiator-name-user__name">{{name}}</p>
+          :username="text" />
+        <p class="timeline-row-initiator-user__name">{{ text }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import TimelinePinTypeEnum from '../../enums/TimelinePinType.enum.js';
 
 const props = defineProps({
-  eventType: {
+  text: {
     type: String,
-    default: 'call-outbound', //?дізнатись яке дефолтне
+    default: TimelinePinTypeEnum.CALL_OUTBOUND,
   },
-  name: {
+  type: {
     type: String,
-  },
+  }
 });
-
-const { name, eventType } = props;
-
-const isCallMissedFromQueueType = computed(() => eventType === 'call-missed-from-queue');
-const isCallInboundFromIvrType = computed(() => eventType === 'call-inbound-from-ivr');
 </script>
 
 <style  lang="scss" scoped>
-.event-initiator-name-user {
+.timeline-row-initiator-user {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);

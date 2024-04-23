@@ -23,7 +23,7 @@ const listHandler = (items) => {
         type:!item.type ? 'chat' : item.type,
       }))
     }));
-  } return copy;
+  } return [];
 }
 
   const getList = async (params) => {

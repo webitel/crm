@@ -2,6 +2,8 @@ import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+import TimelineTaskStatusEnum
+  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -18,33 +20,10 @@ export default {
         transcription: 'Transcription',
       },
       status: {
-        started: 'Started',
-        missed: 'Missed',
-        transferred: 'Transferred',
-        ended: 'Ended',
-      },
-      mouth: {
-        jan: 'January',
-        feb: 'February',
-        mar: 'March',
-        apr: 'April',
-        may: 'May',
-        jun: 'June',
-        jul: 'July',
-        aug: 'August',
-        sep: 'September',
-        oct: 'October',
-        nov: 'November',
-        dec: 'December',
-      },
-      dayWeek: {
-        mon: 'Monday',
-        tue: 'Tuesday',
-        wed: 'Wednesday',
-        thu: 'Thursday',
-        fri: 'Friday',
-        sat: 'Saturday',
-        sun: 'Sunday',
+        [TimelineTaskStatusEnum.STARTED]: 'Started',
+        [TimelineTaskStatusEnum.MISSED]: 'Missed',
+        [TimelineTaskStatusEnum.TRANSFERRED]: 'Transferred',
+        [TimelineTaskStatusEnum.ENDED]: 'Ended',
       },
     },
     communications: {

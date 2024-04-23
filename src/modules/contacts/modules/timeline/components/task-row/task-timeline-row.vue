@@ -1,7 +1,7 @@
 <template>
   <component
     :is="component"
-    :task="item"
+    :item="item"
   />
 </template>
 

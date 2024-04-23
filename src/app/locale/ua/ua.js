@@ -2,6 +2,8 @@ import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+import TimelineTaskStatusEnum
+  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -18,33 +20,10 @@ export default {
         transcription: 'Транскрипція',
       },
       status: {
-        started: 'Начало',
-        missed: 'Пропущен',
-        transferred: 'Переведено',
-        ended: 'Конец',
-      },
-      mouth: {
-        jan: 'Січень',
-        feb: 'Лютий',
-        mar: 'Березень',
-        apr: 'квітень',
-        may: 'Травень',
-        jun: 'Червень',
-        jul: 'Липень',
-        aug: 'Серпень',
-        sep: 'Вересень',
-        oct: 'Жовтень',
-        nov: 'Листопад',
-        dec: 'Грудень',
-      },
-      dayWeek: {
-        mon: 'Понеділок',
-        tue: 'Вівторок',
-        wed: 'Середа',
-        thu: 'Четвер',
-        fri: 'П\'ятниця',
-        sat: 'Субота',
-        syn: 'Неділя',
+        [TimelineTaskStatusEnum.STARTED]: 'Начало',
+        [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
+        [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
+        [TimelineTaskStatusEnum.ENDED]: 'Конец',
       },
     },
     communications: {
