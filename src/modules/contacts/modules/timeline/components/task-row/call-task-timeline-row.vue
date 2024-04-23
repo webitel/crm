@@ -29,7 +29,7 @@
           ></timeline-row-initiator>
 
           <wt-chip
-            v-if="hiddenUsers.lenght"
+            v-if="hiddenUsers.length"
             @click="openHiddenUsers = !openHiddenUsers"
           >{{ +hiddenUsers.lenght }}
           </wt-chip>

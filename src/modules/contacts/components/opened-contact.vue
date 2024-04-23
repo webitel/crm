@@ -13,7 +13,10 @@
     </template>
     <template #main>
       <wt-loader v-if="isLoading "/>
-      <div v-else>
+      <div
+        style="display: contents;"
+        v-else
+      >
         <contact-popup
           v-if="isContactPopup"
           :id="id"

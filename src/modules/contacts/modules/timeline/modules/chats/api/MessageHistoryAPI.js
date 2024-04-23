@@ -1,6 +1,5 @@
 import applyTransform, {
   notify,
-  sanitize,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers';
 import { TimelineApiFactory } from 'webitel-sdk';

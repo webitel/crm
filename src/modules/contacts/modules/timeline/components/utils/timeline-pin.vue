@@ -2,7 +2,7 @@
   <component
     :is="state.component"
     v-bind="state"
-    @click="emit('click')"
+    @click="handleClick"
   >
     {{ text }}
   </component>
@@ -13,7 +13,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import TimelinePinTypeEnum from '../../enums/TimelinePinType.enum.js';
+import TimelinePinType from '../../enums/TimelinePinType.enum.js';
 import TimelineSeparator from './timeline-separator.vue';
 
 const props = defineProps({
@@ -31,54 +31,55 @@ const props = defineProps({
   },
 });
 
-// maybe, collapse/expand
-const emit = defineEmits(['click']);
+const emit = defineEmits([
+  'click',
+]);
 
 const stateMap = {
-  [TimelinePinTypeEnum.DAY]: {
+  [TimelinePinType.DAY]: {
     component: 'wt-button',
     color: 'secondary',
   },
-  [TimelinePinTypeEnum.CLOSE]: {
+  [TimelinePinType.CLOSE]: {
     component: 'wt-rounded-action',
     icon: 'close'
   },
-  [TimelinePinTypeEnum.CHAT]: {
+  [TimelinePinType.CHAT]: {
     component: 'wt-rounded-action',
     color: 'chat',
     icon: 'chat',
     filled: true,
     rounded: true,
   },
-  [TimelinePinTypeEnum.CALL_INBOUND]: {
+  [TimelinePinType.CALL_INBOUND]: {
     component: 'wt-rounded-action',
     color: 'primary',
     icon: 'call-inbound',
     filled: true,
     rounded: true,
   },
-  [TimelinePinTypeEnum.CALL_OUTBOUND]: {
+  [TimelinePinType.CALL_OUTBOUND]: {
     component: 'wt-rounded-action',
     color: 'success',
     icon: 'call-outbound',
     filled: true,
     rounded: true,
   },
-  [TimelinePinTypeEnum.CALL_MISSED]: {
+  [TimelinePinType.CALL_MISSED]: {
     component: 'wt-rounded-action',
     color: 'error',
     icon: 'call-missed',
     filled: true,
     rounded: true,
   },
-  [TimelinePinTypeEnum.CALL_INBOUND_ON_IVR]: {
+  [TimelinePinType.CALL_INBOUND_ON_IVR]: {
     component: 'wt-rounded-action',
     color: 'primary',
     icon: 'call-inbound',
     filled: true,
     rounded: true,
   },
-  [TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE]: {
+  [TimelinePinType.CALL_MISSED_ON_QUEUE]: {
     component: 'wt-rounded-action',
     color: 'error',
     icon: 'call-missed',
@@ -89,11 +90,12 @@ const stateMap = {
 };
 
 const state = computed(() => {
-  if (props.collapsed) {
-    return stateMap[TimelinePinType.CLOSE];
-  }
-  return stateMap[props.type];
+  return props.collapsed ? stateMap[props.type] : stateMap[TimelinePinType.CLOSE];
 });
+
+const handleClick = () => {
+  emit('click');
+};
 </script>
 
 <style scoped lang="scss">

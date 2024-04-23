@@ -39,7 +39,7 @@ const listHandler = (items) => {
         parentId,
         dateFrom,
         dateTo,
-        type,
+        // type,
       );
       const { days, next } = applyTransform(response.data, [
         snakeToCamel(),

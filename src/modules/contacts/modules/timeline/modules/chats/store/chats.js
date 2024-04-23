@@ -19,12 +19,6 @@ const actions = {
     });
     context.commit('SET_TO_HISTORY', { chatId, data: items });
   },
-  GET_HISTORY_BY_CHAT_ID: async (context, { chatId }) => {
-    const history = context.getters.HISTORY_BY_CHAT_ID(chatId);
-    if (history) return history;
-    await context.dispatch('LOAD_HISTORY', { chatId });
-    return context.getters.HISTORY_BY_CHAT_ID(chatId);
-  },
 };
 
 const mutations = {

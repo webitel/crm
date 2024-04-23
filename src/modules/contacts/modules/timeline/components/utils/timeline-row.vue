@@ -3,29 +3,39 @@
     class="timeline-row"
     :class="{ 'timeline-row--width-fit-content': props.widthFitContent }"
   >
-    <section class="timeline-row-before-content">
-      <slot name="before-content" />
-    </section>
-
-    <section class="timeline-row-pin">
-      <slot name="pin" />
-    </section>
-
-    <section class="timeline-row-content">
-      <slot name="content" />
-    </section>
-
-    <section
-      v-if="slots['after-content']"
-      class="timeline-row-after-content"
+    <header
+      class="timeline-row-header"
     >
-      <slot name="after-content" />
+      <section class="timeline-row-before-content">
+        <slot name="before-content" />
+      </section>
+
+      <section class="timeline-row-pin">
+        <slot name="pin" v-bind="{ toggle, collapsed }" />
+      </section>
+
+      <section class="timeline-row-content">
+        <slot name="content" />
+      </section>
+
+      <section
+        v-if="slots['after-content']"
+        class="timeline-row-after-content"
+      >
+        <slot name="after-content" />
+      </section>
+    </header>
+    <section
+      class="timeline-row-dropdown"
+      v-if="slots.dropdown && !collapsed"
+    >
+      <slot name="dropdown" v-bind="{ toggle, collapsed }" />
     </section>
   </article>
 </template>
 
 <script setup>
-import { useSlots } from 'vue';
+import { ref, useSlots } from 'vue';
 
 const props = defineProps({
   widthFitContent: {
@@ -35,10 +45,22 @@ const props = defineProps({
 });
 
 const slots = useSlots();
+
+const collapsed = ref(true);
+
+const toggle = () => {
+  collapsed.value = !collapsed.value;
+};
 </script>
 
 <style  lang="scss" scoped>
 .timeline-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.timeline-row-header {
   display: flex;
   gap: var(--spacing-sm);
   align-items: flex-start;

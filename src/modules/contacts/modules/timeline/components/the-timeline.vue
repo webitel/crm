@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, provide } from 'vue';
 import { useStore } from 'vuex';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import TimelineContainer from './timeline-container.vue';
@@ -44,11 +44,13 @@ const props = defineProps({
   },
 });
 
+const timelineNamespace = `${props.namespace}/timeline`;
+
+provide('namespace', timelineNamespace);
+
 const store = useStore();
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-
-const timelineNamespace = `${props.namespace}/timeline`;
 
 const dataList = computed(() => getNamespacedState(store.state, timelineNamespace).dataList);
 const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);

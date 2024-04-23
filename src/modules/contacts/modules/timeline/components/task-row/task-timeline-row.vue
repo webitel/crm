@@ -7,7 +7,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import ChatTaskTimelineRow from './chat-task-timeline-row.vue';
+import ChatTaskTimelineRow from '../../modules/chats/components/task-row/chat-task-timeline-row.vue';
 import CallTaskTimelineRow from './call-task-timeline-row.vue';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 
