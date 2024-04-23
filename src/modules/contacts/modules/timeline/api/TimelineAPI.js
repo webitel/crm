@@ -15,7 +15,7 @@ const timeline = new TimelineApiFactory(configuration, '', instance);
 
 const listHandler = (items) => {
   let copy = deepCopy(items);
-  if(copy) {
+  if(copy.length) {
     return copy.map(day => ({
       ...day,
       items: day.items.map(item => ({

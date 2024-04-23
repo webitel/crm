@@ -55,15 +55,12 @@ const api = new ApiStoreModule()
 .getModule();
 
 const timeline = new BaseStoreModule()
-.getModule(  {
+.setChildModules({ api, filters })
+.getModule( {
   state,
   getters,
   actions,
   mutations,
-  modules: {
-    api,
-    filters,
-  },
 });
 
 export default timeline;

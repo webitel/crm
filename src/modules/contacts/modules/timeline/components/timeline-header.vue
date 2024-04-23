@@ -16,6 +16,7 @@
 </template>
 <script setup>
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -40,15 +41,16 @@ const { filtersNamespace } = useTableFilters(props.namespace);
 const isDisplayHeader = computed(() => props.list.length || (!props.list.length));
 
 const taskCounters = computed(() => {
-  return props.list.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
-    return {
-      [WebitelContactsTimelineEventType.Call]: acc[WebitelContactsTimelineEventType.Call] + +callsCount,
-      [WebitelContactsTimelineEventType.Chat]: acc[WebitelContactsTimelineEventType.Chat] + +chatsCount,
-    };
-  }, {
-    [WebitelContactsTimelineEventType.Call]: 0,
-    [WebitelContactsTimelineEventType.Chat]: 0,
-  });
+  const arr = !isEmpty(props.list) ? props.list : [];
+    return arr.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
+        return {
+          [WebitelContactsTimelineEventType.Call]: acc[WebitelContactsTimelineEventType.Call] + +callsCount,
+          [WebitelContactsTimelineEventType.Chat]: acc[WebitelContactsTimelineEventType.Chat] + +chatsCount,
+        };
+    }, {
+      [WebitelContactsTimelineEventType.Call]: 0,
+      [WebitelContactsTimelineEventType.Chat]: 0,
+    })
 });
 
 const dateFrom = computed(() => props.list[props.list.length - 1]?.dayTimestamp);
