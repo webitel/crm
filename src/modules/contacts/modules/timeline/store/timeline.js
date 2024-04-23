@@ -5,6 +5,7 @@ import BaseStoreModule
 import set from 'lodash/set.js';
 import TimelineAPI from '../api/TimelineAPI';
 import filters from '../modules/filters/store/filters';
+import chats from '../modules/chats/store/chats.js';
 
 const state = {
   dataList: [],
@@ -55,12 +56,16 @@ const api = new ApiStoreModule()
 .getModule();
 
 const timeline = new BaseStoreModule()
-.setChildModules({ api, filters })
 .getModule( {
   state,
   getters,
   actions,
   mutations,
+  modules: {
+    chats,
+    api,
+    filters,
+  },
 });
 
 export default timeline;

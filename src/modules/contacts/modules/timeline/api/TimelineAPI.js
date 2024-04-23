@@ -1,11 +1,9 @@
-import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
-  camelToSnake,
   merge, notify,
-  sanitize, snakeToCamel, starToSearch, mergeEach,
+  sanitize, snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers';
 import deepCopy from 'deep-copy';
-import { TimelineApiFactory } from 'webitel-sdk';
+import { TimelineApiFactory, WebitelContactsTimelineEventType } from 'webitel-sdk';
 import getDefaultGetListResponse
   from '../../../../../app/api/defaults/getDefaultGetListResponse';
 import configuration from '../../../../../app/api/openAPIConfig';
@@ -20,7 +18,7 @@ const listHandler = (items) => {
       ...day,
       items: day.items.map(item => ({
         ...item,
-        type:!item.type ? 'chat' : item.type,
+        type: item.type || WebitelContactsTimelineEventType.Chat,
       }))
     }));
   } return copy;
@@ -35,14 +33,13 @@ const listHandler = (items) => {
       type,
     } = applyTransform(params, [
       sanitize(fieldsToSend),
-      merge(getDefaultGetParams()),
     ]);
     try {
       const response = await timeline.getTimeline(
         parentId,
         dateFrom,
         dateTo,
-        // type,
+        type,
       );
       const { days, next } = applyTransform(response.data, [
         snakeToCamel(),
@@ -61,4 +58,4 @@ const listHandler = (items) => {
     }
   };
 
-  export default { getList };;
+  export default { getList };
