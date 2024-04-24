@@ -25,10 +25,8 @@
       />
     </template>
 
-    <template
-      #dropdown="{ toggle, collapsed }"
-    >
-      dropdown content goes here!
+    <template #dropdown>
+      <chat-point-row-dropdown />
     </template>
   </timeline-row>
 </template>
@@ -40,6 +38,7 @@ import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
+import ChatPointRowDropdown from './chat-point-row-dropdown.vue';
 
 const props = defineProps({
   point: {

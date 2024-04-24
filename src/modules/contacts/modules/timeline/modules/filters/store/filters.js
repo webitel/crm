@@ -10,6 +10,7 @@ const state = {
     value: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat],
     defaultValue: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat],
   }),
+  page: {}, // FIXME WTF
 };
 
 const getters = {
