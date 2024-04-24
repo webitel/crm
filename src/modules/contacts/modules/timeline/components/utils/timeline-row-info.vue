@@ -45,7 +45,7 @@ const timestampWeekDay = computed(() => {
 
 const timestampMonth = computed(() => {
   const date = new Date(+props.timestamp);
-  return d(date, { month: 'short' });
+  return d(date, { month: 'long' });
 });
 
 const timesScope = computed(() => {

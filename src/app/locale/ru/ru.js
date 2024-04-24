@@ -1,5 +1,6 @@
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
 import TimelineTaskStatusEnum
@@ -24,6 +25,10 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Пропущений',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
         [TimelineTaskStatusEnum.ENDED]: 'Кінець',
+      },
+      eventType: {
+        [WebitelContactsTimelineEventType.Call]: 'Звонок | Звонки',
+        [WebitelContactsTimelineEventType.Chat]: 'Чат | Чаты',
       },
     },
     communications: {

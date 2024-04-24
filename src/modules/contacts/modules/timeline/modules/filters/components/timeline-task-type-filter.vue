@@ -2,7 +2,7 @@
   <div class="timeline-task-type-filter">
     <div
       v-for="({ icon, selected, set, count }) of filters"
-      class="timeline-task-filter__filter-wrapper"
+      class="timeline-task-type-filter__filter-wrapper"
     >
       <wt-checkbox
         :selected="selected"
@@ -11,7 +11,7 @@
         <template #label>
           <div class="timeline-task-type-filter__label-wrapper">
             <wt-icon :icon="icon" />
-            <span class="timeline-task-filter__count">
+            <span class="timeline-task-type-filter__count">
             ({{ count }})
           </span>
           </div>
@@ -44,7 +44,7 @@ const props = defineProps({
 
 const store = useStore();
 
-const filterValue =  computed(() => getNamespacedState(store.state, props.namespace).type.value);
+const filterValue = computed(() => getNamespacedState(store.state, props.namespace).type.value);
 
 function setFilter(payload) {
   return store.dispatch(`${props.namespace}/SET_FILTER`, payload);
@@ -78,12 +78,12 @@ const filters = computed(() => [
 .timeline-task-type-filter {
   display: flex;
   gap: var(--spacing-md);
-}
 
-.timeline-task-type-filter__label-wrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2xs);
-  margin-left: var(--spacing-2xs);
+  &__label-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    margin-left: var(--spacing-2xs);
+  }
 }
 </style>

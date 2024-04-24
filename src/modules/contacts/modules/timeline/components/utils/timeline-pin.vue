@@ -42,7 +42,8 @@ const stateMap = {
   },
   [TimelinePinType.CLOSE]: {
     component: 'wt-rounded-action',
-    icon: 'close'
+    icon: 'close',
+    rounded: true,
   },
   [TimelinePinType.CHAT]: {
     component: 'wt-rounded-action',
@@ -90,6 +91,7 @@ const stateMap = {
 };
 
 const state = computed(() => {
+  if(props.type === TimelinePinType.DAY) return stateMap[TimelinePinType.DAY];
   return props.collapsed ? stateMap[props.type] : stateMap[TimelinePinType.CLOSE];
 });
 

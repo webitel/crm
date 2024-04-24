@@ -22,7 +22,7 @@
       </template>
 
       <template v-slot:content>
-        <div class="chat-task-timeline-row-content">
+        <div class="chat-task-timeline-row__content">
           <timeline-row-initiator
             :type="taskType"
             :text="taskInitiator"
@@ -123,7 +123,7 @@ const taskInitiator = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.chat-task-timeline-row-content {
+.chat-task-timeline-row__content {
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;

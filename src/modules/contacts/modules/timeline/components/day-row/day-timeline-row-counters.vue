@@ -1,14 +1,15 @@
 <template>
   <div class="day-timeline-row-counters">
     <div class="day-timeline-row-counters__wrapper">
-      <span>{{ `${t('channel.type.call')}: ${props.callsCount} `}}</span>
-      <span>{{ `${t('channel.type.chat')}: ${props.chatsCount} `}}</span>
+      <span>{{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Call}`, 2)}: ${props.callsCount} ` }}</span>
+      <span>{{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: ${props.chatsCount} `}}</span>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 
 const props = defineProps({
   callsCount: {

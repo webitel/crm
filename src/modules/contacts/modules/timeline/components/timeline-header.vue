@@ -2,14 +2,14 @@
   <header
     v-if="isDisplayHeader"
     class="timeline-header">
-    <p class="timeline-header-duration">{{ durationTimeline }}</p>
-    <div class="timeline-header-actions">
+    <p class="timeline-header__duration">{{ durationTimeline }}</p>
+    <div class="timeline-header__actions">
       <timeline-task-type-filter
         :namespace="filtersNamespace"
         :calls-count="taskCounters[WebitelContactsTimelineEventType.Call]"
         :chats-count="taskCounters[WebitelContactsTimelineEventType.Chat]"
       />
-      <button class="timeline-header-collapse">{{ t('contacts.collapseAll') }}</button>
+      <button class="timeline-header__collapse">{{ t('contacts.collapseAll') }}</button>
     </div>
   </header>
 
@@ -36,7 +36,7 @@ const { d, t } = useI18n();
 
 const { filtersNamespace } = useTableFilters(props.namespace);
 
-const isDisplayHeader = computed(() => props.list.length || (!props.list.length));
+const isDisplayHeader = computed(() => props.list.length || Object.values(taskCounters.value).some(num => num));
 
 const taskCounters = computed(() => {
     return props.list.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
@@ -74,16 +74,16 @@ function formatDate(date) {
   padding: var(--spacing-xs) var(--spacing-sm);
   background-color: var(--secondary-light-color);
 
-  &-duration {
+  &__duration {
     @extend %typo-subtitle-2;
   }
 
-  &-actions {
+  &__actions {
     display: flex;
     gap: var(--spacing-md);
   }
 
-  &-collapse {
+  &__collapse {
     @extend %typo-body-2;
     margin: auto;
     cursor: pointer;

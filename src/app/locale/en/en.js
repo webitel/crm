@@ -4,6 +4,7 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 
 export default {
   crm: 'CRM',
@@ -24,6 +25,10 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Missed',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Transferred',
         [TimelineTaskStatusEnum.ENDED]: 'Ended',
+      },
+      eventType: {
+        [WebitelContactsTimelineEventType.Call]: 'Call | Calls',
+        [WebitelContactsTimelineEventType.Chat]: 'Chat | Chats',
       },
     },
     communications: {
