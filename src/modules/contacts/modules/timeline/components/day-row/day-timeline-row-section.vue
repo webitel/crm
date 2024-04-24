@@ -10,7 +10,7 @@
     <div v-if="opened">
       <task-timeline-row
         v-for="(item) of props.day.items"
-        :item="item"
+        :task="item"
         :key="item.id"
       ></task-timeline-row>
     </div>

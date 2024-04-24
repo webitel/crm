@@ -50,20 +50,19 @@ const taskCounters = computed(() => {
     })
 });
 
-const dateFrom = computed(() => props.list[props.list.length - 1]?.dayTimestamp);
-const dateTo = computed(() => props.list[0]?.dayTimestamp);
+const durationTimeline = computed(() => {
+  const formatDate = (date) => {
+    const fullDate = new Date(+date);
+    const mouth = d(fullDate, { month: 'long' });
+    const year = d(fullDate, { year: 'numeric' });
+    return `${mouth} ${year}`;
+  }
 
-const displayedDateFrom = computed(() => dateFrom.value || (new Date().setMonth(new Date().getMonth() - 1)));
-const displayedDateTo = computed(() => dateTo.value || (new Date().getTime()));
+  const from = props.list.at(-1)?.dayTimestamp || (new Date().setMonth(new Date().getMonth() - 1));
+  const to = props.list.at(1)?.dayTimestamp || new Date().getTime();
 
-const durationTimeline = computed(() => `${formatDate(displayedDateFrom.value)} - ${formatDate(displayedDateTo.value)}`);
-
-function formatDate(date) {
-  const fullDate = new Date(+date);
-  const mouth = d(fullDate, { month: 'long' });
-  const year = d(fullDate, { year: 'numeric' });
-  return `${mouth} ${year}`;
-}
+  return `${formatDate(from)} - ${formatDate(to)}`
+})
 </script>
 
 <style lang="scss" scoped>

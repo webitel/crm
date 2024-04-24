@@ -23,36 +23,39 @@
 
       <template v-slot:content>
         <div class="chat-task-timeline-row__content">
-          <timeline-row-initiator
-            :type="taskType"
-            :text="taskInitiator"
-          ></timeline-row-initiator>
-
-          <wt-chip
-            v-if="hiddenUsers.length"
-            @click="openHiddenUsers = !openHiddenUsers"
-          >{{ +hiddenUsers.lenght }}
-          </wt-chip>
-
-          <div v-if="openHiddenUsers">
+          <div class="chat-task-timeline-row__wrapper">
             <timeline-row-initiator
-              v-for="user of hiddenUsers"
-              :text="user.name"
+              :type="taskType"
+              :text="taskInitiator.name"
             ></timeline-row-initiator>
-          </div>
 
-          <timeline-row-duration
-            :duration="duration"
-          ></timeline-row-duration>
+            <wt-chip
+              v-if="hiddenUsers.length"
+              @click="openHiddenUsers = !openHiddenUsers"
+            >{{ +hiddenUsers.lenght }}
+            </wt-chip>
+
+            <div v-if="openHiddenUsers">
+              <timeline-row-initiator
+                v-for="user of hiddenUsers"
+                :text="user.name"
+              ></timeline-row-initiator>
+            </div>
+
+            <timeline-row-duration
+              :duration="duration"
+            ></timeline-row-duration>
+
         </div>
-      </template>
 
-        <template v-slot:after-content>
           <call-task-timeline-actions
             v-if="taskType !== TimelinePinTypeEnum.CHAT"
             :id="id"
           ></call-task-timeline-actions>
-        </template>
+
+        </div>
+      </template>
+
     </timeline-row>
   </div>
 </template>
@@ -71,7 +74,7 @@ import TimelineTaskStatus from '../utils/timeline-task-status.vue';
 import CallTaskTimelineActions from '../call-task-actions/call-task-timeline-actions.vue';
 
 const props = defineProps({
-  item: {
+  task: {
     type: Object,
     required: true,
   },
@@ -86,10 +89,9 @@ const {
   flowScheme,
   queue,
   id,
-} = toRefs(props.item);
+} = toRefs(props.task);
 
 const openHiddenUsers = ref(false);
-const hiddenUsers = computed(() => participants.value.filter((participant, idx) => idx));
 
 const taskType = computed(() => {
   if (type.value === WebitelContactsTimelineEventType.Chat) {
@@ -113,23 +115,35 @@ const taskStatus = computed(() => taskType.value.includes(TimelinePinTypeEnum.CA
 const taskInitiator = computed(() => {
   switch (taskType.value) {
     case TimelinePinTypeEnum.CALL_INBOUND_ON_IVR:
-      return flowScheme.value.name;
+      return flowScheme.value;
     case TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE:
-      return queue.value.name;
+      return queue.value;
     default:
-      return participants.value[0].name;
+      return participants.value[0];
   }
 });
+
+const hiddenUsers = computed(() => participants.value.filter(participant => participant.id !==  taskInitiator.value.id));
 </script>
 
 <style lang="scss" scoped>
-.chat-task-timeline-row__content {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius);
-  box-shadow: var(--elevation-1);
+.chat-task-timeline-row {
+  &__content {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    box-shadow: var(--elevation-1);
+    min-height: var(--spacing-2xl);
+  }
+
+  &__wrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
 }
 </style>
 

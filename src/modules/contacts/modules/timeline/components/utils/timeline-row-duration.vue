@@ -22,6 +22,7 @@ const { t } = useI18n();
 .timeline-row-duration {
   display: flex;
   gap: var(--spacing-sm);
+  margin: auto 0;
 
   &__title {
     @extend %typo-subtitle-1;

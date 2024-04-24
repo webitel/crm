@@ -60,7 +60,7 @@ import TimelineTaskStatus from '../../../../enums/TimelineTaskStatus.enum.js';
 import ChatPointsRowSection from '../point-row/chat-points-row-section.vue';
 
 const props = defineProps({
-  item: {
+  task: {
     type: Object,
     required: true,
   },
@@ -76,7 +76,7 @@ const {
   flowScheme,
   queue,
   id: chatId,
-} = toRefs(props.item);
+} = toRefs(props.task);
 
 const store = useStore();
 

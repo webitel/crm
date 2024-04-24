@@ -18,12 +18,6 @@
         <slot name="content" />
       </section>
 
-      <section
-        v-if="slots['after-content']"
-        class="timeline-row-after-content"
-      >
-        <slot name="after-content" />
-      </section>
     </header>
     <section
       class="timeline-row-dropdown"
@@ -80,10 +74,6 @@ const toggle = () => {
 
 .timeline-row-content {
   flex: 1;
-}
-
-.timeline-row-after-content {
-  flex: 0 0 24px;
 }
 
 .timeline-row--width-fit-content {

@@ -1,7 +1,7 @@
 <template>
   <component
     :is="component"
-    :item="item"
+    :task="task"
   />
 </template>
 
@@ -12,17 +12,17 @@ import CallTaskTimelineRow from './call-task-timeline-row.vue';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 
 const props = defineProps({
-  item: {
+  task: {
     type: Object,
     required: true,
   },
 });
 
 const component = computed(() => {
-  switch (props.item.type) {
+  switch (props.task.type) {
     case WebitelContactsTimelineEventType.Chat: return ChatTaskTimelineRow;
     case WebitelContactsTimelineEventType.Call: return CallTaskTimelineRow;
-    default: throw new Error(`Unknown item type, ${props.item.type}!`);
+    default: throw new Error(`Unknown item type, ${props.task.type}!`);
   }
 });
 </script>
