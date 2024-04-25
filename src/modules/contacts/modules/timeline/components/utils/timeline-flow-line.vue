@@ -1,10 +1,12 @@
 <template>
   <div
-    :class="`timeline-separator--${color}`"
-    class="timeline-separator"></div>
+    :class="`timeline-flow-line--${color}`"
+    class="timeline-flow-line"
+  />
 </template>
 
 <script setup>
+// TODO HELP ME!
 const props = defineProps({
   color: {
     type: String,
@@ -14,7 +16,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-.timeline-separator {
+.timeline-flow-line {
   height: var(--spacing-sm);
   width: 1px;
   position: relative;

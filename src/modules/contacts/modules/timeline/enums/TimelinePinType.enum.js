@@ -16,7 +16,7 @@ const TimelinePinType = Object.freeze({
   BOT: 'BOT',
 
   // chat-related pins
-  CHAT: 'CHAT',
+  CHAT_INBOUND: 'CHAT_INBOUND',
   CHAT_TRANSFER: 'CHAT_TRANSFER',
   CHAT_END: 'CHAT_END',
 

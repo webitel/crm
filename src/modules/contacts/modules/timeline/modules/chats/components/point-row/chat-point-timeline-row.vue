@@ -53,8 +53,12 @@ const {
   createdAt,
 } = toRefs(props);
 
+// TODO ME!
 const pinType = computed(() => {
-  return TimelinePinType.CHAT;
+  if (true) return TimelinePinType.USER;
+  if (false) return TimelinePinType.AGENT;
+  if (false) return TimelinePinType.BOT;
+  throw new Error(`Unknown pin type for chat point!, ${JSON.stringify(props.point)}`);
 });
 
 // TODO

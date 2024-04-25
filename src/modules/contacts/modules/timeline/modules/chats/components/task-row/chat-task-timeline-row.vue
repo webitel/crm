@@ -20,7 +20,7 @@
     <template #pin="{ toggle, collapsed }">
       <timeline-pin
         :collapsed="collapsed"
-        :type="TimelinePinType.CHAT"
+        :type="pinType"
         @click="toggle"
       />
     </template>
@@ -72,6 +72,7 @@ import TimelineRowInitiator from '../../../../components/utils/timeline-row-init
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
+import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 import ChatPointsRowSection from '../point-row/chat-points-timeline-row-section.vue';
 
@@ -92,10 +93,22 @@ const {
   id: taskId,
 } = toRefs(props.task);
 
-const taskType = computed(() => gateway?.value ? TimelinePinType.CHAT_GATEWAY : TimelinePinType.CHAT);
+const taskType = computed(() => {
+  if (gateway.value) return TimelineTaskKind.CHAT_INBOUND;
+  return TimelinePinType.CHAT_INBOUND;
+});
+
+const pinType = computed(() => {
+  switch(taskType.value) {
+    case TimelineTaskKind.CHAT_INBOUND:
+      return TimelinePinType.CHAT_INBOUND;
+    default:
+      throw new Error(`Unknown task type: ${taskType.value}`);
+  }
+});
 
 const initiator = computed(() => {
-  if (taskType.value === TimelinePinType.CHAT_GATEWAY) return gateway.value;
+  if (gateway.value) return gateway.value;
   if (participants.value.length) return participants.value.at(0);
   throw new Error(`No initiator found: ${JSON.stringify(props.task)}`);
 });

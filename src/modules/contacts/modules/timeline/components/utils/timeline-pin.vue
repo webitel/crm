@@ -1,28 +1,31 @@
 <template>
   <component
     :is="state.component"
-    v-bind="state"
-    @click="handleClick"
+    :color="state.color"
+    :icon="state.icon"
+    rounded
+    @click="state.handler && state.handler()"
   >
     {{ text }}
   </component>
-  <timeline-separator
+  <timeline-flow-line
     :color="state.color"
   />
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import TimelinePinTypeEnum from '../../enums/TimelinePinType.enum.js';
-import TimelineSeparator from './timeline-separator.vue';
+import TimelinePinType from '../../enums/TimelinePinType.enum.js';
+import TimelineFlowLine from './timeline-flow-line.vue';
 
 const props = defineProps({
   type: {
     type: String,
     required: true,
+    validator: (type) => Object.values(TimelinePinType).includes(type),
   },
   text: {
-    type: String, Number,
+    type: [String, Number],
     default: '',
   },
   collapsed: {
@@ -35,69 +38,90 @@ const emit = defineEmits([
   'click',
 ]);
 
-const stateMap = {
-  [TimelinePinTypeEnum.DAY]: {
-    component: 'wt-button',
-    color: 'secondary',
-  },
-  [TimelinePinTypeEnum.CLOSE]: {
-    component: 'wt-rounded-action',
-    icon: 'close',
-    rounded: true,
-  },
-  [TimelinePinTypeEnum.CHAT]: {
-    component: 'wt-rounded-action',
-    color: 'chat',
-    icon: 'chat',
-    filled: true,
-    rounded: true,
-  },
-  [TimelinePinTypeEnum.CALL_INBOUND]: {
-    component: 'wt-rounded-action',
-    color: 'primary',
-    icon: 'call-inbound',
-    filled: true,
-    rounded: true,
-  },
-  [TimelinePinTypeEnum.CALL_OUTBOUND]: {
-    component: 'wt-rounded-action',
-    color: 'success',
-    icon: 'call-outbound',
-    filled: true,
-    rounded: true,
-  },
-  [TimelinePinTypeEnum.CALL_MISSED]: {
-    component: 'wt-rounded-action',
-    color: 'error',
-    icon: 'call-missed',
-    filled: true,
-    rounded: true,
-  },
-  [TimelinePinTypeEnum.CALL_INBOUND_ON_IVR]: {
-    component: 'wt-rounded-action',
-    color: 'primary',
-    icon: 'call-inbound',
-    filled: true,
-    rounded: true,
-  },
-  [TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE]: {
-    component: 'wt-rounded-action',
-    color: 'error',
-    icon: 'call-missed',
-    filled: true,
-    rounded: true,
-  },
-
-};
-
-const state = computed(() => {
-  if(props.type === TimelinePinTypeEnum.DAY) return stateMap[TimelinePinTypeEnum.DAY];
-  return props.collapsed ? stateMap[props.type] : stateMap[TimelinePinTypeEnum.CLOSE];
-});
-
 const handleClick = () => {
   emit('click');
 };
+
+const stateMap = {
+  [TimelinePinType.CLOSE]: {
+    component: 'wt-rounded-action',
+    icon: 'close',
+    handler: handleClick,
+  },
+
+  [TimelinePinType.DAY]: {
+    component: 'wt-button',
+    color: 'secondary',
+    handler: handleClick,
+  },
+
+  [TimelinePinType.USER]: {
+    component: 'wt-icon',
+    color: 'default',
+    icon: 'account',
+  },
+  [TimelinePinType.AGENT]: {
+    component: 'wt-icon',
+    color: 'default',
+    icon: 'edit',
+  },
+  [TimelinePinType.BOT]: {
+    component: 'wt-icon',
+    color: 'default',
+    icon: 'bot',
+  },
+
+  [TimelinePinType.CHAT_INBOUND]: {
+    component: 'wt-rounded-action',
+    color: 'chat',
+    icon: 'chat',
+    handler: handleClick,
+  },
+  [TimelinePinType.CHAT_TRANSFER]: {
+    component: 'wt-icon',
+    color: 'transfer',
+    icon: 'chat-transfer',
+  },
+  [TimelinePinType.CHAT_END]: {
+    component: 'wt-icon',
+    color: 'error',
+    icon: 'chat-end',
+  },
+
+  [TimelinePinType.CALL_INBOUND]: {
+    component: 'wt-rounded-action',
+    color: 'warning',
+    icon: 'call-inbound',
+    handler: handleClick,
+  },
+  [TimelinePinType.CALL_OUTBOUND]: {
+    component: 'wt-rounded-action',
+    color: 'success',
+    icon: 'call-outbound',
+    handler: handleClick,
+  },
+  [TimelinePinType.CALL_OUTBOUND]: {
+    component: 'wt-rounded-action',
+    color: 'success',
+    icon: 'call-outbound',
+    handler: handleClick,
+  },
+  [TimelinePinType.CALL_MISSED]: {
+    component: 'wt-rounded-action',
+    color: 'error',
+    icon: 'call-missed',
+  },
+  [TimelinePinType.CALL_TRANSFER]: {
+    component: 'wt-icon',
+    color: 'transfer',
+    icon: 'call-transfer',
+  },
+};
+
+const state = computed(() => {
+  if(props.type === TimelinePinType.DAY) return stateMap[TimelinePinType.DAY];
+  return props.collapsed ? stateMap[props.type] : stateMap[TimelinePinType.CLOSE];
+});
 </script>
 
 <style scoped lang="scss">
