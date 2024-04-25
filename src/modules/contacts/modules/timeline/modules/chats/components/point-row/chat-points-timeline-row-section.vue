@@ -1,6 +1,6 @@
 <template>
   <div class="chat-points-row-section">
-    <ChatPointRow
+    <chat-point-timeline-row
       v-for="(point) of points"
       :key="point.id"
       :point="point"
@@ -11,10 +11,10 @@
 <script setup>
 import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
-import ChatPointRow from './chat-point-row.vue';
+import ChatPointTimelineRow from './chat-point-timeline-row.vue';
 
 const props = defineProps({
-  chatId: {
+  taskId: {
     type: String,
     required: true,
   },
@@ -27,11 +27,11 @@ const namespace = `${timelineNamespace}/chats`;
 const store = useStore();
 
 const points = computed(() => {
-  return store.getters[`${namespace}/HISTORY_BY_CHAT_ID`](props.chatId);
+  return store.getters[`${namespace}/HISTORY_BY_CHAT_ID`](props.taskId);
 });
 
 function loadHistory() {
-  store.dispatch(`${namespace}/LOAD_HISTORY`, { chatId: props.chatId });
+  store.dispatch(`${namespace}/LOAD_HISTORY`, { taskId: props.taskId });
 }
 
 if (!points.value) {

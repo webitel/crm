@@ -16,6 +16,13 @@
 
       <section class="timeline-row-content">
         <slot name="content" />
+
+        <article
+          class="timeline-row-content-dropdown"
+          v-if="slots['content-dropdown'] && !collapsed"
+        >
+          <slot name="content-dropdown" v-bind="{ toggle, collapsed }" />
+        </article>
       </section>
 
     </header>

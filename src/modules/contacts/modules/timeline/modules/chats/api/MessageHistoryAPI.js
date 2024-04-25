@@ -2,33 +2,30 @@ import applyTransform, {
   notify,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers';
-import { TimelineApiFactory } from 'webitel-sdk';
+import { CatalogApiFactory } from 'webitel-sdk';
 import instance from '../../../../../../../app/api/instance';
 import configuration from '../../../../../../../app/api/openAPIConfig';
 
-const service = new TimelineApiFactory(configuration, '', instance);
+const service = new CatalogApiFactory(configuration, '', instance);
 
-const getList = async ({ contactId, chatId }) => {
-  const mergeMessageData = ({ peers, chats, messages }) => {
+const getList = async ({ taskId }) => {
+  const mergeMessageData = ({ peers, messages }) => {
     const peersMap = new Map(peers.map((peer) => [peer.id, peer]));
-    const chatsMap = new Map(chats.map((chat) => [chat.id, chat]));
-    return messages.map((message) => ({
+    return messages.map(({ peer, ...message }) => ({
       ...message,
-      peer: peersMap.get(message.peer.id),
-      chat: chatsMap.get(message.chat.id),
+      peer: peer && peersMap.get(message.peer.id),
     }));
   };
 
   try {
-    const response = await service.getDetailedMessageHistory(
-      contactId,
-      chatId,
+    const response = await service.getHistory(
+      taskId,
     );
-    const { chats, peers, messages } = applyTransform(response.data, [
+    const { peers, messages } = applyTransform(response.data, [
       snakeToCamel(),
     ]);
     return {
-      items: applyTransform({ chats, peers, messages }, [
+      items: applyTransform({ peers, messages }, [
         mergeMessageData,
       ]),
     };

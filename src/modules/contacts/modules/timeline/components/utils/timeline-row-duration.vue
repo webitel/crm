@@ -1,13 +1,14 @@
 <template>
   <div class="timeline-row-duration">
     <p class="timeline-row-duration__title">{{ t('vocabulary.duration') }}:</p>
-    <span class="timeline-row-duration__value">{{ ConvertDuration(duration) }}</span>
+    <span class="timeline-row-duration__value">{{ convertedDuration }}</span>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import ConvertDuration from '@webitel/ui-sdk/src/scripts/convertDuration.js';
+import convertDuration from '@webitel/ui-sdk/src/scripts/convertDuration.js';
 
 const props = defineProps({
   duration: {
@@ -16,6 +17,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const convertedDuration = computed(() => convertDuration(props.duration));
 </script>
 
 <style scoped lang="scss">

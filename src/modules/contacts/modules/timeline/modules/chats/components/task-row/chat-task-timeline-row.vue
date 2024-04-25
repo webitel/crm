@@ -4,7 +4,7 @@
       <timeline-row-info
         :timestamp="createdAt"
       >
-<!--        TODO use correct time computed -->
+        <!--        TODO use correct time computed -->
         <template #title="{ time }">
           {{ time }}
         </template>
@@ -24,26 +24,30 @@
         @click="toggle"
       />
     </template>
+
     <template #content>
       <div class="chat-task-timeline-row__content">
         <timeline-row-initiator
-          :text="taskInitiator.name"
+          :text="initiator.name"
           :type="taskType"
         />
 
-        <wt-chip
+        <wt-tooltip
           v-if="hiddenParticipants.length"
-          @click="openHiddenParticipants = !openHiddenParticipants"
+          :triggers="['click']"
         >
-          {{ +hiddenParticipants.length }}
-        </wt-chip>
+          <template #activator>
+            <wt-chip>
+              +{{ hiddenParticipants.length }}
+            </wt-chip>
+          </template>
 
-        <div v-if="openHiddenParticipants">
           <timeline-row-initiator
-            v-for="user of hiddenParticipants"
-            :text="user.name"
-          ></timeline-row-initiator>
-        </div>
+            v-for="({ id, name }) of hiddenParticipants"
+            :key="id"
+            :text="name"
+          />
+        </wt-tooltip>
 
         <timeline-row-duration
           :duration="duration"
@@ -53,23 +57,23 @@
 
     <template #dropdown>
       <chat-points-row-section
-        :chat-id="taskId"
+        :task-id="taskId"
       />
     </template>
   </timeline-row>
 </template>
 
 <script setup>
-import { computed, inject, ref, toRefs } from 'vue';
+import { computed, inject, toRefs } from 'vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
-import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelineRowDuration from '../../../../components/utils/timeline-row-duration.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
-import TimelinePinTypeEnum from '../../../../enums/TimelinePinType.enum.js';
+import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
+import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
-import ChatPointsRowSection from '../point-row/chat-points-row-section.vue';
+import ChatPointsRowSection from '../point-row/chat-points-timeline-row-section.vue';
 
 const props = defineProps({
   task: {
@@ -88,28 +92,31 @@ const {
   id: taskId,
 } = toRefs(props.task);
 
-const openHiddenParticipants = ref(false);
+const taskType = computed(() => gateway?.value ? TimelinePinType.CHAT_GATEWAY : TimelinePinType.CHAT);
 
-const taskType = computed(() => gateway?.value ? TimelinePinTypeEnum.CHAT_GATEWAY : TimelinePinTypeEnum.CHAT)
-
-const taskInitiator = computed(() => {
-  if(taskType.value === TimelinePinTypeEnum.CHAT_GATEWAY) return gateway.value;
-  return participants.value[0]
+const initiator = computed(() => {
+  if (taskType.value === TimelinePinType.CHAT_GATEWAY) return gateway.value;
+  if (participants.value.length) return participants.value.at(0);
+  throw new Error(`No initiator found: ${JSON.stringify(props.task)}`);
 });
-const hiddenParticipants = computed(() => participants?.value?.filter(participant => participant.id !== taskInitiator.value.id));
+
+const hiddenParticipants = computed(() => (
+  (participants?.value || []).filter((participant) => participant.id !== initiator.value.id)
+));
+
 </script>
 
 <style lang="scss" scoped>
 .chat-task-timeline-row {
   &__content {
     display: flex;
-    gap: var(--spacing-sm);
     align-items: center;
     width: 100%;
+    min-height: var(--spacing-2xl);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius);
     box-shadow: var(--elevation-1);
-    min-height: var(--spacing-2xl);
+    gap: var(--spacing-sm);
   }
 }
 </style>

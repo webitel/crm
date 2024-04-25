@@ -10,9 +10,11 @@
       </timeline-row-info>
     </template>
 
-    <template #pin>
+    <template #pin="{ toggle, collapsed }">
       <timeline-pin
+        :collapsed="collapsed"
         :type="pinType"
+        @click="toggle"
       />
     </template>
 
@@ -21,11 +23,11 @@
         icon="expand"
       />
       <timeline-row-initiator
-        text="point initiator"
+        :text="initiator"
       />
     </template>
 
-    <template #dropdown>
+    <template #content-dropdown>
       <chat-point-row-dropdown />
     </template>
   </timeline-row>
@@ -38,7 +40,7 @@ import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import ChatPointRowDropdown from './chat-point-row-dropdown.vue';
+import ChatPointRowDropdown from './chat-point-timeline-row-dropdown.vue';
 
 const props = defineProps({
   point: {
@@ -52,9 +54,11 @@ const {
 } = toRefs(props);
 
 const pinType = computed(() => {
-  return TimelinePinType.CHAT_INVITE;
+  return TimelinePinType.CHAT;
 });
 
+// TODO
+const initiator = computed(() => 'initiatorrr');
 </script>
 
 <style lang="scss" scoped>

@@ -7,23 +7,21 @@ const state = {
 };
 
 const getters = {
-  CONTACT_ID: (s, g, rS, rootGetters) => rootGetters['contacts/card/timeline/PARENT_ID'],
-  HISTORY_BY_CHAT_ID: (state) => (chatId) => state.historyById[chatId],
+  HISTORY_BY_CHAT_ID: (state) => (taskId) => state.historyById[taskId],
 };
 
 const actions = {
-  LOAD_HISTORY: async (context, { chatId }) => {
+  LOAD_HISTORY: async (context, { taskId }) => {
     const { items } = await MessageHistoryAPI.getList({
-      contactId: context.getters.CONTACT_ID,
-      chatId,
+      taskId,
     });
-    context.commit('SET_TO_HISTORY', { chatId, data: items });
+    context.commit('SET_TO_HISTORY', { taskId, data: items });
   },
 };
 
 const mutations = {
-  SET_TO_HISTORY: (state, { chatId, data }) => {
-    state.historyById[chatId] = data;
+  SET_TO_HISTORY: (state, { taskId, data }) => {
+    state.historyById[taskId] = data;
   },
 };
 
