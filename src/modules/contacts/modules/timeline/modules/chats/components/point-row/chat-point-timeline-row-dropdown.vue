@@ -1,7 +1,7 @@
 <template>
-  <article class="chat-point-row-dropdown">
+  <section class="chat-point-row-dropdown">
     dropdown content goes here!
-  </article>
+  </section>
 </template>
 
 <script setup>
