@@ -4,6 +4,7 @@
       <timeline-row-info
         :timestamp="createdAt"
       >
+<!--        TODO use correct time computed -->
         <template #title="{ time }">
           {{ time }}
         </template>
@@ -15,6 +16,7 @@
         </template>
       </timeline-row-info>
     </template>
+
     <template #pin="{ toggle, collapsed }">
       <timeline-pin
         :collapsed="collapsed"
@@ -51,7 +53,7 @@
 
     <template #dropdown>
       <chat-points-row-section
-        :chat-id="chatId"
+        :chat-id="taskId"
       />
     </template>
   </timeline-row>
@@ -60,6 +62,7 @@
 <script setup>
 import { computed, inject, ref, toRefs } from 'vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
+import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelineRowDuration from '../../../../components/utils/timeline-row-duration.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
@@ -82,7 +85,7 @@ const {
   participants,
   duration,
   gateway,
-  id: chatId,
+  id: taskId,
 } = toRefs(props.task);
 
 const openHiddenParticipants = ref(false);

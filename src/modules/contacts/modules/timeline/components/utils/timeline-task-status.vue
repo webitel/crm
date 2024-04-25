@@ -3,21 +3,23 @@
       <wt-indicator
         size="sm"
         :color=statusColor
-      ></wt-indicator>
-      <p>{{ t(`contacts.timeline.status.${ status }`) }}</p>
+      />
+      <p>
+        {{ t(`contacts.timeline.status.${ status }`) }}
+      </p>
     </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import TimelineTaskStatusEnum from '../../enums/TimelineTaskStatus.enum.js';
+import TimelineTaskStatus from '../../enums/TimelineTaskStatus.enum.js';
 
 const props = defineProps({
   status: {
     type: String,
-    default: TimelineTaskStatusEnum.STARTED,
-    options: [TimelineTaskStatusEnum.STARTED, TimelineTaskStatusEnum.MISSED, TimelineTaskStatusEnum.TRANSFERRED, TimelineTaskStatusEnum.ENDED],
+    default: TimelineTaskStatus.STARTED,
+    validator: (value) => Object.values(TimelineTaskStatus).includes(value),
   },
 });
 
@@ -25,9 +27,9 @@ const { t } = useI18n();
 
 const statusColor = computed(() => {
   switch (props.status) {
-    case TimelineTaskStatusEnum.STARTED:
+    case TimelineTaskStatus.STARTED:
       return 'success';
-    case TimelineTaskStatusEnum.TRANSFERRED:
+    case TimelineTaskStatus.TRANSFERRED:
       return 'transfer';
     default:
       return 'error';

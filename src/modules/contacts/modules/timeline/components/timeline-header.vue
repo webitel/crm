@@ -1,21 +1,26 @@
 <template>
   <header
-    v-if="isDisplayHeader"
-    class="timeline-header">
-    <p class="timeline-header__duration">{{ durationTimeline }}</p>
+    v-if="showHeader"
+    class="timeline-header"
+  >
+    <p class="timeline-header__duration">
+      {{ timelineInterval }}
+    </p>
     <div class="timeline-header__actions">
       <timeline-task-type-filter
         :namespace="filtersNamespace"
         :calls-count="taskCounters[WebitelContactsTimelineEventType.Call]"
         :chats-count="taskCounters[WebitelContactsTimelineEventType.Chat]"
       />
-      <button class="timeline-header__collapse">{{ t('contacts.collapseAll') }}</button>
+      <button class="timeline-header__collapse">
+        {{ t('contacts.collapseAll') }}
+      </button>
     </div>
   </header>
 
 </template>
 <script setup>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
@@ -26,17 +31,16 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  namespace: {
-    type: String,
-    required: true,
-  },
 });
+
+const namespace = inject('namespace');
 
 const { d, t } = useI18n();
 
-const { filtersNamespace } = useTableFilters(props.namespace);
+const { filtersNamespace } = useTableFilters(namespace);
 
-const isDisplayHeader = computed(() => props.list.length || Object.values(taskCounters.value).some(num => num));
+// FIXME: what is showHeader condition?
+const showHeader = computed(() => true || props.list.length || Object.values(taskCounters.value).some(num => num));
 
 const taskCounters = computed(() => {
     return props.list.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
@@ -50,7 +54,7 @@ const taskCounters = computed(() => {
     })
 });
 
-const durationTimeline = computed(() => {
+const timelineInterval = computed(() => {
   const formatDate = (date) => {
     const fullDate = new Date(+date);
     const mouth = d(fullDate, { month: 'long' });
@@ -61,7 +65,7 @@ const durationTimeline = computed(() => {
   const from = props.list.at(-1)?.dayTimestamp || (new Date().setMonth(new Date().getMonth() - 1));
   const to = props.list.at(1)?.dayTimestamp || new Date().getTime();
 
-  return `${formatDate(from)} - ${formatDate(to)}`
+  return `${formatDate(from)} - ${formatDate(to)}`;
 })
 </script>
 

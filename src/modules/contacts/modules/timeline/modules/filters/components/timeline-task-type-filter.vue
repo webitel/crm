@@ -10,7 +10,9 @@
       >
         <template #label>
           <div class="timeline-task-type-filter__label-wrapper">
-            <wt-icon :icon="icon" />
+            <wt-icon
+              :icon="icon"
+            />
             <span class="timeline-task-type-filter__count">
             ({{ count }})
           </span>

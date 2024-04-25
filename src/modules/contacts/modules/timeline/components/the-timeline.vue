@@ -2,7 +2,6 @@
   <timeline-container>
     <template #header>
       <timeline-header
-        :namespace="timelineNamespace"
         :list="dataList"
       />
     </template>
@@ -17,11 +16,14 @@
         :src="darkMode ? dummyDark : dummyLight"
       />
 
-      <day-timeline-row-section
-        v-for="day of dataList"
-        :key="day.dateTimestamp"
-        :day="day"
-      ></day-timeline-row-section>
+      <day-timeline-row
+        v-for="({ dayTimestamp, callsCount, chatsCount, items }) of dataList"
+        :key="dayTimestamp"
+        :timestamp="dayTimestamp"
+        :calls-count="callsCount"
+        :chats-count="chatsCount"
+        :tasks="items"
+      />
     </template>
   </timeline-container>
 
@@ -31,10 +33,10 @@
 import { computed, provide } from 'vue';
 import { useStore } from 'vuex';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
+import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
-import DayTimelineRowSection from './day-row/day-timeline-row-section.vue';
 import TimelineHeader from './timeline-header.vue';
 
 const props = defineProps({
@@ -59,7 +61,8 @@ function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
 }
 
-initializeList();
+// TODO: uncomment me after fixing filters module
+// initializeList();
 </script>
 
 <style lang="scss" scoped>
