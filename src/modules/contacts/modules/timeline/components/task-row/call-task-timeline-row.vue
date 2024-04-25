@@ -15,29 +15,31 @@
         </timeline-row-info>
       </template>
 
-      <template v-slot:pin>
+      <template #pin="{ toggle, collapsed }">
         <timeline-pin
+          :collapsed="collapsed"
           :type="taskType"
+          @click="toggle"
         ></timeline-pin>
       </template>
 
       <template v-slot:content>
-        <div class="chat-task-timeline-row__content">
-          <div class="chat-task-timeline-row__wrapper">
+        <div class="call-task-timeline-row__content">
+          <div class="call-task-timeline-row__wrapper">
             <timeline-row-initiator
               :type="taskType"
               :text="taskInitiator.name"
             ></timeline-row-initiator>
 
             <wt-chip
-              v-if="hiddenUsers.length"
-              @click="openHiddenUsers = !openHiddenUsers"
-            >{{ +hiddenUsers.lenght }}
+              v-if="hiddenParticipants.length"
+              @click="openHiddenParticipants = !openHiddenParticipants"
+            >{{ +hiddenParticipants.lenght }}
             </wt-chip>
 
-            <div v-if="openHiddenUsers">
+            <div v-if="openHiddenParticipants">
               <timeline-row-initiator
-                v-for="user of hiddenUsers"
+                v-for="user of hiddenParticipants"
                 :text="user.name"
               ></timeline-row-initiator>
             </div>
@@ -46,7 +48,7 @@
               :duration="duration"
             ></timeline-row-duration>
 
-        </div>
+          </div>
 
           <call-task-timeline-actions
             v-if="taskType !== TimelinePinTypeEnum.CHAT"
@@ -62,7 +64,6 @@
 
 <script setup>
 import { computed, toRefs, ref } from 'vue';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import TimelinePinTypeEnum from '../../enums/TimelinePinType.enum.js';
 import TimelineTaskStatusEnum from '../../enums/TimelineTaskStatus.enum.js';
 import TimelinePin from '../utils/timeline-pin.vue';
@@ -83,7 +84,7 @@ const props = defineProps({
 const {
   createdAt,
   participants,
-  type,
+  isInbound,
   isMissed,
   duration,
   flowScheme,
@@ -91,21 +92,16 @@ const {
   id,
 } = toRefs(props.task);
 
-const openHiddenUsers = ref(false);
+const openHiddenParticipants = ref(false);
 
 const taskType = computed(() => {
-  if (type.value === WebitelContactsTimelineEventType.Chat) {
-    return TimelinePinTypeEnum.CHAT;
-  } else {
+  if(isInbound.value) {
     if (isMissed?.value) {
-      if (queue?.value) return TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE;
-      return TimelinePinTypeEnum.CALL_MISSED;
+      return queue?.value ? TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE : TimelinePinTypeEnum.CALL_MISSED;
     } else {
-      if (!queue?.value) return TimelinePinTypeEnum.CALL_INBOUND_ON_IVR;
-      return TimelinePinTypeEnum.CALL_INBOUND;
+      return !queue?.value ? TimelinePinTypeEnum.CALL_INBOUND_ON_IVR : TimelinePinTypeEnum.CALL_INBOUND;
     }
-    return TimelinePinTypeEnum.CALL_OUTBOUND;
-  }
+  } return TimelinePinTypeEnum.CALL_OUTBOUND;
 });
 
 const taskStatus = computed(() => taskType.value.includes(TimelinePinTypeEnum.CALL_MISSED)
@@ -123,11 +119,11 @@ const taskInitiator = computed(() => {
   }
 });
 
-const hiddenUsers = computed(() => participants.value.filter(participant => participant.id !==  taskInitiator.value.id));
+const hiddenParticipants = computed(() => participants?.value?.filter(participant => participant.id !== taskInitiator.value.id));
 </script>
 
 <style lang="scss" scoped>
-.chat-task-timeline-row {
+.call-task-timeline-row {
   &__content {
     display: flex;
     gap: var(--spacing-sm);
