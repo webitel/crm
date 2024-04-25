@@ -26,12 +26,14 @@
       </section>
 
     </header>
-    <section
-      class="timeline-row-dropdown"
-      v-if="slots.dropdown && !collapsed"
-    >
-      <slot name="dropdown" v-bind="{ toggle, collapsed }" />
-    </section>
+    <transition name="fade">
+      <section
+        class="timeline-row-dropdown"
+        v-if="slots.dropdown && !collapsed"
+      >
+        <slot name="dropdown" v-bind="{ toggle, collapsed }" />
+      </section>
+    </transition>
   </article>
 </template>
 
@@ -54,38 +56,41 @@ const toggle = () => {
 };
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .timeline-row {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-}
 
-.timeline-row-header {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: flex-start;
-}
+  &-header {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: flex-start;
+  }
 
-.timeline-row-before-content {
-  flex: 0 0 120px;
-}
+  &-before-content {
+    flex: 0 0 120px;
+  }
 
-.timeline-row-pin {
-  flex: 0 0 90px; // wt-button min width
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: auto 0;
-}
+  &-pin {
+    flex: 0 0 90px; // wt-button min width
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto 0;
+  }
 
-.timeline-row-content {
-  flex: 1;
-}
+  &-content {
+    flex: 1;
+  }
 
-.timeline-row--width-fit-content {
-  .timeline-row-content {
-    flex: 0 0 auto;
+  &-dropdown {
+    transition: var(--transition);
+  }
+
+  &--width-fit-content {
+    .timeline-row-content {
+      flex: 0 0 auto;
+    }
   }
 }
 </style>

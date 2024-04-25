@@ -1,5 +1,5 @@
 <template>
-  <timeline-container>
+  <timeline-container class="timeline">
     <template #header>
       <timeline-header
         :list="dataList"
@@ -14,6 +14,7 @@
       <wt-dummy
         v-else-if="!dataList.length"
         :src="darkMode ? dummyDark : dummyLight"
+        class="timeline-dummy"
       />
 
       <day-timeline-row
@@ -66,5 +67,7 @@ function initializeList() {
 </script>
 
 <style lang="scss" scoped>
-
+.timeline-dummy {
+  height: 100%;
+}
 </style>

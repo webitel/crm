@@ -3,7 +3,6 @@
     :is="state.component"
     :color="state.color"
     :icon="state.icon"
-    rounded
     @click="state.handler && state.handler()"
   >
     {{ text }}
@@ -17,6 +16,7 @@
 import { computed } from 'vue';
 import TimelinePinType from '../../enums/TimelinePinType.enum.js';
 import TimelineFlowLine from './timeline-flow-line.vue';
+import TimelineRoundedAction from './timeline-rounded-action.vue';
 
 const props = defineProps({
   type: {
@@ -44,7 +44,7 @@ const handleClick = () => {
 
 const stateMap = {
   [TimelinePinType.CLOSE]: {
-    component: 'wt-rounded-action',
+    component: TimelineRoundedAction,
     icon: 'close',
     handler: handleClick,
   },
@@ -70,9 +70,8 @@ const stateMap = {
     color: 'default',
     icon: 'bot',
   },
-
   [TimelinePinType.CHAT_INBOUND]: {
-    component: 'wt-rounded-action',
+    component: TimelineRoundedAction,
     color: 'chat',
     icon: 'chat',
     handler: handleClick,
@@ -87,27 +86,20 @@ const stateMap = {
     color: 'error',
     icon: 'chat-end',
   },
-
   [TimelinePinType.CALL_INBOUND]: {
-    component: 'wt-rounded-action',
-    color: 'warning',
+    component: TimelineRoundedAction,
+    color: 'primary',
     icon: 'call-inbound',
     handler: handleClick,
   },
   [TimelinePinType.CALL_OUTBOUND]: {
-    component: 'wt-rounded-action',
-    color: 'success',
-    icon: 'call-outbound',
-    handler: handleClick,
-  },
-  [TimelinePinType.CALL_OUTBOUND]: {
-    component: 'wt-rounded-action',
+    component: TimelineRoundedAction,
     color: 'success',
     icon: 'call-outbound',
     handler: handleClick,
   },
   [TimelinePinType.CALL_MISSED]: {
-    component: 'wt-rounded-action',
+    component: TimelineRoundedAction,
     color: 'error',
     icon: 'call-missed',
   },
