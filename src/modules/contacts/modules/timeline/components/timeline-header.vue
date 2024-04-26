@@ -75,7 +75,8 @@ const timelineInterval = computed(() => {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--secondary-light-color);
+  border: 1px solid var(--grey-lighten-1);
+  border-radius: var(--border-radius);
 
   &__duration {
     @extend %typo-subtitle-2;

@@ -108,8 +108,8 @@ const pinType = computed(() => {
 });
 
 const initiator = computed(() => {
+  if (participants) return participants.value.at(0);
   if (gateway.value) return gateway.value;
-  if (participants.value.length) return participants.value.at(0);
   throw new Error(`No initiator found: ${JSON.stringify(props.task)}`);
 });
 
