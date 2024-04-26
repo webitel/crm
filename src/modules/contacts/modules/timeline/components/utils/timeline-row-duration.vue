@@ -1,7 +1,11 @@
 <template>
   <div class="timeline-row-duration">
-    <p class="timeline-row-duration__title">{{ t('vocabulary.duration') }}:</p>
-    <span class="timeline-row-duration__value">{{ convertedDuration }}</span>
+    <p class="timeline-row-duration__title">
+      {{ t('vocabulary.duration') }}:
+    </p>
+    <span class="timeline-row-duration__value">
+      {{ convertedDuration }}
+    </span>
   </div>
 </template>
 
@@ -13,6 +17,7 @@ import convertDuration from '@webitel/ui-sdk/src/scripts/convertDuration.js';
 const props = defineProps({
   duration: {
     type: Number,
+    required: true,
   },
 });
 

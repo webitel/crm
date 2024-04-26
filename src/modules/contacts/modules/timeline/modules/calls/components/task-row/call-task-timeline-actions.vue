@@ -27,13 +27,14 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  id: {
-    type: String,
+  task: {
+    type: Object,
+    required: true,
   },
 });
 
 const { t } = useI18n();
-const historyLink = `${import.meta.env.VITE_HISTORY_URL}/${props.id}`;
+const historyLink = `${import.meta.env.VITE_HISTORY_URL}/${props.task.id}`;
 
 const options = computed(() => {
   const openHistory = {

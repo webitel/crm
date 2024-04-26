@@ -1,13 +1,9 @@
 <template>
-    <div class="timeline-task-status">
-      <wt-indicator
-        size="sm"
-        :color=statusColor
-      />
-      <p>
-        {{ t(`contacts.timeline.status.${ status }`) }}
-      </p>
-    </div>
+  <wt-indicator
+    :color=statusColor
+    :text="t(`contacts.timeline.status.${ status }`)"
+    size="sm"
+  />
 </template>
 
 <script setup>
@@ -38,8 +34,5 @@ const statusColor = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.timeline-task-status {
-  display: flex;
-  gap: var(--spacing-xs);
-}
+
 </style>

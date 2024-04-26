@@ -1,15 +1,11 @@
 <template>
-  <div
+  <wt-rounded-action
+    :color="iColor"
+    :icon="icon"
     class="timeline-rounded-action"
-    :class="`timeline-rounded-action--${color}`"
-  >
-    <wt-rounded-action
-      :icon="icon"
-      :color="iColor"
-      rounded
-    >
-    </wt-rounded-action>
-  </div>
+    :class="[`timeline-rounded-action--${color}`]"
+    rounded
+  />
 </template>
 
 <script setup>
@@ -22,8 +18,8 @@ const props = defineProps({
   },
   color: {
     type: String,
-    options: ['primary', 'success', 'error', 'chat', 'secondary'],
     default: 'secondary',
+    validator: (value) => ['primary', 'success', 'error', 'chat', 'secondary'].includes(value),
   },
 });
 
@@ -32,7 +28,7 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
 
 <style lang="scss" scoped>
 .timeline-rounded-action {
-  &--primary:deep(.wt-rounded-action) {
+  &--primary.wt-rounded-action {
     border-color: var(--primary-color);
     background-color: var(--primary-color);
 
@@ -43,7 +39,7 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
     }
   }
 
-  &--secondary:deep(.wt-rounded-action) {
+  &--secondary.wt-rounded-action {
     border-color: var(--secondary-color);
     background-color: var(--secondary-color);
 
@@ -54,7 +50,7 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
     }
   }
 
-  &--success:deep(.wt-rounded-action) {
+  &--success.wt-rounded-action {
     border-color: var(--success-color);
     background-color: var(--success-color);
 
@@ -65,7 +61,7 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
     }
   }
 
-  &--error:deep(.wt-rounded-action) {
+  &--error.wt-rounded-action {
     border-color: var(--error-color);
     background-color: var(--error-color);
 
@@ -76,7 +72,7 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
     }
   }
 
-  &--chat:deep(.wt-rounded-action) {
+  &--chat.wt-rounded-action {
     border-color: var(--chat-color);
     background-color: var(--chat-color);
 

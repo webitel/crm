@@ -9,8 +9,8 @@ import { getDefaultGetListResponse } from '@webitel/ui-sdk/src/api/defaults';
 import convertDuration from '@webitel/ui-sdk/src/scripts/convertDuration';
 import { CallServiceApiFactory } from 'webitel-sdk';
 import * as converters from '@webitel/ui-sdk/src/scripts/caseConverters';
-import configuration from '../../../../../app/api/openAPIConfig';
-import instance from '../../../../../app/api/instance';
+import configuration from '../../../../../../../app/api/openAPIConfig.js';
+import instance from '../../../../../../../app/api/instance.js';
 
 const callService = new CallServiceApiFactory(configuration, '', instance);
 

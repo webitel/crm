@@ -1,77 +1,58 @@
 <template>
   <div class="timeline-row-initiator">
     <div
-      v-if="isDisplayBotName"
-      class="timeline-row-initiator-bot"
+      v-if="type === TimelineInitiatorType.BOT"
+      style="display: contents;"
     >
-      <div class="timeline-row-initiator-bot__icon">
-        <wt-icon
-          icon="bot"
-        ></wt-icon>
+      <wt-icon
+        icon="bot"
+      />
 
-      </div>
-      <p>{{ text }}</p>
+      {{ text }}
     </div>
 
-    <div v-else-if="isDisplayFlowSchemeName">
-      <wt-chip
-        color="secondary"
-      >{{text}}</wt-chip>
+    <div
+      v-else-if="type === TimelineInitiatorType.FLOW"
+      style="display: contents;"
+    >
+      <wt-chip color="secondary">
+        {{ text }}
+      </wt-chip>
     </div>
 
-    <div v-else>
-      <div class="timeline-row-initiator-user">
-        <wt-avatar
-          size="sm"
-          :username="text" />
-        <p class="timeline-row-initiator-user__name">{{ text }}</p>
-      </div>
+    <div
+      v-else
+      style="display: contents;"
+    >
+      <wt-avatar
+        :username="text"
+        size="sm"
+      />
+      {{ text }}
     </div>
   </div>
 </template>
 
 <script setup>
-import TimelinePinTypeEnum from '../../enums/TimelinePinType.enum.js';
-import { computed } from 'vue';
+import TimelineInitiatorType from '../../enums/TimelineInitiatorType.enum.js';
 
 const props = defineProps({
   text: {
     type: String,
-    default: TimelinePinTypeEnum.CALL_OUTBOUND,
+    required: true,
   },
   type: {
     type: String,
-  }
+    default: TimelineInitiatorType.CONTACT,
+    validator: (value) => Object.values(TimelineInitiatorType).includes(value),
+  },
 });
-
-const isDisplayBotName = computed(() => props.type === TimelinePinTypeEnum.CALL_INBOUND_ON_IVR || props.type === TimelinePinTypeEnum.CHAT_GATEWAY);
-const isDisplayFlowSchemeName = computed(() => props.type === TimelinePinTypeEnum.CALL_MISSED_ON_QUEUE);
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .timeline-row-initiator {
-  &-user {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-
-    &__name {
-      @extend %typo-subtitle-1;
-    }
-  }
-
-  &-bot {
-    display: flex;
-    gap: var(--spacing-xs);
-    align-items: center;
-
-    &__icon {
-      background-color: var(--secondary-color);
-      padding: var(--spacing-xs);
-      border-radius: 50%;
-      height: 40px; ///?
-    }
-  }
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
 </style>
