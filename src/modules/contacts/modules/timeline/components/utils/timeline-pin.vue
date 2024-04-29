@@ -1,15 +1,17 @@
 <template>
-  <component
-    :is="state.component"
-    :color="state.color"
-    :icon="state.icon"
-    @click="state.handler && state.handler()"
-  >
-    {{ text }}
-  </component>
-  <timeline-flow-line
-    :color="state.color"
-  />
+  <div class="timeline-pin">
+    <component
+      :is="state.component"
+      :color="state.color"
+      :icon="state.icon"
+      @click="state.handler && state.handler()"
+    >
+      {{ text }}
+    </component>
+    <timeline-flow-line
+      :color="state.color"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -46,6 +48,7 @@ const stateMap = {
   [TimelinePinType.CLOSE]: {
     component: TimelineRoundedAction,
     icon: 'close',
+    color: 'secondary',
     handler: handleClick,
   },
 
@@ -111,10 +114,20 @@ const stateMap = {
 };
 
 const state = computed(() => {
-  if(props.type === TimelinePinType.DAY) return stateMap[TimelinePinType.DAY];
+  if (props.type === TimelinePinType.DAY) return stateMap[TimelinePinType.DAY];
   return props.collapsed ? stateMap[props.type] : stateMap[TimelinePinType.CLOSE];
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
+.timeline-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+  .timeline-flow-line {
+    flex: 1;
+  }
+}
 </style>

@@ -5,6 +5,7 @@
     class="timeline-rounded-action"
     :class="[`timeline-rounded-action--${color}`]"
     rounded
+    @click="emit('click')"
   />
 </template>
 
@@ -22,6 +23,10 @@ const props = defineProps({
     validator: (value) => ['primary', 'success', 'error', 'chat', 'secondary'].includes(value),
   },
 });
+
+const emit = defineEmits([
+  'click',
+]);
 
 const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-dark');
 </script>

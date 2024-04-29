@@ -27,7 +27,7 @@ const namespace = `${timelineNamespace}/chats`;
 const store = useStore();
 
 const points = computed(() => {
-  return store.getters[`${namespace}/HISTORY_BY_CHAT_ID`](props.taskId);
+  return store.getters[`${namespace}/GET_HISTORY_BY_ID`](props.taskId);
 });
 
 function loadHistory() {

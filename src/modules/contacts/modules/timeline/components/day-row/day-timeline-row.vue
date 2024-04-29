@@ -24,8 +24,8 @@
 
     <template v-slot:content>
       <day-timeline-row-counters
-        :callsCount="props.callsCount"
-        :chatsCount="props.chatsCount"
+        :callsCount="callsCount"
+        :chatsCount="chatsCount"
       />
     </template>
 

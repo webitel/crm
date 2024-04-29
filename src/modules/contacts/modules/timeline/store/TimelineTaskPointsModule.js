@@ -10,7 +10,7 @@ export default class TimelineTaskPointsModule extends BaseStoreModule {
   };
 
   getters = {
-    HISTORY_BY_CHAT_ID: (state) => (taskId) => state.historyById[taskId],
+    GET_HISTORY_BY_ID: (state) => (taskId) => state.historyById[taskId],
   };
 
   actions = {

@@ -2,10 +2,10 @@
   <div class="day-timeline-row-counters">
     <div class="day-timeline-row-counters__wrapper">
       <span>
-        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Call}`, 2)}: ${props.callsCount} ` }}
+        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Call}`, 2)}: ${props.callsCount}` }}
       </span>
       <span>
-        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: ${props.chatsCount} `}}
+        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: ${props.chatsCount}`}}
       </span>
     </div>
   </div>
@@ -30,6 +30,8 @@ const { t } = useI18n();
 </script>
 
 <style scoped lang="scss">
+$colWidth: 80px;
+
 .day-timeline-row-counters {
   display: flex;
   align-items: flex-start;
@@ -37,8 +39,10 @@ const { t } = useI18n();
 
   &__wrapper {
     @extend %typo-body-2;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, $colWidth);
     gap: var(--spacing-xs);
+    text-align: right;
   }
 }
 </style>

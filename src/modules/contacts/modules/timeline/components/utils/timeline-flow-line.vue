@@ -10,21 +10,38 @@
 const props = defineProps({
   color: {
     type: String,
-    default: 'default',
+    validator: (v) => [
+      'default', // icon color
+      'success',
+      'primary',
+      'error',
+      'secondary',
+      'chat',
+      'transfer',
+    ].includes(v),
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .timeline-flow-line {
-  height: var(--spacing-sm);
   width: 1px;
-  position: relative;
-  display: block;
-  background-color: var(--btn-secondary-color);
-  bottom: 0;
- //// left: 50%;
-  transform: translate(50%, 0);
+
+  &--default {
+    background-color: var(--icon-color);
+  }
+
+  &--secondary {
+    background-color: var(--secondary-color);
+  }
+
+  &--chat {
+    background-color: var(--chat-color);
+  }
+
+  &--transfer {
+    background-color: var(--transfer-color);
+  }
 
   &--success {
     background-color: var(--success-color);

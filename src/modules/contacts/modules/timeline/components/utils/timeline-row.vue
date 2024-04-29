@@ -1,11 +1,9 @@
 <template>
   <article
+    :class="{ 'timeline-row--width-fit-content': widthFitContent }"
     class="timeline-row"
-    :class="{ 'timeline-row--width-fit-content': props.widthFitContent }"
   >
-    <header
-      class="timeline-row-header"
-    >
+    <section class="timeline-row-self-content">
       <section class="timeline-row-before-content">
         <slot name="before-content" />
       </section>
@@ -14,32 +12,40 @@
         <slot name="pin" v-bind="{ toggle, collapsed }" />
       </section>
 
-      <section class="timeline-row-content">
-        <slot name="content" />
+      <section class="timeline-row-main-content">
+        <header class="timeline-row-main-content-header">
+          <slot name="content" />
+        </header>
 
-        <article
-          class="timeline-row-content-dropdown"
-          v-if="slots['content-dropdown'] && !collapsed"
+        <timeline-row-dropdown-transition
+          v-if="slots['content-dropdown']"
         >
-          <slot name="content-dropdown" v-bind="{ toggle, collapsed }" />
-        </article>
+          <article
+            v-if="!collapsed"
+            class="timeline-row-content-dropdown"
+          >
+            <slot name="content-dropdown" v-bind="{ toggle, collapsed }" />
+          </article>
+        </timeline-row-dropdown-transition>
       </section>
+    </section>
 
-    </header>
-    <transition name="fade">
+    <timeline-row-dropdown-transition
+      v-if="slots.dropdown"
+    >
       <section
+        v-if="!collapsed"
         class="timeline-row-dropdown"
-        v-if="slots.dropdown && !collapsed"
       >
         <slot name="dropdown" v-bind="{ toggle, collapsed }" />
       </section>
-    </transition>
+    </timeline-row-dropdown-transition>
   </article>
 </template>
 
 <script setup>
-import { ref, useSlots, inject, onUnmounted, onMounted } from 'vue';
-import eventBus from '@webitel/ui-sdk/src/scripts/eventBus';
+import { inject, onMounted, onUnmounted, ref, useSlots } from 'vue';
+import TimelineRowDropdownTransition from './timeline-row-dropdown-transition.vue';
 
 const props = defineProps({
   widthFitContent: {
@@ -52,56 +58,48 @@ const slots = useSlots();
 
 const collapsed = ref(true);
 
-const closeRow = () => {
-  if(!collapsed.value) collapsed.value = true;
-}
-
 const toggle = () => {
   collapsed.value = !collapsed.value;
 };
 
-const eventBusObj = inject('eventBusObj', eventBus);
+const collapseRow = () => {
+  if (!collapsed.value) toggle();
+};
 
-onMounted(() => eventBusObj.$on('collapse-all', () => closeRow()))
+const eventBus = inject('$eventBus');
 
-onUnmounted(() => eventBusObj.$off('collapse-all', () => closeRow()));
+onMounted(() => eventBus.$on('timeline/rows/collapse-all', collapseRow));
+
+onUnmounted(() => eventBus.$off('timeline/rows/collapse-all', collapseRow));
 </script>
 
 <style lang="scss" scoped>
 .timeline-row {
   display: flex;
   flex-direction: column;
+}
 
-  &-header {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: flex-start;
-  }
+.timeline-row-self-content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  min-height: 56px;
+}
 
-  &-before-content {
-    flex: 0 0 120px;
-  }
+.timeline-row-before-content {
+  flex: 0 0 120px;
+}
 
-  &-pin {
-    flex: 0 0 90px; // wt-button min width
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: auto 0;
-  }
+.timeline-row-pin {
+  flex: 0 0 90px; // wt-button min width
+  align-self: stretch;
+}
 
-  &-content {
-    flex: 1;
-  }
-
-  &-dropdown {
-    transition: var(--transition);
-  }
-
-  &--width-fit-content {
-    .timeline-row-content {
-      flex: 0 0 auto;
-    }
-  }
+.timeline-row-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
 }
 </style>

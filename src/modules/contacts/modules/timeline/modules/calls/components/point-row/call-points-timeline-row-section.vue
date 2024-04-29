@@ -9,6 +9,7 @@
 </template>
 
 <script setup>
+import { inject, computed } from 'vue';
 import { useStore } from 'vuex';
 import CallPointTimelineRow from './call-point-timeline-row.vue';
 
@@ -26,7 +27,7 @@ const namespace = `${timelineNamespace}/calls`;
 const store = useStore();
 
 const points = computed(() => {
-  return store.getters[`${namespace}/HISTORY_BY_CALL_ID`](props.taskId);
+  return store.getters[`${namespace}/GET_HISTORY_BY_ID`](props.taskId);
 });
 
 function loadHistory() {

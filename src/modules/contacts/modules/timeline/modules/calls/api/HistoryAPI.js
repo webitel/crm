@@ -198,4 +198,6 @@ const getHistory = getList({
   ],
 });
 
-export default { getHistory }
+export default {
+  getList: getHistory,
+};

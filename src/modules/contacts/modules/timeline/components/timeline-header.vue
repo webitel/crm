@@ -3,18 +3,18 @@
     v-if="showHeader"
     class="timeline-header"
   >
-    <p class="timeline-header__duration">
+    <p class="timeline-header-duration">
       {{ timelineInterval }}
     </p>
-    <div class="timeline-header__actions">
+    <div class="timeline-header-actions">
       <timeline-task-type-filter
         :namespace="filtersNamespace"
         :calls-count="taskCounters[WebitelContactsTimelineEventType.Call]"
         :chats-count="taskCounters[WebitelContactsTimelineEventType.Chat]"
       />
       <button
-        class="timeline-header__collapse"
-        @click="closeOpenRows"
+        class="timeline-header-collapse"
+        @click="collapseAll"
       >
         {{ t('contacts.collapseAll') }}
       </button>
@@ -28,7 +28,6 @@ import { useI18n } from 'vue-i18n';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
-import eventBus from '@webitel/ui-sdk/src/scripts/eventBus';
 
 const props = defineProps({
   list: {
@@ -38,14 +37,13 @@ const props = defineProps({
 });
 
 const namespace = inject('namespace');
-const eventBusObj = inject('eventBusObj', eventBus);
+const eventBus = inject('$eventBus');
 
 const { d, t } = useI18n();
 
 const { filtersNamespace } = useTableFilters(namespace);
 
-// FIXME: what is showHeader condition?
-const showHeader = computed(() => true || props.list.length || Object.values(taskCounters.value).some(num => num));
+const showHeader = computed(() => true);
 
 const taskCounters = computed(() => {
     return props.list.reduce((acc, { callsCount = 0, chatsCount = 0 }) => {
@@ -73,8 +71,8 @@ const timelineInterval = computed(() => {
   return `${formatDate(from)} - ${formatDate(to)}`;
 })
 
-function closeOpenRows () {
-  return eventBusObj.$emit('collapse-all')
+function collapseAll () {
+  return eventBus.$emit('timeline/rows/collapse-all');
 }
 
 </script>
@@ -85,22 +83,21 @@ function closeOpenRows () {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--grey-lighten-1);
+  border: 1px solid var(--wt-table-head-border-color);
   border-radius: var(--border-radius);
+}
 
-  &__duration {
-    @extend %typo-subtitle-2;
-  }
+.timeline-header-duration {
+  @extend %typo-subtitle-2;
+}
 
-  &__actions {
-    display: flex;
-    gap: var(--spacing-md);
-  }
+.timeline-header-actions {
+  display: flex;
+  gap: var(--spacing-md);
+}
 
-  &__collapse {
-    @extend %typo-body-2;
-    margin: auto;
-    cursor: pointer;
-  }
+.timeline-header-collapse {
+  @extend %typo-body-2;
+  cursor: pointer;
 }
 </style>
