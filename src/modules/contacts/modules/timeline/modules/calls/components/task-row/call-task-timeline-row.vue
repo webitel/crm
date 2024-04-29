@@ -60,6 +60,12 @@
 
       </div>
     </template>
+
+    <template #dropdown>
+      <call-points-timeline-row-section
+        :task-id="taskId"
+      />
+    </template>
   </timeline-row>
 </template>
 
@@ -76,6 +82,7 @@ import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 import CallTaskTimelineActions from './call-task-timeline-actions.vue';
+import CallPointsTimelineRowSection from '../point-row/call-points-timeline-row-section.vue';
 
 const props = defineProps({
   task: {
@@ -92,7 +99,7 @@ const {
   duration,
   flowScheme,
   queue,
-  id,
+  id: taskId,
 } = toRefs(props.task);
 
 const taskType = computed(() => {

@@ -6,6 +6,7 @@ import set from 'lodash/set.js';
 import TimelineAPI from '../api/TimelineAPI';
 import filters from '../modules/filters/store/filters';
 import chats from '../modules/chats/store/chats.js';
+import calls from '../modules/calls/store/calls.js';
 
 const state = {
   dataList: [],
@@ -63,6 +64,7 @@ const timeline = new BaseStoreModule()
   mutations,
   modules: {
     chats,
+    calls,
     api,
     filters,
   },
