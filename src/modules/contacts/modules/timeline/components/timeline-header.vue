@@ -12,7 +12,10 @@
         :calls-count="taskCounters[WebitelContactsTimelineEventType.Call]"
         :chats-count="taskCounters[WebitelContactsTimelineEventType.Chat]"
       />
-      <button class="timeline-header__collapse">
+      <button
+        class="timeline-header__collapse"
+        @click="closeOpenRows"
+      >
         {{ t('contacts.collapseAll') }}
       </button>
     </div>
@@ -25,6 +28,7 @@ import { useI18n } from 'vue-i18n';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
+import eventBus from '@webitel/ui-sdk/src/scripts/eventBus';
 
 const props = defineProps({
   list: {
@@ -34,6 +38,7 @@ const props = defineProps({
 });
 
 const namespace = inject('namespace');
+const eventBusObj = inject('eventBusObj', eventBus);
 
 const { d, t } = useI18n();
 
@@ -67,6 +72,11 @@ const timelineInterval = computed(() => {
 
   return `${formatDate(from)} - ${formatDate(to)}`;
 })
+
+function closeOpenRows () {
+  return eventBusObj.$emit('collapse-all')
+}
+
 </script>
 
 <style lang="scss" scoped>

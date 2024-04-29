@@ -38,7 +38,8 @@
 </template>
 
 <script setup>
-import { ref, useSlots } from 'vue';
+import { ref, useSlots, inject, onUnmounted, onMounted } from 'vue';
+import eventBus from '@webitel/ui-sdk/src/scripts/eventBus';
 
 const props = defineProps({
   widthFitContent: {
@@ -51,9 +52,19 @@ const slots = useSlots();
 
 const collapsed = ref(true);
 
+const closeRow = () => {
+  if(!collapsed.value) collapsed.value = true;
+}
+
 const toggle = () => {
   collapsed.value = !collapsed.value;
 };
+
+const eventBusObj = inject('eventBusObj', eventBus);
+
+onMounted(() => eventBusObj.$on('collapse-all', () => closeRow()))
+
+onUnmounted(() => eventBusObj.$off('collapse-all', () => closeRow()));
 </script>
 
 <style lang="scss" scoped>
