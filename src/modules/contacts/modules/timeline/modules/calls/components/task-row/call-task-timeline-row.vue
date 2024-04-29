@@ -126,14 +126,18 @@ const taskStatus = computed(() => {
   return TimelineTaskStatusEnum.STARTED;
 });
 
-const initiator = computed(() => {
-  return flowScheme?.value || queue?.value || participants?.value.at(0);
+const initiatorType = computed(() => {
+  if(!isMissed?.value && !queue.value) return TimelineInitiatorType.FLOW;
+  if(isMissed?.value && queue.value) return TimelineInitiatorType.BOT;
+  return TimelineInitiatorType.CONTACT;
 });
 
-const initiatorType = computed(() => {
-  if (flowScheme?.value) return TimelineInitiatorType.FLOW;
-  if (queue?.value) return TimelineInitiatorType.BOT;
-  return TimelineInitiatorType.CONTACT;
+const initiator = computed(() => {
+  switch (initiatorType.value) {
+    case TimelineInitiatorType.FLOW: return flowScheme?.value;
+    case TimelineInitiatorType.BOT: return queue?.value;
+    default: return participants?.value.at(0);
+  }
 });
 
 const hiddenParticipants = computed(() => (participants?.value || [])

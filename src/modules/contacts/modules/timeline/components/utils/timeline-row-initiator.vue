@@ -51,6 +51,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .timeline-row-initiator {
+  @extend %typo-subtitle-1;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);

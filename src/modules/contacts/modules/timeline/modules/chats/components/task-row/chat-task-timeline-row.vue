@@ -29,7 +29,7 @@
       <div class="chat-task-timeline-row__content">
         <timeline-row-initiator
           :text="initiator.name"
-          :type="taskType"
+          :type="initiatorType"
         />
 
         <wt-tooltip
@@ -71,6 +71,7 @@ import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue'
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
+import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
@@ -107,10 +108,16 @@ const pinType = computed(() => {
   }
 });
 
+const initiatorType = computed(() => {
+  if (!participants) return TimelineInitiatorType.BOT;
+  return TimelineInitiatorType.CONTACT
+});
+
 const initiator = computed(() => {
-  if (participants) return participants.value.at(0);
-  if (gateway.value) return gateway.value;
-  throw new Error(`No initiator found: ${JSON.stringify(props.task)}`);
+  switch (initiatorType.value) {
+    case TimelineInitiatorType.BOT: return gateway.value;
+    default: return participants?.value.at(0);
+  }
 });
 
 const hiddenParticipants = computed(() => (
