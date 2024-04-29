@@ -1,8 +1,8 @@
 <template>
   <div class="timeline-row-initiator">
     <div
+      class="timeline-row-initiator__wrapper"
       v-if="type === TimelineInitiatorType.BOT"
-      style="display: contents;"
     >
       <wt-icon
         icon="bot"
@@ -12,8 +12,8 @@
     </div>
 
     <div
+      class="timeline-row-initiator__wrapper"
       v-else-if="type === TimelineInitiatorType.FLOW"
-      style="display: contents;"
     >
       <wt-chip color="secondary">
         {{ text }}
@@ -22,7 +22,7 @@
 
     <div
       v-else
-      style="display: contents;"
+      class="timeline-row-initiator__wrapper"
     >
       <wt-avatar
         :username="text"
@@ -52,7 +52,11 @@ const props = defineProps({
 <style lang="scss" scoped>
 .timeline-row-initiator {
   display: flex;
+  align-items: center;
   gap: var(--spacing-sm);
 }
 
+.timeline-row-initiator__wrapper {
+  display: contents;
+}
 </style>
