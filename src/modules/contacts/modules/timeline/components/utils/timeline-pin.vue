@@ -9,7 +9,7 @@
       {{ text }}
     </component>
     <timeline-flow-line
-      :color="state.color"
+      :color="state.lineColor || state.color"
     />
   </div>
 </template>
@@ -49,6 +49,7 @@ const stateMap = {
     component: TimelineRoundedAction,
     icon: 'close',
     color: 'secondary',
+    lineColor: 'default',
     handler: handleClick,
   },
 

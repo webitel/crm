@@ -2,25 +2,38 @@
   <timeline-row>
     <template #before-content>
       <timeline-row-info
-        :timestamp="createdAt"
+        :timestamp="point.date"
       >
         <template
           #title="{ time }"
-        ></template>
+        >
+          {{ time }}
+        </template>
+
+        <template #subtitle>
+          <timeline-task-status
+            v-if="pointStatus"
+            :status="pointStatus"
+          ></timeline-task-status>
+
+<!--           empty -->
+          <div v-else />
+        </template>
       </timeline-row-info>
     </template>
 
-    <template #pin="{ toggle, collapsed }">
+    <template #pin>
       <timeline-pin
-        :collapsed="collapsed"
         :type="pinType"
-        @click="toggle"
+        collapsed
       />
     </template>
 
-    <template #content>
-      <wt-icon
+    <template #content="{ toggle, collapsed }">
+      {{ point }}
+      <wt-icon-btn
         icon="expand"
+        @click="toggle"
       />
       <timeline-row-initiator
         :text="initiator"
@@ -34,12 +47,14 @@
 </template>
 
 <script setup>
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
+import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
+import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 import ChatPointRowDropdown from './chat-point-timeline-row-dropdown.vue';
 
 const props = defineProps({
@@ -49,9 +64,10 @@ const props = defineProps({
   },
 });
 
-const {
-  createdAt,
-} = toRefs(props);
+// TODO
+const initiator = computed(() => {
+
+});
 
 // TODO ME!
 const pinType = computed(() => {
@@ -62,7 +78,10 @@ const pinType = computed(() => {
 });
 
 // TODO
-const initiator = computed(() => 'initiatorrr');
+const pointStatus = computed(() => {
+  if (true) return TimelineTaskStatusEnum.TRANSFERRED;
+  return false;
+});
 </script>
 
 <style lang="scss" scoped>

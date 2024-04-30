@@ -11,7 +11,7 @@ const props = defineProps({
   color: {
     type: String,
     validator: (v) => [
-      'default', // icon color
+      'default', // divider color
       'success',
       'primary',
       'error',
@@ -28,7 +28,7 @@ const props = defineProps({
   width: 1px;
 
   &--default {
-    background-color: var(--icon-color);
+    background-color: var(--divider-border-color);
   }
 
   &--secondary {

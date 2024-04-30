@@ -14,7 +14,7 @@
 
       <section class="timeline-row-main-content">
         <header class="timeline-row-main-content-header">
-          <slot name="content" />
+          <slot name="content" v-bind="{ toggle, collapsed }" />
         </header>
 
         <timeline-row-dropdown-transition
