@@ -55,6 +55,11 @@ const props = defineProps({
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+
+  .wt-icon,
+  .wt-avatar {
+    flex-shrink: 0;
+  }
 }
 
 .timeline-row-initiator__wrapper {
