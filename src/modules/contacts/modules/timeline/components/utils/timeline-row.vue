@@ -13,20 +13,7 @@
       </section>
 
       <section class="timeline-row-main-content">
-        <header class="timeline-row-main-content-header">
-          <slot name="content" v-bind="{ toggle, collapsed }" />
-        </header>
-
-        <timeline-row-dropdown-transition
-          v-if="slots['content-dropdown']"
-        >
-          <article
-            v-if="!collapsed"
-            class="timeline-row-content-dropdown"
-          >
-            <slot name="content-dropdown" v-bind="{ toggle, collapsed }" />
-          </article>
-        </timeline-row-dropdown-transition>
+        <slot name="content" v-bind="{ toggle, collapsed }" />
       </section>
     </section>
 
@@ -82,8 +69,8 @@ onUnmounted(() => eventBus.$off('timeline/rows/collapse-all', collapseRow));
 .timeline-row-self-content {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-sm);
   min-height: 56px;
+  gap: var(--spacing-sm);
 }
 
 .timeline-row-before-content {
@@ -91,15 +78,19 @@ onUnmounted(() => eventBus.$off('timeline/rows/collapse-all', collapseRow));
 }
 
 .timeline-row-pin {
-  flex: 0 0 90px; // wt-button min width
   align-self: stretch;
+  flex: 0 0 90px; // wt-button min width
 }
 
 .timeline-row-main-content {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: var(--spacing-xs);
   margin-bottom: var(--spacing-xs);
+  gap: var(--spacing-xs);
+}
+
+.timeline-row--width-fit-content .timeline-row-main-content {
+  flex: 0;
 }
 </style>

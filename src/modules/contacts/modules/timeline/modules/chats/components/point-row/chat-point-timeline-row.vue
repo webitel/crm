@@ -14,9 +14,9 @@
           <timeline-task-status
             v-if="pointStatus"
             :status="pointStatus"
-          ></timeline-task-status>
+          />
 
-<!--           empty -->
+          <!--           empty -->
           <div v-else />
         </template>
       </timeline-row-info>
@@ -29,33 +29,26 @@
       />
     </template>
 
-    <template #content="{ toggle, collapsed }">
-      {{ point }}
-      <wt-icon-btn
-        icon="expand"
-        @click="toggle"
-      />
-      <timeline-row-initiator
-        :text="initiator"
-      />
-    </template>
-
-    <template #content-dropdown>
-      <chat-point-row-dropdown />
+    <template #content>
+      <task-timeline-row-content-wrapper>
+        <chat-point-row-content
+          :point="point"
+        />
+      </task-timeline-row-content-wrapper>
     </template>
   </timeline-row>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
+import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
-import TimelinePin from '../../../../components/utils/timeline-pin.vue';
-import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
-import ChatPointRowDropdown from './chat-point-timeline-row-dropdown.vue';
+import ChatPointRowContent from './chat-point-timeline-row-content.vue';
 
 const props = defineProps({
   point: {
@@ -64,22 +57,15 @@ const props = defineProps({
   },
 });
 
-// TODO
-const initiator = computed(() => {
-
-});
-
-// TODO ME!
 const pinType = computed(() => {
-  if (true) return TimelinePinType.USER;
-  if (false) return TimelinePinType.AGENT;
-  if (false) return TimelinePinType.BOT;
-  throw new Error(`Unknown pin type for chat point!, ${JSON.stringify(props.point)}`);
+  if (props.point.peer?.type === 'user') return TimelinePinType.AGENT;
+  if (props.point.peer?.type === 'bot') return TimelinePinType.BOT;
+  return TimelinePinType.USER;
 });
 
-// TODO
+// transfer is not implemented
 const pointStatus = computed(() => {
-  if (true) return TimelineTaskStatusEnum.TRANSFERRED;
+  if (false) return TimelineTaskStatusEnum.TRANSFERRED;
   return false;
 });
 </script>

@@ -5,17 +5,30 @@
       :key="point.id"
       :point="point"
     />
+    <chat-ended-point-timeline-row
+      v-if="task.closedAt"
+      :point="{ date: task.closedAt }"
+    />
   </div>
 </template>
 
 <script setup>
 import { inject } from 'vue';
 import { useTaskPoints } from '../../../../composables/useTaskPoints.js';
+import ChatEndedPointTimelineRow from './chat-ended-point-timeline-row.vue';
 import ChatPointTimelineRow from './chat-point-timeline-row.vue';
 
 const props = defineProps({
   taskId: {
     type: String,
+    required: true,
+  },
+  /**
+   * @type {Object}
+   * @description Task object is needed to display "ended" stub with task.closedAt
+   */
+  task: {
+    type: Object,
     required: true,
   },
 });
@@ -28,6 +41,7 @@ const { points } = useTaskPoints({
   taskId: props.taskId,
   namespace,
 });
+
 </script>
 
 <style lang="scss" scoped>

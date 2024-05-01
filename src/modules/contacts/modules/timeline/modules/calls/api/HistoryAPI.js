@@ -194,7 +194,7 @@ const getHistory = getList({
     merge(getDefaultGetListResponse()),
   ],
   responseItemsTransformers: [
-    transformResponseItems,
+    // transformResponseItems,
   ],
 });
 

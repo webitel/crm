@@ -10,11 +10,12 @@ const service = new CatalogApiFactory(configuration, '', instance);
 
 const getList = async ({ taskId }) => {
   const mergeMessageData = ({ peers, messages }) => {
-    const peersMap = new Map(peers.map((peer) => [peer.id, peer]));
-    return messages.map(({ peer, ...message }) => ({
-      ...message,
-      peer: peer && peersMap.get(message.peer.id),
-    }));
+    return messages.map(({ from, ...message }) => {
+      return {
+        ...message,
+        peer: peers[from.id - 1],
+      };
+    });
   };
 
   try {

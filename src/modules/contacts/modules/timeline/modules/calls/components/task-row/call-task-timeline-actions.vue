@@ -15,8 +15,8 @@
         </wt-tooltip>
       </template>
 
-      <template #option="option">
-        <p>{{ option.text }}</p>
+      <template #option="{ text }">
+        <p>{{ text }}</p>
       </template>
     </wt-context-menu>
   </div>

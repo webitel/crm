@@ -57,6 +57,7 @@
     <template #dropdown>
       <chat-points-row-section
         :task-id="taskId"
+        :task="task"
       />
     </template>
   </timeline-row>

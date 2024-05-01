@@ -9,8 +9,8 @@
 </template>
 
 <script setup>
-import { inject, computed } from 'vue';
-import { useStore } from 'vuex';
+import { inject } from 'vue';
+import { useTaskPoints } from '../../../../composables/useTaskPoints.js';
 import CallPointTimelineRow from './call-point-timeline-row.vue';
 
 const props = defineProps({
@@ -24,20 +24,7 @@ const timelineNamespace = inject('namespace');
 
 const namespace = `${timelineNamespace}/calls`;
 
-const store = useStore();
-
-const points = computed(() => {
-  return store.getters[`${namespace}/GET_HISTORY_BY_ID`](props.taskId);
-});
-
-function loadHistory() {
-  store.dispatch(`${namespace}/LOAD_HISTORY`, { taskId: props.taskId });
-}
-
-if (!points.value) {
-  loadHistory();
-}
-
+const { points } = useTaskPoints({ namespace, taskId: props.taskId });
 </script>
 
 <style scoped lang="scss">

@@ -62,12 +62,12 @@ const stateMap = {
   [TimelinePinType.USER]: {
     component: 'wt-icon',
     color: 'default',
-    icon: 'account',
+    icon: 'contacts',
   },
   [TimelinePinType.AGENT]: {
     component: 'wt-icon',
     color: 'default',
-    icon: 'edit',
+    icon: 'agent',
   },
   [TimelinePinType.BOT]: {
     component: 'wt-icon',
