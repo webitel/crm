@@ -216,11 +216,11 @@ function edit({ id }) {
 
 function communicationsLink({ id }) {
   const routeName = CrmSections.CONTACTS;
-  return { name: `${routeName}-communications`, params: { id } };
+  return { name: `${routeName}-timeline`, params: { id } };
 }
 
 function saved(id) {
-  router.push(`/${CrmSections.CONTACTS}/${id}/communications`);
+  router.push(`/${CrmSections.CONTACTS}/${id}/timeline`);
 }
 
 function closeContactPopup() {

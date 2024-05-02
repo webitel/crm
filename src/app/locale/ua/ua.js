@@ -1,7 +1,10 @@
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+import TimelineTaskStatusEnum
+  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -9,8 +12,24 @@ export default {
     contact: 'Контакт | Контакти',
     manager: 'Власник | Власники',
     destination: 'Призначення',
+    collapseAll: 'Згорнути все',
     timeline: {
       timeline: 'Хронологія',
+      actions: {
+        openInHistory: 'Відкрити в історії',
+        playRecording: 'Програти запис',
+        transcription: 'Транскрипція',
+      },
+      status: {
+        [TimelineTaskStatusEnum.STARTED]: 'Начало',
+        [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
+        [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
+        [TimelineTaskStatusEnum.ENDED]: 'Конец',
+      },
+      eventType: {
+        [WebitelContactsTimelineEventType.Call]: 'Дзвінок | Дзвінки',
+        [WebitelContactsTimelineEventType.Chat]: 'Чат | Чати',
+      },
     },
     communications: {
       communications: 'Засіб зв\'язку | Засоби зв\'язку',

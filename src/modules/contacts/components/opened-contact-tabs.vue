@@ -30,10 +30,11 @@ const router = useRouter();
 const route = useRoute();
 
 const tabs = computed(() => [
-  // {
-  //   text: t('contacts.timeline.timeline'),
-  //   value: 'timeline',
-  // },
+  {
+    text: t('contacts.timeline.timeline'),
+    value: 'timeline',
+    pathName: `${CrmSections.CONTACTS}-timeline`,
+  },
   {
     text: t('contacts.communications.communications', 2),
     value: 'communications',

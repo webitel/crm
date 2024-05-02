@@ -2,6 +2,9 @@ import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+import TimelineTaskStatusEnum
+  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 
 export default {
   crm: 'CRM',
@@ -9,8 +12,24 @@ export default {
     contact: 'Contact | Contacts',
     manager: 'Owner | Owners',
     destination: 'Destination',
+    collapseAll: 'Collapse all',
     timeline: {
       timeline: 'Timeline',
+      actions: {
+        openInHistory: 'Open in history',
+        playRecording: 'Play Recording',
+        transcription: 'Transcription',
+      },
+      status: {
+        [TimelineTaskStatusEnum.STARTED]: 'Started',
+        [TimelineTaskStatusEnum.MISSED]: 'Missed',
+        [TimelineTaskStatusEnum.TRANSFERRED]: 'Transferred',
+        [TimelineTaskStatusEnum.ENDED]: 'Ended',
+      },
+      eventType: {
+        [WebitelContactsTimelineEventType.Call]: 'Call | Calls',
+        [WebitelContactsTimelineEventType.Chat]: 'Chat | Chats',
+      },
     },
     communications: {
       communications: 'Communication option | Communication options',
