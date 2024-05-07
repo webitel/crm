@@ -11,13 +11,21 @@
       />
     </header>
 
+
+    <!--    duplicate text elements to add expand/collapse transition -->
     <article
-      v-if="point.text"
-      class="chat-point-row-content-text"
-      :class="{ 'chat-point-row-content-text--collapsed': collapsed }"
-      >
-      {{ point.text }}
-    </article>
+      v-if="point.text && collapsed"
+      class="chat-point-row-content-text chat-point-row-content-text--collapsed"
+      v-html="text"
+    />
+
+    <timeline-row-dropdown-transition>
+      <article
+        v-if="point.text && !collapsed"
+        class="chat-point-row-content-text"
+        v-html="text"
+      />
+    </timeline-row-dropdown-transition>
 
     <footer
       v-if="showFooter"
@@ -34,9 +42,12 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import ChatPointTimelineRowFile from './chat-point-timeline-row-file.vue';
+import purify from 'dompurify';
+import linkifyHtml from 'linkify-html';
+import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
+import ChatPointTimelineRowFile from './chat-point-timeline-row-file.vue';
 
 const props = defineProps({
   point: {
@@ -62,12 +73,19 @@ const isInitiatorBot = computed(() => {
 const showFooter = computed(() => {
   return !!props.point.files;
 });
+
+const text = computed(() => {
+  return props.point.text ? purify.sanitize(linkifyHtml(props.point.text, {
+    className: 'chat-point-row-content-text__link',
+  })) : '';
+});
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .chat-point-row-content {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: var(--spacing-xs);
 }
 
@@ -79,11 +97,23 @@ const showFooter = computed(() => {
 }
 
 .chat-point-row-content-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-all;
 
   &--collapsed {
+    overflow-x: hidden;
     height: 24px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  :deep(.chat-point-row-content-text__link) {
+    color: var(--link-color);
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--link--hover-color);
+      text-decoration: underline;
+    }
   }
 }
 </style>

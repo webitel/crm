@@ -9,6 +9,7 @@ const state = {
   type: new BaseFilterSchema({
     value: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat],
     defaultValue: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat],
+    restore: ({ query, defaultValue }) => query ? Array.isArray(query) ? query : [query] : defaultValue,
   }),
   page: {}, // FIXME WTF
 };

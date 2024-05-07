@@ -49,6 +49,7 @@
         </wt-tooltip>
 
         <timeline-row-duration
+          v-if="task.closedAt"
           :duration="duration"
         />
       </task-timeline-row-content-wrapper>

@@ -25,6 +25,7 @@
 <script setup>
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import capitalize from 'lodash/capitalize';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
@@ -39,7 +40,7 @@ const props = defineProps({
 const namespace = inject('namespace');
 const eventBus = inject('$eventBus');
 
-const { d, t } = useI18n();
+const { d, t, locale } = useI18n();
 
 const { filtersNamespace } = useTableFilters(namespace);
 
@@ -60,9 +61,7 @@ const taskCounters = computed(() => {
 const timelineInterval = computed(() => {
   const formatDate = (date) => {
     const fullDate = new Date(+date);
-    const mouth = d(fullDate, { month: 'long' });
-    const year = d(fullDate, { year: 'numeric' });
-    return `${mouth} ${year}`;
+    return capitalize(d(fullDate, 'timelineInterval', locale.value === 'ua' ? 'uk' : undefined));
   }
 
   const from = props.list.at(-1)?.dayTimestamp || (new Date().setMonth(new Date().getMonth() - 1));
