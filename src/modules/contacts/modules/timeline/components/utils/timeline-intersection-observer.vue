@@ -1,4 +1,8 @@
 <template>
+  <wt-loader
+    v-if="loading"
+    size="sm"
+  ></wt-loader>
   <div ref="intersectionTarget" />
 </template>
 
@@ -11,6 +15,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
@@ -19,7 +27,7 @@ const emit = defineEmits([
 
 const intersectionTarget = ref(null);
 
-let stopIntersectionObserver;
+let stopObs;
 
 onMounted(() => {
   /**
@@ -27,18 +35,22 @@ onMounted(() => {
    * Note, observer triggers at init, so it should be used also as init function
    * however, current filters module version is initializing list by itself, so we need to refactor filters ASAP
    */
-  stopIntersectionObserver = useIntersectionObserver(intersectionTarget.value, ([{ isIntersecting }]) => {
-    if (isIntersecting && next.value) {
+  const { stop } = useIntersectionObserver(intersectionTarget.value, ([{ isIntersecting }]) => {
+    if (isIntersecting && props.next) {
       emit('next');
     }
   });
+
+  stopObs = stop;
 });
 
 onUnmounted(() => {
-  stopIntersectionObserver();
+  stopObs();
 });
 </script>
 
 <style scoped lang="scss">
-
+.wt-loader {
+  margin: var(--spacing-lg) auto;
+}
 </style>

@@ -18,6 +18,7 @@
         :collapsed="collapsed"
         :type="TimelinePinType.DAY"
         :text="dayNumber"
+        :first="first"
         :last="last && collapsed"
         @click="toggle"
       ></timeline-pin>
@@ -66,6 +67,10 @@ const props = defineProps({
   tasks: {
     type: Array,
     default: () => [],
+  },
+  first: {
+    type: Boolean,
+    default: false,
   },
   last: {
     type: Boolean,

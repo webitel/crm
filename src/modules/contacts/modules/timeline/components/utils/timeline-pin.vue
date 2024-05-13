@@ -35,6 +35,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  first: {
+    type: Boolean,
+    default: false,
+  },
   last: {
     type: Boolean,
     default: false,
@@ -48,6 +52,8 @@ const emit = defineEmits([
 const handleClick = () => {
   emit('click');
 };
+
+if (props.first) handleClick();
 
 const stateMap = {
   [TimelinePinType.CLOSE]: {

@@ -66,4 +66,34 @@ const listHandler = (items) => {
     }
   };
 
-  export default { getList };
+const getCounters = async (params) => {
+  const defaultObject = {
+    callsCount: 0,
+    chatsCount: 0,
+    dateFrom: Date.now(),
+    dateTo: Date.now(),
+  };
+
+  const {
+    parentId,
+  } = applyTransform(params, [
+    sanitize(['parentId']),
+  ]);
+
+  try {
+    const response = await timeline.getTimelineCounter(parentId);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+      merge(defaultObject),
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
+  export default {
+    getList,
+    getCounters,
+  };
