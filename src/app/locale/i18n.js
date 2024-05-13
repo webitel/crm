@@ -3,6 +3,7 @@ import en from './en/en';
 import ru from './ru/ru';
 import ua from './ua/ua';
 import kz from './kz/kz';
+import datetimeFormats from './datetimeFormats.js';
 
 const messages = {
   en,
@@ -16,4 +17,5 @@ export default createI18n({
   locale: 'en',
   fallbackLocale: 'en',
   messages,
+  datetimeFormats,
 });

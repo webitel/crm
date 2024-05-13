@@ -23,6 +23,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import capitalize from 'lodash/capitalize';
 
 const props = defineProps({
   timestamp: {
@@ -31,21 +32,21 @@ const props = defineProps({
   },
 });
 
-const { d } = useI18n();
+const { d, locale } = useI18n();
 
 const timestampTime = computed(() => {
   const date = new Date(+props.timestamp);
-  return date.toLocaleTimeString();
+  return capitalize(date.toLocaleTimeString());
 });
 
 const timestampWeekDay = computed(() => {
   const date = new Date(+props.timestamp);
-  return d(date, { weekday: 'long' });
+  return capitalize(d(date, 'timelineWeekday', locale.value === 'ua' ? 'uk' : undefined));
 });
 
 const timestampMonth = computed(() => {
   const date = new Date(+props.timestamp);
-  return d(date, { month: 'long' });
+  return capitalize(d(date, 'timelineMonth', locale.value === 'ua' ? 'uk' : undefined));
 });
 
 const timesScope = computed(() => {

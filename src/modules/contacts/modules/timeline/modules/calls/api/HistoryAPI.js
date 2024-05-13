@@ -177,7 +177,7 @@ const getList = ({
       next,
     } = applyTransform(response.data, responseTransformers);
     return {
-      items: applyTransform(items, responseItemsTransformers),
+      items: applyTransform(items, responseItemsTransformers).reverse(),
       next,
     };
   } catch (err) {

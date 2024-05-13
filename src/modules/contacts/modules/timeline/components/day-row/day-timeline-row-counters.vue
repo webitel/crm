@@ -2,10 +2,10 @@
   <div class="day-timeline-row-counters">
     <div class="day-timeline-row-counters__wrapper">
       <span>
-        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Call}`, 2)}: ${props.callsCount}` }}
+        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Call}`, 2)}: (${props.callsCount})` }}
       </span>
       <span>
-        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: ${props.chatsCount}`}}
+        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: (${props.chatsCount})`}}
       </span>
     </div>
   </div>

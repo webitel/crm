@@ -28,7 +28,7 @@ const getList = async ({ taskId }) => {
     return {
       items: applyTransform({ peers, messages }, [
         mergeMessageData,
-      ]),
+      ]).reverse(),
     };
   } catch (err) {
     throw applyTransform(err, [

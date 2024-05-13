@@ -88,9 +88,10 @@ onUnmounted(() => eventBus.$off('timeline/rows/collapse-all', collapseRow));
   flex-direction: column;
   margin-bottom: var(--spacing-xs);
   gap: var(--spacing-xs);
+  min-width: 0;
 }
 
 .timeline-row--width-fit-content .timeline-row-main-content {
-  flex: 0;
+  flex: 0 0 auto;
 }
 </style>

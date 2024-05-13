@@ -35,11 +35,14 @@ const actions = {
     }
   },
   LOAD_NEXT: async (context) => {
-    if (!context.next) return;
+    if (!context.state.next) return;
     context.commit('SET', { path: 'page', value: context.state.page + 1 });
     const { items, next } = await context.dispatch('api/GET_LIST', {
       context,
-      params: context.getters.FILTERS,
+      params: {
+        ...context.getters.FILTERS,
+        page: context.state.page,
+      },
     });
     context.commit('SET', { path: 'dataList', value: [...context.state.dataList, ...items] });
     context.commit('SET', { path: 'next', value: next });

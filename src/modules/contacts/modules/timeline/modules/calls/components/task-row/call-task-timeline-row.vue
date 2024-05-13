@@ -18,6 +18,7 @@
       <timeline-pin
         :collapsed="collapsed"
         :type="pinType"
+        :last="last && collapsed"
         @click="toggle"
       />
     </template>
@@ -59,6 +60,7 @@
     <template #dropdown>
       <call-points-timeline-row-section
         :task-id="taskId"
+        :last="last"
       />
     </template>
   </timeline-row>
@@ -84,6 +86,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -123,8 +129,9 @@ const taskStatus = computed(() => {
 });
 
 const initiatorType = computed(() => {
-  if (!isMissed?.value && !queue.value) return TimelineInitiatorType.FLOW;
-  if (isMissed?.value && queue.value) return TimelineInitiatorType.BOT;
+  // FIXME
+  // if (!isMissed?.value && !queue?.value) return TimelineInitiatorType.FLOW;
+  if (isMissed?.value && queue?.value) return TimelineInitiatorType.BOT;
   return TimelineInitiatorType.CONTACT;
 });
 

@@ -25,18 +25,26 @@ const listHandler = (items) => {
 }
 
   const getList = async (params) => {
-    const fieldsToSend = ['parentId', 'dateFrom', 'dateTo', 'type'];
+    const fieldsToSend = ['parentId', 'dateFrom', 'dateTo', 'type', 'page', 'size'];
     const {
       parentId,
       dateFrom,
       dateTo,
       type,
+      page,
+      size,
     } = applyTransform(params, [
       sanitize(fieldsToSend),
     ]);
     try {
       const response = await timeline.getTimeline(
         parentId,
+        `${page || 1}`,
+        `${size || 100}`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
         dateFrom,
         dateTo,
         type,
@@ -58,4 +66,34 @@ const listHandler = (items) => {
     }
   };
 
-  export default { getList };
+const getCounters = async (params) => {
+  const defaultObject = {
+    callsCount: 0,
+    chatsCount: 0,
+    dateFrom: Date.now(),
+    dateTo: Date.now(),
+  };
+
+  const {
+    parentId,
+  } = applyTransform(params, [
+    sanitize(['parentId']),
+  ]);
+
+  try {
+    const response = await timeline.getTimelineCounter(parentId);
+    return applyTransform(response.data, [
+      snakeToCamel(),
+      merge(defaultObject),
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
+  export default {
+    getList,
+    getCounters,
+  };

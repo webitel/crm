@@ -4,9 +4,11 @@
       v-for="(point) of points"
       :key="point.id"
       :point="point"
+      :last="last && task.closedAt && point === points[points.length - 1]"
     />
     <chat-ended-point-timeline-row
       v-if="task.closedAt"
+      :last="last"
       :point="{ date: task.closedAt }"
     />
   </div>
@@ -30,6 +32,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 

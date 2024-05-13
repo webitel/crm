@@ -2,6 +2,7 @@
   <component
     :is="component"
     :task="task"
+    :last="last"
   />
 </template>
 
@@ -15,6 +16,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 

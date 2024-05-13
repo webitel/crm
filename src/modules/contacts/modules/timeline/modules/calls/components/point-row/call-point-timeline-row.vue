@@ -19,6 +19,8 @@
     <template #pin>
       <timeline-pin
         :type="pinType"
+        :last="last"
+        collapsed
       />
     </template>
 
@@ -47,6 +49,7 @@ import TimelineRowInitiator from '../../../../components/utils/timeline-row-init
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
+import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 
 const props = defineProps({
@@ -54,9 +57,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  last: {
+    type: Boolean,
+    default: false,
+  },
 });
-
-const pointType = computed(() => {});
 
 const pointStatus = computed(() => {
   return TimelineTaskStatusEnum.TRANSFERRED;

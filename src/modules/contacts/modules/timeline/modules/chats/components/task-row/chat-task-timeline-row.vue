@@ -20,6 +20,7 @@
       <timeline-pin
         :collapsed="collapsed"
         :type="pinType"
+        :last="last && collapsed"
         @click="toggle"
       />
     </template>
@@ -49,6 +50,7 @@
         </wt-tooltip>
 
         <timeline-row-duration
+          v-if="task.closedAt"
           :duration="duration"
         />
       </task-timeline-row-content-wrapper>
@@ -58,6 +60,7 @@
       <chat-points-row-section
         :task-id="taskId"
         :task="task"
+        :last="last"
       />
     </template>
   </timeline-row>
@@ -82,6 +85,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 
