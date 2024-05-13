@@ -19,6 +19,7 @@
     <template #pin>
       <timeline-pin
         :type="pinType"
+        :last="last"
         collapsed
       />
     </template>
@@ -55,6 +56,10 @@ const props = defineProps({
   point: {
     type: Object,
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 

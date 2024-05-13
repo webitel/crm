@@ -3,11 +3,13 @@
     class="timeline-container"
   >
     <header class="timeline-header">
-      <slot name="header"></slot>
+      <slot name="header" />
     </header>
 
     <article class="timeline-content">
-      <slot name="content"></slot>
+      <slot name="content" />
+
+      <slot name="after-content" />
     </article>
   </section>
 </template>

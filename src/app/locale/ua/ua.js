@@ -21,10 +21,10 @@ export default {
         transcription: 'Транскрипція',
       },
       status: {
-        [TimelineTaskStatusEnum.STARTED]: 'Начало',
-        [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
+        [TimelineTaskStatusEnum.STARTED]: 'Початок',
+        [TimelineTaskStatusEnum.MISSED]: 'Пропущений',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
-        [TimelineTaskStatusEnum.ENDED]: 'Конец',
+        [TimelineTaskStatusEnum.ENDED]: 'Кінець',
       },
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Дзвінок | Дзвінки',

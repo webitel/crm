@@ -35,7 +35,7 @@ const actions = {
     }
   },
   LOAD_NEXT: async (context) => {
-    if (!context.next) return;
+    if (!context.state.next) return;
     context.commit('SET', { path: 'page', value: context.state.page + 1 });
     const { items, next } = await context.dispatch('api/GET_LIST', {
       context,

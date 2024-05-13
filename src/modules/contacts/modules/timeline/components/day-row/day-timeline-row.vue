@@ -18,6 +18,7 @@
         :collapsed="collapsed"
         :type="TimelinePinType.DAY"
         :text="dayNumber"
+        :last="last && collapsed"
         @click="toggle"
       ></timeline-pin>
     </template>
@@ -34,6 +35,7 @@
         v-for="(task) of tasks"
         :task="task"
         :key="task.id"
+        :last="last && task === tasks[tasks.length - 1]"
       ></task-timeline-row>
     </template>
   </timeline-row>
@@ -64,6 +66,10 @@ const props = defineProps({
   tasks: {
     type: Array,
     default: () => [],
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 

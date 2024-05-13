@@ -9,6 +9,7 @@
       {{ text }}
     </component>
     <timeline-flow-line
+      v-if="!last"
       :color="state.lineColor || state.color"
     />
   </div>
@@ -31,6 +32,10 @@ const props = defineProps({
     default: '',
   },
   collapsed: {
+    type: Boolean,
+    default: false,
+  },
+  last: {
     type: Boolean,
     default: false,
   },

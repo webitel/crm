@@ -20,6 +20,7 @@
       <timeline-pin
         :collapsed="collapsed"
         :type="pinType"
+        :last="last && collapsed"
         @click="toggle"
       />
     </template>
@@ -59,6 +60,7 @@
       <chat-points-row-section
         :task-id="taskId"
         :task="task"
+        :last="last"
       />
     </template>
   </timeline-row>
@@ -83,6 +85,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -4,6 +4,7 @@
     v-for="(point) of points"
     :key="point.id"
     :point="point"
+    :last="last"
   />
 </div>
 </template>
@@ -17,6 +18,10 @@ const props = defineProps({
   taskId: {
     type: [String],
     required: true,
+  },
+  last: {
+    type: Boolean,
+    default: false,
   },
 });
 

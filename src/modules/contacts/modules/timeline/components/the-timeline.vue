@@ -17,13 +17,23 @@
       />
 
       <day-timeline-row
-        v-for="({ dayTimestamp, callsCount, chatsCount, items }) of dataList"
+        v-for="({ dayTimestamp, callsCount, chatsCount, items }, key) of dataList"
         :key="dayTimestamp"
         :timestamp="dayTimestamp"
         :calls-count="callsCount"
         :chats-count="chatsCount"
         :tasks="items"
+        :last="!next && key === dataList.length - 1"
       />
+    </template>
+
+    <template #after-content>
+      <wt-button
+        :disabled="!next"
+        @click="loadNext"
+      >
+        next
+      </wt-button>
     </template>
   </timeline-container>
 
@@ -56,9 +66,14 @@ const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 const dataList = computed(() => getNamespacedState(store.state, timelineNamespace).dataList);
 const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);
+const next = computed(() => getNamespacedState(store.state, timelineNamespace).next);
 
 function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
+}
+
+function loadNext() {
+  return store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
 }
 
 // TODO: uncomment me after fixing filters module

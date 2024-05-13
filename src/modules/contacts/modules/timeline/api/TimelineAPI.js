@@ -25,18 +25,26 @@ const listHandler = (items) => {
 }
 
   const getList = async (params) => {
-    const fieldsToSend = ['parentId', 'dateFrom', 'dateTo', 'type'];
+    const fieldsToSend = ['parentId', 'dateFrom', 'dateTo', 'type', 'page', 'size'];
     const {
       parentId,
       dateFrom,
       dateTo,
       type,
+      page,
+      size,
     } = applyTransform(params, [
       sanitize(fieldsToSend),
     ]);
     try {
       const response = await timeline.getTimeline(
         parentId,
+        `${page || 1}`,
+        `${size || 100}`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
         dateFrom,
         dateTo,
         type,
