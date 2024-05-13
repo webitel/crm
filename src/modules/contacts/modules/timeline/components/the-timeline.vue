@@ -28,12 +28,10 @@
     </template>
 
     <template #after-content>
-      <wt-button
-        :disabled="!next"
-        @click="loadNext"
-      >
-        next
-      </wt-button>
+      <timeline-intersection-observer
+        :next="next"
+        @next="loadNext"
+      />
     </template>
   </timeline-container>
 
@@ -43,6 +41,7 @@
 import { computed, provide } from 'vue';
 import { useStore } from 'vuex';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
+import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
