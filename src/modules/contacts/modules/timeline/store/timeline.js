@@ -24,6 +24,7 @@ const actions = {
   INITIALIZE_LIST: async (context) => {
     try {
       context.commit('SET', { path: 'isLoading', value: true });
+      context.commit('SET', { path: 'page', value: 1 });
       const { items, next } = await context.dispatch('api/GET_LIST', {
         context,
         params: context.getters.FILTERS,
