@@ -16,7 +16,12 @@
       </template>
 
       <template #option="{ text }">
-        <p>{{ text }}</p>
+        <div class="call-task-timeline-actions__context-option-wrapper">
+          <wt-icon
+            icon="history"
+          />
+          <p>{{ text }}</p>
+        </div>
       </template>
     </wt-context-menu>
   </div>
@@ -39,6 +44,7 @@ const historyLink = `${import.meta.env.VITE_HISTORY_URL}/${props.task.id}`;
 const options = computed(() => {
   const openHistory = {
     text: t('contacts.timeline.actions.openInHistory'),
+    icon: 'history',
     handler: () => window.open(historyLink),
   };
   return [
@@ -51,5 +57,11 @@ const options = computed(() => {
 .call-task-timeline-actions {
   display: flex;
   align-items: center;
+}
+
+.call-task-timeline-actions__context-option-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 </style>
