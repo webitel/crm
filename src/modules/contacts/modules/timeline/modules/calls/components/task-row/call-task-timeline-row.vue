@@ -129,9 +129,10 @@ const taskStatus = computed(() => {
 });
 
 const initiatorType = computed(() => {
-  // FIXME
-  // if (!isMissed?.value && !queue?.value) return TimelineInitiatorType.FLOW;
-  if (isMissed?.value && queue?.value) return TimelineInitiatorType.BOT;
+  if (!isInbound?.value) return TimelineInitiatorType.CONTACT; // agent
+  if (participants?.value) return TimelineInitiatorType.CONTACT;
+  if (queue?.value) return TimelineInitiatorType.BOT;
+  if (flowScheme?.value) return TimelineInitiatorType.FLOW;
   return TimelineInitiatorType.CONTACT;
 });
 
