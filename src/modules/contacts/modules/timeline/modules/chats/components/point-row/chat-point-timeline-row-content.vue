@@ -3,6 +3,7 @@
     <header class="chat-point-row-content-header">
       <wt-icon-btn
         :icon="collapsed ? 'arrow-right' : 'arrow-down'"
+        :disabled="!textRequiresExpansion"
         @click="toggle"
       />
       <timeline-row-initiator
@@ -16,10 +17,12 @@
     <article
       v-if="point.text && collapsed"
       class="chat-point-row-content-text chat-point-row-content-text--collapsed"
-      v-html="text"
+      v-html="collapsedText"
     />
 
-    <timeline-row-dropdown-transition>
+    <timeline-row-dropdown-transition
+      v-if="textRequiresExpansion"
+    >
       <article
         v-if="point.text && !collapsed"
         class="chat-point-row-content-text"
@@ -78,6 +81,14 @@ const text = computed(() => {
   return props.point.text ? purify.sanitize(linkifyHtml(props.point.text, {
     className: 'chat-point-row-content-text__link',
   })) : '';
+});
+
+const textRequiresExpansion = computed(() => {
+  return props.point.text.length > 100;
+});
+
+const collapsedText = computed(() => {
+  return textRequiresExpansion.value ? `${text.value.slice(0, 100)}...` : text.value;
 });
 </script>
 
