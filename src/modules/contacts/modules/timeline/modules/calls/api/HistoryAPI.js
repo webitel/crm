@@ -34,7 +34,7 @@ const getList = ({
     skipParent,
     parentId,
     cause,
-    fields = ['to', 'transfer_to', 'created_at', 'duration'],
+    fields = ['to', 'transfer_to', 'transfer_from', 'created_at', 'duration'],
     sort = '-created_at',
     direction,
     search,
@@ -133,7 +133,7 @@ const getHistory = getList({
   responseItemsTransformers: [
     (items) => {
       // filter calls, received transfer - we need only calls that ended by transfer
-      return items.filter(({ transferTo }) => !!transferTo);
+      return items.filter(({ transferTo, transferFrom }) => !!transferTo || !!transferFrom);
     },
   ],
 });
