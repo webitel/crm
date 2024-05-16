@@ -2,6 +2,7 @@
   <component
     :is="component"
     :task="task"
+    :detailed="task.isDetailed"
     :last="last"
   />
 </template>

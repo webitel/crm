@@ -17,8 +17,9 @@
     <template #pin="{ toggle, collapsed }">
       <timeline-pin
         :collapsed="collapsed"
-        :type="pinType"
         :last="last && collapsed"
+        :non-clickable="!detailed"
+        :type="pinType"
         @click="toggle"
       />
     </template>
@@ -59,8 +60,8 @@
 
     <template #dropdown>
       <call-points-timeline-row-section
-        :task-id="taskId"
         :last="last"
+        :task-id="taskId"
       />
     </template>
   </timeline-row>
@@ -86,6 +87,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  detailed: {
+    type: Boolean,
+    default: false,
   },
   last: {
     type: Boolean,

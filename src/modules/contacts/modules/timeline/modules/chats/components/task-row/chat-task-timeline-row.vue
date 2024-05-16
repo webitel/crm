@@ -19,8 +19,9 @@
     <template #pin="{ toggle, collapsed }">
       <timeline-pin
         :collapsed="collapsed"
-        :type="pinType"
         :last="last && collapsed"
+        :non-clickable="!detailed"
+        :type="pinType"
         @click="toggle"
       />
     </template>
@@ -58,9 +59,9 @@
 
     <template #dropdown>
       <chat-points-row-section
-        :task-id="taskId"
-        :task="task"
         :last="last"
+        :task="task"
+        :task-id="taskId"
       />
     </template>
   </timeline-row>
@@ -85,6 +86,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true,
+  },
+  detailed: {
+    type: Boolean,
+    default: false,
   },
   last: {
     type: Boolean,
