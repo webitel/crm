@@ -84,7 +84,7 @@ const text = computed(() => {
 });
 
 const textRequiresExpansion = computed(() => {
-  return props.point.text.length > 100;
+  return props.point?.text?.length > 100;
 });
 
 const collapsedText = computed(() => {

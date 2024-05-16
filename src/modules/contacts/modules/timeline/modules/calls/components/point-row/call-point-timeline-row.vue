@@ -71,9 +71,13 @@ const pinType = computed(() => {
   return TimelinePinType.CALL_TRANSFER;
 });
 
-const initiatorType = computed(() => {});
+const initiatorType = computed(() => {
+  return props.point?.to?.type || props.point?.from?.type;
+});
 
-const initiator = computed(() => {});
+const initiator = computed(() => {
+  return props.point?.to?.name || props.point?.from?.name;
+});
 </script>
 
 <style lang="scss" scoped>
