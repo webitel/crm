@@ -32,7 +32,7 @@
         />
 
         <timeline-row-duration
-          :duration="point.talkSec"
+          :duration="point.duration"
         />
       </task-timeline-row-content-wrapper>
     </template>
