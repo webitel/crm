@@ -1,6 +1,6 @@
 {
   "name": "crm",
-  "version": "24.02.0",
+  "version": "24.04.0",
   "private": true,
   "scripts": {
     "dev": "vite",
