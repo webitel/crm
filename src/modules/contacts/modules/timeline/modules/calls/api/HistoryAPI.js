@@ -34,7 +34,7 @@ const getList = ({
     skipParent,
     parentId,
     cause,
-    fields = ['to', 'transfer_to', 'transfer_from', 'created_at', 'duration'],
+    fields = ['to', 'talk_sec', 'created_at'],
     sort = '-created_at',
     direction,
     search,
@@ -46,6 +46,7 @@ const getList = ({
     hangupDisposition,
     hasFile,
     hasTranscription,
+    hasTransfer,
     description,
     grantee,
     talkSec,
@@ -83,6 +84,7 @@ const getList = ({
       team_id: team,
       member_id: member,
       gateway_id: gateway,
+      has_transfer: hasTransfer,
       duration,
       skip_parent: skipParent,
       parent_id: parentId,
@@ -130,12 +132,7 @@ const getHistory = getList({
     snakeToCamel(['variables']),
     merge(getDefaultGetListResponse()),
   ],
-  responseItemsTransformers: [
-    (items) => {
-      // filter calls, received transfer - we need only calls that ended by transfer
-      return items.filter(({ transferTo, transferFrom }) => !!transferTo || !!transferFrom);
-    },
-  ],
+  responseItemsTransformers: [],
 });
 
 export default {

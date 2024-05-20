@@ -4,7 +4,7 @@ import HistoryAPI from '../api/HistoryAPI.js';
 
 const calls = new TimelineTaskPointsModule({
   apiModule: {
-    getList: ({ taskId }) => HistoryAPI.getList({ dependencyId: taskId }),
+    getList: ({ taskId }) => HistoryAPI.getList({ dependencyId: taskId, hasTransfer: true }),
   },
 })
 .getModule();
