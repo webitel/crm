@@ -1,6 +1,7 @@
 <template>
   <wt-popup
-    width="480"
+    v-bind="attrs"
+    size="sm"
     overflow
     @close="close"
   >
@@ -45,7 +46,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -60,6 +61,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+
+const attrs = useAttrs();
 
 const getDefaultDraft = () => ({
   id: '',

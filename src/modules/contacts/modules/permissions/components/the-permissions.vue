@@ -2,7 +2,7 @@
   <div class="permissions">
     <header class="permissions-header">
       <grantee-popup
-        v-if="isGranteePopup"
+        :shown="isGranteePopup"
         :callback="grantPermissions"
         @close="isGranteePopup = false"
       />

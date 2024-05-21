@@ -2,7 +2,7 @@
   <div class="variables">
     <header class="variables-header">
       <variable-popup
-        v-if="isVariablePopup"
+        :shown="isVariablePopup"
         :edited-instance="editedItem"
         :callback="save"
         @close="handleEditedItem"

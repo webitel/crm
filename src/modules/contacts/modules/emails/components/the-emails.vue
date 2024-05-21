@@ -2,7 +2,7 @@
   <div class="contact-communication-tab emails">
 
     <communication-popup
-      v-if="isCommunicationPopup"
+      :shown="isCommunicationPopup"
       :item="editedItem"
       :namespace="namespace"
       channel="email"

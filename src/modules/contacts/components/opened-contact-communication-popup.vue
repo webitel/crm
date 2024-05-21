@@ -1,7 +1,8 @@
 <template>
   <wt-popup
     class="opened-contact-communication-popup"
-    width="480"
+    v-bind="attrs"
+    size="sm"
     overflow
     @close="close"
   >
@@ -50,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch, reactive } from 'vue';
+import { computed, onMounted, ref, watch, reactive, useAttrs } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -77,6 +78,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+
+const attrs = useAttrs();
 
 const isLoading = ref(false);
 const isSaving = ref(false);

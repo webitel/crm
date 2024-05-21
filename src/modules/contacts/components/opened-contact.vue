@@ -18,7 +18,7 @@
         v-else
       >
         <contact-popup
-          v-if="isContactPopup"
+          :shown="isContactPopup"
           :id="id"
           :namespace="baseNamespace"
           @saved="loadItem"

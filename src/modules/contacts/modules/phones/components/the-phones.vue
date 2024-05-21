@@ -2,7 +2,7 @@
   <div class="contact-communication-tab phones">
 
     <communication-popup
-      v-if="isCommunicationPopup"
+      :shown="isCommunicationPopup"
       :item="editedItem"
       :namespace="namespace"
       @close="closePopup"
