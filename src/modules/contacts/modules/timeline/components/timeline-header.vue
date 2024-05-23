@@ -35,14 +35,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  filtersNamespace: {
+    type: String,
+    required: true,
+  },
 });
 
 const namespace = inject('namespace');
 const eventBus = inject('$eventBus');
 
 const { d, t, locale } = useI18n();
-
-const { filtersNamespace } = useTableFilters(namespace);
 
 const showHeader = computed(() => true);
 

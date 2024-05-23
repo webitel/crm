@@ -4,6 +4,7 @@
       <timeline-header
         :list="dataList"
         :contact-id="contactId"
+        :filters-namespace="filtersNamespace"
       />
     </template>
 
@@ -45,9 +46,13 @@
 </template>
 
 <script setup>
-import { computed, provide, ref } from 'vue';
+import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
+import FilterEvent from '@webitel/ui-sdk/src/modules/Filters/enums/FilterEvent.enum.js'
+import {
+  useTableFilters
+} from '../../../../../../../webitel-ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
@@ -79,6 +84,29 @@ function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
 }
 
+const {
+  namespace: filtersNamespace,
+  subscribe,
+  flushSubscribers,
+  restoreFilters,
+} = useTableFilters(timelineNamespace);
+
+onUnmounted(() => {
+  flushSubscribers();
+});
+
+subscribe({
+  event: FilterEvent.RESTORED,
+  callback: initializeList,
+});
+
+subscribe({
+  event: FilterEvent.FILTER_SET,
+  callback: initializeList,
+});
+
+restoreFilters();
+
 const nextLoading = ref(false);
 
 async function loadNext() {
@@ -86,9 +114,6 @@ async function loadNext() {
   await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
   nextLoading.value = false;
 }
-
-// TODO: uncomment me after fixing filters module
-// initializeList();
 </script>
 
 <style lang="scss" scoped>
