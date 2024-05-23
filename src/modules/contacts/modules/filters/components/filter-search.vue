@@ -118,13 +118,13 @@ function setValue(payload) {
 }
 
 function changeMode({ value }) {
-  setValue({ filter: filterQuery.value, value: '' });
+  setValue({ name: filterQuery.value, value: '' });
   filterQuery.value = value;
 }
 
 function setLocalValue(value) {
   localValue.value = value;
-  setValue({ filter: filterQuery.value, value: localValue.value });
+  setValue({ name: filterQuery.value, value: localValue.value });
 }
 
 function restoreSearchMode() {

@@ -39,6 +39,7 @@ const initApp = () => createApp(App)
   try {
     setTokenFromUrl();
     config = await fetchConfig();
+    store.commit('SET_ROUTER', router);
     await store.dispatch('OPEN_SESSION');
   } catch (err) {
     console.error('before app mount error:', err);

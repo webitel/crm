@@ -1,26 +1,41 @@
-import BaseFilterSchema
-  from '@webitel/ui-sdk/src/modules/Filters/classes/BaseFilterSchema';
 import FiltersStoreModule
   from '@webitel/ui-sdk/src/modules/Filters/store/FiltersStoreModule';
-import router from '../../../../../../../app/router';
+import { useRouter } from 'vue-router';
 
-const state = {
-  page: new BaseFilterSchema({
+const router = useRouter();
+
+const filtersList = [
+  {
+    name: 'page',
     value: 1,
     defaultValue: 1,
-  }),
-  size: new BaseFilterSchema({
+    router,
+    get: ['value', 'query'],
+    set: ['value', 'query'],
+    restore: ['query'],
+  },
+  {
+    name: 'size',
     value: 10,
     defaultValue: 10,
-  }),
-  sort: new BaseFilterSchema(),
-};
+    router,
+    get: ['value', 'query'],
+    set: ['value', 'query'],
+    restore: ['query'],
+  },
+  {
+    name: 'sort',
+    value: '',
+    defaultValue: '',
+    router,
+    get: ['value', 'query'],
+    set: ['value', 'query'],
+    restore: ['query'],
+  },
+];
 
-const getters = {
-  ROUTER: () => router,
-  TABLE_NAMESPACE: () => 'contacts/card/permissions/table',
-};
-
-const filters = new FiltersStoreModule().getModule({ state, getters });
+const filters = new FiltersStoreModule()
+.addFilter(filtersList)
+.getModule();
 
 export default filters;

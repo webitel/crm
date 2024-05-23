@@ -5,9 +5,17 @@ import appearance from '../../modules/appearance/store/appearance';
 import instance from '../api/instance';
 
 export default createStore({
+  state: {
+    router: null,
+  },
   actions: {
     OPEN_SESSION: async (context) => {
       await context.dispatch('userinfo/OPEN_SESSION', { instance }, { root: true });
+    },
+  },
+  mutations: {
+    SET_ROUTER: (state, router) => {
+      state.router = router;
     },
   },
   modules: {

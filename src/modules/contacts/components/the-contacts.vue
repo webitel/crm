@@ -1,23 +1,23 @@
 <template>
   <wt-page-wrapper
-    class="contacts"
     :actions-panel="false"
+    class="contacts"
   >
     <template #header>
       <contact-popup
-        :shown="isContactPopup"
         :id="editedContactId"
         :namespace="baseNamespace"
-        @saved="saved"
+        :shown="isContactPopup"
         @close="closeContactPopup"
+        @saved="saved"
       />
 
       <wt-page-header
         :primary-action="create"
-        :secondary-text="$t('reusable.delete')"
+        :primary-disabled="!hasObacCreateAccess"
         :secondary-action="deleteSelectedItems"
         :secondary-disabled="!hasObacDeleteAccess || !deletableSelectedItems.length"
-        :primary-disabled="!hasObacCreateAccess"
+        :secondary-text="$t('reusable.delete')"
       >
         <wt-headline-nav :path="path" />
         <template #actions>
@@ -32,15 +32,15 @@
 
       <wt-dummy
         v-if="!isLoading && !dataList.length"
+        :dark-mode="darkMode"
         :src="dummy.src"
         :text="dummy.text"
-        :dark-mode="darkMode"
       />
 
       <delete-confirmation-popup
-        v-show="isDeleteConfirmationPopup"
-        :delete-count="deleteCount"
+        :shown="isDeleteConfirmationPopup"
         :callback="deleteCallback"
+        :delete-count="deleteCount"
         @close="closeDelete"
       />
 
@@ -49,19 +49,21 @@
         class="table-wrapper"
       >
         <wt-table
-          :headers="headers"
           :data="dataList"
+          :headers="headers"
+          :selected="selected"
           sortable
           @sort="sort"
+          @update:selected="setSelected"
         >
           <template #name="{ item }">
             <div class="username-wrapper">
               <wt-avatar
-                size="sm"
                 :username="item.name.commonName"
+                size="sm"
               />
               <wt-item-link
-                  :link="communicationsLink(item)"
+                :link="`${CrmSections.CONTACTS}/${item.id}`"
               >
                 {{ item.name.commonName }}
               </wt-item-link>
@@ -100,8 +102,8 @@
           </template>
         </wt-table>
         <filter-pagination
-          :namespace="filtersNamespace"
           :is-next="isNext"
+          :namespace="filtersNamespace"
         />
       </div>
     </template>
@@ -109,25 +111,26 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
-import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import FilterEvent from '@webitel/ui-sdk/src/modules/Filters/enums/FilterEvent.enum.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useAccess } from '../../../app/composables/useAccess';
-import ContactPopup from './contact-popup.vue';
-import FilterSearch from '../modules/filters/components/filter-search.vue';
-import dummyLight from '../../../app/assets/dummy-light.svg';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
+import { computed, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import dummyDark from '../../../app/assets/dummy-dark.svg';
+import dummyLight from '../../../app/assets/dummy-light.svg';
+import { useAccess } from '../../../app/composables/useAccess';
+import FilterSearch from '../modules/filters/components/filter-search.vue';
+import ContactPopup from './contact-popup.vue';
 
 const baseNamespace = 'contacts';
 
@@ -135,20 +138,6 @@ const { t } = useI18n();
 const router = useRouter();
 
 const store = useStore();
-
-const {
-  namespace,
-
-  dataList,
-  isLoading,
-  headers,
-  isNext,
-  error,
-
-  loadData,
-  deleteData,
-  sort,
-} = useTableStore(baseNamespace);
 
 const {
   hasObacCreateAccess,
@@ -165,7 +154,40 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const { filtersNamespace } = useTableFilters(namespace);
+const {
+  namespace,
+
+  dataList,
+  selected,
+  isLoading,
+  headers,
+  isNext,
+  error,
+
+  loadData,
+  deleteData,
+  sort,
+  setSelected,
+  onFilterEvent,
+} = useTableStore(baseNamespace);
+
+const {
+  namespace: filtersNamespace,
+  restoreFilters,
+
+  subscribe,
+  flushSubscribers,
+} = useTableFilters(namespace);
+
+subscribe({ event: FilterEvent.FILTER_SET, callback: onFilterEvent });
+subscribe({ event: FilterEvent.RESTORED, callback: onFilterEvent });
+
+restoreFilters();
+
+onUnmounted(() => {
+  flushSubscribers();
+});
+
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -184,7 +206,7 @@ const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));
 // and when the filter didn't produce results
 const dummy = computed(() => {
   if (dataList.value.length) return false;
-  const filters = store.getters[`${namespace}/GET_FILTERS`];
+  const filters = store.getters[`${filtersNamespace}/_STATE_FILTER_NAMES`];
   const defaultFilters = ['page', 'size', 'sort', 'fields'];
   const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
     if (defaultFilters.includes(filter)) return dynamic;
@@ -202,7 +224,7 @@ const dummy = computed(() => {
 });
 
 const deletableSelectedItems = computed(() => (
-  dataList.value.filter((item) => item._isSelected && item.access.delete)
+  selected.value.filter((item) => item.access.delete)
 ));
 
 function create() {
@@ -214,13 +236,8 @@ function edit({ id }) {
   isContactPopup.value = true;
 }
 
-function communicationsLink({ id }) {
-  const routeName = CrmSections.CONTACTS;
-  return { name: `${routeName}-timeline`, params: { id } };
-}
-
 function saved(id) {
-  router.push(`/${CrmSections.CONTACTS}/${id}/timeline`);
+  router.push(`/${CrmSections.CONTACTS}/${id}`);
 }
 
 function closeContactPopup() {
