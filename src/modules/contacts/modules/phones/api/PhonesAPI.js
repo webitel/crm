@@ -31,6 +31,7 @@ const getList = async (params) => {
     merge(getDefaultGetParams()),
     starToSearch('q'),
   ]);
+
   try {
     const response = await service.listPhones(
       parentId,
@@ -38,7 +39,7 @@ const getList = async (params) => {
       size,
       q,
       sort,
-      fields,
+      ['etag', ...fields],
       id,
     );
     const { data, next } = applyTransform(response.data, [

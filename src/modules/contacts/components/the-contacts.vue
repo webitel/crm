@@ -63,7 +63,7 @@
                 size="sm"
               />
               <wt-item-link
-                :link="`${CrmSections.CONTACTS}/${item.id}`"
+                :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.id } }"
               >
                 {{ item.name.commonName }}
               </wt-item-link>
@@ -237,7 +237,10 @@ function edit({ id }) {
 }
 
 function saved(id) {
-  router.push(`/${CrmSections.CONTACTS}/${id}`);
+  router.push({
+    name: CrmSections.CONTACTS,
+    params: { id },
+  });
 }
 
 function closeContactPopup() {

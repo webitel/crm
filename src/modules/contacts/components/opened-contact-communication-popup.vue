@@ -1,9 +1,9 @@
 <template>
   <wt-popup
+    :shown="!!commId"
     class="opened-contact-communication-popup"
-    v-bind="attrs"
-    size="sm"
     overflow
+    size="sm"
     @close="close"
   >
     <template #header>
@@ -15,58 +15,55 @@
       >
         <wt-select
           ref="TypeSelect"
-          :value="draft.type"
-          :v="v$.draft.type"
-          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: currentCommunication.filterField })"
           :clearable="false"
           :label="t('objects.communicationType', 1)"
+          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: currentCommunication.filterField })"
+          :v="v$.draft.type"
+          :value="draft.type"
           required
           @input="draft.type = $event"
         />
         <wt-input
           v-model="draft.destination"
-          :v="v$.draft.destination"
           :clearable="false"
           :label="t('contacts.communications.destination')"
+          :v="v$.draft.destination"
           required
         />
       </form>
     </template>
     <template #actions>
-        <wt-button
-          :disabled="v$.$invalid"
-          :loading="isLoading"
-          @click="save"
-        >
-          {{ t('reusable.save') }}
-        </wt-button>
-        <wt-button
-          color="secondary"
-          @click="close"
-        >
-          {{ t('reusable.cancel') }}
-        </wt-button>
+      <wt-button
+        :disabled="v$.$invalid"
+        :loading="isLoading"
+        @click="save"
+      >
+        {{ t('reusable.save') }}
+      </wt-button>
+      <wt-button
+        color="secondary"
+        @click="close"
+      >
+        {{ t('reusable.cancel') }}
+      </wt-button>
     </template>
   </wt-popup>
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch, reactive, useAttrs } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { email, required } from '@vuelidate/validators';
+import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 import { EngineCommunicationChannels } from 'webitel-sdk';
+import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 
 const { t } = useI18n();
 const store = useStore();
 
 const props = defineProps({
-  item: {
-    // if item is passed, that's an edit
-    type: [Object, null],
-  },
   channel: {
     type: String,
     default: 'number',
@@ -79,7 +76,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const attrs = useAttrs();
+const route = useRoute();
 
 const isLoading = ref(false);
 const isSaving = ref(false);
@@ -99,22 +96,19 @@ const communicationOptions = [
     addText: t('contacts.communications.phones.addTitle'),
     updateText: t('contacts.communications.phones.editTitle'),
     filterField: EngineCommunicationChannels.Phone,
+    getNamespace: `${props.namespace}/GET_PHONE`,
     addNamespace: `${props.namespace}/ADD_PHONE`,
     updateNamespace: `${props.namespace}/UPDATE_PHONE`,
   },
 ];
 
-const getDefaultDraft = () => ({
-  channel: props.channel,
-  type: {},
-  destination: '',
-});
-
-const draft = reactive(getDefaultDraft());
+const draft = reactive({});
 
 const currentCommunication = computed(() => {
   return communicationOptions.find((option) => option.value === props.channel);
 });
+
+const commId = computed(() => route.params.commId);
 
 const v$ = useVuelidate(computed(() => {
   const destination = props.channel === 'email' ? { required, email } : { required };
@@ -127,14 +121,13 @@ const v$ = useVuelidate(computed(() => {
   };
 }), { draft }, { $autoDirty: true });
 
-function initDraft() {
-  draft.destination = props.item[props.channel];
-  draft.type = props.item.type;
+async function initDraft() {
+  const comm = await getItem({ id: commId.value });
+  draft.destination = comm[props.channel];
+  draft.type = comm.type;
 }
 
 v$.value.$touch();
-
-if (props.item) initDraft();
 
 async function save() {
 
@@ -149,6 +142,10 @@ async function save() {
   } finally {
     isSaving.value = false;
   }
+}
+
+function getItem() {
+  return store.dispatch(`${currentCommunication.value.getNamespace}`, { id: commId.value });
 }
 
 function addItem({ type, destination }) {
@@ -168,6 +165,17 @@ function close() {
   emit('close');
 }
 
+watch(commId, () => {
+  if (commId.value === 'new') {
+    Object.assign(draft, {
+      channel: props.channel,
+      type: {},
+      destination: '',
+    });
+  } else if (commId.value) {
+    initDraft();
+  }
+}, { immediate: true });
 </script>
 
 <style lang="scss" scoped>

@@ -51,7 +51,7 @@ const routes = [
       },
       {
         path: 'contacts/:id',
-        name: `${CrmSections.CONTACTS}-edit`,
+        name: `${CrmSections.CONTACTS}-card`,
         component: OpenedContact,
         beforeEnter: checkRouteAccess,
         redirect: { name: `${CrmSections.CONTACTS}-timeline` },
@@ -70,17 +70,17 @@ const routes = [
             component: ContactCommunications,
             children: [
               {
-                path: 'phones',
+                path: 'phones/:commId?',
                 name: `${CrmSections.CONTACTS}-communications-phones`,
                 component: ContactCommunications,
               },
               {
-                path: 'messaging',
+                path: 'messaging/:commId?',
                 name: `${CrmSections.CONTACTS}-communications-messaging`,
                 component: ContactCommunications,
               },
               {
-                path: 'emails',
+                path: 'emails/:commId?',
                 name: `${CrmSections.CONTACTS}-communications-emails`,
                 component: ContactCommunications,
               },
