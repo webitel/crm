@@ -35,7 +35,7 @@
     <template #actions>
       <wt-button
         :disabled="v$.$invalid"
-        :loading="isLoading"
+        :loading="isSaving"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -81,7 +81,6 @@ const route = useRoute();
 // animate popup appearance after f5 with popup opened
 const shown = ref(false);
 
-const isLoading = ref(false);
 const isSaving = ref(false);
 const TypeSelect = ref(null);
 
@@ -132,25 +131,25 @@ const v$ = useVuelidate(computed(() => {
 
 async function initDraft() {
   const comm = await getItem({ id: commId.value });
+  Object.assign(draft, comm);
   draft.destination = comm[props.channel];
-  draft.type = comm.type;
 }
 
 v$.value.$touch();
 
 async function save() {
-
-  try {
-    isSaving.value = true;
-    if (props.item) {
-      await updateItem(draft);
-    } else {
-      await addItem(draft);
-    }
-    close();
-  } finally {
-    isSaving.value = false;
+  isSaving.value = true;
+  if (commId.value !== 'new') {
+    await updateItem(draft);
+  } else {
+    await addItem(draft);
   }
+
+  isSaving.value = false;
+
+  setTimeout(() => {
+    close();
+  }, 1500);
 }
 
 function getItem() {
@@ -166,7 +165,7 @@ function updateItem({ channel, destination, ...rest }) {
   const itemInstance = { ...rest, [props.channel]: destination };
   return store.dispatch(`${currentCommunication.value.updateNamespace}`, {
     itemInstance,
-    etag: props.item.etag,
+    etag: draft.etag,
   });
 }
 
