@@ -1,6 +1,6 @@
 <template>
   <wt-popup
-    :shown="!!commId"
+    :shown="shown"
     class="opened-contact-communication-popup"
     overflow
     size="sm"
@@ -78,6 +78,9 @@ const emit = defineEmits(['close']);
 
 const route = useRoute();
 
+// animate popup appearance after f5 with popup opened
+const shown = ref(false);
+
 const isLoading = ref(false);
 const isSaving = ref(false);
 const TypeSelect = ref(null);
@@ -102,7 +105,13 @@ const communicationOptions = [
   },
 ];
 
-const draft = reactive({});
+const generateNewDraft = () => ({
+  channel: props.channel,
+  type: {},
+  destination: '',
+});
+
+const draft = reactive(generateNewDraft());
 
 const currentCommunication = computed(() => {
   return communicationOptions.find((option) => option.value === props.channel);
@@ -167,13 +176,17 @@ function close() {
 
 watch(commId, () => {
   if (commId.value === 'new') {
-    Object.assign(draft, {
-      channel: props.channel,
-      type: {},
-      destination: '',
-    });
+    Object.assign(draft, generateNewDraft());
   } else if (commId.value) {
     initDraft();
+  }
+}, { immediate: true });
+
+watch(commId, () => {
+  if (commId.value) {
+    setTimeout(() => shown.value = !!commId.value, 300);
+  } else {
+    shown.value = !!commId.value;
   }
 }, { immediate: true });
 </script>

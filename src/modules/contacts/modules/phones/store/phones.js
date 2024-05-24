@@ -27,6 +27,7 @@ const actions = {
     }
   },
   GET_PHONE: async (context, { id }) => {
+    await context.dispatch('LOAD_DATA_LIST');
     return context.state.dataList.find((item) => item.id === id);
   },
   ADD_PHONE: async (context, { itemInstance }) => {
