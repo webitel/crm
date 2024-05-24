@@ -10,7 +10,6 @@ import filters from '../modules/filters/store/filters';
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
-  REQUIRED_FIELDS: () => ['etag'],
 };
 
 const actions = {

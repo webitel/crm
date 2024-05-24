@@ -2,15 +2,13 @@
   <div class="contact-communication-tab emails">
 
     <communication-popup
-      :shown="isCommunicationPopup"
-      :item="editedItem"
       :namespace="namespace"
       channel="email"
-      @close="closePopup"
+      @close="closeCommunicationPopup"
     />
 
     <delete-confirmation-popup
-      v-if="isConfirmationPopup"
+      :shown="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
@@ -20,7 +18,7 @@
       <wt-icon-action
         :disabled="!access.hasRbacEditAccess"
         action="add"
-        @click="isCommunicationPopup = true"
+        @click="addCommunication"
       />
     </header>
 
@@ -64,7 +62,7 @@
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
             action="edit"
-            @click="edit(item)"
+            @click="editCommunication(item)"
           />
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"
@@ -81,7 +79,7 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
@@ -90,6 +88,7 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import dummyLight from '../assets/email-dummy-light.svg';
 import dummyDark from '../assets/email-dummy-dark.svg';
@@ -104,6 +103,8 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
+const route = useRoute();
 const store = useStore();
 const { t } = useI18n();
 
@@ -118,9 +119,25 @@ const {
   patchProperty,
   deleteData,
   sort,
+  onFilterEvent,
 } = useTableStore(props.namespace);
 
-const { filtersNamespace } = useTableFilters(namespace);
+const {
+  subscribe,
+  flushSubscribers,
+  restoreFilters,
+} = useTableFilters(namespace);
+
+subscribe({
+  event: '*',
+  callback: onFilterEvent,
+});
+
+restoreFilters();
+
+onUnmounted(() => {
+  flushSubscribers();
+});
 
 const {
   isVisible: isConfirmationPopup,
@@ -131,9 +148,6 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const editedItem = ref(null);
-const isCommunicationPopup = ref(false);
-
 const showDummy = computed(() => !dataList.value.length);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
@@ -141,14 +155,28 @@ function setAsPrimary({ item, index }) {
   return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
 }
 
-function edit(item) {
-  editedItem.value = item;
-  isCommunicationPopup.value = true;
+function addCommunication() {
+  return router.push({
+    ...route,
+    params: { commId: 'new' },
+  });
 }
 
-function closePopup() {
-  isCommunicationPopup.value = false;
-  editedItem.value = null
+function editCommunication({ id }) {
+  return router.push({
+    ...route,
+    params: { commId: id },
+  });
+}
+
+function closeCommunicationPopup() {
+  const params = { ...route.params };
+  delete params.commId;
+
+  return router.push({
+    ...route,
+    params,
+  });
 }
 
 </script>

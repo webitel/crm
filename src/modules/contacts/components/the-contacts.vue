@@ -179,8 +179,10 @@ const {
   flushSubscribers,
 } = useTableFilters(namespace);
 
-subscribe({ event: FilterEvent.FILTER_SET, callback: onFilterEvent });
-subscribe({ event: FilterEvent.RESTORED, callback: onFilterEvent });
+subscribe({
+  event: '*',
+  callback: onFilterEvent,
+});
 
 restoreFilters();
 

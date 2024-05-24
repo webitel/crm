@@ -96,12 +96,7 @@ onUnmounted(() => {
 });
 
 subscribe({
-  event: FilterEvent.RESTORED,
-  callback: initializeList,
-});
-
-subscribe({
-  event: FilterEvent.FILTER_SET,
+  event: '*',
   callback: initializeList,
 });
 

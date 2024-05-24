@@ -2,7 +2,7 @@
   <div class="contact-communication-tab">
 
     <delete-confirmation-popup
-      v-if="isConfirmationPopup"
+      :shown="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
@@ -91,9 +91,25 @@ const {
 
   deleteData,
   sort,
+  onFilterEvent,
 } = useTableStore(props.namespace);
 
-const { filtersNamespace } = useTableFilters(namespace);
+const {
+  subscribe,
+  flushSubscribers,
+  restoreFilters,
+} = useTableFilters(namespace);
+
+subscribe({
+  event: '*',
+  callback: onFilterEvent,
+});
+
+restoreFilters();
+
+onUnmounted(() => {
+  flushSubscribers();
+});
 
 const {
   isVisible: isConfirmationPopup,

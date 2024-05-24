@@ -66,7 +66,7 @@ const store = useStore();
 const props = defineProps({
   channel: {
     type: String,
-    default: 'number',
+    required: true,
   },
   namespace: {
     type: String,
@@ -90,6 +90,7 @@ const communicationOptions = [
     addText: t('contacts.communications.emails.addTitle'),
     updateText: t('contacts.communications.emails.editTitle'),
     filterField: EngineCommunicationChannels.Email,
+    getNamespace: `${props.namespace}/GET_EMAIL`,
     addNamespace: `${props.namespace}/ADD_EMAIL`,
     updateNamespace: `${props.namespace}/UPDATE_EMAIL`,
   },

@@ -3,13 +3,14 @@
 
     <communication-popup
       :namespace="namespace"
+      channel="number"
       @close="closeCommunicationPopup"
     />
 
     <delete-confirmation-popup
-      :shown="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
+      :shown="isConfirmationPopup"
       @close="closeDelete"
     />
 
@@ -34,8 +35,8 @@
       class="table-wrapper"
     >
       <wt-table
-        :headers="headers"
         :data="dataList"
+        :headers="headers"
         :selectable="false"
         sortable
         @sort="sort"
@@ -43,8 +44,8 @@
         <template #primary="{ item, index }">
           <wt-icon
             v-if="item.primary"
-            icon="tick"
             color="success"
+            icon="tick"
           />
           <wt-icon-btn
             v-else
@@ -78,21 +79,20 @@
 </template>
 
 <script setup>
-import { computed, inject, onUnmounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import FilterEvent from '@webitel/ui-sdk/src/modules/Filters/enums/FilterEvent.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import { computed, inject, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import dummyLight from '../assets/phone-dummy-light.svg';
-import dummyDark from '../assets/phone-dummy-dark.svg';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
+import dummyDark from '../assets/phone-dummy-dark.svg';
+import dummyLight from '../assets/phone-dummy-light.svg';
 
 const access = inject('access');
 
@@ -123,19 +123,13 @@ const {
 } = useTableStore(props.namespace);
 
 const {
-  namespace: filtersNamespace,
   subscribe,
   flushSubscribers,
   restoreFilters,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: FilterEvent.RESTORED,
-  callback: onFilterEvent,
-});
-
-subscribe({
-  event: FilterEvent.FILTER_SET,
+  event: '*',
   callback: onFilterEvent,
 });
 
@@ -180,7 +174,7 @@ function closeCommunicationPopup() {
   delete params.commId;
 
   return router.push({
-   ...route,
+    ...route,
     params,
   });
 }
