@@ -92,7 +92,7 @@ const routes = [
             component: ContactVariables,
           },
           {
-            path: 'permissions',
+            path: 'permissions/:permissionId?',
             name: `${CrmSections.CONTACTS}-permissions`,
             component: ContactPermissions,
           },
