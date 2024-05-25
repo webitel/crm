@@ -60,9 +60,6 @@ import { useStore } from 'vuex';
 import { EngineCommunicationChannels } from 'webitel-sdk';
 import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 
-const { t } = useI18n();
-const store = useStore();
-
 const props = defineProps({
   channel: {
     type: String,
@@ -76,6 +73,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+const { t } = useI18n();
+const store = useStore();
 const route = useRoute();
 
 // animate popup appearance after f5 with popup opened

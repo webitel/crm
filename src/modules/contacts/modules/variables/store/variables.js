@@ -10,10 +10,13 @@ import filters from '../modules/filters/store/filters';
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
-  REQUIRED_FIELDS: () => ['etag'],
 };
 
 const actions = {
+  GET_VARIABLE: async (context, { id }) => {
+    await context.dispatch('LOAD_DATA_LIST');
+    return context.state.dataList.find((item) => item.id === `${id}`);
+  },
   ADD_VARIABLE: async (context, { itemInstance }) => {
     try {
       await context.dispatch('api/POST_ITEM', {

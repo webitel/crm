@@ -87,7 +87,7 @@ const routes = [
             ],
           },
           {
-            path: 'variables',
+            path: 'variables/:variableId?',
             name: `${CrmSections.CONTACTS}-variables`,
             component: ContactVariables,
           },
