@@ -59,6 +59,23 @@ const getList = async (params) => {
   }
 };
 
+const get = async ({ itemId, parentId }) => {
+  try {
+    const response = await service.locatePhone(
+      parentId,
+      null,
+      itemId,
+      );
+    return applyTransform(response.data, [
+      snakeToCamel(),
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
 const fieldsToSend = ['number', 'type', 'primary'];
 
 const add = async ({ parentId, itemInstance }) => {
@@ -125,6 +142,7 @@ const deleteItem = async ({ id, etag, parentId }) => {
 
 export default {
   getList,
+  get,
   add,
   update,
   patch,

@@ -119,7 +119,6 @@ import {
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import FilterEvent from '@webitel/ui-sdk/src/modules/Filters/enums/FilterEvent.enum.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { computed, onUnmounted, ref } from 'vue';

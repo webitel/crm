@@ -14,8 +14,12 @@ const getters = {
 
 const actions = {
   GET_VARIABLE: async (context, { id }) => {
-    await context.dispatch('LOAD_DATA_LIST');
-    return context.state.dataList.find((item) => item.id === `${id}`);
+    return context.dispatch('api/GET_ITEM', {
+      context,
+      params: {
+        itemId: id,
+      },
+    });
   },
   ADD_VARIABLE: async (context, { itemInstance }) => {
     try {

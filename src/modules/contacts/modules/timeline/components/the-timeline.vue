@@ -49,7 +49,6 @@
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import FilterEvent from '@webitel/ui-sdk/src/modules/Filters/enums/FilterEvent.enum.js'
 import {
   useTableFilters
 } from '../../../../../../../webitel-ui-sdk/src/modules/Filters/composables/useTableFilters.js';
