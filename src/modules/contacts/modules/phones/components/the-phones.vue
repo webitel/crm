@@ -1,6 +1,5 @@
 <template>
   <div class="contact-communication-tab phones">
-
     <communication-popup
       :namespace="namespace"
       channel="number"

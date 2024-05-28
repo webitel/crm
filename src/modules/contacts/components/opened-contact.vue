@@ -12,14 +12,14 @@
       </wt-page-header>
     </template>
     <template #main>
-      <wt-loader v-if="isLoading "/>
+      <wt-loader v-if="isLoading " />
       <div
-        style="display: contents;"
         v-else
+        style="display: contents;"
       >
         <contact-popup
-          :shown="isContactPopup"
           :id="id"
+          :shown="isContactPopup"
           :namespace="baseNamespace"
           @saved="loadItem"
           @close="isContactPopup = false"
@@ -39,9 +39,9 @@
             :labels="itemInstance.labels ? itemInstance.labels : []"
             @edit="isContactPopup = true"
             @delete="askDeleteConfirmation({
-            deleted: [itemInstance],
-            callback: () => deleteContact(itemInstance),
-          })"
+              deleted: [itemInstance],
+              callback: () => deleteContact(itemInstance),
+            })"
           />
           <opened-contact-tabs
             :namespace="namespace"
@@ -59,7 +59,7 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { onMounted, onUnmounted, computed, ref, provide, reactive, readonly } from 'vue';
+import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import ContactPopup from './contact-popup.vue';

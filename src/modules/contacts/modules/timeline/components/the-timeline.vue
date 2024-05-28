@@ -10,8 +10,8 @@
 
     <template #content>
       <div
-        class="loader-wrapper"
         v-if="isLoading"
+        class="loader-wrapper"
       >
         <wt-loader />
       </div>
@@ -22,8 +22,8 @@
       />
 
       <day-timeline-row
-        v-else
         v-for="({ dayTimestamp, callsCount, chatsCount, items }, key) of dataList"
+        v-else
         :key="dayTimestamp"
         :timestamp="dayTimestamp"
         :calls-count="callsCount"
@@ -42,22 +42,21 @@
       />
     </template>
   </timeline-container>
-
 </template>
 
 <script setup>
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import {
-  useTableFilters
+  useTableFilters,
 } from '../../../../../../../webitel-ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
-import DayTimelineRow from './day-row/day-timeline-row.vue';
-import TimelineContainer from './timeline-container.vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
+import DayTimelineRow from './day-row/day-timeline-row.vue';
+import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';
+import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
 
 const props = defineProps({
   namespace: {

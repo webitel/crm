@@ -1,6 +1,5 @@
 <template>
   <div class="contact-communication-tab emails">
-
     <communication-popup
       :namespace="namespace"
       channel="email"
@@ -79,20 +78,20 @@
 </template>
 
 <script setup>
-import { computed, inject, onUnmounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import { computed, inject, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import dummyLight from '../assets/email-dummy-light.svg';
-import dummyDark from '../assets/email-dummy-dark.svg';
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
+import dummyDark from '../assets/email-dummy-dark.svg';
+import dummyLight from '../assets/email-dummy-light.svg';
 
 const access = inject('access');
 

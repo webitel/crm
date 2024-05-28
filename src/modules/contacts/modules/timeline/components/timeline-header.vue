@@ -20,13 +20,11 @@
       </button>
     </div>
   </header>
-
 </template>
 <script setup>
+import capitalize from 'lodash/capitalize';
 import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import capitalize from 'lodash/capitalize';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineAPI from '../api/TimelineAPI.js';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
 

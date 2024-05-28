@@ -1,6 +1,5 @@
 <template>
   <div class="contact-communication-tab">
-
     <delete-confirmation-popup
       :shown="isConfirmationPopup"
       :callback="deleteCallback"
@@ -54,20 +53,19 @@
 </template>
 
 <script setup>
-import { computed, inject, onUnmounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
-  useDeleteConfirmationPopup
+  useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
-import dummyLight from '../assets/messaging-dummy-light.svg';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import { computed, inject, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 import dummyDark from '../assets/messaging-dummy-dark.svg';
+import dummyLight from '../assets/messaging-dummy-light.svg';
 
 const access = inject('access');
 

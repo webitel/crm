@@ -14,8 +14,8 @@
               :icon="icon"
             />
             <span class="timeline-task-type-filter__count">
-            ({{ count }})
-          </span>
+              ({{ count }})
+            </span>
           </div>
         </template>
       </wt-checkbox>

@@ -1,12 +1,12 @@
 <template>
-<div class="call-points-timeline-row-section">
-  <call-point-timeline-row
-    v-for="(point) of points"
-    :key="point.id"
-    :point="point"
-    :last="last"
-  />
-</div>
+  <div class="call-points-timeline-row-section">
+    <call-point-timeline-row
+      v-for="(point) of points"
+      :key="point.id"
+      :last="last"
+      :point="point"
+    />
+  </div>
 </template>
 
 <script setup>
