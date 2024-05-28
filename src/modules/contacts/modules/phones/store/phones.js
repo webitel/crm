@@ -5,8 +5,8 @@ import ApiStoreModule
 import BaseStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 import PhonesAPI from '../api/PhonesAPI';
-import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import headers from './_internals/headers';
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
@@ -26,8 +26,10 @@ const actions = {
     }
   },
   GET_PHONE: async (context, { id }) => {
-    await context.dispatch('LOAD_DATA_LIST');
-    return context.state.dataList.find((item) => item.id === id);
+    return context.dispatch('api/GET_ITEM', {
+      context,
+      params: { itemId: id },
+    });
   },
   ADD_PHONE: async (context, { itemInstance }) => {
     const primary = !context.state.dataList.length;
