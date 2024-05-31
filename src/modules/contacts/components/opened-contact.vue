@@ -129,6 +129,10 @@ async function initializeCard() {
 }
 
 function close() {
+  // Need to close the tab if you moved from another application
+  // https://webitel.atlassian.net/browse/WTEL-4552
+
+  if(window.history.length === 1) window.close();
   return router.push('/contacts');
 }
 
