@@ -1,5 +1,5 @@
 import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 
 export default {
   crm: 'CRM',

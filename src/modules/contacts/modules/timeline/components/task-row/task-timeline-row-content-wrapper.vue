@@ -1,6 +1,6 @@
 <template>
   <div class="task-timeline-row-content-wrapper">
-    <slot/>
+    <slot />
   </div>
 </template>
 

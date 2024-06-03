@@ -1,6 +1,6 @@
 <template>
   <div class="call-task-timeline-actions">
-<!--    Why link instead of context-menu with options? See: [WTEL-4546]-->
+    <!--    Why link instead of context-menu with options? See: [WTEL-4546]-->
 
     <a
       :href="historyLink"
@@ -13,35 +13,33 @@
 
     <!--    Why link instead of context-menu with options? See: [WTEL-4546]-->
 
-<!--    <wt-context-menu-->
-<!--      :options="options"-->
-<!--      @click="$event.option.handler()"-->
-<!--    >-->
-<!--      <template #activator>-->
-<!--        <wt-tooltip>-->
-<!--          <template #activator>-->
-<!--            <wt-icon-btn-->
-<!--              icon="options"-->
-<!--            />-->
-<!--          </template>-->
-<!--          {{ t('vocabulary.options', 2) }}-->
-<!--        </wt-tooltip>-->
-<!--      </template>-->
+    <!--    <wt-context-menu-->
+    <!--      :options="options"-->
+    <!--      @click="$event.option.handler()"-->
+    <!--    >-->
+    <!--      <template #activator>-->
+    <!--        <wt-tooltip>-->
+    <!--          <template #activator>-->
+    <!--            <wt-icon-btn-->
+    <!--              icon="options"-->
+    <!--            />-->
+    <!--          </template>-->
+    <!--          {{ t('vocabulary.options', 2) }}-->
+    <!--        </wt-tooltip>-->
+    <!--      </template>-->
 
-<!--      <template #option="{ text }">-->
-<!--        <div class="call-task-timeline-actions__context-option-wrapper">-->
-<!--          <wt-icon-->
-<!--            icon="history"-->
-<!--          />-->
-<!--          <p>{{ text }}</p>-->
-<!--        </div>-->
-<!--      </template>-->
-<!--    </wt-context-menu>-->
+    <!--      <template #option="{ text }">-->
+    <!--        <div class="call-task-timeline-actions__context-option-wrapper">-->
+    <!--          <wt-icon-->
+    <!--            icon="history"-->
+    <!--          />-->
+    <!--          <p>{{ text }}</p>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </wt-context-menu>-->
   </div>
-
 </template>
 <script setup>
-import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({

@@ -5,12 +5,11 @@ import ApiStoreModule
 import BaseStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 import PhonesAPI from '../api/PhonesAPI';
-import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import headers from './_internals/headers';
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
-  REQUIRED_FIELDS: () => ['etag'],
 };
 
 const actions = {
@@ -25,6 +24,12 @@ const actions = {
     } finally {
       await context.dispatch('LOAD_DATA_LIST');
     }
+  },
+  GET_PHONE: async (context, { id }) => {
+    return context.dispatch('api/GET_ITEM', {
+      context,
+      params: { itemId: id },
+    });
   },
   ADD_PHONE: async (context, { itemInstance }) => {
     const primary = !context.state.dataList.length;
