@@ -45,12 +45,10 @@
 </template>
 
 <script setup>
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
-import {
-  useTableFilters,
-} from '../../../../../../../webitel-ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
