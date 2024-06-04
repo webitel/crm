@@ -5,6 +5,7 @@ import handleUnauthorizedInterceptor
   from '@webitel/ui-sdk/src/api/interceptors/response/handleUnauthorized.interceptor';
 
 export default generateInstance({
+  baseURL: import.meta.env.VITE_API_URL,
   interceptors: {
     request: [updateTokenInterceptor],
     response: [handleUnauthorizedInterceptor],

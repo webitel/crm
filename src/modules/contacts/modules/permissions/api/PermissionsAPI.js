@@ -13,7 +13,7 @@ import instance from '../../../../../app/api/instance';
 const baseUrl = '/contacts';
 
 const getList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'id'];
 
   const listResponseHandler = (items) => items.map((item) => ({
     ...item,

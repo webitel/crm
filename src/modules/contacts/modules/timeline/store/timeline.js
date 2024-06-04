@@ -17,7 +17,7 @@ const state = {
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
-  FILTERS: (s, getters) => getters['filters/GET_FILTERS'],
+  FILTERS: (state, getters) => getters['filters/GET_FILTERS'],
 };
 
 const actions = {
@@ -27,8 +27,9 @@ const actions = {
       context.commit('SET', { path: 'page', value: 1 });
       const { items, next } = await context.dispatch('api/GET_LIST', {
         context,
-        params: context.getters.FILTERS,
+        params: context.getters.FILTERS(),
       });
+      console.info('items', items);
       context.commit('SET', { path: 'dataList', value: items });
       context.commit('SET', { path: 'next', value: next });
     } finally {
@@ -41,7 +42,7 @@ const actions = {
     const { items, next } = await context.dispatch('api/GET_LIST', {
       context,
       params: {
-        ...context.getters.FILTERS,
+        ...context.getters.FILTERS(),
         page: context.state.page,
       },
     });

@@ -1,8 +1,8 @@
 <template>
   <div class="timeline-row-initiator">
     <div
-      class="timeline-row-initiator__wrapper"
       v-if="type === TimelineInitiatorType.BOT"
+      class="timeline-row-initiator__wrapper"
     >
       <wt-icon
         icon="bot"
@@ -12,8 +12,8 @@
     </div>
 
     <div
-      class="timeline-row-initiator__wrapper"
       v-else-if="type === TimelineInitiatorType.FLOW"
+      class="timeline-row-initiator__wrapper"
     >
       <wt-chip color="secondary">
         {{ text }}

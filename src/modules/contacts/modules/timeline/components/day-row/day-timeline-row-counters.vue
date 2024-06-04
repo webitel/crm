@@ -5,7 +5,7 @@
         {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Call}`, 2)}: (${props.callsCount})` }}
       </span>
       <span>
-        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: (${props.chatsCount})`}}
+        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: (${props.chatsCount})` }}
       </span>
     </div>
   </div>

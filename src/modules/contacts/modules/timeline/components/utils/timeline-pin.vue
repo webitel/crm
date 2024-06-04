@@ -1,10 +1,10 @@
 <template>
   <div
     :class="{
-    'timeline-pin--clickable': !nonClickable && state.handler,
-    'timeline-pin--collapsed': collapsed,
-    'timeline-pin--has-arrow': hasArrow,
-     }"
+      'timeline-pin--clickable': !nonClickable && state.handler,
+      'timeline-pin--collapsed': collapsed,
+      'timeline-pin--has-arrow': hasArrow,
+    }"
     class="timeline-pin"
   >
     <component
@@ -21,7 +21,7 @@
       class="timeline-pin-arrow"
       icon="arrow-down"
       @click="() => state.handler()"
-    ></wt-icon-btn>
+    />
     <timeline-flow-line
       v-if="!last"
       :color="state.lineColor || state.color"

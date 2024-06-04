@@ -2,14 +2,13 @@
   <div class="permissions">
     <header class="permissions-header">
       <grantee-popup
-        v-if="isGranteePopup"
-        :callback="grantPermissions"
-        @close="isGranteePopup = false"
+        :namespace="namespace"
+        @close="closeItemPopup"
       />
       <wt-icon-action
         :disabled="!access.hasRbacEditAccess"
         action="add"
-        @click="isGranteePopup = true"
+        @click="addItem"
       />
       <wt-icon-action
         action="refresh"
@@ -89,11 +88,12 @@
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, inject, onUnmounted, ref } from 'vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { useI18n } from 'vue-i18n';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import GranteePopup from './permissions-tab-grantee-popup.vue';
 import AccessMode from '../enums/AccessMode.enum';
@@ -109,6 +109,8 @@ const props = defineProps({
 
 const { t } = useI18n();
 const store = useStore();
+const router = useRouter();
+const route = useRoute();
 
 const {
   namespace,
@@ -123,11 +125,23 @@ const {
   patchProperty,
   deleteData,
   sort,
+  onFilterEvent,
 } = useTableStore(`${props.namespace}/permissions`);
 
-const { filtersNamespace } = useTableFilters(namespace);
+const {
+  namespace: filtersNamespace,
+  subscribe,
+  flushSubscribers,
+  restoreFilters,
+} = useTableFilters(namespace);
 
-const isGranteePopup = ref(false);
+subscribe({ event: '*', callback: onFilterEvent });
+
+restoreFilters();
+
+onUnmounted(() => {
+  flushSubscribers();
+});
 
 const modifiedDataList = computed(() => {
   return dataList.value.map((item) => {
@@ -149,10 +163,6 @@ const accessOptions = computed(() => {
   }));
 });
 
-function grantPermissions(payload) {
-  return store.dispatch(`${namespace}/GRANT_PERMISSIONS`, payload);
-}
-
 function changeReadAccessMode(payload) {
   return store.dispatch(`${namespace}/CHANGE_READ_ACCESS_MODE`, payload);
 }
@@ -161,6 +171,25 @@ function changeUpdateAccessMode(payload) {
 }
 function changeDeleteAccessMode(payload) {
   return store.dispatch(`${namespace}/CHANGE_DELETE_ACCESS_MODE`, payload);
+}
+
+
+
+function addItem() {
+  return router.push({
+    ...route,
+    params: { permissionId: 'new' },
+  });
+}
+
+function closeItemPopup() {
+  const params = { ...route.params };
+  delete params.permissionId;
+
+  return router.push({
+    ...route,
+    params,
+  });
 }
 </script>
 
