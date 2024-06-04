@@ -3,9 +3,6 @@ import { defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
 
-// TODO
-// import.meta.env.VUE_APP_PACKAGE_VERSION = require('./package.json').version;
-
 // https://vitejs.dev/config/
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -29,7 +26,7 @@ export default ({ mode }) => {
     },
     resolve: {
       alias: {
-        vue: '@vue/compat',
+        vue: '@vue/compat/dist/vue.esm-browser.prod.js',
       },
     },
     plugins: [
@@ -56,6 +53,9 @@ export default ({ mode }) => {
     ],
     test: {
       globals: true,
+      alias: {
+        vue: 'vue',
+      },
       coverage: {
         enabled: true,
         reporter: 'json',

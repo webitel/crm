@@ -1,7 +1,8 @@
 <template>
   <wt-popup
     class="contact-popup"
-    width="480"
+    v-bind="attrs"
+    size="sm"
     @close="close"
   >
     <template #title>
@@ -65,7 +66,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, useAttrs, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useI18n } from 'vue-i18n';
@@ -81,7 +82,10 @@ const props = defineProps({
     type: [String, null],
   },
 });
+
 const emit = defineEmits(['saved', 'close']);
+
+const attrs = useAttrs();
 
 const { t } = useI18n();
 const store = useStore();

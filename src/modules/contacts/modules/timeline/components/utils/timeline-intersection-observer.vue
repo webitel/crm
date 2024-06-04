@@ -2,7 +2,7 @@
   <wt-loader
     v-if="loading"
     size="sm"
-  ></wt-loader>
+  />
   <div ref="intersectionTarget" />
 </template>
 

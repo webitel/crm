@@ -14,8 +14,8 @@
               :icon="icon"
             />
             <span class="timeline-task-type-filter__count">
-            ({{ count }})
-          </span>
+              ({{ count }})
+            </span>
           </div>
         </template>
       </wt-checkbox>
@@ -24,7 +24,6 @@
 </template>
 
 <script setup>
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
@@ -46,7 +45,7 @@ const props = defineProps({
 
 const store = useStore();
 
-const filterValue = computed(() => getNamespacedState(store.state, props.namespace).type.value);
+const filterValue = computed(() => store.getters[`${props.namespace}/GET_FILTER`]('type'));
 
 function setFilter(payload) {
   return store.dispatch(`${props.namespace}/SET_FILTER`, payload);
@@ -57,7 +56,7 @@ function toggleFilterValue(value) {
     ? filterValue.value.filter((item) => item !== value)
     : [...filterValue.value, value];
 
-  return setFilter({ filter: 'type', value: newValue });
+  return setFilter({ name: 'type', value: newValue });
 }
 
 const filters = computed(() => [

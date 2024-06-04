@@ -11,7 +11,6 @@ import AccessMode from '../enums/AccessMode.enum';
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
-  REQUIRED_FIELDS: () => [],
 };
 
 const actions = {
