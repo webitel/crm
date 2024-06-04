@@ -35,9 +35,7 @@
       class="chat-point-row-content-footer"
     >
       <chat-point-timeline-row-file
-        v-for="(file) of point.files"
-        :key="file.id"
-        :file="file"
+        :file="point.file"
       />
     </footer>
   </section>
@@ -74,7 +72,7 @@ const isInitiatorBot = computed(() => {
 });
 
 const showFooter = computed(() => {
-  return !!props.point.files;
+  return !!props.point.file;
 });
 
 const text = computed(() => {
