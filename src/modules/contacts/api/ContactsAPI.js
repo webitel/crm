@@ -1,21 +1,16 @@
+import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
-  log,
-  merge,
-  starToSearch,
   camelToSnake,
-  snakeToCamel,
-
+  merge,
   notify,
   sanitize,
+  snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers';
-import {
-  getDefaultGetParams,
-} from '@webitel/ui-sdk/src/api/defaults';
 import { ContactsApiFactory } from 'webitel-sdk';
 import getDefaultGetListResponse
   from '../../../app/api/defaults/getDefaultGetListResponse';
-import configuration from '../../../app/api/openAPIConfig';
 import instance from '../../../app/api/instance';
+import configuration from '../../../app/api/openAPIConfig';
 import SearchMode from '../modules/filters/enums/SearchMode.enum';
 
 const service = new ContactsApiFactory(configuration, '', instance);
@@ -64,7 +59,7 @@ const getList = async (params) => {
 
   // This code needed for adding starToSearch method to applyTransform while searchKey !== SearchMode.VARIABLES because '*' in variables search mode brokes backend logic.
   if (searchKey !== SearchMode.VARIABLES) {
-    transformations.push(starToSearch('q'));
+    // transformations.push(starToSearch('q')); WTEL-4265
   }
 
   const {
