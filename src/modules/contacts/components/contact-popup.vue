@@ -1,7 +1,8 @@
 <template>
   <wt-popup
     class="contact-popup"
-    width="480"
+    :shown="shown"
+    size="sm"
     @close="close"
   >
     <template #title>
@@ -65,20 +66,24 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import ContactsAPI from '../api/ContactsAPI';
 import LabelsAPI from '../api/LabelsAPI';
 import TimezonesAPI from '../api/TimezonesAPI';
 import UsersAPI from '../api/UsersAPI';
-import ContactsAPI from '../api/ContactsAPI';
 
 const props = defineProps({
   id: {
     // if id is passed, that's an edit
     type: [String, null],
+  },
+  shown: {
+    type: Boolean,
+    default: false,
   },
 });
 const emit = defineEmits(['saved', 'close']);
@@ -144,8 +149,10 @@ async function loadItem(id = props.id) {
   draft.value = await ContactsAPI.get({ itemId: id });
 }
 
-if (props.id) loadItem(props.id);
-else setDefaultManager();
+watch(() => props.shown, () => {
+  if (props.id) loadItem(props.id);
+  else setDefaultManager();
+});
 </script>
 
 <style lang="scss" scoped>

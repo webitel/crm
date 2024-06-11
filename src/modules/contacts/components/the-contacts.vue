@@ -1,23 +1,23 @@
 <template>
   <wt-page-wrapper
-    class="contacts"
     :actions-panel="false"
+    class="contacts"
   >
     <template #header>
       <contact-popup
-        v-if="isContactPopup"
+        :shown="isContactPopup"
         :id="editedContactId"
         :namespace="baseNamespace"
-        @saved="saved"
         @close="closeContactPopup"
+        @saved="saved"
       />
 
       <wt-page-header
         :primary-action="create"
-        :secondary-text="$t('reusable.delete')"
+        :primary-disabled="!hasObacCreateAccess"
         :secondary-action="deleteSelectedItems"
         :secondary-disabled="!hasObacDeleteAccess || !deletableSelectedItems.length"
-        :primary-disabled="!hasObacCreateAccess"
+        :secondary-text="$t('reusable.delete')"
       >
         <wt-headline-nav :path="path" />
         <template #actions>
@@ -32,15 +32,15 @@
 
       <wt-dummy
         v-if="!isLoading && !dataList.length"
+        :dark-mode="darkMode"
         :src="dummy.src"
         :text="dummy.text"
-        :dark-mode="darkMode"
       />
 
       <delete-confirmation-popup
         v-show="isDeleteConfirmationPopup"
-        :delete-count="deleteCount"
         :callback="deleteCallback"
+        :delete-count="deleteCount"
         @close="closeDelete"
       />
 
@@ -49,19 +49,19 @@
         class="table-wrapper"
       >
         <wt-table
-          :headers="headers"
           :data="dataList"
+          :headers="headers"
           sortable
           @sort="sort"
         >
           <template #name="{ item }">
             <div class="username-wrapper">
               <wt-avatar
-                size="sm"
                 :username="item.name.commonName"
+                size="sm"
               />
               <wt-item-link
-                  :link="communicationsLink(item)"
+                :link="communicationsLink(item)"
               >
                 {{ item.name.commonName }}
               </wt-item-link>
@@ -100,8 +100,8 @@
           </template>
         </wt-table>
         <filter-pagination
-          :namespace="filtersNamespace"
           :is-next="isNext"
+          :namespace="filtersNamespace"
         />
       </div>
     </template>
@@ -109,25 +109,25 @@
 </template>
 
 <script setup>
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useAccess } from '../../../app/composables/useAccess';
-import ContactPopup from './contact-popup.vue';
-import FilterSearch from '../modules/filters/components/filter-search.vue';
-import dummyLight from '../../../app/assets/dummy-light.svg';
 import dummyDark from '../../../app/assets/dummy-dark.svg';
+import dummyLight from '../../../app/assets/dummy-light.svg';
+import { useAccess } from '../../../app/composables/useAccess';
+import FilterSearch from '../modules/filters/components/filter-search.vue';
+import ContactPopup from './contact-popup.vue';
 
 const baseNamespace = 'contacts';
 
@@ -220,7 +220,10 @@ function communicationsLink({ id }) {
 }
 
 function saved(id) {
-  router.push(`/${CrmSections.CONTACTS}/${id}/timeline`);
+  return router.push({
+    name: `${CrmSections.CONTACTS}-card`,
+    params: { id },
+  });
 }
 
 function closeContactPopup() {
