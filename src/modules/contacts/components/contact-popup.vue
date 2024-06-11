@@ -66,7 +66,6 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, useAttrs, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { computed, ref, watch } from 'vue';
@@ -76,7 +75,6 @@ import ContactsAPI from '../api/ContactsAPI';
 import LabelsAPI from '../api/LabelsAPI';
 import TimezonesAPI from '../api/TimezonesAPI';
 import UsersAPI from '../api/UsersAPI';
-import ContactsAPI from '../api/ContactsAPI';
 
 const props = defineProps({
   id: {
