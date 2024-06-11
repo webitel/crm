@@ -5,9 +5,9 @@
   >
     <template #header>
       <contact-popup
+        :shown="isContactPopup"
         :id="editedContactId"
         :namespace="baseNamespace"
-        :shown="isContactPopup"
         @close="closeContactPopup"
         @saved="saved"
       />
@@ -53,7 +53,6 @@
         <wt-table
           :data="dataList"
           :headers="headers"
-          :selected="selected"
           sortable
           @sort="sort"
           @update:selected="setSelected"
@@ -61,8 +60,8 @@
           <template #name="{ item }">
             <div class="username-wrapper">
               <wt-avatar
-                :username="item.name.commonName"
                 size="sm"
+                :username="item.name.commonName"
               />
               <wt-item-link
                 :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.id } }"
@@ -104,8 +103,8 @@
           </template>
         </wt-table>
         <filter-pagination
-          :is-next="isNext"
           :namespace="filtersNamespace"
+          :is-next="isNext"
         />
       </div>
     </template>
@@ -113,9 +112,13 @@
 </template>
 
 <script setup>
+import { computed, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -267,8 +270,8 @@ function edit({ id }) {
 }
 
 function saved(id) {
-  router.push({
-    name: CrmSections.CONTACTS,
+  return router.push({
+    name: `${CrmSections.CONTACTS}-card`,
     params: { id },
   });
 }
