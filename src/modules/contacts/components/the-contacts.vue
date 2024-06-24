@@ -5,7 +5,6 @@
   >
     <template #header>
       <contact-popup
-        v-if="isContactPopup"
         :shown="isContactPopup"
         :id="editedContactId"
         :namespace="baseNamespace"
