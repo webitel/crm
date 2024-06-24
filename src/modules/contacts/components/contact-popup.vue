@@ -152,7 +152,7 @@ async function loadItem(id = props.id) {
 watch(() => props.shown, () => {
   if (props.id) loadItem(props.id);
   else setDefaultManager();
-});
+}, { immediate: true });
 </script>
 
 <style lang="scss" scoped>
