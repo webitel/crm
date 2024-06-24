@@ -78,7 +78,7 @@ const getList = async (params) => {
       size,
       q,
       sort || '+name',
-      fields,
+      ['mode', ...fields],
       id,
       qin,
     );

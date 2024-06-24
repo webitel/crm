@@ -1,8 +1,9 @@
 <template>
   <wt-popup
+    :shown="shown"
     class="opened-contact-communication-popup"
-    width="480"
     overflow
+    size="sm"
     @close="close"
   >
     <template #header>
@@ -14,61 +15,55 @@
       >
         <wt-select
           ref="TypeSelect"
-          :value="draft.type"
-          :v="v$.draft.type"
-          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: currentCommunication.filterField })"
           :clearable="false"
           :label="t('objects.communicationType', 1)"
+          :search-method="(params) => CommunicationTypesAPI.getLookup({...params, channel: currentCommunication.filterField })"
+          :v="v$.draft.type"
+          :value="draft.type"
           required
           @input="draft.type = $event"
         />
         <wt-input
           v-model="draft.destination"
-          :v="v$.draft.destination"
           :clearable="false"
           :label="t('contacts.communications.destination')"
+          :v="v$.draft.destination"
           required
         />
       </form>
     </template>
     <template #actions>
-        <wt-button
-          :disabled="v$.$invalid"
-          :loading="isLoading"
-          @click="save"
-        >
-          {{ t('reusable.save') }}
-        </wt-button>
-        <wt-button
-          color="secondary"
-          @click="close"
-        >
-          {{ t('reusable.cancel') }}
-        </wt-button>
+      <wt-button
+        :disabled="v$.$invalid"
+        :loading="isSaving"
+        @click="save"
+      >
+        {{ t('reusable.save') }}
+      </wt-button>
+      <wt-button
+        color="secondary"
+        @click="close"
+      >
+        {{ t('reusable.cancel') }}
+      </wt-button>
     </template>
   </wt-popup>
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch, reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { email, required } from '@vuelidate/validators';
+import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 import { EngineCommunicationChannels } from 'webitel-sdk';
-
-const { t } = useI18n();
-const store = useStore();
+import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 
 const props = defineProps({
-  item: {
-    // if item is passed, that's an edit
-    type: [Object, null],
-  },
   channel: {
     type: String,
-    default: 'number',
+    required: true,
   },
   namespace: {
     type: String,
@@ -78,7 +73,13 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const isLoading = ref(false);
+const { t } = useI18n();
+const store = useStore();
+const route = useRoute();
+
+// animate popup appearance after f5 with popup opened
+const shown = ref(false);
+
 const isSaving = ref(false);
 const TypeSelect = ref(null);
 
@@ -88,6 +89,7 @@ const communicationOptions = [
     addText: t('contacts.communications.emails.addTitle'),
     updateText: t('contacts.communications.emails.editTitle'),
     filterField: EngineCommunicationChannels.Email,
+    getNamespace: `${props.namespace}/GET_EMAIL`,
     addNamespace: `${props.namespace}/ADD_EMAIL`,
     updateNamespace: `${props.namespace}/UPDATE_EMAIL`,
   },
@@ -96,22 +98,25 @@ const communicationOptions = [
     addText: t('contacts.communications.phones.addTitle'),
     updateText: t('contacts.communications.phones.editTitle'),
     filterField: EngineCommunicationChannels.Phone,
+    getNamespace: `${props.namespace}/GET_PHONE`,
     addNamespace: `${props.namespace}/ADD_PHONE`,
     updateNamespace: `${props.namespace}/UPDATE_PHONE`,
   },
 ];
 
-const getDefaultDraft = () => ({
+const generateNewDraft = () => ({
   channel: props.channel,
   type: {},
   destination: '',
 });
 
-const draft = reactive(getDefaultDraft());
+const draft = reactive(generateNewDraft());
 
 const currentCommunication = computed(() => {
   return communicationOptions.find((option) => option.value === props.channel);
 });
+
+const commId = computed(() => route.params.commId);
 
 const v$ = useVuelidate(computed(() => {
   const destination = props.channel === 'email' ? { required, email } : { required };
@@ -124,28 +129,31 @@ const v$ = useVuelidate(computed(() => {
   };
 }), { draft }, { $autoDirty: true });
 
-function initDraft() {
-  draft.destination = props.item[props.channel];
-  draft.type = props.item.type;
+async function initDraft() {
+  const comm = await getItem({ id: commId.value });
+  Object.assign(draft, comm);
+  draft.destination = comm[props.channel];
 }
 
 v$.value.$touch();
 
-if (props.item) initDraft();
-
 async function save() {
-
-  try {
-    isSaving.value = true;
-    if (props.item) {
-      await updateItem(draft);
-    } else {
-      await addItem(draft);
-    }
-    close();
-  } finally {
-    isSaving.value = false;
+  isSaving.value = true;
+  if (commId.value !== 'new') {
+    await updateItem(draft);
+  } else {
+    await addItem(draft);
   }
+
+  isSaving.value = false;
+
+  setTimeout(() => {
+    close();
+  }, 1500);
+}
+
+function getItem() {
+  return store.dispatch(`${currentCommunication.value.getNamespace}`, { id: commId.value });
 }
 
 function addItem({ type, destination }) {
@@ -157,7 +165,7 @@ function updateItem({ channel, destination, ...rest }) {
   const itemInstance = { ...rest, [props.channel]: destination };
   return store.dispatch(`${currentCommunication.value.updateNamespace}`, {
     itemInstance,
-    etag: props.item.etag,
+    etag: draft.etag,
   });
 }
 
@@ -165,6 +173,21 @@ function close() {
   emit('close');
 }
 
+watch(commId, () => {
+  if (commId.value === 'new') {
+    Object.assign(draft, generateNewDraft());
+  } else if (commId.value) {
+    initDraft();
+  }
+}, { immediate: true });
+
+watch(commId, () => {
+  if (commId.value) {
+    setTimeout(() => shown.value = !!commId.value, 300);
+  } else {
+    shown.value = !!commId.value;
+  }
+}, { immediate: true });
 </script>
 
 <style lang="scss" scoped>
