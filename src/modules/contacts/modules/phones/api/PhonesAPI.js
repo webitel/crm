@@ -64,10 +64,12 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId, parentId }) => {
+  const fields = ['number', 'primary', 'etag', 'type'];
   try {
     const response = await service.locatePhone(
       parentId,
       itemId,
+      fields,
       );
     return applyTransform(response.data, [
       snakeToCamel(),
