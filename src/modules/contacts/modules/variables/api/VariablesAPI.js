@@ -67,6 +67,7 @@ const getList = async (params) => {
 };
 
 const get = async ({ parentId, itemId }) => {
+  const fields = ['key', 'value', 'etag'];
   try {
     const response = await variablesService.listVariables(
       parentId,
@@ -74,7 +75,7 @@ const get = async ({ parentId, itemId }) => {
       1,
       '',
       null,
-      null,
+      fields,
       [itemId],
     );
     const { data } = applyTransform(response.data, [
@@ -88,7 +89,7 @@ const get = async ({ parentId, itemId }) => {
   }
 };
 
-const fieldsToSend = ['id', 'key', 'value', 'etag'];
+const fieldsToSend = ['key', 'value'];
 
 const add = async ({ parentId, itemInstance }) => {
   const item = applyTransform(itemInstance, [
