@@ -63,10 +63,12 @@ const getList = async (params) => {
 };
 
 const get = async ({ itemId, parentId }) => {
+  const fields = ['email', 'primary', 'etag', 'type'];
   try {
     const response = await service.locateEmail(
       parentId,
       itemId,
+      fields,
     );
     return applyTransform(response.data, [
       snakeToCamel(),
