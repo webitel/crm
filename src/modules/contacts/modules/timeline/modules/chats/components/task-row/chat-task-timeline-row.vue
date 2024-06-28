@@ -103,7 +103,7 @@ const {
   createdAt,
   participants,
   duration,
-  gateway,
+  flowScheme,
   id: taskId,
 } = toRefs(props.task);
 
@@ -128,7 +128,7 @@ const initiatorType = computed(() => {
 const initiator = computed(() => {
   switch (initiatorType.value) {
     case TimelineInitiatorType.BOT:
-      return gateway.value;
+      return flowScheme?.value;
     default:
       return participants?.value.at(0);
   }
