@@ -53,6 +53,7 @@
         <wt-table
           :data="dataList"
           :headers="headers"
+          :selected="selected"
           sortable
           @sort="sort"
           @update:selected="setSelected"
