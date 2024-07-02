@@ -93,7 +93,7 @@ const store = useStore();
 
 const userinfo = computed(() => store.state.userinfo);
 
-const draft = ref({
+const generateNewDraft = () => ({
   name: {
     commonName: '',
   },
@@ -103,6 +103,8 @@ const draft = ref({
   about: '',
   createdBy: '',
 });
+
+const draft = ref(generateNewDraft());
 
 const v$ = useVuelidate(computed(() => ({
   draft: {
@@ -151,7 +153,10 @@ async function loadItem(id = props.id) {
 
 watch(() => props.shown, () => {
   if (props.id) loadItem(props.id);
-  else setDefaultManager();
+  else {
+    draft.value = generateNewDraft();
+    setDefaultManager();
+  }
 }, { immediate: true });
 </script>
 
