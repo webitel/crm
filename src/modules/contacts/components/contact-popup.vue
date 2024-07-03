@@ -2,7 +2,7 @@
   <wt-popup
     class="contact-popup"
     :shown="shown"
-    size="sm"
+    width="480"
     @close="close"
   >
     <template #title>
