@@ -128,6 +128,7 @@ const iconType = {
   [ChatGatewayProvider.VIBER]: 'messenger-viber',
   [ChatGatewayProvider.WEBCHAT]: 'messenger-web-chat',
   [ChatGatewayProvider.INFOBIP]: 'messenger-infobip',
+  [ChatGatewayProvider.CUSTOM]: 'custom-chat-gateway',
 };
 </script>
 
