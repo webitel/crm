@@ -57,6 +57,7 @@ export default {
           [ChatGatewayProvider.VIBER]: 'Viber',
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
+          [ChatGatewayProvider.CUSTOM]: 'Custom Chat Gateway',
         },
       },
     },
