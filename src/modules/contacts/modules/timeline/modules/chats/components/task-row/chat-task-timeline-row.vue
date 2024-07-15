@@ -121,7 +121,7 @@ const pinType = computed(() => {
 });
 
 const initiatorType = computed(() => {
-  if (!participants.value) return TimelineInitiatorType.BOT;
+  if (!participants?.value) return TimelineInitiatorType.BOT;
   return TimelineInitiatorType.CONTACT;
 });
 
