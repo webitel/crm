@@ -1,6 +1,6 @@
 <template>
   <wt-indicator
-    :color=statusColor
+    :color="statusColor"
     :text="t(`contacts.timeline.status.${ status }`)"
     size="sm"
   />

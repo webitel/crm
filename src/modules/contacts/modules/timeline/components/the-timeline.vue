@@ -4,13 +4,14 @@
       <timeline-header
         :list="dataList"
         :contact-id="contactId"
+        :filters-namespace="filtersNamespace"
       />
     </template>
 
     <template #content>
       <div
-        class="loader-wrapper"
         v-if="isLoading"
+        class="loader-wrapper"
       >
         <wt-loader />
       </div>
@@ -21,8 +22,8 @@
       />
 
       <day-timeline-row
-        v-else
         v-for="({ dayTimestamp, callsCount, chatsCount, items }, key) of dataList"
+        v-else
         :key="dayTimestamp"
         :timestamp="dayTimestamp"
         :calls-count="callsCount"
@@ -41,19 +42,19 @@
       />
     </template>
   </timeline-container>
-
 </template>
 
 <script setup>
-import { computed, provide, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
-import DayTimelineRow from './day-row/day-timeline-row.vue';
-import TimelineContainer from './timeline-container.vue';
+import { computed, onUnmounted, provide, ref } from 'vue';
+import { useStore } from 'vuex';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
+import DayTimelineRow from './day-row/day-timeline-row.vue';
+import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';
+import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
 
 const props = defineProps({
   namespace: {
@@ -79,6 +80,24 @@ function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
 }
 
+const {
+  namespace: filtersNamespace,
+  subscribe,
+  flushSubscribers,
+  restoreFilters,
+} = useTableFilters(timelineNamespace);
+
+onUnmounted(() => {
+  flushSubscribers();
+});
+
+subscribe({
+  event: '*',
+  callback: initializeList,
+});
+
+restoreFilters();
+
 const nextLoading = ref(false);
 
 async function loadNext() {
@@ -86,9 +105,6 @@ async function loadNext() {
   await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
   nextLoading.value = false;
 }
-
-// TODO: uncomment me after fixing filters module
-// initializeList();
 </script>
 
 <style lang="scss" scoped>

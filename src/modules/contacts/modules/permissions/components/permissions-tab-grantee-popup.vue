@@ -1,7 +1,8 @@
 <template>
   <wt-popup
-    min-width="480"
+    :shown="shown"
     overflow
+    size="sm"
     @close="close"
   >
     <template #title>
@@ -16,7 +17,7 @@
     <template #actions>
       <wt-button
         :disabled="v$.$invalid"
-        :loading="isLoading"
+        :loading="isSaving"
         @click="save"
       >
         {{ $t('reusable.add') }}
@@ -32,15 +33,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import GranteeSelect from './grantee-select.vue';
 
 const props = defineProps({
-  callback: {
-    type: Function,
+  namespace: {
+    type: String,
+    required: true,
   },
 });
 
@@ -49,28 +53,52 @@ const emit = defineEmits([
 ]);
 
 const { t } = useI18n();
+const route = useRoute();
+const store = useStore();
 
+// animation
+const shown = ref(false);
+const isSaving = ref(false);
 const grantee = ref({});
-const isLoading = ref(false);
 
 const v$ = useVuelidate({
   grantee: { required },
 }, { grantee }, { $autoDirty: true });
 v$.value.$touch();
 
+const permissionId = computed(() => route.params.permissionId);
+
 function close() {
   emit('close');
 }
 
-async function save() {
-  try {
-    isLoading.value = true;
-    await props.callback(grantee.value);
-    close();
-  } finally {
-    isLoading.value = false;
-  }
+function grantPermissions(payload) {
+  return store.dispatch(`${props.namespace}/GRANT_PERMISSIONS`, payload);
 }
+
+async function save() {
+  isSaving.value = true;
+  await grantPermissions(grantee.value);
+  close();
+
+  isSaving.value = false;
+
+  setTimeout(() => {
+    close();
+  }, 1500);
+}
+
+watch(permissionId, async () => {
+  grantee.value = {};
+}, { immediate: true });
+
+watch(permissionId, () => {
+  if (permissionId.value) {
+    setTimeout(() => shown.value = !!permissionId.value, 300);
+  } else {
+    shown.value = !!permissionId.value;
+  }
+}, { immediate: true });
 
 </script>
 

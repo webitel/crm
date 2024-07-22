@@ -1,15 +1,18 @@
 import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
-  log,
   camelToSnake,
-  merge, notify,
-  sanitize, snakeToCamel, starToSearch, mergeEach,
+  merge,
+  mergeEach,
+  notify,
+  sanitize,
+  snakeToCamel,
+  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers';
 import { EmailsApiFactory } from 'webitel-sdk';
 import getDefaultGetListResponse
   from '../../../../../app/api/defaults/getDefaultGetListResponse';
-import configuration from '../../../../../app/api/openAPIConfig';
 import instance from '../../../../../app/api/instance';
+import configuration from '../../../../../app/api/openAPIConfig';
 
 const service = new EmailsApiFactory(configuration, '', instance);
 
@@ -39,7 +42,7 @@ const getList = async (params) => {
       size,
       q,
       sort,
-      fields,
+      ['etag', ...fields],
       id,
     );
     const { data, next } = applyTransform(response.data, [
@@ -52,6 +55,24 @@ const getList = async (params) => {
       ]),
       next,
     };
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
+const get = async ({ itemId, parentId }) => {
+  const fields = ['email', 'primary', 'etag', 'type'];
+  try {
+    const response = await service.locateEmail(
+      parentId,
+      itemId,
+      fields,
+    );
+    return applyTransform(response.data, [
+      snakeToCamel(),
+    ]);
   } catch (err) {
     throw applyTransform(err, [
       notify,
@@ -125,6 +146,7 @@ const deleteItem = async ({ id, etag, parentId }) => {
 
 export default {
   getList,
+  get,
   add,
   update,
   patch,

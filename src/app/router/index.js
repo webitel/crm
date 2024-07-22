@@ -71,29 +71,29 @@ const routes = [
             component: ContactCommunications,
             children: [
               {
-                path: 'phones',
+                path: 'phones/:commId?',
                 name: `${CrmSections.CONTACTS}-communications-phones`,
                 component: ContactCommunications,
               },
               {
-                path: 'messaging',
+                path: 'messaging/:commId?',
                 name: `${CrmSections.CONTACTS}-communications-messaging`,
                 component: ContactCommunications,
               },
               {
-                path: 'emails',
+                path: 'emails/:commId?',
                 name: `${CrmSections.CONTACTS}-communications-emails`,
                 component: ContactCommunications,
               },
             ],
           },
           {
-            path: 'variables',
+            path: 'variables/:variableId?',
             name: `${CrmSections.CONTACTS}-variables`,
             component: ContactVariables,
           },
           {
-            path: 'permissions',
+            path: 'permissions/:permissionId?',
             name: `${CrmSections.CONTACTS}-permissions`,
             component: ContactPermissions,
           },

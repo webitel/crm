@@ -9,11 +9,17 @@
       </section>
 
       <section class="timeline-row-pin">
-        <slot name="pin" v-bind="{ toggle, collapsed }" />
+        <slot
+          name="pin"
+          v-bind="{ toggle, collapsed }"
+        />
       </section>
 
       <section class="timeline-row-main-content">
-        <slot name="content" v-bind="{ toggle, collapsed }" />
+        <slot
+          name="content"
+          v-bind="{ toggle, collapsed }"
+        />
       </section>
     </section>
 
@@ -24,7 +30,10 @@
         v-if="!collapsed"
         class="timeline-row-dropdown"
       >
-        <slot name="dropdown" v-bind="{ toggle, collapsed }" />
+        <slot
+          name="dropdown"
+          v-bind="{ toggle, collapsed }"
+        />
       </section>
     </timeline-row-dropdown-transition>
   </article>

@@ -1,8 +1,8 @@
 import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
+  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -37,8 +37,8 @@ export default {
       destination: 'Назначение',
       setAsPrimary: 'Установить как основной',
       emails: {
-        addTitle: 'Добавить електронный адрес',
-        editTitle: 'Редактировать електронный адрес',
+        addTitle: 'Добавить электронный адрес',
+        editTitle: 'Редактировать электронный адрес',
         dummy: 'Электронные адреса еще не добавлены',
       },
       phones: {
@@ -57,6 +57,7 @@ export default {
           [ChatGatewayProvider.VIBER]: 'Viber',
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
+          [ChatGatewayProvider.CUSTOM]: 'Custom Chat Gateway',
         },
       },
     },

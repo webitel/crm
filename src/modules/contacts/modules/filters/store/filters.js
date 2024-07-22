@@ -1,32 +1,40 @@
-import BaseFilterSchema
-  from '@webitel/ui-sdk/src/modules/Filters/classes/BaseFilterSchema';
 import FiltersStoreModule
   from '@webitel/ui-sdk/src/modules/Filters/store/FiltersStoreModule';
-import router from '../../../../../app/router';
 import SearchMode from '../enums/SearchMode.enum';
 
-const state = {
-  page: new BaseFilterSchema({
+const filtersList = [
+  {
+    name: 'page',
     value: 1,
     defaultValue: 1,
-  }),
-  size: new BaseFilterSchema({
+  },
+  {
+    name: 'size',
     value: 10,
     defaultValue: 10,
-  }),
-  sort: new BaseFilterSchema(),
-  [SearchMode.NAME]: new BaseFilterSchema(),
-  [SearchMode.LABELS]: new BaseFilterSchema(),
-  [SearchMode.ABOUT]: new BaseFilterSchema(),
-  [SearchMode.VARIABLES]: new BaseFilterSchema(),
-  [SearchMode.DESTINATION]: new BaseFilterSchema(),
-};
+  },
+  {
+    name: 'sort',
+  },
+  {
+    name: SearchMode.NAME,
+  },
+  {
+    name: SearchMode.LABELS,
+  },
+  {
+    name: SearchMode.ABOUT,
+  },
+  {
+    name: SearchMode.VARIABLES,
+  },
+  {
+    name: SearchMode.DESTINATION,
+  },
+];
 
-const getters = {
-  ROUTER: () => router,
-  TABLE_NAMESPACE: () => 'contacts/table',
-};
-
-const filters = new FiltersStoreModule().getModule({ state, getters });
+const filters = new FiltersStoreModule()
+.addFilter(filtersList)
+.getModule();
 
 export default filters;

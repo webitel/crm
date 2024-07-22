@@ -1,8 +1,7 @@
 <template>
   <div class="contact-communication-tab">
-
     <delete-confirmation-popup
-      v-if="isConfirmationPopup"
+      :shown="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
@@ -54,20 +53,19 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
-  useDeleteConfirmationPopup
+  useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
-import dummyLight from '../assets/messaging-dummy-light.svg';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import { computed, inject, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 import dummyDark from '../assets/messaging-dummy-dark.svg';
+import dummyLight from '../assets/messaging-dummy-light.svg';
 
 const access = inject('access');
 
@@ -91,9 +89,25 @@ const {
 
   deleteData,
   sort,
+  onFilterEvent,
 } = useTableStore(props.namespace);
 
-const { filtersNamespace } = useTableFilters(namespace);
+const {
+  subscribe,
+  flushSubscribers,
+  restoreFilters,
+} = useTableFilters(namespace);
+
+subscribe({
+  event: '*',
+  callback: onFilterEvent,
+});
+
+restoreFilters();
+
+onUnmounted(() => {
+  flushSubscribers();
+});
 
 const {
   isVisible: isConfirmationPopup,
@@ -114,6 +128,7 @@ const iconType = {
   [ChatGatewayProvider.VIBER]: 'messenger-viber',
   [ChatGatewayProvider.WEBCHAT]: 'messenger-web-chat',
   [ChatGatewayProvider.INFOBIP]: 'messenger-infobip',
+  [ChatGatewayProvider.CUSTOM]: 'custom-chat-gateway',
 };
 </script>
 

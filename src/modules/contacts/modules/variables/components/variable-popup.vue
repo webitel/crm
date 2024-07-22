@@ -1,6 +1,7 @@
 <template>
   <wt-popup
-    width="480"
+    :shown="shown"
+    size="sm"
     overflow
     @close="close"
   >
@@ -28,9 +29,9 @@
     </template>
     <template #actions>
       <wt-button
-        :loading="isLoading"
+        :loading="isSaving"
         :disabled="v$.$invalid"
-        @click="props.callback(draft)"
+        @click="save"
       >
         {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
       </wt-button>
@@ -45,21 +46,29 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, useAttrs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 
 const props = defineProps({
-  editedInstance: {
-    type: Object,
-  },
-  callback: {
-    type: Function,
+  namespace: {
+    type: String,
+    required: true,
   },
 });
 
 const emit = defineEmits(['close']);
+
+const route = useRoute();
+const store = useStore();
+const { t } = useI18n();
+
+// animate popup appearance after f5 with popup opened
+const shown = ref(false);
+const isSaving = ref(false);
 
 const getDefaultDraft = () => ({
   id: '',
@@ -68,10 +77,7 @@ const getDefaultDraft = () => ({
   value: '',
 });
 
-const { t } = useI18n();
-
-const isLoading = ref(false);
-let draft = reactive(getDefaultDraft());
+const draft = reactive(getDefaultDraft());
 
 const v$ = useVuelidate(computed(() => ({
   draft: {
@@ -82,11 +88,61 @@ const v$ = useVuelidate(computed(() => ({
 
 v$.value.$touch();
 
-const mode = computed(() => (props.editedInstance ? 'update' : 'create'));
+const variableId = computed(() => route.params.variableId);
 
-if (mode.value === 'update') draft = Object.assign(draft, props.editedInstance);
+const mode = computed(() => (variableId.value === 'new' ? 'create' : 'update' ));
 
 function close() {
   emit('close');
 }
+
+function getItem() {
+  return store.dispatch(`${props.namespace}/GET_VARIABLE`, {
+    id: variableId.value,
+  });
+}
+
+function addItem(payload) {
+  return store.dispatch(`${props.namespace}/ADD_VARIABLE`, {
+    itemInstance: payload,
+  });
+}
+
+function updateItem(payload) {
+  return store.dispatch(`${props.namespace}/UPDATE_VARIABLE`, {
+    itemInstance: payload,
+    etag: payload.etag,
+  });
+}
+
+async function save() {
+  isSaving.value = true;
+  if (variableId.value !== 'new') {
+    await updateItem(draft);
+  } else {
+    await addItem(draft);
+  }
+
+  isSaving.value = false;
+
+  setTimeout(() => {
+    close();
+  }, 1500);
+}
+
+watch(variableId, async () => {
+  if (variableId.value === 'new') {
+    Object.assign(draft, getDefaultDraft());
+  } else if (variableId.value) {
+    Object.assign(draft, await getItem());
+  }
+}, { immediate: true });
+
+watch(variableId, () => {
+  if (variableId.value) {
+    setTimeout(() => shown.value = !!variableId.value, 300);
+  } else {
+    shown.value = !!variableId.value;
+  }
+}, { immediate: true });
 </script>

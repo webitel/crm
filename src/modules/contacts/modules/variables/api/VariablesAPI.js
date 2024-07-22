@@ -4,8 +4,11 @@ import {
 } from '@webitel/ui-sdk/src/api/defaults';
 import applyTransform, {
   camelToSnake,
-  merge, notify, snakeToCamel,
-  starToSearch, sanitize
+  merge,
+  notify,
+  sanitize,
+  snakeToCamel,
+  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers';
 import { VariablesApiFactory } from 'webitel-sdk';
 
@@ -16,7 +19,15 @@ const variablesService = new VariablesApiFactory(configuration, '', instance);
 
 const getList = async (params) => {
 
-  const fieldsToSend = ['parentId', 'page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = [
+    'parentId',
+    'page',
+    'size',
+    'q',
+    'sort',
+    'fields',
+    'id',
+  ];
   const {
     parentId,
     page,
@@ -37,7 +48,7 @@ const getList = async (params) => {
       size,
       q,
       sort,
-      fields,
+      ['etag', ...fields],
       id,
     );
     const { data, next } = applyTransform(response.data, [
@@ -55,7 +66,30 @@ const getList = async (params) => {
   }
 };
 
-const fieldsToSend = ['id', 'key', 'value', 'etag'];
+const get = async ({ parentId, itemId }) => {
+  const fields = ['key', 'value', 'etag'];
+  try {
+    const response = await variablesService.listVariables(
+      parentId,
+      1,
+      1,
+      '',
+      null,
+      fields,
+      [itemId],
+    );
+    const { data } = applyTransform(response.data, [
+      snakeToCamel(),
+    ]);
+    return data[0];
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
+const fieldsToSend = ['key', 'value'];
 
 const add = async ({ parentId, itemInstance }) => {
   const item = applyTransform(itemInstance, [
@@ -96,8 +130,7 @@ const update = async ({ itemInstance, etag: id, parentId }) => {
 const deleteItem = async ({ etag, parentId }) => {
   try {
     const response = await variablesService.deleteVariable(parentId, etag);
-    return applyTransform(response.data, [
-    ]);
+    return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [
 
@@ -108,6 +141,7 @@ const deleteItem = async ({ etag, parentId }) => {
 
 const VariablesAPI = {
   getList,
+  get,
   add,
   update,
   delete: deleteItem,

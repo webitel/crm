@@ -20,18 +20,20 @@
       </button>
     </div>
   </header>
-
 </template>
 <script setup>
+import capitalize from 'lodash/capitalize';
 import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import capitalize from 'lodash/capitalize';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import TimelineAPI from '../api/TimelineAPI.js';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
 
 const props = defineProps({
   contactId: {
+    type: String,
+    required: true,
+  },
+  filtersNamespace: {
     type: String,
     required: true,
   },
@@ -41,8 +43,6 @@ const namespace = inject('namespace');
 const eventBus = inject('$eventBus');
 
 const { d, t, locale } = useI18n();
-
-const { filtersNamespace } = useTableFilters(namespace);
 
 const showHeader = computed(() => true);
 

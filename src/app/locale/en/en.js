@@ -1,10 +1,10 @@
 import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
+  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum';
+  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 
 export default {
   crm: 'CRM',
@@ -57,6 +57,7 @@ export default {
           [ChatGatewayProvider.VIBER]: 'Viber',
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
+          [ChatGatewayProvider.CUSTOM]: 'Custom Chat Gateway',
         },
       },
     },

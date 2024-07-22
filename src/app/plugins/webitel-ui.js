@@ -1,12 +1,11 @@
-import WebitelUI from '@webitel/ui-sdk/dist/ui-sdk.umd';
-import WebitelUIEn from '@webitel/ui-sdk/src/locale/en/en';
-import WebitelUIRu from '@webitel/ui-sdk/src/locale/ru/ru';
-import WebitelUIUa from '@webitel/ui-sdk/src/locale/ua/ua';
-import WebitelUIKz from '@webitel/ui-sdk/src/locale/kz/kz';
-import eventBus from '@webitel/ui-sdk/src/scripts/eventBus';
-import i18n from '../locale/i18n';
+import WebitelUI from '@webitel/ui-sdk/dist/ui-sdk.js';
+import WebitelUIEn from '@webitel/ui-sdk/src/locale/en/en.js';
+import WebitelUIKz from '@webitel/ui-sdk/src/locale/kz/kz.js';
+import WebitelUIRu from '@webitel/ui-sdk/src/locale/ru/ru.js';
+import WebitelUIUa from '@webitel/ui-sdk/src/locale/ua/ua.js';
+import eventBus from '@webitel/ui-sdk/src/scripts/eventBus.js';
+import i18n from '../locale/i18n.js';
 import '@webitel/ui-sdk/dist/ui-sdk.css';
-import '@webitel/ui-sdk/dist/img/sprite';
 
 const globals = {
   $baseURL: import.meta.env.BASE_URL,

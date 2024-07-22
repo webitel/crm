@@ -24,7 +24,7 @@
       />
     </template>
 
-    <template v-slot:content>
+    <template #content>
       <task-timeline-row-content-wrapper>
         <timeline-row-initiator
           :text="initiator.name"
