@@ -17,8 +17,9 @@ const listHandler = (items) => {
     return copy.map(day => ({
       ...day,
       items: day.items.map(item => ({
-        ...item,
+        ...item[item.type || WebitelContactsTimelineEventType.Chat],
         type: item.type || WebitelContactsTimelineEventType.Chat,
+        createdAt: item.createdAt,
       }))
     }));
   } return [];
