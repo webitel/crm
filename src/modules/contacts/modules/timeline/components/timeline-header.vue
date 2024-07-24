@@ -11,6 +11,7 @@
         :namespace="filtersNamespace"
         :calls-count="callsCount"
         :chats-count="chatsCount"
+        :emails-count="emailsCount"
       />
       <button
         class="timeline-header-collapse"
@@ -48,6 +49,7 @@ const showHeader = computed(() => true);
 
 const callsCount = ref(0);
 const chatsCount = ref(0);
+const emailsCount = ref(0);
 const dateFrom = ref(Date.now());
 const dateTo = ref(Date.now());
 
@@ -73,10 +75,12 @@ async function loadCounters() {
     dateTo: sourceDateTo,
     callsCount: sourceCallsCount,
     chatsCount: sourceChatsCount,
+    emailsCount: sourceEmailsCount,
   } = await TimelineAPI.getCounters({ parentId: props.contactId });
 
   callsCount.value = sourceCallsCount;
   chatsCount.value = sourceChatsCount;
+  emailsCount.value = sourceEmailsCount;
   dateFrom.value = sourceDateFrom;
   dateTo.value = sourceDateTo;
 }

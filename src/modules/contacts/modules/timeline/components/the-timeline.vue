@@ -22,12 +22,13 @@
       />
 
       <day-timeline-row
-        v-for="({ dayTimestamp, callsCount, chatsCount, items }, key) of dataList"
+        v-for="({ dayTimestamp, callsCount, chatsCount, emailsCount, items }, key) of dataList"
         v-else
         :key="dayTimestamp"
         :timestamp="dayTimestamp"
         :calls-count="callsCount"
         :chats-count="chatsCount"
+        :emails-count="emailsCount"
         :tasks="items"
         :first="!key"
         :last="!next && key === dataList.length - 1"

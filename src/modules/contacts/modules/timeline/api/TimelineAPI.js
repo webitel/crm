@@ -71,6 +71,7 @@ const getCounters = async (params) => {
   const defaultObject = {
     callsCount: 0,
     chatsCount: 0,
+    emailsCount: 0,
     dateFrom: Date.now(),
     dateTo: Date.now(),
   };

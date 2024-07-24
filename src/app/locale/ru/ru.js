@@ -29,6 +29,7 @@ export default {
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Звонок | Звонки',
         [WebitelContactsTimelineEventType.Chat]: 'Чат | Чаты',
+        [WebitelContactsTimelineEventType.Email]: 'Письмо | Письма',
       },
     },
     communications: {
