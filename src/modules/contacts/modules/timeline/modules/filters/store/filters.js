@@ -6,8 +6,8 @@ const filters = new FiltersStoreModule()
 .addFilter([
   {
     name: 'type',
-    value: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat],
-    defaultValue: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat],
+    value: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat, WebitelContactsTimelineEventType.Email],
+    defaultValue: [WebitelContactsTimelineEventType.Call, WebitelContactsTimelineEventType.Chat, WebitelContactsTimelineEventType.Email],
   },
 ])
 .getModule();

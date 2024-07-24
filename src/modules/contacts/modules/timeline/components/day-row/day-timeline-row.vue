@@ -28,6 +28,7 @@
       <day-timeline-row-counters
         :calls-count="callsCount"
         :chats-count="chatsCount"
+        :emails-count="emailsCount"
       />
     </template>
 
@@ -61,6 +62,10 @@ const props = defineProps({
     default: 0,
   },
   chatsCount: {
+    type: Number,
+    default: 0,
+  },
+  emailsCount: {
     type: Number,
     default: 0,
   },

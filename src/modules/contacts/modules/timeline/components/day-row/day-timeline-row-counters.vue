@@ -7,6 +7,9 @@
       <span>
         {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Chat}`, 2)}: (${props.chatsCount})` }}
       </span>
+      <span>
+        {{ `${t(`contacts.timeline.eventType.${WebitelContactsTimelineEventType.Email}`, 2)}: (${props.emailsCount})` }}
+      </span>
     </div>
   </div>
 </template>
@@ -21,6 +24,10 @@ const props = defineProps({
     default: 0,
   },
   chatsCount: {
+    type: Number,
+    default: 0,
+  },
+  emailsCount: {
     type: Number,
     default: 0,
   },
@@ -40,7 +47,7 @@ $colWidth: 80px;
   &__wrapper {
     @extend %typo-body-2;
     display: grid;
-    grid-template-columns: repeat(2, $colWidth);
+    grid-template-columns: repeat(3, $colWidth);
     gap: var(--spacing-xs);
     text-align: right;
   }

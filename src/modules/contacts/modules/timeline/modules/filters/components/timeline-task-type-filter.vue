@@ -41,6 +41,10 @@ const props = defineProps({
     type: [Number, String],
     default: 0,
   },
+  emailsCount: {
+    type: [Number, String],
+    default: 0,
+  },
 });
 
 const store = useStore();
@@ -71,6 +75,12 @@ const filters = computed(() => [
     selected: filterValue.value.includes(WebitelContactsTimelineEventType.Chat),
     set: () => toggleFilterValue(WebitelContactsTimelineEventType.Chat),
     count: props.chatsCount,
+  },
+  {
+    icon: 'email',
+    selected: filterValue.value.includes(WebitelContactsTimelineEventType.Email),
+    set: () => toggleFilterValue(WebitelContactsTimelineEventType.Email),
+    count: props.emailsCount,
   },
 ]);
 </script>
