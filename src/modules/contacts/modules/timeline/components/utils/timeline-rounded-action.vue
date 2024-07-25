@@ -20,7 +20,7 @@ const props = defineProps({
   color: {
     type: String,
     default: 'secondary',
-    validator: (value) => ['primary', 'success', 'error', 'chat', 'secondary'].includes(value),
+    validator: (value) => ['primary', 'success', 'error', 'chat', 'secondary', 'email'].includes(value),
   },
 });
 
@@ -32,6 +32,9 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
 </script>
 
 <style lang="scss" scoped>
+$mail-color: var(--blue-darken-1);
+$mail-hover-color: var(--blue-lighten-1);
+
 .timeline-rounded-action {
   &--primary.wt-rounded-action {
     border-color: var(--primary-color);
@@ -85,6 +88,17 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
     &:active {
       border-color: var(--chat-hover-color);
       background-color: var(--chat-hover-color);
+    }
+  }
+
+  &--email.wt-rounded-action {
+    border-color: $mail-color;
+    background-color: $mail-color;
+
+    &:hover,
+    &:active {
+      border-color: $mail-hover-color;
+      background-color: $mail-hover-color;
     }
   }
 }

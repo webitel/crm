@@ -27,6 +27,10 @@ const TimelinePinType = Object.freeze({
   CALL_MISSED: 'CALL_MISSED',
   CALL_INBOUND_ON_IVR: 'CALL_INBOUND_ON_IVR',
   CALL_TRANSFER: 'CALL_TRANSFER',
+
+  // email-related pins
+  EMAIL_INBOUND: 'EMAIL_INBOUND',
+  EMAIL_OUTBOUND: 'EMAIL_OUTBOUND',
 });
 
 export default TimelinePinType;

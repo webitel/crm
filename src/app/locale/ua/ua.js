@@ -25,6 +25,8 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Пропущений',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
         [TimelineTaskStatusEnum.ENDED]: 'Кінець',
+        [TimelineTaskStatusEnum.SENT]: 'Надіслано',
+        [TimelineTaskStatusEnum.RECEIVED]: 'Отримано',
       },
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Дзвінок | Дзвінки',

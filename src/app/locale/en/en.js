@@ -25,6 +25,8 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Missed',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Transferred',
         [TimelineTaskStatusEnum.ENDED]: 'Ended',
+        [TimelineTaskStatusEnum.SENT]: 'Sent',
+        [TimelineTaskStatusEnum.RECEIVED]: 'Received',
       },
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Call | Calls',

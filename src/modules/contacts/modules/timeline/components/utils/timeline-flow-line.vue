@@ -18,12 +18,15 @@ const props = defineProps({
       'secondary',
       'chat',
       'transfer',
+      'email',
     ].includes(v),
   },
 });
 </script>
 
 <style lang="scss" scoped>
+$mail-color: var(--blue-darken-1);
+
 .timeline-flow-line {
   width: 1px;
 
@@ -53,6 +56,10 @@ const props = defineProps({
 
   &--error {
     background-color: var(--error-color);
+  }
+
+  &--email {
+    background-color: $mail-color;
   }
 }
 </style>

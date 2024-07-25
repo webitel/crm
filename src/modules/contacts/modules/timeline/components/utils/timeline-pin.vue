@@ -145,6 +145,16 @@ const stateMap = {
     color: 'transfer',
     icon: 'call-transfer',
   },
+  [TimelinePinType.EMAIL_INBOUND]: {
+    component: TimelineRoundedAction,
+    color: 'email',
+    icon: 'email-inbound',
+  },
+  [TimelinePinType.EMAIL_OUTBOUND]: {
+    component: TimelineRoundedAction,
+    color: 'email',
+    icon: 'email-outbound',
+  },
 };
 
 const state = computed(() => {
