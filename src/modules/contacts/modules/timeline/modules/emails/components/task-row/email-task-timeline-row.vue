@@ -26,6 +26,8 @@
 
     <template #content>
       <task-timeline-row-content-wrapper>
+        <email-task-timeline-header
+          :task="task" />
 
       </task-timeline-row-content-wrapper>
     </template>
@@ -42,6 +44,7 @@ import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue'
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import EmailTaskTimelineHeader from './email-task-timeline-header.vue';
 
 const props = defineProps({
   task: {

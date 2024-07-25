@@ -33,6 +33,10 @@ export default {
         [WebitelContactsTimelineEventType.Chat]: 'Chat | Chats',
         [WebitelContactsTimelineEventType.Email]: 'Email | Emails',
       },
+      emails: {
+        to: 'To',
+        cc: 'CC',
+      },
     },
     communications: {
       communications: 'Communication option | Communication options',

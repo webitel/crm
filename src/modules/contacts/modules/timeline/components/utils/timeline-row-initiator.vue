@@ -54,7 +54,7 @@ const props = defineProps({
   @extend %typo-subtitle-1;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
 
   .wt-icon,
   .wt-avatar {
