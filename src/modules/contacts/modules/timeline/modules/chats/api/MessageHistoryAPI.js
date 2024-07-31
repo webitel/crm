@@ -1,14 +1,15 @@
+import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   notify,
   snakeToCamel,
+  merge,
+  camelToSnake,
+  generateUrl,
 } from '@webitel/ui-sdk/src/api/transformers';
-import { CatalogApiFactory } from 'webitel-sdk';
+
 import instance from '../../../../../../../app/api/instance';
-import configuration from '../../../../../../../app/api/openAPIConfig';
 
-const service = new CatalogApiFactory(configuration, '', instance);
-
-const getList = async ({ taskId }) => {
+const getList = async (params) => {
   const mergeMessageData = ({ peers, messages }) => {
     return messages.map(({ from, ...message }) => {
       return {
@@ -18,10 +19,14 @@ const getList = async ({ taskId }) => {
     });
   };
 
+  const url = applyTransform(params, [
+    merge(getDefaultGetParams()),
+    camelToSnake(),
+    generateUrl(`contacts/${params.parentId}/chat/${params.taskId}/messages`),
+  ]);
+
   try {
-    const response = await service.getHistory(
-      taskId,
-    );
+    const response = await instance.get(url);
     const { peers, messages } = applyTransform(response.data, [
       snakeToCamel(),
     ]);
