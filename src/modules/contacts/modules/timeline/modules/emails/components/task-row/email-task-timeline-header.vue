@@ -1,77 +1,40 @@
 <template>
   <div class="email-task-timeline-header">
-    <div
+
+    <email-task-timeline-header-section
       v-if="task.owner"
-      class="email-task-timeline-header__wrapper"
+      :title="t('objects.user', 1)"
     >
-      <p>{{ t('objects.user', 1) }}:</p>
-      <timeline-row-initiator
-        :text="task.owner.name"
-        :type="TimelineInitiatorType.CONTACT"
-      />
-    </div>
+      <template #name>
+        <timeline-row-initiator
+          :text="task.owner.name"
+          :type="TimelineInitiatorType.CONTACT"
+        />
+      </template>
+    </email-task-timeline-header-section>
 
-    <div
+    <email-task-timeline-header-section
       v-if="task.from"
-      class="email-task-timeline-header__wrapper"
+      :title="t('reusable.from')"
+      :name="task.from[0]"
     >
-      <p>{{ t('reusable.from') }}:</p>
-      <span class="email-task-timeline-header__name">{{ task.from[0] }}</span>
-    </div>
+    </email-task-timeline-header-section>
 
-    <div
+    <email-task-timeline-header-section
       v-if="task.to"
-      class="email-task-timeline-header__wrapper"
+      :title="t('contacts.timeline.emails.to')"
+      :name="task.to[0]"
+      :hidden-participants="hiddenRecipients"
     >
-      <p>{{ t('contacts.timeline.emails.to') }}:</p>
-      <span class="email-task-timeline-header__name">{{ task.to[0] }}</span>
+    </email-task-timeline-header-section>
 
-      <wt-tooltip
-        v-if="hiddenRecipients.length"
-        :triggers="['click']"
-      >
-        <template #activator>
-          <wt-chip>
-            +{{ hiddenRecipients.length }}
-          </wt-chip>
-        </template>
-
-        <div class="email-task-timeline-header__inner">
-          <p
-            v-for="(name, idx) of hiddenRecipients"
-            :key="idx"
-          >{{ name }}</p>
-        </div>
-      </wt-tooltip>
-
-    </div>
-
-    <div
+    <email-task-timeline-header-section
       v-if="task.cc"
-      class="email-task-timeline-header__wrapper"
+      :title="t('contacts.timeline.emails.cc')"
+      :name="task.cc[0]"
+      :hidden-participants="hiddenCopyRecipients"
     >
-      <p>{{ t('contacts.timeline.emails.cc') }}:</p>
-      <span class="email-task-timeline-header__name">{{ task.cc[0] }}</span>
-
-
-      <wt-tooltip
-        v-if="hiddenCopyRecipients.length"
-        :triggers="['click']"
-      >
-        <template #activator>
-          <wt-chip>
-            +{{ hiddenCopyRecipients.length }}
-          </wt-chip>
-        </template>
-
-        <div class="email-task-timeline-header__inner">
-          <p
-            v-for="(name, idx) of hiddenCopyRecipients"
-            :key="idx"
-          >{{ name }}</p>
-        </div>
-      </wt-tooltip>
-    </div>
+    </email-task-timeline-header-section>
 
   </div>
 </template>
@@ -82,6 +45,7 @@ import { useI18n } from 'vue-i18n';
 
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
+import EmailTaskTimelineHeaderSection from './email-task-timeline-header-section.vue';
 
 const props = defineProps({
   task: {
@@ -101,19 +65,5 @@ const hiddenCopyRecipients = computed(() => props.task.cc.slice(0, -1));
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-xs);
-
-  &__wrapper {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-  }
-
-  &__inner {
-    padding: var(--spacing-xs);
-  }
-
-  &__name {
-    @extend %typo-subtitle-1;
-  }
 }
 </style>

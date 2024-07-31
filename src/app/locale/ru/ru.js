@@ -36,6 +36,7 @@ export default {
       emails: {
         to: 'Кому',
         cc: 'CC',
+        subject: 'Тема',
       },
     },
     communications: {
