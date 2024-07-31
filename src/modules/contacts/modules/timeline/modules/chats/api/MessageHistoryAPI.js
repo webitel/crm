@@ -2,11 +2,10 @@ import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   notify,
   snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers';
-import {
-  camelToSnake, generateUrl,
+  camelToSnake,
+  generateUrl,
   merge,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/ui-sdk/src/api/transformers';
 import instance from '../../../../../../../app/api/instance';
 
 const getList = async (params) => {
