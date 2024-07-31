@@ -1,13 +1,18 @@
 import applyTransform, {
-  merge, notify,
-  sanitize, snakeToCamel,
+  merge,
+  notify,
+  sanitize,
+  snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers';
 import deepCopy from 'deep-copy';
-import { TimelineApiFactory, WebitelContactsTimelineEventType } from 'webitel-sdk';
+import {
+  TimelineApiFactory,
+  WebitelContactsTimelineEventType,
+} from 'webitel-sdk';
 import getDefaultGetListResponse
   from '../../../../../app/api/defaults/getDefaultGetListResponse';
-import configuration from '../../../../../app/api/openAPIConfig';
 import instance from '../../../../../app/api/instance';
+import configuration from '../../../../../app/api/openAPIConfig';
 
 const timeline = new TimelineApiFactory(configuration, '', instance);
 
@@ -17,7 +22,8 @@ const listHandler = (items) => {
     return copy.map(day => ({
       ...day,
       items: day.items.map(item => ({
-        ...item[item.type || WebitelContactsTimelineEventType.Chat],
+        // ...item[item.type || WebitelContactsTimelineEventType.Chat],
+        ...item,
         type: item.type || WebitelContactsTimelineEventType.Chat,
         createdAt: item.createdAt,
       }))

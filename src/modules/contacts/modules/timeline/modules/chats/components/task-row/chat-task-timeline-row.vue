@@ -29,6 +29,7 @@
     <template #content>
       <task-timeline-row-content-wrapper>
         <timeline-row-initiator
+          v-if="initiator && initiator.name"
           :text="initiator.name"
           :type="initiatorType"
         />
