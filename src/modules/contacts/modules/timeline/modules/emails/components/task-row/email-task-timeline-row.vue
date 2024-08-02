@@ -26,6 +26,8 @@
 
     <template #content>
       <task-timeline-row-content-wrapper>
+        <email-point-timeline-row
+          :task="task" />
 
       </task-timeline-row-content-wrapper>
     </template>
@@ -42,6 +44,7 @@ import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue'
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import EmailPointTimelineRow from '../point-row/email-point-timeline-row.vue';
 
 const props = defineProps({
   task: {
