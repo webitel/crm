@@ -25,6 +25,10 @@ const statusColor = computed(() => {
   switch (props.status) {
     case TimelineTaskStatus.STARTED:
       return 'success';
+    case TimelineTaskStatus.SENT:
+      return 'success';
+    case TimelineTaskStatus.RECEIVED:
+      return 'success';
     case TimelineTaskStatus.TRANSFERRED:
       return 'transfer';
     default:
