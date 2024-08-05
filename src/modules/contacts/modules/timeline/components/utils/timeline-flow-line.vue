@@ -25,8 +25,6 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-$mail-color: var(--blue-darken-1);
-
 .timeline-flow-line {
   width: 1px;
 
@@ -59,7 +57,7 @@ $mail-color: var(--blue-darken-1);
   }
 
   &--email {
-    background-color: $mail-color;
+    background-color: var(--email-color);
   }
 }
 </style>

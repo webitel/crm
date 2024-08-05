@@ -32,9 +32,6 @@ const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-da
 </script>
 
 <style lang="scss" scoped>
-$mail-color: var(--blue-darken-1);
-$mail-hover-color: var(--blue-lighten-1);
-
 .timeline-rounded-action {
   &--primary.wt-rounded-action {
     border-color: var(--primary-color);
@@ -92,13 +89,13 @@ $mail-hover-color: var(--blue-lighten-1);
   }
 
   &--email.wt-rounded-action {
-    border-color: $mail-color;
-    background-color: $mail-color;
+    border-color: var(--email-color);
+    background-color: var(--email-color);
 
     &:hover,
     &:active {
-      border-color: $mail-hover-color;
-      background-color: $mail-hover-color;
+      border-color: var(--email-hover-color);
+      background-color: var(--email-hover-color);
     }
   }
 }
