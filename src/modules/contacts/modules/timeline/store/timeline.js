@@ -49,6 +49,11 @@ const actions = {
     context.commit('SET', { path: 'dataList', value: [...context.state.dataList, ...items] });
     context.commit('SET', { path: 'next', value: next });
   },
+  RESET_STATE: (context) => {
+    context.commit('SET', { path: 'dataList', value: [] });
+    context.commit('SET', { path: 'page', value: 1 });
+    context.commit('SET', { path: 'next', value: false });
+  }
 };
 
 const mutations = {

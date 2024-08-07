@@ -88,10 +88,6 @@ const {
   restoreFilters,
 } = useTableFilters(timelineNamespace);
 
-onUnmounted(() => {
-  flushSubscribers();
-});
-
 subscribe({
   event: '*',
   callback: initializeList,
@@ -106,6 +102,12 @@ async function loadNext() {
   await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
   nextLoading.value = false;
 }
+
+onUnmounted(() => {
+  flushSubscribers();
+  store.dispatch(`${timelineNamespace}/RESET_STATE`);
+});
+
 </script>
 
 <style lang="scss" scoped>
