@@ -6,6 +6,9 @@ import AccessMode
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
+
 export default {
   crm: 'CRM',
   contacts: {
@@ -77,4 +80,25 @@ export default {
       [AccessMode.MANAGE]: 'Allow with delegation',
     },
   },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Contacts',
+      text: 'In this section, you can work with your contacts: clients, customers etc.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Configuration',
+      text: 'In this section, you will set up the Case management process.',
+    },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Lookups',
+    [CrmConfigurationSections.SLA]: 'SLA',
+    [CrmConfigurationSections.SERVICE_CATALOG]: 'Service catalog',
+    [CrmConfigurationSections.PRIORITIES]: 'Priorities',
+    [CrmConfigurationSections.STATUSES]: 'Statuses',
+    [CrmConfigurationSections.CLOSURE_REASONS]: 'Closure reasons',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Contact groups',
+    [CrmConfigurationSections.CASE_SOURCES]: 'Case sources',
+    [CrmConfigurationSections.CUSTOM_LOOKUPS]: 'Custom lookups',
+  }
 };

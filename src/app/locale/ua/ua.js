@@ -6,6 +6,9 @@ import AccessMode
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
+
 export default {
   crm: 'CRM',
   contacts: {
@@ -77,4 +80,25 @@ export default {
       [AccessMode.MANAGE]: 'Управління',
     },
   },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Контакти',
+      text: 'У цьому розділі ви можете працювати з Контактами: клієнтами, партнерами тощо.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Конфігурація',
+      text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
+    },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Довідники',
+    [CrmConfigurationSections.SLA]: 'SLA',
+    [CrmConfigurationSections.SERVICE_CATALOG]: 'Каталог сервісів',
+    [CrmConfigurationSections.PRIORITIES]: 'Пріоритети',
+    [CrmConfigurationSections.STATUSES]: 'Статуси',
+    [CrmConfigurationSections.CLOSURE_REASONS]: 'Причини закриття',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Групи контактів',
+    [CrmConfigurationSections.CASE_SOURCES]: 'Джерела звернень',
+    [CrmConfigurationSections.CUSTOM_LOOKUPS]: 'Користувацькі довідники',
+  }
 };

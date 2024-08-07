@@ -6,6 +6,9 @@ import AccessMode
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
+
 export default {
   crm: 'CRM',
   contacts: {
@@ -77,4 +80,25 @@ export default {
       [AccessMode.MANAGE]: 'Управление',
     },
   },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Контакты',
+      text: 'В этом разделе вы можете работать с Контактами: клиентами, партнерами и т.д.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Конфигурация',
+      text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
+    },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Справочники',
+    [CrmConfigurationSections.SLA]: 'SLA',
+    [CrmConfigurationSections.SERVICE_CATALOG]: 'Каталог сервисов',
+    [CrmConfigurationSections.PRIORITIES]: 'Приоритеты',
+    [CrmConfigurationSections.STATUSES]: 'Статусы',
+    [CrmConfigurationSections.CLOSURE_REASONS]: 'Причины закрытия',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Группы контактов',
+    [CrmConfigurationSections.CASE_SOURCES]: 'Источники обращений',
+    [CrmConfigurationSections.CUSTOM_LOOKUPS]: 'Пользовательские справочники',
+  }
 };
