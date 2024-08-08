@@ -17,7 +17,7 @@ export default {
       timeline: 'Timeline',
       actions: {
         openInHistory: 'Open in history',
-        playRecording: 'Play Recording',
+        playRecording: 'Play recording',
         transcription: 'Transcription',
       },
       status: {

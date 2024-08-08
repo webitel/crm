@@ -81,7 +81,7 @@ import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 import CallPointsTimelineRowSection from '../point-row/call-points-timeline-row-section.vue';
-import CallTaskTimelineActions from './call-task-timeline-actions.vue';
+import CallTaskTimelineActions from './actions/call-task-timeline-actions.vue';
 
 const props = defineProps({
   task: {

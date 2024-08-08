@@ -13,6 +13,8 @@ const state = {
   page: 1,
   next: false,
   isLoading: false,
+  audioURL: '',
+  currentlyPlaying: '0',
 };
 
 const getters = {

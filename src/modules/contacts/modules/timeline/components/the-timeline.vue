@@ -33,6 +33,12 @@
         :first="!key"
         :last="!next && key === dataList.length - 1"
       />
+
+      <wt-player
+        v-show="audioURL"
+        :src="audioURL"
+        @close="closePlayer"
+      />
     </template>
 
     <template #after-content>
@@ -50,6 +56,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
+import { usePlayMedia } from '../../../../../app/composables/usePlayMedia.js';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
@@ -76,6 +83,11 @@ const contactId = computed(() => store.getters[`${timelineNamespace}/PARENT_ID`]
 const dataList = computed(() => getNamespacedState(store.state, timelineNamespace).dataList);
 const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);
 const next = computed(() => getNamespacedState(store.state, timelineNamespace).next);
+
+const {
+  audioURL,
+  closePlayer,
+} = usePlayMedia(timelineNamespace);
 
 function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
