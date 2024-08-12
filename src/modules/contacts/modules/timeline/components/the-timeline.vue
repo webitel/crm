@@ -88,10 +88,6 @@ const {
   restoreFilters,
 } = useTableFilters(timelineNamespace);
 
-onUnmounted(() => {
-  flushSubscribers();
-});
-
 subscribe({
   event: '*',
   callback: initializeList,
@@ -106,6 +102,17 @@ async function loadNext() {
   await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
   nextLoading.value = false;
 }
+
+onUnmounted(() => {
+  flushSubscribers();
+
+  /* https://webitel.atlassian.net/browse/WTEL-4843 */
+  /* Store must be reset to prevent multiple calls TimelineAPI */
+  /* Caching doesn't work because of this code, a fix later. See the task for more details */
+
+  store.dispatch(`${timelineNamespace}/RESET_STATE`);
+});
+
 </script>
 
 <style lang="scss" scoped>
