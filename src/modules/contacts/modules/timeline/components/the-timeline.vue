@@ -99,10 +99,6 @@ const {
   restoreFilters,
 } = useTableFilters(timelineNamespace);
 
-onUnmounted(() => {
-  flushSubscribers();
-});
-
 subscribe({
   event: '*',
   callback: initializeList,
@@ -126,6 +122,14 @@ onMounted(() => {
 
 
 onUnmounted(() => {
+  flushSubscribers();
+
+  /* https://webitel.atlassian.net/browse/WTEL-4843 */
+  /* Store must be reset to prevent multiple calls TimelineAPI */
+  /* Caching doesn't work because of this code, a fix later. See the task for more details */
+
+  store.dispatch(`${timelineNamespace}/RESET_STATE`);
+
   eventBus.$off('play-audio');
 });
 </script>
