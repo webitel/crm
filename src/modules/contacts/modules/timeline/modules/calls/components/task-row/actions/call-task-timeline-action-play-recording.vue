@@ -27,10 +27,11 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, onMounted, onUnmounted } from 'vue';
 import { usePlayMedia } from '../../../../../../../../../app/composables/usePlayMedia.js';
 
 const namespace = inject('namespace');
+const eventBus = inject('$eventBus');
 
 const props = defineProps({
   files: {
@@ -40,10 +41,11 @@ const props = defineProps({
 });
 
 const {
+  audioURL,
   currentlyPlaying,
   play,
   closePlayer,
-} = usePlayMedia(namespace);
+} = usePlayMedia();
 
 const isAnyFilesPlaying = computed(() => {
   return props.files.some((file) => file.id === currentlyPlaying.value);
@@ -58,8 +60,18 @@ const handleOptionSelect = ({ option }) => {
     closePlayer();
   } else {
     play(option.id);
+    if(audioURL.value) eventBus.$emit('play-audio', audioURL.value);
   }
 };
+
+onMounted(() => {
+  eventBus.$on('close-player', closePlayer);
+});
+
+
+onUnmounted(() => {
+  eventBus.$off('close-player', closePlayer);
+});
 
 </script>
 <style lang="scss" scoped>

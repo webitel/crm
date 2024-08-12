@@ -54,9 +54,8 @@
 <script setup>
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import { computed, onUnmounted, provide, ref } from 'vue';
+import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
-import { usePlayMedia } from '../../../../../app/composables/usePlayMedia.js';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
@@ -70,12 +69,13 @@ const props = defineProps({
     required: true,
   },
 });
-
+const audioURL = ref(null);
 const timelineNamespace = `${props.namespace}/timeline`;
 
 provide('namespace', timelineNamespace);
 
 const store = useStore();
+const eventBus = inject('$eventBus');
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 const contactId = computed(() => store.getters[`${timelineNamespace}/PARENT_ID`]);
@@ -84,10 +84,9 @@ const dataList = computed(() => getNamespacedState(store.state, timelineNamespac
 const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);
 const next = computed(() => getNamespacedState(store.state, timelineNamespace).next);
 
-const {
-  audioURL,
-  closePlayer,
-} = usePlayMedia(timelineNamespace);
+function closePlayer() {
+  return eventBus.$emit('close-player');
+}
 
 function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
@@ -118,6 +117,17 @@ async function loadNext() {
   await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
   nextLoading.value = false;
 }
+
+onMounted(() => {
+  eventBus.$on('play-audio', (url) => {
+    audioURL.value = url;
+  });
+});
+
+
+onUnmounted(() => {
+  eventBus.$off('play-audio');
+});
 </script>
 
 <style lang="scss" scoped>
