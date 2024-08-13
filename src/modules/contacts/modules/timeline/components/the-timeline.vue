@@ -35,7 +35,7 @@
       />
 
       <wt-player
-        v-show="audioURL"
+        v-if="audioURL"
         :src="audioURL"
         @close="closePlayer"
       />
@@ -85,7 +85,8 @@ const isLoading = computed(() => getNamespacedState(store.state, timelineNamespa
 const next = computed(() => getNamespacedState(store.state, timelineNamespace).next);
 
 function closePlayer() {
-  return eventBus.$emit('close-player');
+  eventBus.$emit('close-player');
+  audioURL.value = '';
 }
 
 function initializeList() {
@@ -115,7 +116,8 @@ async function loadNext() {
 }
 
 onMounted(() => {
-  eventBus.$on('play-audio', (url) => {
+  return eventBus.$on('play-audio', (url) => {
+    if(!url) return;
     audioURL.value = url;
   });
 });

@@ -30,7 +30,6 @@
 import { computed, inject, onMounted, onUnmounted } from 'vue';
 import { usePlayMedia } from '../../../../../../../../../app/composables/usePlayMedia.js';
 
-const namespace = inject('namespace');
 const eventBus = inject('$eventBus');
 
 const props = defineProps({
@@ -64,14 +63,10 @@ const handleOptionSelect = ({ option }) => {
   }
 };
 
-onMounted(() => {
-  eventBus.$on('close-player', closePlayer);
-});
+onMounted(() => eventBus.$on('close-player', closePlayer));
 
 
-onUnmounted(() => {
-  eventBus.$off('close-player', closePlayer);
-});
+onUnmounted(() => eventBus.$off('close-player', closePlayer));
 
 </script>
 <style lang="scss" scoped>
