@@ -33,6 +33,12 @@
         :first="!key"
         :last="!next && key === dataList.length - 1"
       />
+
+      <wt-player
+        v-if="audioURL"
+        :src="audioURL"
+        @close="closePlayer"
+      />
     </template>
 
     <template #after-content>
@@ -48,7 +54,7 @@
 <script setup>
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import { computed, onUnmounted, provide, ref } from 'vue';
+import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
@@ -63,12 +69,13 @@ const props = defineProps({
     required: true,
   },
 });
-
+const audioURL = ref(null);
 const timelineNamespace = `${props.namespace}/timeline`;
 
 provide('namespace', timelineNamespace);
 
 const store = useStore();
+const eventBus = inject('$eventBus');
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 const contactId = computed(() => store.getters[`${timelineNamespace}/PARENT_ID`]);
@@ -76,6 +83,11 @@ const contactId = computed(() => store.getters[`${timelineNamespace}/PARENT_ID`]
 const dataList = computed(() => getNamespacedState(store.state, timelineNamespace).dataList);
 const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);
 const next = computed(() => getNamespacedState(store.state, timelineNamespace).next);
+
+function closePlayer() {
+  eventBus.$emit('close-player');
+  audioURL.value = '';
+}
 
 function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
@@ -87,10 +99,6 @@ const {
   flushSubscribers,
   restoreFilters,
 } = useTableFilters(timelineNamespace);
-
-onUnmounted(() => {
-  flushSubscribers();
-});
 
 subscribe({
   event: '*',
@@ -106,6 +114,26 @@ async function loadNext() {
   await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
   nextLoading.value = false;
 }
+
+onMounted(() => {
+  return eventBus.$on('play-audio', (url) => {
+    if(!url) return;
+    audioURL.value = url;
+  });
+});
+
+
+onUnmounted(() => {
+  flushSubscribers();
+
+  /* https://webitel.atlassian.net/browse/WTEL-4843 */
+  /* Store must be reset to prevent multiple calls TimelineAPI */
+  /* Caching doesn't work because of this code, a fix later. See the task for more details */
+
+  store.dispatch(`${timelineNamespace}/RESET_STATE`);
+
+  eventBus.$off('play-audio');
+});
 </script>
 
 <style lang="scss" scoped>
