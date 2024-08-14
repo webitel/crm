@@ -25,11 +25,18 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
         [TimelineTaskStatusEnum.ENDED]: 'Конец',
+        [TimelineTaskStatusEnum.SENT]: 'Отправлено',
+        [TimelineTaskStatusEnum.RECEIVED]: 'Получено',
       },
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Звонок | Звонки',
         [WebitelContactsTimelineEventType.Chat]: 'Чат | Чаты',
         [WebitelContactsTimelineEventType.Email]: 'Письмо | Письма',
+      },
+      emails: {
+        to: 'Кому',
+        cc: 'CC',
+        subject: 'Тема',
       },
     },
     communications: {

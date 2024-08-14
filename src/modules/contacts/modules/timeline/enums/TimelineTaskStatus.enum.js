@@ -8,6 +8,8 @@ const TimelineTaskStatus = Object.freeze({
   MISSED: 'missed',
   TRANSFERRED: 'transferred',
   ENDED: 'ended',
+  SENT: 'sent',
+  RECEIVED: 'received',
 });
 
 export default TimelineTaskStatus;
