@@ -1,13 +1,13 @@
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
-} from '@webitel/ui-sdk/src/api/defaults';
+} from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
   merge, notify, snakeToCamel,
   starToSearch, log, sanitize,
   generateUrl, mergeEach,
-} from '@webitel/ui-sdk/src/api/transformers';
+} from '@webitel/ui-sdk/src/api/transformers/index.js';
 import instance from '../../../../../app/api/instance';
 
 const baseUrl = '/roles';

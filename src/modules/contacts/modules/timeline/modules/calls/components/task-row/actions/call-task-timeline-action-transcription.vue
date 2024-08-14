@@ -10,8 +10,8 @@
       {{ t('contacts.timeline.actions.transcription') }}
     </wt-tooltip>
 
-    <call-task-timeline-action-transcription-popup
-      v-if="showPopup"
+    <task-timeline-transcription-popup
+      :shown="showPopup"
       :transcripts="transcripts"
       :created-at="createdAt"
       @close="closePopup"
@@ -22,7 +22,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import CallTaskTimelineActionTranscriptionPopup from './call-task-timeline-action-transcription-popup.vue';
+import TaskTimelineTranscriptionPopup from './task-timeline-transcription-popup.vue';
 
 const props = defineProps({
   transcripts: {
@@ -31,7 +31,7 @@ const props = defineProps({
   },
   createdAt: {
     type: String,
-  }
+  },
 })
 
 const { t } = useI18n();

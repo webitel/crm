@@ -1,15 +1,15 @@
 <template>
   <wt-popup
     v-bind="$attrs"
-    class="call-task-timeline-action-transcription-popup"
-    :min-width="720"
+    :shown="shown"
+    class="task-timeline-transcription-popup"
     @close="$emit('close')"
   >
     <template #title>
       {{ t('contacts.timeline.actions.transcription') }}
     </template>
     <template #main>
-      <div class="call-task-timeline-action-transcription-popup__options">
+      <div class="task-timeline-transcription-popup__options">
         <wt-select
           :value="activeTranscript"
           :clearable="false"
@@ -25,7 +25,7 @@
         />
       </div>
       <wt-loader v-show="isLoading" />
-      <div class="call-task-timeline-action-transcription-popup__table">
+      <div class="task-timeline-transcription-popup__table">
         <wt-table
           v-show="!isLoading"
           :data="phraseData"
@@ -50,7 +50,11 @@ const props = defineProps({
   },
   createdAt: {
     type: String,
-  }
+  },
+  shown: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const { t } = useI18n();
@@ -130,16 +134,13 @@ watch(() => activeTranscript.value, (value) => {
 </script>
 
 <style lang="scss" scoped>
-.call-task-timeline-action-transcription-popup {
+.task-timeline-transcription-popup {
   &__options {
     display: flex;
     align-items: flex-end;
+    gap: var(--spacing-sm);
     justify-content: space-between;
     margin-bottom: var(--spacing-sm);
-
-    .wt-select {
-      width: 220px;
-    }
   }
 
   &__table {
