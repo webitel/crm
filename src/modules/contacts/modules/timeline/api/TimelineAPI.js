@@ -1,7 +1,7 @@
 import applyTransform, {
   merge, notify,
   sanitize, snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers';
+} from '@webitel/ui-sdk/src/api/transformers/index.js';
 import deepCopy from 'deep-copy';
 import { TimelineApiFactory, WebitelContactsTimelineEventType } from 'webitel-sdk';
 import getDefaultGetListResponse
