@@ -5,6 +5,12 @@
       :files="task.files"
     />
 
+    <call-task-timeline-action-transcription
+      v-if="task.transcripts"
+      :created-at="task.createdAt"
+      :transcripts="task.transcripts"
+    />
+
     <call-task-timeline-action-history-link
       :id="task.id"
     />
@@ -13,6 +19,7 @@
 <script setup>
 import CallTaskTimelineActionHistoryLink from './call-task-timeline-action-history-link.vue';
 import CallTaskTimelineActionPlayRecording from './call-task-timeline-action-play-recording.vue';
+import CallTaskTimelineActionTranscription from './call-task-timeline-action-transcription.vue';
 
 const props = defineProps({
   task: {
