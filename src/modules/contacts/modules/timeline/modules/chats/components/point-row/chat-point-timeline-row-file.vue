@@ -5,7 +5,7 @@
       />
       <span
         class="chat-point-timeline-row-file__name"
-        @click="downloadFile({ id: file?.id, name: file?.name })"
+        @click="downloadFile({ id: file?.id, name: file?.name, type: file?.type })"
       >{{ props.file.name }}</span>
     </div>
 </template>
