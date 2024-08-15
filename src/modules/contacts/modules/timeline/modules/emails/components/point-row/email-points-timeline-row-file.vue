@@ -13,7 +13,7 @@
     <wt-icon-btn
       icon="download"
       class="email-points-timeline-row-file__icon"
-      @click="downloadFile({ id: file?.id, name: file?.name })"
+      @click="downloadFile({ id: file?.id, name: file?.name, type: file?.mime })"
     ></wt-icon-btn>
 
   </div>
