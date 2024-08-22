@@ -14,26 +14,27 @@
     </div>
 
     <timeline-row-dropdown-transition>
-      <div v-if="opened">
-        <email-point-timeline-row-subject
-          v-if="task?.subject"
+      <div>
+        <email-point-timeline-row-content
+          v-if="task?.subject || task?.body"
           :subject="task.subject"
+          :body="task.body"
+          :opened="opened"
         />
 
-        <email-points-timeline-row-files-container
-          v-if="task.attachments?.length"
+        <email-point-timeline-row-files-container
+          v-if="task.attachments?.length && opened"
           :files="task.attachments"
         />
       </div>
-
     </timeline-row-dropdown-transition>
   </section>
 </template>
 <script setup>
 import { ref } from 'vue';
 import EmailTaskTimelineHeader from '../task-row/email-task-timeline-header.vue';
-import EmailPointTimelineRowSubject from './email-point-timeline-row-subject.vue';
-import EmailPointsTimelineRowFilesContainer from './email-points-timeline-row-files-container.vue';
+import EmailPointTimelineRowContent from './email-point-timeline-row-content.vue';
+import EmailPointTimelineRowFilesContainer from './email-point-timeline-row-files-container.vue';
 import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';
 
 const props = defineProps({

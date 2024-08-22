@@ -3,7 +3,7 @@
     <wt-divider />
 
     <div class="email-point-timeline-row-files-container__wrapper">
-      <email-points-timeline-row-file
+      <email-point-timeline-row-file
         v-for="file of files"
         :key="file.id"
         :file="file"
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import EmailPointsTimelineRowFile from './email-points-timeline-row-file.vue';
+import EmailPointTimelineRowFile from './email-point-timeline-row-file.vue';
 
 const props = defineProps({
   files: {
