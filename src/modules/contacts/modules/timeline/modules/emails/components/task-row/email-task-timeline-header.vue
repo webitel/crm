@@ -56,8 +56,8 @@ const props = defineProps({
 
 const { t } = useI18n();
 
-const hiddenRecipients = computed(() => props.task.to.slice(0, -1));
-const hiddenCopyRecipients = computed(() => props.task.cc.slice(0, -1));
+const hiddenRecipients = computed(() => props.task.to.length > 1 && props.task.to.slice(1));
+const hiddenCopyRecipients = computed(() => props.task.cc.length > 1 && props.task.cc.slice(1));
 </script>
 
 <style scoped lang="scss">
