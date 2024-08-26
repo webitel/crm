@@ -18,7 +18,7 @@
     <template #option="{ text, id }">
       <div class="call-task-timeline-action-play-recording__option">
         <wt-icon
-          :icon="id === currentlyPlaying ? 'stop' : 'play'"
+          :icon="id === audioId ? 'stop' : 'play'"
         />
         {{ text }}
       </div>
@@ -27,10 +27,12 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, onUnmounted } from 'vue';
-import { usePlayMedia } from '../../../../../../../../../app/composables/usePlayMedia.js';
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
+import generateMediaURL from '../../../../../../../../../app/scripts/generateMediaURL.js';
 
 const eventBus = inject('$eventBus');
+const audioId = inject('audioId'); // value from the-timeline.vue component
+// [https://webitel.atlassian.net/browse/WTEL-4931]
 
 const props = defineProps({
   files: {
@@ -39,32 +41,41 @@ const props = defineProps({
   },
 });
 
-const {
-  audioURL,
-  currentlyPlaying,
-  play,
-  closePlayer,
-} = usePlayMedia();
+const currentFileId = ref(''); // local value
+const audioURL = ref('');
 
 const isAnyFilesPlaying = computed(() => {
-  return props.files.some((file) => file.id === currentlyPlaying.value);
+  return props.files.some((file) => file.id === audioId.value);
 });
 
 const contextOptions = computed(() => {
   return props.files.map(({ name, id }) => ({ text: name, id }));
 });
 
-const handleOptionSelect = ({ option }) => {
-  if (currentlyPlaying.value === option.id) {
-    closePlayer();
+const closePlayer = () => {
+  currentFileId.value = '';
+  audioURL.value = '';
+};
+
+const openPlayer = (id) => {
+  if (id) {
+    currentFileId.value = id;
+    audioURL.value = generateMediaURL(id);
   } else {
-    play(option.id);
-    if(audioURL.value) eventBus.$emit('play-audio', audioURL.value);
+    closePlayer();
   }
 };
 
-onMounted(() => eventBus.$on('close-player', closePlayer));
+const handleOptionSelect = ({ option }) => {
+  if (currentFileId.value === option.id) {
+    closePlayer();
+  } else {
+    openPlayer(option.id);
+  }
+  eventBus.$emit('audio-handler', { url: audioURL.value, id: currentFileId.value});
+};
 
+onMounted(() => eventBus.$on('close-player', closePlayer));
 
 onUnmounted(() => eventBus.$off('close-player', closePlayer));
 

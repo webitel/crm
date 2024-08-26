@@ -70,9 +70,12 @@ const props = defineProps({
   },
 });
 const audioURL = ref(null);
+const audioId = ref('');
+
 const timelineNamespace = `${props.namespace}/timeline`;
 
 provide('namespace', timelineNamespace);
+provide('audioId', audioId);
 
 const store = useStore();
 const eventBus = inject('$eventBus');
@@ -87,6 +90,7 @@ const next = computed(() => getNamespacedState(store.state, timelineNamespace).n
 function closePlayer() {
   eventBus.$emit('close-player');
   audioURL.value = '';
+  audioId.value = '';
 }
 
 function initializeList() {
@@ -116,9 +120,10 @@ async function loadNext() {
 }
 
 onMounted(() => {
-  return eventBus.$on('play-audio', (url) => {
-    if(!url) return;
+  return eventBus.$on('audio-handler', ({ url, id }) => {
+    if(!url || !id) return closePlayer();
     audioURL.value = url;
+    audioId.value = id;
   });
 });
 
@@ -132,7 +137,7 @@ onUnmounted(() => {
 
   store.dispatch(`${timelineNamespace}/RESET_STATE`);
 
-  eventBus.$off('play-audio');
+  eventBus.$off('audio-handler');
 });
 </script>
 
