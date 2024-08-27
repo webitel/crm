@@ -1,8 +1,6 @@
-import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   notify,
   snakeToCamel,
-  merge,
   camelToSnake,
   generateUrl,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
@@ -18,9 +16,7 @@ const getList = async (params) => {
       };
     });
   };
-
   const url = applyTransform(params, [
-    merge(getDefaultGetParams()),
     camelToSnake(),
     generateUrl(`contacts/${params.parentId}/chat/${params.taskId}/messages`),
   ]);
