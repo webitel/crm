@@ -67,7 +67,7 @@ const openPlayer = (id) => {
 };
 
 const handleOptionSelect = ({ option }) => {
-  if (currentFileId.value === option.id) {
+  if (audioId.value === option.id) {
     closePlayer();
   } else {
     openPlayer(option.id);
