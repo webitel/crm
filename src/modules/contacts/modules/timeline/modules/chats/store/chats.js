@@ -5,8 +5,8 @@ import MessageHistoryAPI from '@webitel/ui-sdk/src/api/crm/contactChatMessagesHi
 const chats = new TimelineTaskPointsModule({
   apiModule: {
     getList: ({ taskId, parentId }) => MessageHistoryAPI.getList({
-      taskId,
-      parentId,
+      contactId: parentId,
+      chatId: taskId,
     }),
   },
 })
