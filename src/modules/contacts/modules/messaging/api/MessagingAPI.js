@@ -18,7 +18,6 @@ const getList = async (params) => {
     size,
     q,
     sort,
-    fields,
     id,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
@@ -31,7 +30,6 @@ const getList = async (params) => {
       size,
       q,
       sort,
-      ['etag', ...fields],
       id,
     );
     const { data, next } = applyTransform(response.data, [

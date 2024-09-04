@@ -37,6 +37,9 @@
         <template #app="{ item }">
           {{ item.app.name }}
         </template>
+        <template #user="{ item }">
+          {{ item.user.name }}
+        </template>
         <template #actions="{ item }">
           <wt-icon-action
             :disabled="!access.hasRbacEditAccess"

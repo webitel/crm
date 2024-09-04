@@ -20,4 +20,11 @@ export default [
     field: 'app',
     sort: SortSymbols.NONE,
   },
+  {
+    value: 'user',
+    locale: 'contacts.communications.messaging.username',
+    show: true,
+    field: 'user',
+    sort: SortSymbols.NONE,
+  },
 ];

@@ -57,6 +57,7 @@ export default {
       messaging: {
         gateway: 'Шлюз',
         provider: 'Провайдер',
+        username: 'Имя пользователя',
         dummy: 'Пока еще не было текстовых диалогов',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
