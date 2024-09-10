@@ -1,6 +1,7 @@
 import FiltersStoreModule
   from '@webitel/ui-sdk/src/modules/Filters/store/FiltersStoreModule';
-import SearchMode from '../enums/SearchMode.enum';
+import ContactsSearchMode
+  from '@webitel/ui-sdk/src/api/crm/enums/ContactsSearchMode.js';
 
 const filtersList = [
   {
@@ -17,19 +18,19 @@ const filtersList = [
     name: 'sort',
   },
   {
-    name: SearchMode.NAME,
+    name: ContactsSearchMode.NAME,
   },
   {
-    name: SearchMode.LABELS,
+    name: ContactsSearchMode.LABELS,
   },
   {
-    name: SearchMode.ABOUT,
+    name: ContactsSearchMode.ABOUT,
   },
   {
-    name: SearchMode.VARIABLES,
+    name: ContactsSearchMode.VARIABLES,
   },
   {
-    name: SearchMode.DESTINATION,
+    name: ContactsSearchMode.DESTINATION,
   },
 ];
 
