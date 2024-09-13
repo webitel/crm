@@ -1,12 +1,21 @@
 @import '@webitel/ui-sdk/src/css/main';
+@import './objects/table-page';
+@import './objects/objects';
 
 //disables scrollbar on 100vh auth on small laptops
 body {
+  @extend %wt-scrollbar;
   @extend %typo-body-1;
   display: flex;
   min-width: 100%;
   min-height: 100%;
   color: var(--text-main-color);
+  background: var(--wt-page-wrapper-background-color);
+}
+
+#app {
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .wt-page-wrapper {
@@ -25,6 +34,7 @@ body {
 .table-wrapper {
   flex-grow: 1;
   display: flex;
+  padding-top: var(--spacing-xs);
   flex-direction: column;
   gap: var(--spacing-xs);
   max-height: 100%;
@@ -69,4 +79,75 @@ h1, h2, h3, h4, h5, h6, p {
 a {
   text-decoration: none;
   color: #000;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+// helper class
+.no-padding {
+  padding: 0;
+}
+
+.box-shadow {
+  //box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 3px 16px rgba(0, 0, 0, 0.12), 0px 9px 12px rgba(0, 0, 0, 0.14);
+  box-shadow: rgba(0, 0, 0, 0.08) 0 8px 18px;
+}
+
+.icon-action {
+  cursor: pointer;
+
+  &:before {
+    transition: var(--transition);
+  }
+
+  &:hover:before {
+    color: #000;
+  }
+}
+
+// helper underline class
+.border-underline {
+  position: relative;
+
+  &:before {
+    position: absolute;
+    right: 0;
+    bottom: 6px;
+    left: 0;
+    height: 1px;
+    content: '';
+  }
+}
+
+$scrollbar-bg-color: #EAEAEA;
+$srollbar-thumb-color: var(--primary-color);
+$srollbar-border-radius: 4px;
+
+.scrollbar {
+  // scrollbar itself
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 6px;
+    cursor: pointer;
+    background-color: $scrollbar-bg-color;
+  }
+
+  // scrollable element
+  &::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 6px;
+    border-radius: $srollbar-border-radius;
+    background-color: $srollbar-thumb-color;
+  }
+}
+
+.hidden {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.value-pair-wrap {
+  position: relative;
 }
