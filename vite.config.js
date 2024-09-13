@@ -56,6 +56,11 @@ export default ({ mode }) => {
       alias: {
         vue: 'vue',
       },
+      server: {
+        deps: {
+          inline: ['@webitel/ui-sdk'],
+        },
+      },
       coverage: {
         enabled: true,
         reporter: 'json',

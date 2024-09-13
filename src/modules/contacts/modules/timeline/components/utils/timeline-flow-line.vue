@@ -18,6 +18,7 @@ const props = defineProps({
       'secondary',
       'chat',
       'transfer',
+      'email',
     ].includes(v),
   },
 });
@@ -53,6 +54,10 @@ const props = defineProps({
 
   &--error {
     background-color: var(--error-color);
+  }
+
+  &--email {
+    background-color: var(--email-color);
   }
 }
 </style>

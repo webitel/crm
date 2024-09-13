@@ -4,16 +4,15 @@
         :icon="icon"
       />
       <span
-        @click="download"
         class="chat-point-timeline-row-file__name"
+        @click="downloadFile({ id: file?.id, name: file?.name, type: file?.type })"
       >{{ props.file.name }}</span>
     </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import downloadFile from '../../../../utils/downloadFile.js';
 
 const props = defineProps({
   file: {
@@ -28,15 +27,6 @@ const icon = computed(() => {
   if (props.file.type.includes('audio')) return 'preview-tag-audio';
   return 'attach';
 })
-
-function download() {
-  const a = document.createElement('a');
-  const token = localStorage.getItem('access-token');
-  a.href = `${API_URL}/storage/file/${props.file.id}/download?access_token=${token}`;
-  a.target = '_blank';
-  a.download = props.file.name;
-  a.click();
-}
 </script>
 
 <style scoped lang="scss">

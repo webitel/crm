@@ -28,11 +28,18 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Пропущений',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
         [TimelineTaskStatusEnum.ENDED]: 'Кінець',
+        [TimelineTaskStatusEnum.SENT]: 'Надіслано',
+        [TimelineTaskStatusEnum.RECEIVED]: 'Отримано',
       },
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Дзвінок | Дзвінки',
         [WebitelContactsTimelineEventType.Chat]: 'Чат | Чати',
         [WebitelContactsTimelineEventType.Email]: 'Лист | Листи',
+      },
+      emails: {
+        to: 'Кому',
+        cc: 'CC',
+        subject: 'Тема',
       },
     },
     communications: {
@@ -53,6 +60,7 @@ export default {
       messaging: {
         gateway: 'Шлюз',
         provider: 'Провайдер',
+        username: 'Ім\'я користувача',
         dummy: 'Поки ще не було текстових діалогів',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',

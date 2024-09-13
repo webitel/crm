@@ -20,7 +20,7 @@ export default {
       timeline: 'Timeline',
       actions: {
         openInHistory: 'Open in history',
-        playRecording: 'Play Recording',
+        playRecording: 'Play recording',
         transcription: 'Transcription',
       },
       status: {
@@ -28,11 +28,18 @@ export default {
         [TimelineTaskStatusEnum.MISSED]: 'Missed',
         [TimelineTaskStatusEnum.TRANSFERRED]: 'Transferred',
         [TimelineTaskStatusEnum.ENDED]: 'Ended',
+        [TimelineTaskStatusEnum.SENT]: 'Sent',
+        [TimelineTaskStatusEnum.RECEIVED]: 'Received',
       },
       eventType: {
         [WebitelContactsTimelineEventType.Call]: 'Call | Calls',
         [WebitelContactsTimelineEventType.Chat]: 'Chat | Chats',
         [WebitelContactsTimelineEventType.Email]: 'Email | Emails',
+      },
+      emails: {
+        to: 'To',
+        cc: 'CC',
+        subject: 'Subject',
       },
     },
     communications: {
@@ -53,6 +60,7 @@ export default {
       messaging: {
         gateway: 'Gateway',
         provider: 'Provider ',
+        username: 'Username',
         dummy: 'There are no messaging options yet',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',

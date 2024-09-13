@@ -11,6 +11,9 @@ const TimelineTaskKind = Object.freeze({
   CHAT_INBOUND: 'CHAT_INBOUND',
   // CHAT_OUTBOUND: 'CHAT_OUTBOUND',
   CHAT_ENDED: 'CHAT_ENDED',
+
+  EMAIL_INBOUND: 'EMAIL_INBOUND',
+  EMAIL_OUTBOUND: 'EMAIL_OUTBOUND',
 });
 
 export default TimelineTaskKind;

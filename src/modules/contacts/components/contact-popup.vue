@@ -151,13 +151,15 @@ async function loadItem(id = props.id) {
   draft.value = await ContactsAPI.get({ itemId: id });
 }
 
-watch(() => props.shown, () => {
-  if (props.id) loadItem(props.id);
-  else {
-    draft.value = generateNewDraft();
-    setDefaultManager();
+watch(() => props.shown, (value) => {
+  if(value) {
+    if (props.id) loadItem(props.id);
+    else {
+      draft.value = generateNewDraft();
+      setDefaultManager();
+    }
   }
-}, { immediate: true });
+});
 </script>
 
 <style lang="scss" scoped>

@@ -62,17 +62,17 @@
             <div class="username-wrapper">
               <wt-avatar
                 size="sm"
-                :username="item.name.commonName"
+                :username="item.name"
               />
               <wt-item-link
                 :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.id } }"
               >
-                {{ item.name.commonName }}
+                {{ item.name }}
               </wt-item-link>
             </div>
           </template>
           <template #managers="{ item }">
-            {{ item.managers?.data[0].user.name }}
+            {{ item.managers[0]?.user.name }}
           </template>
           <template #labels="{ item }">
             <div
@@ -80,7 +80,7 @@
               class="contacts-labels-wrapper"
             >
               <wt-chip
-                v-for="({ label, id }) of item.labels.data"
+                v-for="({ label, id }) of item.labels"
                 :key="id"
               >
                 {{ label }}
@@ -125,6 +125,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
+import ContactsSearchMode from '@webitel/ui-sdk/src/api/crm/enums/ContactsSearchMode.js';
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -132,7 +133,6 @@ import { useStore } from 'vuex';
 import dummyDark from '../../../app/assets/dummy-dark.svg';
 import dummyLight from '../../../app/assets/dummy-light.svg';
 import { useAccess } from '../../../app/composables/useAccess';
-import SearchMode from '../modules/filters/enums/SearchMode.enum.js';
 import ContactPopup from './contact-popup.vue';
 
 const baseNamespace = 'contacts';
@@ -206,25 +206,25 @@ const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));
 
 const searchModeOpts = computed(() => [
   {
-    value: SearchMode.NAME,
+    value: ContactsSearchMode.NAME,
     text: t('reusable.name'),
   },
   {
-    value: SearchMode.LABELS,
+    value: ContactsSearchMode.LABELS,
     text: t('vocabulary.labels', 1),
   },
   {
-    value: SearchMode.ABOUT,
+    value: ContactsSearchMode.ABOUT,
     text: t('vocabulary.description'),
   },
   {
-    value: SearchMode.VARIABLES,
+    value: ContactsSearchMode.VARIABLES,
     text: t('contacts.attributes', 1),
     hint: t('webitelUI.searchBar.variableSearchHint'),
     v: { variableSearchValidator },
   },
   {
-    value: SearchMode.DESTINATION,
+    value: ContactsSearchMode.DESTINATION,
     text: t('contacts.destination'),
   },
 ]);
