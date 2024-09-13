@@ -18,6 +18,9 @@ import TheStartPage
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 
+import ContactGroupsRoutes from "../../modules/lookups/modules/contact-groups/modules/cgroups/router/contact-groups.js";
+
+
 import store from '../store';
 
 const checkAppAccess = (to, from, next) => {
@@ -117,6 +120,7 @@ const routes = [
           },
         ],
       },
+      ...ContactGroupsRoutes,
     ],
   },
   {

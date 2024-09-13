@@ -4,6 +4,10 @@ import userinfo from '../../modules/userinfo/store/userinfo';
 import appearance from '../../modules/appearance/store/appearance';
 import instance from '../api/instance';
 
+import cgroups from '../../modules/lookups/modules/contact-groups/store/cgroups';
+import permissions from '../../modules/permissions/store/permissions';
+// import routing from '../../modules/routing/store/routing';
+
 export default createStore({
   state: {
     router: null,
@@ -22,5 +26,9 @@ export default createStore({
     contacts,
     userinfo,
     appearance,
+
+    cgroups,
+    permissions,
+    // routing
   },
 });
