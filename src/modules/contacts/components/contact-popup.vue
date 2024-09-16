@@ -12,12 +12,12 @@
     <template #main>
       <form class="contact-popup-form">
         <wt-input
-          :value="draft.name.commonName"
+          :value="draft.name"
           :label="t('reusable.name')"
-          :v="v$.draft.name.commonName"
+          :v="v$.draft.name"
           required
           prevent-trim
-          @input="draft.name.commonName = $event"
+          @input="draft.name = $event"
         />
         <wt-select
           :value="draft.timezones[0]?.timezone"
@@ -94,9 +94,7 @@ const store = useStore();
 const userinfo = computed(() => store.state.userinfo);
 
 const generateNewDraft = () => ({
-  name: {
-    commonName: '',
-  },
+  name: '',
   timezones: [],
   managers: [],
   labels: [],
@@ -108,9 +106,7 @@ const draft = ref(generateNewDraft());
 
 const v$ = useVuelidate(computed(() => ({
   draft: {
-    name: {
-      commonName: { required },
-    },
+    name: { required },
   },
 })), { draft }, { $autoDirty: true });
 

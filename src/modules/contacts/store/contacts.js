@@ -18,9 +18,7 @@ import variables from '../modules/variables/store/variables';
 
 const cardState = {
   itemInstance: {
-    name: {
-      commonName: '',
-    },
+    name: '',
     timezones: [],
     managers: [],
     labels: [],
