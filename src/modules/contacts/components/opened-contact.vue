@@ -32,7 +32,7 @@
         />
         <div class="opened-contact-content">
           <opened-contact-general
-            :common-name="itemInstance.name ? itemInstance.name.commonName : ''"
+            :name="itemInstance.name"
             :timezones="itemInstance.timezones ? itemInstance.timezones : []"
             :managers="itemInstance.managers ? itemInstance.managers : []"
             :about="itemInstance.about"
@@ -108,7 +108,7 @@ const path = computed(() => {
     { name: t('crm') },
     { name: t('contacts.contact', 2), route: baseUrl },
     {
-      name: itemInstance.value?.name?.commonName || 'Contact',
+      name: itemInstance.value?.name || 'Contact',
       route: `/contacts/${id.value}`,
     },
   ];

@@ -29,11 +29,11 @@
 
     <wt-avatar
       size="3xl"
-      :username="commonName"
+      :username="name"
     />
 
     <p class="opened-contact-general-name">
-      {{ commonName }}
+      {{ name }}
     </p>
 
     <wt-divider />
@@ -103,9 +103,9 @@ import { useI18n } from 'vue-i18n';
 const access = inject('access');
 
 const props = defineProps({
-  commonName: {
+  name: {
     type: String,
-    required: true,
+    default: ''
   },
   timezones: {
     type: Array,
