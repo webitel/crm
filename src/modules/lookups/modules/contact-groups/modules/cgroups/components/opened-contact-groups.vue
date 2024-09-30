@@ -51,6 +51,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import { useAccess } from '../../../../../../../app/composables/useAccess';
   import ContactGroupsRouteNames from "../router/_internals/ContactGroupsRouteNames.enum.js";
+  import openedContactGroupsGeneral from './opened-contact-groups-general.vue';
   import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
   import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
   import RouteNames from "../../../../../../../app/router/_internals/RouteNames.enum.js";

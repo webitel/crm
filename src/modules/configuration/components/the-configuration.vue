@@ -22,6 +22,8 @@
 <script setup>
   import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
   import { ref, computed, onMounted } from 'vue';
+  import CategoryLvl1 from './_internals/config-category-lvl-1.vue';
+  import CategoryLvl2 from './_internals/config-category-lvl-2.vue';
   import { useI18n } from 'vue-i18n';
   import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
