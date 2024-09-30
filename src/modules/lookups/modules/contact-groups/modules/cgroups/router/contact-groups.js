@@ -7,7 +7,8 @@ const General = () => import("../components/opened-contact-groups-general.vue");
 const Permissions = () => import("../../../../../../_shared/permissions-tab/components/permissions-tab.vue");
 
 import {checkRouteAccess} from "../../../../../../../app/router/_internals/guards.js";
-
+import ContactPermissions
+  from '../../../../../../contacts/modules/permissions/components/the-permissions.vue';
 
 const ContactGroupsRoutes = [
   {
@@ -30,7 +31,7 @@ const ContactGroupsRoutes = [
       },{
         path: 'permissions/:permissionId?',
         name: ContactGroupsRouteNames.PERMISSIONS,
-        component: Permissions,
+        component: ContactPermissions,
       }
     ],
   },

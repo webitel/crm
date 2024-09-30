@@ -24,10 +24,10 @@
   </ul>
 </template>
 
-<script>
-export default {
-  name: 'StartCategoryLvl1',
-  props: {
+<script setup>
+  import { defineProps, defineEmits } from 'vue';
+
+  const props = defineProps({
     categories: {
       type: Array,
       default: () => [],
@@ -36,13 +36,13 @@ export default {
       type: Object,
       default: () => ({}),
     },
-  },
-  methods: {
-    select(category) {
-      this.$emit('select', category);
-    },
-  },
-};
+  });
+
+  const emit = defineEmits(['select']);
+
+  function select(category) {
+    emit('select', category);
+  }
 </script>
 
 <style lang="scss" scoped>

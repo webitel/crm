@@ -4,21 +4,13 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: 'start-page-card',
-    props: {
-      image: {
-        type: Object,
-        required: true,
-      },
+<script setup>
+  const props = defineProps({
+    image: {
+      type: Object,
+      required: true,
     },
-    methods: {
-      open() {
-        this.$router.push(this.card.route);
-      },
-    },
-  };
+  });
 </script>
 
 <style lang="scss" scoped>

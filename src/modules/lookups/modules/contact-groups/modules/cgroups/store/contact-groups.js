@@ -30,15 +30,10 @@ const permissions = new PermissionsStoreModule()
   .generateAPIActions(PERMISSIONS_API_URL)
   .getModule();
 
-const history = new HistoryStoreModule()
-  .generateGetListAction(ContactGroupsAPI.getAgentHistory)
-  .getModule();
-
 const contactGroups = new ObjectStoreModule({ resettableState, headers })
   .attachAPIModule(ContactGroupsAPI)
   .generateAPIActions()
   .setChildModules({
-    history,
     permissions,
   })
   .getModule({ actions });

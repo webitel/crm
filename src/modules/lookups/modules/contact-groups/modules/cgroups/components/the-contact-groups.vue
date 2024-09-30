@@ -4,7 +4,7 @@
       <wt-page-header
         hidePrimary
         :secondary-action="goBack"
-        :secondary-text="$t('close')"
+        :secondary-text="t('close')"
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -13,38 +13,39 @@
     <template #main>
       <delete-confirmation-popup
         :shown="isDeleteConfirmationPopup"
-        :delete-count="deleteCount"
         :callback="deleteCallback"
+        :delete-count="deleteCount"
         @close="closeDelete"
       />
 
       <section class="main-section__wrapper">
         <header class="main-section-header">
           <h3 class="content-title">
-            {{ $t('lookups.contactGroups.groups') }}
+            {{ t('lookups.contactGroups.groups') }}
           </h3>
           <div class="main-section-header__actions-wrap">
             <wt-search-bar
-              :value="search"
+              :value="q"
               debounce
-              @enter="loadList"
+              @enter="loadData"
               @input="setSearch"
-              @search="loadList"
+              @search="loadData"
               placeholder=" "
             />
-            <wt-table-actions
-              :icons="['refresh']"
-              @input="tableActionsHandler"
-            >
 
-              <wt-icon-action
-                action="add"
-                @click="create"
-                class="add"
-              />
+            <wt-icon-action
+              :disabled="!hasObacEditAccess"
+              action="add"
+              @click="create"
+              class="add"
+            />
+            <wt-icon-action
+              action="refresh"
+              @click="loadData"
+            />
 
               <delete-all-action
-                v-if="hasDeleteAccess"
+                v-if="hasObacDeleteAccess"
                 :disabled="anySelected"
                 :selected-count="selectedRows.length"
                 @click="askDeleteConfirmation({
@@ -53,26 +54,26 @@
                 })"
                 class="delete"
               />
-            </wt-table-actions>
           </div>
         </header>
 
-        <wt-loader v-show="!isLoaded" />
+<!--        <wt-loader v-show="!isLoaded" />-->
+
         <wt-dummy
           v-if="isLoaded && !dataList.length"
           :show-action="dummy.showAction"
-          :text="dummy.text && $t(dummy.text)"
+          :text="dummy.text && t(dummy.text)"
           :dark-mode="darkMode"
           class="dummy-wrapper"
           @create="create"
         />
+
         <div
-          v-show="dataList.length && isLoaded"
+          v-show="dataList.length"
           class="table-wrapper"
         >
           <wt-table
             :data="dataList"
-            :grid-actions="hasTableActions"
             :headers="headers"
             sortable
             @sort="sort"
@@ -94,7 +95,7 @@
                 <wt-icon-action action="edit"/>
               </wt-item-link>
               <wt-icon-action
-                v-if="hasDeleteAccess"
+                v-if="hasObacDeleteAccess"
                 action="delete"
                 class="table-action"
                 @click="askDeleteConfirmation({
@@ -104,15 +105,9 @@
               />
             </template>
           </wt-table>
-          <wt-pagination
-            :next="isNext"
-            :prev="page > 1"
-            :size="size"
-            debounce
-            @change="loadList"
-            @input="setSize"
-            @next="nextPage"
-            @prev="prevPage"
+          <filter-pagination
+            :namespace="filtersNamespace"
+            :is-next="isNext"
           />
         </div>
       </section>
@@ -120,86 +115,221 @@
   </wt-page-wrapper>
 </template>
 
-<script>
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { snakeToCamel } from '@webitel/ui-sdk/src/scripts/caseConverters';
-import { useDummy } from '../../../../../../../app/composables/useDummy';
-import tableComponentMixin from '../../../../../../../app/mixins/objectPagesMixins/objectTableMixin/tableComponentMixin';
-import RouteNames from '../../../../../../../app/router/_internals/RouteNames.enum';
 
-const namespace = 'cgroups/groups';
+<script setup>
+  import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+  import DeleteConfirmationPopup
+    from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+  import {
+    useDeleteConfirmationPopup,
+  } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+  import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+  import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+  import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+  import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+  import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
+  import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
+  import ContactsSearchMode from '@webitel/ui-sdk/src/api/crm/enums/ContactsSearchMode.js';
+  import { computed, onUnmounted, ref } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRouter } from 'vue-router';
+  import { useStore } from 'vuex';
+  import dummyDark from '../../../../../../../app/assets/dummy-dark.svg';
+  import dummyLight from '../../../../../../../app/assets/dummy-light.svg';
+  import { useAccess } from '../../../../../../../app/composables/useAccess';
+  // import ContactPopup from './contact-popup.vue';
+  import RouteNames from '../../../../../../../app/router/_internals/RouteNames.enum';
+  import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 
-export default {
-  name: 'TheContactGroups',
-  components: { DeleteConfirmationPopup },
-  mixins: [tableComponentMixin],
+  const baseNamespace = 'cgroups';
 
-  setup() {
-    const { dummy } = useDummy({
-      namespace,
-      showAction: true,
-    });
-    const {
-      isVisible: isDeleteConfirmationPopup,
-      deleteCount,
-      deleteCallback,
+  const { t } = useI18n();
+  const router = useRouter();
 
-      askDeleteConfirmation,
-      closeDelete,
-    } = useDeleteConfirmationPopup();
+  const store = useStore();
+
+  const {
+    hasObacCreateAccess,
+    hasObacEditAccess,
+    hasObacDeleteAccess,
+  } = useAccess();
+
+  const {
+    isVisible: isDeleteConfirmationPopup,
+    deleteCount,
+    deleteCallback,
+
+    askDeleteConfirmation,
+    closeDelete,
+  } = useDeleteConfirmationPopup();
+
+  const {
+    namespace,
+
+    dataList,
+    selected,
+    q,
+    isLoading,
+    headers,
+    isNext,
+    error,
+
+    loadData,
+    deleteData,
+    sort,
+    setSelected,
+    setSearch,
+    onFilterEvent,
+  } = useTableStore(baseNamespace);
+
+  const {
+    namespace: filtersNamespace,
+    restoreFilters,
+
+    subscribe,
+    flushSubscribers,
+  } = useTableFilters(namespace);
+
+  const {
+    setId,
+    resetState,
+    deleteItem,
+  } = useCardStore(baseNamespace);
+
+
+  subscribe({
+    event: '*',
+    callback: onFilterEvent,
+  });
+
+  restoreFilters();
+
+  onUnmounted(() => {
+    flushSubscribers();
+  });
+
+  const routeName = ref(`${RouteNames.CONTACT_GROUPS}`);
+  const isContactPopup = ref(false);
+  const editedContactId = ref(null);
+
+  const path = computed(() => [
+    {
+      name: t('crm'),
+      route: '/start-page',
+    },
+    {
+      name: t('lookups.contactGroups.configurations'),
+      route: '/configuration',
+    },
+    {
+      name: t('lookups.lookups'),
+    },
+    {
+      name: t('lookups.contactGroups.contactGroups'),
+      route: '/lookups/contact-groups',
+    },
+  ]);
+  const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
+  const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));
+
+  const searchModeOpts = computed(() => [
+    {
+      value: ContactsSearchMode.NAME,
+      text: t('reusable.name'),
+    },
+    {
+      value: ContactsSearchMode.LABELS,
+      text: t('vocabulary.labels', 1),
+    },
+    {
+      value: ContactsSearchMode.ABOUT,
+      text: t('vocabulary.description'),
+    },
+    {
+      value: ContactsSearchMode.VARIABLES,
+      text: t('contacts.attributes', 1),
+      hint: t('webitelUI.searchBar.variableSearchHint'),
+      v: { variableSearchValidator },
+    },
+    {
+      value: ContactsSearchMode.DESTINATION,
+      text: t('contacts.destination'),
+    },
+  ]);
+  const anySelected = computed(() => {
+    return !selectedRows.value.length;
+  });
+  const selectedRows = computed(() => {
+    return dataList.value.filter((item) => item._isSelected);
+  });
+
+  // we need to check if there's any filters which actually filter data before showing "no data" dummy
+
+  // [WTEL-3776]
+  // display different images when no contacts have been created yet (default img)
+  // and when the filter didn't produce results
+  const dummy = computed(() => {
+    if (dataList.value.length) return false;
+    const filters = store.getters[`${filtersNamespace}/_STATE_FILTER_NAMES`];
+    const defaultFilters = ['page', 'size', 'sort', 'fields'];
+    const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
+      if (defaultFilters.includes(filter)) return dynamic;
+      return {
+        ...dynamic,
+        [filter]: filters[filter],
+      };
+    }, {});
+    const isEmptyFilters = isEmpty(dynamicFilters);
 
     return {
-      dummy,
-      isDeleteConfirmationPopup,
-      deleteCount,
-      deleteCallback,
-
-      askDeleteConfirmation,
-      closeDelete,
+      src: isEmptyFilters ? '' : dummyPic.value,
+      text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
     };
-  },
+  });
 
-  data: () => ({
-    namespace,
-    routeName: `${RouteNames.CONTACT_GROUPS}`,
-  }),
+  const deletableSelectedItems = computed(() => (
+    selected.value.filter((item) => item.access.delete)
+  ));
 
-  computed: {
-    path() {
-      return [
-        {
-          name: this.$t('crm'),
-          route: '/start-page'
-        },
-        {
-          name: this.$t('lookups.contactGroups.configurations'),
-          route: '/configuration'
-        },
-        {
-          name: this.$t('lookups.lookups'),
-        },
-        {
-          name: this.$t('lookups.contactGroups.contactGroups'),
-          route: '/lookups/contact-groups',
-        },
-      ];
-    },
-  },
+  function create() {
+    resetState();
+    router.push({ name: `${routeName.value}-card`, params: { id: 'new' } });
+  }
 
-  methods: {
-    snakeToCamel,
-    editLink(item) {
-      return {
-        name: item.name,
-        params: { id: item.id },
-      };
-    },
-    goBack(){
-      this.$router.push({ name: `configuration` });
-    }
-  },
-};
+  function edit({ id }) {
+    editedContactId.value = id;
+    isContactPopup.value = true;
+  }
+
+  function saved(id) {
+    return router.push({
+      name: `${CrmSections.CONTACTS}-card`,
+      params: { id },
+    });
+  }
+
+  function closeContactPopup() {
+    isContactPopup.value = false;
+    editedContactId.value = null;
+  }
+
+  function deleteSelectedItems() {
+    return askDeleteConfirmation({
+      deleted: deletableSelectedItems.value,
+      callback: () => deleteData([...deletableSelectedItems.value]),
+    });
+  }
+  function editLink(item) {
+    return {
+      name: item.name,
+      params: { id: item.id },
+    };
+  }
+  function goBack() {
+    router.push({ name: 'configuration' });
+  }
+
+  onUnmounted(() => resetState());
 </script>
 
 <style lang="scss" scoped>

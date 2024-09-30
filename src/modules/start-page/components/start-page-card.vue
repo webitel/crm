@@ -24,22 +24,21 @@
   </article>
 </template>
 
-<script>
+<script setup>
+  import { useRouter } from 'vue-router';
 
-export default {
-  name: 'start-page-card',
-  props: {
+  const props = defineProps({
     card: {
       type: Object,
       required: true,
     },
-  },
-  methods: {
-    open() {
-      this.$router.push(this.card.route);
-    },
-  },
-};
+  });
+
+  const router = useRouter();
+
+  const open = () => {
+    router.push(props.card.route);
+  };
 </script>
 
 <style lang="scss" scoped>

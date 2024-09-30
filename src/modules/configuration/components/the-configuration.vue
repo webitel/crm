@@ -19,54 +19,58 @@
   </section>
 </template>
 
-<script>
-import navMixin from '../../../app/mixins/crm-start-page/navMixin';
-import CategoryLvl1 from './_internals/config-category-lvl-1.vue';
-import CategoryLvl2 from './_internals/config-category-lvl-2.vue';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+<script setup>
+  import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
+  import { ref, computed, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
-export default {
-  name: 'TheConfiguration',
-  components: { CategoryLvl1, CategoryLvl2 },
-  mixins: [navMixin],
-  data: () => ({
-    selected: {},
-  }),
+  const { t } = useI18n();
+  const selected = ref({});
+  const navItems = ref([{
+    value: CrmConfigurationSections.LOOKUPS,
+    route: '/lookups',
+    name: 'Lookups',
+    subNav: [
+      {
+        value: CrmConfigurationSections.CONTACT_GROUPS,
+        name: "Contact groups",
+        route: "contact-groups",
+      },
+    ]
+  }]
+  )
+  const categories = computed(() => {
+    return navItems.value.map((navItem) => ({
+      ...navItem,
+      name: t(`${CrmSections.CONFIGURATION}.${navItem.value}`),
+    }));
+  });
 
-  computed: {
-    categories() {
-      return this.navConfiguration.map((navItem) => ({
-        ...navItem,
-        name: this.$t(`${CrmSections.CONFIGURATION}.${navItem.value}`),
-      }));
-    },
-    subcategories() {
-      if (!this.selected.subNav) return [];
-      return this.selected.subNav.map((subNav) => {
-        const route = `${this.selected.route}/${subNav.route}`;
-        const name = this.$t(`${CrmSections.CONFIGURATION}.${subNav.value}`)
-        return {
-          ...subNav,
-          name,
-          route,
-        };
-      });
-    },
-  },
+  const subcategories = computed(() => {
+    if (!selected.value.subNav) return [];
+    return selected.value.subNav.map((subNav) => {
+      const route = `${selected.value.route}/${subNav.route}`;
+      const name = t(`${CrmSections.CONFIGURATION}.${subNav.value}`);
+      return {
+        ...subNav,
+        name,
+        route,
+      };
+    });
+  });
 
-  mounted() {
-    this.initSelected();
-  },
+  onMounted(() => {
+    initSelected();
+  });
 
-  methods: {
-    initSelected() {
-      this.select(this.categories[0]);
-    },
-    select(category) {
-      this.selected = category;
-    },
-  },
-};
+  function initSelected() {
+    select(categories.value[0]);
+  }
+
+  function select(category) {
+    selected.value = category;
+  }
 </script>
 
 <style lang="scss" scoped>

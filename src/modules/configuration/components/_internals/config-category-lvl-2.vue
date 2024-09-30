@@ -20,16 +20,15 @@
   </ul>
 </template>
 
-<script>
-export default {
-  name: 'StartCategoryLvl2',
-  props: {
+<script setup>
+  import { defineProps } from 'vue';
+
+  const props = defineProps({
     categories: {
       type: Array,
       default: () => [],
     },
-  },
-};
+  });
 </script>
 
 <style lang="scss" scoped>
