@@ -1,7 +1,7 @@
 <template>
   <div class="timeline-row-duration">
     <p class="timeline-row-duration__title">
-      {{ t('vocabulary.duration') }}:
+      {{ isTotalDuration ? t('contacts.timeline.totalDuration') : t('vocabulary.duration') }}:
     </p>
     <span class="timeline-row-duration__value">
       {{ convertedDuration }}
@@ -18,6 +18,10 @@ const props = defineProps({
   duration: {
     type: Number,
     required: true,
+  },
+  isTotalDuration: {
+    type: Boolean,
+    default: false,
   },
 });
 

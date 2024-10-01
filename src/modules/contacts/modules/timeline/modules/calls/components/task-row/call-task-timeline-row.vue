@@ -52,6 +52,12 @@
           :duration="duration"
         />
 
+        <timeline-row-duration
+          v-if="totalDuration"
+          is-total-duration
+          :duration="totalDuration"
+        />
+
         <call-task-timeline-actions
           :task="task"
         />
@@ -104,6 +110,7 @@ const {
   isInbound,
   isMissed,
   duration,
+  totalDuration,
   flowScheme,
   queue,
   id: taskId,

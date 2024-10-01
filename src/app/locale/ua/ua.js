@@ -15,6 +15,7 @@ export default {
     collapseAll: 'Згорнути все',
     timeline: {
       timeline: 'Хронологія',
+      totalDuration: 'Загальна тривалість',
       actions: {
         openInHistory: 'Відкрити в історії',
         playRecording: 'Програти запис',

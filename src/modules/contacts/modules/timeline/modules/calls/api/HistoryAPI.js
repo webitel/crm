@@ -108,6 +108,7 @@ const getList = ({
       score_required: score,
       variables,
       contact_id: contact,
+      timeline: 'true',
     });
     const {
       items,
