@@ -41,7 +41,7 @@ const listHandler = (items) => {
       const response = await timeline.getTimeline(
         parentId,
         `${page || 1}`,
-        `${size || 100}`,
+        `${size || 10}`,
         undefined,
         undefined,
         undefined,

@@ -15,6 +15,7 @@ export default {
     collapseAll: 'Collapse all',
     timeline: {
       timeline: 'Timeline',
+      totalDuration: 'Total duration',
       actions: {
         openInHistory: 'Open in history',
         playRecording: 'Play recording',

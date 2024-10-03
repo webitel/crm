@@ -15,6 +15,7 @@ export default {
     collapseAll: 'Свернуть все',
     timeline: {
       timeline: 'Хронология',
+      totalDuration: 'Общая длительность',
       actions: {
         openInHistory: 'Открыть в истории',
         playRecording: 'Проиграть запись',
