@@ -7,7 +7,10 @@ config.global.plugins = [WebitelUi, i18n];
 
 window.scrollTo = () => {};
 
-vi.doMock('../../src/app/api/instance.js', axiosMock());
+const axios = axiosMock();
+vi.doMock('@webitel/ui-sdk/src/api/axios/generateInstance.js', () => ({
+  default: () => axios().default,
+}));
 
 beforeAll(async () => {
   const store = (await import('../../src/app/store/index.js')).default;
