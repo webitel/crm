@@ -472,6 +472,12 @@ export default {
 
   lookups: {
     lookups: 'Справочники',
+    sources: {
+      caseSources: 'Источники обращений',
+      type: 'Тип'
+    },
+    statuses: 'Statuses',
+
     contactGroups: {
       contactGroups: 'Группы контактов',
       groups: 'Группы',

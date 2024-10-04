@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
 
+import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vitejs.dev/config/
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -24,11 +25,11 @@ export default ({ mode }) => {
         },
       },
     },
-    resolve: {
-      alias: {
-        vue: '@vue/compat/dist/vue.esm-browser.prod.js',
-      },
-    },
+    // resolve: {
+    //   alias: {
+    //     vue: '@vue/compat/dist/vue.esm-browser.prod.js',
+    //   },
+    // },
     plugins: [
       vue({
         template: {
@@ -50,6 +51,7 @@ export default ({ mode }) => {
       createSvgSpritePlugin({
         include: '**/sprite/*.svg',
       }),
+      vueDevTools(),
     ],
     test: {
       globals: true,

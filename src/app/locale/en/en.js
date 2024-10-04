@@ -101,6 +101,8 @@ export default {
   configuration: {
     [CrmConfigurationSections.LOOKUPS]: 'Lookups',
     [CrmConfigurationSections.CONTACT_GROUPS]: 'Contact groups',
+    [CrmConfigurationSections.STATUSES]: 'Statuses',
+    [CrmConfigurationSections.SOURCES]: 'Sources',
   },
 
   validation: {
@@ -465,12 +467,27 @@ export default {
 
   lookups: {
     lookups: 'Lookups',
+    sources: {
+      caseSources: 'Case sources',
+      type:{
+        type: 'Type',
+        call: 'Call',
+        chat: 'Chat',
+        socialMedia: 'Social media',
+        email: 'Email',
+        manual: 'Manual',
+      }
+
+
+    },
+    statuses: 'Statuses',
+
     contactGroups: {
       contactGroups: 'Contact groups',
       groups: 'Groups',
       crm: 'CRM',
       configurations: 'Configurations',
-    }
+    },
   },
 
   errorPages: {

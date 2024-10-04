@@ -5,6 +5,7 @@ import appearance from '../../modules/appearance/store/appearance';
 import instance from '../api/instance';
 
 import cgroups from '../../modules/lookups/modules/contact-groups/store/cgroups';
+import sources from '../../modules/lookups/modules/sources/store/sources';
 import permissions from '../../modules/permissions/store/permissions';
 // import routing from '../../modules/routing/store/routing';
 
@@ -28,6 +29,7 @@ export default createStore({
     appearance,
 
     cgroups,
+    sources,
     permissions,
     // routing
   },

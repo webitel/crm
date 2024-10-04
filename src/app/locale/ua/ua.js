@@ -465,6 +465,11 @@ export default {
 
   lookups: {
     lookups: 'Довідники',
+    sources: {
+      caseSources: 'Джерела звернень',
+      type: 'Тип'
+    },
+    statuses: 'Statuses',
     contactGroups: {
       contactGroups: 'Групи контактів',
       groups: 'Групи',
