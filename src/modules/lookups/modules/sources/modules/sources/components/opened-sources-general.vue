@@ -6,9 +6,6 @@
       </h3>
     </header>
     <div class="object-input-grid object-input-grid__1-col object-input-grid__w50">
-      <pre>
-        {{itemInstance}}
-      </pre>
       <wt-input
         :label="t('objects.name')"
         :value="itemInstance.name.length > 0 ? itemInstance.name : ''"
@@ -23,7 +20,7 @@
         :disabled="false"
         track-by="name"
         :label="t('lookups.sources.type.type')"
-        @input="setItemProp({ prop: 'type', value: $event.name })"
+        @input="setItemProp({ prop: 'type', value: $event.type })"
       />
       <wt-textarea
         :label="t('objects.description')"
@@ -52,8 +49,7 @@
        type: Object,
        required: true,
      },
-   });
-
+ });
 
  const baseNamespace = 'sources';
 
@@ -88,30 +84,35 @@
      },
    })), { itemInstance }, { $autoDirty: true });
 
- const sourcesOptions = ref([
+ const sourcesOptions = computed(() => [
    {
-     name: 'type'
+     name: t('lookups.sources.type.type'),
+     type: 'TYPE',
    },
    {
-     name: 'call'
+     name: t('lookups.sources.type.call'),
+     type: 'CALL',
    },
    {
-     name: 'chat'
+     name: t('lookups.sources.type.chat'),
+     type: 'CHAT',
    },
    {
-     name: 'socialMedia'
+     name: t('lookups.sources.type.socialMedia'),
+     type: 'SOCIALMEDIA',
    },
    {
-     name: 'email'
+     name: t('lookups.sources.type.email'),
+     type: 'EMAIL',
    },
    {
-     name: 'manual'
+     name: t('lookups.sources.type.manual'),
+     type: 'MANUAL',
    },
  ]);
 
- const selectedOption = ref(sourcesOptions.value[0])
-
  function setItemProp(payload) {
+   console.log(payload);
    return store.dispatch(`${namespace}/SET_ITEM_PROPERTY`, payload);
  }
 

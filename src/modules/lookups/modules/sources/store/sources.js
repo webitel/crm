@@ -19,6 +19,7 @@ import variables from '../../../../contacts/modules/variables/store/variables';
 
 const cardState = {
   itemInstance: {
+    id: '',
     name: '',
     description: '',
     type: '',

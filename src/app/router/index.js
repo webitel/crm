@@ -18,7 +18,6 @@ import TheStartPage
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 
-import ContactGroupsRoutes from "../../modules/lookups/modules/contact-groups/modules/cgroups/router/contact-groups.js";
 import SourcesRoutes from "../../modules/lookups/modules/sources/modules/sources/router/sources.js";
 
 
@@ -121,7 +120,6 @@ const routes = [
           },
         ],
       },
-      ...ContactGroupsRoutes,
       ...SourcesRoutes,
     ],
   },

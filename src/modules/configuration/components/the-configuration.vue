@@ -35,11 +35,6 @@
     name: 'Lookups',
     subNav: [
       {
-        value: CrmConfigurationSections.CONTACT_GROUPS,
-        name: "Contact groups",
-        route: "contact-groups",
-      },
-      {
         value: CrmConfigurationSections.SOURCES,
         name: "Sources",
         route: "sources",
