@@ -1,2 +1,0 @@
-import './conf-lookups.svg';
-

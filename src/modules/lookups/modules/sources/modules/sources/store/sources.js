@@ -5,19 +5,9 @@ import headers from './_internals/headers';
 
 const resettableState = {
   itemInstance: {
-    user: {},
-    team: {},
-    supervisor: [],
-    auditor: [],
-    region: {},
-    progressiveCount: 1,
-    chatCount: 1,
-    taskCount: 1,
-    isSupervisor: false,
-    greetingMedia: {},
     name: '',
     description: '',
-    type: '',
+    type: ''
   },
 };
 

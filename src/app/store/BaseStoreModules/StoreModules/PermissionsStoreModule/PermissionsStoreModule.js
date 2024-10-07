@@ -1,7 +1,6 @@
 import BaseStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 import PermissionsAPI from '../../../../../modules/_shared/permissions-tab/api/PermissionsAPI';
-import AccessMode from '../../../../../modules/permissions/modules/objects/store/_internals/enums/AccessMode.enum';
-import BaseOpenedInstanceModule from '../../StoreModuleMixins/BaseOpenedInstanceStoreModuleMixin';
+// import AccessMode from '../../../../../modules/permissions/modules/objects/store/_internals/enums/AccessMode.enum';
 import BaseTableModule from '../../StoreModuleMixins/BaseTableStoreModuleMixin';
 import defaultHeaders from './_internals/headers';
 
@@ -12,7 +11,6 @@ export class PermissionsStoreModule extends BaseStoreModule {
 
   actions = {
     ...BaseTableModule.getActions(),
-    ...BaseOpenedInstanceModule.getActions(),
 
     CHANGE_CREATE_ACCESS_MODE: (context, payload) =>
       context.dispatch('CHANGE_ACCESS_MODE', {
@@ -47,19 +45,19 @@ export class PermissionsStoreModule extends BaseStoreModule {
             ww |  ww   | w
             ww |  w    | -
        */
-      switch (mode.id) {
-        case AccessMode.FORBIDDEN:
-          want = ruleName;
-          break;
-        case AccessMode.ALLOW:
-          want = have.rule || ruleName;
-          break;
-        case AccessMode.MANAGE:
-          want = `${ruleName}${ruleName}`;
-          break;
-        default:
-          return;
-      }
+      // switch (mode.id) {
+      //   case AccessMode.FORBIDDEN:
+      //     want = ruleName;
+      //     break;
+      //   case AccessMode.ALLOW:
+      //     want = have.rule || ruleName;
+      //     break;
+      //   case AccessMode.MANAGE:
+      //     want = `${ruleName}${ruleName}`;
+      //     break;
+      //   default:
+      //     return;
+      // }
       const changes = {
         grantee: +item.grantee.id,
         grants: want,
@@ -96,7 +94,6 @@ export class PermissionsStoreModule extends BaseStoreModule {
 
   mutations = {
     ...BaseTableModule.getMutations(),
-    ...BaseOpenedInstanceModule.getMutations(),
 
     RESET_ITEM_STATE: (state) => {
       Object.assign(state, this._resettableState());

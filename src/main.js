@@ -4,7 +4,6 @@ import router from './app/router';
 import i18n from './app/locale/i18n';
 import WebitelUi from './app/plugins/webitel-ui';
 import store from './app/store';
-import './app/assets/icons/sprite';
 import ActionComponents from './app/components/actions';
 
 const setTokenFromUrl = () => {
