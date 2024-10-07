@@ -43,16 +43,16 @@
   .config-nav__category-indicator {
     position: relative;
     display: block;
-    width: 24px;
-    height: 24px;
+    width: var(--icon-md-size);
+    height: var(--icon-md-size);
 
     &:after {
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;
       width: 4px;
       height: 4px;
-      content: '';
       transform: translate(-50%, -50%);
       border-radius: 50%;
       background: var(--text-main-color);
