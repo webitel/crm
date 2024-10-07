@@ -5,6 +5,7 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 export default {
   crm: 'CRM',
@@ -84,6 +85,16 @@ export default {
       [AccessMode.FORBIDDEN]: 'Заборонено',
       [AccessMode.ALLOW]: 'Дозволено',
       [AccessMode.MANAGE]: 'Управління',
+    },
+  },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Контакти',
+      text: 'У цьому розділі ви можете працювати з Контактами: клієнтами, партнерами тощо.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Конфігурація',
+      text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
     },
   },
 };

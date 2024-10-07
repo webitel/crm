@@ -43,15 +43,14 @@
 
 <style lang="scss" scoped>
 .start-page-card {
-  box-sizing: border-box;
-  width: 264px;
-  padding: var(--spacing-xs);
-  color: var(--text-main-color);
-  border-radius: var(--border-radius);
-  background-color: var(--content-wrapper-color);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
+  width: 264px;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius);
+  background-color: var(--content-wrapper-color);
+  color: var(--text-main-color);
 
   &__header {
     @extend %typo-heading-4;

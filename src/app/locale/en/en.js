@@ -5,6 +5,7 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 export default {
   crm: 'CRM',
@@ -84,6 +85,16 @@ export default {
       [AccessMode.ALLOW]: 'Allow',
       [AccessMode.FORBIDDEN]: 'Forbidden',
       [AccessMode.MANAGE]: 'Allow with delegation',
+    },
+  },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Contacts',
+      text: 'In this section, you can work with your contacts: clients, customers etc.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Configuration',
+      text: 'In this section, you will set up the Case management process.',
     },
   },
 };

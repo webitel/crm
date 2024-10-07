@@ -26,17 +26,14 @@
 
   const { t } = useI18n();
 
-  // Отримання теми з Vuex
   const theme = computed(() => store.state.appearance.theme);
 
-  // Логіка для логотипу
   const logo = computed(() => {
     return theme.value === 'dark'
       ? { src: '/crm/src/modules/start-page/assets/start-page-logo-dark.svg', alt: 'image alt' }
       : { src: '/crm/src/modules/start-page/assets/start-page-logo-light.svg', alt: 'image alt' };
   });
 
-  // дані з navMixin
   const nav = ref([
     {
       value: CrmSections.CONTACTS,
@@ -51,7 +48,6 @@
     },
   ]);
 
-  // Створення карток для відображення
   const cardSectionPic = {
     [CrmSections.CONTACTS]: {
       dark: ContactsSecDark,
