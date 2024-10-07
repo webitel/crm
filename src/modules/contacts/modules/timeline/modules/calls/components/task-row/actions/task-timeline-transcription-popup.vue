@@ -40,7 +40,7 @@
 
 <script setup>
 import { onMounted, ref, watch, computed } from 'vue';
-import { saveAs } from 'file-saver-es';
+// import { saveAs } from 'file-saver-es';
 import { useI18n } from 'vue-i18n';
 import CallTranscriptAPI from './api/callTranscript.js';
 
@@ -103,13 +103,13 @@ const transcriptData = computed(() => {
   }));
 });
 
-function downloadTxt(phrases) {
-  const text = phrases.map(({ phrase, channel, time }) => (
-    `${time} [${channel != null ? channel : 'author'}] ${phrase || ''}`
-  )).join('\n');
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  return saveAs(blob, `Transcript ${activeTranscript.value?.id} ${props.createdAt}`);
-}
+// function downloadTxt(phrases) {
+//   const text = phrases.map(({ phrase, channel, time }) => (
+//     `${time} [${channel != null ? channel : 'author'}] ${phrase || ''}`
+//   )).join('\n');
+//   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+//   return saveAs(blob, `Transcript ${activeTranscript.value?.id} ${props.createdAt}`);
+// }
 
 async function loadCallTranscript() {
   try {
