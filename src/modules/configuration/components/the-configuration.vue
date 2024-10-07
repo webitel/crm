@@ -54,7 +54,6 @@
     if (!selected.value.subNav) return [];
     return selected.value.subNav.map((subNav) => {
       const route = `${selected.value.route}/${subNav.route}`;
-      console.log(t(`${CrmSections.CONFIGURATION}.${subNav.value}`));
       const name = t(`${CrmSections.CONFIGURATION}.${subNav.value}`);
       return {
         ...subNav,
