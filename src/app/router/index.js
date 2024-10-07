@@ -15,6 +15,7 @@ import ContactVariables
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
 import store from '../store';
+import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -44,6 +45,13 @@ const routes = [
     component: TheCrmWorkspace,
     beforeEnter: checkAppAccess,
     children: [
+      {
+        path: 'configuration',
+        name: CrmSections.CONFIGURATION,
+        component: TheConfiguration,
+        // beforeEnter: checkRouteAccess,
+        // redirect: { name: `the-start-page` },
+      },
       {
         path: 'contacts',
         name: CrmSections.CONTACTS,
