@@ -5,7 +5,6 @@ import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
   from '../../modules/contacts/components/opened-contact.vue';
-import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import ContactPermissions
   from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
 import ContactTimeline
@@ -14,6 +13,11 @@ import ContactVariables
   from '../../modules/contacts/modules/variables/components/the-variables.vue';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
+import TheStartPage
+  from '../../modules/start-page/components/the-start-page.vue';
+import TheContacts from '../../modules/contacts/components/the-contacts.vue';
+
+
 import store from '../store';
 
 const checkAppAccess = (to, from, next) => {
@@ -40,16 +44,23 @@ const routes = [
   {
     path: '/',
     name: 'crm-workspace',
-    redirect: { name: CrmSections.CONTACTS },
+    redirect: { name: 'the-start-page' },
     component: TheCrmWorkspace,
     beforeEnter: checkAppAccess,
     children: [
+      {
+        path: 'start-page',
+        name: 'the-start-page',
+        component: TheStartPage,
+      },
       {
         path: 'contacts',
         name: CrmSections.CONTACTS,
         component: TheContacts,
         beforeEnter: checkRouteAccess,
+        // redirect: { name: `the-start-page` },
       },
+
       {
         path: 'contacts/:id',
         name: `${CrmSections.CONTACTS}-card`,
@@ -106,6 +117,7 @@ const routes = [
     name: 'access-denied',
     component: AccessDenied,
   },
+
 ];
 
 const router = createRouter({
