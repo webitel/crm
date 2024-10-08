@@ -1,1 +1,1 @@
-import './conf-lookups.svg';
+import './nav-lookups.svg';
