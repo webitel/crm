@@ -1,13 +1,13 @@
 <template>
   <div class="start-page-logo">
-    <img :src="image.src" :alt="image.name">
+    <img :src="image">
   </div>
 </template>
 
 <script setup>
   const props = defineProps({
     image: {
-      type: Object,
+      type: String,
       required: true,
     },
   });

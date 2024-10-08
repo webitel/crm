@@ -20,6 +20,8 @@
   import ContactsSecDark from '../assets/contacts-section-dark.svg';
   import ConfigurationSecLight from '../assets/configuration-section-light.svg';
   import ConfigurationSecDark from '../assets/configuration-section-dark.svg';
+  import StartLogoLight from '../assets/start-page-logo-light.svg';
+  import StartLogoDark from '../assets/start-page-logo-dark.svg';
 
   // Vuex store access
   const store = useStore();
@@ -27,11 +29,10 @@
   const { t } = useI18n();
 
   const theme = computed(() => store.state.appearance.theme);
+  const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
   const logo = computed(() => {
-    return theme.value === 'dark'
-      ? { src: '/crm/src/modules/start-page/assets/start-page-logo-dark.svg', alt: 'image alt' }
-      : { src: '/crm/src/modules/start-page/assets/start-page-logo-light.svg', alt: 'image alt' };
+    return darkMode.value ? StartLogoDark : StartLogoLight;
   });
 
   const nav = ref([
@@ -65,7 +66,7 @@
       disabled: false, // Статус доступу до навігаційних карток
       name: t(`startPage.${navItem.value}.name`),
       text: t(`startPage.${navItem.value}.text`),
-      image: theme.value === 'dark' ? cardSectionPic[navItem.value].dark : cardSectionPic[navItem.value].light,
+      image: darkMode.value ? cardSectionPic[navItem.value].dark : cardSectionPic[navItem.value].light,
     }));
   });
 </script>

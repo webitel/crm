@@ -12,11 +12,11 @@
     </section>
     <footer>
       <wt-button
-          :disabled="card.disabled"
-          wide
-          color="secondary"
-          @click="open"
-          class="start-page-card__button"
+        class="start-page-card__button"
+        :disabled="card.disabled"
+        color="secondary"
+        wide
+        @click="open"
       >
         {{ $t('reusable.open') }}
       </wt-button>
@@ -27,6 +27,7 @@
 <script setup>
   import { useRouter } from 'vue-router';
 
+  const router = useRouter();
   const props = defineProps({
     card: {
       type: Object,
@@ -34,10 +35,8 @@
     },
   });
 
-  const router = useRouter();
-
   const open = () => {
-    router.push(props.card.route);
+    return router.push(props.card.route);
   };
 </script>
 
