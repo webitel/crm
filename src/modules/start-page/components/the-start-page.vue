@@ -35,7 +35,7 @@
     return darkMode.value ? StartLogoDark : StartLogoLight;
   });
 
-  const nav = ref([
+  const nav = [
     {
       value: CrmSections.CONTACTS,
       route: '/contacts',
@@ -47,7 +47,7 @@
       class: 'cc_configuration',
       name: 'configuration',
     },
-  ]);
+  ]
 
   const cardSectionPic = {
     [CrmSections.CONTACTS]: {
@@ -61,7 +61,7 @@
   };
 
   const navCards = computed(() => {
-    return nav.value.map((navItem) => ({
+    return nav.map((navItem) => ({
       ...navItem,
       disabled: false, // Статус доступу до навігаційних карток
       name: t(`startPage.${navItem.value}.name`),

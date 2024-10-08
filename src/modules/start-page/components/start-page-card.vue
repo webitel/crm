@@ -68,11 +68,6 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
-  &__button.wt-button.secondary{
-    &:hover{
-      background-color: var(--btn-primary-color);
-    }
-  }
 }
 
 </style>
