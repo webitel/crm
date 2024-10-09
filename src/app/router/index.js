@@ -16,6 +16,9 @@ import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
 import store from '../store';
 
+import SourcesRoutes from "../../modules/lookups/modules/sources/modules/sources/router/sources.js";
+
+
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
   if (hasReadAccess) {
@@ -99,6 +102,7 @@ const routes = [
           },
         ],
       },
+      ...SourcesRoutes,
     ],
   },
   {
