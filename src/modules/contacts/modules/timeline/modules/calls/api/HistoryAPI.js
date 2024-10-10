@@ -1,11 +1,13 @@
-import { getDefaultGetListResponse } from '@webitel/ui-sdk/src/api/defaults/index.js';
+import {
+  getDefaultGetListResponse,
+} from '@webitel/ui-sdk/src/api/defaults/index.js';
+import applyTransform
+  from '@webitel/ui-sdk/src/api/transformers/applyTransform';
 import {
   merge,
   notify,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import applyTransform
-  from '@webitel/ui-sdk/src/api/transformers/applyTransform';
 import { CallServiceApiFactory } from 'webitel-sdk';
 import instance from '../../../../../../../app/api/instance.js';
 import configuration from '../../../../../../../app/api/openAPIConfig.js';
@@ -108,7 +110,7 @@ const getList = ({
       score_required: score,
       variables,
       contact_id: contact,
-      timeline: 'true',
+      timeline: true,
     });
     const {
       items,

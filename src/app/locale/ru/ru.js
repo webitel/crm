@@ -2,6 +2,7 @@ import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -96,5 +97,11 @@ export default {
       name: 'Конфигурация',
       text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
     },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Справочники',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Группы контактов',
+    [CrmConfigurationSections.STATUSES]: 'Статусы',
+    [CrmConfigurationSections.SOURCES]: 'Источники',
   },
 };

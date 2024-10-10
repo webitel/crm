@@ -19,6 +19,7 @@ import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 
 
 import store from '../store';
+import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -54,13 +55,19 @@ const routes = [
         component: TheStartPage,
       },
       {
+        path: 'configuration',
+        name: CrmSections.CONFIGURATION,
+        component: TheConfiguration,
+        // beforeEnter: checkRouteAccess,
+        // redirect: { name: `the-start-page` },
+      },
+      {
         path: 'contacts',
         name: CrmSections.CONTACTS,
         component: TheContacts,
         beforeEnter: checkRouteAccess,
         // redirect: { name: `the-start-page` },
       },
-
       {
         path: 'contacts/:id',
         name: `${CrmSections.CONTACTS}-card`,
@@ -117,7 +124,6 @@ const routes = [
     name: 'access-denied',
     component: AccessDenied,
   },
-
 ];
 
 const router = createRouter({
