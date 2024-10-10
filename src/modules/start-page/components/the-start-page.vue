@@ -1,6 +1,6 @@
 <template>
   <div>
-    <start-page :nav="nav" :lightDarkLogos="logo"/>
+    <start-page :nav="nav" :appLogo="logo"/>
   </div>
 </template>
 
@@ -32,6 +32,7 @@
         light: ContactsLight,
         dark: ContactsDark,
       },
+      disabled: false
     },
     {
       value: CrmSections.CONFIGURATION,
@@ -42,6 +43,7 @@
         light: ConfigurationLight,
         dark: ConfigurationDark,
       },
+      disabled: false
     },
   ]
 </script>
