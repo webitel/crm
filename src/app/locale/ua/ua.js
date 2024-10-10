@@ -1,12 +1,12 @@
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
-import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
-
 
 export default {
   crm: 'CRM',
@@ -86,6 +86,16 @@ export default {
       [AccessMode.FORBIDDEN]: 'Заборонено',
       [AccessMode.ALLOW]: 'Дозволено',
       [AccessMode.MANAGE]: 'Управління',
+    },
+  },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Контакти',
+      text: 'У цьому розділі ви можете працювати з Контактами: клієнтами, партнерами тощо.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Конфігурація',
+      text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
     },
   },
   configuration: {
