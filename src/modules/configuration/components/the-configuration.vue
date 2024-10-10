@@ -18,7 +18,7 @@
       {
         value: CrmConfigurationSections.SOURCES,
         name: t('configuration.sources'),
-        route: "sources",
+        route: "lookups/sources",
       }
     ],
   }]
