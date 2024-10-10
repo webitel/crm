@@ -1,5 +1,4 @@
 import ObjectStoreModule from '../../../../../../../app/store/BaseStoreModules/StoreModules/ObjectStoreModule';
-import PermissionsStoreModule from '../../../../../../../app/store/BaseStoreModules/StoreModules/PermissionsStoreModule/PermissionsStoreModule';
 import SourcesAPI from '../api/sources';
 import headers from './_internals/headers';
 
@@ -16,11 +15,6 @@ const actions = {
     context.commit('RESET_ITEM_STATE');
   },
 };
-
-const PERMISSIONS_API_URL = '/contacts/groups';
-const permissions = new PermissionsStoreModule()
-  .generateAPIActions(PERMISSIONS_API_URL)
-  .getModule();
 
 const sources = new ObjectStoreModule({ resettableState, headers })
   .attachAPIModule(SourcesAPI)
