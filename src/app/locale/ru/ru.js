@@ -5,6 +5,7 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 
 export default {
   crm: 'CRM',
@@ -85,5 +86,11 @@ export default {
       [AccessMode.ALLOW]: 'Разрешено',
       [AccessMode.MANAGE]: 'Управление',
     },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Справочники',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Группы контактов',
+    [CrmConfigurationSections.STATUSES]: 'Статусы',
+    [CrmConfigurationSections.SOURCES]: 'Источники',
   },
 };
