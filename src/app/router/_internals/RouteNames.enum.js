@@ -15,6 +15,7 @@ export default Object.freeze({
   PAUSE_CAUSE: 'agent-pause-cause',
   MEDIA: 'media',
   CONTACT_GROUPS: 'contact-groups',
+  SOURCES: 'sources',
 
 
   SETTINGS_PAGE: 'settings',

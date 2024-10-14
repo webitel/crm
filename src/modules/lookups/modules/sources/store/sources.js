@@ -1,11 +1,9 @@
-import TableStoreModule
-  from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
-import CardStoreModule
-  from '@webitel/ui-sdk/src/modules/CardStoreModule/store/CardStoreModule';
-import BaseStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
-import ApiStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
+import {
+  createApiStoreModule,
+  createBaseStoreModule,
+  createCardStoreModule,
+  createTableStoreModule,
+} from '@webitel/ui-sdk/store';
 
 import SourcesAPI from '../modules/sources/api/SourcesAPI';
 import headers from './_internals/headers';
@@ -24,20 +22,37 @@ const tableGetters = {
   REQUIRED_FIELDS: () => ['mode'],
 };
 
-const api = new ApiStoreModule()
-.generateAPIActions(SourcesAPI)
-.getModule();
+const api = createApiStoreModule({
+  state: {
+    api: SourcesAPI,
+  },
+});
 
-const table = new TableStoreModule({ headers })
-.setChildModules({ api, filters })
-.getModule({ getters: tableGetters });
+const table = createTableStoreModule({
+  state: {
+    headers,
+  },
+  modules: {
+    api,
+    filters,
+  },
+  getters: tableGetters,
+});
 
-const card = new CardStoreModule()
-.setChildModules({ api })
-.getModule({ state: cardState });
+const card = createCardStoreModule({
+  state: { _resettable: cardState },
+  modules: {
+    api
+  },
+});
 
-const sources = new BaseStoreModule()
-.setChildModules({ table, card })
-.getModule();
+const sources = createBaseStoreModule({
+  getters: tableGetters,
+  modules: {
+    table,
+    card,
+  },
+});
 
 export default sources;
+

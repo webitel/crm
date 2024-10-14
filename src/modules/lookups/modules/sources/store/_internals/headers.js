@@ -22,4 +22,11 @@ export default [
     field: 'description',
     sort: SortSymbols.NONE,
   },
+  {
+    value: 'q',
+    locale: 'vocabulary.description',
+    show: false,
+    field: 'q',
+    sort: SortSymbols.NONE,
+  },
 ];
