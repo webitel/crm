@@ -125,7 +125,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
-import ContactsSearchMode from '@webitel/ui-sdk/src/api/crm/enums/ContactsSearchMode.js';
+import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
