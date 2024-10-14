@@ -1,6 +1,8 @@
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -85,5 +87,21 @@ export default {
       [AccessMode.ALLOW]: 'Разрешено',
       [AccessMode.MANAGE]: 'Управление',
     },
+  },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Контакты',
+      text: 'В этом разделе вы можете работать с Контактами: клиентами, партнерами и т.д.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Конфигурация',
+      text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
+    },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Справочники',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Группы контактов',
+    [CrmConfigurationSections.STATUSES]: 'Статусы',
+    [CrmConfigurationSections.SOURCES]: 'Источники',
   },
 };

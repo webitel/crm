@@ -1,6 +1,8 @@
+import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -85,5 +87,21 @@ export default {
       [AccessMode.FORBIDDEN]: 'Forbidden',
       [AccessMode.MANAGE]: 'Allow with delegation',
     },
+  },
+  startPage: {
+    [CrmSections.CONTACTS]: {
+      name: 'Contacts',
+      text: 'In this section, you can work with your contacts: clients, customers etc.',
+    },
+    [CrmSections.CONFIGURATION]: {
+      name: 'Configuration',
+      text: 'In this section, you will set up the Case management process.',
+    },
+  },
+  configuration: {
+    [CrmConfigurationSections.LOOKUPS]: 'Lookups',
+    [CrmConfigurationSections.CONTACT_GROUPS]: 'Contact groups',
+    [CrmConfigurationSections.STATUSES]: 'Statuses',
+    [CrmConfigurationSections.SOURCES]: 'Sources',
   },
 };
