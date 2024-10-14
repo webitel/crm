@@ -22,13 +22,9 @@
             {{ t('lookups.sources.caseSources') }}
           </h3>
           <div class="main-section-header__actions-wrap">
-            <wt-search-bar
-              :value="q"
-              debounce
-              @enter="loadData"
-              @input="setSearch"
-              @search="loadData"
-              placeholder=" "
+            <filter-search
+              :namespace="filtersNamespace"
+              name="name"
             />
             <wt-icon-action
               :disabled="!hasObacEditAccess"
@@ -140,7 +136,6 @@ const {
   namespace,
   dataList,
   selected,
-  q,
   isLoading,
   headers,
   isNext,
@@ -149,7 +144,6 @@ const {
   deleteData,
   sort,
   setSelected,
-  setSearch,
   onFilterEvent,
 } = useTableStore(baseNamespace);
 
