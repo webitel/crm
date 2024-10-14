@@ -42,7 +42,7 @@
     </template>
 
     <template #after-content>
-      <timeline-intersection-observer
+      <wt-intersection-observer
         :next="next"
         :loading="nextLoading"
         @next="loadNext"
@@ -61,7 +61,6 @@ import dummyLight from '../assets/timeline-dummy-light.svg';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';
-import TimelineIntersectionObserver from './utils/timeline-intersection-observer.vue';
 
 const props = defineProps({
   namespace: {
