@@ -136,6 +136,7 @@ const {
   namespace,
   dataList,
   selected,
+  q,
   isLoading,
   headers,
   isNext,
@@ -144,6 +145,7 @@ const {
   deleteData,
   sort,
   setSelected,
+  setSearch,
   onFilterEvent,
 } = useTableStore(baseNamespace);
 
