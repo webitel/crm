@@ -59,6 +59,7 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -128,13 +129,7 @@ async function initializeCard() {
   }
 }
 
-function close() {
-  // Need to close the tab if you moved from another application
-  // https://webitel.atlassian.net/browse/WTEL-4552
-
-  if(window.history.length === 1) return window.close();
-  return router.push('/contacts');
-}
+const { close } = useClose('contacts');
 
 async function deleteContact(item) {
   await deleteItem(item);

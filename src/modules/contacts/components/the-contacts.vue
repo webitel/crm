@@ -14,9 +14,9 @@
 
       <wt-page-header
         :primary-action="create"
-        :primary-disabled="!hasObacCreateAccess"
+        :primary-disabled="!hasCreateAccess"
         :secondary-action="deleteSelectedItems"
-        :secondary-disabled="!hasObacDeleteAccess || !deletableSelectedItems.length"
+        :secondary-disabled="!hasDeleteAccess || !deletableSelectedItems.length"
         :secondary-text="$t('reusable.delete')"
       >
         <wt-headline-nav :path="path" />
@@ -132,7 +132,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import dummyDark from '../../../app/assets/dummy-dark.svg';
 import dummyLight from '../../../app/assets/dummy-light.svg';
-import { useAccess } from '../../../app/composables/useAccess';
+import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import ContactPopup from './contact-popup.vue';
 
 const baseNamespace = 'contacts';
@@ -143,10 +143,9 @@ const router = useRouter();
 const store = useStore();
 
 const {
-  hasObacCreateAccess,
-  hasObacEditAccess,
-  hasObacDeleteAccess,
-} = useAccess();
+  hasCreateAccess,
+  hasDeleteAccess,
+} = useAccessControl('contacts');
 
 const {
   isVisible: isDeleteConfirmationPopup,
