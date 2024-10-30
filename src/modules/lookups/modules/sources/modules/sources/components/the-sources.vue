@@ -55,14 +55,7 @@
 
         <wt-loader v-show="isLoading" />
 
-        <wt-dummy
-          v-if="!isLoading && !dataList.length"
-          class="dummy-wrapper"
-          :show-action="dummy.showAction"
-          :text="dummy.text && t(dummy.text)"
-          :dark-mode="darkMode"
-          @create="create"
-        />
+        <!--       TODO Повернути dummy-->
 
         <div
           class="table-section__table-wrapper"
@@ -127,8 +120,6 @@
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
 
-  import dummyDark from '../../../../../../../app/assets/dummy-dark.svg';
-  import dummyLight from '../../../../../../../app/assets/dummy-light.svg';
   import { useAccess } from '../../../../../../../app/composables/useAccess';
   import RouteNames from '../../../../../../../app/router/_internals/RouteNames.enum';
 
@@ -139,7 +130,6 @@
   const store = useStore();
 
   const {
-    hasObacCreateAccess,
     hasObacEditAccess,
     hasObacDeleteAccess,
   } = useAccess();
@@ -156,16 +146,13 @@
     namespace,
     dataList,
     selected,
-    q,
     isLoading,
     headers,
     isNext,
-    error,
     loadData,
     deleteData,
     sort,
     setSelected,
-    setSearch,
     onFilterEvent,
   } = useTableStore(baseNamespace);
 
@@ -177,9 +164,7 @@
   } = useTableFilters(namespace);
 
   const {
-    setId,
-    resetState,
-    deleteItem,
+    resetState
   } = useCardStore(baseNamespace);
 
   subscribe({
@@ -210,7 +195,6 @@
   ]);
 
   const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-  const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));
 
   const anySelected = computed(() => {
     return !selectedRows.value.length;
@@ -224,7 +208,6 @@
   );
 
   function create() {
-    resetState();
     router.push({ name: `${routeName.value}-card`, params: { id: 'new' } });
   }
 
@@ -241,69 +224,8 @@
 
   const { close } = useClose('configuration');
 
-  // we need to check if there's any filters which actually filter data before showing "no data" dummy
-  // [WTEL-3776]
-  // display different images when no sources have been created yet (default img)
-  // and when the filter didn't produce results
-  const dummy = computed(() => {
-    if (dataList.value.length) return false;
-    const filters = store.getters[`${filtersNamespace}/_STATE_FILTER_NAMES`];
-    const defaultFilters = ['page', 'size', 'sort', 'fields'];
-    const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
-      if (defaultFilters.includes(filter)) return dynamic;
-      return {
-        ...dynamic,
-        [filter]: filters[filter],
-      };
-    }, {});
-    const isEmptyFilters = isEmpty(dynamicFilters);
-
-    return {
-      src: isEmptyFilters ? '' : dummyPic.value,
-      text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
-    };
-  });
   onUnmounted(() => {
     flushSubscribers();
     resetState();
   });
 </script>
-
-<style lang="scss" scoped>
-  .content-title {
-    @extend %typo-heading-4;
-  }
-
-  .table-section {
-    gap: var(--spacing-sm);
-
-    .table-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--spacing-xs);
-
-      &__actions-wrap {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-xs);
-
-        :deep(.wt-tooltip) {
-          order: 2;
-
-          &.table-title__action--add {
-            order: 1;
-          }
-        }
-
-        .table-title__action--delete {
-          order: 3;
-        }
-
-        :deep(.wt-table-actions) {
-          padding: 0;
-        }
-      }
-    }
-  }
-</style>
