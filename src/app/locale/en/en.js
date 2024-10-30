@@ -1,8 +1,8 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
+import CrmSections
+  from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -98,10 +98,14 @@ export default {
       text: 'In this section, you will set up the Case management process.',
     },
   },
-  configuration: {
-    [CrmConfigurationSections.LOOKUPS]: 'Lookups',
-    [CrmConfigurationSections.CONTACT_GROUPS]: 'Contact groups',
-    [CrmConfigurationSections.STATUSES]: 'Statuses',
-    [CrmConfigurationSections.SOURCES]: 'Sources',
+  lookups: {
+    lookups: 'Lookups',
+
+    slas: {
+      slas: 'SLA | SLAs',
+    },
+    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
+    [CrmSections.STATUSES]: 'Statuses',
+    [CrmSections.SOURCES]: 'Sources',
   },
 };
