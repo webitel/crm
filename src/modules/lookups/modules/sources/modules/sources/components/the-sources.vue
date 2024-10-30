@@ -1,12 +1,12 @@
 <template>
   <wt-page-wrapper
-    :actions-panel="false"
     class="table-page"
+    :actions-panel="false"
   >
     <template #header>
       <wt-page-header
-        hide-primary
         :secondary-action="close"
+        hide-primary
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -19,6 +19,7 @@
         :delete-count="deleteCount"
         @close="closeDelete"
       />
+
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
@@ -30,17 +31,17 @@
               name="name"
             />
             <wt-icon-action
-              :disabled="!hasObacEditAccess"
+              class="table-title__action--add"
               action="add"
+              :disabled="!hasObacEditAccess"
               @click="create"
-              class="add"
             />
             <wt-icon-action
               action="refresh"
               @click="loadData"
             />
             <delete-all-action
-              class="delete"
+              class="table-title__action--delete"
               v-if="hasObacDeleteAccess"
               :disabled="anySelected"
               :selected-count="selectedRows.length"
@@ -55,15 +56,18 @@
         <wt-loader v-show="isLoading" />
 
         <wt-dummy
-          class="dummy-wrapper"
           v-if="!isLoading && !dataList.length"
+          class="dummy-wrapper"
           :show-action="dummy.showAction"
           :text="dummy.text && t(dummy.text)"
           :dark-mode="darkMode"
           @create="create"
         />
 
-        <div class="table-section__table-wrapper" v-show="dataList.length">
+        <div
+          class="table-section__table-wrapper"
+          v-show="dataList.length"
+        >
           <wt-table
             :data="dataList"
             :headers="headers"
@@ -88,13 +92,16 @@
                 v-if="hasObacDeleteAccess"
                 action="delete"
                 @click="askDeleteConfirmation({
-                    deleted: [item],
-                    callback: () => deleteData(item),
-                  })"
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })"
               />
             </template>
           </wt-table>
-          <filter-pagination :namespace="filtersNamespace" :is-next="isNext" />
+          <filter-pagination
+            :namespace="filtersNamespace"
+            :is-next="isNext"
+          />
         </div>
       </section>
     </template>
@@ -267,31 +274,35 @@
     @extend %typo-heading-4;
   }
 
-  .main-section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--spacing-xs) var(--spacing-xs) 0;
+  .table-section {
+    gap: var(--spacing-sm);
 
-    &__actions-wrap {
+    .table-title {
       display: flex;
       align-items: center;
-      gap: var(--spacing-xs);
+      justify-content: space-between;
+      padding: var(--spacing-xs);
 
-      :deep(.wt-tooltip) {
-        order: 2;
+      &__actions-wrap {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
 
-        &.add {
-          order: 1;
+        :deep(.wt-tooltip) {
+          order: 2;
+
+          &.table-title__action--add {
+            order: 1;
+          }
         }
-      }
 
-      .delete {
-        order: 3;
-      }
+        .table-title__action--delete {
+          order: 3;
+        }
 
-      :deep(.wt-table-actions) {
-        padding: 0;
+        :deep(.wt-table-actions) {
+          padding: 0;
+        }
       }
     }
   }
