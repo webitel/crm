@@ -43,11 +43,12 @@
             <delete-all-action
               class="table-title__action--delete"
               v-if="hasObacDeleteAccess"
-              :disabled="anySelected"
-              :selected-count="selectedRows.length"
+              class="delete"
+              :disabled="!selected.length"
+              :selected-count="selected.length"
               @click="askDeleteConfirmation({
-                deleted: selectedRows,
-                callback: () => deleteData(selectedRows),
+                deleted: selected,
+                callback: () => deleteData(selected),
               })"
             />
           </div>
@@ -172,6 +173,11 @@
     callback: onFilterEvent,
   });
 
+  onUnmounted(() => {
+    flushSubscribers();
+    resetState();
+  });
+
   restoreFilters();
 
   const routeName = ref(`${RouteNames.SOURCES}`);
@@ -196,36 +202,9 @@
 
   const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
-  const anySelected = computed(() => {
-    return !selectedRows.value.length;
-  });
-  const selectedRows = computed(() => {
-    return dataList.value.filter((item) => item._isSelected);
-  });
-
-  const deletableSelectedItems = computed(() =>
-    selected.value.filter((item) => item.access.delete),
-  );
+  const { close } = useClose('configuration');
 
   function create() {
     router.push({ name: `${routeName.value}-card`, params: { id: 'new' } });
   }
-
-  function deleteSelectedItems() {
-    return askDeleteConfirmation({
-      deleted: deletableSelectedItems.value,
-      callback: () => deleteData([...deletableSelectedItems.value]),
-    });
-  }
-
-  function goBack() {
-    router.push({ name: 'configuration' });
-  }
-
-  const { close } = useClose('configuration');
-
-  onUnmounted(() => {
-    flushSubscribers();
-    resetState();
-  });
 </script>
