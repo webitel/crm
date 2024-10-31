@@ -26,31 +26,28 @@
             {{ t('lookups.sources.caseSources') }}
           </h3>
           <div class="table-title__actions-wrap">
-            <filter-search
-              :namespace="filtersNamespace"
-              name="name"
-            />
-            <wt-icon-action
-              class="table-title__action--add"
-              action="add"
-              :disabled="!hasObacEditAccess"
-              @click="create"
-            />
-            <wt-icon-action
-              action="refresh"
-              @click="loadData"
-            />
-            <delete-all-action
-              class="table-title__action--delete"
-              v-if="hasObacDeleteAccess"
-              class="delete"
-              :disabled="!selected.length"
-              :selected-count="selected.length"
-              @click="askDeleteConfirmation({
+            <!--       TODO очікувати апдейт по цьову компоненту від Дані-->
+            <wt-action-bar
+              :actions="tableActions"
+              mode="table"
+              @click:add="create"
+              @click:refresh="loadData"
+            >
+              <template #search-bar>
+                <filter-search
+                  :namespace="filtersNamespace"
+                  name="name"
+                />
+              </template>
+              <delete-all-action
+                :disabled="anySelected"
+                :selected-count="selected.length"
+                @click="askDeleteConfirmation({
                 deleted: selected,
                 callback: () => deleteData(selected),
               })"
-            />
+              />
+            </wt-action-bar>
           </div>
         </header>
 
@@ -70,14 +67,14 @@
           >
             <template #name="{ item }">
               <wt-item-link
-                :link="{ name: `${CrmConfigurationSections.SOURCES}-card`, params: { id: item.id } }"
+                :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
               >
                 {{ item.name }}
               </wt-item-link>
             </template>
             <template #actions="{ item }">
               <wt-item-link
-                :link="{ name: `${CrmConfigurationSections.SOURCES}-card`, params: { id: item.id } }"
+                :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
               >
                 <wt-icon-action action="edit" />
               </wt-item-link>
@@ -106,7 +103,8 @@
   import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
   import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
   import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-  import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
+  import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
+  import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
   import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
   import DeleteConfirmationPopup
     from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -167,6 +165,11 @@
   const {
     resetState
   } = useCardStore(baseNamespace);
+
+  const tableActions = [
+    IconAction.ADD,
+    IconAction.REFRESH,
+  ];
 
   subscribe({
     event: '*',
