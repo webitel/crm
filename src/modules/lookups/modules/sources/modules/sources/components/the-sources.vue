@@ -26,7 +26,9 @@
             {{ t('lookups.sources.caseSources') }}
           </h3>
           <div class="table-title__actions-wrap">
-            <!--       TODO очікувати апдейт по цьову компоненту від Дані-->
+
+            <!--       TODO очікувати апдейт по компоненту wt-action-bar від Дані (потребує доопрацювань)-->
+
             <wt-action-bar
               :actions="tableActions"
               mode="table"
@@ -39,14 +41,16 @@
                   name="name"
                 />
               </template>
-              <delete-all-action
-                :disabled="anySelected"
-                :selected-count="selected.length"
-                @click="askDeleteConfirmation({
-                deleted: selected,
-                callback: () => deleteData(selected),
-              })"
-              />
+              <template>
+                <delete-all-action
+                  :disabled="anySelected"
+                  :selected-count="selected.length"
+                  @click="askDeleteConfirmation({
+                  deleted: selected,
+                  callback: () => deleteData(selected),
+                 })"
+                />
+              </template>
             </wt-action-bar>
           </div>
         </header>
@@ -79,8 +83,8 @@
                 <wt-icon-action action="edit" />
               </wt-item-link>
               <wt-icon-action
-                class="table-action"
                 v-if="hasObacDeleteAccess"
+                class="table-action"
                 action="delete"
                 @click="askDeleteConfirmation({
                   deleted: [item],
@@ -163,7 +167,7 @@
   } = useTableFilters(namespace);
 
   const {
-    resetState
+    resetState,
   } = useCardStore(baseNamespace);
 
   const tableActions = [
