@@ -1,6 +1,6 @@
 <template>
   <div>
-    <start-page :nav="nav" :appLogo="logo"/>
+    <start-page :nav="nav" :app-logo="logo"/>
   </div>
 </template>
 
@@ -35,10 +35,10 @@
       disabled: false
     },
     {
-      value: CrmSections.CONFIGURATION,
+      value: 'configuration',
       route: '/configuration',
-      name: t(`startPage.${CrmSections.CONFIGURATION}.name`),
-      text: t(`startPage.${CrmSections.CONFIGURATION}.text`),
+      name: t(`startPage.configuration.name`),
+      text: t(`startPage.configuration.text`),
       images: {
         light: ConfigurationLight,
         dark: ConfigurationDark,

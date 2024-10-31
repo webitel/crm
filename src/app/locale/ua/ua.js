@@ -92,7 +92,7 @@ export default {
       name: 'Контакти',
       text: 'У цьому розділі ви можете працювати з Контактами: клієнтами, партнерами тощо.',
     },
-    [CrmSections.CONFIGURATION]: {
+    configuration: {
       name: 'Конфігурація',
       text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
     },
@@ -102,6 +102,7 @@ export default {
 
     slas: {
       slas: 'SLA | SLAs',
+      calendar: 'Календар',
     },
 
     [CrmSections.CONTACT_GROUPS]: 'Групи контактів',

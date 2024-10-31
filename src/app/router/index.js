@@ -16,10 +16,12 @@ import AccessDenied from '../components/utils/access-denied-component.vue';
 import TheStartPage
   from '../../modules/start-page/components/the-start-page.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
-
+import TheSlas
+  from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
 
 import store from '../store';
-import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
+import TheConfiguration
+  from '../../modules/configuration/components/the-configuration.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -56,10 +58,43 @@ const routes = [
       },
       {
         path: 'configuration',
-        name: CrmSections.CONFIGURATION,
+        name: 'configuration',
         component: TheConfiguration,
         // beforeEnter: checkRouteAccess,
-        // redirect: { name: `the-start-page` },
+        // redirect: { name: 'the-start-page' },
+      },
+
+      {
+        path: 'lookups',
+        name: 'lookups',
+        redirect: { name: 'configuration' },
+        children: [
+          {
+            path: 'slas',
+            name: CrmSections.SLAS,
+            component: TheSlas,
+            // beforeEnter: checkRouteAccess,
+          },
+          // {
+          //   path: 'slas/:id',
+          //   name: `${CrmSections.SLAS}-card`,
+          //   component: OpenedSlas,
+          //   beforeEnter: checkRouteAccess,
+          //   redirect: { name: `${CrmSections.SLAS}-general` },
+          //   children: [
+          //     {
+          //       path: 'general',
+          //       name: `${CrmSections.SLAS}-general`,
+          //       component: SlasGeneral,
+          //     },
+          //     {
+          //       path: 'conditions',
+          //       name: `${CrmSections.SLAS}-conditions`,
+          //       component: SlasConditions,
+          //     },
+          //   ],
+          // }
+        ],
       },
       {
         path: 'contacts',
@@ -136,7 +171,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (!localStorage.getItem('access-token') && !to.query.accessToken) {
-    const desiredUrl =  encodeURIComponent(window.location.href);
+    const desiredUrl = encodeURIComponent(window.location.href);
     const authUrl = import.meta.env.VITE_AUTH_URL;
     window.location.href = `${authUrl}?redirectTo=${desiredUrl}`;
   } else if (to.query.accessToken) {
