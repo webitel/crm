@@ -43,7 +43,7 @@
               </template>
               <template>
                 <delete-all-action
-                  :disabled="anySelected"
+                  :disabled="!selected.length"
                   :selected-count="selected.length"
                   @click="askDeleteConfirmation({
                   deleted: selected,
