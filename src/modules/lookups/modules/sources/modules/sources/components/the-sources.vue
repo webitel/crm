@@ -51,7 +51,7 @@
             </wt-action-bar>
           </div>
         </header>
-
+*
         <wt-loader v-show="isLoading" />
 
         <!--       TODO Повернути dummy-->
@@ -68,14 +68,14 @@
           >
             <template #name="{ item }">
               <wt-item-link
-                :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
+                :link="linkToCard(item.id)"
               >
                 {{ item.name }}
               </wt-item-link>
             </template>
             <template #actions="{ item }">
               <wt-item-link
-                :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
+                :link="linkToCard(item.id)"
               >
                 <wt-icon-action action="edit" />
               </wt-item-link>
@@ -197,6 +197,7 @@
     },
     {
       name: t('lookups.lookups'),
+      route: '/configuration',
     },
     {
       name: t('lookups.sources.caseSources'),
@@ -210,5 +211,8 @@
 
   function create() {
     router.push({ name: `${routeName.value}-card`, params: { id: 'new' } });
+  }
+  function linkToCard(id){
+    return { name: `${CrmSections.SOURCES}-card`, params: { id: id } }
   }
 </script>
