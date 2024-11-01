@@ -26,9 +26,6 @@
             {{ t('lookups.sources.caseSources') }}
           </h3>
           <div class="table-title__actions-wrap">
-
-            <!--       TODO очікувати апдейт по компоненту wt-action-bar від Дані (потребує доопрацювань)-->
-
             <wt-action-bar
               :actions="tableActions"
               mode="table"
@@ -41,7 +38,7 @@
                   name="name"
                 />
               </template>
-              <template>
+              <template #delete>
                 <delete-all-action
                   :disabled="!selected.length"
                   :selected-count="selected.length"
