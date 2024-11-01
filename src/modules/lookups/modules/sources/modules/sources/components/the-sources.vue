@@ -51,7 +51,6 @@
             </wt-action-bar>
           </div>
         </header>
-*
         <wt-loader v-show="isLoading" />
 
         <!--       TODO Повернути dummy-->
