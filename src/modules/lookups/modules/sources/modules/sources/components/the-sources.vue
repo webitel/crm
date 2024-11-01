@@ -192,15 +192,15 @@
       route: '/start-page',
     },
     {
-      name: t('lookups.contactGroups.configurations'),
+      name: t('lookups.contactGroups.configurations'), // локалка буде існувати в наступних комітах
       route: '/configuration',
     },
     {
-      name: t('lookups.lookups'),
+      name: t('lookups.lookups'), // локалка буде існувати в наступних комітах
       route: '/configuration',
     },
     {
-      name: t('lookups.sources.caseSources'),
+      name: t('lookups.sources.caseSources'), // локалка буде існувати в наступних комітах
       route: '/lookups/sources',
     },
   ]);
