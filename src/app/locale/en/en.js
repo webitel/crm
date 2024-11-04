@@ -2,7 +2,6 @@ import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -99,9 +98,37 @@ export default {
     },
   },
   configuration: {
-    [CrmConfigurationSections.LOOKUPS]: 'Lookups',
-    [CrmConfigurationSections.CONTACT_GROUPS]: 'Contact groups',
-    [CrmConfigurationSections.STATUSES]: 'Statuses',
-    [CrmConfigurationSections.SOURCES]: 'Sources',
+    [CrmSections.LOOKUPS]: 'Lookups',
+    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
+    [CrmSections.STATUSES]: 'Statuses',
+    [CrmSections.SOURCES]: 'Sources',
+  },
+  objects: {
+    general: 'General',
+    save: 'Save',
+    saved: 'Saved',
+    name: 'Name',
+    description: 'Description',
+  },
+  lookups: {
+    lookups: 'Lookups',
+    sources: {
+      caseSources: 'Case sources',
+      type:{
+        type: 'Type',
+        call: 'Call',
+        chat: 'Chat',
+        socialMedia: 'Social media',
+        email: 'Email',
+        manual: 'Manual',
+      }
+    },
+    statuses: 'Statuses',
+    contactGroups: {
+      contactGroups: 'Contact groups',
+      groups: 'Groups',
+      crm: 'CRM',
+      configurations: 'Configurations',
+    },
   },
 };

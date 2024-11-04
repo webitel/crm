@@ -2,7 +2,6 @@ import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import CrmConfigurationSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmConfigurationSections.enum';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -99,9 +98,31 @@ export default {
     },
   },
   configuration: {
-    [CrmConfigurationSections.LOOKUPS]: 'Справочники',
-    [CrmConfigurationSections.CONTACT_GROUPS]: 'Группы контактов',
-    [CrmConfigurationSections.STATUSES]: 'Статусы',
-    [CrmConfigurationSections.SOURCES]: 'Источники',
+    [CrmSections.LOOKUPS]: 'Справочники',
+    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
+    [CrmSections.STATUSES]: 'Статусы',
+    [CrmSections.SOURCES]: 'Источники',
+  },
+  objects: {
+    general: 'Общее',
+    save: 'Сохранить',
+    saved: 'Сохранено',
+    name: 'Имя',
+    description: 'Описание',
+  },
+  lookups: {
+    lookups: 'Справочники',
+    sources: {
+      caseSources: 'Источники обращений',
+      type: 'Тип'
+    },
+    statuses: 'Statuses',
+
+    contactGroups: {
+      contactGroups: 'Группы контактов',
+      groups: 'Группы',
+      crm: 'CRM',
+      configurations: 'Конфигурация',
+    }
   },
 };
