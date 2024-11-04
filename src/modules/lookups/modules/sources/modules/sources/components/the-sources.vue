@@ -212,6 +212,6 @@
     router.push({ name: `${routeName.value}-card`, params: { id: 'new' } });
   }
   function linkToCard(id){
-    return { name: `${CrmSections.SOURCES}-card`, params: { id: id } }
+    return { name: `${CrmSections.SOURCES}-card`, params: { id } }
   }
 </script>
