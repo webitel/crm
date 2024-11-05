@@ -93,6 +93,11 @@ export default {
       name: 'Contacts',
       text: 'In this section, you can work with your contacts: clients, customers etc.',
     },
+    // TODO: Use CrmSections.CASES instead of 'cases'
+    'cases': {
+      name: 'Cases',
+      text: 'Here you can view Cases registered in the system.',
+    },
     [CrmSections.CONFIGURATION]: {
       name: 'Configuration',
       text: 'In this section, you will set up the Case management process.',
@@ -103,5 +108,26 @@ export default {
     [CrmConfigurationSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmConfigurationSections.STATUSES]: 'Statuses',
     [CrmConfigurationSections.SOURCES]: 'Sources',
+  },
+  cases: {
+    case: 'Case | Cases',
+    id: 'ID',
+    subject: 'Subject',
+    priority: 'Priority',
+    status: 'Status',
+    source: 'Source',
+    author: 'Author',
+    group: 'Group',
+    assignee: 'Assignee',
+    reporter: 'Reporter',
+    impacted: 'Impacted',
+    appliedSLA: 'Applied SLA',
+    reactionTime: 'Reaction time',
+    resolutionTime: 'Resolution time',
+    actualReactionTime: 'Actual reaction time',
+    actualResolutionTime: 'Actual resolution time',
+    reason: 'Reason',
+    result: 'Result',
+    rating: 'Rating',
   },
 };

@@ -93,6 +93,11 @@ export default {
       name: 'Контакти',
       text: 'У цьому розділі ви можете працювати з Контактами: клієнтами, партнерами тощо.',
     },
+    // TODO: Use CrmSections.CASES instead of 'cases'
+    'cases': {
+      name: 'Звернення',
+      text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
+    },
     [CrmSections.CONFIGURATION]: {
       name: 'Конфігурація',
       text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
@@ -103,5 +108,26 @@ export default {
     [CrmConfigurationSections.CONTACT_GROUPS]: 'Групи контактів',
     [CrmConfigurationSections.STATUSES]: 'Статуси',
     [CrmConfigurationSections.SOURCES]: 'Джерела',
+  },
+  cases: {
+    case: 'Звернення | Звернення',
+    id: 'Індентифікатор',
+    subject: 'Тема',
+    priority: 'Пріорітет',
+    status: 'Статус',
+    source: 'Джерело',
+    author: 'Автор',
+    group: 'Група виконавців',
+    assignee: 'Виконавець',
+    reporter: 'Ініціатор',
+    impacted: 'Впливає на',
+    appliedSLA: 'Застосований SLA',
+    reactionTime: 'Плановий час реакції',
+    resolutionTime: 'Плановий час вирішення',
+    actualReactionTime: 'Фактичний час реакції',
+    actualResolutionTime: 'Фактичний час вирішення',
+    reason: 'Причина',
+    result: 'Результат',
+    rating: 'Оцінка',
   },
 };

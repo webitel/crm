@@ -10,6 +10,8 @@
   import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
   import StartLogoLight from '../assets/start-page-logo-light.svg';
   import StartLogoDark from '../assets/start-page-logo-dark.svg';
+  import CasesLight from '../assets/cases-section-light.svg';
+  import CasesDark from '../assets/cases-section-dark.svg';
   import ConfigurationLight from '../assets/configuration-section-light.svg';
   import ConfigurationDark from '../assets/configuration-section-dark.svg';
   import ContactsLight from '../assets/contacts-section-light.svg';
@@ -42,6 +44,18 @@
       images: {
         light: ConfigurationLight,
         dark: ConfigurationDark,
+      },
+      disabled: false
+    },
+    // TODO: Use CrmSections.CASES instead of 'cases'
+    {
+      value: 'cases',
+      route: '/cases',
+      name: t(`startPage.cases.name`),
+      text: t(`startPage.cases.text`),
+      images: {
+        light: CasesLight,
+        dark: CasesDark,
       },
       disabled: false
     },

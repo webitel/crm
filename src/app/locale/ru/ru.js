@@ -93,6 +93,11 @@ export default {
       name: 'Контакты',
       text: 'В этом разделе вы можете работать с Контактами: клиентами, партнерами и т.д.',
     },
+    // TODO: Use CrmSections.CASES instead of 'cases'
+    'cases': {
+      name: 'Обращения',
+      text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
+    },
     [CrmSections.CONFIGURATION]: {
       name: 'Конфигурация',
       text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
@@ -103,5 +108,26 @@ export default {
     [CrmConfigurationSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmConfigurationSections.STATUSES]: 'Статусы',
     [CrmConfigurationSections.SOURCES]: 'Источники',
+  },
+  cases: {
+    case: 'Обращение | Обращения',
+    id: 'Индентификатор',
+    subject: 'Тема',
+    priority: 'Приоритет',
+    status: 'Статус',
+    source: 'Источник',
+    author: 'Автор',
+    group: 'Группа исполнителей',
+    assignee: 'Исполнитель',
+    reporter: 'Инициатор',
+    impacted: 'Влияет на',
+    appliedSLA: 'Примененный SLA',
+    reactionTime: 'Плановое время реакции',
+    resolutionTime: 'Плановое время решения',
+    actualReactionTime: 'Фактическое время реакции',
+    actualResolutionTime: 'Фактическое время решения',
+    reason: 'Причина',
+    result: 'Результат',
+    rating: 'Оценка',
   },
 };
