@@ -6,7 +6,7 @@
           class="icon-action"
           icon="bucket"
           v-bind="$attrs"
-          @click="$emit('click')"
+          @click="emitClick"
         />
       </template>
       {{ actionPanelDeleteTooltip }}
@@ -14,24 +14,28 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DeleteAllAction',
-  props: {
+<script setup>
+  import { computed, defineProps, defineEmits } from 'vue';
+  import { useI18n } from 'vue-i18n';
+
+  const props = defineProps({
     selectedCount: {
       type: Number,
     },
-  },
-  computed: {
-    actionPanelDeleteTooltip() {
-      return this.selectedCount
-        ? this.$t('iconHints.deleteSelected', {
-            count: this.selectedCount,
-          })
-        : this.$t('iconHints.deleteAll');
-    },
-  },
-};
+  });
+
+  const emit = defineEmits(['click']);
+  const { t } = useI18n();
+
+  const emitClick = () => {
+    emit('click');
+  };
+
+  const actionPanelDeleteTooltip = computed(() => {
+    return props.selectedCount
+      ? t('iconHints.deleteSelected', { count: props.selectedCount })
+      : t('iconHints.deleteAll');
+  });
 </script>
 
 <style lang="scss" scoped>
