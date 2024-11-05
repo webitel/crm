@@ -64,7 +64,7 @@ const routes = [
       },
       {
         path: 'cases',
-        name: 'cases',
+        name: CrmSections.CASES,
         component: TheCases,
         // redirect: { name: `the-start-page` },
       },
