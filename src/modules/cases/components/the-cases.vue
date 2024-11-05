@@ -143,6 +143,7 @@
 </template>
 
 <script setup>
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -248,8 +249,7 @@ const dummy = computed(() => {
 
 function saved(id) {
   return router.push({
-    // TODO: Use CrmSections.CASES instead of 'cases'
-    name: `cases-card`,
+    name: `${CrmSections.CASES}-card`,
     params: { id },
   });
 }

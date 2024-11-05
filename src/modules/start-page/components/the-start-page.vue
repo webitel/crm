@@ -47,12 +47,11 @@
       },
       disabled: false
     },
-    // TODO: Use CrmSections.CASES instead of 'cases'
     {
-      value: 'cases',
+      value: CrmSections.CASES,
       route: '/cases',
-      name: t(`startPage.cases.name`),
-      text: t(`startPage.cases.text`),
+      name: t(`startPage.${CrmSections.CASES}.name`),
+      text: t(`startPage.${CrmSections.CASES}.text`),
       images: {
         light: CasesLight,
         dark: CasesDark,

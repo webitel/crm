@@ -92,8 +92,7 @@ export default {
       name: 'Контакты',
       text: 'В этом разделе вы можете работать с Контактами: клиентами, партнерами и т.д.',
     },
-    // TODO: Use CrmSections.CASES instead of 'cases'
-    'cases': {
+    [CrmSections.CASES]: {
       name: 'Обращения',
       text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
     },
