@@ -5,10 +5,12 @@ import i18n from './app/locale/i18n';
 import WebitelUi from './app/plugins/webitel-ui';
 import store from './app/store';
 import './app/assets/icons/sprite';
+import ActionComponents from './app/components/actions';
 
 const setTokenFromUrl = () => {
   try {
-    const queryMap = window.location.search.slice(1)
+    const queryMap = window.location.search
+    .slice(1)
     .split('&')
     .reduce((obj, query) => {
       const [key, value] = query.split('=');
@@ -29,11 +31,19 @@ const fetchConfig = async () => {
   return response.json();
 };
 
-const initApp = () => createApp(App)
-.use(store)
-.use(router)
-.use(i18n)
-.use(...WebitelUi);
+const initApp = () => {
+  const app = createApp(App)
+  .use(store)
+  .use(router)
+  .use(i18n)
+  .use(...WebitelUi);
+
+  ActionComponents.forEach((component) => {
+    app.component(component.name, component);
+  });
+
+  return app;
+};
 
 (async () => {
   let config;
