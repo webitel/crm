@@ -25,7 +25,7 @@
             {{ $t('cases.case', 2) }}
           </h3>
           <wt-action-bar
-            :actions="['add', 'refresh']"
+            :actions="[IconAction.ADD, IconAction.REFRESH]"
           >
             <wt-icon-btn
               icon="filter"
@@ -131,6 +131,7 @@
 
 <script setup>
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
