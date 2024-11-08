@@ -103,6 +103,11 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       calendar: 'Календарь',
+      conditions: 'Условие | Условия',
+      reactionTime: 'Плановое время реакции',
+      resolutionTime: 'Плановое время решения',
+      validFrom: 'Действителен с',
+      validTo: 'Действителен до',
     },
     [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',

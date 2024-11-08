@@ -19,6 +19,7 @@
         <wt-actions-bar
           mode="table"
           :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+          @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
         >
           <template #search-bar>
             <filter-search
@@ -37,12 +38,6 @@
         :callback="deleteCallback"
         :delete-count="deleteCount"
         @close="closeDelete"
-      />
-
-      <wt-empty
-        v-if="!isLoading && !dataList.length"
-        :image="emptyPic"
-        :text="t('webitelUI.dummy.text')"
       />
 
       <div
@@ -67,13 +62,20 @@
             {{ item.description }}
           </template>
           <template #calendar="{ item }">
-            {{ item.calendarId }}
+            {{ item.calendar.name }}
           </template>
           <template #actions="{ item }">
-            <wt-actions-bar
-              mode="card"
-              :actions="[IconAction.EDIT, IconAction.DELETE]"
-            ></wt-actions-bar>
+            <wt-icon-action
+              action="edit"
+              @click="edit(item)"
+            />
+            <wt-icon-action
+              action="delete"
+              @click="askDeleteConfirmation({
+                deleted: [item],
+                callback: () => deleteData(item),
+              })"
+            />
           </template>
         </wt-table>
         <filter-pagination
@@ -105,8 +107,6 @@ import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import emptyPageDark from '../../../../../assets/emptyPageDark.svg';
-import emptyPageLight from '../../../../../assets/emptyPageLight.svg';
 
 const baseNamespace = 'configuration/lookups/slas';
 
@@ -168,7 +168,6 @@ const path = computed(() => [
 ]);
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-const emptyPic = computed(() => (darkMode.value ? emptyPageDark : emptyPageLight));
 
 const deletableSelectedItems = computed(() => (
   selected.value.filter((item) => item.access.delete)
@@ -182,6 +181,13 @@ function deleteSelectedItems() {
 }
 
 const { close } = useClose('configuration');
+
+function edit(item) {
+  return router.push({
+    name: `${CrmSections.SLAS}-card`,
+    params: { id: item.id },
+  });
+}
 </script>
 
 <style lang="scss" scoped>

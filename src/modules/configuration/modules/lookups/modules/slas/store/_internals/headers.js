@@ -16,10 +16,10 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'calendarId',
+    value: 'calendar',
     locale: 'lookups.slas.calendar',
     show: true,
-    field: 'calendar_id',
+    field: 'calendar',
     sort: SortSymbols.NONE,
   },
 

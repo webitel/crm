@@ -1,0 +1,105 @@
+<template>
+  <section>
+    <header class="content-header">
+      <h3 class="content-title">
+        {{ t('reusable.generalInfo') }}
+      </h3>
+    </header>
+    <div class="object-input-grid">
+      <wt-input
+        :disabled="disableUserInput"
+        :label="t('reusable.name')"
+        :value="itemInstance.name"
+        :v="v.itemInstance.name"
+        required
+        @input="setItemProp({ path: 'name', value: $event })"
+      />
+
+      <wt-select
+        :disabled="disableUserInput"
+        :label="t('lookups.slas.calendar')"
+        :search-method="loadCalendarsList"
+        :v="v.itemInstance.calendar"
+        :value="itemInstance.calendar"
+        required
+        @input="setItemProp({ prop: 'calendar', value: $event })"
+      />
+
+      <wt-input
+        :disabled="disableUserInput"
+        :label="t('vocabulary.description')"
+        :value="itemInstance.description"
+        @input="setItemProp({ path: 'description', value: $event })"
+      />
+
+      <div>
+        <wt-timepicker
+          :disabled="disableUserInput"
+          :label="t('lookups.slas.reactionTime')"
+          :v="v.itemInstance.reactionTime"
+          :value="itemInstance.reactionTime"
+          format='hh:mm'
+          @input="setItemProp({ prop: 'reactionTime', value: +$event })"
+        />
+
+        <wt-timepicker
+          :disabled="disableUserInput"
+          :label="t('lookups.slas.resolutionTime')"
+          :v="v.itemInstance.resolutionTime"
+          :value="itemInstance.resolutionTime"
+          format='hh:mm'
+          @input="setItemProp({ prop: 'resolutionTime', value: +$event })"
+        />
+      </div>
+
+      <div>
+        <wt-datepicker
+          :disabled="disableUserInput"
+          :label="$t('lookups.slas.validFrom')"
+          :value="itemInstance.validFrom"
+          mode="datetime"
+          @input="setItemProp({ prop: 'validFrom', value: $event })"
+        />
+
+        <wt-datepicker
+          :disabled="disableUserInput"
+          :label="$t('lookups.slas.validTo')"
+          :value="itemInstance.validTo"
+          mode="datetime"
+          @input="setItemProp({ prop: 'validTo', value: $event })"
+        />
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { useI18n } from 'vue-i18n';
+import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
+
+const props = defineProps({
+  namespace: {
+    type: String,
+    required: true,
+  },
+  v: {
+    type: Object,
+    required: true,
+  },
+});
+
+const { t } = useI18n();
+
+const { disableUserInput } = useAccessControl();
+
+const { itemInstance, setItemProp } = useCardStore(props.namespace);
+
+function loadCalendarsList(search) {
+  return CalendarsAPI.getLookup(search);
+}
+</script>
+
+<style lang="scss" scoped>
+</style>

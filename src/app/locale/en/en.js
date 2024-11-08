@@ -104,6 +104,11 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       calendar: 'Calendar',
+      conditions: 'Condition | Conditions',
+      reactionTime: 'Reaction time',
+      resolutionTime: 'Resolution time',
+      validFrom: 'Valid from',
+      validTo: 'Valid to',
     },
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',

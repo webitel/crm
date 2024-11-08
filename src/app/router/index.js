@@ -18,6 +18,8 @@ import TheStartPage
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import TheSlas
   from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
+import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
+import OpenedSlaGeneral  from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
 
 import store from '../store';
 import TheConfiguration
@@ -61,7 +63,6 @@ const routes = [
         name: 'configuration',
         component: TheConfiguration,
         // beforeEnter: checkRouteAccess,
-        // redirect: { name: 'the-start-page' },
       },
 
       {
@@ -75,25 +76,24 @@ const routes = [
             component: TheSlas,
             // beforeEnter: checkRouteAccess,
           },
-          // {
-          //   path: 'slas/:id',
-          //   name: `${CrmSections.SLAS}-card`,
-          //   component: OpenedSlas,
-          //   beforeEnter: checkRouteAccess,
-          //   redirect: { name: `${CrmSections.SLAS}-general` },
-          //   children: [
-          //     {
-          //       path: 'general',
-          //       name: `${CrmSections.SLAS}-general`,
-          //       component: SlasGeneral,
-          //     },
-          //     {
-          //       path: 'conditions',
-          //       name: `${CrmSections.SLAS}-conditions`,
-          //       component: SlasConditions,
-          //     },
-          //   ],
-          // }
+          {
+            path: 'slas/:id',
+            name: `${CrmSections.SLAS}-card`,
+            component: OpenedSla,
+            redirect: { name: `${CrmSections.SLAS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SLAS}-general`,
+                component: OpenedSlaGeneral,
+              },
+              // {
+              //   path: 'conditions',
+              //   name: `${CrmSections.SLAS}-conditions`,
+              //   component: SlasConditions,
+              // },
+            ],
+          }
         ],
       },
       {
