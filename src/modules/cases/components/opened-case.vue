@@ -41,10 +41,12 @@
 </template>
 
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import OpenedCaseGeneral from './opened-case-general.vue';
@@ -64,6 +66,7 @@ const {
   setId,
   resetState,
   deleteItem,
+  ...restStore
 } = useCardStore(namespace);
 
 const isLoading = ref(true);
@@ -92,35 +95,28 @@ const tabs = computed(() => [
   },
 ]);
 
-const currentTab = computed(() => {
-  return tabs.value.find(({ pathName }) => route?.matched?.find(({ name }) => name === pathName));
-});
-
-function changeTab(tab) {
-  return router.push({ name: tab.pathName });
-}
-
-async function initializeCard() {
-  try {
-    isLoading.value = true;
-    const { id: itemId } = route.params;
-    await setId(itemId);
-    await loadItem();
-  } finally {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 500);
-  }
-}
+const {
+  currentTab,
+  changeTab,
+} = useCardTabs(tabs.value);
 
 const { close } = useClose('cases');
 
+const {
+  isNew,
+  save,
+  initialize,
+} = useCardComponent({
+  ...restStore,
+  itemInstance,
+  setId,
+  loadItem,
+  resetState,
+});
 
-const mode = computed(() => (route.params.id === 'new' ? 'create' : 'update' ));
+const mode = computed(() => (isNew.value ? 'create' : 'update'));
 
-
-onMounted(() => initializeCard());
-onUnmounted(() => resetState());
+initialize();
 </script>
 
 
