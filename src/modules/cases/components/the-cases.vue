@@ -26,6 +26,7 @@
           </h3>
           <wt-action-bar
             :actions="[IconAction.ADD, IconAction.REFRESH]"
+            @click:add="add"
           >
             <wt-icon-btn
               icon="filter"
@@ -58,7 +59,11 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              {{ item.name }}
+              <wt-item-link
+                :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
+              >
+                {{ item.name }}
+              </wt-item-link>
             </template>
             <template #priority="{ item }">
               {{ item.priority.name }}
@@ -211,10 +216,10 @@ const path = computed(() => [
   },
 ]);
 
-function saved(id) {
+function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
-    params: { id },
+    params: { id: 'new' },
   });
 }
 
@@ -229,7 +234,7 @@ function deleteSelectedItems() {
 
 <style lang="scss" scoped>
 // make action icons fixed to right
-.wt-table ::v-deep .wt-table__tr {
+.wt-table :deep(.wt-table__tr) {
   .wt-table__td__actions {
     position: sticky;
     right: 0;
