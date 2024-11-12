@@ -8,7 +8,7 @@ import CasesAPI from '../api/CasesAPI.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
-const caseState = {
+const resettableState = {
   itemInstance: {
     name: '',
     subject: '',
@@ -48,7 +48,10 @@ const table = createTableStoreModule({
   },
 });
 const card = createCardStoreModule({
-  state: caseState,
+  state: { _resettable: resettableState },
+  modules: {
+    api,
+  },
 });
 
 const cases = createBaseStoreModule({
