@@ -5,7 +5,7 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="mode === 'update'"
+        :hide-primary="!isNew"
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
@@ -13,7 +13,7 @@
 
         <template #actions>
           <wt-button
-            v-if="mode === 'update'"
+            v-if="!isNew"
             color="secondary"
           >{{ t('reusable.edit') }}
           </wt-button>
@@ -113,8 +113,6 @@ const {
   loadItem,
   resetState,
 });
-
-const mode = computed(() => (isNew.value ? 'create' : 'update'));
 
 initialize();
 </script>
