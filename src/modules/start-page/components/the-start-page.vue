@@ -2,11 +2,14 @@
   <wt-start-page
     :nav="nav"
     :app-logo="logo"
+    :dark-mode="darkMode"
   />
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import WtStartPage from '@webitel/ui-sdk/src/components/on-demand/wt-start-page/components/wt-start-page.vue';
 import LogoLight from '../assets/crm-logo-light.svg';
@@ -17,6 +20,9 @@ import ContactsImgLight from '../assets/contacts-section-img-light.svg';
 import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
 
 const { t } = useI18n();
+const store = useStore();
+
+const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 const logo = {
   light: LogoLight,
