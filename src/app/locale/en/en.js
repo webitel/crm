@@ -93,7 +93,7 @@ export default {
       name: 'Contacts',
       text: 'In this section, you can work with your contacts: clients, customers etc.',
     },
-    [CrmSections.CONFIGURATION]: {
+    'configuration': {
       name: 'Configuration',
       text: 'In this section, you will set up the Case management process.',
     },
