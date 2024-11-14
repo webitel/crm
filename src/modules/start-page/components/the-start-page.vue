@@ -43,16 +43,6 @@ const nav = [
     },
   },
   {
-    value: CrmSections.CASES,
-    route: '/cases',
-    name: t(`startPage.${CrmSections.CASES}.name`),
-    text: t(`startPage.${CrmSections.CASES}.text`),
-    images: {
-      light: CasesLight,
-      dark: CasesDark,
-    },
-  },
-  {
     value: 'configuration',
     route: '/configuration',
     name: t(`startPage.configuration.name`),
@@ -60,6 +50,16 @@ const nav = [
     images: {
       light: ConfigurationImgLight,
       dark: ConfigurationImgDark,
+    },
+  },
+  {
+    value: CrmSections.CASES,
+    route: '/cases',
+    name: t(`startPage.${CrmSections.CASES}.name`),
+    text: t(`startPage.${CrmSections.CASES}.text`),
+    images: {
+      light: CasesLight,
+      dark: CasesDark,
     },
   },
 ];
