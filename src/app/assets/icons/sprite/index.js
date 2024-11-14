@@ -1,1 +1,1 @@
-import './nav-lookups.svg';
+import './crm-lookups.svg';

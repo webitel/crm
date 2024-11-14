@@ -58,13 +58,6 @@ const routes = [
         component: TheStartPage,
       },
       {
-        path: 'configuration',
-        name: CrmSections.CONFIGURATION,
-        component: TheConfiguration,
-        // beforeEnter: checkRouteAccess,
-        // redirect: { name: `the-start-page` },
-      },
-      {
         path: 'cases',
         name: CrmSections.CASES,
         component: TheCases,
@@ -139,6 +132,26 @@ const routes = [
           },
         ],
       },
+      {
+        path: 'configuration',
+        name: 'configuration',
+        component: TheConfiguration,
+        // beforeEnter: checkRouteAccess,
+      },
+      {
+        path: 'lookups',
+        name: 'lookups',
+        redirect: { name: 'configuration' },
+        children: [
+          {
+            path: 'slas',
+            name: CrmSections.SLAS,
+          },
+      ],
+      },
+
+
+
     ],
   },
   {
