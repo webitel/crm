@@ -119,30 +119,4 @@ initialize();
 
 
 <style lang="scss" scoped>
-.opened-case-content {
-  display: flex;
-  flex-grow: 1;
-  min-height: 0;
-  gap: var(--spacing-sm);
-
-  &__general {
-    flex: 0 0 250px;
-    padding: var(--page-wrapper-padding);
-    background: var(--content-wrapper-color);
-  }
-
-  &__tabs {
-    flex: 1 1 auto;
-    padding: var(--page-wrapper-padding);
-    background: var(--content-wrapper-color);
-  }
-}
-
-//Overwriting styles so opened-case-content__general and opened-case-content__tabs separated by grey color
-.opened-card {
-  :deep(.wt-page-wrapper__main) {
-    padding: 0;
-    background: var(--wt-page-wrapper-background-color);
-  }
-}
 </style>
