@@ -19,11 +19,11 @@ import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import TheSlas
   from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
 import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
-import OpenedSlaGeneral  from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+
 
 import store from '../store';
-import TheConfiguration
-  from '../../modules/configuration/components/the-configuration.vue';
+import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -57,44 +57,6 @@ const routes = [
         path: 'start-page',
         name: 'the-start-page',
         component: TheStartPage,
-      },
-      {
-        path: 'configuration',
-        name: 'configuration',
-        component: TheConfiguration,
-        // beforeEnter: checkRouteAccess,
-      },
-
-      {
-        path: 'lookups',
-        name: 'lookups',
-        redirect: { name: 'configuration' },
-        children: [
-          {
-            path: 'slas',
-            name: CrmSections.SLAS,
-            component: TheSlas,
-            // beforeEnter: checkRouteAccess,
-          },
-          {
-            path: 'slas/:id',
-            name: `${CrmSections.SLAS}-card`,
-            component: OpenedSla,
-            redirect: { name: `${CrmSections.SLAS}-general` },
-            children: [
-              {
-                path: 'general',
-                name: `${CrmSections.SLAS}-general`,
-                component: OpenedSlaGeneral,
-              },
-              // {
-              //   path: 'conditions',
-              //   name: `${CrmSections.SLAS}-conditions`,
-              //   component: SlasConditions,
-              // },
-            ],
-          }
-        ],
       },
       {
         path: 'contacts',
@@ -152,6 +114,46 @@ const routes = [
           },
         ],
       },
+      {
+        path: 'configuration',
+        name: 'configuration',
+        component: TheConfiguration,
+        // beforeEnter: checkRouteAccess,
+      },
+      {
+        path: 'lookups',
+        name: 'lookups',
+        redirect: { name: 'configuration' },
+        children: [
+          {
+            path: 'slas',
+            name: CrmSections.SLAS,
+            component: TheSlas,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'slas/:id',
+            name: `${CrmSections.SLAS}-card`,
+            component: OpenedSla,
+            redirect: { name: `${CrmSections.SLAS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SLAS}-general`,
+                component: OpenedSlaGeneral,
+              },
+              // {
+              //   path: 'conditions',
+              //   name: `${CrmSections.SLAS}-conditions`,
+              //   component: SlasConditions,
+              // },
+            ],
+          }
+      ],
+      },
+
+
+
     ],
   },
   {
@@ -171,7 +173,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (!localStorage.getItem('access-token') && !to.query.accessToken) {
-    const desiredUrl = encodeURIComponent(window.location.href);
+    const desiredUrl =  encodeURIComponent(window.location.href);
     const authUrl = import.meta.env.VITE_AUTH_URL;
     window.location.href = `${authUrl}?redirectTo=${desiredUrl}`;
   } else if (to.query.accessToken) {
