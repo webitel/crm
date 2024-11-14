@@ -1,7 +1,7 @@
 <template>
   <wt-page-wrapper
+    class="table-page slas"
     :actions-panel="false"
-    class="slas"
   >
     <template #header>
       <wt-page-header
@@ -12,23 +12,27 @@
       </wt-page-header>
     </template>
     <template #main>
-      <header class="content-header">
-        <h3 class="content-title">
-          {{ t('lookups.slas.slas') }}
-        </h3>
-        <wt-actions-bar
-          mode="table"
-          :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
-        >
-          <template #search-bar>
-            <filter-search
-              :namespace="filtersNamespace"
-              name="search"
-            />
-          </template>
-        </wt-actions-bar>
-      </header>
+      <section class="table-section">
+        <header class="table-title">
+          <h3 class="table-title__title">
+            {{ t('lookups.slas.slas') }}
+          </h3>
+          <wt-actions-bar
+            mode="table"
+            :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
+            @click:refresh="loadData"
+          >
+            <template #search-bar>
+              <filter-search
+                :namespace="filtersNamespace"
+                name="search"
+              />
+            </template>
+          </wt-actions-bar>
+        </header>
+      </section>
+
 
 
       <wt-loader v-show="isLoading" />
@@ -66,10 +70,12 @@
           </template>
           <template #actions="{ item }">
             <wt-icon-action
+              v-if="hasEditAccess"
               action="edit"
               @click="edit(item)"
             />
             <wt-icon-action
+              v-if="hasDeleteAccess"
               action="delete"
               @click="askDeleteConfirmation({
                 deleted: [item],
@@ -91,7 +97,7 @@
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import WtActionsBar from '@webitel/ui-sdk/src/components/wt-action-bar/wt-action-bar.vue';
-import WtEmpty from '@webitel/ui-sdk/src/components/wt-empty/wt-empty.vue';
+import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import {
@@ -114,6 +120,8 @@ const { t } = useI18n();
 const router = useRouter();
 
 const store = useStore();
+
+const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,

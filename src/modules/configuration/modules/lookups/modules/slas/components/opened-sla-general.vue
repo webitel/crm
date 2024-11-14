@@ -1,11 +1,11 @@
 <template>
-  <section>
-    <header class="content-header">
-      <h3 class="content-title">
+  <section class="opened-sla-general">
+    <header class="opened-card-header">
+      <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
       </h3>
     </header>
-    <div class="object-input-grid">
+    <div class="opened-card-input-grid">
       <wt-input
         :disabled="disableUserInput"
         :label="t('reusable.name')"
@@ -25,7 +25,7 @@
         @input="setItemProp({ prop: 'calendar', value: $event })"
       />
 
-      <wt-input
+      <wt-textarea
         :disabled="disableUserInput"
         :label="t('vocabulary.description')"
         :value="itemInstance.description"
@@ -52,7 +52,7 @@
         />
       </div>
 
-      <div>
+      <div class="opened-sla-general__wrapper">
         <wt-datepicker
           :disabled="disableUserInput"
           :label="$t('lookups.slas.validFrom')"
@@ -102,4 +102,8 @@ function loadCalendarsList(search) {
 </script>
 
 <style lang="scss" scoped>
+.opened-sla-general__wrapper {
+  display: flex;
+  gap: var(--spacing-sm);
+}
 </style>

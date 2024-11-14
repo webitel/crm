@@ -11,6 +11,7 @@ import applyTransform, {
   notify,
   sanitize,
   snakeToCamel,
+  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import deepCopy from 'deep-copy';
 import ConvertDuration from '@webitel/ui-sdk/src/scripts/convertDuration.js';
@@ -19,13 +20,14 @@ const instance = getDefaultInstance();
 
 const baseUrl = '/cases/slas';
 
-const fieldsToSend = ['name', 'description', 'validFrom', 'validTo', 'calendar', 'reactionTime', 'resolutionTime'];
+const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar', 'reaction_time', 'resolution_time'];
 
 const getSlasList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const url = applyTransform(params, [
     merge(getDefaultGetParams()),
+    starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
