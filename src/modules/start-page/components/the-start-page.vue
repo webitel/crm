@@ -1,64 +1,68 @@
 <template>
-  <div>
-    <start-page :nav="nav" :appLogo="logo"/>
-  </div>
+  <wt-start-page
+    :nav="nav"
+    :app-logo="logo"
+    :dark-mode="darkMode"
+  />
 </template>
 
 <script setup>
-  import { useI18n } from 'vue-i18n';
-  import StartPage from '@webitel/ui-sdk/src/modules/StartPage/components/the-start-page.vue';
-  import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-  import StartLogoLight from '../assets/start-page-logo-light.svg';
-  import StartLogoDark from '../assets/start-page-logo-dark.svg';
-  import CasesLight from '../assets/cases-section-light.svg';
-  import CasesDark from '../assets/cases-section-dark.svg';
-  import ConfigurationLight from '../assets/configuration-section-light.svg';
-  import ConfigurationDark from '../assets/configuration-section-dark.svg';
-  import ContactsLight from '../assets/contacts-section-light.svg';
-  import ContactsDark from '../assets/contacts-section-dark.svg';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import WtStartPage from '@webitel/ui-sdk/src/components/on-demand/wt-start-page/components/wt-start-page.vue';
+import LogoLight from '../assets/crm-logo-light.svg';
+import LogoDark from '../assets/crm-logo-dark.svg';
+import ConfigurationImgLight from '../assets/configuration-section-img-light.svg';
+import ConfigurationImgDark from '../assets/configuration-section-img-dark.svg';
+import ContactsImgLight from '../assets/contacts-section-img-light.svg';
+import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
+import CasesLight from '../assets/cases-section-light.svg';
+import CasesDark from '../assets/cases-section-dark.svg';
 
-  const { t } = useI18n();
+const { t } = useI18n();
+const store = useStore();
 
-  const logo = {
-    light: StartLogoLight,
-    dark: StartLogoDark
-  }
+const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
-  const nav = [
-    {
-      value: CrmSections.CONTACTS,
-      route: '/contacts',
-      name: t(`startPage.${CrmSections.CONTACTS}.name`),
-      text: t(`startPage.${CrmSections.CONTACTS}.text`),
-      images: {
-        light: ContactsLight,
-        dark: ContactsDark,
-      },
-      disabled: false
+const logo = {
+  light: LogoLight,
+  dark: LogoDark,
+};
+
+const nav = [
+  {
+    value: CrmSections.CONTACTS,
+    route: '/contacts',
+    name: t(`startPage.${CrmSections.CONTACTS}.name`),
+    text: t(`startPage.${CrmSections.CONTACTS}.text`),
+    images: {
+      light: ContactsImgLight,
+      dark: ContactsImgDark,
     },
-    {
-      value: CrmSections.CONFIGURATION,
-      route: '/configuration',
-      name: t(`startPage.${CrmSections.CONFIGURATION}.name`),
-      text: t(`startPage.${CrmSections.CONFIGURATION}.text`),
-      images: {
-        light: ConfigurationLight,
-        dark: ConfigurationDark,
-      },
-      disabled: false
+  },
+  {
+    value: 'configuration',
+    route: '/configuration',
+    name: t(`startPage.configuration.name`),
+    text: t(`startPage.configuration.text`),
+    images: {
+      light: ConfigurationImgLight,
+      dark: ConfigurationImgDark,
     },
-    {
-      value: CrmSections.CASES,
-      route: '/cases',
-      name: t(`startPage.${CrmSections.CASES}.name`),
-      text: t(`startPage.${CrmSections.CASES}.text`),
-      images: {
-        light: CasesLight,
-        dark: CasesDark,
-      },
-      disabled: false
+  },
+  {
+    value: CrmSections.CASES,
+    route: '/cases',
+    name: t(`startPage.${CrmSections.CASES}.name`),
+    text: t(`startPage.${CrmSections.CASES}.text`),
+    images: {
+      light: CasesLight,
+      dark: CasesDark,
     },
-  ]
+  },
+];
 </script>
 
 <style scoped>
