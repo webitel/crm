@@ -55,7 +55,7 @@
       <div class="opened-sla-general__wrapper">
         <wt-datepicker
           :disabled="disableUserInput"
-          :label="$t('lookups.slas.validFrom')"
+          :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           mode="datetime"
           @input="setItemProp({ prop: 'validFrom', value: $event })"
@@ -63,7 +63,7 @@
 
         <wt-datepicker
           :disabled="disableUserInput"
-          :label="$t('lookups.slas.validTo')"
+          :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
           mode="datetime"
           @input="setItemProp({ prop: 'validTo', value: $event })"

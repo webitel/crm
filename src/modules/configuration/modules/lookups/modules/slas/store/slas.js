@@ -10,6 +10,16 @@ import filters from '../modules/filters/store/filters';
 
 const resettableState = {
   itemInstance: {
+    name: '',
+    description: '',
+    calendar: {
+      id: '',
+      name: '',
+    },
+    reactionTime: 0,
+    resolutionTime: 0,
+    validTo: 0,
+    validFrom: 0,
   },
 };
 
