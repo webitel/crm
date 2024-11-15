@@ -36,7 +36,6 @@ const getSlasList = async (params) => {
   try {
     const response = await instance.get(url);
     const { items, next } = applyTransform(response.data, [
-      snakeToCamel(['profile']),
       merge(getDefaultGetListResponse()),
     ]);
     return {
