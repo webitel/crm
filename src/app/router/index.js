@@ -1,6 +1,7 @@
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { createRouter, createWebHistory } from 'vue-router';
+import TheCases from '../../modules/cases/components/the-cases.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
@@ -53,6 +54,12 @@ const routes = [
         path: 'start-page',
         name: 'the-start-page',
         component: TheStartPage,
+      },
+      {
+        path: 'cases',
+        name: CrmSections.CASES,
+        component: TheCases,
+        // redirect: { name: `the-start-page` },
       },
       {
         path: 'contacts',
