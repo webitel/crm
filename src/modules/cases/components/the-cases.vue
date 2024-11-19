@@ -54,7 +54,6 @@
             :data="dataList"
             :headers="headers"
             :selected="selected"
-            actions-sticky
             sortable
             @sort="sort"
             @update:selected="setSelected"
