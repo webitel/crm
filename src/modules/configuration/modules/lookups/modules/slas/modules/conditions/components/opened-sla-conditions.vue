@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="table-page opened-sla-conditions">
     <condition-popup
       :namespace="namespace"
     />
@@ -12,7 +12,7 @@
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
-          {{ t('lookups.slas.conditions') }}
+          {{ t('lookups.slas.conditions', 2) }}
         </h3>
 
         <wt-actions-bar
@@ -33,12 +33,11 @@
 
     <wt-loader v-show="isLoading" />
     <div
-      v-show="!isLoading"
+      v-show="!isLoading && dataList.length"
       class="table-wrapper"
     >
       <wt-table
         :data="dataList"
-        :grid-actions="!disableUserInput"
         :headers="headers"
         :selected="selected"
         sortable
@@ -46,25 +45,23 @@
         @update:selected="setSelected"
       >
         <template #name="{ item }">
-          <wt-item-link>
-            {{ item.name }}
-          </wt-item-link>
+          {{ item.name }}
         </template>
         <template #priorities="{ item }">
-          <div>
-            <p>{{ priorities[0].name }}</p>
+          <div v-if="item.priorities?.length">
+            <p>{{ item.priorities[0]?.name }}</p>
             <wt-tooltip
-              v-if="priorities.length"
+              v-if="item.priorities?.length"
               :triggers="['click']"
             >
               <template #activator>
                 <wt-chip>
-                  +{{ priorities.length }}
+                  +{{ item.priorities?.length - 1 }}
                 </wt-chip>
               </template>
 
               <timeline-row-initiator
-                v-for="({ id, name }) of hiddenPriorities"
+                v-for="({ id, name }) of getHiddenPriorities(item.priorities)"
                 :key="id"
                 :text="name"
               />
@@ -93,15 +90,17 @@
           />
         </template>
       </wt-table>
+
+      <filter-pagination
+        :namespace="filtersNamespace"
+        :next="isNext"
+      />
     </div>
-    <filter-pagination
-      :namespace="filtersNamespace"
-      :next="isNext"
-    />
   </section>
 </template>
 
 <script setup>
+import { required } from '@vuelidate/validators';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -148,6 +147,8 @@ const { t } = useI18n();
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
+
+
 const {
   namespace: tableNamespace,
 
@@ -164,6 +165,8 @@ const {
   setSelected,
   onFilterEvent,
 } = useTableStore(namespace);
+
+console.log(store)
 
 const {
   namespace: filtersNamespace,
@@ -193,31 +196,42 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const create = async () => {
-  if (!parentId.value) {
-    await addItem();
-    await router.replace({
-      ...route,
-      params: {
-        ...route.params,
-        id: parentId.value,
-      },
-    });
-  }
-
+const edit = ({id}) => {
   return router.push({
     ...route,
-    params: {
-      ...route.params,
-      tokenId: 'new',
-    },
+    params: { conditionId: id },
   });
+
 };
+
+// const create = async () => {
+//   if (!parentId.value) {
+//     await addItem();
+//     await router.replace({
+//       ...route,
+//       params: {
+//         ...route.params,
+//         id: parentId.value,
+//       },
+//     });
+//   }
+//
+//   return router.push({
+//     ...route,
+//     params: {
+//       ...route.params,
+//       id: 'new',
+//     },
+//   });
+// };
+
 // const prettifyDate = (value) => {
 //   return new Date(+value).toLocaleString();
 // };
 
-const hiddenPriorities = computed(() => priorities.slice(1));
+function getHiddenPriorities (item) {
+  return item.priorities?.slice(1);
+};
 
 </script>
 

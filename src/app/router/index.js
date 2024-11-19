@@ -22,6 +22,7 @@ import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/
 import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
 import OpenedSlaConditions
   from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
+import OpenedSlaConditionsPopup from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-condition-popup.vue';
 
 import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -144,7 +145,7 @@ const routes = [
                 component: OpenedSlaGeneral,
               },
               {
-                path: 'conditions',
+                path: 'conditions/:conditionId?',
                 name: `${CrmSections.SLAS}-conditions`,
                 component: OpenedSlaConditions,
               },

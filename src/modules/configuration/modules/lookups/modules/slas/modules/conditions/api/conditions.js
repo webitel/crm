@@ -38,7 +38,7 @@ const getConditionsList = async ({parentId, ...rest}) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, []),
+      items: applyTransform(items, [snakeToCamel()]),
       next,
     };
   } catch (err) {
@@ -47,11 +47,15 @@ const getConditionsList = async ({parentId, ...rest}) => {
 };
 
 const getCondition = async ({ parentId, itemId: id }) => {
-  const url = `${baseUrl}/${parentId}/${nestedUrl}/${id}`;
+  const itemResponseHandler = (item) => {
+    return item.slaCondition;
+  };
+
+  const url = `${baseUrl}/${parentId}/sla_condition/${id}`;
 
   try {
     const response = await instance.get(url);
-    return applyTransform(response.data, [snakeToCamel()]);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }

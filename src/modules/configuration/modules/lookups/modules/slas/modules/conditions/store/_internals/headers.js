@@ -17,14 +17,14 @@ export default [
   },
   {
     value: 'reactionTime',
-    locale: 'lookups.slas.calendar',
+    locale: 'lookups.slas.reactionTime',
     show: true,
     field: 'reaction_time',
     sort: SortSymbols.NONE,
   },
   {
     value: 'resolutionTime',
-    locale: 'lookups.slas.calendar',
+    locale: 'lookups.slas.resolutionTime',
     show: true,
     field: 'resolution_time',
     sort: SortSymbols.NONE,
