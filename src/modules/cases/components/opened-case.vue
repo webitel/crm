@@ -137,12 +137,4 @@ initialize();
     background: var(--content-wrapper-color);
   }
 }
-
-//Overwriting styles so opened-case-content__general and opened-case-content__tabs separated by grey color
-.opened-card {
-  :deep(.wt-page-wrapper__main) {
-    padding: 0;
-    background: var(--wt-page-wrapper-background-color);
-  }
-}
 </style>

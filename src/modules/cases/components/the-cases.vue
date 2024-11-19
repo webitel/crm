@@ -233,18 +233,4 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
-// make action icons fixed to right
-.wt-table :deep(.wt-table__tr) {
-  .wt-table__td__actions {
-    position: sticky;
-    right: 0;
-    background: var(--content-wrapper-color);
-  }
-
-  &:nth-child(2n) {
-    .wt-table__td__actions {
-      background: var(--wt-table-zebra-color);
-    }
-  }
-}
 </style>
