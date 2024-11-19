@@ -1,7 +1,7 @@
 <template>
-  <wt-page-wrapper
+  <wt-dual-panel
     :actions-panel="false"
-    class="opened-case opened-card"
+    class="opened-case"
   >
     <template #header>
       <wt-page-header
@@ -20,24 +20,22 @@
         </template>
       </wt-page-header>
     </template>
+    <template #side-panel>
+      <opened-case-general />
+    </template>
     <template #main>
-      <div class="opened-case-content">
-        <div class="opened-case-content__general">
-          <opened-case-general />
-        </div>
-        <div class="opened-case-content__tabs">
-          <wt-tabs
-            :current="currentTab"
-            :tabs="tabs"
-            @change="changeTab"
-          />
-          <router-view
-            :namespace="namespace"
-          />
-        </div>
+      <div>
+        <wt-tabs
+          :current="currentTab"
+          :tabs="tabs"
+          @change="changeTab"
+        />
+        <router-view
+          :namespace="namespace"
+        />
       </div>
     </template>
-  </wt-page-wrapper>
+  </wt-dual-panel>
 </template>
 
 <script setup>
@@ -119,22 +117,4 @@ initialize();
 
 
 <style lang="scss" scoped>
-.opened-case-content {
-  display: flex;
-  flex-grow: 1;
-  min-height: 0;
-  gap: var(--spacing-sm);
-
-  &__general {
-    flex: 0 0 250px;
-    padding: var(--page-wrapper-padding);
-    background: var(--content-wrapper-color);
-  }
-
-  &__tabs {
-    flex: 1 1 auto;
-    padding: var(--page-wrapper-padding);
-    background: var(--content-wrapper-color);
-  }
-}
 </style>
