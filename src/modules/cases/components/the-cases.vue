@@ -26,6 +26,7 @@
           </h3>
           <wt-action-bar
             :actions="[IconAction.ADD, IconAction.REFRESH]"
+            @click:add="add"
           >
             <wt-icon-btn
               icon="filter"
@@ -58,7 +59,11 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              {{ item.name }}
+              <wt-item-link
+                :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
+              >
+                {{ item.name }}
+              </wt-item-link>
             </template>
             <template #priority="{ item }">
               {{ item.priority.name }}
@@ -209,10 +214,10 @@ const path = computed(() => [
   },
 ]);
 
-function saved(id) {
+function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
-    params: { id },
+    params: { id: 'new' },
   });
 }
 

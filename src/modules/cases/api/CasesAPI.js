@@ -460,9 +460,9 @@ const getList = async (params) => {
   }
 };
 
-const get = async ({ itemId: etag }) => {
+const get = async ({ itemId: id }) => {
   try {
-    const bucketData = data.items.find((item) => item.etag === etag);
+    const bucketData = data.items.find((item) => item.id === id);
 
     if (!bucketData) {
       throw new Error("Item not found");

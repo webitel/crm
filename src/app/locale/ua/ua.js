@@ -132,5 +132,8 @@ export default {
     reason: 'Причина',
     result: 'Результат',
     rating: 'Оцінка',
+    caseInfo: {
+      caseInfo: 'Інформація',
+    }
   },
 };

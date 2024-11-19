@@ -132,5 +132,8 @@ export default {
     reason: 'Reason',
     result: 'Result',
     rating: 'Rating',
+    caseInfo: {
+      caseInfo: 'Case info',
+    }
   },
 };
