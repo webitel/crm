@@ -97,7 +97,7 @@ export default {
       name: 'Cases',
       text: 'Here you can view Cases registered in the system.',
     },
-    [CrmSections.CONFIGURATION]: {
+    'configuration': {
       name: 'Configuration',
       text: 'In this section, you will set up the Case management process.',
     },
