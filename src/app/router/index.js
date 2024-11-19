@@ -45,15 +45,15 @@ const routes = [
   {
     path: '/',
     name: 'crm-workspace',
-    redirect: { name: 'the-start-page' },
+    redirect: { name: 'contacts' },
     component: TheCrmWorkspace,
     beforeEnter: checkAppAccess,
     children: [
-      {
-        path: 'start-page',
-        name: 'the-start-page',
-        component: TheStartPage,
-      },
+      // {
+      //   path: 'start-page',
+      //   name: 'the-start-page',
+      //   component: TheStartPage,
+      // },
       {
         path: 'contacts',
         name: CrmSections.CONTACTS,
