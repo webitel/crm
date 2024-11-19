@@ -92,6 +92,7 @@ const {
 const { v$, invalid } = useValidate(validateSchema, { itemInstance });
 const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
   ...restStore,
+  id,
   itemInstance,
   invalid,
 });

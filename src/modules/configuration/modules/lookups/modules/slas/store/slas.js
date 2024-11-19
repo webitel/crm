@@ -11,6 +11,16 @@ import conditions from '../modules/conditions/store/conditions';
 
 const resettableState = {
   itemInstance: {
+    name: '',
+    description: '',
+    calendar: {
+      id: '',
+      name: '',
+    },
+    reactionTime: 0,
+    resolutionTime: 0,
+    validTo: 0,
+    validFrom: 0,
   },
 };
 

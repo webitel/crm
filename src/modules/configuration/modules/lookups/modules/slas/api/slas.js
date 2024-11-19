@@ -7,14 +7,11 @@ import applyTransform, {
   camelToSnake,
   generateUrl,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import deepCopy from 'deep-copy';
-import ConvertDuration from '@webitel/ui-sdk/src/scripts/convertDuration.js';
 
 const instance = getDefaultInstance();
 
@@ -47,8 +44,6 @@ const getSlasList = async (params) => {
   }
 };
 
-
-
 const getSla = async ({ itemId: id }) => {
   const itemResponseHandler = (item) => {
     return item.sla;
@@ -61,6 +56,7 @@ const getSla = async ({ itemId: id }) => {
   try {
     const response = await instance.get(url);
     return applyTransform(response.data, [
+      snakeToCamel(),
       itemResponseHandler,
     ]);
   } catch (err) {
@@ -68,63 +64,11 @@ const getSla = async ({ itemId: id }) => {
   }
 };
 
-const convertTime = (value) => {
-  const generalTime = ConvertDuration(value);
-  const time = {};
-
-  const hours = generalTime.split(':')[0];
-  const hoursValue = hours[0] === '0' ? hours[1] : hours;
-
-  const minutes = generalTime.split(':')[1];
-  const minutesValue = minutes[0] === '0' ? minutes[1] : minutes;
-
-  if(hoursValue !== '00' && hoursValue !== '0') {
-    time.hours = hoursValue;
-  }
-
-  if(minutesValue !== '00' && minutesValue !== '0') {
-    time.minutes = minutesValue;
-  }
-
-  if(!time.hours && !time.minutes) {
-    return null;
-  }
-
-  return time;
-}
-
 const preRequestHandler = (item) => {
-  const copy = deepCopy(item);
-
-  if(copy.validFrom) {
-    copy.validFrom = new Date(copy.validFrom).toISOString();
+  return {
+    ...item,
+    calendarId: item.calendar.id,
   }
-  if(copy.validTo) {
-    copy.validTo = new Date(copy.validTo).toISOString();
-  }
-  if(copy.reactionTime) {
-    const timeValue = convertTime(copy.reactionTime);
-    if(!timeValue) {
-      delete copy.reactionTime;
-    } else {
-      copy.reactionTime = timeValue;
-    }
-  }
-
-  if(copy.resolutionTime) {
-    const timeValue = convertTime(copy.resolutionTime);
-    if(!timeValue) {
-      delete copy.resolutionTime;
-    } else {
-      copy.resolutionTime = timeValue;
-    }
-  }
-
-  if(copy.calendar) {
-    copy.calendarId = copy.calendar.id;
-  }
-
-  return copy;
 };
 
 const addSla = async ({ itemInstance }) => {
@@ -132,10 +76,25 @@ const addSla = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     sanitize(fieldsToSend),
+    camelToSnake(),
   ]);
   try {
     const response = await instance.post(baseUrl, item);
-    return applyTransform(response.data, []);
+    return applyTransform(response.data, [
+      snakeToCamel()
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const updateSla = async ({ itemInstance, itemId: id }) => {
+  const item = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
+
+  const url = `${baseUrl}/${id}`;
+  try {
+    const response = await instance.put(url, item);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
@@ -154,8 +113,9 @@ const deleteSla = async ({ id }) => {
 const SlasAPI = {
   getList: getSlasList,
   get: getSla,
-  delete: deleteSla,
   add: addSla,
+  update: updateSla,
+  delete: deleteSla,
 }
 
 export default SlasAPI;

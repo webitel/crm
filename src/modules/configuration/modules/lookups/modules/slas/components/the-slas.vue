@@ -20,8 +20,14 @@
           <wt-actions-bar
             mode="table"
             :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :disabled:add="!hasCreateAccess"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
             @click:refresh="loadData"
+            @click:delete="askDeleteConfirmation({
+                  deleted: selected,
+                  callback: () => deleteData(selected),
+                })"
           >
             <template #search-bar>
               <filter-search
@@ -32,7 +38,6 @@
           </wt-actions-bar>
         </header>
       </section>
-
 
 
       <wt-loader v-show="isLoading" />
@@ -109,7 +114,7 @@ import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { computed, onUnmounted, ref } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -140,7 +145,6 @@ const {
   isLoading,
   headers,
   isNext,
-  error,
 
   loadData,
   deleteData,
@@ -174,19 +178,6 @@ const path = computed(() => [
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.slas.slas', 2), route: '/slas' },
 ]);
-
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-
-const deletableSelectedItems = computed(() => (
-  selected.value.filter((item) => item.access.delete)
-));
-
-function deleteSelectedItems() {
-  return askDeleteConfirmation({
-    deleted: deletableSelectedItems.value,
-    callback: () => deleteData([...deletableSelectedItems.value]),
-  });
-}
 
 const { close } = useClose('configuration');
 
