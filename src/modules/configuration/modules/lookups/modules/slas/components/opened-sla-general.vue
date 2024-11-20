@@ -7,7 +7,6 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input
-        :disabled="disableUserInput"
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
@@ -16,7 +15,6 @@
       />
 
       <wt-select
-        :disabled="disableUserInput"
         :label="t('lookups.slas.calendar')"
         :search-method="loadCalendarsList"
         :v="v.itemInstance.calendar"
@@ -26,7 +24,6 @@
       />
 
       <wt-textarea
-        :disabled="disableUserInput"
         :label="t('vocabulary.description')"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
@@ -34,7 +31,6 @@
 
       <div>
         <wt-timepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.reactionTime')"
           :v="v.itemInstance.reactionTime"
           :value="itemInstance.reactionTime"
@@ -43,7 +39,6 @@
         />
 
         <wt-timepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.resolutionTime')"
           :v="v.itemInstance.resolutionTime"
           :value="itemInstance.resolutionTime"
@@ -54,7 +49,6 @@
 
       <div class="opened-sla-general__wrapper">
         <wt-datepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           mode="datetime"
@@ -62,7 +56,6 @@
         />
 
         <wt-datepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
           mode="datetime"
@@ -76,7 +69,6 @@
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
 
 const props = defineProps({
@@ -91,8 +83,6 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-
-const { disableUserInput } = useAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

@@ -4,7 +4,7 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
+        :hide-primary="!hasSaveActionAccess || currentTab === 'conditions'"
         :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
@@ -126,7 +126,7 @@ const path = computed(() => {
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.slas.slas', 2), route: '/slas' },
+    { name: t('lookups.slas.slas', 2), route: '/lookups/slas' },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
       route: {
