@@ -40,16 +40,16 @@ const nav = [
       dark: ContactsImgDark,
     },
   },
-  // {
-  //   value: 'configuration',
-  //   route: '/configuration',
-  //   name: t(`startPage.configuration.name`),
-  //   text: t(`startPage.configuration.text`),
-  //   images: {
-  //     light: ConfigurationImgLight,
-  //     dark: ConfigurationImgDark,
-  //   },
-  // },
+  {
+    value: 'configuration',
+    route: '/configuration',
+    name: t(`startPage.configuration.name`),
+    text: t(`startPage.configuration.text`),
+    images: {
+      light: ConfigurationImgLight,
+      dark: ConfigurationImgDark,
+    },
+  },
 ];
 </script>
 
