@@ -34,14 +34,6 @@ const table = createTableStoreModule({
   },
 });
 
-const original = table.actions.LOAD_DATA_LIST;
-
-// table.actions.LOAD_DATA_LIST = (context) => {
-//   if (!context.getters.PARENT_ID) return;
-//
-//   return original(context);
-// };
-
 const card = createCardStoreModule({
   state: { _resettable: resettableItemState },
   getters,

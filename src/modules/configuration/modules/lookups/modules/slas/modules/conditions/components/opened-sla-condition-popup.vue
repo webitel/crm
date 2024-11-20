@@ -5,7 +5,7 @@
     @close="close"
   >
     <template #title>
-      {{ conditionId !== 'new' ? t('reusable.edit') : t('reusable.add') }}
+      {{ !isNew ? t('reusable.edit') : t('reusable.add') }}
       {{ t('lookups.slas.conditions', 1).toLowerCase() }}
     </template>
     <template #main>
@@ -20,31 +20,31 @@
         <wt-select
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
-          multiple
           :search-method="PrioritiesAPI.getLookup"
-          @input="setItemProp({ path: 'name', value: $event })"
+          multiple
+          @input="setItemProp({ path: 'priorities', value: $event })"
         />
         <wt-timepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.reactionTime')"
           :v="v.itemInstance.reactionTime"
           :value="itemInstance.reactionTime"
           format="hh:mm"
-          @input="setItemProp({ prop: 'reactionTime', value: +$event })"
+          @input="setItemProp({ prop: 'reactionTime', value: $event })"
         />
 
         <wt-timepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.resolutionTime')"
           :v="v.itemInstance.resolutionTime"
           :value="itemInstance.resolutionTime"
           format="hh:mm"
-          @input="setItemProp({ prop: 'resolutionTime', value: +$event })"
+          @input="setItemProp({ prop: 'resolutionTime', value: $event })"
         />
       </form>
     </template>
     <template #actions>
-      <wt-button @click="save">
+      <wt-button
+        :disabled="v.$invalid"
+        @click="save">
         {{ t('reusable.save') }}
       </wt-button>
       <wt-button
@@ -55,20 +55,16 @@
       </wt-button>
     </template>
   </wt-popup>
-
-
 </template>
 
 <script setup>
-import { required } from '@vuelidate/validators';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import PrioritiesAPI from '../../../../ priorities/api/priorities.js';
-import { computed, onMounted, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { required } from '@vuelidate/validators';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useCardStore } from '@webitel/ui-sdk/store';
 import { useValidate } from '@webitel/ui-sdk/src/composables/useValidate/useValidate.js';
+import PrioritiesAPI from '../../../../ priorities/api/priorities.js';
 
 const props = defineProps({
   namespace: {
@@ -77,7 +73,8 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const emit = defineEmits(['load-data']);
+
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
@@ -91,18 +88,11 @@ const {
   updateItem,
   setId,
   setItemProp,
+  id,
 } = useCardStore(props.namespace);
 
-const getDefaultDraft = () => ({
-  id: '',
-  name: '',
-  reactionTime: '',
-  resolutionTime: '',
-  priorities: [],
-});
-
 const conditionId = computed(() => route.params.conditionId);
-console.log(conditionId.value);
+const isNew = computed(() => conditionId.value === 'new');
 
 const validateSchema = computed(() => ({
   itemInstance: {
@@ -118,36 +108,48 @@ const validateSchema = computed(() => ({
   },
 }));
 
-const { v$: v, invalid } = useValidate(validateSchema, { itemInstance });
-
-async function initializePopup() {
-  try {
-    if (conditionId.value !== 'new') {
-      // isLoading.value = true;
-      console.log(conditionId.value);
-      await setId(conditionId.value);
-      await loadItem();
-    } else {
-      await addItem(getDefaultDraft());
-    }
-  } finally {
-    // isLoading.value = false;
-  }
-}
+const { v$: v } = useValidate(validateSchema, { itemInstance });
+v.value?.$touch();
 
 function close() {
   router.go(-1);
 }
 
-onMounted(() =>  initializePopup());
+function loadDataList() {
+  emit('load-data');
+}
+
+const save = async () => {
+  if (isNew.value) {
+    await addItem({ itemInstance, parentId: id.value });
+  } else {
+    await updateItem({ itemInstance, itemId: id.value });
+  }
+
+  if (id?.value) {
+    close();
+    loadDataList();
+  }
+};
+
+async function initializePopup() {
+  try {
+    if (!isNew.value) {
+      await setId(conditionId.value);
+      await loadItem();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 watch(() => conditionId.value, (value) => {
   if(value) {
-    loadItem(value) /////не закінчила
+    initializePopup();
+  } else {
+    resetState();
   }
-});
-
-
+}, { immediate: true });
 </script>
 
 <style lang="scss" scoped>

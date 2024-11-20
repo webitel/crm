@@ -7,7 +7,6 @@ import applyTransform, {
   camelToSnake,
   generateUrl,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
@@ -17,11 +16,17 @@ import applyTransform, {
 const instance = getDefaultInstance();
 
 const baseUrl = '/slas';
-const nestedUrl = 'sla_conditions';
+const nestedUrl = 'sla_condition';
 
-const fieldsToSend = ['name', 'priorities', 'sla_id', 'reaction_time', 'resolution_time'];
+const fieldsToSend = [
+  'name',
+  'priorities',
+  'sla_id',
+  'reaction_time',
+  'resolution_time',
+];
 
-const getConditionsList = async ({parentId, ...rest}) => {
+const getConditionsList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const url = applyTransform(rest, [
@@ -30,7 +35,7 @@ const getConditionsList = async ({parentId, ...rest}) => {
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(`${baseUrl}/${parentId}/${nestedUrl}`),
+    generateUrl(`${baseUrl}/${parentId}/sla_conditions`),
   ]);
   try {
     const response = await instance.get(url);
@@ -51,7 +56,9 @@ const getCondition = async ({ parentId, itemId: id }) => {
     return item.slaCondition;
   };
 
-  const url = `${baseUrl}/${parentId}/sla_condition/${id}`;
+  const url = applyTransform({ fields: fieldsToSend }, [
+    generateUrl(`${baseUrl}/${parentId}/${nestedUrl}/${id}`),
+  ]);
 
   try {
     const response = await instance.get(url);
@@ -61,11 +68,19 @@ const getCondition = async ({ parentId, itemId: id }) => {
   }
 };
 
+const preRequestHandler = (item) => {
+  if (!item.priorities) return item;
+  return {
+    ...item,
+    priorities: item.priorities?.map((priority) => priority.id),
+  };
+};
+
 const updateCondition = async ({ itemInstance, itemId: id }) => {
   const item = applyTransform(itemInstance, [
-    // preRequestHandler,
-    sanitize(fieldsToSend),
+    preRequestHandler,
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
 
   const url = `${baseUrl}/${itemInstance.slaId}/${nestedUrl}/${id}`;
@@ -78,7 +93,11 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
 };
 
 const addCondition = async ({ itemInstance, parentId }) => {
-  const item = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+  const item = applyTransform(itemInstance, [
+    preRequestHandler,
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
   const url = `${baseUrl}/${parentId}/${nestedUrl}`;
   try {
     const response = await instance.post(url, item);
@@ -98,13 +117,12 @@ const deleteCondition = async ({ id, parentId }) => {
   }
 };
 
-
 const ConditionsAPI = {
   getList: getConditionsList,
   get: getCondition,
   update: updateCondition,
   delete: deleteCondition,
   add: addCondition,
-}
+};
 
 export default ConditionsAPI;

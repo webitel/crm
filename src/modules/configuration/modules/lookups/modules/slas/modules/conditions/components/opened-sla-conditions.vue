@@ -2,6 +2,7 @@
   <section class="table-page opened-sla-conditions">
     <condition-popup
       :namespace="namespace"
+      @load-data="loadData"
     />
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
@@ -18,7 +19,7 @@
         <wt-actions-bar
           mode="table"
           :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="create"
+          @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
           @click:refresh="loadData"
         >
           <template #search-bar>
@@ -60,28 +61,28 @@
                 </wt-chip>
               </template>
 
-              <timeline-row-initiator
-                v-for="({ id, name }) of getHiddenPriorities(item.priorities)"
-                :key="id"
-                :text="name"
-              />
+              <ul class="opened-sla-conditions__priorities">
+                <li
+                  v-for="({ id, name }) of getHiddenPriorities(item.priorities)"
+                  :key="id"
+                  :text="name"
+                ></li>
+              </ul>
             </wt-tooltip>
           </div>
         </template>
         <template #reactionTime="{ item }">
-          {{ item.reactionTime }}
+          {{ convertDurationWithMin(item.reactionTime) }}
         </template>
         <template #resolutionTime="{ item }">
-          {{ item.resolutionTime }}
+          {{ convertDurationWithMin(item.resolutionTime) }}
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            v-if="hasEditAccess"
             action="edit"
-            @click="edit(item)"
+            @click="router.push({ ...route, params: { conditionId: item.id } })"
           />
           <wt-icon-action
-            v-if="hasDeleteAccess"
             action="delete"
             @click="askDeleteConfirmation({
                 deleted: [item],
@@ -100,7 +101,6 @@
 </template>
 
 <script setup>
-import { required } from '@vuelidate/validators';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -109,19 +109,16 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
-import { onUnmounted, watch, computed } from 'vue';
+import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import WtActionsBar
   from '../../../../../../../../../../../webitel-ui-sdk/src/components/wt-action-bar/wt-action-bar.vue';
 import IconAction from '../../../../../../../../../../../webitel-ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import FilterSearch
   from '../../../../../../../../../../../webitel-ui-sdk/src/modules/Filters/components/filter-search.vue';
-import TimelineRowInitiator
-  from '../../../../../../../../contacts/modules/timeline/components/utils/timeline-row-initiator.vue';
 import ConditionPopup from './opened-sla-condition-popup.vue';
+import convertDurationWithMin from '../../../scripts/convertDurationWithMin.js';
 
 const props = defineProps({
   namespace: {
@@ -133,21 +130,13 @@ const props = defineProps({
 const {
   namespace: parentCardNamespace,
   id: parentId,
-
-  addItem,
 } = useCardStore(props.namespace);
 
 const namespace = `${parentCardNamespace}/conditions`;
 
-const store = useStore();
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
-
-
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
-
-
 
 const {
   namespace: tableNamespace,
@@ -157,7 +146,6 @@ const {
   isLoading,
   headers,
   isNext,
-  error,
 
   loadData,
   deleteData,
@@ -165,8 +153,6 @@ const {
   setSelected,
   onFilterEvent,
 } = useTableStore(namespace);
-
-console.log(store)
 
 const {
   namespace: filtersNamespace,
@@ -196,44 +182,13 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const edit = ({id}) => {
-  return router.push({
-    ...route,
-    params: { conditionId: id },
-  });
-
-};
-
-// const create = async () => {
-//   if (!parentId.value) {
-//     await addItem();
-//     await router.replace({
-//       ...route,
-//       params: {
-//         ...route.params,
-//         id: parentId.value,
-//       },
-//     });
-//   }
-//
-//   return router.push({
-//     ...route,
-//     params: {
-//       ...route.params,
-//       id: 'new',
-//     },
-//   });
-// };
-
-// const prettifyDate = (value) => {
-//   return new Date(+value).toLocaleString();
-// };
-
-function getHiddenPriorities (item) {
+function getHiddenPriorities(item) {
   return item.priorities?.slice(1);
-};
-
+}
 </script>
 
 <style lang="scss" scoped>
+.opened-sla-conditions__priorities {
+  display: contents;
+}
 </style>
