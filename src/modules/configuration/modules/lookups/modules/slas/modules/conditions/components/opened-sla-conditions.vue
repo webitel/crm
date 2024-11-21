@@ -52,7 +52,7 @@
           <div v-if="item.priorities?.length">
             <p>{{ item.priorities[0]?.name }}</p>
             <wt-tooltip
-              v-if="item.priorities?.length"
+              v-if="item.priorities?.length > 1"
               :triggers="['click']"
             >
               <template #activator>
@@ -61,21 +61,23 @@
                 </wt-chip>
               </template>
 
-              <ul class="opened-sla-conditions__priorities">
-                <li
-                  v-for="({ id, name }) of getHiddenPriorities(item.priorities)"
-                  :key="id"
-                  :text="name"
-                ></li>
-              </ul>
+              <template #option>
+                <ul class="opened-sla-conditions__priorities">
+                  <li
+                    v-for="({ id, name }) of getHiddenPriorities(item.priorities)"
+                    :key="id"
+                    :text="name"
+                  ></li>
+                </ul>
+              </template>
             </wt-tooltip>
           </div>
         </template>
         <template #reactionTime="{ item }">
-          {{ convertDurationWithMin(item.reactionTime) }}
+          {{ ConvertDurationWithMinutes(item.reactionTime / 60) }}
         </template>
         <template #resolutionTime="{ item }">
-          {{ convertDurationWithMin(item.resolutionTime) }}
+          {{ ConvertDurationWithMinutes(item.resolutionTime / 60) }}
         </template>
         <template #actions="{ item }">
           <wt-icon-action
@@ -118,7 +120,7 @@ import IconAction from '../../../../../../../../../../../webitel-ui-sdk/src/enum
 import FilterSearch
   from '../../../../../../../../../../../webitel-ui-sdk/src/modules/Filters/components/filter-search.vue';
 import ConditionPopup from './opened-sla-condition-popup.vue';
-import convertDurationWithMin from '../../../scripts/convertDurationWithMin.js';
+import ConvertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 
 const props = defineProps({
   namespace: {
