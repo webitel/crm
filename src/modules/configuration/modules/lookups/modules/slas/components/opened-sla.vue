@@ -4,7 +4,7 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess || currentTab === 'conditions'"
+        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
@@ -118,7 +118,7 @@ const tabs = computed(() => {
   return tabs;
 });
 
-const { currentTab, changeTab } = useCardTabs(tabs.value);
+const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
 
