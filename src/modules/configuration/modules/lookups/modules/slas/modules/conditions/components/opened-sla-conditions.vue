@@ -49,7 +49,9 @@
           {{ item.name }}
         </template>
         <template #priorities="{ item }">
-          <div v-if="item.priorities?.length">
+          <div
+            v-if="item.priorities?.length"
+            class="opened-sla-conditions__priorities">
             <p>{{ item.priorities[0]?.name }}</p>
             <wt-tooltip
               v-if="item.priorities?.length > 1"
@@ -61,23 +63,22 @@
                 </wt-chip>
               </template>
 
-              <template #option>
-                <ul class="opened-sla-conditions__priorities">
-                  <li
-                    v-for="({ id, name }) of getHiddenPriorities(item.priorities)"
-                    :key="id"
-                    :text="name"
-                  ></li>
-                </ul>
-              </template>
+              <ul>
+                <li
+                  v-for="({ id, name }) of item.priorities?.slice(1)"
+                  :key="id"
+                >
+                  <p>{{ name }}</p>
+                </li>
+              </ul>
             </wt-tooltip>
           </div>
         </template>
         <template #reactionTime="{ item }">
-          {{ ConvertDurationWithMinutes(item.reactionTime / 60) }}
+          {{ convertDurationWithMinutes(item.reactionTime / 60) }}
         </template>
         <template #resolutionTime="{ item }">
-          {{ ConvertDurationWithMinutes(item.resolutionTime / 60) }}
+          {{ convertDurationWithMinutes(item.resolutionTime / 60) }}
         </template>
         <template #actions="{ item }">
           <wt-icon-action
@@ -120,7 +121,7 @@ import IconAction from '../../../../../../../../../../../webitel-ui-sdk/src/enum
 import FilterSearch
   from '../../../../../../../../../../../webitel-ui-sdk/src/modules/Filters/components/filter-search.vue';
 import ConditionPopup from './opened-sla-condition-popup.vue';
-import ConvertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
+import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 
 const props = defineProps({
   namespace: {
@@ -184,13 +185,11 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-function getHiddenPriorities(item) {
-  return item.priorities?.slice(1);
-}
 </script>
 
 <style lang="scss" scoped>
 .opened-sla-conditions__priorities {
-  display: contents;
+  display: flex;
+  gap: var(--spacing-xs);
 }
 </style>
