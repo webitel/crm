@@ -190,10 +190,4 @@ function edit(item) {
 </script>
 
 <style lang="scss" scoped>
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-}
 </style>
