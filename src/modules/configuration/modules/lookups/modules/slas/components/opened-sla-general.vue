@@ -9,7 +9,6 @@
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
-        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -17,7 +16,6 @@
       <wt-select
         :label="t('lookups.slas.calendar')"
         :search-method="loadCalendarsList"
-        :v="v.itemInstance.calendar"
         :value="itemInstance.calendar"
         required
         @input="setItemProp({ prop: 'calendar', value: $event })"
@@ -32,7 +30,6 @@
       <div>
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
-          :v="v.itemInstance.reactionTime"
           :value="itemInstance.reactionTime"
           format='hh:mm'
           @input="setItemProp({ prop: 'reactionTime', value: +$event })"
@@ -40,7 +37,6 @@
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
-          :v="v.itemInstance.resolutionTime"
           :value="itemInstance.resolutionTime"
           format='hh:mm'
           @input="setItemProp({ prop: 'resolutionTime', value: +$event })"
@@ -74,10 +70,6 @@ import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js
 const props = defineProps({
   namespace: {
     type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
     required: true,
   },
 });

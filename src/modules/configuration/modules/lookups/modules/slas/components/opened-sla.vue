@@ -35,7 +35,6 @@
           <component
             :is="Component"
             :namespace="cardNamespace"
-            :v="v$"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
@@ -52,35 +51,16 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import { useValidate } from '@webitel/ui-sdk/src/composables/useValidate/useValidate.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 
 const namespace = 'configuration/lookups/slas';
 const { t } = useI18n();
 const route = useRoute();
-
-const validateSchema = computed(() => ({
-  itemInstance: {
-    name: {
-      required,
-    },
-    calendar: {
-      required,
-    },
-    reactionTime: {
-      required,
-    },
-    resolutionTime: {
-      required,
-    },
-  },
-}));
 
 const {
   namespace: cardNamespace,
@@ -89,12 +69,10 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { v$, invalid } = useValidate(validateSchema, { itemInstance });
 const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
-  invalid,
 });
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 

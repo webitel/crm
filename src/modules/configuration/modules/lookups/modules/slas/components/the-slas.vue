@@ -37,63 +37,69 @@
             </template>
           </wt-actions-bar>
         </header>
-      </section>
 
+        <wt-loader v-show="isLoading" />
 
-      <wt-loader v-show="isLoading" />
+        <delete-confirmation-popup
+          :shown="isDeleteConfirmationPopup"
+          :callback="deleteCallback"
+          :delete-count="deleteCount"
+          @close="closeDelete"
+        />
 
-      <delete-confirmation-popup
-        :shown="isDeleteConfirmationPopup"
-        :callback="deleteCallback"
-        :delete-count="deleteCount"
-        @close="closeDelete"
-      />
+        <wt-empty
+          v-show="showEmpty"
+          :image="imageEmpty"
+          :text="textEmpty"
+        />
 
-      <div
-        v-show="!isLoading && dataList.length"
-        class="table-wrapper"
-      >
-        <wt-table
-          :data="dataList"
-          :headers="headers"
-          :selected="selected"
-          sortable
-          @sort="sort"
-          @update:selected="setSelected"
+        <div
+          v-show="!isLoading && dataList.length"
+          class="table-wrapper"
         >
-          <template #name="{ item }">
-            <wt-item-link
-              :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }">
-              {{ item.name }}
-            </wt-item-link>
-          </template>
-          <template #description="{ item }">
-            {{ item.description }}
-          </template>
-          <template #calendar="{ item }">
-            {{ item.calendar.name }}
-          </template>
-          <template #actions="{ item }">
-            <wt-icon-action
-              v-if="hasEditAccess"
-              action="edit"
-              @click="edit(item)"
-            />
-            <wt-icon-action
-              v-if="hasDeleteAccess"
-              action="delete"
-              @click="askDeleteConfirmation({
+          <wt-table
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
+            <template #description="{ item }">
+              {{ item.description }}
+            </template>
+            <template #calendar="{ item }">
+              {{ item.calendar.name }}
+            </template>
+            <template #actions="{ item }">
+              <wt-icon-action
+                v-if="hasEditAccess"
+                action="edit"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                v-if="hasDeleteAccess"
+                action="delete"
+                @click="askDeleteConfirmation({
                 deleted: [item],
                 callback: () => deleteData(item),
               })"
-            />
-          </template>
-        </wt-table>
-        <filter-pagination
-          :namespace="filtersNamespace"
-          :is-next="isNext"
-        />
-      </div>
+              />
+            </template>
+          </wt-table>
+          <filter-pagination
+            :namespace="filtersNamespace"
+            :is-next="isNext"
+          />
+        </div>
+      </section>
     </template>
   </wt-page-wrapper>
 </template>
@@ -118,6 +124,8 @@ import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import filters from '../modules/filters/store/filters.js';
 
 const baseNamespace = 'configuration/lookups/slas';
 
@@ -145,6 +153,7 @@ const {
   isLoading,
   headers,
   isNext,
+  error,
 
   loadData,
   deleteData,
@@ -187,6 +196,12 @@ function edit(item) {
     params: { id: item.id },
   });
 }
+
+const {
+  showEmpty,
+  image: imageEmpty,
+  text: textEmpty,
+} = useTableEmpty({ dataList, filters, error, isLoading });
 </script>
 
 <style lang="scss" scoped>
