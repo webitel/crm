@@ -13,7 +13,6 @@
         <wt-input
           :value="itemInstance.name"
           :label="t('reusable.name')"
-          :v="v.itemInstance.name"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
@@ -26,7 +25,6 @@
         />
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
-          :v="v.itemInstance.reactionTime"
           :value="itemInstance.reactionTime"
           format="hh:mm"
           @input="setItemProp({ prop: 'reactionTime', value: $event })"
@@ -34,7 +32,6 @@
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
-          :v="v.itemInstance.resolutionTime"
           :value="itemInstance.resolutionTime"
           format="hh:mm"
           @input="setItemProp({ prop: 'resolutionTime', value: $event })"
@@ -43,7 +40,6 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="v.$invalid"
         @click="save">
         {{ t('reusable.save') }}
       </wt-button>
@@ -63,7 +59,6 @@ import { useI18n } from 'vue-i18n';
 import { required } from '@vuelidate/validators';
 import { useRoute, useRouter } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { useValidate } from '@webitel/ui-sdk/src/composables/useValidate/useValidate.js';
 import PrioritiesAPI from '../../../../ priorities/api/priorities.js';
 
 const props = defineProps({
@@ -93,23 +88,6 @@ const {
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
-
-const validateSchema = computed(() => ({
-  itemInstance: {
-    name: {
-      required,
-    },
-    reactionTime: {
-      required,
-    },
-    resolutionTime: {
-      required,
-    },
-  },
-}));
-
-const { v$: v } = useValidate(validateSchema, { itemInstance });
-v.value?.$touch();
 
 function close() {
   router.go(-1);

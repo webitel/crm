@@ -10,29 +10,34 @@
       :callback="deleteCallback"
       @close="closeDelete"
     />
-    <section class="table-section">
-      <header class="table-title">
-        <h3 class="table-title__title">
-          {{ t('lookups.slas.conditions', 2) }}
-        </h3>
+    <header class="table-title">
+      <h3 class="table-title__title">
+        {{ t('lookups.slas.conditions', 2) }}
+      </h3>
 
-        <wt-actions-bar
-          mode="table"
-          :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
-          @click:refresh="loadData"
-        >
-          <template #search-bar>
-            <filter-search
-              :namespace="filtersNamespace"
-              name="search"
-            />
-          </template>
-        </wt-actions-bar>
-      </header>
-    </section>
+      <wt-actions-bar
+        mode="table"
+        :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+        @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
+        @click:refresh="loadData"
+      >
+        <template #search-bar>
+          <filter-search
+            :namespace="filtersNamespace"
+            name="search"
+          />
+        </template>
+      </wt-actions-bar>
+    </header>
 
     <wt-loader v-show="isLoading" />
+
+    <wt-empty
+      v-show="showEmpty"
+      :image="imageEmpty"
+      :text="textEmpty"
+    />
+
     <div
       v-show="!isLoading && dataList.length"
       class="table-wrapper"
@@ -122,6 +127,8 @@ import FilterSearch
   from '../../../../../../../../../../../webitel-ui-sdk/src/modules/Filters/components/filter-search.vue';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import filters from '../modules/filters/store/filters.js';
 
 const props = defineProps({
   namespace: {
@@ -149,6 +156,7 @@ const {
   isLoading,
   headers,
   isNext,
+  error,
 
   loadData,
   deleteData,
@@ -184,6 +192,12 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const {
+  showEmpty,
+  image: imageEmpty,
+  text: textEmpty,
+} = useTableEmpty({ dataList, filters, error, isLoading });
 
 </script>
 
