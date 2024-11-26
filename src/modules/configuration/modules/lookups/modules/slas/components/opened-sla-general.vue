@@ -95,7 +95,6 @@ const { t } = useI18n();
 const { disableUserInput } = useAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
-console.log(props.namespace)
 
 function loadCalendarsList(search) {
   return CalendarsAPI.getLookup(search);
