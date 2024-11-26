@@ -2,14 +2,14 @@
   <div class="editable-field">
     <div
       v-if="!editMode"
-      class="editable-field__value"
+      class="editable-field__content"
     >
       <label class="editable-field__label">{{ label }}</label>
       <span class="editable-field__value">{{ value }}</span>
     </div>
     <div
       v-else
-      class="editable-field__content"
+      class="editable-field__slot"
     >
       <slot />
     </div>
@@ -39,7 +39,7 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
 
-  &__value {
+  &__content {
     display: flex;
     flex-direction: column;
   }

@@ -48,12 +48,6 @@ const actions = {
   },
 };
 
-const mutations = {
-  SET: (state, { path, value }) => {
-    set(state, path, value);
-  },
-};
-
 const api = createApiStoreModule({
   state: {
     api: CasesAPI,
@@ -77,7 +71,6 @@ const card = createCardStoreModule({
     api,
   },
   actions,
-  mutations,
   getters,
 });
 
