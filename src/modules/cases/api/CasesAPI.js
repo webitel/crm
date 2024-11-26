@@ -6,6 +6,8 @@ import applyTransform, {
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import getDefaultGetListResponse from '../../../app/api/defaults/getDefaultGetListResponse.js';
 
+// NOTE: local version of API and need to be deleted after the API is created in the backend
+
 const data = {
   page: "1",
   next: true,
