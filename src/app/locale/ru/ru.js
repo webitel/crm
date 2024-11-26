@@ -120,6 +120,7 @@ export default {
     source: 'Источник',
     author: 'Автор',
     group: 'Группа исполнителей',
+    service: 'Сервис',
     assignee: 'Исполнитель',
     reporter: 'Инициатор',
     impacted: 'Влияет на',
@@ -133,6 +134,7 @@ export default {
     rating: 'Оценка',
     caseInfo: {
       caseInfo: 'Информация',
+      contactInfo: 'Контактная информация',
     }
   },
 };

@@ -1,6 +1,7 @@
 import applyTransform, {
+  camelToSnake,
   merge,
-  notify,
+  notify, sanitize,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import getDefaultGetListResponse from '../../../app/api/defaults/getDefaultGetListResponse.js';
@@ -441,6 +442,35 @@ const data = {
     },
   ],
 };
+const fieldsToSend = [
+  'id',
+  'ver',
+  'etag',
+  'name',
+  'subject',
+  'description',
+  'contact_info',
+  'planned_reaction_at',
+  'planned_resolve_at',
+  'status_lookup',
+  'close_reason_lookup',
+  'author',
+  'assignee',
+  'reporter',
+  'impacted',
+  'group',
+  'priority',
+  'source',
+  'status',
+  'close',
+  'rate',
+  'timing',
+  'sla_condition',
+  'service',
+  'comments',
+  'related',
+  'links',
+];
 
 
 const getList = async (params) => {
@@ -480,21 +510,16 @@ const get = async ({ itemId: id }) => {
 
 const deleteCase = async ({ etag }) => {
   try {
-    // Find the index of the item with the specified id
     const itemIndex = data.items.findIndex((item) => item.etag === etag);
 
-    // If the item does not exist, simulate an error as the real API would
     if (itemIndex === -1) {
       throw new Error("Item not found");
     }
 
-    // Remove the item from the data array
     const deletedItem = data.items.splice(itemIndex, 1)[0];
 
-    // Simulate the transformed response for a successful deletion
     const transformedResponse = applyTransform(deletedItem, []);
 
-    // Return the simulated response as a resolved promise
     return new Promise((resolve) => {
       resolve(transformedResponse);
     });
@@ -503,10 +528,76 @@ const deleteCase = async ({ etag }) => {
   }
 };
 
+const updateCase = async ({ itemId: id, itemInstance }) => {
+  try {
+    const itemIndex = data.items.findIndex((item) => item.id === id);
+
+    if (itemIndex === -1) {
+      throw new Error("Item not found");
+    }
+
+    const transformedItem = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+
+    data.items[itemIndex] = {
+      ...data.items[itemIndex],
+      ...transformedItem,
+      updated_at: new Date().toISOString(),
+    };
+
+    const updatedItem = applyTransform(data.items[itemIndex], [snakeToCamel()]);
+
+    return new Promise((resolve) => {
+      resolve(updatedItem);
+    });
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const addCase = async ({ itemInstance }) => {
+  console.log(itemInstance);
+
+  try {
+    const newCase = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+
+    const newCaseWithDefaults = {
+      ...newCase,
+      id: String(Date.now()),
+      ver: 1,
+      etag: `etag-${Date.now()}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      created_by: {
+        id: "system",
+        name: "System",
+      },
+      updated_by: {
+        id: "system",
+        name: "System",
+      },
+    };
+
+    console.log(newCaseWithDefaults);
+
+    data.items.push(newCaseWithDefaults);
+
+    const addedCase = applyTransform(newCaseWithDefaults, [snakeToCamel()]);
+
+    return new Promise((resolve) => {
+      resolve(addedCase);
+    });
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+
 const casesAPI = {
   getList,
   get,
   delete: deleteCase,
+  update: updateCase,
+  add: addCase,
 };
 
 

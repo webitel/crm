@@ -2,10 +2,10 @@ import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
 export default [
   {
-    value: 'name',
+    value: 'id',
     locale: 'cases.id',
     show: true,
-    field: 'id',
+    field: 'name',
     sort: SortSymbols.NONE,
   },
   {
