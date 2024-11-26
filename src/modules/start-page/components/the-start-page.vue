@@ -18,6 +18,8 @@ import ConfigurationImgLight from '../assets/configuration-section-img-light.svg
 import ConfigurationImgDark from '../assets/configuration-section-img-dark.svg';
 import ContactsImgLight from '../assets/contacts-section-img-light.svg';
 import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
+import CasesLight from '../assets/cases-section-light.svg';
+import CasesDark from '../assets/cases-section-dark.svg';
 
 const { t } = useI18n();
 const store = useStore();
@@ -48,6 +50,16 @@ const nav = [
     images: {
       light: ConfigurationImgLight,
       dark: ConfigurationImgDark,
+    },
+  },
+  {
+    value: CrmSections.CASES,
+    route: '/cases',
+    name: t(`startPage.${CrmSections.CASES}.name`),
+    text: t(`startPage.${CrmSections.CASES}.text`),
+    images: {
+      light: CasesLight,
+      dark: CasesDark,
     },
   },
 ];
