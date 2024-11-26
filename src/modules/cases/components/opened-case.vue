@@ -16,7 +16,7 @@
           <wt-button
             v-if="!isNew && !editMode"
             color="secondary"
-            @click="editCase"
+            @click="toggleEditMode(true)"
           >
             {{ t('reusable.edit') }}
           </wt-button>
@@ -37,7 +37,7 @@
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import OpenedCaseGeneral from './opened-case-general.vue';
@@ -110,13 +110,9 @@ const toggleEditMode = (value) => {
     name: route.name,
     query: {
       ...route.query,
-      edit: value ? true : undefined,
+      edit: value ? true : null,
     },
   });
-};
-
-const editCase = () => {
-  toggleEditMode(true);
 };
 
 const saveCase = () => {
@@ -124,11 +120,18 @@ const saveCase = () => {
   save();
 };
 
-if (router.currentRoute.value.params?.id === 'new' || route.query.edit) {
-  toggleEditMode(true);
-} else {
-  toggleEditMode(false);
-}
+const initializeEditMode  = () => {
+  if (isNew.value || route.query.edit) {
+    toggleEditMode(true);
+  } else {
+    toggleEditMode(false);
+  }
+};
+
+onMounted(() => {
+  initializeEditMode();
+});
+
 initialize();
 </script>
 

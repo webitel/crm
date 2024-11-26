@@ -443,9 +443,7 @@ const data = {
   ],
 };
 const fieldsToSend = [
-  'id',
   'ver',
-  'etag',
   'name',
   'subject',
   'description',
@@ -555,8 +553,6 @@ const updateCase = async ({ itemId: id, itemInstance }) => {
 };
 
 const addCase = async ({ itemInstance }) => {
-  console.log(itemInstance);
-
   try {
     const newCase = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
 
@@ -576,8 +572,6 @@ const addCase = async ({ itemInstance }) => {
         name: "System",
       },
     };
-
-    console.log(newCaseWithDefaults);
 
     data.items.push(newCaseWithDefaults);
 

@@ -4,11 +4,14 @@
       v-if="!editMode"
       class="editable-field__value"
     >
-      <label>{{ label }}</label>
-      <span>{{ value }}</span>
+      <label class="editable-field__label">{{ label }}</label>
+      <span class="editable-field__value">{{ value }}</span>
     </div>
-    <div v-else class="editable-field__slot">
-      <slot></slot>
+    <div
+      v-else
+      class="editable-field__content"
+    >
+      <slot />
     </div>
   </div>
 </template>
@@ -39,18 +42,18 @@ const props = defineProps({
   &__value {
     display: flex;
     flex-direction: column;
+  }
 
-    label {
-      @extend %typo-heading-4
-    }
+  &__label {
+    @extend %typo-heading-4
+  }
 
-    span {
-      @extend %typo-body-1
-    }
+  &__value {
+    @extend %typo-body-1
+  }
 
-    label, span {
-      padding: var(--spacing-xs);
-    }
+  &__label, &__value {
+    padding: var(--spacing-xs);
   }
 }
 

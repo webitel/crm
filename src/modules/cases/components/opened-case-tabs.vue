@@ -38,7 +38,7 @@ const tabs = computed(() => [
 const {
   currentTab,
   changeTab,
-} = useCardTabs(tabs.value);
+} = useCardTabs(tabs);
 </script>
 
 <style lang="scss" scoped>
