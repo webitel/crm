@@ -7,10 +7,7 @@
       <label class="editable-field__label">{{ label }}</label>
       <span class="editable-field__value">{{ value }}</span>
     </div>
-    <div
-      v-else
-      class="editable-field__slot"
-    >
+    <div v-else>
       <slot />
     </div>
   </div>
