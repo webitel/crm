@@ -103,7 +103,6 @@ export default {
 
     slas: {
       slas: 'SLA | SLAs',
-      calendar: 'Calendar',
       conditions: 'Condition | Conditions',
       reactionTime: 'Reaction time',
       resolutionTime: 'Resolution time',

@@ -102,7 +102,6 @@ export default {
 
     slas: {
       slas: 'SLA | SLAs',
-      calendar: 'Календар',
       conditions: 'Умова | Умови',
       reactionTime: 'Плановий час реакції',
       resolutionTime: 'Плановий час вирішення',

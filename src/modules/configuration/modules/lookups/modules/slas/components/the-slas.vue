@@ -1,6 +1,6 @@
 <template>
   <wt-page-wrapper
-    class="table-page slas"
+    class="table-page"
     :actions-panel="false"
   >
     <template #header>
@@ -18,8 +18,7 @@
             {{ t('lookups.slas.slas') }}
           </h3>
           <wt-actions-bar
-            mode="table"
-            :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
@@ -54,46 +53,47 @@
         />
 
         <div
-          v-show="!isLoading && dataList.length"
           class="table-wrapper"
         >
-          <wt-table
-            :data="dataList"
-            :headers="headers"
-            :selected="selected"
-            sortable
-            @sort="sort"
-            @update:selected="setSelected"
-          >
-            <template #name="{ item }">
-              <wt-item-link
-                :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
-              >
-                {{ item.name }}
-              </wt-item-link>
-            </template>
-            <template #description="{ item }">
-              {{ item.description }}
-            </template>
-            <template #calendar="{ item }">
-              {{ item.calendar.name }}
-            </template>
-            <template #actions="{ item }">
-              <wt-icon-action
-                v-if="hasEditAccess"
-                action="edit"
-                @click="edit(item)"
-              />
-              <wt-icon-action
-                v-if="hasDeleteAccess"
-                action="delete"
-                @click="askDeleteConfirmation({
+          <wt-table-transition v-if="dataList.length && !isLoading">
+            <wt-table
+              :data="dataList"
+              :headers="headers"
+              :selected="selected"
+              sortable
+              @sort="sort"
+              @update:selected="setSelected"
+            >
+              <template #name="{ item }">
+                <wt-item-link
+                  :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
+                >
+                  {{ item.name }}
+                </wt-item-link>
+              </template>
+              <template #description="{ item }">
+                {{ item.description }}
+              </template>
+              <template #calendar="{ item }">
+                {{ item.calendar.name }}
+              </template>
+              <template #actions="{ item }">
+                <wt-icon-action
+                  v-if="hasEditAccess"
+                  action="edit"
+                  @click="edit(item)"
+                />
+                <wt-icon-action
+                  v-if="hasDeleteAccess"
+                  action="delete"
+                  @click="askDeleteConfirmation({
                 deleted: [item],
                 callback: () => deleteData(item),
               })"
-              />
-            </template>
-          </wt-table>
+                />
+              </template>
+            </wt-table>
+          </wt-table-transition>
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"
@@ -109,7 +109,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import WtActionsBar from '@webitel/ui-sdk/src/components/wt-action-bar/wt-action-bar.vue';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-
+import WtTableTransition from '@webitel/ui-sdk/src/components/on-demand/wt-table-transition/wt-table-transition.vue';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import {
   useDeleteConfirmationPopup,

@@ -17,7 +17,7 @@ export default [
   },
   {
     value: 'calendar',
-    locale: 'lookups.slas.calendar',
+    locale: 'objects.calendar',
     show: true,
     field: 'calendar',
     sort: SortSymbols.NONE,

@@ -14,7 +14,7 @@
       />
 
       <wt-select
-        :label="t('lookups.slas.calendar')"
+        :label="t('objects.calendar')"
         :search-method="loadCalendarsList"
         :value="itemInstance.calendar"
         required
