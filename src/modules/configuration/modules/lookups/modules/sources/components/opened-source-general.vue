@@ -1,5 +1,5 @@
 <template>
-  <section class="opened-sla-general">
+  <section>
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
@@ -15,8 +15,8 @@
 
       <wt-select
         :label="t('vocabulary.type')"
-        :options="TypesSourcesOptions"
-        :value="currentType"
+        :options="typesSourcesOptions"
+        :value="currentTypeSource"
         required
         @input="setItemProp({ prop: 'type', value: $event.id })"
       />
@@ -47,21 +47,17 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-const TypesSourcesOptions = Object.values(TypesSources).map((type) => {
+const typesSourcesOptions = computed(() => Object.values(TypesSources).map((type) => {
   return {
     id: type,
     name: t(`lookups.sources.type.${type}`),
   };
-});
+}));
 
-const currentType = computed(() => {
-  return TypesSourcesOptions.find((type) => type.id === itemInstance.value?.type);
+const currentTypeSource = computed(() => {
+  return typesSourcesOptions.value.find((type) => type.id === itemInstance.value?.type);
 });
 </script>
 
 <style lang="scss" scoped>
-.opened-sla-general__wrapper {
-  display: flex;
-  gap: var(--spacing-sm);
-}
 </style>
