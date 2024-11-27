@@ -36,6 +36,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -82,7 +83,7 @@ const {
   resetState,
 });
 
-const { close } = useClose(namespace);
+const { close } = useClose(CrmSections.CASES);
 
 const path = computed(() => {
   const baseUrl = '/cases';
@@ -120,10 +121,6 @@ const saveCase = () => {
   toggleEditMode(false);
   save();
 };
-
-onMounted(() => {
-  toggleEditMode(editMode.value);
-});
 
 initialize();
 </script>
