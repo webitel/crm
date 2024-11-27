@@ -1,10 +1,10 @@
 import {
   createApiStoreModule,
-  createBaseStoreModule, createCardStoreModule,
+  createBaseStoreModule,
+  createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 import CasesAPI from '../api/CasesAPI.js';
-
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
@@ -48,7 +48,9 @@ const table = createTableStoreModule({
   },
 });
 const card = createCardStoreModule({
-  state: { _resettable: resettableState },
+  state: {
+    _resettable: resettableState,
+  },
   modules: {
     api,
   },
@@ -62,5 +64,3 @@ const cases = createBaseStoreModule({
 });
 
 export default cases;
-
-

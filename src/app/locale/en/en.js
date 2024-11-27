@@ -121,6 +121,7 @@ export default {
     source: 'Source',
     author: 'Author',
     group: 'Group',
+    service: 'Service',
     assignee: 'Assignee',
     reporter: 'Reporter',
     impacted: 'Impacted',
@@ -134,6 +135,7 @@ export default {
     rating: 'Rating',
     caseInfo: {
       caseInfo: 'Case info',
+      contactInfo: 'Contact info',
     }
   },
 };

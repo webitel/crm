@@ -5,7 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!isNew"
+        :hide-primary="!isNew && !editMode"
+        :primary-action="saveCase"
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
@@ -13,44 +14,40 @@
 
         <template #actions>
           <wt-button
-            v-if="!isNew"
+            v-if="!isNew && !editMode"
             color="secondary"
-          >{{ t('reusable.edit') }}
+            @click="toggleEditMode(true)"
+          >
+            {{ t('reusable.edit') }}
           </wt-button>
         </template>
       </wt-page-header>
     </template>
     <template #side-panel>
+      {{ editMode }}
       <opened-case-general />
     </template>
     <template #main>
-      <div>
-        <wt-tabs
-          :current="currentTab"
-          :tabs="tabs"
-          @change="changeTab"
-        />
-        <router-view
-          :namespace="namespace"
-        />
-      </div>
+      <opened-case-tabs :namespace="namespace" />
     </template>
   </wt-dual-panel>
 </template>
 
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import OpenedCaseGeneral from './opened-case-general.vue';
+import OpenedCaseTabs from './opened-case-tabs.vue';
+import { useStore } from 'vuex';
 
 const namespace = 'cases';
 
+const store = useStore();
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -61,13 +58,32 @@ const {
   itemInstance,
 
   loadItem,
+  addItem,
+  updateItem,
   setId,
   resetState,
+  setItemProp,
   deleteItem,
-  ...restStore
 } = useCardStore(namespace);
 
-const isLoading = ref(true);
+const {
+  isNew,
+  pathName,
+  disabledSave,
+  saveText,
+  save,
+  initialize,
+} = useCardComponent({
+  id,
+  itemInstance,
+  loadItem,
+  addItem,
+  updateItem,
+  setId,
+  resetState,
+});
+
+const { close } = useClose(CrmSections.CASES);
 
 const path = computed(() => {
   const baseUrl = '/cases';
@@ -79,42 +95,35 @@ const path = computed(() => {
       route: baseUrl,
     },
     {
-      name: itemInstance.value?.name || 'Cases',
-      route: `/cases/${id.value}`,
+      // TODO: replace itemInstance.value?.id with item.name when it will be available from API
+      name: id.value ? `${itemInstance.value?.id} ${itemInstance.value?.subject}` : t('reusable.new'),
+      route: {
+        name: router.currentRoute.name,
+        query: router.currentRoute.query,
+      },
     },
   ];
 });
 
-const tabs = computed(() => [
-  {
-    text: t('cases.caseInfo.caseInfo'),
-    value: 'case-info',
-    pathName: `${CrmSections.CASES}-case-info`,
-  },
-]);
+const editMode = computed(() => route.query.edit === 'true');
 
-const {
-  currentTab,
-  changeTab,
-} = useCardTabs(tabs.value);
+const toggleEditMode = (value) => {
+  router.replace({
+    name: route.name,
+    query: {
+      ...route.query,
+      edit: value ? true : undefined,
+    },
+  });
+};
 
-const { close } = useClose('cases');
-
-const {
-  isNew,
-  save,
-  initialize,
-} = useCardComponent({
-  ...restStore,
-  itemInstance,
-  setId,
-  loadItem,
-  resetState,
-});
+const saveCase = () => {
+  toggleEditMode(false);
+  save();
+};
 
 initialize();
 </script>
-
 
 <style lang="scss" scoped>
 </style>
