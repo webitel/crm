@@ -12,6 +12,7 @@
     <div v-else>
       <slot
         :label="label"
+        :required="required"
         :update-value="updateValue"
         :value="value"
       />
@@ -31,6 +32,10 @@ const props = defineProps({
   label: {
     type: String,
     default: '',
+  },
+  required: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -2,32 +2,31 @@
   <div class="case-info">
     <editable-field
       :edit-mode="editMode"
-      :value="itemInstance.subject"
       :label="t('cases.subject')"
+      :value="itemInstance.subject"
+      required
       @update:value="itemInstance.subject = $event"
     >
-      <template #default="{ value, label, updateValue }">
+      <template #default="props">
         <wt-input
-          required
-          :label="label"
-          :value="value"
-          @input="updateValue($event)"
+          v-bind="props"
+          @input="props.updateValue($event)"
         />
       </template>
     </editable-field>
 
+
     <editable-field
       :edit-mode="editMode"
-      :value="itemInstance.description"
       :label="t('vocabulary.description')"
+      :value="itemInstance.description"
+      required
       @update:value="itemInstance.description = $event"
     >
-      <template #default="{ value, label, updateValue }">
+      <template #default="props">
         <wt-textarea
-          required
-          :label="label"
-          :value="value"
-          @input="updateValue($event)"
+          v-bind="props"
+          @input="props.updateValue($event)"
         />
       </template>
     </editable-field>
@@ -35,32 +34,30 @@
     <div class="opened-card-input-grid">
       <editable-field
         :edit-mode="editMode"
-        :value="itemInstance.source"
         :label="t('cases.source')"
+        :value="itemInstance.source"
+        required
         @update:value="itemInstance.source = $event"
       >
-        <template #default="{ value, label, updateValue }">
+        <template #default="props">
           <wt-select
-            required
-            :label="label"
-            :value="value"
-            @input="updateValue($event)"
+            v-bind="props"
+            @input="props.updateValue($event)"
           />
         </template>
       </editable-field>
 
       <editable-field
         :edit-mode="editMode"
-        :value="itemInstance.contactInfo"
         :label="t('cases.caseInfo.contactInfo')"
+        :value="itemInstance.contactInfo"
+        required
         @update:value="itemInstance.contactInfo = $event"
       >
-        <template #default="{ value, label, updateValue }">
+        <template #default="props">
           <wt-input
-            :label="label"
-            :value="value"
-            required
-            @input="updateValue($event)"
+            v-bind="props"
+            @input="props.updateValue($event)"
           />
         </template>
       </editable-field>
@@ -79,7 +76,6 @@ const { t } = useI18n();
 
 const store = useStore();
 const route = useRoute();
-
 
 const props = defineProps({
   namespace: {
