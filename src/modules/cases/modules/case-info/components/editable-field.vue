@@ -4,15 +4,20 @@
       v-if="!editMode"
       class="editable-field__content"
     >
-      <label class="editable-field__label">{{ label }}</label>
+      <wt-label class="editable-field__label">
+        {{ label }}
+      </wt-label>
       <span class="editable-field__value">{{ value }}</span>
     </div>
     <div v-else>
-      <slot />
+      <slot
+        :label="label"
+        :update-value="updateValue"
+        :value="value"
+      />
     </div>
   </div>
 </template>
-
 <script setup>
 const props = defineProps({
   editMode: {
@@ -29,6 +34,12 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['update:value']);
+
+const updateValue = (newValue) => {
+  emit('update:value', newValue);
+};
+
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +52,7 @@ const props = defineProps({
     flex-direction: column;
   }
 
-  &__label {
+  &__label.wt-label {
     @extend %typo-heading-4
   }
 

@@ -61,12 +61,15 @@ const {
   updateItem,
   setId,
   resetState,
+  setItemProp,
   deleteItem,
-
 } = useCardStore(namespace);
 
 const {
   isNew,
+  pathName,
+  disabledSave,
+  saveText,
   save,
   initialize,
 } = useCardComponent({
@@ -79,7 +82,7 @@ const {
   resetState,
 });
 
-const { close } = useClose('cases');
+const { close } = useClose(namespace);
 
 const path = computed(() => {
   const baseUrl = '/cases';
@@ -101,16 +104,14 @@ const path = computed(() => {
   ];
 });
 
-const editMode = computed(() => store.getters[`${cardNamespace}/EDIT_MODE`]);
+const editMode = computed(() => route.query.edit === 'true');
 
 const toggleEditMode = (value) => {
-  store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
-
   router.replace({
     name: route.name,
     query: {
       ...route.query,
-      edit: value ? true : null,
+      edit: value ? true : undefined,
     },
   });
 };
@@ -120,16 +121,8 @@ const saveCase = () => {
   save();
 };
 
-const initializeEditMode  = () => {
-  if (isNew.value || route.query.edit) {
-    toggleEditMode(true);
-  } else {
-    toggleEditMode(false);
-  }
-};
-
 onMounted(() => {
-  initializeEditMode();
+  toggleEditMode(editMode.value);
 });
 
 initialize();

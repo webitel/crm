@@ -4,13 +4,14 @@
       :edit-mode="editMode"
       :value="itemInstance.subject"
       :label="t('cases.subject')"
+      @update:value="itemInstance.subject = $event"
     >
-      <template>
+      <template #default="{ value, label, updateValue }">
         <wt-input
           required
-          :label="t('cases.subject')"
-          :value="itemInstance.subject"
-          @input="itemInstance.subject = $event"
+          :label="label"
+          :value="value"
+          @input="updateValue($event)"
         />
       </template>
     </editable-field>
@@ -19,13 +20,14 @@
       :edit-mode="editMode"
       :value="itemInstance.description"
       :label="t('vocabulary.description')"
+      @update:value="itemInstance.description = $event"
     >
-      <template>
+      <template #default="{ value, label, updateValue }">
         <wt-textarea
           required
-          :label="t('vocabulary.description')"
-          :value="itemInstance.description"
-          @input="itemInstance.description = $event"
+          :label="label"
+          :value="value"
+          @input="updateValue($event)"
         />
       </template>
     </editable-field>
@@ -35,14 +37,14 @@
         :edit-mode="editMode"
         :value="itemInstance.source"
         :label="t('cases.source')"
+        @update:value="itemInstance.source = $event"
       >
-        <template>
-          <!-- TODO: add valid options for source-->
+        <template #default="{ value, label, updateValue }">
           <wt-select
             required
-            :label="t('cases.source')"
-            :value="itemInstance.source"
-            @input="itemInstance.source = $event"
+            :label="label"
+            :value="value"
+            @input="updateValue($event)"
           />
         </template>
       </editable-field>
@@ -51,30 +53,33 @@
         :edit-mode="editMode"
         :value="itemInstance.contactInfo"
         :label="t('cases.caseInfo.contactInfo')"
+        @update:value="itemInstance.contactInfo = $event"
       >
-        <template>
+        <template #default="{ value, label, updateValue }">
           <wt-input
+            :label="label"
+            :value="value"
             required
-            :label="t('cases.caseInfo.contactInfo')"
-            :value="itemInstance.contactInfo"
-            @input="itemInstance.contactInfo = $event"
+            @input="updateValue($event)"
           />
         </template>
       </editable-field>
     </div>
   </div>
 </template>
-
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import EditableField from './editable-field.vue';
 
 const { t } = useI18n();
 
 const store = useStore();
+const route = useRoute();
+
 
 const props = defineProps({
   namespace: {
@@ -87,7 +92,7 @@ const {
   itemInstance,
 } = useCardStore(props.namespace);
 
-const editMode = computed(() => store.getters[`${cardNamespace}/EDIT_MODE`]);
+const editMode = computed(() => route.query.edit === 'true');
 
 </script>
 
