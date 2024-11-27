@@ -20,7 +20,7 @@ const nav = [
     subNav: [
       {
         value: CrmSections.SOURCES,
-        name: t('lookups.sources'),
+        name: t('lookups.sources.sources', 2),
         route: 'lookups/sources',
       },
       {

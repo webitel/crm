@@ -7,6 +7,8 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import TypesSourcesEnum
+  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 
 export default {
   crm: 'CRM',
@@ -109,8 +111,19 @@ export default {
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
+    sources: {
+      sources: 'Case source | Case sources',
+      type: {
+        [TypesSourcesEnum.CALL]: 'Call',
+        [TypesSourcesEnum.CHAT]: 'Chat',
+        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Social Media',
+        [TypesSourcesEnum.EMAIL]: 'Email',
+        [TypesSourcesEnum.API]: 'API',
+        [TypesSourcesEnum.MANUAL]: 'Manual',
+      }
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
-    [CrmSections.SOURCES]: 'Sources',
   },
 };
