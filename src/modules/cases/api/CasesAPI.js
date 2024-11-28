@@ -13,386 +13,337 @@ const data = {
   next: true,
   items: [
     {
-      id: "12345",
+      id: "1",
       ver: 1,
-      etag: "abc123etag",
-      created_by: {
-        id: "67890",
-        name: "John Doe",
+      etag: "etag-123",
+      createdBy: {
+        id: "u1",
+        name: "User One"
       },
-      created_at: "2024-10-25T12:00:00Z",
-      updated_by: {
-        id: "67891",
-        name: "Jane Smith",
+      createdAt: "2024-11-01T10:00:00Z",
+      updatedBy: {
+        id: "u2",
+        name: "User Two"
       },
-      updated_at: "2024-10-26T12:00:00Z",
-      name: "Sample Task",
-      subject: "System Outage",
-      description: "Detailed description of the system outage.",
-      contact_info: "john.doe@example.com",
-      planned_reaction_at: "2024-10-27T14:00:00Z",
-      planned_resolve_at: "2024-10-28T16:00:00Z",
-      status_lookup: {
-        id: "status001",
-        name: "In Progress",
+      updatedAt: "2024-11-02T10:00:00Z",
+      name: "Incident 1",
+      subject: "Network Issue",
+      description: "The network is experiencing downtime.",
+      contactInfo: "contact1@example.com",
+      plannedReactionAt: "2024-11-01T12:00:00Z",
+      plannedResolveAt: "2024-11-03T12:00:00Z",
+      status: {
+        id: "s1",
+        name: "Open"
       },
-      close_reason_lookup: {
-        id: "reason001",
-        name: "Resolved",
+      closeReasonGroup: {
+        id: "crg1",
+        name: "Resolved Issues"
       },
       author: {
-        id: "author001",
-        name: "Alice Brown",
+        id: "u1",
+        name: "User One"
       },
       assignee: {
-        id: "assignee001",
-        name: "Bob Green",
+        id: "u3",
+        name: "User Three"
       },
       reporter: {
-        id: "reporter001",
-        name: "Charlie White",
+        id: "u4",
+        name: "User Four"
       },
       impacted: {
-        id: "impacted001",
-        name: "Operations",
+        id: "dep1",
+        name: "IT Department"
       },
       group: {
-        id: "group001",
-        name: "Support Team",
+        id: "g1",
+        name: "Support"
       },
       priority: {
-        id: "priority001",
-        name: "High",
+        id: "p1",
+        name: "High"
       },
       source: {
-        id: "source001",
-        name: "Internal",
+        id: "src1",
+        name: "Email"
       },
-      status: {
-        id: "status001",
-        name: "Open",
+      statusCondition: {
+        id: "sc1",
+        name: "Active"
       },
       close: {
-        close_result: "Fixed",
-        close_reason: {
-          id: "reason001",
-          name: "Resolved Issue",
-        },
+        closeResult: "Resolved",
+        closeReason: {
+          id: "cr1",
+          name: "Issue Resolved"
+        }
       },
       rate: {
         rating: "5",
-        rating_comment: "Great service!",
+        ratingComment: "Issue resolved promptly."
       },
       timing: {
-        resolved_at: "2024-10-28T18:00:00Z",
-        reacted_at: "2024-10-27T15:00:00Z",
-        difference_in_reaction: "1 hour",
-        difference_in_resolve: "2 days",
+        resolvedAt: "2024-11-03T10:00:00Z",
+        reactedAt: "2024-11-01T10:30:00Z",
+        differenceInReaction: "30m",
+        differenceInResolve: "2d"
       },
-      sla_condition: [
+      slaCondition: [
         {
-          id: "sla001",
-          name: "High Priority SLA",
+          id: "sla1",
+          name: "Critical SLA",
           priorities: [
             {
-              id: "priority001",
-              name: "High",
-            },
+              id: "p1",
+              name: "High"
+            }
           ],
-          reaction_time: {
+          reactionTime: {
             hours: 1,
-            minutes: 30,
+            minutes: 0
           },
-          resolution_time: {
+          resolutionTime: {
             hours: 48,
-            minutes: 0,
+            minutes: 0
           },
-          sla_id: "sla001",
-          created_at: "2024-10-24T10:00:00Z",
-          updated_at: "2024-10-25T11:00:00Z",
-          created_by: {
-            id: "67890",
-            name: "John Doe",
+          slaId: "slaId1",
+          createdAt: "2024-10-01T10:00:00Z",
+          updatedAt: "2024-10-01T12:00:00Z",
+          createdBy: {
+            id: "u5",
+            name: "SLA Manager"
           },
-          updated_by: {
-            id: "67891",
-            name: "Jane Smith",
-          },
-        },
+          updatedBy: {
+            id: "u6",
+            name: "SLA Admin"
+          }
+        }
       ],
       service: {
-        id: "service001",
-        name: "IT Support",
-        root_id: "root123",
-        description: "IT support services",
-        code: "IT-SUPPORT",
-        state: true,
-        sla: {
-          id: "sla001",
-          name: "Standard SLA",
-        },
-        group: {
-          id: "group001",
-          name: "Support Team",
-        },
-        assignee: {
-          id: "assignee002",
-          name: "Sally Blue",
-        },
-        created_at: "2024-10-24T09:30:00Z",
-        updated_at: "2024-10-25T10:30:00Z",
-        created_by: {
-          id: "67890",
-          name: "John Doe",
-        },
-        updated_by: {
-          id: "67891",
-          name: "Jane Smith",
-        },
-        catalog_id: "catalog123",
-        service: [{}],
+        id: "srv1",
+        name: "Network Support"
       },
       comments: {
         page: "1",
-        next: false,
+        next: true,
         items: [
           {
-            id: "comment001",
+            id: "c1",
             ver: 1,
-            etag: "commentEtag001",
-            created_by: {
-              id: "67890",
-              name: "John Doe",
+            etag: "etag-456",
+            createdBy: {
+              id: "u3",
+              name: "User Three"
             },
-            created_at: "2024-10-25T13:00:00Z",
-            updated_by: {
-              id: "67891",
-              name: "Jane Smith",
+            createdAt: "2024-11-01T15:00:00Z",
+            updatedBy: {
+              id: "u4",
+              name: "User Four"
             },
-            updated_at: "2024-10-26T13:30:00Z",
+            updatedAt: "2024-11-01T16:00:00Z",
             author: {
-              id: "67890",
-              name: "John Doe",
+              id: "u3",
+              name: "User Three"
             },
-            text: "Initial analysis shows a possible server overload.",
-            edited: true,
-          },
-        ],
+            text: "The issue is under investigation.",
+            edited: true
+          }
+        ]
       },
       related: {
         page: "1",
-        next: false,
+        next: true,
         items: [
           {
-            id: "related001",
+            id: "rel1",
             ver: 1,
-            etag: "relatedEtag001",
-            created_by: {
-              id: "67892",
-              name: "Frank Red",
+            etag: "etag-789",
+            createdBy: {
+              id: "u7",
+              name: "User Seven"
             },
-            created_at: "2024-10-25T15:00:00Z",
-            updated_by: {
-              id: "67893",
-              name: "Grace Orange",
+            createdAt: "2024-11-01T14:00:00Z",
+            updatedBy: {
+              id: "u8",
+              name: "User Eight"
             },
-            updated_at: "2024-10-26T15:30:00Z",
-            child: "Child Issue 001",
-            relation_type: "BlockedBy",
-          },
-        ],
+            updatedAt: "2024-11-01T15:00:00Z",
+            child: "2",
+            relationType: "BlockedBy"
+          }
+        ]
       },
       links: {
         page: "1",
-        next: false,
+        next: true,
         items: [
           {
-            id: "link001",
+            id: "l1",
             ver: 1,
-            etag: "linkEtag001",
-            created_by: {
-              id: "67890",
-              name: "John Doe",
+            etag: "etag-321",
+            createdBy: {
+              id: "u9",
+              name: "User Nine"
             },
-            created_at: "2024-10-24T08:00:00Z",
-            updated_by: {
-              id: "67891",
-              name: "Jane Smith",
+            createdAt: "2024-11-01T13:00:00Z",
+            updatedBy: {
+              id: "u10",
+              name: "User Ten"
             },
-            updated_at: "2024-10-25T09:00:00Z",
-            author: "John Doe",
-            name: "System Architecture Diagram",
-            url: "https://example.com/diagram",
-          },
-        ],
+            updatedAt: "2024-11-01T14:00:00Z",
+            author: {
+              id: "u9",
+              name: "User Nine"
+            },
+            name: "Troubleshooting Guide",
+            url: "http://example.com/troubleshooting"
+          }
+        ]
       },
+      sla: {
+        id: "sla1",
+        name: "Critical SLA"
+      }
     },
     {
-      id: "54321",
-      ver: 2,
-      etag: "xyz789etag",
-      created_by: {
-        id: "78910",
-        name: "Michael Scott",
+      id: "2",
+      ver: 1,
+      etag: "etag-124",
+      createdBy: {
+        id: "u2",
+        name: "User Two"
       },
-      created_at: "2024-10-27T08:00:00Z",
-      updated_by: {
-        id: "78911",
-        name: "Dwight Schrute",
+      createdAt: "2024-11-05T11:00:00Z",
+      updatedBy: {
+        id: "u3",
+        name: "User Three"
       },
-      updated_at: "2024-10-28T08:00:00Z",
-      name: "Follow-up Task",
-      subject: "Network Maintenance",
-      description: "Details about scheduled network maintenance.",
-      contact_info: "michael.scott@example.com",
-      planned_reaction_at: "2024-10-29T10:00:00Z",
-      planned_resolve_at: "2024-10-30T12:00:00Z",
-      status_lookup: {
-        id: "status002",
-        name: "Scheduled",
+      updatedAt: "2024-11-06T11:00:00Z",
+      name: "Incident 2",
+      subject: "Login Issue",
+      description: "Users are unable to log in to the system.",
+      contactInfo: "contact2@example.com",
+      plannedReactionAt: "2024-11-05T12:00:00Z",
+      plannedResolveAt: "2024-11-07T12:00:00Z",
+      status: {
+        id: "s2",
+        name: "In Progress"
       },
-      close_reason_lookup: {
-        id: "reason002",
-        name: "Maintenance Completed",
+      closeReasonGroup: {
+        id: "crg2",
+        name: "Pending Issues"
       },
       author: {
-        id: "author002",
-        name: "Jim Halpert",
+        id: "u2",
+        name: "User Two"
       },
       assignee: {
-        id: "assignee002",
-        name: "Pam Beesly",
+        id: "u4",
+        name: "User Four"
       },
       reporter: {
-        id: "reporter002",
-        name: "Ryan Howard",
+        id: "u5",
+        name: "User Five"
       },
       impacted: {
-        id: "impacted002",
-        name: "IT Department",
+        id: "dep2",
+        name: "Accounts Department"
       },
       group: {
-        id: "group002",
-        name: "Network Team",
+        id: "g2",
+        name: "IT Support"
       },
       priority: {
-        id: "priority002",
-        name: "Medium",
+        id: "p2",
+        name: "Medium"
       },
       source: {
-        id: "source002",
-        name: "External",
+        id: "src2",
+        name: "Phone Call"
       },
-      status: {
-        id: "status002",
-        name: "Pending",
+      statusCondition: {
+        id: "sc2",
+        name: "Ongoing"
       },
       close: {
-        close_result: "Maintenance Completed",
-        close_reason: {
-          id: "reason002",
-          name: "Scheduled Maintenance",
-        },
+        closeResult: "Pending",
+        closeReason: {
+          id: "cr2",
+          name: "Need More Info"
+        }
       },
       rate: {
         rating: "4",
-        rating_comment: "Good work!",
+        ratingComment: "Issue is being addressed."
       },
       timing: {
-        resolved_at: "2024-10-30T15:00:00Z",
-        reacted_at: "2024-10-29T11:00:00Z",
-        difference_in_reaction: "3 hours",
-        difference_in_resolve: "2 days",
+        resolvedAt: "2024-11-07T10:00:00Z",
+        reactedAt: "2024-11-05T11:30:00Z",
+        differenceInReaction: "30m",
+        differenceInResolve: "2d"
       },
-      sla_condition: [
+      slaCondition: [
         {
-          id: "sla002",
-          name: "Medium Priority SLA",
+          id: "sla2",
+          name: "Standard SLA",
           priorities: [
             {
-              id: "priority002",
-              name: "Medium",
-            },
+              id: "p2",
+              name: "Medium"
+            }
           ],
-          reaction_time: {
+          reactionTime: {
             hours: 2,
-            minutes: 0,
+            minutes: 0
           },
-          resolution_time: {
+          resolutionTime: {
             hours: 72,
-            minutes: 0,
+            minutes: 0
           },
-          sla_id: "sla002",
-          created_at: "2024-10-26T09:00:00Z",
-          updated_at: "2024-10-27T10:00:00Z",
-          created_by: {
-            id: "78910",
-            name: "Michael Scott",
+          slaId: "slaId2",
+          createdAt: "2024-10-05T10:00:00Z",
+          updatedAt: "2024-10-05T12:00:00Z",
+          createdBy: {
+            id: "u5",
+            name: "SLA Manager"
           },
-          updated_by: {
-            id: "78911",
-            name: "Dwight Schrute",
-          },
-        },
+          updatedBy: {
+            id: "u6",
+            name: "SLA Admin"
+          }
+        }
       ],
       service: {
-        id: "service002",
-        name: "Network Services",
-        root_id: "root456",
-        description: "Network maintenance services",
-        code: "NETWORK-SERV",
-        state: true,
-        sla: {
-          id: "sla002",
-          name: "Extended SLA",
-        },
-        group: {
-          id: "group002",
-          name: "Network Team",
-        },
-        assignee: {
-          id: "assignee003",
-          name: "Angela Martin",
-        },
-        created_at: "2024-10-26T08:30:00Z",
-        updated_at: "2024-10-27T09:30:00Z",
-        created_by: {
-          id: "78910",
-          name: "Michael Scott",
-        },
-        updated_by: {
-          id: "78911",
-          name: "Dwight Schrute",
-        },
-        catalog_id: "catalog456",
-        service: [{}],
+        id: "srv2",
+        name: "Login Support"
       },
       comments: {
         page: "1",
         next: false,
         items: [
           {
-            id: "comment002",
+            id: "c2",
             ver: 1,
-            etag: "commentEtag002",
-            created_by: {
-              id: "78910",
-              name: "Michael Scott",
+            etag: "etag-457",
+            createdBy: {
+              id: "u4",
+              name: "User Four"
             },
-            created_at: "2024-10-27T09:00:00Z",
-            updated_by: {
-              id: "78911",
-              name: "Dwight Schrute",
+            createdAt: "2024-11-05T15:00:00Z",
+            updatedBy: {
+              id: "u5",
+              name: "User Five"
             },
-            updated_at: "2024-10-28T09:30:00Z",
+            updatedAt: "2024-11-05T16:00:00Z",
             author: {
-              id: "78910",
-              name: "Michael Scott",
+              id: "u4",
+              name: "User Four"
             },
-            text: "Maintenance scheduled to improve network reliability.",
-            edited: false,
-          },
-        ],
+            text: "Looking into the issue.",
+            edited: false
+          }
+        ]
       },
       related: {
         page: "1",
@@ -441,9 +392,14 @@ const data = {
           },
         ],
       },
-    },
-  ],
+      sla: {
+        id: "sla2",
+        name: "Standard SLA"
+      }
+    }
+  ]
 };
+
 const fieldsToSend = [
   'ver',
   'name',
