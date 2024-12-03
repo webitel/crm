@@ -5,7 +5,7 @@
       :label="t('cases.subject')"
       :value="itemInstance.subject"
       required
-      @update:value="itemInstance.subject = $event"
+      @update:value="setItemProp({ path: 'subject', value: $event })"
     >
       <template #default="props">
         <wt-input
@@ -21,7 +21,7 @@
       :label="t('vocabulary.description')"
       :value="itemInstance.description"
       required
-      @update:value="itemInstance.description = $event"
+      @update:value="setItemProp({ path: 'description', value: $event })"
     >
       <template #default="props">
         <wt-textarea
@@ -37,7 +37,7 @@
         :label="t('cases.source')"
         :value="itemInstance.source"
         required
-        @update:value="itemInstance.source = $event"
+        @update:value="setItemProp({ path: 'source', value: $event })"
       >
         <template #default="props">
           <wt-select
@@ -52,7 +52,7 @@
         :label="t('cases.caseInfo.contactInfo')"
         :value="itemInstance.contactInfo"
         required
-        @update:value="itemInstance.contactInfo = $event"
+        @update:value="setItemProp({ path: 'contactInfo', value: $event })"
       >
         <template #default="props">
           <wt-input
@@ -82,13 +82,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  editMode: {
+    type: Boolean,
+    default: false,
+  },
 });
 const {
   namespace: cardNamespace,
   itemInstance,
+  setItemProp,
 } = useCardStore(props.namespace);
-
-const editMode = computed(() => route.query.edit === 'true');
 
 </script>
 

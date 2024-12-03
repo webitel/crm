@@ -6,8 +6,9 @@
       @change="changeTab"
     />
     <router-view
-      class="opened-card-tabs__tab"
+      :edit-mode="editMode"
       :namespace="namespace"
+      class="opened-card-tabs__tab"
     />
   </article>
 </template>
@@ -22,6 +23,10 @@ const props = defineProps({
   namespace: {
     type: String,
     required: true,
+  },
+  editMode: {
+    type: Boolean,
+    default: false,
   },
 });
 

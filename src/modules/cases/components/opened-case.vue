@@ -25,10 +25,16 @@
     </template>
     <template #side-panel>
       {{ editMode }}
-      <opened-case-general />
+      <opened-case-general
+        :namespace="namespace"
+        :edit-mode="editMode"
+      />
     </template>
     <template #main>
-      <opened-case-tabs :namespace="namespace" />
+      <opened-case-tabs
+        :namespace="namespace"
+        :edit-mode="editMode"
+      />
     </template>
   </wt-dual-panel>
 </template>
@@ -38,7 +44,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import OpenedCaseGeneral from './opened-case-general.vue';

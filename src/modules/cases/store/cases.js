@@ -5,7 +5,7 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 import CasesAPI from '../api/CasesAPI.js';
-import caseService from '../modules/case-service/store/case-service.js';
+import service from '../modules/service/store/service.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
@@ -61,7 +61,7 @@ const cases = createBaseStoreModule({
   modules: {
     table,
     card,
-    caseService,
+    service,
   },
 });
 

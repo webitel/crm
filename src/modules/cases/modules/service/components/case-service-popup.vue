@@ -19,20 +19,25 @@
 </template>
 
 <script setup>
-import { service } from '../api/example.js';
-import { ref } from 'vue';
+import { serviceCatalogData } from '../api/example.js';
 
-const emit = defineEmits(['save']);
+const props = defineProps({
+  shown: {
+    type: Boolean,
+    required: true,
+  },
+});
 
-const shown = ref(true);
+const emit = defineEmits(['save', 'close']);
+
 
 function save() {
+  emit('save', serviceCatalogData);
   close();
-  emit('save', service);
 }
 
 function close() {
-  shown.value = false;
+  emit('close');
 }
 </script>
 

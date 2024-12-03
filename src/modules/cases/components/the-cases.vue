@@ -220,6 +220,7 @@ function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
     params: { id: 'new' },
+    query: { edit: true },
   });
 }
 
