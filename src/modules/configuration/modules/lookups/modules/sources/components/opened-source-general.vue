@@ -18,7 +18,7 @@
         :options="typesSourcesOptions"
         :value="currentTypeSource"
         required
-        @input="setItemProp({ prop: 'type', value: $event.id })"
+        @input="setItemProp({ path: 'type', value: $event.id })"
       />
 
       <wt-textarea

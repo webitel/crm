@@ -5,8 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        hide-primary
         :secondary-action="close"
+        hide-primary
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -126,7 +126,6 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
 
@@ -135,7 +134,6 @@ const baseNamespace = 'configuration/lookups/sources';
 const { t } = useI18n();
 const router = useRouter();
 
-const store = useStore();
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
