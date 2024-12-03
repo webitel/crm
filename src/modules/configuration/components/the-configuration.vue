@@ -19,14 +19,19 @@ const nav = [
     name: t('lookups.lookups'),
     subNav: [
       {
+        value: CrmSections.SLAS,
+        name: t('lookups.slas.slas', 2),
+        route: 'lookups/slas',
+      },
+      {
         value: CrmSections.SOURCES,
         name: t('lookups.sources.sources', 2),
         route: 'lookups/sources',
       },
       {
-        value: CrmSections.SLAS,
-        name: t('lookups.slas.slas', 2),
-        route: 'lookups/slas',
+        value: CrmSections.CONTACT_GROUPS,
+        name: t('lookups.contactGroups.contactGroups', 2),
+        route: 'lookups/contact-groups',
       },
     ],
   },

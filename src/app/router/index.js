@@ -26,6 +26,14 @@ import OpenedSource
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
 import OpenedSourceGeneral
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
+import TheContactGroups
+  from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
+import OpenedContactGroup
+  from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group.vue';
+import OpenedContactGroupGeneral
+  from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
+import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
+
 
 
 import store from '../store';
@@ -174,11 +182,32 @@ const routes = [
               },
             ],
           },
+          {
+            path: 'contact-groups',
+            name: CrmSections.CONTACT_GROUPS,
+            component: TheContactGroups,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'contact-groups/:id',
+            name: `${CrmSections.CONTACT_GROUPS}-card`,
+            component: OpenedContactGroup,
+            redirect: { name: `${CrmSections.CONTACT_GROUPS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.CONTACT_GROUPS}-general`,
+                component: OpenedContactGroupGeneral,
+              },
+              {
+                path: 'permissions/:permissionId?',
+                name: `${CrmSections.CONTACT_GROUPS}-permissions`,
+                component: PermissionsTab,
+              },
+            ],
+          },
       ],
       },
-
-
-
     ],
   },
   {

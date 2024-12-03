@@ -122,8 +122,11 @@ export default {
         [TypesSourcesEnum.MANUAL]: 'Manual',
       }
     },
+    contactGroups: {
+      contactGroups: 'Contact group | Contact groups',
+      defaultGroup: 'Default group',
+    },
 
-    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
   },
 };

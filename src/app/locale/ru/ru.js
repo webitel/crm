@@ -122,7 +122,10 @@ export default {
         [TypesSourcesEnum.MANUAL]: 'Созданное вручную',
       },
     },
-    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
+    contactGroups: {
+      contactGroups: 'Группа контактов | Группы контактов',
+      defaultGroup: 'Группа по умолчанию',
+    },
     [CrmSections.STATUSES]: 'Статусы',
   },
 };
