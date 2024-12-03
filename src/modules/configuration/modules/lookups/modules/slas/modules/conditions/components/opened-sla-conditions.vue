@@ -16,8 +16,7 @@
       </h3>
 
       <wt-actions-bar
-        mode="table"
-        :actions="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+        :includes="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
       >
@@ -39,67 +38,68 @@
     />
 
     <div
-      v-show="!isLoading && dataList.length"
       class="table-wrapper"
     >
-      <wt-table
-        :data="dataList"
-        :headers="headers"
-        :selected="selected"
-        sortable
-        @sort="sort"
-        @update:selected="setSelected"
-      >
-        <template #name="{ item }">
-          {{ item.name }}
-        </template>
-        <template #priorities="{ item }">
-          <div
-            v-if="item.priorities?.length"
-            class="opened-sla-conditions__priorities">
-            <p>{{ item.priorities[0]?.name }}</p>
-            <wt-tooltip
-              v-if="item.priorities?.length > 1"
-              :triggers="['click']"
+      <wt-table-transition v-if="dataList.length && !isLoading">
+        <wt-table
+          :data="dataList"
+          :headers="headers"
+          :selected="selected"
+          sortable
+          @sort="sort"
+          @update:selected="setSelected"
+        >
+          <template #name="{ item }">
+            {{ item.name }}
+          </template>
+          <template #priorities="{ item }">
+            <div
+              v-if="item.priorities?.length"
+              class="opened-sla-conditions__priorities"
             >
-              <template #activator>
-                <wt-chip>
-                  +{{ item.priorities?.length - 1 }}
-                </wt-chip>
-              </template>
+              <p>{{ item.priorities[0]?.name }}</p>
+              <wt-tooltip
+                v-if="item.priorities?.length > 1"
+                :triggers="['click']"
+              >
+                <template #activator>
+                  <wt-chip>
+                    +{{ item.priorities?.length - 1 }}
+                  </wt-chip>
+                </template>
 
-              <ul>
-                <li
-                  v-for="({ id, name }) of item.priorities?.slice(1)"
-                  :key="id"
-                >
-                  <p>{{ name }}</p>
-                </li>
-              </ul>
-            </wt-tooltip>
-          </div>
-        </template>
-        <template #reactionTime="{ item }">
-          {{ convertDurationWithMinutes(item.reactionTime / 60) }}
-        </template>
-        <template #resolutionTime="{ item }">
-          {{ convertDurationWithMinutes(item.resolutionTime / 60) }}
-        </template>
-        <template #actions="{ item }">
-          <wt-icon-action
-            action="edit"
-            @click="router.push({ ...route, params: { conditionId: item.id } })"
-          />
-          <wt-icon-action
-            action="delete"
-            @click="askDeleteConfirmation({
+                <ul>
+                  <li
+                    v-for="({ id, name }) of item.priorities?.slice(1)"
+                    :key="id"
+                  >
+                    <p>{{ name }}</p>
+                  </li>
+                </ul>
+              </wt-tooltip>
+            </div>
+          </template>
+          <template #reactionTime="{ item }">
+            {{ convertDurationWithMinutes(item.reactionTime / 60) }}
+          </template>
+          <template #resolutionTime="{ item }">
+            {{ convertDurationWithMinutes(item.resolutionTime / 60) }}
+          </template>
+          <template #actions="{ item }">
+            <wt-icon-action
+              action="edit"
+              @click="router.push({ ...route, params: { conditionId: item.id } })"
+            />
+            <wt-icon-action
+              action="delete"
+              @click="askDeleteConfirmation({
                 deleted: [item],
                 callback: () => deleteData(item),
               })"
-          />
-        </template>
-      </wt-table>
-
+            />
+          </template>
+        </wt-table>
+      </wt-table-transition>
       <filter-pagination
         :namespace="filtersNamespace"
         :next="isNext"
@@ -129,6 +129,7 @@ import ConditionPopup from './opened-sla-condition-popup.vue';
 import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
+import WtTableTransition from '@webitel/ui-sdk/src/components/on-demand/wt-table-transition/wt-table-transition.vue';
 
 const props = defineProps({
   namespace: {
