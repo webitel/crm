@@ -7,26 +7,21 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input
-        :disabled="disableUserInput"
         :label="t('reusable.name')"
         :value="itemInstance.name"
-        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
-        :disabled="disableUserInput"
-        :label="t('lookups.slas.calendar')"
+        :label="t('objects.calendar')"
         :search-method="loadCalendarsList"
-        :v="v.itemInstance.calendar"
         :value="itemInstance.calendar"
         required
-        @input="setItemProp({ prop: 'calendar', value: $event })"
+        @input="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
-        :disabled="disableUserInput"
         :label="t('vocabulary.description')"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
@@ -34,39 +29,33 @@
 
       <div>
         <wt-timepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.reactionTime')"
-          :v="v.itemInstance.reactionTime"
           :value="itemInstance.reactionTime"
           format='hh:mm'
-          @input="setItemProp({ prop: 'reactionTime', value: +$event })"
+          @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.resolutionTime')"
-          :v="v.itemInstance.resolutionTime"
           :value="itemInstance.resolutionTime"
           format='hh:mm'
-          @input="setItemProp({ prop: 'resolutionTime', value: +$event })"
+          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
       </div>
 
       <div class="opened-sla-general__wrapper">
         <wt-datepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           mode="datetime"
-          @input="setItemProp({ prop: 'validFrom', value: $event })"
+          @input="setItemProp({ path: 'validFrom', value: $event })"
         />
 
         <wt-datepicker
-          :disabled="disableUserInput"
           :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
           mode="datetime"
-          @input="setItemProp({ prop: 'validTo', value: $event })"
+          @input="setItemProp({ path: 'validTo', value: $event })"
         />
       </div>
     </div>
@@ -76,7 +65,6 @@
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
 
 const props = defineProps({
@@ -84,15 +72,9 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  v: {
-    type: Object,
-    required: true,
-  },
 });
 
 const { t } = useI18n();
-
-const { disableUserInput } = useAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

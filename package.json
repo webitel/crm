@@ -1,6 +1,6 @@
 {
   "name": "crm",
-  "version": "24.08.0",
+  "version": "24.10.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -43,5 +43,9 @@
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-svg-sprite": "^0.5.2",
     "vitest": "^2.0.5"
+  },
+  "optionalDependencies": {
+    "@esbuild/darwin-arm64": "^0.24.0",
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }
