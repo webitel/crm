@@ -1,10 +1,10 @@
+import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index.js';
 import slas from '../modules/slas/store/slas.js';
 
-const modules = {
-  slas,
-};
+const lookups = createBaseStoreModule({
+  modules: {
+    slas,
+  },
+});
 
-export default {
-  namespaced: true,
-  modules,
-};
+export default lookups;

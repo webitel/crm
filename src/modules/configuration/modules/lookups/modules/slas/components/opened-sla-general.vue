@@ -18,7 +18,7 @@
         :search-method="loadCalendarsList"
         :value="itemInstance.calendar"
         required
-        @input="setItemProp({ prop: 'calendar', value: $event })"
+        @input="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
@@ -32,14 +32,14 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           format='hh:mm'
-          @input="setItemProp({ prop: 'reactionTime', value: +$event })"
+          @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           format='hh:mm'
-          @input="setItemProp({ prop: 'resolutionTime', value: +$event })"
+          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
       </div>
 
@@ -48,14 +48,14 @@
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           mode="datetime"
-          @input="setItemProp({ prop: 'validFrom', value: $event })"
+          @input="setItemProp({ path: 'validFrom', value: $event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
           mode="datetime"
-          @input="setItemProp({ prop: 'validTo', value: $event })"
+          @input="setItemProp({ path: 'validTo', value: $event })"
         />
       </div>
     </div>
