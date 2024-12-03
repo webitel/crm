@@ -54,9 +54,10 @@
 </template>
 
 <script setup>
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { required } from '@vuelidate/validators';
 import { useRoute, useRouter } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import PrioritiesAPI from '../../../../ priorities/api/priorities.js';
@@ -89,9 +90,7 @@ const {
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 
-function close() {
-  router.go(-1);
-}
+const { close } = useClose( `${CrmSections.SLAS}-conditions`);
 
 function loadDataList() {
   emit('load-data');

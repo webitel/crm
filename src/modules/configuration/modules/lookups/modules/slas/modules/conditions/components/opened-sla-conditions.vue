@@ -16,7 +16,7 @@
       </h3>
 
       <wt-actions-bar
-        :includes="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+        :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
       >
