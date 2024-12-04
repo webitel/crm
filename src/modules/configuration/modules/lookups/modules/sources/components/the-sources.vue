@@ -17,7 +17,7 @@
           <h3 class="table-title__title">
             {{ t('lookups.sources.sources', 2) }}
           </h3>
-          <wt-actions-bar
+          <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!hasDeleteAccess || !selected.length"
@@ -34,7 +34,7 @@
                 name="search"
               />
             </template>
-          </wt-actions-bar>
+          </wt-action-bar>
         </header>
 
         <wt-loader v-show="isLoading" />
@@ -46,15 +46,15 @@
           @close="closeDelete"
         />
 
-        <wt-empty
-          v-show="showEmpty"
-          :image="imageEmpty"
-          :text="textEmpty"
-        />
-
         <div
-          class="table-wrapper"
+          class="table-section__table-wrapper"
         >
+          <wt-empty
+            v-show="showEmpty"
+            :image="imageEmpty"
+            :text="textEmpty"
+          />
+
           <wt-table-transition v-if="dataList.length && !isLoading">
             <wt-table
               :data="dataList"
@@ -110,7 +110,6 @@
 <script setup>
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import WtActionsBar from '@webitel/ui-sdk/src/components/wt-action-bar/wt-action-bar.vue';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import WtTableTransition from '@webitel/ui-sdk/src/components/on-demand/wt-table-transition/wt-table-transition.vue';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
