@@ -1,23 +1,32 @@
 <template>
-  <section class="opened-sla-general">
+  <section class="opened-contact-group-general">
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
       </h3>
     </header>
     <div class="opened-card-input-grid">
-      <wt-input
-        :label="t('reusable.name')"
-        :value="itemInstance.name"
-        required
-        @input="setItemProp({ path: 'name', value: $event })"
-      />
+      <div class="opened-contact-group-general__wrapper">
+        <wt-input
+          :label="t('reusable.name')"
+          :value="itemInstance.name"
+          required
+          @input="setItemProp({ path: 'name', value: $event })"
+        />
 
-      <wt-textarea
-        :label="t('vocabulary.description')"
-        :value="itemInstance.description"
-        @input="setItemProp({ path: 'description', value: $event })"
-      />
+        <wt-textarea
+          :label="t('vocabulary.description')"
+          :value="itemInstance.description"
+          @input="setItemProp({ path: 'description', value: $event })"
+        />
+
+        <wt-switcher
+          :label="t('reusable.state')"
+          :value="itemInstance.enabled"
+          @change="setItemProp({ path: 'enabled', value: $event })"
+        />
+      </div>
+
 
       <wt-select
         v-if="itemInstance.type === TypesContactGroups.DYNAMIC"
@@ -25,15 +34,8 @@
         :search-method="loadStaticContactGroupsList"
         :value="itemInstance.defaultGroup"
         required
-        @input="setItemProp({ prop: 'defaultGroup', value: $event })"
+        @input="setItemProp({ path: 'defaultGroup', value: $event })"
       />
-
-      <wt-switcher
-        :label="t('reusable.state')"
-        :value="itemInstance.enabled"
-        @change="setItemProp({ prop: 'enabled', value: $event })"
-      />
-
     </div>
   </section>
 </template>
@@ -56,14 +58,15 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-function loadStaticContactGroupsList(search) {
-  return ContactGroupsAPI.getLookup({ type: TypesContactGroups.STATIC });
+function loadStaticContactGroupsList() {
+  return ContactGroupsAPI.getLookup({ type: TypesContactGroups.STATIC.toUpperCase() });
 }
 </script>
 
 <style lang="scss" scoped>
-.opened-sla-general__wrapper {
+.opened-contact-group-general__wrapper {
   display: flex;
+  flex-direction: column;
   gap: var(--spacing-sm);
 }
 </style>

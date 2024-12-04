@@ -57,6 +57,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import TypeContactGroupsEnum from '../enums/TypeContactGroups.enum.js';
 
 const namespace = 'configuration/lookups/contactGroups';
 const { t } = useI18n();
@@ -99,7 +100,7 @@ const tabs = computed(() => {
 
   const tabs = [general];
 
-  if (itemInstance.value.type === 'dynamic') tabs.push(conditions);
+  if (itemInstance.value.type === TypeContactGroupsEnum.DYNAMIC) tabs.push(conditions);
   if (id.value) tabs.push(permissions);
 
   return tabs;

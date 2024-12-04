@@ -1,3 +1,4 @@
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index.js';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -33,10 +34,24 @@ const table = createTableStoreModule({
   },
 });
 
+const permissions = createObjectPermissionsStoreModule({
+  modules: {
+    table: {
+      getters: {
+        PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.contactGroups.card.itemId,
+      },
+      modules: {
+        api,
+      },
+    },
+  },
+});
+
 const card = createCardStoreModule({
   state: { _resettable: resettableState },
   modules: {
     api,
+    permissions,
   },
 });
 

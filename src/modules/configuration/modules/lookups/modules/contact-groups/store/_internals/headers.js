@@ -15,13 +15,13 @@ export default [
     field: 'description',
     sort: SortSymbols.NONE,
   },
-  // {
-  //   value: 'type',
-  //   locale: 'vocabulary.type',
-  //   show: true,
-  //   field: 'type',
-  //   sort: SortSymbols.NONE,
-  // },
+  {
+    value: 'type',
+    locale: 'vocabulary.type',
+    show: true,
+    field: 'type',
+    sort: SortSymbols.NONE,
+  },
   {
     value: 'state',
     locale: 'reusable.state',
