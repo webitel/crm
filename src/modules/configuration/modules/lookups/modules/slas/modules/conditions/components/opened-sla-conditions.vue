@@ -15,7 +15,7 @@
         {{ t('lookups.slas.conditions', 2) }}
       </h3>
 
-      <wt-actions-bar
+      <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
@@ -26,20 +26,21 @@
             name="search"
           />
         </template>
-      </wt-actions-bar>
+      </wt-action-bar>
     </header>
 
     <wt-loader v-show="isLoading" />
 
-    <wt-empty
-      v-show="showEmpty"
-      :image="imageEmpty"
-      :text="textEmpty"
-    />
-
     <div
-      class="table-wrapper"
+      class="table-section__table-wrapper"
     >
+
+      <wt-empty
+        v-show="showEmpty"
+        :image="imageEmpty"
+        :text="textEmpty"
+      />
+
       <wt-table-transition v-if="dataList.length && !isLoading">
         <wt-table
           :data="dataList"
@@ -120,8 +121,6 @@ import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
 import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import WtActionsBar
-  from '../../../../../../../../../../../webitel-ui-sdk/src/components/wt-action-bar/wt-action-bar.vue';
 import IconAction from '../../../../../../../../../../../webitel-ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import FilterSearch
   from '../../../../../../../../../../../webitel-ui-sdk/src/modules/Filters/components/filter-search.vue';
