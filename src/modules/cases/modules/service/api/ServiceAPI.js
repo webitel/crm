@@ -165,7 +165,6 @@ const findServiceById = (items, id) => {
 };
 
 const get = async ({ itemId: id }) => {
-  console.log('id', id);
   try {
     const bucketData = findServiceById(serviceData.items, id);
 

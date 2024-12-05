@@ -78,6 +78,8 @@ const {
   resetState,
 });
 
+initializeComponent();
+
 const { t } = useI18n();
 const store = useStore();
 const route = useRoute();
@@ -132,13 +134,10 @@ async function addServiceToStore(serviceCatalogData) {
   }
 }
 
-// Loads initial data for the component on mount.
+// Loads initial data for the component.
 async function initializeComponent() {
   try {
-    const { id } = route.params;
-    await setId(id);
-    await loadItem();
-
+    await initializeCard();
     const serviceId = itemInstance.value?.service?.id;
     if (serviceId) {
       const serviceResponse = await ServiceAPI.get({ itemId: serviceId });
@@ -150,13 +149,10 @@ async function initializeComponent() {
   }
 }
 
-onMounted(initializeComponent);
-
 onUnmounted(() => {
   resetState();
 });
 
-initialize();
 </script>
 
 <style lang="scss" scoped>

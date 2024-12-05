@@ -8,8 +8,8 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
 import CaseService from '../modules/service/components/case-service.vue';
 
 const props = defineProps({
@@ -20,16 +20,24 @@ const props = defineProps({
   editMode: {
     type: Boolean,
     default: false,
+  },
+});
+
+const store = useStore();
+
+// TODO: code for pull request, delete before merge
+const serviceNamespace = `${props.namespace}/service`;
+const closeReason = computed(() => store.getters[`${serviceNamespace}/CLOSE_REASON_ID`]);
+
+
+watchEffect(() => {
+  if (closeReason.value) {
+    initializeWithServiceData(closeReason.value);
   }
 });
 
-const { t } = useI18n();
-
-const route = useRoute();
-
+async function initializeWithServiceData(service) {
+  console.log('Service data:', service);
+}
 </script>
 
-
-<style lang="scss" scoped>
-
-</style>
