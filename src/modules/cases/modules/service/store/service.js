@@ -10,9 +10,9 @@ const getters = {
   SERVICE: (state) => state.service,
   CLOSE_REASON_ID: (state) => state.catalog?.closeReason.id,
   STATUS_ID: (state) => state.catalog?.status.id,
-  SLA_ID: (state) => resolvePropertyFromHierarchy(state, ['sla', 'id']),
-  GROUP_ID: (state) => resolvePropertyFromHierarchy(state, ['group', 'id']),
-  ASSIGNEE_ID: (state) => resolvePropertyFromHierarchy(state, ['assignee', 'id']),
+  SLA_ID: (state) => resolvePropertyFromHierarchy(state, 'sla.id'),
+  GROUP_ID: (state) => resolvePropertyFromHierarchy(state, 'group.id'),
+  ASSIGNEE_ID: (state) => resolvePropertyFromHierarchy(state, 'assignee.id'),
 };
 
 const actions = {
@@ -47,21 +47,17 @@ function resolvePropertyFromHierarchy(state, propertyPath) {
   const findProperty = (service) => {
     if (!service) return null;
 
-    const propertyValue = getNestedProperty(service, propertyPath);
+    const propertyValue = get(service, propertyPath);
+
     if (propertyValue) return propertyValue;
 
+    // Find parent service in the catalog using rootId
     const parentService = state.catalog?.service?.find(
       (item) => item.id === service.rootId
     );
 
-    return findProperty(parentService);
+    return findProperty(parentService); // Recursive call to parent
   };
 
   return findProperty(state.service);
-}
-
-
-// Helper function to safely access nested properties.
-function getNestedProperty(obj, path) {
-  return path.reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), obj);
 }

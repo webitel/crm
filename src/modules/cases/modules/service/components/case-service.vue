@@ -94,6 +94,9 @@ function setCatalogToStore(catalog) {
   store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
+//TODO: refactor due to coderewiew and delete this
+// це було прям дуже важко вичитати
+// так виглядає, як наче краще десь в дані трансформувати в інші структури, щоб було зручно щось таке шукати
 // Generates a hierarchical path for a service within a catalog.
 function generateServicePath(service, catalog) {
   const path = [];
@@ -129,8 +132,8 @@ async function addServiceToStore(serviceCatalogData) {
     });
 
     servicePath.value = generateServicePath(service, catalog);
-  } catch (error) {
-    console.error('Error adding serviceCatalogData to the store:', error);
+  } catch (err) {
+    throw err;
   }
 }
 
@@ -144,8 +147,8 @@ async function initializeComponent() {
       const catalogResponse = await CatalogAPI.get({ itemId: serviceResponse.catalogId });
       await addServiceToStore({ service: serviceResponse, catalog: catalogResponse });
     }
-  } catch (error) {
-    console.error('Error during component initialization:', error);
+  } catch (err) {
+    throw err;
   }
 }
 

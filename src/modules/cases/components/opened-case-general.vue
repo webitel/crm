@@ -25,19 +25,4 @@ const props = defineProps({
 
 const store = useStore();
 
-// TODO: code for pull request, delete before merge
-const serviceNamespace = `${props.namespace}/service`;
-const closeReason = computed(() => store.getters[`${serviceNamespace}/CLOSE_REASON_ID`]);
-
-
-watchEffect(() => {
-  if (closeReason.value) {
-    initializeWithServiceData(closeReason.value);
-  }
-});
-
-async function initializeWithServiceData(service) {
-  console.log('Service data:', service);
-}
 </script>
-
