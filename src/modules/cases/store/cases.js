@@ -34,6 +34,23 @@ const resettableState = {
   },
 };
 
+const state = {
+  editMode: false,
+};
+
+const getters = {
+  EDIT_MODE: (state) => state.editMode,
+};
+
+const actions = {
+  TOGGLE_EDIT_MODE: (context, payload) => {
+    context.commit('SET', {
+      path: 'editMode',
+      value: payload,
+    });
+  },
+};
+
 const api = createApiStoreModule({
   state: {
     api: CasesAPI,
@@ -51,10 +68,13 @@ const table = createTableStoreModule({
 const card = createCardStoreModule({
   state: {
     _resettable: resettableState,
+    ...state,
   },
   modules: {
     api,
   },
+  actions,
+  getters,
 });
 
 const cases = createBaseStoreModule({

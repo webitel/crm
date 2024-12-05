@@ -111,17 +111,13 @@ const path = computed(() => {
   ];
 });
 
-const editMode = computed(() => route.query.edit === 'true');
+const editMode = computed(() => {
+  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+});
 
-const toggleEditMode = (value) => {
-  router.replace({
-    name: route.name,
-    query: {
-      ...route.query,
-      edit: value ? true : undefined,
-    },
-  });
-};
+async function toggleEditMode(value) {
+  await store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
+}
 
 const saveCase = () => {
   toggleEditMode(false);
