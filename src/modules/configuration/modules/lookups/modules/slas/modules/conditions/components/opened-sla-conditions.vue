@@ -121,9 +121,9 @@ import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
 import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import IconAction from '../../../../../../../../../../../webitel-ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import FilterSearch
-  from '../../../../../../../../../../../webitel-ui-sdk/src/modules/Filters/components/filter-search.vue';
+  from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
