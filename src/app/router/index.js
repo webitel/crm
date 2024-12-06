@@ -20,6 +20,12 @@ import TheSlas
   from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
 import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
 import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+import TheSources
+  from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
+import OpenedSource
+  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
+import OpenedSourceGeneral
+  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 
 
 import store from '../store';
@@ -148,7 +154,26 @@ const routes = [
               //   component: SlasConditions,
               // },
             ],
-          }
+          },
+          {
+            path: 'sources',
+            name: CrmSections.SOURCES,
+            component: TheSources,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'sources/:id',
+            name: `${CrmSections.SOURCES}-card`,
+            component: OpenedSource,
+            redirect: { name: `${CrmSections.SOURCES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SOURCES}-general`,
+                component: OpenedSourceGeneral,
+              },
+            ],
+          },
       ],
       },
     ],
