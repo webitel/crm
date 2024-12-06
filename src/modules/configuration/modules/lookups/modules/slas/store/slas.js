@@ -13,10 +13,7 @@ const resettableState = {
   itemInstance: {
     name: '',
     description: '',
-    calendar: {
-      id: '',
-      name: '',
-    },
+    calendar: {},
     reactionTime: 0,
     resolutionTime: 0,
     validTo: 0,
