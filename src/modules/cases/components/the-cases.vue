@@ -25,7 +25,7 @@
             {{ $t('cases.case', 2) }}
           </h3>
           <wt-action-bar
-            :actions="[IconAction.ADD, IconAction.REFRESH]"
+            :include="[IconAction.ADD, IconAction.REFRESH]"
             @click:add="add"
           >
             <wt-icon-btn

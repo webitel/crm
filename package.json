@@ -30,6 +30,7 @@
     "webitel-sdk": "^24.4.16"
   },
   "optionalDependencies": {
+    "@esbuild/darwin-arm64": "^0.24.0",
     "@rollup/rollup-linux-x64-gnu": "4.9.5"
   },
   "devDependencies": {

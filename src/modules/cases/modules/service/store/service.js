@@ -20,10 +20,10 @@ const actions = {
       value: service,
     });
   },
-  SET_CATALOG(context, service) {
+  SET_CATALOG(context, catalog) {
     context.commit('SET', {
       path: 'catalog',
-      value: service,
+      value: catalog,
     });
   },
 };

@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
 import CaseService from '../modules/service/components/case-service.vue';
 
 const props = defineProps({
@@ -16,7 +15,5 @@ const props = defineProps({
     required: true,
   },
 });
-
-const store = useStore();
 
 </script>

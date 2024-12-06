@@ -1,11 +1,11 @@
 <template>
-  <case-service-popup
-    :shown="isServicePopup"
-    @close="isServicePopup = false"
-    @save="addServiceToStore"
-  />
   <div class="case-service">
-    <div class="case-service__text-wrapper">
+    <case-service-popup
+      :shown="isServicePopup"
+      @close="isServicePopup = false"
+      @save="addServiceToStore"
+    />
+    <div class="case-service__wrapper">
       <span class="case-service__title">{{ t('cases.service') }}</span>
       <span
         v-if="servicePath"
@@ -84,11 +84,11 @@ const servicePath = ref('');
 const editMode = inject('editMode');
 
 function setServiceToStore(service) {
-  store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
+  return store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
 }
 
 function setCatalogToStore(catalog) {
-  store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
+  return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
 // Finds the parent service for the given service within a catalog.
@@ -131,8 +131,8 @@ async function addServiceToStore(serviceCatalogData) {
   if (!serviceCatalogData) return console.error('No serviceCatalogData provided');
   try {
     const { service, catalog } = serviceCatalogData;
-    setServiceToStore(service);
-    setCatalogToStore(catalog);
+    await setServiceToStore(service);
+    await setCatalogToStore(catalog);
 
     await setItemProp({
       path: 'service',
@@ -173,7 +173,7 @@ onUnmounted(() => {
   width: fit-content;
   gap: var(--spacing-sm);
 
-  &__text-wrapper {
+  &__wrapper {
     display: flex;
     flex-direction: column;
   }
