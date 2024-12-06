@@ -2,36 +2,53 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
+  getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { SourcesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
+const configuration = getDefaultOpenAPIConfig();
 
-const baseUrl = '/cases/sources';
+const sourceService = new SourcesApiFactory(configuration, '', instance);
 
 const fieldsToSend = ['name', 'description', 'type'];
 
 const getSourcesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const url = applyTransform(params, [
+  const {
+    page,
+    size,
+    fields,
+    sort,
+    id,
+    q,
+    type,
+  } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(baseUrl),
   ]);
   try {
-    const response = await instance.get(url);
+    const response = await sourceService.listSources(
+      page,
+      size,
+      fields,
+      sort,
+      id,
+      q,
+      type,
+    )
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
@@ -50,12 +67,8 @@ const getSource = async ({ itemId: id }) => {
     return item.source;
   };
 
-  const url = applyTransform({ fields: fieldsToSend }, [
-    generateUrl(`${baseUrl}/${id}`),
-  ]);
-
   try {
-    const response = await instance.get(url);
+    const response = await sourceService.locateSource(id);
     return applyTransform(response.data, [
       snakeToCamel(),
       itemResponseHandler,
@@ -79,7 +92,7 @@ const addSource = async ({ itemInstance }) => {
     camelToSnake(),
   ]);
   try {
-    const response = await instance.post(baseUrl, item);
+    const response = await sourceService.createSource(item);
     return applyTransform(response.data, [
       snakeToCamel()
     ]);
@@ -94,9 +107,8 @@ const updateSource = async ({ itemInstance, itemId: id }) => {
     camelToSnake(),
     sanitize(fieldsToSend)]);
 
-  const url = `${baseUrl}/${id}`;
   try {
-    const response = await instance.put(url, item);
+    const response = await sourceService.updateSource(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -104,9 +116,8 @@ const updateSource = async ({ itemInstance, itemId: id }) => {
 };
 
 const deleteSource = async ({ id }) => {
-  const url = `${baseUrl}/${id}`;
   try {
-    const response = await instance.delete(url);
+    const response = await sourceService.deleteSource(id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

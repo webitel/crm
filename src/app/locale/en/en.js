@@ -113,7 +113,7 @@ export default {
     },
     sources: {
       sources: 'Case source | Case sources',
-      type: {
+      types: {
         [TypesSourcesEnum.CALL]: 'Call',
         [TypesSourcesEnum.CHAT]: 'Chat',
         [TypesSourcesEnum.SOCIAL_MEDIA]: 'Social Media',

@@ -50,7 +50,7 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 const typesSourcesOptions = computed(() => Object.values(TypesSources).map((type) => {
   return {
     id: type,
-    name: t(`lookups.sources.type.${type}`),
+    name: t(`lookups.sources.types.${type}`),
   };
 }));
 
