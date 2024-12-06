@@ -73,7 +73,7 @@
               </template>
 
               <template #type="{ item }">
-                {{ t(`lookups.sources.types[${item.type}]`) }}
+                {{ t(`lookups.sources.types.${item.type}`) }}
               </template>
 
               <template #description="{ item }">

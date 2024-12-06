@@ -24,6 +24,13 @@ const fieldsToSend = ['name', 'description', 'type'];
 const getSourcesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
+  const listResponseHandler = (items) => {
+    return items.map((item) => ({
+      ...item,
+      type: item.type.toLowerCase(),
+    }));
+  };
+
   const {
     page,
     size,
@@ -39,6 +46,7 @@ const getSourcesList = async (params) => {
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
+
   try {
     const response = await sourceService.listSources(
       page,
@@ -53,7 +61,7 @@ const getSourcesList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, []),
+      items: applyTransform(items, [listResponseHandler]),
       next,
     };
   } catch (err) {
@@ -63,7 +71,9 @@ const getSourcesList = async (params) => {
 
 const getSource = async ({ itemId: id }) => {
   const itemResponseHandler = (item) => {
-    item.source.type = item.source.type.toLowerCase();
+    if(item.source.type) {
+      item.source.type = item.source.type.toLowerCase();
+    }
     return item.source;
   };
 
