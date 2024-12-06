@@ -66,7 +66,7 @@
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed } from 'vue';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
@@ -82,16 +82,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  editMode: {
-    type: Boolean,
-    default: false,
-  },
 });
 const {
   namespace: cardNamespace,
   itemInstance,
   setItemProp,
 } = useCardStore(props.namespace);
+
+const editMode = inject('editMode');
 
 </script>
 
