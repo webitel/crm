@@ -2,21 +2,22 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
+  getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { SLAConditionsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
+const configuration = getDefaultOpenAPIConfig();
 
-const baseUrl = '/slas';
-const nestedUrl = 'sla_condition';
+const slaConditionsService = new SLAConditionsApiFactory(configuration, '', instance);
 
 const fieldsToSend = [
   'name',
@@ -29,16 +30,30 @@ const fieldsToSend = [
 const getConditionsList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const url = applyTransform(rest, [
+  const {
+    page,
+    size,
+    fields,
+    sort,
+    id,
+    q,
+  } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(`${baseUrl}/${parentId}/sla_conditions`),
   ]);
   try {
-    const response = await instance.get(url);
+    const response = await slaConditionsService.listSLAConditions(
+      parentId,
+      page,
+      size,
+      fields,
+      sort,
+      id,
+      q,
+    );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
@@ -56,12 +71,8 @@ const getCondition = async ({ parentId, itemId: id }) => {
     return item.slaCondition;
   };
 
-  const url = applyTransform({ fields: fieldsToSend }, [
-    generateUrl(`${baseUrl}/${parentId}/${nestedUrl}/${id}`),
-  ]);
-
   try {
-    const response = await instance.get(url);
+    const response = await slaConditionsService.locateSLACondition(parentId, id, fieldsToSend);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -83,9 +94,8 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
     sanitize(fieldsToSend),
   ]);
 
-  const url = `${baseUrl}/${itemInstance.slaId}/${nestedUrl}/${id}`;
   try {
-    const response = await instance.put(url, item);
+    const response = await slaConditionsService.updateSLACondition(itemInstance.slaId, id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -98,9 +108,9 @@ const addCondition = async ({ itemInstance, parentId }) => {
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
-  const url = `${baseUrl}/${parentId}/${nestedUrl}`;
+
   try {
-    const response = await instance.post(url, item);
+    const response = await slaConditionsService.createSLACondition(parentId, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -108,9 +118,8 @@ const addCondition = async ({ itemInstance, parentId }) => {
 };
 
 const deleteCondition = async ({ id, parentId }) => {
-  const url = `${baseUrl}/${parentId}/${nestedUrl}/${id}`;
   try {
-    const response = await instance.delete(url);
+    const response = await slaConditionsService.deleteSLACondition(parentId, id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

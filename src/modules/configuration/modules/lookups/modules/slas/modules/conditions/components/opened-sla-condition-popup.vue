@@ -27,14 +27,14 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           format="hh:mm"
-          @input="setItemProp({ prop: 'reactionTime', value: $event })"
+          @input="setItemProp({ path: 'reactionTime', value: $event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           format="hh:mm"
-          @input="setItemProp({ prop: 'resolutionTime', value: $event })"
+          @input="setItemProp({ path: 'resolutionTime', value: $event })"
         />
       </form>
     </template>
@@ -116,7 +116,7 @@ async function initializePopup() {
       await loadItem();
     }
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
