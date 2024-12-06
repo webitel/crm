@@ -65,7 +65,7 @@ const getSla = async ({ itemId: id }) => {
   };
 
   try {
-    const response = await slaService.locateSLA(id);
+    const response = await slaService.locateSLA(id, fieldsToSend);
     return applyTransform(response.data, [
       snakeToCamel(),
       itemResponseHandler,
@@ -83,11 +83,11 @@ const preRequestHandler = (item) => {
 };
 
 const addSla = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'validFrom', 'validTo', 'calendarId', 'reactionTime', 'resolutionTime'];
+  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time']; //difference with top list - field calendar_id
   const item = applyTransform(itemInstance, [
     preRequestHandler,
-    sanitize(fieldsToSend),
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
   try {
     const response = await slaService.createSLA(item);
@@ -100,8 +100,11 @@ const addSla = async ({ itemInstance }) => {
 };
 
 const updateSla = async ({ itemInstance, itemId: id }) => {
-  const item = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
-
+  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time'];
+  const item = applyTransform(itemInstance, [
+    preRequestHandler,
+    camelToSnake(),
+    sanitize(fieldsToSend)]);
   try {
     const response = await slaService.updateSLA(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
