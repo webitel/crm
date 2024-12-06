@@ -6,8 +6,8 @@
       @change="changeTab"
     />
     <router-view
-      class="opened-card-tabs__tab"
       :namespace="namespace"
+      class="opened-card-tabs__tab"
     />
   </article>
 </template>

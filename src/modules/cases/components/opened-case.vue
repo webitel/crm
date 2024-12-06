@@ -25,10 +25,14 @@
     </template>
     <template #side-panel>
       {{ editMode }}
-      <opened-case-general />
+      <opened-case-general
+        :namespace="namespace"
+      />
     </template>
     <template #main>
-      <opened-case-tabs :namespace="namespace" />
+      <opened-case-tabs
+        :namespace="namespace"
+      />
     </template>
   </wt-dual-panel>
 </template>
@@ -38,7 +42,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, onMounted } from 'vue';
+import { computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import OpenedCaseGeneral from './opened-case-general.vue';
@@ -105,17 +109,15 @@ const path = computed(() => {
   ];
 });
 
-const editMode = computed(() => route.query.edit === 'true');
+const editMode = computed(() => {
+  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+});
 
-const toggleEditMode = (value) => {
-  router.replace({
-    name: route.name,
-    query: {
-      ...route.query,
-      edit: value ? true : undefined,
-    },
-  });
-};
+provide('editMode', editMode);
+
+async function toggleEditMode(value) {
+  await store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
+}
 
 const saveCase = () => {
   toggleEditMode(false);

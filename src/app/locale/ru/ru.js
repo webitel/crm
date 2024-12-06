@@ -132,6 +132,7 @@ export default {
     reason: 'Причина',
     result: 'Результат',
     rating: 'Оценка',
+    selectAService: 'Выберите сервис',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',

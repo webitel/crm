@@ -25,7 +25,7 @@
             {{ $t('cases.case', 2) }}
           </h3>
           <wt-action-bar
-            :actions="[IconAction.ADD, IconAction.REFRESH]"
+            :include="[IconAction.ADD, IconAction.REFRESH]"
             @click:add="add"
           >
             <wt-icon-btn
@@ -224,10 +224,10 @@ function add() {
 }
 
 function edit(item) {
+  store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
   return router.push({
     name: `${CrmSections.CASES}-card`,
     params: { id: item.id },
-    query: { edit: true },
   });
 }
 
