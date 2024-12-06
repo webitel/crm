@@ -20,9 +20,14 @@ import TheSlas
   from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
 import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
 import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+import TheSources
+  from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
+import OpenedSource
+  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
+import OpenedSourceGeneral
+  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 import OpenedSlaConditions
   from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
-import OpenedSlaConditionsPopup from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-condition-popup.vue';
 
 import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -150,7 +155,26 @@ const routes = [
                 component: OpenedSlaConditions,
               },
             ],
-          }
+          },
+          {
+            path: 'sources',
+            name: CrmSections.SOURCES,
+            component: TheSources,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'sources/:id',
+            name: `${CrmSections.SOURCES}-card`,
+            component: OpenedSource,
+            redirect: { name: `${CrmSections.SOURCES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SOURCES}-general`,
+                component: OpenedSourceGeneral,
+              },
+            ],
+          },
       ],
       },
     ],
