@@ -21,7 +21,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!hasDeleteAccess"
-            @click:add="router.push({ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: 'new' }})"
+            @click:add="addGroup"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
@@ -44,6 +44,12 @@
           :callback="deleteCallback"
           :delete-count="deleteCount"
           @close="closeDelete"
+        />
+
+        <create-contact-group-popup
+          :shown="isCreateGroupPopup"
+          :namespace="baseNamespace"
+          @close="closeCreateGroupPopup"
         />
 
         <div
@@ -79,7 +85,7 @@
               </template>
 
               <template #type="{ item }">
-                {{ item.type }}
+                {{ t(`lookups.contactGroups.types.${item.type}`) }}
               </template>
 
               <template #state="{ item, index }">
@@ -132,11 +138,12 @@ import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { computed, onUnmounted } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
+import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
 const baseNamespace = 'configuration/lookups/contactGroups';
 
@@ -191,14 +198,22 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
+const { close } = useClose('configuration');
+
+const {
+  showEmpty,
+  image: imageEmpty,
+  text: textEmpty,
+} = useTableEmpty({ dataList, filters, error, isLoading });
+
+const isCreateGroupPopup = ref(false);
+
 const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.sources.sources', 2), route: '/contact-groups' },
 ]);
-
-const { close } = useClose('configuration');
 
 function edit(item) {
   return router.push({
@@ -207,11 +222,14 @@ function edit(item) {
   });
 }
 
-const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+function addGroup() {
+  isCreateGroupPopup.value = true;
+}
+
+function closeCreateGroupPopup() {
+  isCreateGroupPopup.value = false;
+}
+
 </script>
 
 <style lang="scss" scoped>

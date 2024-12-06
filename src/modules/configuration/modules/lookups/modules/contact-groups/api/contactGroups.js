@@ -80,19 +80,19 @@ const getContactGroup = async ({ itemId: id }) => {
   }
 };
 
-// const preRequestHandler = (item) => {
-//   return {
-//     ...item,
-//     calendarId: item.calendar.id,
-//   }
-// };
+const preRequestHandler = (item) => {
+  return {
+    ...item,
+    type: item.type.toUpperCase(),
+  }
+};
 
 const addStaticContactGroup = async ({ itemInstance }) => {
 
   const item = applyTransform(itemInstance, [
-    // preRequestHandler,
-    sanitize(fieldsToSend),
+    preRequestHandler,
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
   try {
     const response = await instance.post(baseUrl, item);

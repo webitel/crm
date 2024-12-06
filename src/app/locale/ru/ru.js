@@ -2,6 +2,8 @@ import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import TypesContactGroupsEnum
+  from '../../../modules/configuration/modules/lookups/modules/contact-groups/enums/TypeContactGroups.enum.js';
 import TypesSourcesEnum
   from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 import AccessMode
@@ -125,6 +127,11 @@ export default {
     contactGroups: {
       contactGroups: 'Группа контактов | Группы контактов',
       defaultGroup: 'Группа по умолчанию',
+      addGroup: 'Добавить контакты',
+      types: {
+        [TypesContactGroupsEnum.DYNAMIC]: 'Динамическая',
+        [TypesContactGroupsEnum.STATIC]: 'Статическая',
+      },
     },
     [CrmSections.STATUSES]: 'Статусы',
   },
