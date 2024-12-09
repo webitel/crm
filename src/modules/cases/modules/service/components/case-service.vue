@@ -168,10 +168,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .case-service {
-  display: flex;
-  flex-direction: column;
   width: fit-content;
-  gap: var(--spacing-sm);
 
   &__wrapper {
     display: flex;
@@ -179,7 +176,7 @@ onUnmounted(() => {
   }
 
   &__title, &__path {
-    padding: var(--spacing-2xs);
+    padding: var(--spacing-xs);
   }
 
   &__path {

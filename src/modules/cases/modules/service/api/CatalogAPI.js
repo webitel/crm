@@ -233,25 +233,6 @@ const catalogsData = {
   ],
 };
 
-const fieldsToSend = [
-  'id',
-  'name',
-  'description',
-  'prefix',
-  'code',
-  'state',
-  'sla',
-  'status',
-  'closeReason',
-  'teams',
-  'skills',
-  'createdAt',
-  'updatedAt',
-  'createdBy',
-  'updatedBy',
-  'service',
-];
-
 // Get method for the Catalogs API
 const getList = async (params) => {
   try {

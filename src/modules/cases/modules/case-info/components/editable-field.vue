@@ -4,7 +4,10 @@
       v-if="!editMode"
       class="editable-field__content"
     >
-      <wt-label class="editable-field__label">
+      <wt-label
+        v-if="label"
+        class="editable-field__label"
+      >
         {{ label }}
       </wt-label>
       <span class="editable-field__value">{{ value }}</span>
