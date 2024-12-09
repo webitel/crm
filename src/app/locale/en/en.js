@@ -7,6 +7,8 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import TypesSourcesEnum
+  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 
 export default {
   crm: 'CRM',
@@ -93,7 +95,7 @@ export default {
       name: 'Contacts',
       text: 'In this section, you can work with your contacts: clients, customers etc.',
     },
-    'configuration': {
+    configuration: {
       name: 'Configuration',
       text: 'In this section, you will set up the Case management process.',
     },
@@ -103,9 +105,25 @@ export default {
 
     slas: {
       slas: 'SLA | SLAs',
+      conditions: 'Condition | Conditions',
+      reactionTime: 'Reaction time',
+      resolutionTime: 'Resolution time',
+      validFrom: 'Valid from',
+      validTo: 'Valid to',
     },
+    sources: {
+      sources: 'Case source | Case sources',
+      types: {
+        [TypesSourcesEnum.CALL]: 'Call',
+        [TypesSourcesEnum.CHAT]: 'Chat',
+        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Social Media',
+        [TypesSourcesEnum.EMAIL]: 'Email',
+        [TypesSourcesEnum.API]: 'API',
+        [TypesSourcesEnum.MANUAL]: 'Manual',
+      }
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
-    [CrmSections.SOURCES]: 'Sources',
   },
 };
