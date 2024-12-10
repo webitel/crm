@@ -31,6 +31,7 @@ const resettableState = {
     closeReason: '',
     closeResult: '',
     rate: '',
+    statusCondition: '',
   },
 };
 

@@ -426,6 +426,7 @@ const fieldsToSend = [
   'comments',
   'related',
   'links',
+  'statusCondition'
 ];
 
 
@@ -510,6 +511,34 @@ const updateCase = async ({ itemId: id, itemInstance }) => {
   }
 };
 
+const patchCase = async ({ itemId: id, itemInstance }) => {
+  try {
+    const itemIndex = data.items.findIndex((item) => item.id === id);
+
+    if (itemIndex === -1) {
+      throw new Error("Item not found");
+    }
+
+    // Transform the patch data to camelCase and filter for allowed fields
+    const transformedPatch = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+
+    // Update only the provided fields
+    data.items[itemIndex] = {
+      ...data.items[itemIndex],
+      ...transformedPatch,
+      updated_at: new Date().toISOString(),
+    };
+
+    const patchedItem = applyTransform(data.items[itemIndex], [snakeToCamel()]);
+
+    return new Promise((resolve) => {
+      resolve(patchedItem);
+    });
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const addCase = async ({ itemInstance }) => {
   try {
     const newCase = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
@@ -550,6 +579,7 @@ const casesAPI = {
   delete: deleteCase,
   update: updateCase,
   add: addCase,
+  patch: patchCase,
 };
 
 
