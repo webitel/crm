@@ -8,6 +8,7 @@ import {
 import ContactGroupsAPI from '../api/contactGroups.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters.js';
+import conditions from '../modules/conditions/store/conditions';
 
 const resettableState = {
   itemInstance: {
@@ -51,6 +52,7 @@ const card = createCardStoreModule({
   state: { _resettable: resettableState },
   modules: {
     api,
+    conditions,
     permissions,
   },
 });
