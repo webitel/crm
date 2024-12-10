@@ -1,5 +1,8 @@
 <template>
   <article class="opened-case-general">
+    <case-status
+      :namespace="namespace"
+    />
     <case-priority
       :namespace="namespace"
     />
@@ -12,6 +15,7 @@
 <script setup>
 import CasePriority from '../modules/priority/components/case-priority.vue';
 import CaseService from '../modules/service/components/case-service.vue';
+import CaseStatus from '../modules/status/components/case-status.vue';
 
 const props = defineProps({
   namespace: {

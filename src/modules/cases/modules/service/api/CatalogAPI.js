@@ -25,7 +25,7 @@ const catalogsData = {
         name: "Critical SLA"
       },
       status: {
-        id: "status1",
+        id: "s1",
         name: "Active"
       },
       closeReason: {
@@ -101,7 +101,7 @@ const catalogsData = {
         name: 'Standard SLA',
       },
       status: {
-        id: 'status1',
+        id: 's1',
         name: 'Active',
       },
       closeReason: {

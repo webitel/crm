@@ -1,7 +1,7 @@
 export const serviceCatalogData  = {
   catalog: {
     id: 'catalog1',
-    name: 'Main Catalog',
+    name: 'Main Catalogqwe',
     description: 'This is the main service catalog.',
     prefix: 'CAT',
     code: 'CAT001',
@@ -11,7 +11,7 @@ export const serviceCatalogData  = {
       name: 'Standard SLA',
     },
     status: {
-      id: 'status1',
+      id: 's2',
       name: 'Active',
     },
     closeReason: {
@@ -142,7 +142,7 @@ export const serviceCatalogData  = {
   },
   service: {
     id: 'subservice2',
-    name: 'Router Configuration',
+    name: 'Router Configuratioasdn',
     rootId: 'root3',
     description: 'Guidance on router setup and troubleshooting.',
     code: 'RT001',
