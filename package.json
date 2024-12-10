@@ -27,7 +27,7 @@
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0",
-    "webitel-sdk": "^24.8.8"
+    "webitel-sdk": "^24.10.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.1.3",

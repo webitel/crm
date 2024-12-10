@@ -32,6 +32,8 @@ import OpenedContactGroup
   from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group.vue';
 import OpenedContactGroupGeneral
   from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
+import OpenedContactGroupsConditions
+  from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 
 
@@ -203,6 +205,11 @@ const routes = [
                 path: 'permissions/:permissionId?',
                 name: `${CrmSections.CONTACT_GROUPS}-permissions`,
                 component: PermissionsTab,
+              },
+              {
+                path: 'conditions/:conditionId?',
+                name: `${CrmSections.CONTACT_GROUPS}-conditions`,
+                component: OpenedContactGroupsConditions,
               },
             ],
           },

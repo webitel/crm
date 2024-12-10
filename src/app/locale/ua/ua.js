@@ -129,6 +129,7 @@ export default {
       contactGroups: 'Група контактів | Групи контактів',
       defaultGroup: 'Група за замовчуванням',
       addGroup: 'Додати контакти',
+      assignee: 'Виконавець',
       types: {
         [TypesContactGroupsEnum.DYNAMIC]: 'Динамічна',
         [TypesContactGroupsEnum.STATIC]: 'Статична',
