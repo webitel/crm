@@ -28,6 +28,8 @@ import OpenedSourceGeneral
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 import OpenedSlaConditions
   from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
+import TheServiceCatalogs
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/the-service-catalogs.vue';
 
 import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -174,6 +176,12 @@ const routes = [
                 component: OpenedSourceGeneral,
               },
             ],
+          },
+          {
+            path: 'service-catalogs',
+            name: CrmSections.SERVICE_CATALOG,
+            component: TheServiceCatalogs,
+            // beforeEnter: checkRouteAccess,
           },
       ],
       },

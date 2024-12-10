@@ -28,6 +28,11 @@ const nav = [
         name: t('lookups.slas.slas', 2),
         route: 'lookups/slas',
       },
+      {
+        value: CrmSections.SLAS,
+        name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+        route: 'lookups/service-catalogs',
+      },
     ],
   },
 ];

@@ -123,6 +123,11 @@ export default {
         [TypesSourcesEnum.MANUAL]: 'Створене вручну',
       },
     },
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
     [CrmSections.STATUSES]: 'Статуси',
   },

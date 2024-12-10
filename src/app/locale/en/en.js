@@ -111,6 +111,7 @@ export default {
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
+
     sources: {
       sources: 'Case source | Case sources',
       types: {
@@ -121,6 +122,10 @@ export default {
         [TypesSourcesEnum.API]: 'API',
         [TypesSourcesEnum.MANUAL]: 'Manual',
       }
+    },
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Service catalog | Service catalogs',
     },
 
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
