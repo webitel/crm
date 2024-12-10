@@ -2,26 +2,24 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
-  getDefaultOpenAPIConfig,
+  getDefaultOpenAPIConfig
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
+import { CatalogsApiFactory } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
-  merge,
-  notify,
-  sanitize,
-  snakeToCamel,
-  starToSearch,
+  merge, notify,
+  sanitize, snakeToCamel,
+  starToSearch
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { SLAsApiFactory} from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const slaService = new SLAsApiFactory(configuration, '', instance);
+const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar', 'reaction_time', 'resolution_time'];
+const fieldsToSend = ['name', 'code', 'sla', 'statuses', 'teams', 'skills', 'status', 'prefix', 'reason', 'description'];
 
-const getSlasList = async (params) => {
+const getCatalogsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const {
@@ -39,7 +37,7 @@ const getSlasList = async (params) => {
     camelToSnake(),
   ]);
   try {
-    const response = await slaService.listSLAs(
+    const response = await catalogsService.listCatalogs(
       page,
       size,
       fields,
@@ -59,13 +57,13 @@ const getSlasList = async (params) => {
   }
 };
 
-const getSla = async ({ itemId: id }) => {
+const getCatalog = async ({ itemId: id }) => {
   const itemResponseHandler = (item) => {
     return item.sla;
   };
 
   try {
-    const response = await slaService.locateSLA(id, fieldsToSend);
+    const response = await catalogsService.locateCatalog(id, fieldsToSend);
     return applyTransform(response.data, [
       snakeToCamel(),
       itemResponseHandler,
@@ -82,7 +80,7 @@ const preRequestHandler = (item) => {
   }
 };
 
-const addSla = async ({ itemInstance }) => {
+const addCatalog = async ({ itemInstance }) => {
   const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time']; //difference with top list - field calendar_id
   const item = applyTransform(itemInstance, [
     preRequestHandler,
@@ -90,7 +88,7 @@ const addSla = async ({ itemInstance }) => {
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await slaService.createSLA(item);
+    const response = await catalogsService.createCatalog(item);
     return applyTransform(response.data, [
       snakeToCamel()
     ]);
@@ -99,35 +97,35 @@ const addSla = async ({ itemInstance }) => {
   }
 };
 
-const updateSla = async ({ itemInstance, itemId: id }) => {
+const updateCatalog = async ({ itemInstance, itemId: id }) => {
   const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
   try {
-    const response = await slaService.updateSLA(id, item);
+    const response = await catalogsService.updateCatalog(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const deleteSla = async ({ id }) => {
+const deleteCatalog = async ({ id }) => {
   try {
-    const response = await slaService.deleteSLA(id);
+    const response = await catalogsService.deleteCatalog(id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const SlasAPI = {
-  getList: getSlasList,
-  get: getSla,
-  add: addSla,
-  update: updateSla,
-  delete: deleteSla,
+const CatalogsAPI = {
+  getList: getCatalogsList,
+  get: getCatalog,
+  add: addCatalog,
+  update: updateCatalog,
+  delete: deleteCatalog,
 }
 
-export default SlasAPI;
+export default CatalogsAPI;
