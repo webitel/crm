@@ -1,9 +1,9 @@
 <template>
   <div class="case-status">
-    <div v-if="statusId">
+    <div v-if="statusId && itemInstance.statusCondition?.id">
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
-        :key="statusId && itemInstance.statusCondition?.id"
+        :key="statusId"
         :clearable="false"
         :search-method="(params) => StatusConditionsAPI.getLookup({...params, statusId: statusId })"
         :value="itemInstance.statusCondition?.name"
