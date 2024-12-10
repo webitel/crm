@@ -18,7 +18,7 @@
         :options="typesSourcesOptions"
         :value="currentTypeSource"
         required
-        @input="setItemProp({ prop: 'type', value: $event.id })"
+        @input="setItemProp({ path: 'type', value: $event.id })"
       />
 
       <wt-textarea
@@ -50,7 +50,7 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 const typesSourcesOptions = computed(() => Object.values(TypesSources).map((type) => {
   return {
     id: type,
-    name: t(`lookups.sources.type.${type}`),
+    name: t(`lookups.sources.types.${type}`),
   };
 }));
 

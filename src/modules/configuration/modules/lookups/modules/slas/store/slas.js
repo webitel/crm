@@ -7,15 +7,13 @@ import {
 import SlasAPI from '../api/slas.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import conditions from '../modules/conditions/store/conditions';
 
 const resettableState = {
   itemInstance: {
     name: '',
     description: '',
-    calendar: {
-      id: '',
-      name: '',
-    },
+    calendar: {},
     reactionTime: 0,
     resolutionTime: 0,
     validTo: 0,
@@ -43,6 +41,7 @@ const card = createCardStoreModule({
   state: { _resettable: resettableState },
   modules: {
     api,
+    conditions,
   },
 });
 

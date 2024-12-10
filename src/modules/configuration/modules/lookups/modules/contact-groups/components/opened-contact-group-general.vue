@@ -58,8 +58,8 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-function loadStaticContactGroupsList() {
-  return ContactGroupsAPI.getLookup({ type: TypesContactGroups.STATIC.toUpperCase() });
+function loadStaticContactGroupsList(params) {
+  return ContactGroupsAPI.getLookup({ ...params, type: TypesContactGroups.STATIC.toUpperCase() });
 }
 </script>
 

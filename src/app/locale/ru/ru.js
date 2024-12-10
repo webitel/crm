@@ -115,7 +115,7 @@ export default {
 
     sources: {
       sources: 'Источник обращений | Источники обращений',
-      type: {
+      types: {
         [TypesSourcesEnum.CALL]: 'Звонок',
         [TypesSourcesEnum.CHAT]: 'Чат',
         [TypesSourcesEnum.SOCIAL_MEDIA]: 'Социальная сеть',

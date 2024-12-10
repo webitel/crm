@@ -2,36 +2,51 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
+  getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { SLAsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
+const configuration = getDefaultOpenAPIConfig();
 
-const baseUrl = '/cases/slas';
+const slaService = new SLAsApiFactory(configuration, '', instance);
 
 const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar', 'reaction_time', 'resolution_time'];
 
 const getSlasList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const url = applyTransform(params, [
+  const {
+    page,
+    size,
+    fields,
+    sort,
+    id,
+    q,
+  } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(baseUrl),
   ]);
   try {
-    const response = await instance.get(url);
+    const response = await slaService.listSLAs(
+      page,
+      size,
+      fields,
+      sort,
+      id,
+      q,
+    );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
@@ -49,12 +64,8 @@ const getSla = async ({ itemId: id }) => {
     return item.sla;
   };
 
-  const url = applyTransform({ fields: fieldsToSend }, [
-    generateUrl(`${baseUrl}/${id}`),
-  ]);
-
   try {
-    const response = await instance.get(url);
+    const response = await slaService.locateSLA(id, fieldsToSend);
     return applyTransform(response.data, [
       snakeToCamel(),
       itemResponseHandler,
@@ -72,14 +83,14 @@ const preRequestHandler = (item) => {
 };
 
 const addSla = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'validFrom', 'validTo', 'calendarId', 'reactionTime', 'resolutionTime'];
+  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time']; //difference with top list - field calendar_id
   const item = applyTransform(itemInstance, [
     preRequestHandler,
-    sanitize(fieldsToSend),
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
   try {
-    const response = await instance.post(baseUrl, item);
+    const response = await slaService.createSLA(item);
     return applyTransform(response.data, [
       snakeToCamel()
     ]);
@@ -89,11 +100,13 @@ const addSla = async ({ itemInstance }) => {
 };
 
 const updateSla = async ({ itemInstance, itemId: id }) => {
-  const item = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
-
-  const url = `${baseUrl}/${id}`;
+  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time'];
+  const item = applyTransform(itemInstance, [
+    preRequestHandler,
+    camelToSnake(),
+    sanitize(fieldsToSend)]);
   try {
-    const response = await instance.put(url, item);
+    const response = await slaService.updateSLA(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -101,9 +114,8 @@ const updateSla = async ({ itemInstance, itemId: id }) => {
 };
 
 const deleteSla = async ({ id }) => {
-  const url = `${baseUrl}/${id}`;
   try {
-    const response = await instance.delete(url);
+    const response = await slaService.deleteSLA(id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);
