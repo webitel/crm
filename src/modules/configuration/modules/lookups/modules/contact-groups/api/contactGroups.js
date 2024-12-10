@@ -26,7 +26,7 @@ const contactGroupsService = new GroupsApiFactory(configuration, '', instance);
 
 const baseUrl = '/contacts/groups';
 
-const fieldsToSend = ['name', 'description', 'enabled', 'type'];
+const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group'];
 
 const getContactGroupsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'type'];
@@ -176,7 +176,7 @@ const ContactGroupsAPI = {
   delete: deleteStaticContactGroup,
   getLookup,
 
-  ...generatePermissionsApi(contactGroupsService),
+  ...generatePermissionsApi(baseUrl),
 
 };
 

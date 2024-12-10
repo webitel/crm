@@ -14,7 +14,7 @@ const resettableState = {
     name: '',
     description: '',
     type: '',
-    state: '',
+    enabled: true,
   },
 };
 

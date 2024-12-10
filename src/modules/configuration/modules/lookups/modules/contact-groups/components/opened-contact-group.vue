@@ -150,7 +150,7 @@ const save = async () => {
     isDynamicGroup.value ? await dynamicContactGroupsAPI.add(itemInstance.value) : await addItem();
   } else {
     if(isDynamicGroup.value) {
-      await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, id: id.value});
+      await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
       await loadItem();
     } else {
       await updateItem();
