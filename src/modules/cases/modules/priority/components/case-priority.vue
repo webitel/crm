@@ -45,6 +45,7 @@ const {
 
 const editMode = inject('editMode');
 
+// TODO: replace p1 with actual priority id after API is implemented
 async function initializePriority() {
   if (!itemInstance.value.priority) {
     try {
