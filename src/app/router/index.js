@@ -179,7 +179,7 @@ const routes = [
           },
           {
             path: 'service-catalogs',
-            name: CrmSections.SERVICE_CATALOG,
+            name: CrmSections.SERVICE_CATALOGS,
             component: TheServiceCatalogs,
             // beforeEnter: checkRouteAccess,
           },
