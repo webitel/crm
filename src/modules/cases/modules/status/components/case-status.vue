@@ -6,9 +6,22 @@
         :key="statusId"
         :clearable="false"
         :search-method="(params) => StatusConditionsAPI.getLookup({...params, statusId: statusId })"
-        :value="itemInstance.statusCondition?.name"
+        :value="itemInstance?.statusCondition"
         @input="handleSelect"
-      />
+      >
+        <template #singleLabel="{ option }">
+          <wt-indicator
+            :text="option.name"
+            :color="getIndicatorColor(option)"
+          />
+        </template>
+        <template #option="{ option }">
+          <wt-indicator
+            :text="option.name"
+            :color="getIndicatorColor(option)"
+          />
+        </template>
+      </wt-select>
     </div>
   </div>
 </template>
@@ -61,6 +74,12 @@ const {
   setId,
   resetState,
 });
+
+function getIndicatorColor(option) {
+  if (option?.initial) return 'initial-status';
+  if (option?.final) return 'final-status';
+  return 'other-status';
+}
 
 const statusId = computed(() => store.getters[`${props.namespace}/service/STATUS_ID`]);
 

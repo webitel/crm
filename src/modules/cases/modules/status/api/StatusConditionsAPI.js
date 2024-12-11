@@ -133,7 +133,7 @@ const getLookup = async ({ statusId, ...params }) => {
   return getList({
     ...params,
     statusId,
-    fields: ["id", "name"],
+    fields: ["id", "name", "initial", "final"],
   });
 };
 
