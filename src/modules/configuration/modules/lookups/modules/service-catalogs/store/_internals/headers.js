@@ -15,12 +15,4 @@ export default [
     field: 'description',
     sort: SortSymbols.NONE,
   },
-  {
-    value: 'calendar',
-    locale: 'objects.calendar',
-    show: true,
-    field: 'calendar',
-    sort: SortSymbols.NONE,
-  },
-
 ];

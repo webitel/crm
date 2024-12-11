@@ -11,12 +11,16 @@ import filters from '../modules/filters/store/filters';
 const resettableState = {
   itemInstance: {
     name: '',
+    code: '',
+    sla: {},
+    statuses: '',
+    teams: {},
+    skills: {},
+    status: {},
+    prefix: '',
+    reason: {},
     description: '',
-    calendar: {},
-    reactionTime: 0,
-    resolutionTime: 0,
-    validTo: 0,
-    validFrom: 0,
+    services: [],
   },
 };
 
@@ -43,11 +47,11 @@ const card = createCardStoreModule({
   },
 });
 
-const serviceCatalogs = createBaseStoreModule({
+const catalogs = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default serviceCatalogs;
+export default catalogs;

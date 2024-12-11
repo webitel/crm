@@ -81,7 +81,7 @@ const preRequestHandler = (item) => {
 };
 
 const addCatalog = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time']; //difference with top list - field calendar_id
+  const fieldsToSend = ['name', 'description', 'services'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -98,7 +98,7 @@ const addCatalog = async ({ itemInstance }) => {
 };
 
 const updateCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time'];
+  const fieldsToSend = ['name', 'description', 'services'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),

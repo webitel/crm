@@ -12,7 +12,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { SLAsApiFactory} from 'webitel-sdk';
+import { SLAsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
