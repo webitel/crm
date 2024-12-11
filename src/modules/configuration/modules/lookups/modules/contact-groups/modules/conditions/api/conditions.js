@@ -19,13 +19,11 @@ const configuration = getDefaultOpenAPIConfig();
 
 const dynamicGroupConditionsService = new DynamicConditionsApiFactory(configuration, '', instance);
 
-// const fieldsToSend = [
-//   'name',
-//   'priorities',
-//   'sla_id',
-//   'reaction_time',
-//   'resolution_time',
-// ];
+const fieldsToSend = [
+  'assignee',
+  'expression',
+  'group',
+];
 
 const getConditionsList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -45,7 +43,7 @@ const getConditionsList = async ({ parentId, ...rest }) => {
     camelToSnake(),
   ]);
   try {
-    const response = await dynamicGroupConditionsService.listSLAConditions(
+    const response = await dynamicGroupConditionsService.listConditions(
       parentId,
       page,
       size,
@@ -72,7 +70,7 @@ const getCondition = async ({ parentId, itemId: id }) => {
   };
 
   try {
-    const response = await slaConditionsService.locateSLACondition(parentId, id, fieldsToSend);
+    const response = await dynamicGroupConditionsService.locateCondition(parentId, id, fieldsToSend);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -80,10 +78,10 @@ const getCondition = async ({ parentId, itemId: id }) => {
 };
 
 const preRequestHandler = (item) => {
-  if (!item.priorities) return item;
+  if (!item.group) return item;
   return {
     ...item,
-    priorities: item.priorities?.map((priority) => priority.id),
+    group: item.group.id,
   };
 };
 
@@ -95,7 +93,7 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
   ]);
 
   try {
-    const response = await slaConditionsService.updateSLACondition(itemInstance.slaId, id, item);
+    const response = await dynamicGroupConditionsService.updateCondition(itemInstance.slaId, id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -110,7 +108,7 @@ const addCondition = async ({ itemInstance, parentId }) => {
   ]);
 
   try {
-    const response = await slaConditionsService.createSLACondition(parentId, item);
+    const response = await dynamicGroupConditionsService.createCondition(parentId, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -119,7 +117,7 @@ const addCondition = async ({ itemInstance, parentId }) => {
 
 const deleteCondition = async ({ id, parentId }) => {
   try {
-    const response = await slaConditionsService.deleteSLACondition(parentId, id);
+    const response = await dynamicGroupConditionsService.deleteCondition(parentId, id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

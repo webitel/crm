@@ -21,12 +21,13 @@
           :label="t('lookups.contactGroups.contactGroups', 1)"
           :search-method="loadStaticContactGroupsList"
           multiple
-          @input="setItemProp({ path: 'group', value: $event })"
+          @input="setItemProp({ path: 'group', value: $event[0] })"
         />
         <wt-select
+          :disabled="!itemInstance.group"
           :value="itemInstance.assignee"
           :label="t('lookups.contactGroups.assignee')"
-          :search-method="ContactsAPI.getContactsLookup"
+          :search-method="loadContacts"
           multiple
           @input="setItemProp({ path: 'assignee', value: $event })"
         />
@@ -84,7 +85,8 @@ const {
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
-const { close } = useClose(`${CrmSections.SLAS}-conditions`);
+
+const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
 
 function loadDataList() {
   emit('load-data');
@@ -101,8 +103,12 @@ const save = async () => {
     loadDataList();
   }
 };
-function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({ ...params, type: TypesContactGroups.STATIC.toUpperCase() });
+async function loadStaticContactGroupsList(params) {
+ return await ContactGroupsAPI.getLookup({ ...params, type: TypesContactGroups.STATIC.toUpperCase() });
+}
+
+async function loadContacts(params) {
+  return await ContactsAPI.getLookup({ ...params, groupId: itemInstance.value.group.id });
 }
 
 async function initializePopup() {

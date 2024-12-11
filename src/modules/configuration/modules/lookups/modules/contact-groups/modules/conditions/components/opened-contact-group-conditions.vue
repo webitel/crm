@@ -54,10 +54,14 @@
             {{ item.assignee.name }}
           </template>
           <template #actions="{ item }">
-            <wt-icon-action
-              action="move"
-              @click="router.push({ ...route, params: { conditionId: item.id } })"
-            />
+            <wt-tooltip>
+              <template #activator>
+                <wt-icon-btn
+                  icon="move"
+                />
+              </template>
+              {{ t('iconHints.draggable') }}
+            </wt-tooltip>
             <wt-icon-action
               action="edit"
               @click="router.push({ ...route, params: { conditionId: item.id } })"
@@ -93,19 +97,18 @@ import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import FilterSearch
-  from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import ConditionPopup from './opened-sla-condition-popup.vue';
-import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
+import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
 import WtTableTransition from '@webitel/ui-sdk/src/components/on-demand/wt-table-transition/wt-table-transition.vue';
+
 const props = defineProps({
   namespace: {
     type: String,
     required: true,
   },
 });
+
 const {
   namespace: parentCardNamespace,
   id: parentId,

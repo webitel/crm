@@ -14,7 +14,7 @@ const resettableItemState = {
 };
 
 const getters = {
-  PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.groupContacts.card.itemId,
+  PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.contactGroups.card.itemId,
 };
 
 const api = createApiStoreModule({
