@@ -5,20 +5,20 @@
       <wt-select
         :key="statusId"
         :clearable="false"
-        :search-method="(params) => StatusConditionsAPI.getLookup({...params, statusId: statusId })"
+        :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
         @input="handleSelect"
       >
         <template #singleLabel="{ option }">
           <wt-indicator
-            :text="option.name"
             :color="getIndicatorColor(option)"
+            :text="option.name"
           />
         </template>
         <template #option="{ option }">
           <wt-indicator
-            :text="option.name"
             :color="getIndicatorColor(option)"
+            :text="option.name"
           />
         </template>
       </wt-select>
@@ -29,7 +29,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed,  watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
@@ -83,6 +83,12 @@ function getIndicatorColor(option) {
 
 const statusId = computed(() => store.getters[`${props.namespace}/service/STATUS_ID`]);
 
+const fetchStatusConditions = (params) =>
+  StatusConditionsAPI.getLookup({
+    ...params,
+    statusId: statusId.value,
+  });
+
 async function handleSelect(value) {
   try {
     const statusResponse = await StatusesAPI.get({ itemId: statusId.value });
@@ -114,7 +120,7 @@ async function updateStatusCondition() {
   if (!statusId.value) return;
 
   try {
-    const { items } = await StatusConditionsAPI.getList({statusId: statusId.value});
+    const { items } = await StatusConditionsAPI.getList({ statusId: statusId.value });
 
     const initialCondition = items.find((item) => item.initial);
 
@@ -130,13 +136,12 @@ async function updateStatusCondition() {
       },
     });
   } catch (err) {
-    throw err
+    throw err;
   }
 }
 
 watch(statusId, updateStatusCondition);
 </script>
-
 
 <style lang="scss" scoped>
 .case-status {
