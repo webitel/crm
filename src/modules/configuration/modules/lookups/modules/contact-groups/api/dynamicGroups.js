@@ -20,9 +20,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const dynamicContactGroupsService = new DynamicGroupsApiFactory(configuration, '', instance);
 
-const baseUrl = '/contacts/groups';
-
-const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group'];
+const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group_id'];
 
 const preRequestHandler = (item) => {
   return {
@@ -33,7 +31,6 @@ const preRequestHandler = (item) => {
 };
 
 const addDynamicContactGroup = async (itemInstance) => {
-  const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group_id'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -51,7 +48,7 @@ const addDynamicContactGroup = async (itemInstance) => {
 };
 
 const updateDynamicContactGroup = async ({ itemInstance, itemId: id }) => {
-  const item = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
+  const item = applyTransform(itemInstance, [preRequestHandler, camelToSnake(), sanitize(fieldsToSend)]);
 
   try {
     const response = await dynamicContactGroupsService.updateDynamicGroup(id, item);
