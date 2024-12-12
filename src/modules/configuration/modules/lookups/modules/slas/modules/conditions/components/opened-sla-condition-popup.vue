@@ -26,6 +26,7 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           format="hh:mm"
+          required
           @input="setItemProp({ path: 'reactionTime', value: $event })"
         />
 
@@ -33,6 +34,7 @@
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           format="hh:mm"
+          required
           @input="setItemProp({ path: 'resolutionTime', value: $event })"
         />
       </form>
