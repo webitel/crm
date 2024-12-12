@@ -5,8 +5,7 @@
     @close="close"
   >
     <template #title>
-      {{ !isNew ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('lookups.slas.conditions', 1).toLowerCase() }}
+      {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
     <template #main>
       <form>
