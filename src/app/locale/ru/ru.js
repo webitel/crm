@@ -105,6 +105,8 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       conditions: 'Условие | Условия',
+      editCondition: 'Редактировать условие',
+      addCondition: 'Добавить условие',
       reactionTime: 'Плановое время реакции',
       resolutionTime: 'Плановое время решения',
       validFrom: 'Действителен с',
