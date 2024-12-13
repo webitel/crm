@@ -26,7 +26,7 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
-            :primary-action-text="t('reusable.add')"
+            :primary-action-text="primaryActionText"
           />
         </div>
       </section>
@@ -72,11 +72,10 @@ const {
   onFilterEvent,
 } = useTableStore(baseNamespace);
 
-// loadData()
-
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
 </script>
