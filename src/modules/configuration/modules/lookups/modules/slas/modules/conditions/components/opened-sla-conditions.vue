@@ -132,7 +132,6 @@ import ConditionPopup from './opened-sla-condition-popup.vue';
 import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
-import WtTableTransition from '@webitel/ui-sdk/src/components/on-demand/wt-table-transition/wt-table-transition.vue';
 
 const props = defineProps({
   namespace: {
