@@ -121,7 +121,8 @@ import {
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -166,6 +167,7 @@ const {
   sort,
   setSelected,
   onFilterEvent,
+  resetState,
 } = useTableStore(namespace);
 
 const {
@@ -185,6 +187,7 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
+  resetState();
 });
 
 const {
