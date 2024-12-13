@@ -37,8 +37,6 @@
           </wt-action-bar>
         </header>
 
-        <wt-loader v-show="isLoading" />
-
         <delete-confirmation-popup
           :shown="isDeleteConfirmationPopup"
           :callback="deleteCallback"
@@ -55,6 +53,8 @@
             :image="imageEmpty"
             :text="textEmpty"
           />
+
+          <wt-loader v-show="isLoading" />
 
           <wt-table-transition v-if="dataList.length && !isLoading">
             <wt-table
