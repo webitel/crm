@@ -20,12 +20,14 @@
           :label="t('vocabulary.priority')"
           :search-method="PrioritiesAPI.getLookup"
           multiple
+          required
           @input="setItemProp({ path: 'priorities', value: $event })"
         />
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           format="hh:mm"
+          required
           @input="setItemProp({ path: 'reactionTime', value: $event })"
         />
 
@@ -33,6 +35,7 @@
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           format="hh:mm"
+          required
           @input="setItemProp({ path: 'resolutionTime', value: $event })"
         />
       </form>
