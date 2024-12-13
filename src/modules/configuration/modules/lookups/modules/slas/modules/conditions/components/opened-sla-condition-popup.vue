@@ -20,6 +20,7 @@
           :label="t('vocabulary.priority')"
           :search-method="PrioritiesAPI.getLookup"
           multiple
+          required
           @input="setItemProp({ path: 'priorities', value: $event })"
         />
         <wt-timepicker
