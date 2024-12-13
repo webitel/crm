@@ -45,6 +45,7 @@
         />
 
         <div
+          v-if="dataList.length && !isLoading"
           class="table-section__table-wrapper"
         >
           <wt-empty
@@ -55,48 +56,46 @@
 
           <wt-loader v-show="isLoading" />
 
-          <wt-table-transition v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
-            >
-              <template #name="{ item }">
-                <wt-item-link
-                  :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
-              </template>
+          <wt-table
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
 
-              <template #type="{ item }">
-                {{ t(`lookups.sources.types.${item.type}`) }}
-              </template>
+            <template #type="{ item }">
+              {{ t(`lookups.sources.types.${item.type}`) }}
+            </template>
 
-              <template #description="{ item }">
-                {{ item.description }}
-              </template>
+            <template #description="{ item }">
+              {{ item.description }}
+            </template>
 
-              <template #actions="{ item }">
-                <wt-icon-action
-                  v-if="hasEditAccess"
-                  action="edit"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  v-if="hasDeleteAccess"
-                  action="delete"
-                  @click="askDeleteConfirmation({
+            <template #actions="{ item }">
+              <wt-icon-action
+                v-if="hasEditAccess"
+                action="edit"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                v-if="hasDeleteAccess"
+                action="delete"
+                @click="askDeleteConfirmation({
                 deleted: [item],
                 callback: () => deleteData(item),
               })"
-                />
-              </template>
-            </wt-table>
-          </wt-table-transition>
+              />
+            </template>
+          </wt-table>
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"
@@ -132,7 +131,6 @@ const baseNamespace = 'configuration/lookups/sources';
 
 const { t } = useI18n();
 const router = useRouter();
-
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
