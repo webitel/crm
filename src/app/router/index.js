@@ -1,6 +1,8 @@
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { createRouter, createWebHistory } from 'vue-router';
+import OpenedServiceCatalogs
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
@@ -182,6 +184,11 @@ const routes = [
             name: CrmSections.SERVICE_CATALOGS,
             component: TheServiceCatalogs,
             // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'service-catalogs/:id',
+            name: `${CrmSections.SERVICE_CATALOGS}-card`,
+            component: OpenedServiceCatalogs,
           },
       ],
       },

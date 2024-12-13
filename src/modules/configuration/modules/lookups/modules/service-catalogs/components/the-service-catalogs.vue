@@ -27,6 +27,7 @@
             :image="imageEmpty"
             :text="textEmpty"
             :primary-action-text="primaryActionText"
+            @click:primary="addNewCatalog"
           />
         </div>
       </section>
@@ -36,15 +37,19 @@
 
 <script setup>
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useRouter } from 'vue-router';
+
 import filters from '../../slas/modules/filters/store/filters.js';
 
 const baseNamespace = 'configuration/lookups/catalogs';
 
 const { t } = useI18n();
+const router = useRouter();
 
 const path = computed(() => [
   { name: t('crm') },
@@ -78,4 +83,8 @@ const {
   text: textEmpty,
   primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
+
+const addNewCatalog = () => {
+  router.push({ name: `${CrmSections.SERVICE_CATALOGS}-card`, params: { id: 'new' }})
+}
 </script>
