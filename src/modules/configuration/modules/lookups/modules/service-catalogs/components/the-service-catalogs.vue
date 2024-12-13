@@ -1,5 +1,6 @@
 <template>
   <wt-page-wrapper
+    class="table-page"
     :actions-panel="false"
   >
     <template #header>
@@ -9,6 +10,26 @@
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
+    </template>
+    <template #main>
+      <section class="table-section">
+        <header class="table-title">
+          <h3 class="table-title__title">
+            {{ t('lookups.serviceCatalogs.serviceCatalogs') }}
+          </h3>
+        </header>
+
+        <div
+          class="table-section__table-wrapper"
+        >
+          <wt-empty
+            v-show="showEmpty"
+            :image="imageEmpty"
+            :text="textEmpty"
+            :primary-action-text="primaryActionText"
+          />
+        </div>
+      </section>
     </template>
   </wt-page-wrapper>
 </template>
@@ -55,7 +76,6 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
-
-loadData()
 </script>
