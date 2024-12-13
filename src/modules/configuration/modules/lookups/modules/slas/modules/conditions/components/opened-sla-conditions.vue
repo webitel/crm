@@ -19,6 +19,10 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
+        @click:delete="askDeleteConfirmation({
+                  deleted: selected,
+                  callback: () => deleteData(selected),
+                })"
       >
         <template #search-bar>
           <filter-search
