@@ -26,7 +26,7 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
-            primary-action-text="Add"
+            :primary-action-text="t('reusable.add')"
           />
         </div>
       </section>

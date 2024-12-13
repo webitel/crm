@@ -56,7 +56,7 @@
             :text="textEmpty"
           />
 
-          <wt-table-transition v-if="!dataList.length && !isLoading">
+          <wt-table-transition v-if="dataList.length && !isLoading">
             <wt-table
               :data="dataList"
               :headers="headers"
@@ -201,7 +201,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList: [], filters, error, isLoading });
+} = useTableEmpty({ dataList, filters, error, isLoading });
 </script>
 
 <style lang="scss" scoped>
