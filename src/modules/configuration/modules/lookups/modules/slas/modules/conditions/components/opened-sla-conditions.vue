@@ -19,7 +19,7 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!selected.length"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
-        @click:refresh="loadData"
+        @click:refresh="refresh"
         @click:delete="askDeleteConfirmation({
                   deleted: selected,
                   callback: () => deleteData(selected),
@@ -205,6 +205,14 @@ const {
   image: imageEmpty,
   text: textEmpty,
 } = useTableEmpty({ dataList, filters, error, isLoading });
+
+const refresh = () => {
+  // https://webitel.atlassian.net/browse/WTEL-5711
+  // because 'selected' needs to be updated [WTEL-5711]
+
+  resetState();
+  loadData();
+};
 
 </script>
 
