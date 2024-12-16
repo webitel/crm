@@ -11,7 +11,7 @@
         <wt-icon
           v-if="icon"
           :icon="icon"
-          color="info"
+          :color="color"
         />
         <wt-label
           v-if="label"
@@ -75,6 +75,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  color: {
+    type: String,
+    default: '',
+  },
   link: {
     type: Object,
     default: null,
@@ -130,16 +134,20 @@ const updateValue = (newValue) => {
     }
 
     .editable-field__label {
-      padding: var(--spacing-xs) 0;
+      padding: var(--spacing-xs);
     }
 
     .editable-field__value {
-      padding: var(--spacing-xs) 0;
+      padding: var(--spacing-xs);
     }
 
     .editable-field__label .wt-label {
       font-weight: bold;
       @extend %typo-body-1;
+    }
+
+    .editable-field__link {
+      color: var(--link-color);
     }
   }
 }

@@ -5,7 +5,8 @@
       <editable-field
         :label="t('cases.author') + ':'"
         :value="itemInstance.author?.name || userinfo.name"
-        icon="link"
+        color="info"
+        icon="case-author"
         is-list-mode
       />
 
@@ -14,10 +15,11 @@
         :label="t('cases.reporter') + ':'"
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.reporter?.id } }"
         :value="itemInstance.reporter?.name"
-        icon="link"
+        color="info"
+        icon="reporter"
         is-list-mode
         required
-        @update:value="setItemProp({ path: 'reporter', value: $event })"
+        @update:value="handleReporterInput"
       >
         <template #default="props">
           <wt-select
@@ -30,12 +32,13 @@
         </template>
       </editable-field>
 
+
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.impacted') + ':'"
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.impacted?.id } }"
         :value="itemInstance.impacted?.name"
-        icon="link"
+        icon="impacted"
         is-list-mode
         required
         @update:value="setItemProp({ path: 'impacted', value: $event })"
@@ -56,7 +59,8 @@
         :label="t('cases.assignee') + ':'"
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.assignee?.id } }"
         :value="itemInstance.assignee?.name"
-        icon="link"
+        color="success"
+        icon="assignee"
         is-list-mode
         required
         @update:value="setItemProp({ path: 'assignee', value: $event })"
@@ -78,7 +82,8 @@
         :edit-mode="editMode"
         :label="t('cases.group') + ':'"
         :value="itemInstance.group?.name"
-        icon="link"
+        color="success"
+        icon="group"
         is-list-mode
         required
         @update:value="setItemProp({ path: 'group', value: $event })"
@@ -99,7 +104,7 @@
 
 <script setup>
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, inject, watch } from 'vue';
+import { computed, inject, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { useStore } from 'vuex';
@@ -123,6 +128,21 @@ const {
   setItemProp,
 } = useCardStore(props.namespace);
 
+function handleReporterInput(value) {
+  setItemProp({
+    path: 'reporter',
+    value: value,
+  });
+
+  if (!itemInstance.value.impacted) {
+    setItemProp({
+      path: 'impacted',
+      value: value,
+    });
+  }
+}
+
+
 // TODO: replace STATIC type with type from TypeContactGroups.enum.js
 async function loadStaticContactGroupsList(params) {
   return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
@@ -135,15 +155,18 @@ const userinfo = computed(() => store.state.userinfo);
 
 const editMode = inject('editMode');
 
-watch(serviceGroup, (value) => {
-  if (value) {
-    setItemProp({ path: 'group', value: value });
+watchEffect(() => {
+  if (serviceGroup.value) {
+    setItemProp({
+      path: 'group',
+      value: serviceGroup.value,
+    });
   }
-});
-
-watch(serviceAssignee, (value) => {
-  if (value) {
-    setItemProp({ path: 'assignee', value: value });
+  if (serviceAssignee.value) {
+    setItemProp({
+      path: 'assignee',
+      value: serviceAssignee.value,
+    });
   }
 });
 </script>
