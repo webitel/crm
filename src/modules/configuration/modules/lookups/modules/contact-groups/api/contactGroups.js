@@ -55,6 +55,8 @@ const getContactGroupsList = async (params) => {
     sort,
     id,
     q,
+    name,
+    type,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -71,6 +73,8 @@ const getContactGroupsList = async (params) => {
       sort,
       id,
       q,
+      name,
+      type,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),

@@ -1,7 +1,7 @@
 <template>
   <div class="case-persons">
     <span class="case-persons__title">{{ t('cases.persons') }}</span>
-    <div>
+    <div v-if="itemInstance.service">
       <editable-field
         :label="t('cases.author') + ':'"
         :value="itemInstance.author?.name || userinfo.name"
@@ -72,10 +72,11 @@
         </template>
       </editable-field>
 
+      <!-- TODO: add Assign to me btn -->
+
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.group') + ':'"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.group?.id } }"
         :value="itemInstance.group?.name"
         icon="link"
         is-list-mode
@@ -85,7 +86,7 @@
         <template #default="props">
           <wt-select
             :clearable="false"
-            :search-method="searchContactGroups"
+            :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -98,7 +99,7 @@
 
 <script setup>
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, inject } from 'vue';
+import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { useStore } from 'vuex';
@@ -122,14 +123,31 @@ const {
   setItemProp,
 } = useCardStore(props.namespace);
 
-function searchContactGroups() {
-  return ContactGroupsAPI.getLookup({ group: { type: 'static' } });
+// TODO: replace STATIC type with type from TypeContactGroups.enum.js
+async function loadStaticContactGroupsList(params) {
+  return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
 }
+
+const serviceGroup = computed(() => store.getters[`${props.namespace}/service/GROUP`]);
+const serviceAssignee = computed(() => store.getters[`${props.namespace}/service/ASSIGNEE`]);
 
 const userinfo = computed(() => store.state.userinfo);
 
 const editMode = inject('editMode');
+
+watch(serviceGroup, (value) => {
+  if (value) {
+    setItemProp({ path: 'group', value: value });
+  }
+});
+
+watch(serviceAssignee, (value) => {
+  if (value) {
+    setItemProp({ path: 'assignee', value: value });
+  }
+});
 </script>
+
 
 <style lang="scss" scoped>
 .case-persons {

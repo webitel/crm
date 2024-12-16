@@ -1,4 +1,5 @@
 import { createBaseStoreModule } from '@webitel/ui-sdk/store';
+import get from 'lodash/get';
 
 const state = {
   catalog: null,
@@ -9,8 +10,8 @@ const getters = {
   CLOSE_REASON_ID: (state) => state.catalog?.closeReason.id,
   STATUS_ID: (state) => state.catalog?.status.id,
   SLA_ID: (state) => resolvePropertyFromHierarchy(state, 'sla.id'),
-  GROUP_ID: (state) => resolvePropertyFromHierarchy(state, 'group.id'),
-  ASSIGNEE_ID: (state) => resolvePropertyFromHierarchy(state, 'assignee.id'),
+  GROUP: (state) => resolvePropertyFromHierarchy(state, 'group'),
+  ASSIGNEE: (state) => resolvePropertyFromHierarchy(state, 'assignee'),
 };
 
 const actions = {
@@ -39,7 +40,6 @@ const service = createBaseStoreModule({
 
 export default service;
 
-
 // Helper function to resolve a nested property from the service hierarchy.
 function resolvePropertyFromHierarchy(state, propertyPath) {
   const findProperty = (service) => {
@@ -51,7 +51,7 @@ function resolvePropertyFromHierarchy(state, propertyPath) {
 
     // Find parent service in the catalog using rootId
     const parentService = state.catalog?.service?.find(
-      (item) => item.id === service.rootId
+      (item) => item.id === service.rootId,
     );
 
     return findProperty(parentService); // Recursive call to parent
