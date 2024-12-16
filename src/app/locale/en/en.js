@@ -126,6 +126,11 @@ export default {
 
     serviceCatalogs: {
       serviceCatalogs: 'Service catalog | Service catalogs',
+      prefix: 'Prefix',
+      code: 'Code',
+      statuses: 'Statuses',
+      closureReasons: 'Closure reasons',
+      skills: 'Skills',
     },
 
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
