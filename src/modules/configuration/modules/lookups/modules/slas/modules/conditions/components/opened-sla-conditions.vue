@@ -17,6 +17,7 @@
 
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+        :disabled:delete="!selected.length"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
         @click:delete="askDeleteConfirmation({
