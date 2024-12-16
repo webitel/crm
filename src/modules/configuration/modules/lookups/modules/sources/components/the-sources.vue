@@ -20,7 +20,7 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!hasDeleteAccess || !selected.length"
+            :disabled:delete="!selected.length"
             @click:add="router.push({ name: `${CrmSections.SOURCES}-card`, params: { id: 'new' }})"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
