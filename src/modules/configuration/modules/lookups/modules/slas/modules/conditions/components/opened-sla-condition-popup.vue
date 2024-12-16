@@ -92,7 +92,7 @@ const {
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 
-const { close } = useClose( `${CrmSections.SLAS}-conditions`);
+const { close } = useClose(`${CrmSections.SLAS}-conditions`);
 
 function loadDataList() {
   emit('load-data');
