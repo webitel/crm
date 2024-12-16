@@ -2,6 +2,8 @@ import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import TypesSourcesEnum
+  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -96,7 +98,7 @@ export default {
       name: 'Обращения',
       text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
     },
-    'configuration': {
+    configuration: {
       name: 'Конфигурация',
       text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
     },
@@ -106,10 +108,28 @@ export default {
 
     slas: {
       slas: 'SLA | SLAs',
+      conditions: 'Условие | Условия',
+      editCondition: 'Редактировать условие',
+      addCondition: 'Добавить условие',
+      reactionTime: 'Плановое время реакции',
+      resolutionTime: 'Плановое время решения',
+      validFrom: 'Действителен с',
+      validTo: 'Действителен до',
+    },
+
+    sources: {
+      sources: 'Источник обращений | Источники обращений',
+      types: {
+        [TypesSourcesEnum.CALL]: 'Звонок',
+        [TypesSourcesEnum.CHAT]: 'Чат',
+        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Социальная сеть',
+        [TypesSourcesEnum.EMAIL]: 'Письмо',
+        [TypesSourcesEnum.API]: 'API',
+        [TypesSourcesEnum.MANUAL]: 'Созданное вручную',
+      },
     },
     [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',
-    [CrmSections.SOURCES]: 'Источники',
   },
   cases: {
     case: 'Обращение | Обращения',

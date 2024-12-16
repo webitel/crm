@@ -23,7 +23,70 @@
           <wt-select
             :clearable="false"
             :search-method="UsersAPI.getLookup"
-            style="padding: 8px 0"
+            class="case-persons__select"
+            v-bind="props"
+            @input="props.updateValue($event)"
+          />
+        </template>
+      </editable-field>
+
+      <editable-field
+        :edit-mode="editMode"
+        :label="t('cases.impacted') + ':'"
+        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.impacted?.id } }"
+        :value="itemInstance.impacted?.name"
+        icon="link"
+        is-list-mode
+        required
+        @update:value="setItemProp({ path: 'impacted', value: $event })"
+      >
+        <template #default="props">
+          <wt-select
+            :clearable="false"
+            :search-method="UsersAPI.getLookup"
+            class="case-persons__select"
+            v-bind="props"
+            @input="props.updateValue($event)"
+          />
+        </template>
+      </editable-field>
+
+      <editable-field
+        :edit-mode="editMode"
+        :label="t('cases.assignee') + ':'"
+        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.assignee?.id } }"
+        :value="itemInstance.assignee?.name"
+        icon="link"
+        is-list-mode
+        required
+        @update:value="setItemProp({ path: 'assignee', value: $event })"
+      >
+        <template #default="props">
+          <wt-select
+            :clearable="false"
+            :search-method="UsersAPI.getLookup"
+            class="case-persons__select"
+            v-bind="props"
+            @input="props.updateValue($event)"
+          />
+        </template>
+      </editable-field>
+
+      <editable-field
+        :edit-mode="editMode"
+        :label="t('cases.group') + ':'"
+        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.group?.id } }"
+        :value="itemInstance.group?.name"
+        icon="link"
+        is-list-mode
+        required
+        @update:value="setItemProp({ path: 'group', value: $event })"
+      >
+        <template #default="props">
+          <wt-select
+            :clearable="false"
+            :search-method="searchContactGroups"
+            class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
           />
@@ -39,6 +102,7 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { useStore } from 'vuex';
+import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import UsersAPI from '../../../../contacts/api/UsersAPI.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 
@@ -57,6 +121,11 @@ const {
   itemInstance,
   setItemProp,
 } = useCardStore(props.namespace);
+
+function searchContactGroups() {
+  return ContactGroupsAPI.getLookup({ group: { type: 'static' } });
+}
+
 const userinfo = computed(() => store.state.userinfo);
 
 const editMode = inject('editMode');
@@ -94,6 +163,10 @@ const editMode = inject('editMode');
   &__label {
     font-weight: bold;
     @extend %typo-body-1;
+  }
+
+  &__select {
+    padding: var(--spacing-xs) 0;
   }
 }
 </style>

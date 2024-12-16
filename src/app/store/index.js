@@ -4,7 +4,7 @@ import contacts from '../../modules/contacts/store/contacts';
 import userinfo from '../../modules/userinfo/store/userinfo';
 import appearance from '../../modules/appearance/store/appearance';
 import instance from '../api/instance';
-// import configuration from '../../modules/configuration/store/configuration';
+import configuration from '../../modules/configuration/store/configuration';
 
 export default createStore({
   state: {
@@ -25,5 +25,6 @@ export default createStore({
     userinfo,
     appearance,
     cases,
+    configuration,
   },
 });
