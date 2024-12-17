@@ -3,7 +3,7 @@
     <span class="case-persons__title">{{ t('cases.persons') }}</span>
     <div v-if="itemInstance.service">
       <editable-field
-        :label="`${t('cases.author')}:`"
+        :label="t('cases.author')"
         :value="itemInstance.author?.name || userinfo.name"
         color="info"
         icon="case-author"
@@ -12,7 +12,7 @@
 
       <editable-field
         :edit-mode="editMode"
-        :label="`${t('cases.reporter')}:`"
+        :label="t('cases.reporter')"
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.reporter?.id } }"
         :value="itemInstance.reporter?.name"
         color="info"
@@ -35,7 +35,7 @@
 
       <editable-field
         :edit-mode="editMode"
-        :label="`${t('cases.impacted')}:`"
+        :label="t('cases.impacted')"
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.impacted?.id } }"
         :value="itemInstance.impacted?.name"
         icon="impacted"
@@ -56,7 +56,7 @@
 
       <editable-field
         :edit-mode="editMode"
-        :label="`${t('cases.assignee')}:`"
+        :label="t('cases.assignee')"
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.assignee?.id } }"
         :value="itemInstance.assignee?.name"
         color="success"
@@ -80,7 +80,7 @@
 
       <editable-field
         :edit-mode="editMode"
-        :label="`${t('cases.group')}:`"
+        :label="t('cases.group')"
         :value="itemInstance.group?.name"
         color="success"
         icon="group"
