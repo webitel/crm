@@ -31,7 +31,7 @@
             {{ value }}
           </wt-item-link>
           <wt-icon
-            v-if="link"
+            v-if="link && value"
             icon="link"
             size="sm"
           />
