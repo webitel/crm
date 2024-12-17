@@ -24,7 +24,7 @@ export default createStore({
     contacts,
     userinfo,
     appearance,
-    cases,
     configuration,
+    cases,
   },
 });
