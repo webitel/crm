@@ -105,10 +105,8 @@ const save = async () => {
     await updateItem({ itemInstance, itemId: id.value });
   }
 
-  if (id?.value) {
     close();
     loadDataList();
-  }
 };
 
 async function initializePopup() {
@@ -123,7 +121,7 @@ async function initializePopup() {
 }
 
 watch(() => conditionId.value, (value) => {
-  if(value) {
+  if (value) {
     initializePopup();
   } else {
     resetState();
