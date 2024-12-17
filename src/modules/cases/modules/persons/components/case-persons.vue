@@ -142,7 +142,6 @@ function handleReporterInput(value) {
   }
 }
 
-
 // TODO: replace STATIC type with type from TypeContactGroups.enum.js
 async function loadStaticContactGroupsList(params) {
   return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });

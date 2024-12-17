@@ -133,14 +133,6 @@ const updateValue = (newValue) => {
       justify-content: space-between;
     }
 
-    .editable-field__label {
-      padding: var(--spacing-xs);
-    }
-
-    .editable-field__value {
-      padding: var(--spacing-xs);
-    }
-
     .editable-field__label .wt-label {
       font-weight: bold;
       @extend %typo-body-1;
