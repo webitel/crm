@@ -15,7 +15,7 @@
       >
         <wt-icon
           color="error"
-          icon="stop"
+          icon="stop-sign"
         />
         <span class="case-sla__sla-condition-name">
           {{ condition.name }}
