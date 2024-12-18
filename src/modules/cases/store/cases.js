@@ -24,6 +24,7 @@ const resettableState = {
     assignee: '',
     reporter: '',
     sla: '',
+    slaCondition: '',
     plannedReactionAt: '',
     plannedResolutionAt: '',
     reactedAt: '',

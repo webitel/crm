@@ -1,4 +1,5 @@
 import { createBaseStoreModule } from '@webitel/ui-sdk/store';
+import get from 'lodash/get';
 
 const state = {
   catalog: null,
@@ -8,7 +9,7 @@ const state = {
 const getters = {
   CLOSE_REASON_ID: (state) => state.catalog?.closeReason.id,
   STATUS_ID: (state) => state.catalog?.status.id,
-  SLA_ID: (state) => resolvePropertyFromHierarchy(state, 'sla.id'),
+  SLA: (state) => resolvePropertyFromHierarchy(state, 'sla'),
   GROUP_ID: (state) => resolvePropertyFromHierarchy(state, 'group.id'),
   ASSIGNEE_ID: (state) => resolvePropertyFromHierarchy(state, 'assignee.id'),
 };

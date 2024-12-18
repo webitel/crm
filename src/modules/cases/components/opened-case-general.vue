@@ -9,12 +9,16 @@
     <case-service
       :namespace="namespace"
     />
+    <case-sla
+      :namespace="namespace"
+    />
   </article>
 </template>
 
 <script setup>
 import CasePriority from '../modules/priority/components/case-priority.vue';
 import CaseService from '../modules/service/components/case-service.vue';
+import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
 
 const props = defineProps({

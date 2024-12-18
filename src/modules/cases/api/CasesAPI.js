@@ -422,11 +422,12 @@ const fieldsToSend = [
   'rate',
   'timing',
   'sla_condition',
+  'sla',
   'service',
   'comments',
   'related',
   'links',
-  'statusCondition'
+  'status_condition'
 ];
 
 
@@ -541,7 +542,7 @@ const patchCase = async ({ itemId: id, itemInstance }) => {
 
 const addCase = async ({ itemInstance }) => {
   try {
-    const newCase = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+    const newCase = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
 
     const newCaseWithDefaults = {
       ...newCase,
@@ -562,7 +563,7 @@ const addCase = async ({ itemInstance }) => {
 
     data.items.push(newCaseWithDefaults);
 
-    const addedCase = applyTransform(newCaseWithDefaults, [snakeToCamel()]);
+    const addedCase = applyTransform(newCaseWithDefaults, []);
 
     return new Promise((resolve) => {
       resolve(addedCase);
