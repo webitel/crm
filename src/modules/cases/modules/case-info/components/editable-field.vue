@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'editable-field--list-mode': listView }"
+    :class="{ 'editable-field--list-view': listView }"
     class="editable-field"
   >
     <div
@@ -127,7 +127,7 @@ const updateValue = (newValue) => {
     padding: var(--spacing-xs);
   }
 
-  &--list-mode {
+  &--list-view {
     .editable-field__content {
       flex-direction: row;
       justify-content: space-between;
