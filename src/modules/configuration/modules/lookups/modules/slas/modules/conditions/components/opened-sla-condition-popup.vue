@@ -8,7 +8,7 @@
       {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
     <template #main>
-      <form>
+      <form class="opened-card-input-grid opened-card-input-grid--1-col">
         <wt-input
           :value="itemInstance.name"
           :label="t('reusable.name')"
