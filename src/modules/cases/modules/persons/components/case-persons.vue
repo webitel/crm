@@ -7,7 +7,7 @@
         :value="itemInstance.author?.name || userinfo.name"
         color="info"
         icon="case-author"
-        is-list-mode
+        list-view
       />
 
       <editable-field
@@ -17,7 +17,7 @@
         :value="itemInstance.reporter?.name"
         color="info"
         icon="reporter"
-        is-list-mode
+        list-view
         required
         @update:value="handleReporterInput"
       >
@@ -39,7 +39,7 @@
         :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.impacted?.id } }"
         :value="itemInstance.impacted?.name"
         icon="impacted"
-        is-list-mode
+        list-view
         required
         @update:value="setItemProp({ path: 'impacted', value: $event })"
       >
@@ -61,7 +61,7 @@
         :value="itemInstance.assignee?.name"
         color="success"
         icon="assignee"
-        is-list-mode
+        list-view
         required
         @update:value="setItemProp({ path: 'assignee', value: $event })"
       >
@@ -84,7 +84,7 @@
         :value="itemInstance.group?.name"
         color="success"
         icon="group"
-        is-list-mode
+        list-view
         required
         @update:value="setItemProp({ path: 'group', value: $event })"
       >

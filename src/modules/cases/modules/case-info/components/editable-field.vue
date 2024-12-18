@@ -1,13 +1,13 @@
 <template>
   <div
-    :class="{ 'editable-field--list-mode': isListMode }"
+    :class="{ 'editable-field--list-mode': listView }"
     class="editable-field"
   >
     <div
       v-if="!editMode"
       class="editable-field__content"
     >
-      <div class="editable-field__label">
+      <div class="editable-field__label-wrapper">
         <wt-icon
           v-if="icon"
           :icon="icon"
@@ -67,7 +67,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  isListMode: {
+  listView: {
     type: Boolean,
     default: false,
   },
@@ -107,7 +107,7 @@ const updateValue = (newValue) => {
     @extend %typo-heading-4
   }
 
-  &__label {
+  &__label-wrapper {
     display: flex;
     align-items: center;
     gap: var(--spacing-2xs);
@@ -133,7 +133,7 @@ const updateValue = (newValue) => {
       justify-content: space-between;
     }
 
-    .editable-field__label .wt-label {
+    .editable-field__label-wrapper .wt-label {
       font-weight: bold;
       @extend %typo-body-1;
     }
