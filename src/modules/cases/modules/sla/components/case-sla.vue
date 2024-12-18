@@ -5,19 +5,19 @@
       v-if="itemInstance.sla"
       class="case-sla__content"
     >
-      <div class="case-sla__sla-name">
+      <div class="case-sla__name">
         <span>{{ itemInstance?.sla?.name }}</span>
       </div>
       <div
         v-for="condition in itemInstance?.slaCondition"
         :key="condition.id"
-        class="case-sla__sla-condition"
+        class="case-sla__condition"
       >
         <wt-icon
           color="error"
           icon="stop-sign"
         />
-        <span class="case-sla__sla-condition-name">
+        <span>
           {{ condition.name }}
         </span>
       </div>
@@ -114,13 +114,13 @@ watch(
     gap: var(--spacing-xs);
   }
 
-  &__sla-condition {
+  &__condition {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
   }
 
-  &__sla-name {
+  &__name {
     @extend %typo-body-1;
     //TODO: replace bold with actual font-weight after TYPOGRAPHY/body 1 bold is implemented
     font-weight: bold;
