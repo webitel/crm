@@ -35,7 +35,6 @@
         </template>
       </editable-field>
 
-
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.impacted')"
@@ -80,6 +79,7 @@
       </editable-field>
 
       <!-- TODO: add Assign to me btn -->
+      <!-- TODO: also replace editable-field usage with computed and v-for for computed if it will have benefits  -->
 
       <editable-field
         :edit-mode="editMode"
