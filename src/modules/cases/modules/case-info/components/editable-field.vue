@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'editable-field--list-view': listView }"
+    :class="{ 'editable-horizontal-field': horizontalView }"
     class="editable-field"
   >
     <div
@@ -67,7 +67,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  listView: {
+  horizontalView: {
     type: Boolean,
     default: false,
   },
@@ -127,7 +127,7 @@ const updateValue = (newValue) => {
     padding: var(--spacing-xs);
   }
 
-  &--list-view {
+  &.editable-horizontal-field {
     .editable-field__content {
       flex-direction: row;
       justify-content: space-between;
