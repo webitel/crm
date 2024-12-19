@@ -153,6 +153,7 @@ export default {
     reason: 'Reason',
     result: 'Result',
     rating: 'Rating',
+    persons: 'Persons',
     selectAService: 'Select a service',
     caseInfo: {
       caseInfo: 'Case info',
