@@ -111,7 +111,7 @@ export const serviceCatalogData  = {
                 code: 'RT001',
                 state: true,
                 sla: {
-                  id: 'sla3',
+                  id: 'sla1',
                   name: 'Critical SLA',
                 },
                 group: {
@@ -148,7 +148,7 @@ export const serviceCatalogData  = {
     code: 'RT001',
     state: true,
     sla: {
-      id: 'sla3',
+      id: 'sla1',
       name: 'Critical SLA',
     },
     group: {

@@ -9,7 +9,7 @@ const state = {
 const getters = {
   CLOSE_REASON_ID: (state) => state.catalog?.closeReason.id,
   STATUS_ID: (state) => state.catalog?.status.id,
-  SLA_ID: (state) => resolvePropertyFromHierarchy(state, 'sla.id'),
+  SLA: (state) => resolvePropertyFromHierarchy(state, 'sla'),
   GROUP: (state) => resolvePropertyFromHierarchy(state, 'group'),
   ASSIGNEE: (state) => resolvePropertyFromHierarchy(state, 'assignee'),
 };
@@ -39,6 +39,7 @@ const service = createBaseStoreModule({
 });
 
 export default service;
+
 
 // Helper function to resolve a nested property from the service hierarchy.
 function resolvePropertyFromHierarchy(state, propertyPath) {
