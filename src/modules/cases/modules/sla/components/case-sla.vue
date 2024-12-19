@@ -93,8 +93,7 @@ watch(
         path: 'slaCondition',
         value: slaConditionResponse.items,
       });
-    } catch (error) {
-      console.error('Failed to fetch SLA conditions:', error);
+    } catch (err) {
       await setItemProp({
         path: 'sla',
         value: null,
@@ -104,8 +103,9 @@ watch(
         path: 'slaCondition',
         value: [],
       });
+      throw err;
     }
-  }
+  },
 );
 
 
