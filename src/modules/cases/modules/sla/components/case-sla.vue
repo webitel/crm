@@ -80,18 +80,23 @@ watch(
   () => serviceSLA.value?.id,
   async (newSlaId) => {
     if (newSlaId) {
-      const slaConditionResponse = await slaConditionsAPI.getList({ slaId: newSlaId });
-      await setItemProp({
-        path: 'sla',
-        value: serviceSLA.value,
-      });
-      await setItemProp({
-        path: 'slaCondition',
-        value: slaConditionResponse.items,
-      });
+      try {
+        const slaConditionResponse = await slaConditionsAPI.getList({ slaId: newSlaId });
+        await setItemProp({
+          path: 'sla',
+          value: serviceSLA.value,
+        });
+        await setItemProp({
+          path: 'slaCondition',
+          value: slaConditionResponse.items,
+        });
+      } catch (err) {
+        throw err;
+      }
     }
   }
 );
+
 </script>
 
 <style lang="scss" scoped>
