@@ -9,6 +9,8 @@ import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 import TypesSourcesEnum
   from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
+import TypesContactGroupsEnum
+  from '../../../modules/configuration/modules/lookups/modules/contact-groups/enums/TypeContactGroups.enum.js';
 
 export default {
   crm: 'CRM',
@@ -124,8 +126,16 @@ export default {
         [TypesSourcesEnum.MANUAL]: 'Manual',
       }
     },
+    contactGroups: {
+      contactGroups: 'Contact group | Contact groups',
+      defaultGroup: 'Default group',
+      addGroup: 'Add group',
+      types: {
+        [TypesContactGroupsEnum.DYNAMIC]: 'Dynamic',
+        [TypesContactGroupsEnum.STATIC]: 'Static',
+      },
+    },
 
-    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
   },
 };
