@@ -108,6 +108,8 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       conditions: 'Condition | Conditions',
+      editCondition: 'Edit condition',
+      addCondition: 'Add condition',
       reactionTime: 'Reaction time',
       resolutionTime: 'Resolution time',
       validFrom: 'Valid from',

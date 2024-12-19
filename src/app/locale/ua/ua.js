@@ -107,6 +107,8 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       conditions: 'Умова | Умови',
+      editCondition: 'Редагувати умову',
+      addCondition: 'Додати умову',
       reactionTime: 'Плановий час реакції',
       resolutionTime: 'Плановий час вирішення',
       validFrom: 'Дійсний з',
