@@ -10,8 +10,8 @@ const getters = {
   CLOSE_REASON_ID: (state) => state.catalog?.closeReason.id,
   STATUS_ID: (state) => state.catalog?.status.id,
   SLA: (state) => resolvePropertyFromHierarchy(state, 'sla'),
-  GROUP_ID: (state) => resolvePropertyFromHierarchy(state, 'group.id'),
-  ASSIGNEE_ID: (state) => resolvePropertyFromHierarchy(state, 'assignee.id'),
+  GROUP: (state) => resolvePropertyFromHierarchy(state, 'group'),
+  ASSIGNEE: (state) => resolvePropertyFromHierarchy(state, 'assignee'),
 };
 
 const actions = {
@@ -52,7 +52,7 @@ function resolvePropertyFromHierarchy(state, propertyPath) {
 
     // Find parent service in the catalog using rootId
     const parentService = state.catalog?.service?.find(
-      (item) => item.id === service.rootId
+      (item) => item.id === service.rootId,
     );
 
     return findProperty(parentService); // Recursive call to parent

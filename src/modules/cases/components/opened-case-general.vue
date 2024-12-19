@@ -9,6 +9,9 @@
     <case-service
       :namespace="namespace"
     />
+    <case-persons
+      :namespace="namespace"
+    />
     <case-sla
       :namespace="namespace"
     />
@@ -16,6 +19,7 @@
 </template>
 
 <script setup>
+import CasePersons from '../modules/persons/components/case-persons.vue';
 import CasePriority from '../modules/priority/components/case-priority.vue';
 import CaseService from '../modules/service/components/case-service.vue';
 import CaseSla from '../modules/sla/components/case-sla.vue';

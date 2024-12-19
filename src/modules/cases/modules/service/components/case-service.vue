@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, inject, onUnmounted, ref } from 'vue';
+import { inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
@@ -168,7 +168,10 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .case-service {
+  display: flex;
+  flex-direction: column;
   width: fit-content;
+  gap: var(--spacing-xs);
 
   &__wrapper {
     display: flex;

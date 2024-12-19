@@ -1,16 +1,42 @@
 <template>
-  <div class="editable-field">
+  <div
+    :class="{ 'editable-horizontal-field': horizontalView }"
+    class="editable-field"
+  >
     <div
       v-if="!editMode"
       class="editable-field__content"
     >
-      <wt-label
-        v-if="label"
-        class="editable-field__label"
-      >
-        {{ label }}
-      </wt-label>
-      <span class="editable-field__value">{{ value }}</span>
+      <div class="editable-field__label-wrapper">
+        <wt-icon
+          v-if="icon"
+          :color="color"
+          :icon="icon"
+        />
+        <wt-label
+          v-if="label"
+        >
+          {{ label }}
+        </wt-label>
+      </div>
+      <div class="editable-field__value">
+        <span v-if="!link">
+          {{ value }}
+        </span>
+        <template v-else>
+          <wt-item-link
+            :link="link"
+            class="editable-field__link"
+          >
+            {{ value }}
+          </wt-item-link>
+          <wt-icon
+            v-if="link && value"
+            icon="link"
+            size="sm"
+          />
+        </template>
+      </div>
     </div>
     <div v-else>
       <slot
@@ -22,6 +48,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 const props = defineProps({
   editMode: {
@@ -39,6 +66,22 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false,
+  },
+  horizontalView: {
+    type: Boolean,
+    default: false,
+  },
+  icon: {
+    type: String,
+    default: '',
+  },
+  color: {
+    type: String,
+    default: '',
+  },
+  link: {
+    type: Object,
+    default: null,
   },
 });
 
@@ -60,17 +103,53 @@ const updateValue = (newValue) => {
     flex-direction: column;
   }
 
-  &__label.wt-label {
+  &__label-wrapper .wt-label {
     @extend %typo-heading-4
   }
 
-  &__value {
+  &__label-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+  }
+
+  &__value span {
     @extend %typo-body-1
   }
 
-  &__label, &__value {
+  &__value {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+  }
+
+  &__label-wrapper, &__value {
     padding: var(--spacing-xs);
   }
-}
 
+  &.editable-horizontal-field {
+    .editable-field__content {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .editable-field__label-wrapper, .editable-field__value {
+      padding: 0;
+    }
+
+    .editable-field__value span {
+      @extend %typo-subtitle-1;
+    }
+
+    .editable-field__label-wrapper .wt-label {
+      //TODO: remove bold after proper typography implementation
+      font-weight: bold;
+      @extend %typo-body-1;
+    }
+
+    .editable-field__link {
+      color: var(--link-color);
+    }
+  }
+}
 </style>
