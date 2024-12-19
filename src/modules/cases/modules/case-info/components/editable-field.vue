@@ -10,8 +10,8 @@
       <div class="editable-field__label-wrapper">
         <wt-icon
           v-if="icon"
-          :icon="icon"
           :color="color"
+          :icon="icon"
         />
         <wt-label
           v-if="label"
@@ -103,7 +103,7 @@ const updateValue = (newValue) => {
     flex-direction: column;
   }
 
-  &__label .wt-label {
+  &__label-wrapper .wt-label {
     @extend %typo-heading-4
   }
 
@@ -123,7 +123,7 @@ const updateValue = (newValue) => {
     gap: var(--spacing-2xs);
   }
 
-  &__label, &__value {
+  &__label-wrapper, &__value {
     padding: var(--spacing-xs);
   }
 
@@ -133,7 +133,16 @@ const updateValue = (newValue) => {
       justify-content: space-between;
     }
 
+    .editable-field__label-wrapper, .editable-field__value {
+      padding: 0;
+    }
+
+    .editable-field__value span {
+      @extend %typo-subtitle-1;
+    }
+
     .editable-field__label-wrapper .wt-label {
+      //TODO: remove bold after proper typography implementation
       font-weight: bold;
       @extend %typo-body-1;
     }

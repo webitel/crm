@@ -1,7 +1,10 @@
 <template>
   <div class="case-persons">
     <span class="case-persons__title">{{ t('cases.persons') }}</span>
-    <div v-if="itemInstance.service">
+    <div
+      v-if="itemInstance.service"
+      class="case-persons__wrapper"
+    >
       <editable-field
         :label="t('cases.author')"
         :value="itemInstance.author?.name || userinfo.name"
@@ -174,6 +177,13 @@ watchEffect(() => {
 <style lang="scss" scoped>
 .case-persons {
   width: 100%;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+  }
 
   &__title {
     display: block;
