@@ -118,9 +118,6 @@ watch(
   &__title {
     display: block;
     @extend %typo-heading-4;
-  }
-
-  &__title {
     padding: var(--spacing-xs);
   }
 
