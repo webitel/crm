@@ -79,23 +79,37 @@ const serviceSLA = computed(() => store.getters[`${props.namespace}/service/SLA`
 watch(
   () => serviceSLA.value?.id,
   async (newSlaId) => {
-    if (newSlaId) {
-      try {
-        const slaConditionResponse = await slaConditionsAPI.getList({ slaId: newSlaId });
-        await setItemProp({
-          path: 'sla',
-          value: serviceSLA.value,
-        });
-        await setItemProp({
-          path: 'slaCondition',
-          value: slaConditionResponse.items,
-        });
-      } catch (err) {
-        throw err;
-      }
+    if (!newSlaId) return;
+
+    try {
+      const slaConditionResponse = await slaConditionsAPI.getList({ slaId: newSlaId });
+
+      await setItemProp({
+        path: 'sla',
+        value: serviceSLA.value,
+      });
+
+      await setItemProp({
+        path: 'slaCondition',
+        value: slaConditionResponse.items,
+      });
+    } catch (error) {
+      console.error('Failed to fetch SLA conditions:', error);
+      await setItemProp({
+        path: 'sla',
+        value: null,
+      });
+
+      await setItemProp({
+        path: 'slaCondition',
+        value: [],
+      });
+
+      // Опціонально: показ сповіщення користувачу
     }
   }
 );
+
 
 </script>
 
