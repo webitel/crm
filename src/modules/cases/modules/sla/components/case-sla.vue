@@ -44,13 +44,8 @@ const {
   namespace: cardNamespace,
   id,
   itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
   setItemProp,
-  deleteItem,
+  ...restStore
 } = useCardStore(props.namespace);
 
 const {
@@ -64,11 +59,7 @@ const {
 } = useCardComponent({
   id,
   itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
+  ...restStore
 });
 
 const { t } = useI18n();
