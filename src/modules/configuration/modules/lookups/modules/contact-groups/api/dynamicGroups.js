@@ -20,13 +20,13 @@ const configuration = getDefaultOpenAPIConfig();
 
 const dynamicContactGroupsService = new DynamicGroupsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group_id'];
+const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group'];
 
 const preRequestHandler = (item) => {
   return {
     ...item,
     type: item.type.toUpperCase(),
-    defaultGroupId: item.defaultGroup.id,
+    defaultGroup: item.defaultGroup.id,
   }
 };
 

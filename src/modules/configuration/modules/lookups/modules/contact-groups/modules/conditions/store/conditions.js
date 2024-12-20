@@ -17,6 +17,15 @@ const getters = {
   PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.contactGroups.card.itemId,
 };
 
+const actions = {
+  ADD_ITEM: async (context) => {
+    await context.dispatch('api/POST_ITEM', { context });
+  },
+  UPDATE_ITEM: async (context) => {
+    await context.dispatch('api/UPD_ITEM', { context });
+  },
+}
+
 const api = createApiStoreModule({
   state: {
     api: ConditionsAPI,
@@ -37,6 +46,7 @@ const table = createTableStoreModule({
 const card = createCardStoreModule({
   state: { _resettable: resettableItemState },
   getters,
+  actions,
   modules: {
     api,
   },

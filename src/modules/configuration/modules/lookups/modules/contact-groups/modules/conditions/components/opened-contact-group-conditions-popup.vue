@@ -9,7 +9,7 @@
       {{ t('lookups.slas.conditions', 1).toLowerCase() }}
     </template>
     <template #main>
-      <form>
+      <form class="opened-card-input-grid opened-card-input-grid--1-col">
         <wt-input
           :value="itemInstance.expression"
           :label="t('lookups.slas.conditions', 1)"
@@ -20,15 +20,14 @@
           :value="itemInstance.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
           :search-method="loadStaticContactGroupsList"
-          multiple
-          @input="setItemProp({ path: 'group', value: $event[0] })"
+          required
+          @input="setGroups"
         />
         <wt-select
           :disabled="!itemInstance.group"
           :value="itemInstance.assignee"
           :label="t('lookups.contactGroups.assignee')"
           :search-method="loadContacts"
-          multiple
           @input="setItemProp({ path: 'assignee', value: $event })"
         />
       </form>
@@ -52,6 +51,7 @@
 <script setup>
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -98,17 +98,29 @@ const save = async () => {
   } else {
     await updateItem({ itemInstance, itemId: id.value });
   }
-  if (id?.value) {
-    close();
-    loadDataList();
-  }
+
+  close();
+  loadDataList();
 };
+
 async function loadStaticContactGroupsList(params) {
- return await ContactGroupsAPI.getLookup({ ...params, type: TypesContactGroups.STATIC.toUpperCase() });
+  return await ContactGroupsAPI.getLookup({ ...params, type: TypesContactGroups.STATIC.toUpperCase() });
 }
 
 async function loadContacts(params) {
   return await ContactsAPI.getLookup({ ...params, groupId: itemInstance.value.group.id });
+}
+
+async function setGroups(value) {
+  await setItemProp({ path: 'group', value });
+
+  if (!IsEmpty(itemInstance.value.assignee)) {
+    await setItemProp({ path: 'assignee', value: '' });
+  }
+
+  if (!IsEmpty(value)) {
+    await loadContacts();
+  }
 }
 
 async function initializePopup() {

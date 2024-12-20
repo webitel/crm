@@ -12,6 +12,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { DynamicConditionsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -64,13 +65,13 @@ const getConditionsList = async ({ parentId, ...rest }) => {
   }
 };
 
-const getCondition = async ({ parentId, itemId: id }) => {
+const getCondition = async ({ itemId: id }) => {
   const itemResponseHandler = (item) => {
-    return item.slaCondition;
+    return item.condition;
   };
 
   try {
-    const response = await dynamicGroupConditionsService.locateCondition(parentId, id, fieldsToSend);
+    const response = await dynamicGroupConditionsService.locateCondition(id, fieldsToSend);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -79,6 +80,7 @@ const getCondition = async ({ parentId, itemId: id }) => {
 
 const preRequestHandler = (item) => {
   if (!item.group) return item;
+  if(isEmpty(item.assignee)) delete item.assignee; ///переписати
   return {
     ...item,
     group: item.group.id,
@@ -93,7 +95,7 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
   ]);
 
   try {
-    const response = await dynamicGroupConditionsService.updateCondition(itemInstance.slaId, id, item);
+    const response = await dynamicGroupConditionsService.updateCondition(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -115,6 +117,15 @@ const addCondition = async ({ itemInstance, parentId }) => {
   }
 };
 
+const patchCondition = async ({ parentId, changes }) => {
+  try {
+    const response = await dynamicGroupConditionsService.updateCondition2(parentId, changes);
+    return applyTransform(response.data, []);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const deleteCondition = async ({ id, parentId }) => {
   try {
     const response = await dynamicGroupConditionsService.deleteCondition(parentId, id);
@@ -128,6 +139,7 @@ const ConditionsAPI = {
   getList: getConditionsList,
   get: getCondition,
   update: updateCondition,
+  patch: patchCondition,
   delete: deleteCondition,
   add: addCondition,
 };

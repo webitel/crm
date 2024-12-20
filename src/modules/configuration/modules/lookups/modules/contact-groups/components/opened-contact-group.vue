@@ -125,7 +125,7 @@ const path = computed(() => {
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.sources.sources', 2), route: '/lookups/contact-groups' },
+    { name: t('lookups.contactGroups.contactGroups', 2), route: '/lookups/contact-groups' },
     { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
@@ -152,8 +152,7 @@ const save = async () => {
     }
   } else {
     if(isDynamicGroup.value) {
-      const { id } = await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
-      await setId(id);
+      await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
       await loadItem();
     } else {
       await updateItem();
