@@ -18,7 +18,7 @@
         :search-method="loadCalendarsList"
         :value="itemInstance.calendar"
         required
-        @input="setItemProp({ prop: 'calendar', value: $event })"
+        @input="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
@@ -27,35 +27,35 @@
         @input="setItemProp({ path: 'description', value: $event })"
       />
 
-      <div>
+      <div class="opened-card-input-grid ">
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
-          format='hh:mm'
-          @input="setItemProp({ prop: 'reactionTime', value: +$event })"
+          format="hh:mm"
+          required
+          @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
-          format='hh:mm'
-          @input="setItemProp({ prop: 'resolutionTime', value: +$event })"
+          format="hh:mm"
+          required
+          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
-      </div>
 
-      <div class="opened-sla-general__wrapper">
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           mode="datetime"
-          @input="setItemProp({ prop: 'validFrom', value: $event })"
+          @input="setItemProp({ path: 'validFrom', value: $event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
           mode="datetime"
-          @input="setItemProp({ prop: 'validTo', value: $event })"
+          @input="setItemProp({ path: 'validTo', value: $event })"
         />
       </div>
     </div>
@@ -84,8 +84,10 @@ function loadCalendarsList(search) {
 </script>
 
 <style lang="scss" scoped>
-.opened-sla-general__wrapper {
-  display: flex;
-  gap: var(--spacing-sm);
+// TODO: temporary solution. Will be fixed with typography
+.opened-sla-general {
+  :deep(.wt-textarea__textarea) {
+    min-height: 120px;
+  }
 }
 </style>

@@ -107,6 +107,8 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       conditions: 'Умова | Умови',
+      editCondition: 'Редагувати умову',
+      addCondition: 'Додати умову',
       reactionTime: 'Плановий час реакції',
       resolutionTime: 'Плановий час вирішення',
       validFrom: 'Дійсний з',
@@ -116,7 +118,7 @@ export default {
     sources: {
       sources: 'Джерело звернень | Джерела звернень',
 
-      type: {
+      types: {
         [TypesSourcesEnum.CALL]: 'Дзвінок',
         [TypesSourcesEnum.CHAT]: 'Чат',
         [TypesSourcesEnum.SOCIAL_MEDIA]: 'Соціальна мережа',

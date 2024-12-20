@@ -18,14 +18,18 @@ import TheStartPage
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import TheSlas
   from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
-import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
-import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+import OpenedSla
+  from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
+import OpenedSlaGeneral
+  from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
 import TheSources
   from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
 import OpenedSource
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
 import OpenedSourceGeneral
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
+import OpenedSlaConditions
+  from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
 import TheContactGroups
   from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroup
@@ -34,12 +38,12 @@ import OpenedContactGroupGeneral
   from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
 import OpenedContactGroupsConditions
   from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
-import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
-
-
+import PermissionsTab
+  from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 
 import store from '../store';
-import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
+import TheConfiguration
+  from '../../modules/configuration/components/the-configuration.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -158,11 +162,11 @@ const routes = [
                 name: `${CrmSections.SLAS}-general`,
                 component: OpenedSlaGeneral,
               },
-              // {
-              //   path: 'conditions',
-              //   name: `${CrmSections.SLAS}-conditions`,
-              //   component: SlasConditions,
-              // },
+              {
+                path: 'conditions/:conditionId?',
+                name: `${CrmSections.SLAS}-conditions`,
+                component: OpenedSlaConditions,
+              },
             ],
           },
           {
@@ -184,6 +188,7 @@ const routes = [
               },
             ],
           },
+
           {
             path: 'contact-groups',
             name: CrmSections.CONTACT_GROUPS,
@@ -202,18 +207,18 @@ const routes = [
                 component: OpenedContactGroupGeneral,
               },
               {
-                path: 'permissions/:permissionId?',
-                name: `${CrmSections.CONTACT_GROUPS}-permissions`,
-                component: PermissionsTab,
-              },
-              {
                 path: 'conditions/:conditionId?',
                 name: `${CrmSections.CONTACT_GROUPS}-conditions`,
                 component: OpenedContactGroupsConditions,
               },
+              {
+                path: 'permissions/:permissionId?',
+                name: `${CrmSections.CONTACT_GROUPS}-permissions`,
+                component: PermissionsTab,
+              },
             ],
           },
-      ],
+        ],
       },
     ],
   },
@@ -234,7 +239,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (!localStorage.getItem('access-token') && !to.query.accessToken) {
-    const desiredUrl =  encodeURIComponent(window.location.href);
+    const desiredUrl = encodeURIComponent(window.location.href);
     const authUrl = import.meta.env.VITE_AUTH_URL;
     window.location.href = `${authUrl}?redirectTo=${desiredUrl}`;
   } else if (to.query.accessToken) {

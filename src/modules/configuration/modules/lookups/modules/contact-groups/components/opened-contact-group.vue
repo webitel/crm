@@ -50,30 +50,41 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import TypesContactGroups from '../enums/TypeContactGroups.enum.js';
 import TypeContactGroupsEnum from '../enums/TypeContactGroups.enum.js';
+import dynamicContactGroupsAPI from '../api/dynamicGroups.js';
 
 const namespace = 'configuration/lookups/contactGroups';
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
+  addItem,
+  updateItem,
+  loadItem,
+  setId,
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
+const { isNew, pathName, disabledSave, saveText, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
+  addItem,
+  updateItem,
+  loadItem,
+  setId,
 });
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
@@ -84,23 +95,23 @@ const tabs = computed(() => {
     text: t('reusable.general'),
     value: 'general',
     pathName: `${CrmSections.CONTACT_GROUPS}-general`,
-  };
+};
 
   const conditions = {
     text: t('lookups.slas.conditions', 2),
     value: 'conditions',
     pathName: `${CrmSections.CONTACT_GROUPS}-conditions`,
-  };
+};
 
   const permissions = {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
     pathName: `${CrmSections.CONTACT_GROUPS}-permissions`,
-  };
+};
 
   const tabs = [general];
 
-  if (itemInstance.value.type === TypeContactGroupsEnum.DYNAMIC) tabs.push(conditions);
+  if (itemInstance.value.type === TypeContactGroupsEnum.DYNAMIC && id.value) tabs.push(conditions);
   if (id.value) tabs.push(permissions);
 
   return tabs;
@@ -115,18 +126,44 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.sources.sources', 2), route: '/lookups/contact-groups' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
-    },
+    { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
 
+const isDynamicGroup = computed(() => itemInstance.value.type === TypesContactGroups.DYNAMIC);
+
+const redirectToEdit = () => {
+  return router.replace({
+    ...route,
+    params: { id: id?.value },
+  });
+};
+
+const save = async () => {
+  if (disabledSave.value) return;
+
+  if (isNew.value) {
+    if(isDynamicGroup.value) {
+      const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);
+      await setId(id);
+      await loadItem();
+    } else {
+      await addItem();
+    }
+  } else {
+    if(isDynamicGroup.value) {
+      const { id } = await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
+      await setId(id);
+      await loadItem();
+    } else {
+      await updateItem();
+    }
+  }
+
+  if(id?.value) {
+    await redirectToEdit();
+  }
+};
+
 initialize();
 </script>
-
-<style lang="scss" scoped>
-</style>

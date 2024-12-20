@@ -10,12 +10,21 @@ import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters.js';
 import conditions from '../modules/conditions/store/conditions';
 
-const resettableState = {
+const resetTableState = {
+  dataList: [],
+  selected: [],
+  error: {},
+  isLoading: false,
+  isNextPage: false,
+};
+
+const resetCardState = {
+  itemId: '',
   itemInstance: {
     name: '',
     description: '',
     type: '',
-    state: '',
+    enabled: true,
   },
 };
 
@@ -26,9 +35,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers,
-  },
+  state: { _resettable: resetTableState, headers },
   modules: {
     filters,
     api,
@@ -49,7 +56,7 @@ const permissions = createObjectPermissionsStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resettableState },
+  state: { _resettable: resetCardState },
   modules: {
     api,
     conditions,

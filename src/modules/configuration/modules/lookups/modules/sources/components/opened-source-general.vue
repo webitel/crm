@@ -5,7 +5,7 @@
         {{ t('reusable.generalInfo') }}
       </h3>
     </header>
-    <div class="opened-card-input-grid">
+    <div class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50">
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
@@ -18,7 +18,7 @@
         :options="typesSourcesOptions"
         :value="currentTypeSource"
         required
-        @input="setItemProp({ prop: 'type', value: $event.id })"
+        @input="setItemProp({ path: 'type', value: $event.id })"
       />
 
       <wt-textarea
@@ -50,7 +50,7 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 const typesSourcesOptions = computed(() => Object.values(TypesSources).map((type) => {
   return {
     id: type,
-    name: t(`lookups.sources.type.${type}`),
+    name: t(`lookups.sources.types.${type}`),
   };
 }));
 

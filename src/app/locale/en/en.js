@@ -108,6 +108,8 @@ export default {
     slas: {
       slas: 'SLA | SLAs',
       conditions: 'Condition | Conditions',
+      editCondition: 'Edit condition',
+      addCondition: 'Add condition',
       reactionTime: 'Reaction time',
       resolutionTime: 'Resolution time',
       validFrom: 'Valid from',
@@ -115,7 +117,7 @@ export default {
     },
     sources: {
       sources: 'Case source | Case sources',
-      type: {
+      types: {
         [TypesSourcesEnum.CALL]: 'Call',
         [TypesSourcesEnum.CHAT]: 'Chat',
         [TypesSourcesEnum.SOCIAL_MEDIA]: 'Social Media',
