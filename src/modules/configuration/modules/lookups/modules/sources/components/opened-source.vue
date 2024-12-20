@@ -1,6 +1,6 @@
 <template>
   <wt-page-wrapper
-    :actions-panel="!!currentTab.filters"
+    :actions-panel="false"
   >
     <template #header>
       <wt-page-header
@@ -14,23 +14,11 @@
       </wt-page-header>
     </template>
 
-    <template #actions-panel>
-      <component
-        :is="currentTab.filters"
-        :namespace="namespace"
-      />
-    </template>
-
     <template #main>
       <form
         class="main-container"
         @submit.prevent="save"
       >
-        <wt-tabs
-          :current="currentTab"
-          :tabs="tabs"
-          @change="changeTab"
-        />
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
@@ -50,17 +38,14 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 
 const namespace = 'configuration/lookups/sources';
 const { t } = useI18n();
-const route = useRoute();
 
 const {
   namespace: cardNamespace,
@@ -78,17 +63,6 @@ const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SOURCES);
 
-const tabs = computed(() => {
-  const general = {
-    text: t('reusable.general'),
-    value: 'general',
-    pathName: `${CrmSections.SOURCES}-general`,
-  };
-  return [general];
-});
-
-const { currentTab, changeTab } = useCardTabs(tabs);
-
 const path = computed(() => {
 
   return [
@@ -96,13 +70,7 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
-    },
+    { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
 

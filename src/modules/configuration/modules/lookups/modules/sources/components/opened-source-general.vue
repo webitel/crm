@@ -5,7 +5,7 @@
         {{ t('reusable.generalInfo') }}
       </h3>
     </header>
-    <div class="opened-card-input-grid">
+    <div class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50">
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"

@@ -1,15 +1,15 @@
 <template>
   <wt-popup
+    class="opened-sla-condition-popup"
     :shown="!!conditionId"
     size="sm"
     @close="close"
   >
     <template #title>
-      {{ !isNew ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('lookups.slas.conditions', 1).toLowerCase() }}
+      {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
     <template #main>
-      <form>
+      <form class="opened-card-input-grid opened-card-input-grid--1-col">
         <wt-input
           :value="itemInstance.name"
           :label="t('reusable.name')"
@@ -21,21 +21,27 @@
           :label="t('vocabulary.priority')"
           :search-method="PrioritiesAPI.getLookup"
           multiple
+          required
           @input="setItemProp({ path: 'priorities', value: $event })"
         />
-        <wt-timepicker
-          :label="t('lookups.slas.reactionTime')"
-          :value="itemInstance.reactionTime"
-          format="hh:mm"
-          @input="setItemProp({ path: 'reactionTime', value: $event })"
-        />
+        <div class="opened-sla-condition-popup__wrapper">
+          <wt-timepicker
+            :label="t('lookups.slas.reactionTime')"
+            :value="itemInstance.reactionTime"
+            format="hh:mm"
+            required
+            @input="setItemProp({ path: 'reactionTime', value: $event })"
+          />
 
-        <wt-timepicker
-          :label="t('lookups.slas.resolutionTime')"
-          :value="itemInstance.resolutionTime"
-          format="hh:mm"
-          @input="setItemProp({ path: 'resolutionTime', value: $event })"
-        />
+          <wt-timepicker
+            :label="t('lookups.slas.resolutionTime')"
+            :value="itemInstance.resolutionTime"
+            format="hh:mm"
+            required
+            @input="setItemProp({ path: 'resolutionTime', value: $event })"
+          />
+        </div>
+
       </form>
     </template>
     <template #actions>
@@ -90,7 +96,7 @@ const {
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 
-const { close } = useClose( `${CrmSections.SLAS}-conditions`);
+const { close } = useClose(`${CrmSections.SLAS}-conditions`);
 
 function loadDataList() {
   emit('load-data');
@@ -103,10 +109,8 @@ const save = async () => {
     await updateItem({ itemInstance, itemId: id.value });
   }
 
-  if (id?.value) {
     close();
     loadDataList();
-  }
 };
 
 async function initializePopup() {
@@ -121,7 +125,7 @@ async function initializePopup() {
 }
 
 watch(() => conditionId.value, (value) => {
-  if(value) {
+  if (value) {
     initializePopup();
   } else {
     resetState();
@@ -130,4 +134,8 @@ watch(() => conditionId.value, (value) => {
 </script>
 
 <style lang="scss" scoped>
+.opened-sla-condition-popup__wrapper {
+  display: flex;
+  justify-content: space-between;
+}
 </style>
