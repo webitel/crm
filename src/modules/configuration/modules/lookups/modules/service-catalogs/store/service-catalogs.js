@@ -14,13 +14,14 @@ const resettableState = {
     code: '',
     sla: {},
     statuses: '',
-    teams: {},
-    skills: {},
+    teams: [],
+    skills: [],
     status: {},
     prefix: '',
-    reason: {},
+    closeReason: {},
     description: '',
     services: [],
+    state: true,
   },
 };
 

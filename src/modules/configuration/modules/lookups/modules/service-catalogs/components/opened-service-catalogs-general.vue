@@ -31,8 +31,8 @@
       <wt-select
         :label="t('lookups.serviceCatalogs.closureReasons')"
         :search-method="loadReasonList"
-        :value="itemInstance.reasons"
-        @input="setItemProp({ path: 'reasons', value: $event })"
+        :value="itemInstance.closeReason"
+        @input="setItemProp({ path: 'closeReason', value: $event })"
       />
 
       <wt-select
@@ -45,8 +45,9 @@
       <wt-select
         :label="t('objects.team', 2)"
         :search-method="loadTeamsList"
-        :value="itemInstance.team"
-        @input="setItemProp({ path: 'team', value: $event })"
+        :value="itemInstance.teams"
+        multiple
+        @input="setItemProp({ path: 'teams', value: $event })"
       />
 
       <wt-input
@@ -58,8 +59,9 @@
       <wt-select
         :label="t('lookups.serviceCatalogs.skills')"
         :search-method="loadSkillsList"
-        :value="itemInstance.skill"
-        @input="setItemProp({ path: 'skill', value: $event })"
+        :value="itemInstance.skills"
+        multiple
+        @input="setItemProp({ path: 'skills', value: $event })"
       />
 
       <wt-textarea
@@ -80,9 +82,12 @@
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
-import SkillApi from '../../ priorities/api/priorities.js';
+
 import SlasAPI from '../../slas/api/slas.js';
+import TeamsAPI from '@webitel/ui-sdk/src/api/clients/teams/teams.js';
+import CloseReasonsApi from '../../сlosure-reasons/api/closure-reasons.js';
+import StatusesApi from '../../statuses/api/statuses.js';
+import SkillsAPI from '@webitel/ui-sdk/src/api/clients/skills/skills.js';
 
 const props = defineProps({
   namespace: {
@@ -95,28 +100,24 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-// TODO Implement api to load statuses
 function loadStatusesList(search) {
-  return CalendarsAPI.getLookup(search);
+  return StatusesApi.getLookup(search);
 }
 
-// TODO Implement api to load reasons
 function loadReasonList(search) {
-  return CalendarsAPI.getLookup(search);
+  return CloseReasonsApi.getLookup(search);
 }
 
 function loadSlaList(search) {
-  return SlasAPI.getList(search);
+  return SlasAPI.getLookup(search);
 }
 
-// TODO Implement api to load teams
 function loadTeamsList(search) {
-  return CalendarsAPI.getLookup(search);
+  return TeamsAPI.getLookup(search);
 }
 
-// TODO Implement api to load skills
 function loadSkillsList(search) {
-  return CalendarsAPI.getLookup(search);
+  return SkillsAPI.getLookup(search);
 }
 </script>
 
