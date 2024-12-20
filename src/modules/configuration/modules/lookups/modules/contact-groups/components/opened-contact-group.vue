@@ -73,6 +73,7 @@ const {
   addItem,
   updateItem,
   loadItem,
+  setId,
   ...restStore
 } = useCardStore(namespace);
 
@@ -83,6 +84,7 @@ const { isNew, pathName, disabledSave, saveText, initialize } = useCardComponent
   addItem,
   updateItem,
   loadItem,
+  setId,
 });
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
@@ -124,13 +126,7 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.sources.sources', 2), route: '/lookups/contact-groups' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
-    },
+    { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
 
@@ -147,10 +143,17 @@ const save = async () => {
   if (disabledSave.value) return;
 
   if (isNew.value) {
-    isDynamicGroup.value ? await dynamicContactGroupsAPI.add(itemInstance.value) : await addItem();
+    if(isDynamicGroup.value) {
+      const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);
+      await setId(id);
+      await loadItem();
+    } else {
+      await addItem();
+    }
   } else {
     if(isDynamicGroup.value) {
-      await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
+      const { id } = await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
+      await setId(id);
       await loadItem();
     } else {
       await updateItem();

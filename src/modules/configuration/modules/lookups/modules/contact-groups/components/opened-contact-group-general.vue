@@ -27,13 +27,11 @@
         />
       </div>
 
-
       <wt-select
         v-if="itemInstance.type === TypesContactGroups.DYNAMIC"
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
         :value="itemInstance.defaultGroup"
-        required
         @input="setItemProp({ path: 'defaultGroup', value: $event })"
       />
     </div>
@@ -42,7 +40,6 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import TypesContactGroups from '../enums/TypeContactGroups.enum.js';
 import ContactGroupsAPI from '../api/contactGroups.js';

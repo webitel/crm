@@ -9,7 +9,16 @@ import ContactGroupsAPI from '../api/contactGroups.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters.js';
 
+const resetTableState = {
+  dataList: [],
+  selected: [],
+  error: {},
+  isLoading: false,
+  isNextPage: false,
+};
+
 const resettableState = {
+  itemId: '',
   itemInstance: {
     name: '',
     description: '',
@@ -25,9 +34,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers,
-  },
+  state: { _resettable: resetTableState, headers },
   modules: {
     filters,
     api,
@@ -48,7 +55,7 @@ const permissions = createObjectPermissionsStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resettableState },
+  state: { _resettable: resetCardState },
   modules: {
     api,
     permissions,
