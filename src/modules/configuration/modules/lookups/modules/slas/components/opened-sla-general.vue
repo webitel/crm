@@ -27,23 +27,23 @@
         @input="setItemProp({ path: 'description', value: $event })"
       />
 
-      <div>
+      <div class="opened-card-input-grid ">
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
-          format='hh:mm'
+          format="hh:mm"
+          required
           @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
-          format='hh:mm'
+          format="hh:mm"
+          required
           @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
-      </div>
 
-      <div class="opened-sla-general__wrapper">
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
@@ -84,8 +84,10 @@ function loadCalendarsList(search) {
 </script>
 
 <style lang="scss" scoped>
-.opened-sla-general__wrapper {
-  display: flex;
-  gap: var(--spacing-sm);
+// TODO: temporary solution. Will be fixed with typography
+.opened-sla-general {
+  :deep(.wt-textarea__textarea) {
+    min-height: 120px;
+  }
 }
 </style>
