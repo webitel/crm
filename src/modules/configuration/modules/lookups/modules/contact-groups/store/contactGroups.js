@@ -17,7 +17,7 @@ const resetTableState = {
   isNextPage: false,
 };
 
-const resettableState = {
+const resetCardState = {
   itemId: '',
   itemInstance: {
     name: '',
