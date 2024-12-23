@@ -9,16 +9,12 @@
         <span>{{ itemInstance?.sla?.name }}</span>
       </div>
       <template v-if="itemInstance?.slaCondition?.name">
-        <div
-          class="case-sla__condition"
-        >
+        <div class="case-sla__condition">
           <wt-icon
             color="error"
             icon="stop-sign"
           />
-          <span>
-            {{ itemInstance.slaCondition.name }}
-          </span>
+          <span>{{ itemInstance.slaCondition.name }}</span>
         </div>
       </template>
     </div>
@@ -67,17 +63,15 @@ const { t } = useI18n();
 const store = useStore();
 const serviceSLA = computed(() => store.getters[`${props.namespace}/service/SLA`]);
 
-
 const updateSlaCondition = async (slaId, priorityId) => {
   if (!slaId || !priorityId) {
     await resetSlaCondition();
     return;
   }
-
   try {
     const response = await slaConditionsAPI.getList({ slaId });
-    const matchingCondition = response.items.find(condition =>
-      condition.priorities.some(priority => priority.id === priorityId),
+    const matchingCondition = response.items.find((condition) =>
+      condition.priorities.some((priority) => priority.id === priorityId),
     );
 
     await setItemProp({ path: 'slaCondition', value: matchingCondition });
