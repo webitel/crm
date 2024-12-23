@@ -15,7 +15,7 @@ const mockData = {
       name: "Critical SLA Condition",
       priorities: [
         {
-          id: "priority1",
+          id: "p1",
           name: "High",
         },
       ],

@@ -154,6 +154,8 @@ export default {
     rating: 'Оценка',
     persons: 'Персоны',
     selectAService: 'Выберите сервис',
+    deadlines: 'Сроки',
+    createdAt: 'Создано',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',

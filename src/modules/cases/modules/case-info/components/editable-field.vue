@@ -7,15 +7,16 @@
       v-if="!editMode"
       class="editable-field__content"
     >
-      <div class="editable-field__label-wrapper">
+      <div
+        v-if="label"
+        class="editable-field__label-wrapper"
+      >
         <wt-icon
           v-if="icon"
           :color="color"
           :icon="icon"
         />
-        <wt-label
-          v-if="label"
-        >
+        <wt-label>
           {{ label }}
         </wt-label>
       </div>

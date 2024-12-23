@@ -8,19 +8,19 @@
       <div class="case-sla__name">
         <span>{{ itemInstance?.sla?.name }}</span>
       </div>
-      <div
-        v-for="condition in itemInstance?.slaCondition"
-        :key="condition.id"
-        class="case-sla__condition"
-      >
-        <wt-icon
-          color="error"
-          icon="stop-sign"
-        />
-        <span>
-          {{ condition.name }}
-        </span>
-      </div>
+      <template v-if="itemInstance?.slaCondition?.name">
+        <div
+          class="case-sla__condition"
+        >
+          <wt-icon
+            color="error"
+            icon="stop-sign"
+          />
+          <span>
+            {{ itemInstance.slaCondition.name }}
+          </span>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -59,47 +59,71 @@ const {
 } = useCardComponent({
   id,
   itemInstance,
-  ...restStore
+  ...restStore,
 });
 
 const { t } = useI18n();
-const store = useStore();
 
+const store = useStore();
 const serviceSLA = computed(() => store.getters[`${props.namespace}/service/SLA`]);
+
+
+const updateSlaCondition = async (slaId, priorityId) => {
+  if (!slaId || !priorityId) {
+    await resetSlaCondition();
+    return;
+  }
+
+  try {
+    const response = await slaConditionsAPI.getList({ slaId });
+    const matchingCondition = response.items.find(condition =>
+      condition.priorities.some(priority => priority.id === priorityId),
+    );
+
+    await setItemProp({ path: 'slaCondition', value: matchingCondition });
+  } catch (err) {
+    await resetSlaCondition();
+    throw err;
+  }
+};
+
+const resetSlaCondition = async () => {
+  await setItemProp({ path: 'slaCondition', value: null });
+};
+
+const resetSla = async () => {
+  await setItemProp({ path: 'sla', value: null });
+};
 
 watch(
   () => serviceSLA.value?.id,
   async (newSlaId) => {
-    if (!newSlaId) return;
+    if (!newSlaId) {
+      await resetSla();
+      return;
+    }
 
     try {
-      const slaConditionResponse = await slaConditionsAPI.getList({ slaId: newSlaId });
-
-      await setItemProp({
-        path: 'sla',
-        value: serviceSLA.value,
-      });
-
-      await setItemProp({
-        path: 'slaCondition',
-        value: slaConditionResponse.items,
-      });
+      await setItemProp({ path: 'sla', value: serviceSLA.value });
+      await updateSlaCondition(newSlaId, itemInstance.value.priority?.id);
     } catch (err) {
-      await setItemProp({
-        path: 'sla',
-        value: null,
-      });
-
-      await setItemProp({
-        path: 'slaCondition',
-        value: [],
-      });
       throw err;
     }
   },
 );
 
+watch(
+  () => itemInstance.value.priority?.id,
+  async (newPriorityId) => {
+    try {
+      await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
+    } catch (err) {
+      throw err;
+    }
+  },
+);
 
+initialize();
 </script>
 
 <style lang="scss" scoped>
