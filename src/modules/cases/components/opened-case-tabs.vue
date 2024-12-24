@@ -33,6 +33,11 @@ const tabs = computed(() => [
     value: 'case-info',
     pathName: `${CrmSections.CASES}-case-info`,
   },
+  {
+    text: t('cases.result'),
+    value: 'result',
+    pathName: `${CrmSections.CASES}-result`,
+  },
 ]);
 
 const {

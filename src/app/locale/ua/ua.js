@@ -155,6 +155,7 @@ export default {
     rating: 'Оцінка',
     persons: 'Особи',
     selectAService: 'Виберіть сервіс',
+    ratingComment: 'Коментар до оцінки',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
