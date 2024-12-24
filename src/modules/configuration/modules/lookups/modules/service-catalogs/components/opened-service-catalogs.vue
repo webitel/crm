@@ -33,6 +33,7 @@
           <component
               :is="Component"
               :namespace="cardNamespace"
+              :isNew="isNew"
               :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
