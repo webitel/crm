@@ -39,7 +39,9 @@ const props = defineProps({
 
 function prettifyDate(timestamp) {
   // timestamp is in milliseconds
-  const date = new Date(Number(timestamp));
+  const value = Number(timestamp);
+  if (!value) return '';
+  const date = new Date(value);
 
   const time = date.toLocaleTimeString('en-GB', {
     hour: '2-digit',
@@ -55,7 +57,7 @@ function prettifyDate(timestamp) {
 const formattedTimeDifference = computed(() => {
   //value is in seconds
   const value = Number(props.timeDifference);
-  if (value === 0) return '';
+  if (!value) return '';
 
   const totalSeconds = Math.abs(value);
   const isNegative = value < 0;
