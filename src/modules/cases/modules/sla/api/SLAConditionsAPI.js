@@ -71,9 +71,12 @@ const mockData = {
   ],
 };
 
-const getList = async ({ slaId, params }) => {
+const getList = async ({ slaId, priorityId, params }) => {
   try {
-    const filteredItems = mockData.items.filter(item => item.slaId === slaId);
+    const filteredItems = mockData.items.filter(item =>
+      item.slaId === slaId &&
+      (!priorityId || item.priorities.some(priority => priority.id === priorityId))
+    );
     const { items, next } = applyTransform({ items: filteredItems }, [
       snakeToCamel(),
       merge(getDefaultGetListResponse()),

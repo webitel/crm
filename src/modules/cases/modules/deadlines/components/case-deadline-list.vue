@@ -1,32 +1,29 @@
 <template>
   <div class="case-deadline-list">
     <span class="case-deadline-list__title">{{ t('cases.deadlines') }}</span>
-    <div
-      v-if="itemInstance.createdAt && itemInstance.timing"
-      class="case-deadline-list__wrapper"
-    >
+    <div class="case-deadline-list__wrapper">
       <case-deadline
-        :time="itemInstance.createdAt"
+        :time="itemInstance?.createdAt"
         :label="t('cases.createdAt')"
       />
       <case-deadline
-        :time-difference="itemInstance.timing.differenceInReaction"
-        :time="itemInstance.plannedReactionAt"
+        :time-difference="itemInstance?.timing?.differenceInReaction"
+        :time="itemInstance?.plannedReactionAt"
         :label="t('cases.reactionTime')"
       />
       <case-deadline
-        :time="itemInstance.timing.reactedAt"
+        :time="itemInstance?.timing?.reactedAt"
         :label="t('cases.actualReactionTime')"
       />
 
       <case-deadline
-        :time-difference="itemInstance.timing.differenceInResolve"
-        :time="itemInstance.plannedResolveAt"
+        :time-difference="itemInstance?.timing?.differenceInResolve"
+        :time="itemInstance?.plannedResolveAt"
         :label="t('cases.resolutionTime')"
       />
 
       <case-deadline
-        :time="itemInstance.timing.resolvedAt"
+        :time="itemInstance?.timing?.resolvedAt"
         :label="t('cases.actualResolutionTime')"
       />
     </div>

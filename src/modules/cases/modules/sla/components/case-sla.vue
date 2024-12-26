@@ -71,17 +71,15 @@ const updateSlaCondition = async (slaId, priorityId) => {
     return;
   }
   try {
-    const response = await slaConditionsAPI.getList({ slaId });
-    const matchingCondition = response.items.find((condition) =>
-      condition.priorities.some((priority) => priority.id === priorityId),
-    );
-
-    await setItemProp({ path: 'slaCondition', value: matchingCondition });
+    const response = await slaConditionsAPI.getList({ slaId, priorityId });
+    //NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
+    await setItemProp({ path: 'slaCondition', value: response.items[0] });
   } catch (err) {
     await resetSlaCondition();
     throw err;
   }
 };
+
 
 const resetSlaCondition = async () => {
   await setItemProp({ path: 'slaCondition', value: null });
