@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
+import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
@@ -19,7 +20,18 @@ import AccessDenied from '../components/utils/access-denied-component.vue';
 import TheStartPage
   from '../../modules/start-page/components/the-start-page.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
-
+import TheSlas
+  from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
+import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
+import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+import TheSources
+  from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
+import OpenedSource
+  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
+import OpenedSourceGeneral
+  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
+import OpenedSlaConditions
+  from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
 
 import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -73,6 +85,11 @@ const routes = [
             path: 'case-info',
             name: `${CrmSections.CASES}-case-info`,
             component: CaseInfo,
+          },
+          {
+            path: 'result',
+            name: `${CrmSections.CASES}-result`,
+            component: CaseResult,
           },
         ],
       },
@@ -146,12 +163,48 @@ const routes = [
           {
             path: 'slas',
             name: CrmSections.SLAS,
+            component: TheSlas,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'slas/:id',
+            name: `${CrmSections.SLAS}-card`,
+            component: OpenedSla,
+            redirect: { name: `${CrmSections.SLAS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SLAS}-general`,
+                component: OpenedSlaGeneral,
+              },
+              {
+                path: 'conditions/:conditionId?',
+                name: `${CrmSections.SLAS}-conditions`,
+                component: OpenedSlaConditions,
+              },
+            ],
+          },
+          {
+            path: 'sources',
+            name: CrmSections.SOURCES,
+            component: TheSources,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'sources/:id',
+            name: `${CrmSections.SOURCES}-card`,
+            component: OpenedSource,
+            redirect: { name: `${CrmSections.SOURCES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SOURCES}-general`,
+                component: OpenedSourceGeneral,
+              },
+            ],
           },
       ],
       },
-
-
-
     ],
   },
   {

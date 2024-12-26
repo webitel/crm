@@ -25,7 +25,7 @@
             {{ $t('cases.case', 2) }}
           </h3>
           <wt-action-bar
-            :actions="[IconAction.ADD, IconAction.REFRESH]"
+            :include="[IconAction.ADD, IconAction.REFRESH]"
             @click:add="add"
           >
             <wt-icon-btn
@@ -58,57 +58,58 @@
             @sort="sort"
             @update:selected="setSelected"
           >
-            <template #name="{ item }">
+            <!--TODO: replace item.id with item.name when it will be available from API-->
+            <template #id="{ item }">
               <wt-item-link
                 :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
               >
-                {{ item.name }}
+                {{ item.id }}
               </wt-item-link>
             </template>
             <template #priority="{ item }">
-              {{ item.priority.name }}
+              {{ item.priority?.name }}
             </template>
             <template #status="{ item }">
-              {{ item.status.name }}
+              {{ item.status?.name }}
             </template>
             <template #source="{ item }">
-              {{ item.source.name }}
+              {{ item.source?.name }}
             </template>
             <template #service="{ item }">
-              {{ item.service.name }}
+              {{ item.service?.name }}
             </template>
             <template #createdBy="{ item }">
-              {{ item.createdBy.name }}
+              {{ item.createdBy?.name }}
             </template>
             <template #group="{ item }">
-              {{ item.group.name }}
+              {{ item.group?.name }}
             </template>
             <template #assignee="{ item }">
-              {{ item.assignee.name }}
+              {{ item.assignee?.name }}
             </template>
             <template #reporter="{ item }">
-              {{ item.reporter.name }}
+              {{ item.reporter?.name }}
             </template>
             <template #impacted="{ item }">
-              {{ item.impacted.name }}
+              {{ item.impacted?.name }}
             </template>
             <template #appliedSLA="{ item }">
-              {{ item.service.sla.name }}
+              {{ item.service?.sla?.name }}
             </template>
             <template #actualReactionTime="{ item }">
-              {{ item.timing.reactedAt }}
+              {{ item.timing?.reactedAt }}
             </template>
             <template #actualResolutionTime="{ item }">
-              {{ item.timing.resolvedAt }}
+              {{ item.timing?.resolvedAt }}
             </template>
             <template #closeReason="{ item }">
-              {{ item.close.closeReason.name }}
+              {{ item.close?.closeReason?.name }}
             </template>
             <template #closeResult="{ item }">
-              {{ item.close.closeResult }}
+              {{ item.close?.closeResult }}
             </template>
             <template #rate="{ item }">
-              {{ item.rate.rating }}
+              {{ item.rate?.rating }}
             </template>
             <template #actions="{ item }">
               <wt-icon-action
@@ -118,9 +119,9 @@
               <wt-icon-action
                 action="delete"
                 @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })"
               />
             </template>
           </wt-table>
@@ -148,13 +149,14 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { computed, onUnmounted, } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 const baseNamespace = 'cases';
 
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 
 const store = useStore();
 
@@ -218,6 +220,14 @@ function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
     params: { id: 'new' },
+  });
+}
+
+function edit(item) {
+  store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
+  return router.push({
+    name: `${CrmSections.CASES}-card`,
+    params: { id: item.id },
   });
 }
 

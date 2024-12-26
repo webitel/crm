@@ -2,6 +2,8 @@ import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import TypesSourcesEnum
+  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -96,7 +98,7 @@ export default {
       name: 'Звернення',
       text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
     },
-    'configuration': {
+    configuration: {
       name: 'Конфігурація',
       text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
     },
@@ -106,11 +108,29 @@ export default {
 
     slas: {
       slas: 'SLA | SLAs',
+      conditions: 'Умова | Умови',
+      editCondition: 'Редагувати умову',
+      addCondition: 'Додати умову',
+      reactionTime: 'Плановий час реакції',
+      resolutionTime: 'Плановий час вирішення',
+      validFrom: 'Дійсний з',
+      validTo: 'Дійсний до',
     },
 
+    sources: {
+      sources: 'Джерело звернень | Джерела звернень',
+
+      types: {
+        [TypesSourcesEnum.CALL]: 'Дзвінок',
+        [TypesSourcesEnum.CHAT]: 'Чат',
+        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Соціальна мережа',
+        [TypesSourcesEnum.EMAIL]: 'Лист',
+        [TypesSourcesEnum.API]: 'API',
+        [TypesSourcesEnum.MANUAL]: 'Створене вручну',
+      },
+    },
     [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
     [CrmSections.STATUSES]: 'Статуси',
-    [CrmSections.SOURCES]: 'Джерела',
   },
   cases: {
     case: 'Звернення | Звернення',
@@ -121,6 +141,7 @@ export default {
     source: 'Джерело',
     author: 'Автор',
     group: 'Група виконавців',
+    service: 'Сервіс',
     assignee: 'Виконавець',
     reporter: 'Ініціатор',
     impacted: 'Впливає на',
@@ -132,8 +153,14 @@ export default {
     reason: 'Причина',
     result: 'Результат',
     rating: 'Оцінка',
+    persons: 'Особи',
+    selectAService: 'Виберіть сервіс',
+    deadlines: 'Терміни',
+    createdAt: 'Створено',
+    ratingComment: 'Коментар до оцінки',
     caseInfo: {
       caseInfo: 'Інформація',
+      contactInfo: 'Контактна інформація',
     }
   },
 };
