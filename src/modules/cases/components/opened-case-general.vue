@@ -6,6 +6,9 @@
     <case-priority
       :namespace="namespace"
     />
+    <case-deadlines
+      :namespace="namespace"
+    />
     <case-service
       :namespace="namespace"
     />
@@ -19,6 +22,7 @@
 </template>
 
 <script setup>
+import CaseDeadlines from '../modules/deadlines/components/case-deadline-list.vue';
 import CasePersons from '../modules/persons/components/case-persons.vue';
 import CasePriority from '../modules/priority/components/case-priority.vue';
 import CaseService from '../modules/service/components/case-service.vue';

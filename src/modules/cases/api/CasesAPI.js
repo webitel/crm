@@ -20,7 +20,7 @@ const data = {
         id: "u1",
         name: "User One"
       },
-      createdAt: "2024-11-01T10:00:00Z",
+      createdAt: "1734950841253",
       updatedBy: {
         id: "u2",
         name: "User Two"
@@ -30,8 +30,8 @@ const data = {
       subject: "Network Issue",
       description: "The network is experiencing downtime.",
       contactInfo: "contact1@example.com",
-      plannedReactionAt: "2024-11-01T12:00:00Z",
-      plannedResolveAt: "2024-11-03T12:00:00Z",
+      plannedReactionAt: "1734961322138",
+      plannedResolveAt: "1734961322138",
       status: {
         id: "s1",
         name: "Open"
@@ -84,42 +84,40 @@ const data = {
         ratingComment: "Issue resolved promptly."
       },
       timing: {
-        resolvedAt: "2024-11-03T10:00:00Z",
-        reactedAt: "2024-11-01T10:30:00Z",
-        differenceInReaction: "30m",
-        differenceInResolve: "2d"
+        resolvedAt: "1734961389622",
+        reactedAt: "1734950841253",
+        differenceInReaction: "1800",
+        differenceInResolve: "-172800000"
       },
-      slaCondition: [
-        {
-          id: "sla1",
-          name: "Critical SLA",
-          priorities: [
-            {
-              id: "p1",
-              name: "High"
-            }
-          ],
-          reactionTime: {
-            hours: 1,
-            minutes: 0
-          },
-          resolutionTime: {
-            hours: 48,
-            minutes: 0
-          },
-          slaId: "slaId1",
-          createdAt: "2024-10-01T10:00:00Z",
-          updatedAt: "2024-10-01T12:00:00Z",
-          createdBy: {
-            id: "u5",
-            name: "SLA Manager"
-          },
-          updatedBy: {
-            id: "u6",
-            name: "SLA Admin"
+      slaCondition: {
+        id: "sla1",
+        name: "Critical SLA",
+        priorities: [
+          {
+            id: "p1",
+            name: "High"
           }
+        ],
+        reactionTime: {
+          hours: 1,
+          minutes: 0
+        },
+        resolutionTime: {
+          hours: 48,
+          minutes: 0
+        },
+        slaId: "slaId1",
+        createdAt: "2024-10-01T10:00:00Z",
+        updatedAt: "2024-10-01T12:00:00Z",
+        createdBy: {
+          id: "u5",
+          name: "SLA Manager"
+        },
+        updatedBy: {
+          id: "u6",
+          name: "SLA Admin"
         }
-      ],
+      },
       service: {
         id: "subservice2",
         name: "Network Support"
@@ -224,8 +222,8 @@ const data = {
       subject: "Login Issue",
       description: "Users are unable to log in to the system.",
       contactInfo: "contact2@example.com",
-      plannedReactionAt: "2024-11-05T12:00:00Z",
-      plannedResolveAt: "2024-11-07T12:00:00Z",
+      plannedReactionAt: "1734961322138",
+      plannedResolveAt: "1734961322138",
       status: {
         id: "s2",
         name: "In Progress"
@@ -278,42 +276,40 @@ const data = {
         ratingComment: "Issue is being addressed."
       },
       timing: {
-        resolvedAt: "2024-11-07T10:00:00Z",
-        reactedAt: "2024-11-05T11:30:00Z",
-        differenceInReaction: "30m",
-        differenceInResolve: "2d"
+        resolvedAt: "1734950841253",
+        reactedAt: "1734950841253",
+        differenceInReaction: "1800",
+        differenceInResolve: "172800000"
       },
-      slaCondition: [
-        {
-          id: "sla2",
-          name: "Standard SLA",
-          priorities: [
-            {
-              id: "p2",
-              name: "Medium"
-            }
-          ],
-          reactionTime: {
-            hours: 2,
-            minutes: 0
-          },
-          resolutionTime: {
-            hours: 72,
-            minutes: 0
-          },
-          slaId: "slaId2",
-          createdAt: "2024-10-05T10:00:00Z",
-          updatedAt: "2024-10-05T12:00:00Z",
-          createdBy: {
-            id: "u5",
-            name: "SLA Manager"
-          },
-          updatedBy: {
-            id: "u6",
-            name: "SLA Admin"
+      slaCondition:  {
+        id: "sla2",
+        name: "Standard SLA",
+        priorities: [
+          {
+            id: "p2",
+            name: "Medium"
           }
+        ],
+        reactionTime: {
+          hours: 2,
+          minutes: 0
+        },
+        resolutionTime: {
+          hours: 72,
+          minutes: 0
+        },
+        slaId: "slaId2",
+        createdAt: "2024-10-05T10:00:00Z",
+        updatedAt: "2024-10-05T12:00:00Z",
+        createdBy: {
+          id: "u5",
+          name: "SLA Manager"
+        },
+        updatedBy: {
+          id: "u6",
+          name: "SLA Admin"
         }
-      ],
+      },
       service: {
         id: "srv2",
         name: "Login Support"
@@ -405,11 +401,11 @@ const fieldsToSend = [
   'name',
   'subject',
   'description',
-  'contact_info',
-  'planned_reaction_at',
-  'planned_resolve_at',
+  'contactInfo',
+  'plannedReactionAt',
+  'plannedResolveAt',
   'status_lookup',
-  'close_reason_lookup',
+  'closeReasonLookup',
   'author',
   'assignee',
   'reporter',
@@ -421,13 +417,13 @@ const fieldsToSend = [
   'close',
   'rate',
   'timing',
-  'sla_condition',
+  'slaCondition',
   'sla',
   'service',
   'comments',
   'related',
   'links',
-  'status_condition'
+  'statusCondition'
 ];
 
 

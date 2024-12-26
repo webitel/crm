@@ -155,6 +155,8 @@ export default {
     rating: 'Оцінка',
     persons: 'Особи',
     selectAService: 'Виберіть сервіс',
+    deadlines: 'Терміни',
+    createdAt: 'Створено',
     ratingComment: 'Коментар до оцінки',
     caseInfo: {
       caseInfo: 'Інформація',
