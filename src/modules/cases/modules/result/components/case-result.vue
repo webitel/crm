@@ -10,8 +10,8 @@
       >
         <template #default="props">
           <wt-select
-            :search-method="searchCloseReasons"
             v-bind="props"
+            :search-method="searchCloseReasons"
             @input="props.updateValue($event)"
           />
         </template>
