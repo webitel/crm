@@ -155,6 +155,7 @@ export default {
     rating: 'Rating',
     persons: 'Persons',
     selectAService: 'Select a service',
+    ratingComment: 'Rating comment',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
