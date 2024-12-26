@@ -157,6 +157,7 @@ export default {
     selectAService: 'Select a service',
     deadlines: 'Deadlines',
     createdAt: 'Created at',
+    ratingComment: 'Rating comment',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',

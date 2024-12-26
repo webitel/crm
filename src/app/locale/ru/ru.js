@@ -156,6 +156,7 @@ export default {
     selectAService: 'Выберите сервис',
     deadlines: 'Сроки',
     createdAt: 'Создано',
+    ratingComment: 'Комментарий к оценке',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
