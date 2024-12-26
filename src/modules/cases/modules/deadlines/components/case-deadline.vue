@@ -9,17 +9,19 @@
         <span>{{ prettifyDate(time) }}</span>
       </div>
       <span
-        v-if="timeDifference"
+        v-if="formattedTimeDifference"
         :class="{
           'case-deadline__time-difference_positive': timeDifference > 0,
           'case-deadline__time-difference_negative': timeDifference < 0
         }"
-      >{{ formatTimeDifference(timeDifference) }}</span>
+      >{{ formattedTimeDifference }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
   label: {
     type: String,
@@ -36,7 +38,6 @@ const props = defineProps({
 });
 
 function prettifyDate(timestamp) {
-  console.log(timestamp);
   // timestamp is in milliseconds
   const date = new Date(Number(timestamp));
 
@@ -45,14 +46,18 @@ function prettifyDate(timestamp) {
     minute: '2-digit',
   });
 
-  const datePart = date.toLocaleDateString('en-GB').replace(/\//g, '.');
+  const datePart = date.toLocaleDateString('en-GB')
+  .replace(/\//g, '.');
 
   return `${time} ${datePart}`;
 }
 
-function formatTimeDifference(value) {
+const formattedTimeDifference = computed(() => {
   //value is in seconds
-  const totalSeconds = Math.abs(Number(value));
+  const value = Number(props.timeDifference);
+  if (value === 0) return '';
+
+  const totalSeconds = Math.abs(value);
   const isNegative = value < 0;
 
   const days = Math.floor(totalSeconds / (24 * 60 * 60));
@@ -62,7 +67,7 @@ function formatTimeDifference(value) {
   const formatted = `${days}d ${hours}h ${minutes}m`;
 
   return isNegative ? `- ${formatted}` : formatted;
-}
+});
 </script>
 
 <style lang="scss" scoped>

@@ -8,13 +8,13 @@
       <div class="case-sla__name">
         <span>{{ itemInstance?.sla?.name }}</span>
       </div>
-      <template v-if="itemInstance?.slaCondition?.name">
+      <template v-if="slaConditionName">
         <div class="case-sla__condition">
           <wt-icon
             color="error"
             icon="stop-sign"
           />
-          <span>{{ itemInstance.slaCondition.name }}</span>
+          <span>{{ slaConditionName }}</span>
         </div>
       </template>
     </div>
@@ -62,6 +62,8 @@ const { t } = useI18n();
 
 const store = useStore();
 const serviceSLA = computed(() => store.getters[`${props.namespace}/service/SLA`]);
+
+const slaConditionName = computed(() => itemInstance?.value?.slaCondition?.name || '');
 
 const updateSlaCondition = async (slaId, priorityId) => {
   if (!slaId || !priorityId) {

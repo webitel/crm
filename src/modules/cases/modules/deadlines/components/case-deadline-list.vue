@@ -1,9 +1,9 @@
 <template>
-  <div class="case-deadlines">
-    <span class="case-deadlines__title">{{ t('cases.deadlines') }}</span>
+  <div class="case-deadline-list">
+    <span class="case-deadline-list__title">{{ t('cases.deadlines') }}</span>
     <div
       v-if="itemInstance.createdAt && itemInstance.timing"
-      class="case-deadlines__wrapper"
+      class="case-deadline-list__wrapper"
     >
       <case-deadline
         :time="itemInstance.createdAt"
@@ -54,7 +54,7 @@ const {
 </script>
 
 <style lang="scss" scoped>
-.case-deadlines {
+.case-deadline-list {
   width: 100%;
 
   &__title {
