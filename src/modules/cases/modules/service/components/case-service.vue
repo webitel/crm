@@ -161,6 +161,8 @@ async function initializeComponent() {
 }
 
 onUnmounted(() => {
+  setServiceToStore(null);
+  setCatalogToStore(null);
   resetState();
 });
 
