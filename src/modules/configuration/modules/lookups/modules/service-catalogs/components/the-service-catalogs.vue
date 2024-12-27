@@ -61,6 +61,52 @@
               @sort="sort"
               @update:selected="setSelected"
             >
+              <template #name="{ item }">
+                <wt-item-link
+                  v-if="isRootElement(item)"
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-card`, params: { id: item.id } }"
+                >
+                  {{ item.name }}
+                </wt-item-link>
+                <template v-else>
+                  {{ item.name }}
+                </template>
+              </template>
+              <template #sla="{ item }">
+                {{ item.sla?.name }}
+              </template>
+              <template #close_reason="{ item }">
+                {{ item.close_reason?.name }}
+              </template>
+
+              <template #state="{ item }">
+                <wt-switcher
+                  :value="item.state"
+                  @change="changeState(item)"
+                />
+              </template>
+              <template #teams="{ item }">
+                <template v-if="!isRootElement(item)">
+                  -
+                </template>
+                <template v-else>
+                  {{ getFirstItemName(item.teams) }}
+                  <wt-chip v-if="displayCountChipItems(item.teams)">
+                    {{ displayCountChipItems(item.teams) }}
+                  </wt-chip>
+                </template>
+              </template>
+              <template #skills="{ item }">
+                <template v-if="!isRootElement(item)">
+                  -
+                </template>
+                <template v-else>
+                  {{ getFirstItemName(item.skills) }}
+                  <wt-chip v-if="displayCountChipItems(item.skills)">
+                    {{ displayCountChipItems(item.skills) }}
+                  </wt-chip>
+                </template>
+              </template>
               <template #actions="{ item }">
                 <wt-icon-action
                   v-if="hasEditAccess"
@@ -194,9 +240,35 @@ const refresh = () => {
   loadData();
 };
 
+const isRootElement = (item) => !item.root_id;
+
+const getFirstItemName = (items) => {
+  if(!items?.length) return '';
+
+  return items[0]?.name
+};
+const displayCountChipItems = (items) => {
+  if(!items?.length) return 0;
+
+  switch (items.length) {
+    case 1:
+      return 0;
+    case 2:
+      return 1;
+    default:
+      return '+1';
+  }
+}
+const changeState = (item) => {
+  console.log('item')
+}
+const chipElements = (items) => {
+  if(!items?.length) return [];
+
+  return items.slice(1);
+}
+
 watch(() => filtersValue.value, () => {
   resetState();
 });
-
-loadData();
 </script>

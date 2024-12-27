@@ -40,7 +40,7 @@ const getCatalogsList = async (params) => {
     const response = await catalogsService.listCatalogs(
       page,
       size,
-      fields,
+      [...fields, 'services'],
       sort,
       id,
       q,

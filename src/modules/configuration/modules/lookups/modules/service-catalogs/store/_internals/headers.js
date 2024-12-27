@@ -23,6 +23,13 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
+    value: 'statuses',
+    locale: 'lookups.serviceCatalogs.statuses',
+    show: true,
+    field: 'statuses',
+    sort: SortSymbols.NONE,
+  },
+  {
     value: 'teams',
     locale: 'objects.team',
     show: true,
@@ -37,10 +44,10 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'statuses',
-    locale: 'lookups.serviceCatalogs.statuses',
+    value: 'state',
+    locale: 'reusable.state',
     show: true,
-    field: 'statuses',
+    field: 'state',
     sort: SortSymbols.NONE,
   },
   {
@@ -62,13 +69,6 @@ export default [
     locale: 'vocabulary.description',
     show: true,
     field: 'description',
-    sort: SortSymbols.NONE,
-  },
-  {
-    value: 'services',
-    locale: 'services',
-    show: true,
-    field: 'services',
     sort: SortSymbols.NONE,
   },
 ];
