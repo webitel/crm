@@ -27,7 +27,7 @@
         <template #default="props">
           <wt-select
             :clearable="false"
-            :search-method="UsersAPI.getLookup"
+            :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -48,7 +48,7 @@
         <template #default="props">
           <wt-select
             :clearable="false"
-            :search-method="UsersAPI.getLookup"
+            :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -70,7 +70,7 @@
         <template #default="props">
           <wt-select
             :clearable="false"
-            :search-method="UsersAPI.getLookup"
+            :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -107,12 +107,12 @@
 
 <script setup>
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, inject, watchEffect } from 'vue';
+import { computed, inject, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { useStore } from 'vuex';
 import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
-import UsersAPI from '../../../../contacts/api/UsersAPI.js';
+import ContactsAPI from '../../../../contacts/api/ContactsAPI.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const store = useStore();
@@ -157,20 +157,23 @@ const userinfo = computed(() => store.state.userinfo);
 
 const editMode = inject('editMode');
 
-watchEffect(() => {
-  if (serviceGroup.value) {
-    setItemProp({
-      path: 'group',
-      value: serviceGroup.value,
-    });
-  }
-  if (serviceAssignee.value) {
-    setItemProp({
-      path: 'assignee',
-      value: serviceAssignee.value,
-    });
-  }
-});
+const watchServiceValues = (valueRef, path) => {
+  watch(
+    valueRef,
+    (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        setItemProp({
+          path,
+          value: newValue,
+        });
+      }
+    }
+  );
+};
+
+watchServiceValues(serviceGroup, 'group');
+watchServiceValues(serviceAssignee, 'assignee');
+
 </script>
 
 

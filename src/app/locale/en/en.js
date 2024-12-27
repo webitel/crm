@@ -146,6 +146,7 @@ export default {
     reporter: 'Reporter',
     impacted: 'Impacted',
     appliedSLA: 'Applied SLA',
+    appliedCondition: 'Applied condition',
     reactionTime: 'Reaction time',
     resolutionTime: 'Resolution time',
     actualReactionTime: 'Actual reaction time',

@@ -94,7 +94,10 @@
               {{ item.impacted?.name }}
             </template>
             <template #appliedSLA="{ item }">
-              {{ item.service?.sla?.name }}
+              {{ item.sla?.name }}
+            </template>
+            <template #appliedCondition="{ item }">
+              {{ item.slaCondition?.name }}
             </template>
             <template #actualReactionTime="{ item }">
               {{ item.timing?.reactedAt }}

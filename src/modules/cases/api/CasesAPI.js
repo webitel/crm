@@ -66,7 +66,8 @@ const data = {
       },
       source: {
         id: "src1",
-        name: "Email"
+        name: "Email",
+        type: "email",
       },
       statusCondition: {
         id: "sc1",
@@ -91,7 +92,7 @@ const data = {
       },
       slaCondition: {
         id: "sla1",
-        name: "Critical SLA",
+        name: "SLA Condition",
         priorities: [
           {
             id: "p1",
@@ -258,7 +259,8 @@ const data = {
       },
       source: {
         id: "src2",
-        name: "Phone Call"
+        name: "Phone Call",
+        type: "Phone"
       },
       statusCondition: {
         id: "sc2",
@@ -545,7 +547,7 @@ const addCase = async ({ itemInstance }) => {
       id: String(Date.now()),
       ver: 1,
       etag: `etag-${Date.now()}`,
-      created_at: new Date().toISOString(),
+      created_at: Date.now(),
       updated_at: new Date().toISOString(),
       created_by: {
         id: "system",

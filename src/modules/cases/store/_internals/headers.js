@@ -93,6 +93,13 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
+    value: 'appliedCondition',
+    locale: 'cases.appliedCondition',
+    show: true,
+    field: 'slaCondition',
+    sort: SortSymbols.NONE,
+  },
+  {
     value: 'plannedReactionAt',
     locale: 'cases.reactionTime',
     show: true,

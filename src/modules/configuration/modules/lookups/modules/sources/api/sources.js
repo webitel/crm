@@ -27,7 +27,7 @@ const getSourcesList = async (params) => {
   const listResponseHandler = (items) => {
     return items.map((item) => ({
       ...item,
-      type: item.type.toLowerCase(),
+      type: item.type?.toLowerCase(),
     }));
   };
 
@@ -134,12 +134,18 @@ const deleteSource = async ({ id }) => {
   }
 };
 
+const getLookup = (params) => getSourcesList({
+  ...params,
+  fields: params.fields || ['id', 'name', 'type'],
+});
+
 const SourcesAPI = {
   getList: getSourcesList,
   get: getSource,
   add: addSource,
   update: updateSource,
   delete: deleteSource,
+  getLookup
 }
 
 export default SourcesAPI;
