@@ -35,13 +35,14 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.source')"
-        :value="itemInstance.source"
+        :value="itemInstance.source?.name"
         required
         @update:value="setItemProp({ path: 'source', value: $event })"
       >
         <template #default="props">
           <wt-select
             v-bind="props"
+            :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"
           />
         </template>
@@ -70,6 +71,7 @@ import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import EditableField from './editable-field.vue';
 
 const { t } = useI18n();

@@ -24,7 +24,6 @@
       </wt-page-header>
     </template>
     <template #side-panel>
-      {{ editMode }}
       <opened-case-general
         :namespace="namespace"
       />

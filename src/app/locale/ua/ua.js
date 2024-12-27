@@ -146,6 +146,7 @@ export default {
     reporter: 'Ініціатор',
     impacted: 'Впливає на',
     appliedSLA: 'Застосований SLA',
+    appliedCondition: 'Застосована умова',
     reactionTime: 'Плановий час реакції',
     resolutionTime: 'Плановий час вирішення',
     actualReactionTime: 'Фактичний час реакції',

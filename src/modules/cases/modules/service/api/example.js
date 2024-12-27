@@ -149,7 +149,7 @@ export const serviceCatalogData  = {
     state: true,
     sla: {
       id: 'sla1',
-      name: 'Critical SLA',
+      name: 'Critical SLAa',
     },
     group: {
       id: 'group3',

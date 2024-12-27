@@ -12,7 +12,7 @@ const mockData = {
   items: [
     {
       id: "slaCond1",
-      name: "Critical SLA Condition",
+      name: "SLA Condition",
       priorities: [
         {
           id: "p1",
