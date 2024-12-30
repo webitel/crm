@@ -52,7 +52,6 @@
         :edit-mode="editMode"
         :label="t('cases.caseInfo.contactInfo')"
         :value="itemInstance.contactInfo"
-        required
         @update:value="setItemProp({ path: 'contactInfo', value: $event })"
       >
         <template #default="props">

@@ -22,12 +22,13 @@
       </div>
       <div class="editable-field__value">
         <span v-if="!link">
-          {{ value }}
+          {{ valueWithDefault }}
         </span>
         <template v-else>
           <wt-item-link
             :link="link"
             class="editable-field__link"
+            target="_blank"
           >
             {{ value }}
           </wt-item-link>
@@ -51,6 +52,8 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
   editMode: {
     type: Boolean,
@@ -84,6 +87,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+});
+
+const valueWithDefault = computed(() => {
+  return props.horizontalView ? props.value : props.value || '-';
 });
 
 const emit = defineEmits(['update:value']);
@@ -135,6 +142,7 @@ const updateValue = (newValue) => {
     }
 
     .editable-field__label-wrapper, .editable-field__value {
+      text-align: end;
       padding: 0;
     }
 

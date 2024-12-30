@@ -70,10 +70,13 @@
               {{ item.priority?.name }}
             </template>
             <template #status="{ item }">
-              {{ item.status?.name }}
+              {{ item.statusCondition?.name }}
             </template>
             <template #source="{ item }">
               {{ item.source?.name }}
+            </template>
+            <template #createdAt="{ item }">
+              {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
               {{ item.service?.name }}
@@ -99,11 +102,17 @@
             <template #appliedCondition="{ item }">
               {{ item.slaCondition?.name }}
             </template>
+            <template #plannedReactionAt="{ item }">
+              {{ prettifyDate(item.plannedReactionAt) }}
+            </template>
+            <template #plannedResolveAt="{ item }">
+              {{ prettifyDate(item.plannedResolveAt) }}
+            </template>
             <template #actualReactionTime="{ item }">
-              {{ item.timing?.reactedAt }}
+              {{ prettifyDate(item.timing?.reactedAt) }}
             </template>
             <template #actualResolutionTime="{ item }">
-              {{ item.timing?.resolvedAt }}
+              {{ prettifyDate(item.timing?.resolvedAt) }}
             </template>
             <template #closeReason="{ item }">
               {{ item.close?.closeReason?.name }}
@@ -154,6 +163,7 @@ import { computed, onUnmounted, } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import prettifyDate from '../utils/prettifyDate.js';
 
 const baseNamespace = 'cases';
 

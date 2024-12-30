@@ -403,7 +403,7 @@ const fieldsToSend = [
   'name',
   'subject',
   'description',
-  'contactInfo',
+  'contact_info',
   'plannedReactionAt',
   'plannedResolveAt',
   'status_lookup',
@@ -419,7 +419,7 @@ const fieldsToSend = [
   'close',
   'rate',
   'timing',
-  'slaCondition',
+  'sla_condition',
   'sla',
   'service',
   'comments',
@@ -492,7 +492,7 @@ const updateCase = async ({ itemId: id, itemInstance }) => {
       throw new Error("Item not found");
     }
 
-    const transformedItem = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+    const transformedItem = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
 
     data.items[itemIndex] = {
       ...data.items[itemIndex],
