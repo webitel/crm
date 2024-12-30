@@ -21,6 +21,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
   label: {
@@ -36,23 +37,6 @@ const props = defineProps({
     default: '',
   },
 });
-
-function prettifyDate(timestamp) {
-  // timestamp is in milliseconds
-  const value = Number(timestamp);
-  if (!value) return '';
-  const date = new Date(value);
-
-  const time = date.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-  const datePart = date.toLocaleDateString('en-GB')
-  .replace(/\//g, '.');
-
-  return `${time} ${datePart}`;
-}
 
 const formattedTimeDifference = computed(() => {
   //value is in seconds

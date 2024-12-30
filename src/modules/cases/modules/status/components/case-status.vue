@@ -1,6 +1,6 @@
 <template>
   <div class="case-status">
-    <div v-if="statusId && itemInstance.statusCondition?.id">
+    <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="statusId"
@@ -117,7 +117,7 @@ async function handleSelect(value) {
 }
 
 async function updateStatusCondition() {
-  if (!statusId.value) return;
+  if (statusId.value) return;
 
   try {
     const { items } = await StatusConditionsAPI.getList({ statusId: statusId.value });

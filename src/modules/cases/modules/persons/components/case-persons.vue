@@ -1,10 +1,7 @@
 <template>
   <div class="case-persons">
     <span class="case-persons__title">{{ t('cases.persons') }}</span>
-    <div
-      v-if="itemInstance.service"
-      class="case-persons__wrapper"
-    >
+    <div class="case-persons__wrapper">
       <editable-field
         :label="t('cases.author')"
         :value="itemInstance.author?.name || userinfo.name"
