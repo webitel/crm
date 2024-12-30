@@ -5,6 +5,7 @@
       <wt-select
         :key="statusId"
         :clearable="false"
+        :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
         @input="handleSelect"
@@ -34,6 +35,7 @@ import { useStore } from 'vuex';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
 import StatusesAPI from '../api/StatusesAPI.js';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   namespace: {
@@ -41,6 +43,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { t } = useI18n();
 
 const store = useStore();
 
