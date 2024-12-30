@@ -37,6 +37,13 @@
           </wt-action-bar>
         </header>
 
+        <delete-confirmation-popup
+          :shown="isDeleteConfirmationPopup"
+          :callback="deleteCallback"
+          :delete-count="deleteCount"
+          @close="closeDelete"
+        />
+
         <div
           class="table-section__table-wrapper"
         >
@@ -63,26 +70,28 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  v-if="isRootElement(item)"
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-card`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { id: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
-                <template v-else>
-                  {{ item.name }}
-                </template>
               </template>
               <template #sla="{ item }">
-                {{ item.sla?.name }}
+                {{ displayText(item.sla?.name) }}
               </template>
               <template #close_reason="{ item }">
-                {{ item.close_reason?.name }}
+                {{ displayText(item.close_reason?.name) }}
               </template>
 
-              <template #state="{ item }">
+              <template
+                #prefix="{ item }"
+              >
+                {{ displayText(item.prefix) }}
+              </template>
+
+              <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
-                  @change="changeState(item)"
+                  @change="changeState(item, index)"
                 />
               </template>
               <template #teams="{ item }">
@@ -90,8 +99,11 @@
                   -
                 </template>
                 <template v-else>
-                  {{ getFirstItemName(item.teams) }}
-                  <wt-chip v-if="displayCountChipItems(item.teams)">
+                  {{ displayText(getFirstItemName(item.teams)) }}
+                  <wt-chip
+                    v-if="displayCountChipItems(item.teams)"
+                    class="table-chip"
+                  >
                     {{ displayCountChipItems(item.teams) }}
                   </wt-chip>
                 </template>
@@ -101,8 +113,11 @@
                   -
                 </template>
                 <template v-else>
-                  {{ getFirstItemName(item.skills) }}
-                  <wt-chip v-if="displayCountChipItems(item.skills)">
+                  {{ displayText(getFirstItemName(item.skills)) }}
+                  <wt-chip
+                    v-if="displayCountChipItems(item.skills)"
+                    class="table-chip"
+                  >
                     {{ displayCountChipItems(item.skills) }}
                   </wt-chip>
                 </template>
@@ -152,8 +167,12 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { useRouter } from 'vue-router';
 
 import filters from '../../slas/modules/filters/store/filters.js';
+import CatalogsAPI from '../api/service-catalogs.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 
 const baseNamespace = 'configuration/lookups/catalogs';
+const EMPTY_CELL = '-'
 
 const { t } = useI18n();
 const router = useRouter();
@@ -193,6 +212,7 @@ const {
   sort,
   setSelected,
   onFilterEvent,
+  patchProperty,
   resetState,
 } = useTableStore(baseNamespace);
 
@@ -259,16 +279,37 @@ const displayCountChipItems = (items) => {
       return '+1';
   }
 }
-const changeState = (item) => {
-  console.log('item')
+const changeState = (item, index) => {
+  if(isRootElement(item)) {
+    CatalogsAPI.update({
+      itemInstance: {
+        ...item,
+        state: !item.state,
+      },
+      itemId: item.id,
+    })
+  }
+
+  item.state = !item.state;
 }
 const chipElements = (items) => {
   if(!items?.length) return [];
 
   return items.slice(1);
 }
+const displayText = (text) => {
+  if(!text) return EMPTY_CELL;
+
+  return text;
+}
 
 watch(() => filtersValue.value, () => {
   resetState();
 });
 </script>
+
+<style lang="scss" scoped>
+.table-chip {
+  margin-left: var(--spacing-xs);
+}
+</style>

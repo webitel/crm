@@ -21,25 +21,20 @@
 
     <template #main>
       <form
-          class="main-container"
-          @submit.prevent="save"
+        class="main-container"
+        @submit.prevent="save"
       >
-        <wt-tabs
-            :current="currentTab"
-            :tabs="tabs"
-            @change="changeTab"
-        />
         <router-view v-slot="{ Component }">
           <component
-              :is="Component"
-              :namespace="cardNamespace"
-              :isNew="isNew"
-              :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :is="Component"
+            :namespace="cardNamespace"
+            :is-new="isNew"
+            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
-            hidden
-            type="submit"
+          hidden
+          type="submit"
         > <!--  submit form on Enter  -->
       </form>
     </template>
@@ -83,21 +78,15 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.SLAS}-general`,
-  };
-  const conditions = {
-    text: t('lookups.slas.conditions', 2),
-    value: 'conditions',
-    pathName: `${CrmSections.SLAS}-conditions`,
+    pathName: `${CrmSections.SERVICE_CATALOGS}-general`,
   };
 
   const tabs = [general];
 
-  if (id.value) tabs.push(conditions);
   return tabs;
 });
 
-const { currentTab, changeTab } = useCardTabs(tabs);
+const { currentTab } = useCardTabs(tabs);
 
 const path = computed(() => {
   return [

@@ -37,6 +37,10 @@ import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedServiceCatalogsGeneral
   from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs-general.vue';
+import TheCatalogServices
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/the-catalog-services.vue';
+import OpenedServices
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/opened-services.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -199,6 +203,16 @@ const routes = [
                 component: OpenedServiceCatalogsGeneral,
               },
             ],
+          },
+          {
+            path: 'service-catalogs/:id/services',
+            name: `${CrmSections.SERVICE_CATALOGS}-services`,
+            component: TheCatalogServices,
+          },
+          {
+            path: 'service-catalogs/:id/services/:serviceId',
+            name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+            component: OpenedServices,
           },
       ],
       },
