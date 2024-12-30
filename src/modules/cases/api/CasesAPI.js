@@ -425,7 +425,7 @@ const fieldsToSend = [
   'comments',
   'related',
   'links',
-  'statusCondition'
+  'status_condition'
 ];
 
 
@@ -519,8 +519,7 @@ const patchCase = async ({ itemId: id, itemInstance }) => {
     }
 
     // Transform the patch data to camelCase and filter for allowed fields
-    const transformedPatch = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
-
+    const transformedPatch = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
     // Update only the provided fields
     data.items[itemIndex] = {
       ...data.items[itemIndex],
