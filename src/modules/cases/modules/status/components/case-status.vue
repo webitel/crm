@@ -1,4 +1,9 @@
 <template>
+  <case-result-popup
+    :shown="isResultPopup"
+    @close="isResultPopup = false"
+    @save="saveResult"
+  />
   <div class="case-status">
     <div v-if="statusId && itemInstance.statusCondition?.id">
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
@@ -29,11 +34,12 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
 import StatusesAPI from '../api/StatusesAPI.js';
+import CaseResultPopup from './case-result-popup.vue';
 
 const props = defineProps({
   namespace: {
@@ -75,6 +81,8 @@ const {
   resetState,
 });
 
+const isResultPopup = ref(false);
+
 function getIndicatorColor(option) {
   if (option?.initial) return 'initial-status';
   if (option?.final) return 'final-status';
@@ -90,6 +98,8 @@ const fetchStatusConditions = (params) =>
   });
 
 async function handleSelect(value) {
+  if (value.final) isResultPopup.value = true;
+
   try {
     const statusResponse = await StatusesAPI.get({ itemId: statusId.value });
     const status = {
