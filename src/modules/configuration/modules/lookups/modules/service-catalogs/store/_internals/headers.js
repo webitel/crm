@@ -26,7 +26,7 @@ export default [
     value: 'statuses',
     locale: 'lookups.serviceCatalogs.statuses',
     show: true,
-    field: 'statuses',
+    field: 'status',
     sort: SortSymbols.NONE,
   },
   {

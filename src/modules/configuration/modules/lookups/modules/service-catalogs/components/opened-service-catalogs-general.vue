@@ -18,6 +18,7 @@
         :search-method="loadStatusesList"
         :value="itemInstance.status"
         required
+        :clearable="false"
         @input="setItemProp({ path: 'status', value: $event })"
       />
 
@@ -32,6 +33,8 @@
         :label="t('lookups.serviceCatalogs.closureReasons')"
         :search-method="loadReasonList"
         :value="itemInstance.closeReason"
+        required
+        :clearable="false"
         @input="setItemProp({ path: 'closeReason', value: $event })"
       />
 
@@ -40,6 +43,7 @@
         :search-method="loadSlaList"
         :value="itemInstance.sla"
         required
+        :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
       />
       <wt-select

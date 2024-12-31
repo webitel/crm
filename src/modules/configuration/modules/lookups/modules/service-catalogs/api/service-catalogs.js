@@ -17,8 +17,8 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'statuses', 'teams', 'skills', 'status', 'prefix', 'reason', 'description', 'services'];
-const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla',];
+const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
 
 const getCatalogsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];

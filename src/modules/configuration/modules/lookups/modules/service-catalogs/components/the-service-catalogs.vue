@@ -78,6 +78,9 @@
               <template #sla="{ item }">
                 {{ displayText(item.sla?.name) }}
               </template>
+              <template #statuses="{ item }">
+                {{ displayText(item.status?.name) }}
+              </template>
               <template #close_reason="{ item }">
                 {{ displayText(item.close_reason?.name) }}
               </template>
