@@ -5,7 +5,6 @@
         :edit-mode="editMode"
         :label="t('cases.reason')"
         :value="itemInstance?.close?.closeReason?.name"
-        required
         @update:value="setItemProp({ path: 'close.closeReason', value: $event })"
       >
         <template #default="props">
@@ -21,7 +20,6 @@
         :edit-mode="editMode"
         :label="t('cases.result')"
         :value="itemInstance?.close?.closeResult"
-        required
         @update:value="setItemProp({ path: 'close.closeResult', value: $event })"
       >
         <template #default="props">
@@ -35,14 +33,12 @@
       <editable-field
         :label="t('cases.rating')"
         :value="itemInstance?.rate?.rating"
-      >
-      </editable-field>
+      />
 
       <editable-field
         :label="t('cases.ratingComment')"
         :value="itemInstance?.rate?.ratingComment"
-      >
-      </editable-field>
+      />
     </div>
   </div>
 </template>

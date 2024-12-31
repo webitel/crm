@@ -159,6 +159,7 @@ export default {
     deadlines: 'Deadlines',
     createdAt: 'Created at',
     ratingComment: 'Rating comment',
+    caseResult: 'Case result',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
