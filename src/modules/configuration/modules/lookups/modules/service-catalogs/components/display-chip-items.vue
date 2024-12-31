@@ -42,7 +42,6 @@ const displayCountChipItems = () => {
   }
 }
 const options = computed(() => {
-  console.log('items', props.items)
   if(!props.items?.length) return [];
 
   return props.items.slice(1).map((item) => ({
