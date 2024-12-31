@@ -10,15 +10,15 @@
       <wt-select
         :label="t('cases.reason')"
         :search-method="searchCloseReasons"
-        :value="reason"
+        :value="draft.reason"
         required
-        @input="reason = $event"
+        @input="draft.reason = $event"
       />
 
       <wt-textarea
         :label="t('cases.result')"
-        :value="result"
-        @input="result = $event"
+        :value="draft.result"
+        @input="draft.result = $event"
       />
     </template>
     <template #actions>
@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
 import { useStore } from 'vuex';
@@ -58,8 +58,10 @@ const store = useStore();
 
 const { t } = useI18n();
 
-const reason = ref(null);
-const result = ref(null);
+const draft = reactive({
+  reason: null,
+  result: null,
+});
 
 const closeReasonId = computed(() => store.getters[`${props.namespace}/service/CLOSE_REASON_ID`]);
 
@@ -71,8 +73,8 @@ const emit = defineEmits(['save', 'close']);
 
 function save() {
   const finalStatusData = {
-    reason: reason.value,
-    result: result.value,
+    reason: draft.reason,
+    result: draft.result,
   };
   emit('save', finalStatusData);
   close();
