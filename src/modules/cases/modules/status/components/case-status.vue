@@ -6,11 +6,12 @@
     @save="saveResult"
   />
   <div class="case-status">
-    <div v-if="statusId && itemInstance.statusCondition?.id">
+    <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="statusId"
         :clearable="false"
+        :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
         @input="handleSelect"
@@ -41,6 +42,7 @@ import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
 import StatusesAPI from '../api/StatusesAPI.js';
 import CaseResultPopup from './case-result-popup.vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   namespace: {
@@ -48,6 +50,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { t } = useI18n();
 
 const store = useStore();
 
@@ -103,8 +107,8 @@ function getIndicatorColor(option) {
 
 const statusId = computed(() => store.getters[`${props.namespace}/service/STATUS_ID`]);
 
-const fetchStatusConditions = (params) =>
-  StatusConditionsAPI.getLookup({
+const fetchStatusConditions = async (params) =>
+  await StatusConditionsAPI.getLookup({
     ...params,
     statusId: statusId.value,
   });
@@ -139,7 +143,7 @@ async function handleSelect(value) {
 }
 
 async function updateStatusCondition() {
-  if (!statusId.value) return;
+  if (!statusId.value && !itemInstance.value.statusCondition) return;
 
   try {
     const { items } = await StatusConditionsAPI.getList({ statusId: statusId.value });

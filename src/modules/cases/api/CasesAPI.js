@@ -403,7 +403,7 @@ const fieldsToSend = [
   'name',
   'subject',
   'description',
-  'contactInfo',
+  'contact_info',
   'plannedReactionAt',
   'plannedResolveAt',
   'status_lookup',
@@ -419,13 +419,13 @@ const fieldsToSend = [
   'close',
   'rate',
   'timing',
-  'slaCondition',
+  'sla_condition',
   'sla',
   'service',
   'comments',
   'related',
   'links',
-  'statusCondition'
+  'status_condition'
 ];
 
 
@@ -492,7 +492,7 @@ const updateCase = async ({ itemId: id, itemInstance }) => {
       throw new Error("Item not found");
     }
 
-    const transformedItem = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
+    const transformedItem = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
 
     data.items[itemIndex] = {
       ...data.items[itemIndex],
@@ -519,8 +519,7 @@ const patchCase = async ({ itemId: id, itemInstance }) => {
     }
 
     // Transform the patch data to camelCase and filter for allowed fields
-    const transformedPatch = applyTransform(itemInstance, [sanitize(fieldsToSend), camelToSnake()]);
-
+    const transformedPatch = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
     // Update only the provided fields
     data.items[itemIndex] = {
       ...data.items[itemIndex],

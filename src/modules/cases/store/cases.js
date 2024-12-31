@@ -33,6 +33,7 @@ const resettableState = {
     closeResult: '',
     rate: '',
     statusCondition: '',
+    contactInfo: '',
   },
 };
 
