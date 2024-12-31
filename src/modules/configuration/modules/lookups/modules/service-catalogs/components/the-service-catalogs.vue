@@ -99,13 +99,7 @@
                   -
                 </template>
                 <template v-else>
-                  {{ displayText(getFirstItemName(item.teams)) }}
-                  <wt-chip
-                    v-if="displayCountChipItems(item.teams)"
-                    class="table-chip"
-                  >
-                    {{ displayCountChipItems(item.teams) }}
-                  </wt-chip>
+                  <display-chip-items :items="item.teams" />
                 </template>
               </template>
               <template #skills="{ item }">
@@ -113,13 +107,7 @@
                   -
                 </template>
                 <template v-else>
-                  {{ displayText(getFirstItemName(item.skills)) }}
-                  <wt-chip
-                    v-if="displayCountChipItems(item.skills)"
-                    class="table-chip"
-                  >
-                    {{ displayCountChipItems(item.skills) }}
-                  </wt-chip>
+                  <display-chip-items :items="item.skills" />
                 </template>
               </template>
               <template #actions="{ item }">
@@ -170,6 +158,7 @@ import filters from '../../slas/modules/filters/store/filters.js';
 import CatalogsAPI from '../api/service-catalogs.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import DisplayChipItems from './display-chip-items.vue';
 
 const baseNamespace = 'configuration/lookups/catalogs';
 const EMPTY_CELL = '-'
@@ -212,7 +201,6 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  patchProperty,
   resetState,
 } = useTableStore(baseNamespace);
 
@@ -262,23 +250,6 @@ const refresh = () => {
 
 const isRootElement = (item) => !item.root_id;
 
-const getFirstItemName = (items) => {
-  if(!items?.length) return '';
-
-  return items[0]?.name
-};
-const displayCountChipItems = (items) => {
-  if(!items?.length) return 0;
-
-  switch (items.length) {
-    case 1:
-      return 0;
-    case 2:
-      return 1;
-    default:
-      return '+1';
-  }
-}
 const changeState = (item, index) => {
   if(isRootElement(item)) {
     CatalogsAPI.update({
@@ -292,11 +263,6 @@ const changeState = (item, index) => {
 
   item.state = !item.state;
 }
-const chipElements = (items) => {
-  if(!items?.length) return [];
-
-  return items.slice(1);
-}
 const displayText = (text) => {
   if(!text) return EMPTY_CELL;
 
@@ -307,9 +273,3 @@ watch(() => filtersValue.value, () => {
   resetState();
 });
 </script>
-
-<style lang="scss" scoped>
-.table-chip {
-  margin-left: var(--spacing-xs);
-}
-</style>
