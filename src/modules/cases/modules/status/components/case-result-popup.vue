@@ -9,12 +9,16 @@
     <template #main>
       <wt-select
         :label="t('cases.reason')"
+        :search-method="searchCloseReasons"
+        :value="reason"
         required
+        @input="reason = $event"
       />
 
       <wt-textarea
         :label="t('cases.result')"
-        required
+        :value="result"
+        @input="result = $event"
       />
     </template>
     <template #actions>
@@ -34,22 +38,43 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import EditableField from '../../case-info/components/editable-field.vue';
 import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
+import { useStore } from 'vuex';
 
-const { t } = useI18n();
 const props = defineProps({
   shown: {
     type: Boolean,
     required: true,
   },
+  namespace: {
+    type: String,
+    required: true,
+  },
 });
+
+const store = useStore();
+
+const { t } = useI18n();
+
+const reason = ref(null);
+const result = ref(null);
+
+const closeReasonId = computed(() => store.getters[`${props.namespace}/service/CLOSE_REASON_ID`]);
+
+async function searchCloseReasons() {
+  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value });
+}
 
 const emit = defineEmits(['save', 'close']);
 
 function save() {
-  emit('save');
+  const finalStatusData = {
+    reason: reason.value,
+    result: result.value,
+  };
+  emit('save', finalStatusData);
   close();
 }
 

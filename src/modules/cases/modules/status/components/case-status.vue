@@ -1,5 +1,6 @@
 <template>
   <case-result-popup
+    :namespace="props.namespace"
     :shown="isResultPopup"
     @close="isResultPopup = false"
     @save="saveResult"
@@ -82,6 +83,17 @@ const {
 });
 
 const isResultPopup = ref(false);
+
+async function saveResult({ reason, result }) {
+  await setItemProp({
+    path: 'close.closeReason',
+    value: reason,
+  });
+  await setItemProp({
+    path: 'close.closeResult',
+    value: result,
+  });
+}
 
 function getIndicatorColor(option) {
   if (option?.initial) return 'initial-status';
