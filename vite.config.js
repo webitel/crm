@@ -20,7 +20,7 @@ export default ({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@import "./src/app/css/main.scss";`,
+          additionalData: `@use "./src/app/css/main.scss" as *;`,
         },
       },
     },

@@ -12,7 +12,7 @@
         class="editable-field__label-wrapper"
       >
         <wt-icon
-          v-if="icon"
+          v-if="icon && horizontalView"
           :color="color"
           :icon="icon"
         />
@@ -21,6 +21,11 @@
         </wt-label>
       </div>
       <div class="editable-field__value">
+        <wt-icon
+          v-if="icon && !horizontalView"
+          :color="color"
+          :icon="icon"
+        />
         <span v-if="!link">
           {{ valueWithDefault }}
         </span>
@@ -98,7 +103,6 @@ const emit = defineEmits(['update:value']);
 const updateValue = (newValue) => {
   emit('update:value', newValue);
 };
-
 </script>
 
 <style lang="scss" scoped>
