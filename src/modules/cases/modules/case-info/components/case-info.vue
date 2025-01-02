@@ -33,6 +33,8 @@
 
     <div class="opened-card-input-grid">
       <editable-field
+        color="info"
+        :icon="itemInstance?.source?.type"
         :edit-mode="editMode"
         :label="t('cases.source')"
         :value="itemInstance.source?.name"

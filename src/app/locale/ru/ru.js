@@ -158,6 +158,7 @@ export default {
     deadlines: 'Сроки',
     createdAt: 'Создано',
     ratingComment: 'Комментарий к оценке',
+    caseResult: 'Результат обращения',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
