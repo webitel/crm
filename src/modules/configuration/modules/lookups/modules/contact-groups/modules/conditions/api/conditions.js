@@ -80,7 +80,11 @@ const getCondition = async ({ itemId: id }) => {
 
 const preRequestHandler = (item) => {
   if (!item.group) return item;
-  if(isEmpty(item.assignee)) delete item.assignee; ///переписати
+  if (!isEmpty(item.assignee)) {
+    item.assignee = item.assignee.id;
+  } else {
+    item.assignee = 0;
+  }
   return {
     ...item,
     group: item.group.id,
@@ -118,8 +122,13 @@ const addCondition = async ({ itemInstance, parentId }) => {
 };
 
 const patchCondition = async ({ parentId, changes }) => {
+
+  const item = applyTransform(changes, [
+    camelToSnake(),
+  ]);
+
   try {
-    const response = await dynamicGroupConditionsService.updateCondition2(parentId, changes);
+    const response = await dynamicGroupConditionsService.updateCondition2(parentId, item);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

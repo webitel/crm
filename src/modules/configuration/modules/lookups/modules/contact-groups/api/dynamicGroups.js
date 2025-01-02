@@ -14,19 +14,29 @@ import applyTransform, {
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { DynamicGroupsApiFactory } from 'webitel-sdk';
+import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
 const dynamicContactGroupsService = new DynamicGroupsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group'];
+const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group', 'assignee'];
 
 const preRequestHandler = (item) => {
+  if (!isEmpty(item.defaultGroup)) {
+    item.defaultGroup = item.defaultGroup.id;
+  } else {
+    item.defaultGroup = 0;
+  }
+
+  if (item.assignee) {
+    item.assignee = item.assignee.id;
+  }
+
   return {
     ...item,
     type: item.type.toUpperCase(),
-    defaultGroup: item.defaultGroup.id,
   }
 };
 

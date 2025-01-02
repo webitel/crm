@@ -35,7 +35,7 @@
         :text="textEmpty"
       />
 
-      <wt-table-transition v-if="dataList.length && !isLoading">
+      <div v-if="dataList.length && !isLoading">
         <wt-table
           :data="dataList"
           :headers="headers"
@@ -75,7 +75,7 @@
             />
           </template>
         </wt-table>
-      </wt-table-transition>
+      </div>
       <filter-pagination
         :namespace="filtersNamespace"
         :next="isNext"
@@ -85,6 +85,7 @@
 </template>
 
 <script setup>
+import { moveArrayElement } from '@vueuse/integrations/useSortable';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -93,14 +94,14 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
-import { onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import filters from '../modules/filters/store/filters.js';
-import WtTableTransition from '@webitel/ui-sdk/src/components/on-demand/wt-table-transition/wt-table-transition.vue';
+import { useDestroyableSortable } from '@webitel/ui-sdk/src/composables/useDestroyableSortable/useDestroyableSortable';
+import ConditionsAPI from '../api/conditions.js';
 
 const props = defineProps({
   namespace: {
@@ -140,6 +141,7 @@ const {
   restoreFilters,
   subscribe,
   flushSubscribers,
+  filtersValue,
 } = useTableFilters(tableNamespace);
 
 subscribe({
@@ -148,10 +150,6 @@ subscribe({
 });
 
 restoreFilters();
-
-onUnmounted(() => {
-  flushSubscribers();
-});
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -165,7 +163,43 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, error, isLoading });
+
+const SortableWrapper = ref(null);
+const page = computed(() => filtersValue.value.page);
+
+const { initSortable, destroySortable, reloadSortable } = useDestroyableSortable(SortableWrapper, {
+  onEnd: async ({ newIndex, oldIndex }) => {
+    if (newIndex === oldIndex) return;
+    await ConditionsAPI.patch({
+      parentId: dataList.value[oldIndex].id,
+      changes: {
+        position: {
+          currentPosition: (oldIndex) * page.value,
+          targetPosition: (newIndex) * page.value,
+        },
+      },
+    });
+    await loadData();
+    destroySortable();
+    initSortable();
+  },
+});
+
+onMounted (() => {
+  setTimeout(() => {
+    const element = document.querySelector('.wt-table__body');
+
+    SortableWrapper.value = element;
+    initSortable();
+  }, 500);
+});
+
+onUnmounted(() => {
+  flushSubscribers();
+  destroySortable();
+});
+
 </script>
 
 <style lang="scss" scoped>
