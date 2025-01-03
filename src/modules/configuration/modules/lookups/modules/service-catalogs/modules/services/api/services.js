@@ -19,7 +19,7 @@ const servicesService = new ServicesApiFactory(configuration, '', instance);
 
 const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
 
-const getServicesList = async (params) => {
+const getServicesList = async ({ rootId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const {
@@ -29,7 +29,7 @@ const getServicesList = async (params) => {
     sort,
     id,
     q,
-  } = applyTransform(params, [
+  } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
@@ -43,7 +43,9 @@ const getServicesList = async (params) => {
       sort,
       id,
       q,
-      'rootId',
+      rootId,
+      undefined,
+      fields
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
