@@ -124,7 +124,7 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { onUnmounted } from 'vue';
+import { onUnmounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
@@ -134,6 +134,7 @@ import ConditionPopup from './opened-sla-condition-popup.vue';
 import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
+import deepEqual from 'deep-equal';
 
 const props = defineProps({
   namespace: {
@@ -173,6 +174,7 @@ const {
 
 const {
   namespace: filtersNamespace,
+  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -208,12 +210,20 @@ const {
 
 const refresh = () => {
   // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' needs to be updated [WTEL-5711]
+  // because 'selected' value needs cleaned
 
   resetState();
   loadData();
 };
 
+watch(() => filtersValue.value, (newValue, oldValue) => {
+  // https://webitel.atlassian.net/browse/WTEL-5744
+  // because 'selected' value needs cleaned when changing filters
+
+  if(!deepEqual(newValue, oldValue)) {
+    resetState();
+  }
+});
 </script>
 
 <style lang="scss" scoped>

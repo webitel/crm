@@ -1,5 +1,6 @@
 <template>
   <wt-popup
+    class="opened-sla-condition-popup"
     :shown="!!conditionId"
     size="sm"
     @close="close"
@@ -8,7 +9,7 @@
       {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
     <template #main>
-      <form>
+      <form class="opened-card-input-grid opened-card-input-grid--1-col">
         <wt-input
           :value="itemInstance.name"
           :label="t('reusable.name')"
@@ -23,21 +24,24 @@
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
         />
-        <wt-timepicker
-          :label="t('lookups.slas.reactionTime')"
-          :value="itemInstance.reactionTime"
-          format="hh:mm"
-          required
-          @input="setItemProp({ path: 'reactionTime', value: $event })"
-        />
+        <div class="opened-sla-condition-popup__wrapper">
+          <wt-timepicker
+            :label="t('lookups.slas.reactionTime')"
+            :value="itemInstance.reactionTime"
+            format="hh:mm"
+            required
+            @input="setItemProp({ path: 'reactionTime', value: $event })"
+          />
 
-        <wt-timepicker
-          :label="t('lookups.slas.resolutionTime')"
-          :value="itemInstance.resolutionTime"
-          format="hh:mm"
-          required
-          @input="setItemProp({ path: 'resolutionTime', value: $event })"
-        />
+          <wt-timepicker
+            :label="t('lookups.slas.resolutionTime')"
+            :value="itemInstance.resolutionTime"
+            format="hh:mm"
+            required
+            @input="setItemProp({ path: 'resolutionTime', value: $event })"
+          />
+        </div>
+
       </form>
     </template>
     <template #actions>
@@ -130,4 +134,8 @@ watch(() => conditionId.value, (value) => {
 </script>
 
 <style lang="scss" scoped>
+.opened-sla-condition-popup__wrapper {
+  display: flex;
+  justify-content: space-between;
+}
 </style>
