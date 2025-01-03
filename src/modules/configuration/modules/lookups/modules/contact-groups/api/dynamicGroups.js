@@ -1,17 +1,11 @@
 import {
-  getDefaultGetListResponse,
-  getDefaultGetParams,
   getDefaultInstance, getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
-  merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
-  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { DynamicGroupsApiFactory } from 'webitel-sdk';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
@@ -24,11 +18,8 @@ const dynamicContactGroupsService = new DynamicGroupsApiFactory(configuration, '
 const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group', 'assignee'];
 
 const preRequestHandler = (item) => {
-  if (!isEmpty(item.defaultGroup)) {
-    item.defaultGroup = item.defaultGroup.id;
-  } else {
-    item.defaultGroup = 0;
-  }
+
+  item.defaultGroup = !isEmpty(item.defaultGroup) ? item.defaultGroup.id : 0;
 
   if (item.assignee) {
     item.assignee = item.assignee.id;

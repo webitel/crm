@@ -5,8 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        hide-primary
         :secondary-action="close"
+        hide-primary
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -123,6 +123,9 @@
 </template>
 
 <script setup>
+import { computed, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -136,9 +139,6 @@ import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, onUnmounted, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
 

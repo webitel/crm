@@ -49,16 +49,16 @@
 </template>
 
 <script setup>
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
+import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
 import ContactGroupsAPI from '../../../api/contactGroups.js';
 import TypesContactGroups from '../../../enums/TypeContactGroups.enum.js';
-import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
 
 const props = defineProps({
   namespace: {
@@ -68,7 +68,6 @@ const props = defineProps({
 });
 const emit = defineEmits(['load-data']);
 const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
 
 const {
@@ -108,7 +107,7 @@ async function loadStaticContactGroupsList(params) {
 }
 
 async function loadContacts(params) {
-  return await ContactsAPI.getLookup({ ...params, groupId: itemInstance.value.group.id });
+  return await ContactsAPI.getLookup({ ...params, groupId: itemInstance.value.group?.id });
 }
 
 async function setGroups(value) {

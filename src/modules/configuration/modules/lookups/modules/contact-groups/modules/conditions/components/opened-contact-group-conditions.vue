@@ -1,5 +1,5 @@
 <template>
-  <section class="table-page opened-sla-conditions">
+  <section class="table-page opened-contact-group-conditions">
     <condition-popup
       :namespace="namespace"
       @load-data="loadData"
@@ -25,9 +25,7 @@
 
     <wt-loader v-show="isLoading" />
 
-    <div
-      class="table-section__table-wrapper"
-    >
+    <div class="table-section__table-wrapper">
 
       <wt-empty
         v-show="showEmpty"
@@ -40,8 +38,6 @@
           :data="dataList"
           :headers="headers"
           :selected="selected"
-          sortable
-          @sort="sort"
           @update:selected="setSelected"
         >
           <template #expression="{ item }">
@@ -54,14 +50,9 @@
             {{ item.assignee.name }}
           </template>
           <template #actions="{ item }">
-            <wt-tooltip>
-              <template #activator>
-                <wt-icon-btn
-                  icon="move"
-                />
-              </template>
-              {{ t('iconHints.draggable') }}
-            </wt-tooltip>
+            <wt-icon-btn
+              icon="move"
+            />
             <wt-icon-action
               action="edit"
               @click="router.push({ ...route, params: { conditionId: item.id } })"
@@ -85,7 +76,10 @@
 </template>
 
 <script setup>
-import { moveArrayElement } from '@vueuse/integrations/useSortable';
+import { onMounted, onUnmounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import Sortable, { Swap } from 'sortablejs';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -94,14 +88,16 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
-import { onMounted, onUnmounted, ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useDestroyableSortable } from '@webitel/ui-sdk/src/composables/useDestroyableSortable/useDestroyableSortable';
+import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 import ConditionsAPI from '../api/conditions.js';
+
+const sortableConfig = {
+  swap: true,
+  animation: 150,
+  easing: 'cubic-bezier(1, 0, 0, 1)',
+};
 
 const props = defineProps({
   namespace: {
@@ -131,7 +127,6 @@ const {
   error,
   loadData,
   deleteData,
-  sort,
   setSelected,
   onFilterEvent,
 } = useTableStore(namespace);
@@ -141,7 +136,6 @@ const {
   restoreFilters,
   subscribe,
   flushSubscribers,
-  filtersValue,
 } = useTableFilters(tableNamespace);
 
 subscribe({
@@ -165,46 +159,73 @@ const {
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
-const SortableWrapper = ref(null);
-const page = computed(() => filtersValue.value.page);
-
-const { initSortable, destroySortable, reloadSortable } = useDestroyableSortable(SortableWrapper, {
-  onEnd: async ({ newIndex, oldIndex }) => {
-    if (newIndex === oldIndex) return;
-    await ConditionsAPI.patch({
-      parentId: dataList.value[oldIndex].id,
-      changes: {
-        position: {
-          currentPosition: (oldIndex) * page.value,
-          targetPosition: (newIndex) * page.value,
-        },
-      },
-    });
-    await loadData();
-    destroySortable();
-    initSortable();
-  },
-});
-
-onMounted (() => {
-  setTimeout(() => {
-    const element = document.querySelector('.wt-table__body');
-
-    SortableWrapper.value = element;
-    initSortable();
-  }, 500);
-});
-
 onUnmounted(() => {
   flushSubscribers();
-  destroySortable();
 });
+
+//тут додам посилання на таску де розпишу чому саме так
+
+function setPosition(newIndex, list) {
+  if (newIndex === 0) return {
+    currentPosition: dataList.value[0].id,
+    targetPosition: 0,
+
+  };
+
+  if (newIndex === list.length - 1) return {
+    currentPosition: 0,
+    targetPosition: dataList.value[dataList.value.length - 1].id,
+
+  };
+  return {
+    currentPosition: list[newIndex - 1].id,
+    targetPosition: list[newIndex + 1].id,
+  };
+}
+
+function initSortable(wrapper) {
+  new Sortable(wrapper, {
+
+    ...sortableConfig,
+
+    async onEnd({ oldIndex, newIndex }) {
+      const updatedDataList = [...dataList.value];
+
+      const [movedItem] = updatedDataList.splice(oldIndex, 1);
+      updatedDataList.splice(newIndex, 0, movedItem);
+
+      await ConditionsAPI.patch({
+        parentId: dataList.value[oldIndex].id,
+        changes: {
+          position: setPosition(newIndex, updatedDataList),
+        },
+      });
+      await loadData();
+    },
+  });
+}
+
+function callSortable() {
+  setTimeout(() => {
+    const wrapper = document.querySelector('.wt-table__body');
+    initSortable(wrapper);
+  }, 500);
+}
+
+watch(dataList, () => callSortable());
+onMounted(() => {
+  if(dataList.value.length) {
+    callSortable();
+    Sortable.mount(new Swap());
+  }
+}, { once: true });
 
 </script>
 
 <style lang="scss" scoped>
-.opened-sla-conditions__priorities {
-  display: flex;
-  gap: var(--spacing-xs);
+.opened-contact-group-conditions {
+  :deep(.wt-table .sortable-swap-highlight) {
+    background: var(--primary-color);
+  }
 }
 </style>
