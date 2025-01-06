@@ -181,5 +181,5 @@ function closeCommunicationPopup() {
 </script>
 
 <style lang="scss" scoped>
-@use '../../_shared/css/contact-communication-tab';
+@import '../../_shared/css/contact-communication-tab';
 </style>
