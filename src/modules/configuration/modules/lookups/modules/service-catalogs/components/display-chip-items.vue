@@ -1,29 +1,29 @@
 <template>
-  {{ displayText(getFirstItemName()) }}
+  <div class="display-chip-items">
+    {{ displayText(getFirstItemName()) }}
 
-  <wt-tooltip
-    v-if="displayList.length"
-    :triggers="['click']"
-  >
-    <template #activator>
-      <wt-chip class="chip-items">
-        +{{ displayList.length }}
-      </wt-chip>
-    </template>
-
-    <div
-      v-for="({ name, id }) of displayList"
-      :key="id"
+    <wt-tooltip
+      v-if="displayList.length"
+      :triggers="['click']"
     >
-      {{ name }}
-    </div>
-  </wt-tooltip>
+      <template #activator>
+        <wt-chip>
+          +{{ displayList.length }}
+        </wt-chip>
+      </template>
+
+      <div
+        v-for="({ name, id }) of displayList"
+        :key="id"
+      >
+        {{ name }}
+      </div>
+    </wt-tooltip>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import TimelineRowInitiator
-  from '../../../../../../contacts/modules/timeline/components/utils/timeline-row-initiator.vue';
 
 const EMPTY_CELL = '-'
 
@@ -33,6 +33,7 @@ const props = defineProps({
     required: true,
   },
 })
+
 const getFirstItemName = () => {
   if(!props.items?.length) return EMPTY_CELL;
 
@@ -43,11 +44,14 @@ const displayList = computed(() => {
 
   return props.items.slice(1);
 })
-const displayText = (text) => text ? text : EMPTY_CELL;
+
+const displayText = (text) => text && EMPTY_CELL;
 </script>
 
 <style lang="scss" scoped>
-.chip-items {
-  margin-left: var(--spacing-xs);
+.display-chip-items {
+  display: flex;
+  align-items: center;
+  gap: var(--spaacing-xs);
 }
 </style>
