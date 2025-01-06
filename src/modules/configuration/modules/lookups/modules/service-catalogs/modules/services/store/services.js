@@ -4,7 +4,7 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import CatalogsAPI from '../api/service-catalogs.js';
+import ServicesAPI from '../api/services.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
 
@@ -14,34 +14,35 @@ const resetTableState = {
   error: {},
   isLoading: false,
   isNextPage: false,
+  rootId: null,
 };
 
 const resetCardState = {
   itemId: '',
+  rootId: null,
   itemInstance: {
     name: '',
     code: '',
-    sla: {},
-    statuses: '',
-    teams: [],
-    skills: [],
-    status: {},
-    prefix: '',
-    closeReason: {},
-    description: '',
-    services: [],
     state: true,
+    description: '',
   },
 };
 
+const actions = {
+  SELECT_ROOT: async ({ commit }, { rootId }) => {
+    commit('SET', { path: 'rootId', value: rootId });
+  },
+}
+
 const api = createApiStoreModule({
   state: {
-    api: CatalogsAPI,
+    api: ServicesAPI,
   },
 });
 
 const table = createTableStoreModule({
   state: { _resettable: resetTableState, headers },
+  actions,
   modules: {
     filters,
     api,
@@ -50,16 +51,17 @@ const table = createTableStoreModule({
 
 const card = createCardStoreModule({
   state: { _resettable: resetCardState },
+  actions,
   modules: {
     api,
   },
 });
 
-const catalogs = createBaseStoreModule({
+const services = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default catalogs;
+export default services;
