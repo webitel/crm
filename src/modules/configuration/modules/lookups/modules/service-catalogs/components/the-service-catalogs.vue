@@ -266,7 +266,7 @@ const changeState = async (item) => {
 
   item.state = !item.state;
 }
-const displayText = (text) => text ? text : EMPTY_CELL;
+const displayText = (text) => text && EMPTY_CELL;
 
 watch(() => filtersValue.value, () => {
   resetState();

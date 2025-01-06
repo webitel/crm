@@ -1,6 +1,6 @@
 <template>
   <div class="display-chip-items">
-    {{ displayText(getFirstItemName()) }}
+    {{ displayText(firstItemName) }}
 
     <wt-tooltip
       v-if="displayList.length"
@@ -34,11 +34,12 @@ const props = defineProps({
   },
 })
 
-const getFirstItemName = () => {
+const firstItemName = computed(() => {
   if(!props.items?.length) return EMPTY_CELL;
 
   return props.items[0]?.name
-};
+});
+
 const displayList = computed(() => {
   if(!props.items?.length) return [];
 
