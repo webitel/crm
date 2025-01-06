@@ -6,7 +6,7 @@
     :triggers="['click']"
   >
     <template #activator>
-      <wt-chip class="display-chip">
+      <wt-chip class="chip-items">
         +{{ displayList.length }}
       </wt-chip>
     </template>
@@ -47,7 +47,7 @@ const displayText = (text) => text ? text : EMPTY_CELL;
 </script>
 
 <style lang="scss" scoped>
-.display-chip {
+.chip-items {
   margin-left: var(--spacing-xs);
 }
 </style>
