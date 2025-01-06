@@ -135,6 +135,10 @@ export default {
       skills: 'Skills',
     },
 
+    service: {
+      service: 'Service | Services',
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
   },

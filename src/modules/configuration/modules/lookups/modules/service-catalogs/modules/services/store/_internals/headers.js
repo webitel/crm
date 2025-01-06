@@ -9,6 +9,13 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
+    value: 'code',
+    locale: 'lookups.serviceCatalogs.code',
+    show: true,
+    field: 'code',
+    sort: SortSymbols.NONE,
+  },
+  {
     value: 'description',
     locale: 'vocabulary.description',
     show: true,

@@ -14,12 +14,10 @@ const resetTableState = {
   error: {},
   isLoading: false,
   isNextPage: false,
-  rootId: null,
 };
 
 const resetCardState = {
   itemId: '',
-  rootId: null,
   itemInstance: {
     name: '',
     code: '',
@@ -41,7 +39,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: { _resettable: resetTableState, headers },
+  state: { _resettable: resetTableState, headers, rootId: null },
   actions,
   modules: {
     filters,
@@ -50,7 +48,7 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState },
+  state: { _resettable: resetCardState, rootId: null },
   actions,
   modules: {
     api,
