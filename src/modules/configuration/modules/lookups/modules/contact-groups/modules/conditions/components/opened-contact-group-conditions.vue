@@ -18,7 +18,7 @@
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH]"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
-        @click:refresh="loadData"
+        @click:refresh="refresh"
       >
       </wt-action-bar>
     </header>
@@ -87,16 +87,18 @@ import {
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useCardStore, useTableStore } from '@webitel/ui-sdk/store';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 import ConditionsAPI from '../api/conditions.js';
 
 const sortableConfig = {
-  swap: true,
-  animation: 150,
-  easing: 'cubic-bezier(1, 0, 0, 1)',
+  swap: true, // Enable swap mode
+  swapClass: 'sortable-swap-highlight', // Class name for swap item (if swap mode is enabled)
+  animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
+  easing: 'cubic-bezier(1, 0, 0, 1)', // Easing for animation. Defaults to null. See https://easings.net/ for examples.
 };
 
 const props = defineProps({
@@ -129,12 +131,14 @@ const {
   deleteData,
   setSelected,
   onFilterEvent,
+  resetState,
 } = useTableStore(namespace);
 
 const {
   namespace: filtersNamespace,
   restoreFilters,
   subscribe,
+  filtersValue,
   flushSubscribers,
 } = useTableFilters(tableNamespace);
 
@@ -157,26 +161,38 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, undefined, error, isLoading });
 
 onUnmounted(() => {
   flushSubscribers();
 });
 
-//тут додам посилання на таску де розпишу чому саме так
+const refresh = () => {
+  // https://webitel.atlassian.net/browse/WTEL-5711
+  // because 'selected' value needs cleaned
+  resetState();
+  loadData();
+};
+
+watch(() => filtersValue.value, () => {
+  // https://webitel.atlassian.net/browse/WTEL-5744
+  // because 'selected' value needs cleaned when changing filters
+  resetState();
+});
+
+// https://webitel.atlassian.net/browse/WTEL-4740
 
 function setPosition(newIndex, list) {
   if (newIndex === 0) return {
     currentPosition: dataList.value[0].id,
     targetPosition: 0,
-
   };
 
   if (newIndex === list.length - 1) return {
     currentPosition: 0,
     targetPosition: dataList.value[dataList.value.length - 1].id,
-
   };
+
   return {
     currentPosition: list[newIndex - 1].id,
     targetPosition: list[newIndex + 1].id,
@@ -208,18 +224,21 @@ function initSortable(wrapper) {
 function callSortable() {
   setTimeout(() => {
     const wrapper = document.querySelector('.wt-table__body');
-    initSortable(wrapper);
+    if (wrapper) {
+      initSortable(wrapper);
+    }
   }, 500);
 }
 
 watch(dataList, () => callSortable());
-onMounted(() => {
-  if(dataList.value.length) {
-    callSortable();
+onMounted(async () => {
+  if (!Sortable.__pluginsMounted) {
     Sortable.mount(new Swap());
+    Sortable.__pluginsMounted = true;
   }
-}, { once: true });
 
+  callSortable();
+});
 </script>
 
 <style lang="scss" scoped>

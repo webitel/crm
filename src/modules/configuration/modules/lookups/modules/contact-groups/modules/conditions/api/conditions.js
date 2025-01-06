@@ -132,9 +132,9 @@ const patchCondition = async ({ parentId, changes }) => {
   }
 };
 
-const deleteCondition = async ({ id, parentId }) => {
+const deleteCondition = async ({ id }) => {
   try {
-    const response = await dynamicGroupConditionsService.deleteCondition(parentId, id);
+    const response = await dynamicGroupConditionsService.deleteCondition(id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

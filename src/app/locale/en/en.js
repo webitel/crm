@@ -130,7 +130,7 @@ export default {
       contactGroups: 'Contact group | Contact groups',
       defaultGroup: 'Default group',
       addGroup: 'Add group',
-      assignee: 'Assignee', //може в лібу?
+      assignee: 'Assignee',
       types: {
         [TypesContactGroupsEnum.DYNAMIC]: 'Dynamic',
         [TypesContactGroupsEnum.STATIC]: 'Static',

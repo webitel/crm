@@ -27,7 +27,7 @@
           :disabled="!itemInstance.group"
           :value="itemInstance.assignee"
           :label="t('lookups.contactGroups.assignee')"
-          :search-method="loadContacts"
+          :options="contactList"
           @input="setItemProp({ path: 'assignee', value: $event })"
         />
       </form>
@@ -49,9 +49,9 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watch, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -84,6 +84,7 @@ const {
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
+const contactList = ref([]);
 
 const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
 
@@ -118,7 +119,10 @@ async function setGroups(value) {
   }
 
   if (!IsEmpty(value)) {
-    await loadContacts();
+    const { items } = await loadContacts();
+    if(items.length) {
+      contactList.value = items;
+    }
   }
 }
 
