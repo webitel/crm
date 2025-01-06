@@ -17,7 +17,8 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'statuses', 'teams', 'skills', 'status', 'prefix', 'reason', 'description'];
+const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
 
 const getCatalogsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -40,10 +41,13 @@ const getCatalogsList = async (params) => {
     const response = await catalogsService.listCatalogs(
       page,
       size,
-      fields,
+      [...fields, 'services'],
       sort,
       id,
       q,
+      true,
+undefined,
+      servicesFieldsToSend
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
@@ -116,6 +120,20 @@ const updateCatalog = async ({ itemInstance, itemId: id }) => {
   }
 };
 
+const patchCatalog = async ({ itemInstance, itemId: id }) => {
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const item = applyTransform(itemInstance, [
+    preRequestHandler,
+    camelToSnake(),
+    sanitize(fieldsToSend)]);
+  try {
+    const response = await catalogsService.updateCatalog2(id, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const deleteCatalog = async ({ id }) => {
   try {
     const response = await catalogsService.deleteCatalog(id);
@@ -130,6 +148,7 @@ const CatalogsAPI = {
   get: getCatalog,
   add: addCatalog,
   update: updateCatalog,
+  patch: patchCatalog,
   delete: deleteCatalog,
 }
 

@@ -8,7 +8,25 @@ import CatalogsAPI from '../api/service-catalogs.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
 
-const resettableState = {
+const resetTableState = {
+  itemInstance: {
+    name: '',
+    code: '',
+    sla: {},
+    statuses: '',
+    teams: [],
+    skills: [],
+    status: {},
+    prefix: '',
+    closeReason: {},
+    description: '',
+    services: [],
+    state: true,
+  },
+};
+
+const resetCardState = {
+  itemId: '',
   itemInstance: {
     name: '',
     code: '',
@@ -32,9 +50,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers,
-  },
+  state: { _resettable: resetTableState, headers },
   modules: {
     filters,
     api,
@@ -42,7 +58,7 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resettableState },
+  state: { _resettable: resetCardState },
   modules: {
     api,
   },
