@@ -1,20 +1,29 @@
 <template>
   {{ displayText(getFirstItemName()) }}
 
-  <wt-context-menu :options="options">
+  <wt-tooltip
+    v-if="displayList.length"
+    :triggers="['click']"
+  >
     <template #activator>
-      <wt-chip
-        v-if="displayCountChipItems(items)"
-        class="display-chip"
-      >
-        {{ displayCountChipItems() }}
+      <wt-chip class="display-chip">
+        +{{ displayList.length }}
       </wt-chip>
     </template>
-  </wt-context-menu>
+
+    <div
+      v-for="({ name, id }) of displayList"
+      :key="id"
+    >
+      {{ name }}
+    </div>
+  </wt-tooltip>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+import TimelineRowInitiator
+  from '../../../../../../contacts/modules/timeline/components/utils/timeline-row-initiator.vue';
 
 const EMPTY_CELL = '-'
 
@@ -25,34 +34,16 @@ const props = defineProps({
   },
 })
 const getFirstItemName = () => {
-  if(!props.items?.length) return '';
+  if(!props.items?.length) return EMPTY_CELL;
 
   return props.items[0]?.name
 };
-const displayCountChipItems = () => {
-  if(!props.items?.length) return 0;
-
-  switch (props.items.length) {
-    case 1:
-      return 0;
-    case 2:
-      return 1;
-    default:
-      return `+${props.items.length - 1}`;
-  }
-}
-const options = computed(() => {
+const displayList = computed(() => {
   if(!props.items?.length) return [];
 
-  return props.items.slice(1).map((item) => ({
-    text: item.name
-  }));
+  return props.items.slice(1);
 })
-const displayText = (text) => {
-  if(!text) return EMPTY_CELL;
-
-  return text;
-}
+const displayText = (text) => text ? text : EMPTY_CELL;
 </script>
 
 <style lang="scss" scoped>
