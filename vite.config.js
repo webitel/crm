@@ -26,7 +26,7 @@ export default ({ mode }) => {
     },
     resolve: {
       alias: {
-        vue: '@vue/compat/dist/vue.esm-browser.prod.js',
+        vue: '@vue/compat',
       },
     },
     plugins: [

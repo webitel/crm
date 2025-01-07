@@ -37,6 +37,8 @@ const getConditionsList = async ({ parentId, ...rest }) => {
     sort,
     id,
     q,
+    slaConditionId,
+    priorityId,
   } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -53,6 +55,8 @@ const getConditionsList = async ({ parentId, ...rest }) => {
       sort,
       id,
       q,
+      slaConditionId,
+      priorityId,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),

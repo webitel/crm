@@ -63,13 +63,13 @@
               <wt-item-link
                 :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
               >
-                {{ item.id }}
+                {{ item.name }}
               </wt-item-link>
             </template>
             <template #priority="{ item }">
               {{ item.priority?.name }}
             </template>
-            <template #status="{ item }">
+            <template #statusCondition="{ item }">
               {{ item.statusCondition?.name }}
             </template>
             <template #source="{ item }">
@@ -99,7 +99,7 @@
             <template #appliedSLA="{ item }">
               {{ item.sla?.name }}
             </template>
-            <template #appliedCondition="{ item }">
+            <template #slaCondition="{ item }">
               {{ item.slaCondition?.name }}
             </template>
             <template #plannedReactionAt="{ item }">
@@ -159,7 +159,7 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, onUnmounted, } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';

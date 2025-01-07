@@ -27,7 +27,7 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import slaConditionsAPI from '../api/SLAConditionsAPI.js';
+import ConditionsAPI from '../../../../configuration/modules/lookups/modules/slas/modules/conditions/api/conditions.js';
 
 const props = defineProps({
   namespace: {
@@ -71,7 +71,7 @@ const updateSlaCondition = async (slaId, priorityId) => {
     return;
   }
   try {
-    const response = await slaConditionsAPI.getList({ slaId, priorityId });
+    const response = await ConditionsAPI.getList({ slaId, priorityId });
     //NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
     await setItemProp({ path: 'slaCondition', value: response.items[0] });
   } catch (err) {
