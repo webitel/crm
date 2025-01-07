@@ -118,14 +118,10 @@ const updateService = async ({ itemInstance, itemId: id }) => {
   }
 };
 
-const patchService = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
-  const item = applyTransform(itemInstance, [
-    preRequestHandler,
-    camelToSnake(),
-    sanitize(fieldsToSend)]);
+const patchService = async ({ changes, id }) => {
+  const body = applyTransform(changes, [sanitize(fieldsToSend), camelToSnake()]);
   try {
-    const response = await servicesService.updateService2(id, item);
+    const response = await servicesService.updateService2(id, body);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);

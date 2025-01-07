@@ -162,6 +162,7 @@ import CatalogsAPI from '../api/service-catalogs.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import DisplayChipItems from './display-chip-items.vue';
+import ServicesAPI from '../modules/services/api/services.js';
 
 const baseNamespace = 'configuration/lookups/catalogs';
 const EMPTY_CELL = '-'
@@ -262,9 +263,17 @@ const changeState = (item, index) => {
       },
       itemId: item.id,
     })
-  }
 
-  item.state = !item.state;
+    item.state = !item.state;
+  } else {
+
+    ServicesAPI.patch({
+      changes: {
+        state: !item.state,
+      },
+      id: item.id,
+    })
+  }
 }
 const displayText = (text) => {
   if(!text) return EMPTY_CELL;

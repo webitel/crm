@@ -23,4 +23,11 @@ export default [
     field: 'description',
     sort: SortSymbols.NONE,
   },
+  {
+    value: 'state',
+    locale: 'reusable.state',
+    show: true,
+    field: 'state',
+    sort: SortSymbols.NONE,
+  },
 ];

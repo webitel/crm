@@ -21,6 +21,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
+            @click:add="addNewService"
             @click:refresh="refresh"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
@@ -50,6 +51,8 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
+            :primary-action-text="primaryActionText"
+            @click:primary="addNewService"
           />
 
           <wt-loader v-show="isLoading" />
@@ -69,8 +72,11 @@
               <template #description="{ item }">
                 {{ item.description }}
               </template>
-              <template #calendar="{ item }">
-                {{ item.calendar.name }}
+              <template #state="{ item, index }">
+                <wt-switcher
+                  :value="item.state"
+                  @change="patchProperty({index, prop: 'state', value: $event})"
+                />
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
@@ -173,6 +179,7 @@ const {
   setSelected,
   onFilterEvent,
   resetState,
+  patchProperty
 } = useTableStore(baseNamespace);
 
 const {
@@ -206,8 +213,8 @@ const { close } = useClose('configuration');
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.SLAS}-card`,
-    params: { id: item.id },
+    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+    params: { id:route.params?.id, serviceId: item.id },
   });
 }
 
@@ -215,7 +222,15 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
+
+const addNewService = () => {
+  router.push({
+    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+    params: { id:route.params?.id, serviceId: 'new' },
+  })
+}
 
 const refresh = () => {
   resetState();
@@ -231,16 +246,16 @@ onUnmounted(() => {
   resetState();
 });
 
-onMounted(() => {
-  if (isNew.value) {
-    router.push({ name: `${CrmSections.SERVICE_CATALOGS}-card`, params: { id: 'new' }})
+onMounted(async () => {
+  if(isNew.value)  {
+    router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
 
   store.dispatch(`${baseNamespace}/table/SELECT_ROOT`, {
     rootId: route.params?.id,
   })
 
-  loadData();
+  await loadData();
 });
 
 initialize();
