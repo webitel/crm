@@ -9,6 +9,7 @@
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
+        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -17,6 +18,7 @@
         :label="t('vocabulary.type')"
         :options="typesSourcesOptions"
         :value="currentTypeSource"
+        :v="v.itemInstance.type"
         required
         @input="setItemProp({ path: 'type', value: $event.id })"
       />
@@ -39,6 +41,10 @@ import TypesSources from '../enums/TypesSources.enum.js';
 const props = defineProps({
   namespace: {
     type: String,
+    required: true,
+  },
+  v: {
+    type: Object,
     required: true,
   },
 });

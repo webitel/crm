@@ -6,7 +6,7 @@
       <wt-page-header
         :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="v$.$invalid"
+        :primary-disabled="v$.$invalid || itemInstance._dirty"
         :primary-text="saveText"
         :secondary-action="close"
       >

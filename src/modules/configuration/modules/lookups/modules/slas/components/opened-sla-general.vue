@@ -29,7 +29,7 @@
         @input="setItemProp({ path: 'description', value: $event })"
       />
 
-      <div class="opened-card-input-grid ">
+      <div class="opened-card-input-grid opened-sla-general__wrapper">
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
@@ -96,6 +96,10 @@ function loadCalendarsList(search) {
 .opened-sla-general {
   :deep(.wt-textarea__textarea) {
     min-height: 120px;
+  }
+
+  &__wrapper {
+    grid-row-gap: 0;
   }
 }
 </style>

@@ -22,8 +22,8 @@ const resetCardState = {
     id: '',
     name: '',
     priorities: [],
-    reactionTime: 0,
-    resolutionTime: 0,
+    reactionTime: '',
+    resolutionTime: '',
     slaId: 0,
   },
 };
