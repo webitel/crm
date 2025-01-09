@@ -71,7 +71,7 @@ const updateSlaCondition = async (slaId, priorityId) => {
     return;
   }
   try {
-    const response = await ConditionsAPI.getList({ slaId, priorityId });
+    const response = await ConditionsAPI.getList({ parentId: slaId, priorityId });
     //NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
     await setItemProp({ path: 'slaCondition', value: response.items[0] });
   } catch (err) {

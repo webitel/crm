@@ -93,7 +93,7 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'appliedCondition',
+    value: 'slaCondition',
     locale: 'cases.appliedCondition',
     show: true,
     field: 'slaCondition',

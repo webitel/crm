@@ -107,17 +107,26 @@ function getIndicatorColor(option) {
 
 const statusId = computed(() => store.getters[`${props.namespace}/service/STATUS_ID`]);
 
-const fetchStatusConditions = async (params) =>
-  await StatusConditionsAPI.getLookup({
-    ...params,
-    statusId: statusId.value,
-  });
+const fetchStatusConditions = async (params) => {
+  if (!statusId.value) {
+    return { items: [] };
+  }
+
+  try {
+    return await StatusConditionsAPI.getLookup({
+      statusId: statusId.value,
+      ...params,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
 
 async function handleSelect(value) {
   if (value.final) isResultPopup.value = true;
 
   try {
-    const statusResponse = await StatusesAPI.get({ itemId: statusId.value });
+    const statusResponse = await StatusesAPI.get({ statusId: statusId.value });
     const status = {
       id: statusResponse.id,
       name: statusResponse.name,
@@ -131,11 +140,11 @@ async function handleSelect(value) {
       value,
     });
     await CasesAPI.patch({
-      itemId: id.value,
       itemInstance: {
         statusCondition: value,
         status,
       },
+      itemId: id.value,
     });
   } catch (err) {
     throw err;

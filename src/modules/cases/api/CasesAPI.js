@@ -21,15 +21,14 @@ const configuration = getDefaultOpenAPIConfig();
 const casesService = new CasesApiFactory(configuration, '', instance);
 
 const fieldsToSend = [
-  'ver',
   'name',
   'subject',
   'description',
   'contact_info',
-  'plannedReactionAt',
-  'plannedResolveAt',
+  'planned_reaction_at',
+  'planned_resolve_at',
   'status_lookup',
-  'closeReasonLookup',
+  'close_reason_lookup',
   'author',
   'assignee',
   'reporter',
@@ -42,10 +41,11 @@ const fieldsToSend = [
   'rate',
   'timing',
   'sla_condition',
+  'difference_in_reaction',
   'sla',
   'service',
   'comments',
-  'related',
+  'related_cases',
   'links',
   'status_condition',
 ];
@@ -85,7 +85,6 @@ const getCasesList = async (params) => {
       options,
     );
 
-    console.log('response', response.data);
     const {
       items,
       next,
@@ -119,11 +118,36 @@ const deleteCase = async ({ id }) => {
   }
 };
 
+//TODO: refactor if not needed
+const preRequestHandler = (item) => {
+  return {
+    subject: item.subject,
+    description: item.description,
+    contact_info: item.contactInfo,
+    status: item.status.id,
+    author: item.author.id,
+    assignee: item.assignee.id,
+    reporter: item.reporter.id,
+    impacted: item.impacted.id,
+    group: item.group.id,
+    source: item.source.id,
+    priority: item.priority.id,
+    service: item.service.id,
+    sla: item.sla.id,
+    rate: item.rate.id,
+    close: {
+      close_result: item.close.closeResult,
+      close_reason: item.close.closeReason.id,
+    }
+  }
+};
 const updateCase = async ({ itemInstance, itemId: id }) => {
   const item = applyTransform(itemInstance, [
+    preRequestHandler,
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
+
   try {
     const response = await casesService.updateCase(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
@@ -134,6 +158,7 @@ const updateCase = async ({ itemInstance, itemId: id }) => {
 
 const addCase = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
+    preRequestHandler,
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);

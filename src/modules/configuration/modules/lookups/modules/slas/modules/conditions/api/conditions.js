@@ -28,7 +28,7 @@ const fieldsToSend = [
 ];
 
 const getConditionsList = async ({ parentId, ...rest }) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'slaConditionId', 'priorityId'];
 
   const {
     page,

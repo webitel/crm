@@ -58,12 +58,18 @@
             @sort="sort"
             @update:selected="setSelected"
           >
-            <!--TODO: replace item.id with item.name when it will be available from API-->
             <template #id="{ item }">
               <wt-item-link
                 :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
               >
-                {{ item.name }}
+                <div class="case-link-content">
+                  <wt-icon
+                    :color="item.priority?.color"
+                    icon="cases"
+                  />
+
+                  {{ item.name }}
+                </div>
               </wt-item-link>
             </template>
             <template #priority="{ item }">
@@ -159,10 +165,11 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import ServicesAPI from '../modules/service/api/ServiceAPI.js';
 import prettifyDate from '../utils/prettifyDate.js';
 
 const baseNamespace = 'cases';
@@ -254,4 +261,8 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
+.case-link-content {
+  display: flex;
+  gap: var(--spacing-xs);
+}
 </style>
