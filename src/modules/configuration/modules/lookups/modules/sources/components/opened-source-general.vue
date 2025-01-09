@@ -34,7 +34,7 @@
 import { computed } from 'vue';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import TypesSources from '../enums/TypesSources.enum.js';
+import { CasesSourceType } from 'webitel-sdk';
 
 const props = defineProps({
   namespace: {
@@ -47,7 +47,9 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-const typesSourcesOptions = computed(() => Object.values(TypesSources).map((type) => {
+const typesSourcesOptions = computed(() => Object.values(CasesSourceType)
+.filter((type) => type !== CasesSourceType.TYPEUNSPECIFIED)
+.map((type) => {
   return {
     id: type,
     name: t(`lookups.sources.types.${type}`),
