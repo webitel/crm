@@ -134,6 +134,7 @@ import ConditionPopup from './opened-sla-condition-popup.vue';
 import convertDurationWithMinutes from '@webitel/ui-sdk/src/scripts/convertDurationWithMinutes.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
+import deepEqual from 'deep-equal';
 
 const props = defineProps({
   namespace: {
@@ -215,11 +216,13 @@ const refresh = () => {
   loadData();
 };
 
-watch(() => filtersValue.value, () => {
+watch(() => filtersValue.value, (newValue, oldValue) => {
   // https://webitel.atlassian.net/browse/WTEL-5744
   // because 'selected' value needs cleaned when changing filters
 
-  resetState();
+  if(!deepEqual(newValue, oldValue)) {
+    resetState();
+  }
 });
 </script>
 

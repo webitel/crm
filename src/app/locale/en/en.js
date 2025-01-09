@@ -1,4 +1,5 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { CasesSourceType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections
@@ -7,8 +8,6 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
-import TypesSourcesEnum
-  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 import TypesContactGroupsEnum
   from '../../../modules/configuration/modules/lookups/modules/contact-groups/enums/TypeContactGroups.enum.js';
 
@@ -118,12 +117,12 @@ export default {
     sources: {
       sources: 'Case source | Case sources',
       types: {
-        [TypesSourcesEnum.CALL]: 'Call',
-        [TypesSourcesEnum.CHAT]: 'Chat',
-        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Social Media',
-        [TypesSourcesEnum.EMAIL]: 'Email',
-        [TypesSourcesEnum.API]: 'API',
-        [TypesSourcesEnum.MANUAL]: 'Manual',
+        [CasesSourceType.CALL]: 'Call',
+        [CasesSourceType.CHAT]: 'Chat',
+        [CasesSourceType.SOCIALMEDIA]: 'Social Media',
+        [CasesSourceType.EMAIL]: 'Email',
+        [CasesSourceType.API]: 'API',
+        [CasesSourceType.MANUAL]: 'Manual',
       }
     },
     contactGroups: {
@@ -135,7 +134,6 @@ export default {
         [TypesContactGroupsEnum.STATIC]: 'Static',
       },
     },
-
     [CrmSections.STATUSES]: 'Statuses',
   },
 };

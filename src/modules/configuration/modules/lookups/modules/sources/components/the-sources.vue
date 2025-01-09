@@ -73,7 +73,7 @@
               </template>
 
               <template #type="{ item }">
-                {{ t(`lookups.sources.types.${item.type}`) }}
+                {{ t(`lookups.sources.types.${item.type.toUpperCase()}`) }}
               </template>
 
               <template #description="{ item }">
@@ -125,7 +125,6 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import filters from '../modules/filters/store/filters.js';
 
 const baseNamespace = 'configuration/lookups/sources';
 
@@ -202,7 +201,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, error, isLoading });
 
 const refresh = () => {
   // https://webitel.atlassian.net/browse/WTEL-5711
