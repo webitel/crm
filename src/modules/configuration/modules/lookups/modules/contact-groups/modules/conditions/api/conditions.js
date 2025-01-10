@@ -79,11 +79,9 @@ const getCondition = async ({ itemId: id }) => {
 };
 
 const preRequestHandler = (item) => {
-  if (!item.group) return item;
-  item.assignee = !isEmpty(item.assignee) ? item.assignee.id : 0;
-
   return {
     ...item,
+    assignee: !isEmpty(item.assignee) ? item.assignee.id : 0,
     group: item.group.id,
   };
 };

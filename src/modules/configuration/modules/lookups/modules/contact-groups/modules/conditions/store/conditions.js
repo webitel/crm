@@ -8,14 +8,6 @@ import ConditionsAPI from '../api/conditions.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
-const resetTableState = {
-  dataList: [],
-  selected: [],
-  error: {},
-  isLoading: false,
-  isNextPage: false,
-};
-
 const resetCardState = {
   itemId: '',
   itemInstance: {},
@@ -41,10 +33,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers,
-    _resettable: resetTableState,
-  },
+  state: { headers },
   getters,
   modules: {
     api,

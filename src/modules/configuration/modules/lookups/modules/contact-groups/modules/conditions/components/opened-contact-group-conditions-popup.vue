@@ -13,11 +13,13 @@
         <wt-input
           :value="itemInstance.expression"
           :label="t('lookups.slas.conditions', 1)"
+          :v="v$.itemInstance.expression"
           required
           @input="setItemProp({ path: 'expression', value: $event })"
         />
         <wt-select
           :value="itemInstance.group"
+          :v="v$.itemInstance.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
           :search-method="loadStaticContactGroupsList"
           required
@@ -34,6 +36,7 @@
     </template>
     <template #actions>
       <wt-button
+        :disabled="v$.$invalid"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -53,12 +56,14 @@ import { computed, watch, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { WebitelContactsGroupType } from 'webitel-sdk';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
 import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
 import ContactGroupsAPI from '../../../api/contactGroups.js';
-import TypesContactGroups from '../../../enums/TypeContactGroups.enum.js';
 
 const props = defineProps({
   namespace: {
@@ -82,6 +87,14 @@ const {
   id,
 } = useCardStore(props.namespace);
 
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    expression: { required },
+    group: { required },
+  },
+})), { itemInstance }, { $autoDirty: true });
+v$.value.$touch();
+
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 const contactList = ref([]);
@@ -104,7 +117,7 @@ const save = async () => {
 };
 
 async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({ ...params, type: TypesContactGroups.STATIC.toUpperCase() });
+  return await ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC });
 }
 
 async function loadContacts(params) {
@@ -127,13 +140,9 @@ async function setGroups(value) {
 }
 
 async function initializePopup() {
-  try {
-    if (!isNew.value) {
-      await setId(conditionId.value);
-      await loadItem();
-    }
-  } catch (error) {
-    throw error;
+  if (!isNew.value) {
+    await setId(conditionId.value);
+    await loadItem();
   }
 }
 
