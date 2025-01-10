@@ -4,7 +4,6 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
@@ -34,8 +33,8 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            :v="v$"
             :namespace="cardNamespace"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
@@ -52,8 +51,9 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { WebitelContactsGroupType } from 'webitel-sdk';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -76,7 +76,7 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, disabledSave, saveText, initialize } = useCardComponent({
+const { isNew, pathName, saveText, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
@@ -85,11 +85,18 @@ const { isNew, pathName, disabledSave, saveText, initialize } = useCardComponent
   loadItem,
   setId,
 });
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);
 
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    name: { required },
+  },
+})), { itemInstance }, { $autoDirty: true });
+v$.value.$touch();
+
 const isDynamicGroup = computed(() => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const tabs = computed(() => {
   const general = {
@@ -139,8 +146,6 @@ const redirectToEdit = () => {
 };
 
 const save = async () => {
-  if (disabledSave.value) return;
-
   if (isNew.value) {
     if(isDynamicGroup.value) {
       const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);

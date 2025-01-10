@@ -14,9 +14,9 @@
 import { ref, computed, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import TypeContactGroups from '../enums/TypeContactGroups.enum.js';
 
 const props = defineProps({
   namespace: {
@@ -33,18 +33,18 @@ const attrs = useAttrs();
 
 const { setItemProp } = useCardStore(`${props.namespace}/card`);
 
-const options = computed(() => {
-  return Object.values(TypeContactGroups).map((type) => ({
-    value: type,
-    title: t(`lookups.contactGroups.types.${type}`),
-  }));
-});
+const options = computed(() => Object.values(WebitelContactsGroupType)
+.filter((type) => type !== WebitelContactsGroupType.GROUPTYPEUNSPECIFIED)
+.map((type) => ({
+  value: type,
+  title: t(`lookups.contactGroups.types.${type}`),
+})));
 
 const selected = ref(options.value[0]);
 
 function createGroup() {
-  router.push({ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: 'new' }});
-  setItemProp({ path: 'type', value: selected.value.value })
+  router.push({ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: 'new' } });
+  setItemProp({ path: 'type', value: selected.value.value });
 }
 
 function changeGroupType(option) {

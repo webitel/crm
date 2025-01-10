@@ -10,6 +10,7 @@
         <wt-input
           :label="t('reusable.name')"
           :value="itemInstance.name"
+          :v="v.itemInstance.name"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
@@ -39,14 +40,18 @@
 </template>
 
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import ContactGroupsAPI from '../api/contactGroups.js';
 import { WebitelContactsGroupType } from 'webitel-sdk';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import ContactGroupsAPI from '../api/contactGroups.js';
 
 const props = defineProps({
   namespace: {
     type: String,
+    required: true,
+  },
+  v: {
+    type: Object,
     required: true,
   },
 });

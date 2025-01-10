@@ -1,17 +1,11 @@
 import {
-  getDefaultGetListResponse,
-  getDefaultGetParams,
   getDefaultInstance, getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
-  merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
-  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { DynamicGroupsApiFactory } from 'webitel-sdk';
 
@@ -25,7 +19,7 @@ const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group_i
 const preRequestHandler = (item) => {
   return {
     ...item,
-    type: item.type.toUpperCase(),
+    type: item.type,
     defaultGroupId: item.defaultGroup.id,
   }
 };
