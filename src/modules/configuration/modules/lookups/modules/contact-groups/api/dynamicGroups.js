@@ -27,7 +27,7 @@ const preRequestHandler = (item) => {
 
   return {
     ...item,
-    type: item.type.toUpperCase(),
+    type: item.type,
   }
 };
 

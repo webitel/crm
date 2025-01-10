@@ -5,8 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        :secondary-action="close"
         hide-primary
+        :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="addGroup"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
                   callback: () => deleteData(selected),
@@ -84,7 +84,7 @@
               </template>
 
               <template #type="{ item }">
-                {{ t(`lookups.contactGroups.types.${item.type}`) }}
+                {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
               </template>
 
               <template #state="{ item, index }">
@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -174,12 +174,10 @@ const {
   setSelected,
   onFilterEvent,
   patchProperty,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -195,7 +193,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const { close } = useClose('configuration');
@@ -229,22 +226,6 @@ function addGroup() {
 function closeCreateGroupPopup() {
   isCreateGroupPopup.value = false;
 }
-
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
-
-  resetState();
-  loadData();
-};
-
-watch(() => filtersValue.value, () => {
-  // https://webitel.atlassian.net/browse/WTEL-5744
-  // because 'selected' value needs cleaned when changing filters
-
-  resetState();
-});
-
 </script>
 
 <style lang="scss" scoped>

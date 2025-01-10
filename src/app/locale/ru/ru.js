@@ -1,11 +1,9 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { CasesSourceType } from 'webitel-sdk';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import TypesContactGroupsEnum
-  from '../../../modules/configuration/modules/lookups/modules/contact-groups/enums/TypeContactGroups.enum.js';
-import TypesSourcesEnum
-  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -118,12 +116,12 @@ export default {
     sources: {
       sources: 'Источник обращений | Источники обращений',
       types: {
-        [TypesSourcesEnum.CALL]: 'Звонок',
-        [TypesSourcesEnum.CHAT]: 'Чат',
-        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Социальная сеть',
-        [TypesSourcesEnum.EMAIL]: 'Письмо',
-        [TypesSourcesEnum.API]: 'API',
-        [TypesSourcesEnum.MANUAL]: 'Созданное вручную',
+        [CasesSourceType.CALL]: 'Звонок',
+        [CasesSourceType.CHAT]: 'Чат',
+        [CasesSourceType.SOCIALMEDIA]: 'Социальная сеть',
+        [CasesSourceType.EMAIL]: 'Письмо',
+        [CasesSourceType.API]: 'API',
+        [CasesSourceType.MANUAL]: 'Созданное вручную',
       },
     },
     contactGroups: {
@@ -132,8 +130,8 @@ export default {
       addGroup: 'Добавить контакты',
       assignee: 'Исполнитель',
       types: {
-        [TypesContactGroupsEnum.DYNAMIC]: 'Динамическая',
-        [TypesContactGroupsEnum.STATIC]: 'Статическая',
+        [WebitelContactsGroupType.DYNAMIC]: 'Динамическая',
+        [WebitelContactsGroupType.STATIC]: 'Статическая',
       },
     },
     [CrmSections.STATUSES]: 'Статусы',

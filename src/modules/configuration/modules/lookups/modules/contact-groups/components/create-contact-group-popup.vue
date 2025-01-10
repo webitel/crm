@@ -1,7 +1,6 @@
 <template>
   <wt-selection-popup
-    v-bind="$attrs"
-    :shown="shown"
+    v-bind="attrs"
     :selected="selected"
     :options="options"
     :title="t('lookups.contactGroups.addGroup')"
@@ -12,43 +11,40 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { ref, computed, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import TypeContactGroups from '../enums/TypeContactGroups.enum.js';
-
-const { t } = useI18n();
-const router = useRouter();
-
-const selected = ref(null);
 
 const props = defineProps({
   namespace: {
     type: String,
     required: true,
   },
-  shown: {
-    type: Boolean,
-    default: false,
-  }
 });
 
 const emit = defineEmits(['close']);
 
+const { t } = useI18n();
+const router = useRouter();
+const attrs = useAttrs();
+
 const { setItemProp } = useCardStore(`${props.namespace}/card`);
 
-const options = computed(() => {
-  return Object.values(TypeContactGroups).map((type) => ({
-    value: type,
-    title: t(`lookups.contactGroups.types.${type}`),
-  }));
-});
+const options = computed(() => Object.values(WebitelContactsGroupType)
+.filter((type) => type !== WebitelContactsGroupType.GROUPTYPEUNSPECIFIED)
+.map((type) => ({
+  value: type,
+  title: t(`lookups.contactGroups.types.${type}`),
+})));
+
+const selected = ref(options.value[0]);
 
 function createGroup() {
-  router.push({ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: 'new' }});
-  setItemProp({ path: 'type', value: selected.value.value })
+  router.push({ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: 'new' } });
+  setItemProp({ path: 'type', value: selected.value.value });
 }
 
 function changeGroupType(option) {
@@ -58,10 +54,6 @@ function changeGroupType(option) {
 function close() {
   emit('close');
 }
-
-onMounted(() => {
-  selected.value = options.value[0];
-});
 </script>
 
 <style lang="scss" scoped>
