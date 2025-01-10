@@ -79,17 +79,8 @@ const getCondition = async ({ parentId, itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  if (!item.priorities) return item;
-  return {
-    ...item,
-    priorities: item.priorities?.map((priority) => priority.id),
-  };
-};
-
 const updateCondition = async ({ itemInstance, itemId: id }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -104,7 +95,6 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
 
 const addCondition = async ({ itemInstance, parentId }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
