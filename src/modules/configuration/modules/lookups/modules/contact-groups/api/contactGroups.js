@@ -39,15 +39,6 @@ const getContactGroupsList = async (params) => {
     enabled: false,
   };
 
-  const listResponseHandler = (items) => {
-    return items.map((item) => {
-      if (item.type) {
-        item.type = item.type.toLowerCase();
-      }
-      return item;
-    });
-  };
-
   const {
     page,
     size,
@@ -82,7 +73,6 @@ const getContactGroupsList = async (params) => {
     return {
       items: applyTransform(items, [
         mergeEach(defaultObject),
-        listResponseHandler,
       ]),
       next,
     };

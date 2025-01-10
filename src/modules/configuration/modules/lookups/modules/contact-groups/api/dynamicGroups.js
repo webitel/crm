@@ -8,32 +8,16 @@ import applyTransform, {
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { DynamicGroupsApiFactory } from 'webitel-sdk';
-import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
 const dynamicContactGroupsService = new DynamicGroupsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group', 'assignee'];
-
-const preRequestHandler = (item) => {
-
-  item.defaultGroup = !isEmpty(item.defaultGroup) ? item.defaultGroup.id : 0;
-
-  if (item.assignee) {
-    item.assignee = item.assignee.id;
-  }
-
-  return {
-    ...item,
-    type: item.type,
-  }
-};
+const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group'];
 
 const addDynamicContactGroup = async (itemInstance) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -49,7 +33,7 @@ const addDynamicContactGroup = async (itemInstance) => {
 };
 
 const updateDynamicContactGroup = async ({ itemInstance, itemId: id }) => {
-  const item = applyTransform(itemInstance, [preRequestHandler, camelToSnake(), sanitize(fieldsToSend)]);
+  const item = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
 
   try {
     const response = await dynamicContactGroupsService.updateDynamicGroup(id, item);
