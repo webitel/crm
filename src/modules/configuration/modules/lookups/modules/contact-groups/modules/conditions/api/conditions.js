@@ -12,7 +12,6 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { DynamicConditionsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -78,17 +77,8 @@ const getCondition = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    assignee: !isEmpty(item.assignee) ? item.assignee.id : 0,
-    group: item.group.id,
-  };
-};
-
 const updateCondition = async ({ itemInstance, itemId: id }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -103,7 +93,6 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
 
 const addCondition = async ({ itemInstance, parentId }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);

@@ -167,18 +167,18 @@ let sortableInstance = null;
 
 function setPosition(newIndex, list) {
   if (newIndex === 0) return {
-    condUp: dataList.value[0].id,
-    condDown: 0,
+    condDown: dataList.value[0].id,
+    condUp: 0,
   };
 
   if (newIndex === list.length - 1) return {
-    condUp: 0,
-    condDown: dataList.value[dataList.value.length - 1].id,
+    condDown: 0,
+    condUp: dataList.value[dataList.value.length - 1].id,
   };
 
   return {
-    condUp: list[newIndex - 1].id,
-    condDown: list[newIndex + 1].id,
+    condDown: list[newIndex - 1].id,
+    condUp: list[newIndex + 1].id,
   };
 }
 

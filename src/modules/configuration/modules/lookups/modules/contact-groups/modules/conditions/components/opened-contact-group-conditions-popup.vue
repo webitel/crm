@@ -1,6 +1,7 @@
 <template>
   <wt-popup
     :shown="!!conditionId"
+    class="opened-contact-group-conditions-popup"
     size="sm"
     @close="close"
   >
@@ -9,7 +10,7 @@
       {{ t('lookups.slas.conditions', 1).toLowerCase() }}
     </template>
     <template #main>
-      <form class="opened-card-input-grid opened-card-input-grid--1-col">
+      <form class="opened-contact-group-conditions-popup__wrapper">
         <wt-input
           :value="itemInstance.expression"
           :label="t('lookups.slas.conditions', 1)"
@@ -155,4 +156,9 @@ watch(() => conditionId.value, (value) => {
 }, { immediate: true });
 </script>
 <style lang="scss" scoped>
+.opened-contact-group-conditions-popup__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
 </style>
