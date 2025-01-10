@@ -119,7 +119,7 @@ const tabs = computed(() => {
 
   const tabs = [general];
 
-  if (!isDynamicGroup.value && id.value) tabs.push(conditions);
+  if (isDynamicGroup.value && id.value) tabs.push(conditions);
   if (id.value) tabs.push(permissions);
 
   return tabs;
@@ -156,8 +156,7 @@ const save = async () => {
     }
   } else {
     if(isDynamicGroup.value) {
-      const { id } = await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
-      await setId(id);
+      await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
       await loadItem();
     } else {
       await updateItem();
