@@ -184,18 +184,18 @@ watch(() => filtersValue.value, () => {
 
 function setPosition(newIndex, list) {
   if (newIndex === 0) return {
-    currentPosition: dataList.value[0].id,
-    targetPosition: 0,
+    condUp: dataList.value[0].id,
+    condDown: 0,
   };
 
   if (newIndex === list.length - 1) return {
-    currentPosition: 0,
-    targetPosition: dataList.value[dataList.value.length - 1].id,
+    condUp: 0,
+    condDown: dataList.value[dataList.value.length - 1].id,
   };
 
   return {
-    currentPosition: list[newIndex - 1].id,
-    targetPosition: list[newIndex + 1].id,
+    condUp: list[newIndex - 1].id,
+    condDown: list[newIndex + 1].id,
   };
 }
 
