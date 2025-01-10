@@ -1,5 +1,6 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -7,8 +8,6 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
-import TypesContactGroupsEnum
-  from '../../../modules/configuration/modules/lookups/modules/contact-groups/enums/TypeContactGroups.enum.js';
 
 export default {
   crm: 'CRM',
@@ -130,8 +129,8 @@ export default {
       defaultGroup: 'Группа по умолчанию',
       addGroup: 'Добавить контакты',
       types: {
-        [TypesContactGroupsEnum.DYNAMIC]: 'Динамическая',
-        [TypesContactGroupsEnum.STATIC]: 'Статическая',
+        [WebitelContactsGroupType.DYNAMIC]: 'Динамическая',
+        [WebitelContactsGroupType.STATIC]: 'Статическая',
       },
     },
     [CrmSections.STATUSES]: 'Статусы',

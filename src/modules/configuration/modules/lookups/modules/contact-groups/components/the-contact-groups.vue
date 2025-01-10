@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="addGroup"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
                   callback: () => deleteData(selected),
@@ -84,7 +84,7 @@
               </template>
 
               <template #type="{ item }">
-                {{ t(`lookups.contactGroups.types.${item.type}`) }}
+                {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
               </template>
 
               <template #state="{ item, index }">
@@ -174,12 +174,10 @@ const {
   setSelected,
   onFilterEvent,
   patchProperty,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -195,7 +193,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const { close } = useClose('configuration');
@@ -229,22 +226,6 @@ function addGroup() {
 function closeCreateGroupPopup() {
   isCreateGroupPopup.value = false;
 }
-
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
-
-  resetState();
-  loadData();
-};
-
-watch(() => filtersValue.value, () => {
-  // https://webitel.atlassian.net/browse/WTEL-5744
-  // because 'selected' value needs cleaned when changing filters
-
-  resetState();
-});
-
 </script>
 
 <style lang="scss" scoped>

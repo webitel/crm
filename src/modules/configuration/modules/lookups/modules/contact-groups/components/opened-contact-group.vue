@@ -51,14 +51,13 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import TypesContactGroups from '../enums/TypeContactGroups.enum.js';
-import TypeContactGroupsEnum from '../enums/TypeContactGroups.enum.js';
 import dynamicContactGroupsAPI from '../api/dynamicGroups.js';
 
 const namespace = 'configuration/lookups/contactGroups';
@@ -90,6 +89,8 @@ const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);
 
+const isDynamicGroup = computed(() => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC);
+
 const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
@@ -111,7 +112,7 @@ const tabs = computed(() => {
 
   const tabs = [general];
 
-  if (itemInstance.value.type === TypeContactGroupsEnum.DYNAMIC && id.value) tabs.push(conditions);
+  if (!isDynamicGroup.value && id.value) tabs.push(conditions);
   if (id.value) tabs.push(permissions);
 
   return tabs;
@@ -129,8 +130,6 @@ const path = computed(() => {
     { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
-
-const isDynamicGroup = computed(() => itemInstance.value.type === TypesContactGroups.DYNAMIC);
 
 const redirectToEdit = () => {
   return router.replace({

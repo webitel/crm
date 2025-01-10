@@ -92,12 +92,7 @@ const getContactGroupsList = async (params) => {
 };
 
 const getContactGroup = async ({ itemId: id }) => {
-  const itemResponseHandler = (item) => {
-    if (item.group.type) {
-      item.group.type = item.group.type.toLowerCase();
-    }
-    return item.group;
-  };
+  const itemResponseHandler = (item) => item.group;
 
   try {
     const response = await contactGroupsService.locateGroup(id, fieldsToSend);
@@ -110,17 +105,9 @@ const getContactGroup = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    type: item.type.toUpperCase(),
-  };
-};
-
 const addStaticContactGroup = async ({ itemInstance }) => {
 
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);

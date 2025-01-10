@@ -9,14 +9,6 @@ import ContactGroupsAPI from '../api/contactGroups.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters.js';
 
-const resetTableState = {
-  dataList: [],
-  selected: [],
-  error: {},
-  isLoading: false,
-  isNextPage: false,
-};
-
 const resetCardState = {
   itemId: '',
   itemInstance: {
@@ -34,7 +26,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: { _resettable: resetTableState, headers },
+  state: { headers },
   modules: {
     filters,
     api,
