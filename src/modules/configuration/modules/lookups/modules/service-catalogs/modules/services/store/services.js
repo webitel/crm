@@ -23,6 +23,9 @@ const resetCardState = {
     code: '',
     state: true,
     description: '',
+    assignee: '',
+    sla: '',
+    groups: '',
   },
 };
 

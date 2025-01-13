@@ -127,6 +127,13 @@ export default {
 
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
+      prefix: 'Префикс',
+      code: 'Код',
+      statuses: 'Статусы',
+      closureReasons: 'Причины закрытия',
+      skills: 'Навыки',
+      assignee: 'Исполнитель',
+      group: 'Группа исполнителей',
     },
 
     service: {

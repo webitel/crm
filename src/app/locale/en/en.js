@@ -133,6 +133,8 @@ export default {
       statuses: 'Statuses',
       closureReasons: 'Closure reasons',
       skills: 'Skills',
+      assignee: 'Assignee',
+      group: 'Group',
     },
 
     service: {

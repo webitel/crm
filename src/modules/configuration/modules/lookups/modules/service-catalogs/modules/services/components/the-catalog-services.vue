@@ -214,7 +214,7 @@ const { close } = useClose('configuration');
 function edit(item) {
   return router.push({
     name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
-    params: { id:route.params?.id, serviceId: item.id },
+    params: { catalogId: route.params?.id, id: item.id },
   });
 }
 
@@ -228,7 +228,7 @@ const {
 const addNewService = () => {
   router.push({
     name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
-    params: { id:route.params?.id, serviceId: 'new' },
+    params: { catalogId: route.params?.id, id: 'new' },
   })
 }
 

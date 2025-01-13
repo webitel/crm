@@ -6,9 +6,10 @@
     <template #header>
       <wt-page-header
         :hide-primary="!hasSaveActionAccess"
-        :primary-action="save"
+        :primary-action="saveService"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
+        :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -43,8 +44,13 @@ import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const { t } = useI18n();
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
 
 const baseNamespace = 'configuration/lookups/services';
 const catalogNamespace = 'configuration/lookups/catalogs';
@@ -52,10 +58,12 @@ const catalogNamespace = 'configuration/lookups/catalogs';
 const {
   id: idCatalog,
   itemInstance: itemInstanceCatalog,
+  setId,
+  loadItem,
   ...restCatalogStore
 } = useCardStore(catalogNamespace);
 
-const { isNew: isNewCatalog, pathName: pathNameCatalog, initialize: initializeCatalog } = useCardComponent({
+const { pathName: pathNameCatalog } = useCardComponent({
   ...restCatalogStore,
   id: idCatalog,
   itemInstance: itemInstanceCatalog,
@@ -65,6 +73,7 @@ const {
   namespace: cardNamespace,
   id,
   itemInstance,
+
   ...restStore
 } = useCardStore(baseNamespace);
 
@@ -86,23 +95,43 @@ const path = computed(() => {
       name: pathNameCatalog.value,
     },
     {
-      name: pathName.value,
+      name: isNew.value ? t('reusable.new') : pathName.value,
     },
   ];
 });
 
 const { close } = useClose('configuration');
 
+const catalogId = computed(() => route.params.catalogId);
+
+async function initializeCatalog() {
+  try {
+    if (catalogId.value) {
+      await setId(catalogId.value);
+      await loadItem();
+    } else {
+
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 initializeCatalog();
 initialize();
 
+const saveService = (payload) => {
+  console.log('payload', payload)
+  save(payload);
+};
+
 onMounted(async () => {
-  if(isNewCatalog.value)  {
+  if(catalogId.value === 'new')  {
     router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
 
-  store.dispatch(`${baseNamespace}/table/SELECT_ROOT`, {
-    rootId: route.params?.id,
+  store.dispatch(`${baseNamespace}/card/SELECT_ROOT`, {
+    rootId: catalogId.value,
   })
 });
 </script>

@@ -17,7 +17,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const servicesService = new ServicesApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+const fieldsToSend = ['name', 'code', 'sla', 'status', 'state', 'description', 'services']; // TODO need to add 'groups', 'assignee', because now that got error on the backend
 
 const getServicesList = async ({ rootId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -87,13 +87,19 @@ const preRequestHandler = (item) => {
   }
 };
 
-const addService = async ({ itemInstance }) => {
+const addService = async ({ itemInstance, ...rest }) => {
+
+  console.log('rootId', rest)
+
   const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
+
+  item.rootId = 45;
+
   try {
     const response = await servicesService.createService(item);
     return applyTransform(response.data, [
