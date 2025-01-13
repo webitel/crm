@@ -124,6 +124,12 @@ export default {
         [TypesSourcesEnum.MANUAL]: 'Созданное вручную',
       },
     },
+
+    priorities: {
+      priorities: 'Пріоритет | Пріоритети',
+      color: 'Колір'
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',
   },

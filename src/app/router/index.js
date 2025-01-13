@@ -28,6 +28,11 @@ import OpenedSourceGeneral
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 import OpenedSlaConditions
   from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
+import ThePriorities
+  from '../../modules/configuration/modules/lookups/modules/priorities/components/the-priorities.vue';
+import OpenedPriority
+  from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
+import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
 
 import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -172,6 +177,24 @@ const routes = [
                 path: 'general',
                 name: `${CrmSections.SOURCES}-general`,
                 component: OpenedSourceGeneral,
+              },
+            ],
+          },
+          {
+            path: 'priorities',
+            name: CrmSections.PRIORITIES,
+            component: ThePriorities,
+          },
+          {
+            path: 'priorities/:id',
+            name: `${CrmSections.PRIORITIES}-card`,
+            component: OpenedPriority,
+            redirect: { name: `${CrmSections.PRIORITIES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.PRIORITIES}-general`,
+                component: OpenedPriorityGeneral,
               },
             ],
           },
