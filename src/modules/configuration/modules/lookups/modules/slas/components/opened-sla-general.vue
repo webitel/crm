@@ -36,7 +36,7 @@
           :v="v.itemInstance.reactionTime"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'reactionTime', value: $event })"
+          @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
@@ -45,21 +45,21 @@
           :v="v.itemInstance.resolutionTime"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'resolutionTime', value: $event })"
+          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           mode="datetime"
-          @input="setItemProp({ path: 'validFrom', value: $event })"
+          @input="setItemProp({ path: 'validFrom', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
           mode="datetime"
-          @input="setItemProp({ path: 'validTo', value: $event })"
+          @input="setItemProp({ path: 'validTo', value: +$event })"
         />
       </div>
     </div>
