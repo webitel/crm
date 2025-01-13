@@ -1,4 +1,6 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { CasesSourceType } from 'webitel-sdk';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -6,7 +8,6 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
-import { CasesSourceType } from 'webitel-sdk';
 
 export default {
   crm: 'CRM',
@@ -124,7 +125,16 @@ export default {
         [CasesSourceType.MANUAL]: 'Створене вручну',
       },
     },
-    [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
+    contactGroups: {
+      contactGroups: 'Група контактів | Групи контактів',
+      defaultGroup: 'Група за замовчуванням',
+      addGroup: 'Додати контакти',
+      assignee: 'Виконавець',
+      types: {
+        [WebitelContactsGroupType.DYNAMIC]: 'Динамічна',
+        [WebitelContactsGroupType.STATIC]: 'Статична',
+      },
+    },
     [CrmSections.STATUSES]: 'Статуси',
   },
 };
