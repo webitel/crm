@@ -128,6 +128,7 @@ export default {
       contactGroups: 'Contact group | Contact groups',
       defaultGroup: 'Default group',
       addGroup: 'Add group',
+      assignee: 'Assignee',
       types: {
         [WebitelContactsGroupType.DYNAMIC]: 'Dynamic',
         [WebitelContactsGroupType.STATIC]: 'Static',

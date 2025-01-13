@@ -129,6 +129,7 @@ export default {
       contactGroups: 'Група контактів | Групи контактів',
       defaultGroup: 'Група за замовчуванням',
       addGroup: 'Додати контакти',
+      assignee: 'Виконавець',
       types: {
         [WebitelContactsGroupType.DYNAMIC]: 'Динамічна',
         [WebitelContactsGroupType.STATIC]: 'Статична',
