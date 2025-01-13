@@ -21,6 +21,7 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            :v="v$"
             :namespace="cardNamespace"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
@@ -37,6 +38,8 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
@@ -53,7 +56,16 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    name: { required },
+    type: { required },
+  },
+})), { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
+
+const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
@@ -61,6 +73,7 @@ const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardCom
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SOURCES);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const path = computed(() => {
 

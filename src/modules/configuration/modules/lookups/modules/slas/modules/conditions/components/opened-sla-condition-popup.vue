@@ -13,6 +13,7 @@
         <wt-input
           :value="itemInstance.name"
           :label="t('reusable.name')"
+          :v="v$.itemInstance.name"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
@@ -28,17 +29,19 @@
           <wt-timepicker
             :label="t('lookups.slas.reactionTime')"
             :value="itemInstance.reactionTime"
+            :v="v$.itemInstance.reactionTime"
             format="hh:mm"
             required
-            @input="setItemProp({ path: 'reactionTime', value: $event })"
+            @input="setItemProp({ path: 'reactionTime', value: +$event })"
           />
 
           <wt-timepicker
             :label="t('lookups.slas.resolutionTime')"
             :value="itemInstance.resolutionTime"
+            :v="v$.itemInstance.resolutionTime"
             format="hh:mm"
             required
-            @input="setItemProp({ path: 'resolutionTime', value: $event })"
+            @input="setItemProp({ path: 'resolutionTime', value: +$event })"
           />
         </div>
 
@@ -46,6 +49,7 @@
     </template>
     <template #actions>
       <wt-button
+        :disabled="v$.$invalid"
         @click="save">
         {{ t('reusable.save') }}
       </wt-button>
@@ -60,6 +64,8 @@
 </template>
 
 <script setup>
+import { useVuelidate } from '@vuelidate/core';
+import { minValue, required } from '@vuelidate/validators';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed, watch } from 'vue';
@@ -78,7 +84,6 @@ const props = defineProps({
 const emit = defineEmits(['load-data']);
 
 const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
 
 const {
@@ -95,6 +100,16 @@ const {
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
+
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    name: { required },
+    reactionTime: { required, minValue: minValue(1) },
+    resolutionTime: { required, minValue: minValue(1) },
+  },
+})), { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
 
 const { close } = useClose(`${CrmSections.SLAS}-conditions`);
 
