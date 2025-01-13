@@ -5,7 +5,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="v$.$invalid"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -73,6 +73,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SOURCES);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const path = computed(() => {
 

@@ -163,8 +163,6 @@ const {
 
 let sortableInstance = null;
 
-// https://webitel.atlassian.net/browse/WTEL-4740
-
 function setPosition(newIndex, list) {
   if (newIndex === 0) return {
     condDown: dataList.value[0].id,

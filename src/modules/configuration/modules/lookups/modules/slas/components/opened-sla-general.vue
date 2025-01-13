@@ -36,7 +36,7 @@
           :v="v.itemInstance.reactionTime"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'reactionTime', value: $event ? +$event : '' })"
+          @input="setItemProp({ path: 'reactionTime', value: $event })"
         />
 
         <wt-timepicker
@@ -45,7 +45,7 @@
           :v="v.itemInstance.resolutionTime"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'resolutionTime', value: $event ? +$event : '' })"
+          @input="setItemProp({ path: 'resolutionTime', value: $event })"
         />
 
         <wt-datepicker

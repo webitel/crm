@@ -32,7 +32,7 @@
             :v="v$.itemInstance.reactionTime"
             format="hh:mm"
             required
-            @input="setItemProp({ path: 'reactionTime', value: $event ? +$event : '' })"
+            @input="setItemProp({ path: 'reactionTime', value: $event })"
           />
 
           <wt-timepicker
@@ -41,7 +41,7 @@
             :v="v$.itemInstance.resolutionTime"
             format="hh:mm"
             required
-            @input="setItemProp({ path: 'resolutionTime', value: $event ? +$event : '' })"
+            @input="setItemProp({ path: 'resolutionTime', value: $event })"
           />
         </div>
 
@@ -65,7 +65,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { minValue, required } from '@vuelidate/validators';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed, watch } from 'vue';
@@ -104,8 +104,8 @@ const isNew = computed(() => conditionId.value === 'new');
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {
     name: { required },
-    reactionTime: { required },
-    resolutionTime: { required },
+    reactionTime: { required, minValue: minValue(1) },
+    resolutionTime: { required, minValue: minValue(1) },
   },
 })), { itemInstance }, { $autoDirty: true });
 

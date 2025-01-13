@@ -6,7 +6,7 @@
       <wt-page-header
         :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="v$.$invalid || itemInstance._dirty"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -53,7 +53,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, minValue } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
@@ -76,8 +76,8 @@ const v$ = useVuelidate(computed(() => ({
   itemInstance: {
     name: { required },
     calendar: { required },
-    reactionTime: { required },
-    resolutionTime: { required },
+    reactionTime: { required, minValue: minValue(1) },
+    resolutionTime: { required, minValue: minValue(1) },
   },
 })), { itemInstance }, { $autoDirty: true });
 
@@ -91,6 +91,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SLAS);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const tabs = computed(() => {
   const general = {
