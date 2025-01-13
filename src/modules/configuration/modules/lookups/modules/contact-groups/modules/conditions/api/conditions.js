@@ -12,19 +12,17 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { SLAConditionsApiFactory } from 'webitel-sdk';
+import { DynamicConditionsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const slaConditionsService = new SLAConditionsApiFactory(configuration, '', instance);
+const dynamicGroupConditionsService = new DynamicConditionsApiFactory(configuration, '', instance);
 
 const fieldsToSend = [
-  'name',
-  'priorities',
-  'sla_id',
-  'reaction_time',
-  'resolution_time',
+  'assignee',
+  'expression',
+  'group',
 ];
 
 const getConditionsList = async ({ parentId, ...rest }) => {
@@ -45,7 +43,7 @@ const getConditionsList = async ({ parentId, ...rest }) => {
     camelToSnake(),
   ]);
   try {
-    const response = await slaConditionsService.listSLAConditions(
+    const response = await dynamicGroupConditionsService.listConditions(
       parentId,
       page,
       size,
@@ -66,13 +64,13 @@ const getConditionsList = async ({ parentId, ...rest }) => {
   }
 };
 
-const getCondition = async ({ parentId, itemId: id }) => {
+const getCondition = async ({ itemId: id }) => {
   const itemResponseHandler = (item) => {
-    return item.slaCondition;
+    return item.condition;
   };
 
   try {
-    const response = await slaConditionsService.locateSLACondition(parentId, id, fieldsToSend);
+    const response = await dynamicGroupConditionsService.locateCondition(id, fieldsToSend);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -86,7 +84,7 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
   ]);
 
   try {
-    const response = await slaConditionsService.updateSLACondition(itemInstance.slaId, id, item);
+    const response = await dynamicGroupConditionsService.updateCondition(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -100,16 +98,30 @@ const addCondition = async ({ itemInstance, parentId }) => {
   ]);
 
   try {
-    const response = await slaConditionsService.createSLACondition(parentId, item);
+    const response = await dynamicGroupConditionsService.createCondition(parentId, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const deleteCondition = async ({ id, parentId }) => {
+const patchCondition = async ({ parentId, changes }) => {
+
+  const item = applyTransform(changes, [
+    camelToSnake(),
+  ]);
+
   try {
-    const response = await slaConditionsService.deleteSLACondition(parentId, id);
+    const response = await dynamicGroupConditionsService.updateCondition2(parentId, item);
+    return applyTransform(response.data, []);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const deleteCondition = async ({ id }) => {
+  try {
+    const response = await dynamicGroupConditionsService.deleteCondition(id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -120,6 +132,7 @@ const ConditionsAPI = {
   getList: getConditionsList,
   get: getCondition,
   update: updateCondition,
+  patch: patchCondition,
   delete: deleteCondition,
   add: addCondition,
 };

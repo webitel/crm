@@ -5,8 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        :secondary-action="close"
         hide-primary
+        :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -15,14 +15,14 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.sources.sources', 2) }}
+            {{ t('lookups.contactGroups.contactGroups', 2) }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
-            @click:add="router.push({ name: `${CrmSections.SOURCES}-card`, params: { id: 'new' }})"
-            @click:refresh="refresh"
+            @click:add="addGroup"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
                   callback: () => deleteData(selected),
@@ -44,9 +44,16 @@
           @close="closeDelete"
         />
 
+        <create-contact-group-popup
+          :shown="isCreateGroupPopup"
+          :namespace="baseNamespace"
+          @close="closeCreateGroupPopup"
+        />
+
         <div
           class="table-section__table-wrapper"
         >
+
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -66,18 +73,26 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SOURCES}-card`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
               </template>
 
-              <template #type="{ item }">
-                {{ t(`lookups.sources.types.${item.type.toUpperCase()}`) }}
-              </template>
-
               <template #description="{ item }">
                 {{ item.description }}
+              </template>
+
+              <template #type="{ item }">
+                {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
+              </template>
+
+              <template #state="{ item, index }">
+                <wt-switcher
+                  :disabled="!hasEditAccess"
+                  :value="item.enabled"
+                  @change="patchProperty({ item, index, prop: 'enabled', value: $event})"
+                />
               </template>
 
               <template #actions="{ item }">
@@ -108,6 +123,9 @@
 </template>
 
 <script setup>
+import { computed, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -120,13 +138,11 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { computed, onUnmounted, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
-const baseNamespace = 'configuration/lookups/sources';
+const baseNamespace = 'configuration/lookups/contactGroups';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -157,12 +173,11 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
+  patchProperty,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -178,24 +193,9 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
-const path = computed(() => [
-  { name: t('crm') },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.sources.sources', 2) },
-]);
-
 const { close } = useClose('configuration');
-
-function edit(item) {
-  return router.push({
-    name: `${CrmSections.SOURCES}-card`,
-    params: { id: item.id },
-  });
-}
 
 const {
   showEmpty,
@@ -203,20 +203,29 @@ const {
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
+const isCreateGroupPopup = ref(false);
 
-  resetState();
-  loadData();
-};
+const path = computed(() => [
+  { name: t('crm') },
+  { name: t('startPage.configuration.name'), route: '/configuration' },
+  { name: t('lookups.lookups'), route: '/configuration' },
+  { name: t('lookups.contactGroups.contactGroups', 2) },
+]);
 
-watch(() => filtersValue.value, () => {
-  // https://webitel.atlassian.net/browse/WTEL-5744
-  // because 'selected' value needs cleaned when changing filters
+function edit(item) {
+  return router.push({
+    name: `${CrmSections.CONTACT_GROUPS}-card`,
+    params: { id: item.id },
+  });
+}
 
-  resetState();
-});
+function addGroup() {
+  isCreateGroupPopup.value = true;
+}
+
+function closeCreateGroupPopup() {
+  isCreateGroupPopup.value = false;
+}
 </script>
 
 <style lang="scss" scoped>

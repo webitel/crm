@@ -4,7 +4,6 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
         :primary-disabled="v$.$invalid"
         :primary-text="saveText"
