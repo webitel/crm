@@ -16,6 +16,7 @@
     <template #actions-panel>
       <component
         :is="currentTab.filters"
+        :v="v$"
         :namespace="namespace"
       />
     </template>
@@ -33,8 +34,8 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            :v="v$"
             :namespace="cardNamespace"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
@@ -51,7 +52,6 @@ import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessContr
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
@@ -64,7 +64,6 @@ const namespace = 'configuration/lookups/closeReasonGroups';
 
 const { t } = useI18n();
 const route = useRoute();
-const router = useRouter();
 
 const {
   namespace: cardNamespace,
@@ -77,7 +76,7 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, saveText, disabledSave, save, initialize } = useCardComponent({
+const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
@@ -90,6 +89,16 @@ const { isNew, pathName, saveText, disabledSave, save, initialize } = useCardCom
 const { disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.CLOSE_REASON_GROUPS);
+
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    name: { required },
+  },
+})), { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
+
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const tabs = computed(() => {
   const general = {

@@ -129,8 +129,6 @@ const router = useRouter();
 
 const store = useStore();
 
-console.log('state', store);
-
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
 const {
@@ -157,7 +155,6 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
@@ -178,7 +175,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const path = computed(() => [
@@ -190,6 +186,12 @@ const path = computed(() => [
 
 const { close } = useClose('configuration');
 
+const {
+  showEmpty,
+  image: imageEmpty,
+  text: textEmpty,
+} = useTableEmpty({ dataList, filters, error, isLoading });
+
 function edit(item) {
   return router.push({
     name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
@@ -197,26 +199,6 @@ function edit(item) {
   });
 }
 
-const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
-
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
-
-  resetState();
-  loadData();
-};
-
-watch(() => filtersValue.value, () => {
-  // https://webitel.atlassian.net/browse/WTEL-5744
-  // because 'selected' value needs cleaned when changing filters
-
-  resetState();
-});
 </script>
 
 <style lang="scss" scoped>
