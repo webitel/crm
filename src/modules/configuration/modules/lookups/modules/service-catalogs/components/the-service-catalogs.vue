@@ -173,7 +173,7 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.serviceCatalogs.serviceCatalogs', 2), route: '/lookups/service-catalogs' },
+  { name: t('lookups.serviceCatalogs.serviceCatalogs', 2) },
 ]);
 
 const { close } = useClose('configuration');

@@ -130,6 +130,10 @@ export default {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
     },
 
+    service: {
+      service: 'Cервіси | Cервіси',
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
     [CrmSections.STATUSES]: 'Статуси',
   },

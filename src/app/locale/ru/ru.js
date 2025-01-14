@@ -129,6 +129,10 @@ export default {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
     },
 
+    service: {
+      service: 'Сервисы | Сервисы',
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',
   },
