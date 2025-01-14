@@ -17,7 +17,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const servicesService = new ServicesApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
 
 const getServicesList = async ({ rootId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -60,6 +60,8 @@ const getServicesList = async ({ rootId, ...rest }) => {
 };
 
 const getService = async ({ itemId: id }) => {
+  const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+
   const itemResponseHandler = (item) => {
     return item.service;
   };
@@ -88,7 +90,7 @@ const preRequestHandler = (item) => {
 };
 
 const addService = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -105,7 +107,6 @@ const addService = async ({ itemInstance }) => {
 };
 
 const updateService = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),

@@ -1,16 +1,25 @@
 <template>
-  {{ displayText(getFirstItemName()) }}
+  <div class="display-chip-items">
+    {{ displayText(firstItemName) }}
 
-  <wt-context-menu :options="options">
-    <template #activator>
-      <wt-chip
-        v-if="displayCountChipItems(items)"
-        class="display-chip"
+    <wt-tooltip
+      v-if="displayList.length"
+      :triggers="['click']"
+    >
+      <template #activator>
+        <wt-chip>
+          +{{ displayList.length }}
+        </wt-chip>
+      </template>
+
+      <div
+        v-for="({ name, id }) of displayList"
+        :key="id"
       >
-        {{ displayCountChipItems() }}
-      </wt-chip>
-    </template>
-  </wt-context-menu>
+        {{ name }}
+      </div>
+    </wt-tooltip>
+  </div>
 </template>
 
 <script setup>
@@ -24,39 +33,26 @@ const props = defineProps({
     required: true,
   },
 })
-const getFirstItemName = () => {
-  if(!props.items?.length) return '';
+
+const firstItemName = computed(() => {
+  if(!props.items?.length) return EMPTY_CELL;
 
   return props.items[0]?.name
-};
-const displayCountChipItems = () => {
-  if(!props.items?.length) return 0;
+});
 
-  switch (props.items.length) {
-    case 1:
-      return 0;
-    case 2:
-      return 1;
-    default:
-      return `+${props.items.length - 1}`;
-  }
-}
-const options = computed(() => {
+const displayList = computed(() => {
   if(!props.items?.length) return [];
 
-  return props.items.slice(1).map((item) => ({
-    text: item.name
-  }));
+  return props.items.slice(1);
 })
-const displayText = (text) => {
-  if(!text) return EMPTY_CELL;
 
-  return text;
-}
+const displayText = (text) => text && EMPTY_CELL;
 </script>
 
 <style lang="scss" scoped>
-.display-chip {
-  margin-left: var(--spacing-xs);
+.display-chip-items {
+  display: flex;
+  align-items: center;
+  gap: var(--spaacing-xs);
 }
 </style>
