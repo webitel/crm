@@ -31,6 +31,11 @@ const nav = reactive([
         route: 'lookups/slas',
       },
       {
+        value: CrmSections.CONTACT_GROUPS,
+        name: computed(() => t('lookups.contactGroups.contactGroups', 2)),
+        route: 'lookups/contact-groups',
+      },
+      {
         value: CrmSections.SERVICE_CATALOGS,
         name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
         route: 'lookups/service-catalogs',

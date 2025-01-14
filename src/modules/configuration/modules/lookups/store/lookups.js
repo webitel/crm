@@ -3,6 +3,7 @@ import slas from '../modules/slas/store/slas.js';
 import sources from '../modules/sources/store/sources.js';
 import catalogs from '../modules/service-catalogs/store/service-catalogs.js';
 import services from '../modules/service-catalogs/modules/services/store/services.js';
+import contactGroups from '../modules/contact-groups/store/contactGroups.js';
 
 const lookups = createBaseStoreModule({
   modules: {
@@ -10,6 +11,7 @@ const lookups = createBaseStoreModule({
     catalogs,
     sources,
     services,
+    contactGroups,
   },
 });
 

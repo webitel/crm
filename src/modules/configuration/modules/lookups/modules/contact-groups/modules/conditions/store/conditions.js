@@ -10,18 +10,11 @@ import headers from './_internals/headers.js';
 
 const resetCardState = {
   itemId: '',
-  itemInstance: {
-    id: '',
-    name: '',
-    priorities: [],
-    reactionTime: 0,
-    resolutionTime: 0,
-    slaId: 0,
-  },
+  itemInstance: {},
 };
 
 const getters = {
-  PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.slas.card.itemId,
+  PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.contactGroups.card.itemId,
 };
 
 const actions = {
@@ -40,9 +33,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers
-  },
+  state: { headers },
   getters,
   modules: {
     api,

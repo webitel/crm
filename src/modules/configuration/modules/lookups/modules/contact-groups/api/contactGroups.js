@@ -39,15 +39,6 @@ const getContactGroupsList = async (params) => {
     enabled: false,
   };
 
-  const listResponseHandler = (items) => {
-    return items.map((item) => {
-      if (item.type) {
-        item.type = item.type.toLowerCase();
-      }
-      return item;
-    });
-  };
-
   const {
     page,
     size,
@@ -55,6 +46,8 @@ const getContactGroupsList = async (params) => {
     sort,
     id,
     q,
+    name,
+    type,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -71,6 +64,8 @@ const getContactGroupsList = async (params) => {
       sort,
       id,
       q,
+      name,
+      type,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
@@ -78,7 +73,6 @@ const getContactGroupsList = async (params) => {
     return {
       items: applyTransform(items, [
         mergeEach(defaultObject),
-        listResponseHandler,
       ]),
       next,
     };
@@ -88,12 +82,7 @@ const getContactGroupsList = async (params) => {
 };
 
 const getContactGroup = async ({ itemId: id }) => {
-  const itemResponseHandler = (item) => {
-    if (item.group.type) {
-      item.group.type = item.group.type.toLowerCase();
-    }
-    return item.group;
-  };
+  const itemResponseHandler = (item) => item.group;
 
   try {
     const response = await contactGroupsService.locateGroup(id, fieldsToSend);
@@ -106,17 +95,9 @@ const getContactGroup = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    type: item.type.toUpperCase(),
-  };
-};
-
 const addStaticContactGroup = async ({ itemInstance }) => {
 
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
