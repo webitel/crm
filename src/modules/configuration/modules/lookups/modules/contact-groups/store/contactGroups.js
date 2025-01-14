@@ -1,12 +1,13 @@
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index.js';
 import {
   createApiStoreModule,
   createBaseStoreModule,
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import SlasAPI from '../api/slas.js';
+import ContactGroupsAPI from '../api/contactGroups.js';
 import headers from './_internals/headers';
-import filters from '../modules/filters/store/filters';
+import filters from '../modules/filters/store/filters.js';
 import conditions from '../modules/conditions/store/conditions';
 
 const resetCardState = {
@@ -14,17 +15,14 @@ const resetCardState = {
   itemInstance: {
     name: '',
     description: '',
-    calendar: {},
-    reactionTime: 0,
-    resolutionTime: 0,
-    validTo: 0,
-    validFrom: 0,
+    type: '',
+    enabled: true,
   },
 };
 
 const api = createApiStoreModule({
   state: {
-    api: SlasAPI,
+    api: ContactGroupsAPI,
   },
 });
 
@@ -36,19 +34,33 @@ const table = createTableStoreModule({
   },
 });
 
+const permissions = createObjectPermissionsStoreModule({
+  modules: {
+    table: {
+      getters: {
+        PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.contactGroups.card.itemId,
+      },
+      modules: {
+        api,
+      },
+    },
+  },
+});
+
 const card = createCardStoreModule({
   state: { _resettable: resetCardState },
   modules: {
     api,
     conditions,
+    permissions,
   },
 });
 
-const slas = createBaseStoreModule({
+const contactGroups = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default slas;
+export default contactGroups;
