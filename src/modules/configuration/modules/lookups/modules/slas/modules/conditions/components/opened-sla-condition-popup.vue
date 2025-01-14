@@ -25,32 +25,31 @@
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
         />
-        <div class="opened-sla-condition-popup__wrapper">
-          <wt-timepicker
-            :label="t('lookups.slas.reactionTime')"
-            :value="itemInstance.reactionTime"
-            :v="v$.itemInstance.reactionTime"
-            format="hh:mm"
-            required
-            @input="setItemProp({ path: 'reactionTime', value: +$event })"
-          />
+        <wt-timepicker
+          :label="t('lookups.slas.reactionTime')"
+          :value="itemInstance.reactionTime"
+          :v="v$.itemInstance.reactionTime"
+          format="dd:hh:mm"
+          required
+          @input="setItemProp({ path: 'reactionTime', value: +$event })"
+        />
 
-          <wt-timepicker
-            :label="t('lookups.slas.resolutionTime')"
-            :value="itemInstance.resolutionTime"
-            :v="v$.itemInstance.resolutionTime"
-            format="hh:mm"
-            required
-            @input="setItemProp({ path: 'resolutionTime', value: +$event })"
-          />
-        </div>
+        <wt-timepicker
+          :label="t('lookups.slas.resolutionTime')"
+          :value="itemInstance.resolutionTime"
+          :v="v$.itemInstance.resolutionTime"
+          format="dd:hh:mm"
+          required
+          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
+        />
 
       </form>
     </template>
     <template #actions>
       <wt-button
         :disabled="v$.$invalid"
-        @click="save">
+        @click="save"
+      >
         {{ t('reusable.save') }}
       </wt-button>
       <wt-button
@@ -124,8 +123,8 @@ const save = async () => {
     await updateItem({ itemInstance, itemId: id.value });
   }
 
-    close();
-    loadDataList();
+  close();
+  loadDataList();
 };
 
 async function initializePopup() {
@@ -149,8 +148,4 @@ watch(() => conditionId.value, (value) => {
 </script>
 
 <style lang="scss" scoped>
-.opened-sla-condition-popup__wrapper {
-  display: flex;
-  justify-content: space-between;
-}
 </style>

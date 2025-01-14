@@ -34,7 +34,7 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           :v="v.itemInstance.reactionTime"
-          format="hh:mm"
+          format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
@@ -43,7 +43,7 @@
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           :v="v.itemInstance.resolutionTime"
-          format="hh:mm"
+          format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
