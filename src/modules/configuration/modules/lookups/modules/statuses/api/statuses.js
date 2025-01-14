@@ -48,7 +48,7 @@ const getStatusesList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, []),
+      items,
       next,
     };
   } catch (err) {

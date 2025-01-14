@@ -254,9 +254,9 @@ const refresh = () => {
 
 const isRootElement = (item) => !item.root_id;
 
-const changeState = (item, index) => {
+const changeState = async (item) => {
   if(isRootElement(item)) {
-    CatalogsAPI.update({
+    await CatalogsAPI.update({
       itemInstance: {
         ...item,
         state: !item.state,
@@ -275,11 +275,7 @@ const changeState = (item, index) => {
     })
   }
 }
-const displayText = (text) => {
-  if(!text) return EMPTY_CELL;
-
-  return text;
-}
+const displayText = (text) => text && EMPTY_CELL;
 
 watch(() => filtersValue.value, () => {
   resetState();

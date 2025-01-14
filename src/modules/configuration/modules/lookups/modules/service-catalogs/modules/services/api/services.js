@@ -60,6 +60,8 @@ const getServicesList = async ({ rootId, ...rest }) => {
 };
 
 const getService = async ({ itemId: id }) => {
+  const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+
   const itemResponseHandler = (item) => {
     return item.service;
   };
@@ -87,19 +89,12 @@ const preRequestHandler = (item) => {
   }
 };
 
-const addService = async ({ itemInstance, ...rest }) => {
-
-  console.log('rootId', rest)
-
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+const addService = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
-
-  item.rootId = 45;
-
   try {
     const response = await servicesService.createService(item);
     return applyTransform(response.data, [
@@ -111,7 +106,6 @@ const addService = async ({ itemInstance, ...rest }) => {
 };
 
 const updateService = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
