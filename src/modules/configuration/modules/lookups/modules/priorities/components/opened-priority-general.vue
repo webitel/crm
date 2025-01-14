@@ -10,24 +10,30 @@
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
+        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
 
       <div class="opened-card-input-grid__color">
-        <wt-icon icon="cases" />
+        <wt-icon-wrapper
+          :color="itemInstance.color"
+          icon="cases"
+          size="xl"
+        />
 
         <wt-select
           :label="t('lookups.priorities.color')"
           :options="prioritiesColorsOptions"
           :value="currentPriorityColor"
+          :v="v.itemInstance.color"
           required
           option-label="name"
           @input="setItemProp({ path: 'color', value: $event.id })"
         >
           <template #singleLabel="{ option, optionLabel }">
             <div class="color-select-option">
-              <wt-badge :color-variable="`${option.id}-darken-2`" />
+              <color-preview :color="option.id" />
 
               {{ option[optionLabel] }}
             </div>
@@ -35,7 +41,7 @@
 
           <template #option="{ option, optionLabel }">
             <div class="color-select-option">
-              <wt-badge :color-variable="`${option.id}-darken-2`" />
+              <color-preview :color="option.id" />
 
               {{ option[optionLabel] }}
             </div>
@@ -53,15 +59,21 @@
 </template>
 
 <script setup>
-import { kebabToCamel } from '@webitel/ui-sdk/src/scripts/index.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { kebabToCamel } from '@webitel/ui-sdk/src/scripts/index.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import WtIconWrapper from '../../../../../../../app/components/utils/wt-icon-wrapper/wt-icon-wrapper.vue';
 import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
+import ColorPreview from './color-preview.vue';
 
 const props = defineProps({
   namespace: {
     type: String,
+    required: true,
+  },
+  v: {
+    type: Object,
     required: true,
   },
 });
@@ -91,25 +103,18 @@ onMounted(() => {
 .opened-card-input-grid {
   &__color {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     grid-gap: 8px;
 
     .wt-icon {
-      width: 40px;
-      height: 40px;
+      margin-top: 25px;
     }
   }
 
   .color-select-option {
     display: flex;
-    grid-gap: 8px;
+    grid-gap: 4px;
     align-items: center;
-
-    .wt-badge {
-      position: relative;
-      width: 16px;
-      height: 16px;
-    }
   }
 }
 </style>

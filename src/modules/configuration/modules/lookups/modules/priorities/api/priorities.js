@@ -60,6 +60,19 @@ const getPrioritiesList = async (params) => {
   }
 };
 
+const getPriority = async ({ itemId: id }) => {
+  const itemResponseHandler = (item) => {
+    return item.priority;
+  };
+
+  try {
+    const response = await priorityService.locatePriority(id, fieldsToSend);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const getConditionsLookup = (params) =>
   getPrioritiesList({
     ...params,
@@ -73,7 +86,21 @@ const addPriority = async ({ itemInstance, parentId }) => {
   ]);
 
   try {
-    const response = await priorityService.createPriority(item);
+    const response = await priorityService.createPriority(parentId, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const updatePriority = async ({ itemInstance, itemId: id }) => {
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+
+  try {
+    const response = await priorityService.updatePriority(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -91,6 +118,8 @@ const deletePriority = async ({ id }) => {
 
 const PrioritiesAPI = {
   getList: getPrioritiesList,
+  get: getPriority,
+  update: updatePriority,
   getLookup: getConditionsLookup,
   delete: deletePriority,
   add: addPriority,

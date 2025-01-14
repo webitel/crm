@@ -19,13 +19,11 @@
             {{ t('lookups.priorities.priorities') }}
           </h3>
 
-          <!-- TODO -->
-          <!-- :disabled:add="!hasCreateAccess"-->
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:delete="!selected.length"
             @click:add="router.push({ name: `${CrmSections.PRIORITIES}-card`, params: { id: 'new' }})"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
                   callback: () => deleteData(selected),
@@ -77,21 +75,15 @@
               </template>
 
               <template #color="{ item }">
-                <div class="table-page__badge">
-                  <wt-badge color-variable="purple-lighten-2" />
-                </div>
+                <color-preview :color="item.color" />
               </template>
 
               <template #actions="{ item }">
-                <!-- TODO-->
-                <!-- v-if="hasEditAccess"-->
                 <wt-icon-action
                   action="edit"
                   @click="edit(item)"
                 />
 
-                <!-- TODO-->
-                <!-- v-if="hasDeleteAccess"-->
                 <wt-icon-action
                   action="delete"
                   @click="askDeleteConfirmationWrapper(item)"
@@ -130,16 +122,12 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useAccessControl
-} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import ColorPreview from './color-preview.vue';
 
 const baseNamespace = 'configuration/lookups/priorities';
 
 const { t } = useI18n();
 const router = useRouter();
-
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -165,7 +153,6 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
@@ -186,7 +173,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const path = computed(() => [
@@ -217,22 +203,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
 } = useTableEmpty({ dataList, filters, error, isLoading });
-
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
-
-  resetState();
-  loadData();
-};
 </script>
 
 <style lang="scss" scoped>
-.table-page {
-  &__badge {
-    position: relative;
-    width: 20px;
-    height: 20px;
-  }
-}
 </style>
