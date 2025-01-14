@@ -119,13 +119,10 @@ const updateService = async ({ itemInstance, itemId: id }) => {
   }
 };
 
-const patchService = async ({ itemInstance, itemId: id }) => {
-  const item = applyTransform(itemInstance, [
-    preRequestHandler,
-    camelToSnake(),
-    sanitize(fieldsToSend)]);
+const patchService = async ({ changes, id }) => {
+  const body = applyTransform(changes, [sanitize(fieldsToSend), camelToSnake()]);
   try {
-    const response = await servicesService.updateService2(id, item);
+    const response = await servicesService.updateService2(id, body);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
