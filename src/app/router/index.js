@@ -1,6 +1,10 @@
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { createRouter, createWebHistory } from 'vue-router';
+import OpenedCloseReasonGroup
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
+import TheCloseReasonGroups
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/the-close-reason-groups.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
@@ -28,7 +32,10 @@ import OpenedSourceGeneral
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 import OpenedSlaConditions
   from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
-
+import OpenedCloseReasonGroups
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
+import OpenedCloseReasonGroupsGeneral
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
 import store from '../store';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 
@@ -172,6 +179,30 @@ const routes = [
                 path: 'general',
                 name: `${CrmSections.SOURCES}-general`,
                 component: OpenedSourceGeneral,
+              },
+            ],
+          },
+          {
+            path: 'close-reason-groups',
+            name: CrmSections.CLOSE_REASON_GROUPS,
+            component: TheCloseReasonGroups,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'close-reason-groups/:id',
+            name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
+            component: OpenedCloseReasonGroups,
+            redirect: { name: `${CrmSections.CLOSE_REASON_GROUPS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.CLOSE_REASON_GROUPS}-general`,
+                component: OpenedCloseReasonGroupsGeneral,
+              },
+              {
+                path: 'close-reasons/:closeReasonsId?',
+                name: `${CrmSections.CLOSE_REASON_GROUPS}-close-reasons`,
+                // component: OpenedCloseReasons,
               },
             ],
           },

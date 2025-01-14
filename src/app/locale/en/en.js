@@ -125,6 +125,11 @@ export default {
       }
     },
 
+    closeReasonGroups: {
+      closeReasonGroups: 'Close Reason Groups',
+
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
   },

@@ -30,6 +30,11 @@ const nav = reactive([
         name: computed(() => t('lookups.slas.slas', 2)),
         route: 'lookups/slas',
       },
+      {
+        value: CrmSections.CLOSE_REASON_GROUPS,
+        name: computed(() => t('lookups.closeReasonGroups.closeReasonGroups', 2)),
+        route: 'lookups/close-reason-groups',
+      },
     ],
   },
 ]);

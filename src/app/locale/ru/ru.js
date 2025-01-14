@@ -124,6 +124,12 @@ export default {
         [TypesSourcesEnum.MANUAL]: 'Созданное вручную',
       },
     },
+
+    closeReasonGroups: {
+      closeReasonGroups: '',
+
+    },
+
     [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',
   },
