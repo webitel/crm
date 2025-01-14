@@ -78,19 +78,15 @@ const getCatalog = async ({ itemId: id }) => {
 };
 
 const preRequestHandler = (item) => {
+  console.log('item', item)
   return {
     ...item,
     state: item.state ?? true,
-    sla_id: item.sla?.id,
-    status_id: item.status?.id,
-    close_reason_id: item.closeReason?.id,
-    team_ids: item.teams?.map((team) => team.id),
-    skill_ids: item.skills?.map((skill) => skill.id),
   }
 };
 
 const addCatalog = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -107,7 +103,8 @@ const addCatalog = async ({ itemInstance }) => {
 };
 
 const updateCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  console.log('itemInstance', itemInstance)
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),

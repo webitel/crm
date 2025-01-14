@@ -46,13 +46,13 @@ const displayList = computed(() => {
   return props.items.slice(1);
 })
 
-const displayText = (text) => text && EMPTY_CELL;
+const displayText = (text) => text || EMPTY_CELL;
 </script>
 
 <style lang="scss" scoped>
 .display-chip-items {
   display: flex;
   align-items: center;
-  gap: var(--spaacing-xs);
+  gap: var(--spacing-xs);
 }
 </style>

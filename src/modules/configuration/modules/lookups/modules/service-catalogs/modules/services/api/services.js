@@ -17,7 +17,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const servicesService = new ServicesApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'status', 'state', 'description', 'services']; // TODO need to add 'groups', 'assignee', because now that got error on the backend
+const fieldsToSend = ['name', 'code', 'sla', 'status', 'state', 'description', 'groups', 'assignee', 'services']; // TODO need to add  because now that got error on the backend
 
 const getServicesList = async ({ rootId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -60,7 +60,7 @@ const getServicesList = async ({ rootId, ...rest }) => {
 };
 
 const getService = async ({ itemId: id }) => {
-  const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+  const fieldsToSend = ['name', 'code', 'sla', 'state', 'prefix', 'group', 'assignee', 'description', 'catalog_id'];
 
   const itemResponseHandler = (item) => {
     return item.service;
@@ -81,11 +81,6 @@ const preRequestHandler = (item) => {
   return {
     ...item,
     state: item.state ?? true,
-    sla_id: item.sla?.id,
-    status_id: item.status?.id,
-    close_reason_id: item.closeReason?.id,
-    team_ids: item.teams?.map((team) => team.id),
-    skill_ids: item.skills?.map((skill) => skill.id),
   }
 };
 
@@ -95,6 +90,17 @@ const addService = async ({ itemInstance }) => {
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
+
+  item.root_id = 45;
+  item.catalog_id = 45;
+  item.group = {
+    id: '114',
+    name: '2222ііі'
+  }
+  item.assignee = {
+    id: '101',
+    name: '2222ііі'
+  }
   try {
     const response = await servicesService.createService(item);
     return applyTransform(response.data, [

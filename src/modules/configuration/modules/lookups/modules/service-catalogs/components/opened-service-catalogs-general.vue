@@ -9,6 +9,7 @@
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
+        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -17,6 +18,7 @@
         :label="t('lookups.serviceCatalogs.statuses')"
         :search-method="loadStatusesList"
         :value="itemInstance.status"
+        :v="v.itemInstance.status"
         required
         :clearable="false"
         @input="setItemProp({ path: 'status', value: $event })"
@@ -25,6 +27,7 @@
       <wt-input
         :label="t('lookups.serviceCatalogs.prefix')"
         :value="itemInstance.prefix"
+        :v="v.itemInstance.prefix"
         required
         @input="setItemProp({ path: 'prefix', value: $event })"
       />
@@ -33,6 +36,7 @@
         :label="t('lookups.serviceCatalogs.closureReasons')"
         :search-method="loadReasonList"
         :value="itemInstance.closeReason"
+        :v="v.itemInstance.closeReason"
         required
         :clearable="false"
         @input="setItemProp({ path: 'closeReason', value: $event })"
@@ -42,6 +46,7 @@
         :label="t('lookups.slas.slas')"
         :search-method="loadSlaList"
         :value="itemInstance.sla"
+        :v="v.itemInstance.sla"
         required
         :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
@@ -97,6 +102,10 @@ import SkillsAPI from '@webitel/ui-sdk/src/api/clients/skills/skills.js';
 const props = defineProps({
   namespace: {
     type: String,
+    required: true,
+  },
+  v: {
+    type: Object,
     required: true,
   },
   isNew: {

@@ -27,6 +27,7 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            :v="v$"
             :namespace="cardNamespace"
             :is-new="isNew"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
@@ -52,6 +53,8 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 
 const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
@@ -64,7 +67,19 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    name: { required },
+    sla: { required },
+    prefix: { required },
+    closeReason: { required },
+    status: { required },
+  },
+})), { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
+
+const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
@@ -73,6 +88,7 @@ const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardCom
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const tabs = computed(() => {
   const general = {

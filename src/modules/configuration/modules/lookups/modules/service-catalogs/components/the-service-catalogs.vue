@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="addNewCatalog"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
@@ -205,12 +205,10 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -226,7 +224,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const {
@@ -246,11 +243,6 @@ const edit = (item) => {
     params: { id: item.id },
   });
 }
-
-const refresh = () => {
-  resetState();
-  loadData();
-};
 
 const isRootElement = (item) => !item.root_id;
 
@@ -275,9 +267,6 @@ const changeState = async (item) => {
     })
   }
 }
-const displayText = (text) => text && EMPTY_CELL;
 
-watch(() => filtersValue.value, () => {
-  resetState();
-});
+const displayText = (text) => text || EMPTY_CELL;
 </script>
