@@ -3,6 +3,7 @@
     class="opened-sla-condition-popup"
     :shown="!!conditionId"
     size="sm"
+    overflow
     @close="close"
   >
     <template #title>
@@ -21,6 +22,7 @@
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
           :search-method="PrioritiesAPI.getLookup"
+          :close-on-select="false"
           multiple
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
@@ -47,7 +49,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="v$.$invalid"
+        :disabled="disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -111,6 +113,7 @@ const v$ = useVuelidate(computed(() => ({
 v$.value.$touch();
 
 const { close } = useClose(`${CrmSections.SLAS}-conditions`);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {
   emit('load-data');
