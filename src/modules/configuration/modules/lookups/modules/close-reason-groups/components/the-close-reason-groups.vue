@@ -120,7 +120,6 @@ import DeleteConfirmationPopup
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import filters from '../modules/filters/store/filters.js';
 
 const baseNamespace = 'configuration/lookups/closeReasonGroups';
 

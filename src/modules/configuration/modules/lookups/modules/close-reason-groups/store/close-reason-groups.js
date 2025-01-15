@@ -23,7 +23,7 @@ const api = createApiStoreModule({
 });
 
 const table = createTableStoreModule({
-  state: { _resettable: headers },
+  state: { headers },
   modules: {
     filters,
     api,
