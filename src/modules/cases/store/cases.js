@@ -16,7 +16,11 @@ const resettableState = {
     subject: '',
     priority: '',
     status: '',
-    source: '',
+    source: {
+      id: '',
+      name: '',
+      type: '',
+    },
     createdAt: '',
     service: '',
     about: '',
@@ -33,8 +37,9 @@ const resettableState = {
     closeReason: '',
     closeResult: '',
     rate: '',
-    statusCondition: '',
+    statusCondition: {},
     contactInfo: '',
+    closeReasonGroup: '',
   },
 };
 
@@ -72,6 +77,7 @@ const table = createTableStoreModule({
 const card = createCardStoreModule({
   state: {
     _resettable: resettableState,
+    itemInstance: resettableState.itemInstance,
     ...state,
   },
   modules: {

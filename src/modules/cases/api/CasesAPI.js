@@ -21,10 +21,12 @@ const configuration = getDefaultOpenAPIConfig();
 const casesService = new CasesApiFactory(configuration, '', instance);
 
 const fieldsToSend = [
+  'etag',
   'name',
   'subject',
   'description',
   'contact_info',
+  'created_at',
   'planned_reaction_at',
   'planned_resolve_at',
   'status_lookup',
@@ -53,7 +55,6 @@ const fieldsToSend = [
 const getCasesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'ids', 'sort', 'fields', 'filters'];
 
-  console.log(params);
   const {
     page,
     size,
@@ -118,34 +119,32 @@ const deleteCase = async ({ id }) => {
   }
 };
 
-//TODO: refactor if not needed
-const preRequestHandler = (item) => {
-  return {
-    subject: item.subject,
-    description: item.description,
-    contact_info: item.contactInfo,
-    status: item.status.id,
-    author: item.author.id,
-    assignee: item.assignee.id,
-    reporter: item.reporter.id,
-    impacted: item.impacted.id,
-    group: item.group.id,
-    source: item.source.id,
-    priority: item.priority.id,
-    service: item.service.id,
-    sla: item.sla.id,
-    rate: item.rate.id,
-    close: {
-      close_result: item.close.closeResult,
-      close_reason: item.close.closeReason.id,
-    }
-  }
-};
 const updateCase = async ({ itemInstance, itemId: id }) => {
+  const fieldsToSend = [
+    'name',
+    'subject',
+    'description',
+    'contact_info',
+    'status_lookup',
+    'close_reason_lookup',
+    'author',
+    'assignee',
+    'reporter',
+    'impacted',
+    'group',
+    'priority',
+    'source',
+    'status',
+    'close',
+    'rate',
+    'sla_condition',
+    'sla',
+    'service',
+    'status_condition',
+  ];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
-    sanitize(fieldsToSend),
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
 
   try {
@@ -157,10 +156,31 @@ const updateCase = async ({ itemInstance, itemId: id }) => {
 };
 
 const addCase = async ({ itemInstance }) => {
+  const fieldsToSend = [
+    'subject',
+    'description',
+    'contact_info',
+    'status_lookup',
+    'close_reason_lookup',
+    'author',
+    'assignee',
+    'reporter',
+    'impacted',
+    'group',
+    'priority',
+    'source',
+    'status',
+    'close',
+    'sla_condition',
+    'sla',
+    'service',
+    'status_condition',
+    'close_reason_group',
+  ];
+
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
-    sanitize(fieldsToSend),
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
   try {
     const response = await casesService.createCase(item);
@@ -170,13 +190,14 @@ const addCase = async ({ itemInstance }) => {
   }
 };
 
-const patchCase = async ({ changes, id }) => {
+const patchCase = async ({ changes, etag }) => {
+  const fieldsToSend = ['status_condition', 'status'];
   const body = applyTransform(changes, [
-    sanitize(fieldsToSend),
     camelToSnake(),
+    sanitize(fieldsToSend),
   ]);
   try {
-    const response = await casesService.updateCase(id, body);
+    const response = await casesService.updateCase(etag, body);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);

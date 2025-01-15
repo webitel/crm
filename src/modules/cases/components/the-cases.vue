@@ -11,7 +11,6 @@
       </wt-page-header>
     </template>
     <template #main>
-
       <delete-confirmation-popup
         :callback="deleteCallback"
         :delete-count="deleteCount"
@@ -41,7 +40,7 @@
               @click="deleteSelectedItems"
             />
             <template #search-bar>
-              <wt-search-bar/>
+              <wt-search-bar />
             </template>
           </wt-action-bar>
         </header>
@@ -73,13 +72,21 @@
               </wt-item-link>
             </template>
             <template #priority="{ item }">
-              {{ item.priority?.name }}
+              <span
+                :class="{ 'case-priority': !!item.priority?.color }"
+                :style="{ color: item.priority?.color }"
+              >
+                {{ item.priority?.name }}
+              </span>
             </template>
             <template #statusCondition="{ item }">
               {{ item.statusCondition?.name }}
             </template>
             <template #source="{ item }">
-              {{ item.source?.name }}
+              <wt-icon
+                color="info"
+                :icon="sourceTypeIcon(item.source.type)"
+              />
             </template>
             <template #createdAt="{ item }">
               {{ prettifyDate(item.createdAt) }}
@@ -165,11 +172,11 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, onMounted, onUnmounted } from 'vue';
+import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import ServicesAPI from '../modules/service/api/ServiceAPI.js';
 import prettifyDate from '../utils/prettifyDate.js';
 
 const baseNamespace = 'cases';
@@ -236,6 +243,11 @@ const path = computed(() => [
   },
 ]);
 
+function sourceTypeIcon(type) {
+  if (!type) return '';
+  return snakeToKebab(type.toLowerCase());
+}
+
 function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
@@ -264,5 +276,11 @@ function deleteSelectedItems() {
 .case-link-content {
   display: flex;
   gap: var(--spacing-xs);
+}
+
+//TODO: typo-body-1 bold
+.case-priority {
+  @extend %typo-body-1;
+  font-weight: bold;
 }
 </style>

@@ -36,7 +36,6 @@ const getStatusConditionsList = async ({ statusId, ...rest }) => {
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
-  console.log('statusId', statusId);
 
   try {
     const response = await statusConditionsService.listStatusConditions(

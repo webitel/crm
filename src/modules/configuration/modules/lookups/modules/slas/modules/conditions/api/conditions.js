@@ -37,8 +37,8 @@ const getConditionsList = async ({ parentId, ...rest }) => {
     sort,
     id,
     q,
-    slaConditionId,
-    priorityId,
+    sla_condition_id: slaConditionId,
+    priority_id: priorityId,
   } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),

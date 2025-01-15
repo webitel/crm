@@ -251,7 +251,7 @@ const getServicesList = async ({ rootId, ...rest }) => {
 };
 
 const getService = async ({ itemId: id }) => {
-  const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+  const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'close_reason', 'reason', 'description', 'services', 'root_id', 'catalog_id', 'group'];
 
   const itemResponseHandler = (item) => {
     return item.service;

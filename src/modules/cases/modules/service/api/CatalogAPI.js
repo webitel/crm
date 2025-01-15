@@ -296,7 +296,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
 const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
 
 const getCatalogsList = async (params) => {
@@ -341,15 +341,10 @@ const getCatalogsList = async (params) => {
 };
 
 const getCatalog = async ({ itemId: id }) => {
-  const itemResponseHandler = (item) => {
-    return item.catalog;
-  };
-
   try {
     const response = await catalogsService.locateCatalog(id, fieldsToSend);
     return applyTransform(response.data, [
       snakeToCamel(),
-      itemResponseHandler,
     ]);
   } catch (err) {
     throw applyTransform(err, [notify]);
