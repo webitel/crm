@@ -5,8 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        :secondary-action="close"
         hide-primary
+        :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
@@ -15,13 +15,13 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.slas.slas') }}
+            {{ t('lookups.contactGroups.contactGroups', 2) }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
-            @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
+            @click:add="addGroup"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
@@ -42,6 +42,12 @@
           :callback="deleteCallback"
           :delete-count="deleteCount"
           @close="closeDelete"
+        />
+
+        <create-contact-group-popup
+          :shown="isCreateGroupPopup"
+          :namespace="baseNamespace"
+          @close="closeCreateGroupPopup"
         />
 
         <div
@@ -67,17 +73,28 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
               </template>
+
               <template #description="{ item }">
                 {{ item.description }}
               </template>
-              <template #calendar="{ item }">
-                {{ item.calendar.name }}
+
+              <template #type="{ item }">
+                {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
               </template>
+
+              <template #state="{ item, index }">
+                <wt-switcher
+                  :disabled="!hasEditAccess"
+                  :value="item.enabled"
+                  @change="patchProperty({ item, index, prop: 'enabled', value: $event})"
+                />
+              </template>
+
               <template #actions="{ item }">
                 <wt-icon-action
                   v-if="hasEditAccess"
@@ -106,7 +123,7 @@
 </template>
 
 <script setup>
-import { computed, onUnmounted } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -123,9 +140,9 @@ import DeleteConfirmationPopup
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import filters from '../modules/filters/store/filters.js';
+import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
-const baseNamespace = 'configuration/lookups/slas';
+const baseNamespace = 'configuration/lookups/contactGroups';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -156,6 +173,7 @@ const {
   sort,
   setSelected,
   onFilterEvent,
+  patchProperty,
 } = useTableStore(baseNamespace);
 
 const {
@@ -177,27 +195,37 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
-const path = computed(() => [
-  { name: t('crm') },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.slas.slas', 2) },
-]);
-
 const { close } = useClose('configuration');
-
-function edit(item) {
-  return router.push({
-    name: `${CrmSections.SLAS}-card`,
-    params: { id: item.id },
-  });
-}
 
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, error, isLoading });
+
+const isCreateGroupPopup = ref(false);
+
+const path = computed(() => [
+  { name: t('crm') },
+  { name: t('startPage.configuration.name'), route: '/configuration' },
+  { name: t('lookups.lookups'), route: '/configuration' },
+  { name: t('lookups.contactGroups.contactGroups', 2) },
+]);
+
+function edit(item) {
+  return router.push({
+    name: `${CrmSections.CONTACT_GROUPS}-card`,
+    params: { id: item.id },
+  });
+}
+
+function addGroup() {
+  isCreateGroupPopup.value = true;
+}
+
+function closeCreateGroupPopup() {
+  isCreateGroupPopup.value = false;
+}
 </script>
 
 <style lang="scss" scoped>
