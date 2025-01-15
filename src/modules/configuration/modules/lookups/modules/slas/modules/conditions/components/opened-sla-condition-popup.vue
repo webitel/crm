@@ -22,6 +22,7 @@
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
           :search-method="PrioritiesAPI.getLookup"
+          :close-on-select="false"
           multiple
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
