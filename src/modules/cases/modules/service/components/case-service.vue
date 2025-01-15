@@ -131,7 +131,8 @@ async function addServiceToStore(serviceCatalogData) {
     const { service, catalog } = serviceCatalogData;
     await setServiceToStore(service);
     await setCatalogToStore(catalog);
-    //TODO: keep this so backend can work propperly
+
+    //TODO: keep this so backend can work properly until close_reason_group is removed from required
     await setItemProp({
       path: 'close_reason_group',
       value: { id: '3' },
