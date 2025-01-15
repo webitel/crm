@@ -6,7 +6,7 @@
     <template #header>
       <wt-page-header
         :hide-primary="!hasSaveActionAccess"
-        :primary-action="saveService"
+        :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
@@ -65,6 +65,7 @@ const {
 
 const { pathName: pathNameCatalog } = useCardComponent({
   ...restCatalogStore,
+  loadItem,
   id: idCatalog,
   itemInstance: itemInstanceCatalog,
 });
@@ -93,6 +94,10 @@ const path = computed(() => {
     { name: t('lookups.serviceCatalogs.serviceCatalogs', 2), route: '/lookups/service-catalogs' },
     {
       name: pathNameCatalog.value,
+      route: {
+        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        params: { id: catalogId.value }
+      }
     },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
@@ -119,11 +124,6 @@ async function initializeCatalog() {
 
 initializeCatalog();
 initialize();
-
-const saveService = (payload) => {
-  console.log('payload', payload)
-  save(payload);
-};
 
 onMounted(async () => {
   if(catalogId.value === 'new')  {

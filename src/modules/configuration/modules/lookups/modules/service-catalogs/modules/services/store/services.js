@@ -18,14 +18,15 @@ const resetTableState = {
 
 const resetCardState = {
   itemId: '',
+  rootId: '',
   itemInstance: {
     name: '',
     code: '',
     state: true,
     description: '',
-    assignee: '',
-    sla: '',
-    groups: '',
+    assignee: {},
+    sla: {},
+    group: {},
   },
 };
 

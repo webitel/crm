@@ -15,10 +15,11 @@
 
       <wt-select
         :label="t('lookups.serviceCatalogs.assignee')"
-        :search-method="loadSlaList"
+        :search-method="loadAssigneeList"
         :value="itemInstance.assignee"
-        :clearable="false"
-        @input="setItemProp({ path: 'sla', value: $event })"
+        :clearable="true"
+        :disabled="itemInstance.group?.type === WebitelContactsGroupType.DYNAMIC"
+        @input="setItemProp({ path: 'assignee', value: $event })"
       />
 
       <wt-select
@@ -32,10 +33,10 @@
 
       <wt-select
         :label="t('lookups.serviceCatalogs.group')"
-        :search-method="loadSlaList"
-        :value="itemInstance.groups"
-        :clearable="false"
-        @input="setItemProp({ path: 'sla', value: $event })"
+        :search-method="loadGroupList"
+        :value="itemInstance.group"
+        :clearable="true"
+        @input="setItemProp({ path: 'group', value: $event })"
       />
 
       <wt-input
@@ -45,6 +46,7 @@
       />
 
       <wt-switcher
+        v-if="!isNew"
         :label="t('reusable.state')"
         :value="itemInstance.state"
         @change="setItemProp({ path: 'state', value: $event })"
@@ -64,6 +66,10 @@ import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
 import SlasAPI from '../../../../slas/api/slas.js';
+import ContactGroupsAPI from '../../../../contact-groups/api/contactGroups.js';
+import { contacts } from '@webitel/ui-sdk/src/api/clients/сontacts/index.js';
+import { WebitelContactsGroupType } from 'webitel-sdk';
+
 const props = defineProps({
   namespace: {
     type: String,
@@ -79,8 +85,19 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-function loadSlaList(search) {
+const loadSlaList = (search) => {
   return SlasAPI.getLookup(search);
+}
+
+const loadGroupList = (search) => {
+  return ContactGroupsAPI.getLookup({
+    ...search,
+    fields: ['id', 'name', 'type']
+  });
+}
+
+const loadAssigneeList = (search) => {
+  return contacts.getLookup(search);
 }
 
 </script>

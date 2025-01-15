@@ -4,7 +4,7 @@ import {
   getDefaultInstance,
   getDefaultOpenAPIConfig
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import { CatalogsApiFactory } from 'webitel-sdk';
+import { CatalogsApiFactory, WebitelContactsGroupType } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
   merge, notify,
@@ -17,7 +17,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
 const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
 
 const getCatalogsList = async (params) => {
@@ -78,7 +78,6 @@ const getCatalog = async ({ itemId: id }) => {
 };
 
 const preRequestHandler = (item) => {
-  console.log('item', item)
   return {
     ...item,
     state: item.state ?? true,
@@ -103,7 +102,6 @@ const addCatalog = async ({ itemInstance }) => {
 };
 
 const updateCatalog = async ({ itemInstance, itemId: id }) => {
-  console.log('itemInstance', itemInstance)
   const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,

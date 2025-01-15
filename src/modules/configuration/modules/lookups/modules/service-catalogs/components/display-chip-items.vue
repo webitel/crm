@@ -24,8 +24,7 @@
 
 <script setup>
 import { computed } from 'vue';
-
-const EMPTY_CELL = '-'
+import { displayText, EMPTY_SYMBOL } from '../../../../../../../app/utils/displayText.js';
 
 const props = defineProps({
   items: {
@@ -35,7 +34,7 @@ const props = defineProps({
 })
 
 const firstItemName = computed(() => {
-  if(!props.items?.length) return EMPTY_CELL;
+  if(!props.items?.length) return EMPTY_SYMBOL;
 
   return props.items[0]?.name
 });
@@ -45,8 +44,6 @@ const displayList = computed(() => {
 
   return props.items.slice(1);
 })
-
-const displayText = (text) => text || EMPTY_CELL;
 </script>
 
 <style lang="scss" scoped>

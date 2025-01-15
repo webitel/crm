@@ -64,6 +64,7 @@ const {
   namespace: cardNamespace,
   id,
   itemInstance,
+  resetState,
   ...restStore
 } = useCardStore(namespace);
 
@@ -83,6 +84,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
+  resetState,
 });
 
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
@@ -121,6 +123,10 @@ const path = computed(() => {
 });
 
 initialize();
+
+if(isNew.value) {
+  resetState();
+}
 </script>
 
 <style scoped lang="scss">

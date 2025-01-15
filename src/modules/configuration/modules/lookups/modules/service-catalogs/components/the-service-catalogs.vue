@@ -163,9 +163,10 @@ import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import DisplayChipItems from './display-chip-items.vue';
 import ServicesAPI from '../modules/services/api/services.js';
+import { displayText } from '../../../../../../../app/utils/displayText.js';
 
 const baseNamespace = 'configuration/lookups/catalogs';
-const EMPTY_CELL = '-'
+
 
 const { t } = useI18n();
 const router = useRouter();
@@ -267,6 +268,4 @@ const changeState = async (item) => {
     })
   }
 }
-
-const displayText = (text) => text || EMPTY_CELL;
 </script>

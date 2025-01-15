@@ -24,6 +24,20 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
+    value: 'assignee',
+    locale: 'lookups.serviceCatalogs.assignee',
+    show: true,
+    field: 'assignee',
+    sort: SortSymbols.NONE,
+  },
+  {
+    value: 'group',
+    locale: 'lookups.serviceCatalogs.group',
+    show: true,
+    field: 'group',
+    sort: SortSymbols.NONE,
+  },
+  {
     value: 'state',
     locale: 'reusable.state',
     show: true,

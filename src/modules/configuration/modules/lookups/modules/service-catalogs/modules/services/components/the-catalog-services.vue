@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="addNewService"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
@@ -67,12 +67,41 @@
               @update:selected="setSelected"
             >
               <template #name="{ item }">
-                {{ item.name }}
+                <wt-item-link
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { id: item.id } }"
+                >
+                  {{ item.name }}
+                </wt-item-link>
               </template>
               <template #description="{ item }">
                 {{ item.description }}
               </template>
-              <template #state="{ item, index }">
+              <template
+                #group="{ item }"
+              >
+                {{ displayText(item.group?.name) }}
+              </template>
+              <template
+                #assignee="{ item }"
+              >
+                <wt-item-link
+                  v-if="item.assignee?.id"
+                  class="the-catalog-service__service-assignee"
+                  :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
+                >
+                  {{ item.assignee.name }}
+                </wt-item-link>
+                <template v-else>
+                  {{ displayText(item.assignee?.name) }}
+                </template>
+              </template>
+              <template
+                #state="
+                  {
+                    item,
+                    index
+                  }"
+              >
                 <wt-switcher
                   :value="item.state"
                   @change="patchProperty({index, prop: 'state', value: $event})"
@@ -106,7 +135,7 @@
 </template>
 
 <script setup>
-import { computed, onUnmounted, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -126,16 +155,14 @@ import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreM
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
 
-import { onMounted } from 'vue';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { useRoute } from 'vue-router';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import CatalogsAPI from '../../../api/service-catalogs.js';
+import { displayText } from '../../../../../../../../../app/utils/displayText.js';
 
 const route = useRoute();
 const store = useStore()
 
 const baseNamespace = 'configuration/lookups/services';
-const catalogNamespace = 'configuration/lookups/catalogs';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -151,17 +178,7 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-  id,
-  itemInstance,
-  ...restStore
-} = useCardStore(catalogNamespace);
-
-const { isNew, pathName, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-});
+const rootService = ref(null);
 
 const {
   namespace,
@@ -178,13 +195,11 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
   patchProperty
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -196,7 +211,9 @@ subscribe({
   callback: onFilterEvent,
 });
 
-restoreFilters();
+const rootServiceName = computed(() => {
+  return rootService.value?.name;
+});
 
 const path = computed(() => {
   return [
@@ -205,7 +222,7 @@ const path = computed(() => {
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.serviceCatalogs.serviceCatalogs', 2), route: '/lookups/service-catalogs' },
     {
-      name: pathName.value,
+      name: rootServiceName.value,
     },
   ];
 });
@@ -232,31 +249,47 @@ const addNewService = () => {
   })
 }
 
-const refresh = () => {
-  resetState();
-  loadData();
-};
+const loadRootService = async () => {
+  rootService.value = await CatalogsAPI.get({
+    itemId: route.params.id
+  })
+}
 
-watch(() => filtersValue.value, () => {
-  resetState();
-});
+const loadServices = async () => {
+  try {
+    await loadRootService();
 
-onUnmounted(() => {
-  flushSubscribers();
-  resetState();
-});
 
-onMounted(async () => {
-  if(isNew.value)  {
+  } catch {
     router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
 
-  store.dispatch(`${baseNamespace}/table/SELECT_ROOT`, {
-    rootId: route.params?.id,
+  if(!rootService.value)  {
+    router.push({ name: CrmSections.SERVICE_CATALOGS})
+  }
+
+  await store.dispatch(`${baseNamespace}/table/SELECT_ROOT`, {
+    rootId: route.params.id,
   })
 
-  await loadData();
+  await restoreFilters();
+}
+
+onUnmounted(() => {
+  flushSubscribers();
 });
 
-initialize();
+loadServices()
+
+watch(() => route.params.id, async () => {
+  await loadServices();
+});
 </script>
+
+<style scoped lang="scss">
+.the-catalog-service{
+  &__service-assignee {
+    color: var(--text-link-color) !important;
+  }
+}
+</style>

@@ -4,7 +4,7 @@ import {
   getDefaultInstance,
   getDefaultOpenAPIConfig
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import { ServicesApiFactory } from 'webitel-sdk';
+import { ServicesApiFactory, WebitelContactsGroupType } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
   merge, notify,
@@ -17,7 +17,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const servicesService = new ServicesApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'status', 'state', 'description', 'groups', 'assignee', 'services']; // TODO need to add  because now that got error on the backend
+const fieldsToSend = ['name', 'code', 'sla', 'status', 'state', 'description', 'group', 'assignee', 'services', 'root_id'];
 
 const getServicesList = async ({ rootId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -81,26 +81,19 @@ const preRequestHandler = (item) => {
   return {
     ...item,
     state: item.state ?? true,
+    assignee: item.group?.type === WebitelContactsGroupType.DYNAMIC ? {} : item.assignee,
   }
 };
 
-const addService = async ({ itemInstance }) => {
+const addService = async ({ itemInstance, rootId, }) => {
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
 
-  item.root_id = 45;
-  item.catalog_id = 45;
-  item.group = {
-    id: '114',
-    name: '2222ііі'
-  }
-  item.assignee = {
-    id: '101',
-    name: '2222ііі'
-  }
+  item.root_id = rootId;
+
   try {
     const response = await servicesService.createService(item);
     return applyTransform(response.data, [
