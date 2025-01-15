@@ -115,6 +115,7 @@ export default {
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
+
     sources: {
       sources: 'Case source | Case sources',
       types: {
@@ -126,6 +127,7 @@ export default {
         [CasesSourceType.MANUAL]: 'Manual',
       }
     },
+
     contactGroups: {
       contactGroups: 'Contact group | Contact groups',
       defaultGroup: 'Default group',
@@ -138,8 +140,10 @@ export default {
     },
 
     closeReasonGroups: {
-      closeReasonGroups: 'Close Reason Groups',
-
+      closeReasonGroups: 'Closure reasons',
+      reason: 'Reason | Reasons',
+      addCondition: 'Add a reason',
+      editCondition: 'Edit a reason',
     },
 
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',

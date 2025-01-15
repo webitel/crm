@@ -127,6 +127,7 @@ export default {
         [CasesSourceType.MANUAL]: 'Створене вручну',
       },
     },
+
     contactGroups: {
       contactGroups: 'Група контактів | Групи контактів',
       defaultGroup: 'Група за замовчуванням',
@@ -139,8 +140,10 @@ export default {
     },
 
     closeReasonGroups: {
-      closeReasonGroups: '',
-
+      closeReasonGroups: 'Причини закриття',
+      reason: 'Причина | Причини',
+      addCondition: 'Додати причину',
+      editCondition: 'Редагувати причину',
     },
 
     [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
