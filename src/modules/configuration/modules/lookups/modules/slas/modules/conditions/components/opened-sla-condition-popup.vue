@@ -21,6 +21,7 @@
         <wt-select
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
+          :v="v$.itemInstance.priorities"
           :search-method="PrioritiesAPI.getLookup"
           :close-on-select="false"
           multiple
@@ -105,6 +106,7 @@ const isNew = computed(() => conditionId.value === 'new');
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {
     name: { required },
+    priorities: { required },
     reactionTime: { required, minValue: minValue(1) },
     resolutionTime: { required, minValue: minValue(1) },
   },
