@@ -127,24 +127,6 @@ export default {
     priorities: {
       priorities: 'Priority | Priorities',
       color: 'Color',
-      colors: {
-        red: 'Red',
-        pink: 'Pink',
-        purple: 'Purple',
-        deepPurple: 'Deep purple',
-        indigo: 'Indigo',
-        blue: 'Blue',
-        lightBlue: 'Light blue',
-        cyan: 'Cyan',
-        teal: 'Teal',
-        green: 'Green',
-        lightGreen: 'Light green',
-        lime: 'Lime',
-        yellow: 'Yellow',
-        amber: 'Amber',
-        orange: 'Orange',
-        deepOrange: 'Deep orange',
-      }
     },
 
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',

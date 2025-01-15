@@ -35,7 +35,9 @@
             <div class="color-select-option">
               <color-preview :color="option.id" />
 
-              {{ option[optionLabel] }}
+              <span class="color-select-option__name">
+                {{ option[optionLabel] }}
+              </span>
             </div>
           </template>
 
@@ -43,7 +45,9 @@
             <div class="color-select-option">
               <color-preview :color="option.id" />
 
-              {{ option[optionLabel] }}
+              <span class="color-select-option__name">
+                {{ option[optionLabel] }}
+              </span>
             </div>
           </template>
         </wt-select>
@@ -61,7 +65,6 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { kebabToCamel } from '@webitel/ui-sdk/src/scripts/index.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import WtIconWrapper from '../../../../../../../app/components/utils/wt-icon-wrapper/wt-icon-wrapper.vue';
 import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
@@ -84,7 +87,7 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 const prioritiesColorsOptions = computed(() => Object.values(PrioritiesColors).map((type) => {
   return {
     id: type,
-    name: t(`lookups.priorities.colors.${kebabToCamel(type)}`),
+    name: type,
   };
 }));
 
@@ -115,6 +118,12 @@ onMounted(() => {
     display: flex;
     grid-gap: 4px;
     align-items: center;
+
+    &__name {
+      &::first-letter {
+        text-transform: uppercase;
+      }
+    }
   }
 }
 </style>
