@@ -3,6 +3,7 @@
     class="opened-sla-condition-popup"
     :shown="!!conditionId"
     size="sm"
+    overflow
     @close="close"
   >
     <template #title>
