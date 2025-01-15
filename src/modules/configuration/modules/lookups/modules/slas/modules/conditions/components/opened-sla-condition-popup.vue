@@ -49,7 +49,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="v$.$invalid"
+        :disabled="disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -113,6 +113,7 @@ const v$ = useVuelidate(computed(() => ({
 v$.value.$touch();
 
 const { close } = useClose(`${CrmSections.SLAS}-conditions`);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {
   emit('load-data');
