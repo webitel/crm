@@ -75,17 +75,8 @@ const getSla = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    calendarId: item.calendar.id,
-  }
-};
-
 const addSla = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time']; //difference with top list - field calendar_id
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -100,9 +91,7 @@ const addSla = async ({ itemInstance }) => {
 };
 
 const updateSla = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'valid_from', 'valid_to', 'calendar_id', 'reaction_time', 'resolution_time'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
   try {
