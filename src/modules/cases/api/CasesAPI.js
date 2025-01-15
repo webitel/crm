@@ -21,14 +21,9 @@ const configuration = getDefaultOpenAPIConfig();
 const casesService = new CasesApiFactory(configuration, '', instance);
 
 const fieldsToSend = [
-  'etag',
-  'name',
   'subject',
   'description',
   'contact_info',
-  'created_at',
-  'planned_reaction_at',
-  'planned_resolve_at',
   'status_lookup',
   'close_reason_lookup',
   'author',
@@ -40,16 +35,11 @@ const fieldsToSend = [
   'source',
   'status',
   'close',
-  'rate',
-  'timing',
   'sla_condition',
-  'difference_in_reaction',
   'sla',
   'service',
-  'comments',
-  'related_cases',
-  'links',
   'status_condition',
+  'close_reason_group',
 ];
 
 const getCasesList = async (params) => {
@@ -102,6 +92,37 @@ const getCasesList = async (params) => {
 };
 
 const getCase = async ({ itemId: id }) => {
+  const fieldsToSend = [
+    'etag',
+    'name',
+    'subject',
+    'description',
+    'contact_info',
+    'created_at',
+    'planned_reaction_at',
+    'planned_resolve_at',
+    'status_lookup',
+    'close_reason_lookup',
+    'author',
+    'assignee',
+    'reporter',
+    'impacted',
+    'group',
+    'priority',
+    'source',
+    'status',
+    'close',
+    'rate',
+    'timing',
+    'sla_condition',
+    'difference_in_reaction',
+    'sla',
+    'service',
+    'comments',
+    'related_cases',
+    'links',
+    'status_condition',
+  ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);
     return applyTransform(response.data, [snakeToCamel()]);
@@ -119,36 +140,16 @@ const deleteCase = async ({ id }) => {
   }
 };
 
-const updateCase = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = [
-    'name',
-    'subject',
-    'description',
-    'contact_info',
-    'status_lookup',
-    'close_reason_lookup',
-    'author',
-    'assignee',
-    'reporter',
-    'impacted',
-    'group',
-    'priority',
-    'source',
-    'status',
-    'close',
-    'rate',
-    'sla_condition',
-    'sla',
-    'service',
-    'status_condition',
-  ];
+const updateCase = async ({ itemInstance }) => {
+  const { etag } = itemInstance;
+
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
 
   try {
-    const response = await casesService.updateCase(id, item);
+    const response = await casesService.updateCase(etag, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -156,27 +157,6 @@ const updateCase = async ({ itemInstance, itemId: id }) => {
 };
 
 const addCase = async ({ itemInstance }) => {
-  const fieldsToSend = [
-    'subject',
-    'description',
-    'contact_info',
-    'status_lookup',
-    'close_reason_lookup',
-    'author',
-    'assignee',
-    'reporter',
-    'impacted',
-    'group',
-    'priority',
-    'source',
-    'status',
-    'close',
-    'sla_condition',
-    'sla',
-    'service',
-    'status_condition',
-    'close_reason_group',
-  ];
 
   const item = applyTransform(itemInstance, [
     camelToSnake(),

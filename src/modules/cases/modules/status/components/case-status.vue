@@ -138,7 +138,7 @@ async function patchStatusCondition(condition) {
       await CasesAPI.patch({
         changes: {
           statusCondition: condition,
-          status,
+          status: status.value,
         },
         etag: itemInstance.value.etag,
       });
