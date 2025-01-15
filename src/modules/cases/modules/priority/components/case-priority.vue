@@ -44,23 +44,6 @@ const {
 } = useCardStore(props.namespace);
 
 const editMode = inject('editMode');
-
-// TODO: replace p1 with actual priority id after API is implemented
-// TODO: in implementation process this code seems to be unnecessary but it's left here for reference. Remove it after ALL API implementation
-// async function initializePriority() {
-//   if (!itemInstance.value.priority) {
-//     try {
-//       const priority = await PrioritiesAPI.get({ itemId: 'p1' });
-//       await setItemProp({ path: 'priority', value: priority });
-//     } catch (err) {
-//       throw err
-//     }
-//   }
-// }
-//
-// onMounted(() => {
-//   initializePriority();
-// });
 </script>
 
 <style lang="scss" scoped>

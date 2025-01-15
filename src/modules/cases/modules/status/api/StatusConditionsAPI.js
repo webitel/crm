@@ -64,7 +64,7 @@ const getStatusConditionsLookup = ({ statusId, ...rest }) => {
   return getStatusConditionsList({
     statusId,
     rest,
-    fields: ['id', 'name', 'initial', 'final'],
+    fields: rest.fields || ['id', 'name'],
   });
 };
 
