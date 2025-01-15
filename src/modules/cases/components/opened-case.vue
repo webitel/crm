@@ -98,8 +98,7 @@ const path = computed(() => {
       route: baseUrl,
     },
     {
-      // TODO: replace itemInstance.value?.id with item.name when it will be available from API
-      name: id.value ? `${itemInstance.value?.id} ${itemInstance.value?.subject}` : t('reusable.new'),
+      name: id.value ? `${itemInstance.value?.name} ${itemInstance.value?.subject}` : t('reusable.new'),
       route: {
         name: router.currentRoute.name,
         query: router.currentRoute.query,

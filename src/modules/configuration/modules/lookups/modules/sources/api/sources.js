@@ -70,12 +70,7 @@ const getSourcesList = async (params) => {
 };
 
 const getSource = async ({ itemId: id }) => {
-  const itemResponseHandler = (item) => {
-    if(item.source.type) {
-      item.source.type = item.source.type.toLowerCase();
-    }
-    return item.source;
-  };
+  const itemResponseHandler = (item) => item.source;
 
   try {
     const response = await sourceService.locateSource(id);
@@ -88,16 +83,8 @@ const getSource = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    type: item.type.toUpperCase(),
-  }
-};
-
 const addSource = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
@@ -113,7 +100,6 @@ const addSource = async ({ itemInstance }) => {
 
 const updateSource = async ({ itemInstance, itemId: id }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
 

@@ -28,7 +28,7 @@ const fieldsToSend = [
 ];
 
 const getConditionsList = async ({ parentId, ...rest }) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'slaConditionId', 'priorityId'];
 
   const {
     page,
@@ -37,6 +37,8 @@ const getConditionsList = async ({ parentId, ...rest }) => {
     sort,
     id,
     q,
+    sla_condition_id: slaConditionId,
+    priority_id: priorityId,
   } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -53,6 +55,8 @@ const getConditionsList = async ({ parentId, ...rest }) => {
       sort,
       id,
       q,
+      slaConditionId,
+      priorityId,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
@@ -79,17 +83,8 @@ const getCondition = async ({ parentId, itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  if (!item.priorities) return item;
-  return {
-    ...item,
-    priorities: item.priorities?.map((priority) => priority.id),
-  };
-};
-
 const updateCondition = async ({ itemInstance, itemId: id }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -104,7 +99,6 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
 
 const addCondition = async ({ itemInstance, parentId }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);

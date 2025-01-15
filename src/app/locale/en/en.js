@@ -1,4 +1,6 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { CasesSourceType } from 'webitel-sdk';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections
@@ -7,8 +9,6 @@ import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
   from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
-import TypesSourcesEnum
-  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 
 export default {
   crm: 'CRM',
@@ -113,23 +113,33 @@ export default {
       editCondition: 'Edit condition',
       addCondition: 'Add condition',
       reactionTime: 'Reaction time',
+      reactionTimeTitle: 'Reaction time (dd:hh:mm)',
       resolutionTime: 'Resolution time',
+      resolutionTimeTitle: 'Reaction time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
     sources: {
       sources: 'Case source | Case sources',
       types: {
-        [TypesSourcesEnum.CALL]: 'Call',
-        [TypesSourcesEnum.CHAT]: 'Chat',
-        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Social Media',
-        [TypesSourcesEnum.EMAIL]: 'Email',
-        [TypesSourcesEnum.API]: 'API',
-        [TypesSourcesEnum.MANUAL]: 'Manual',
+        [CasesSourceType.CALL]: 'Call',
+        [CasesSourceType.CHAT]: 'Chat',
+        [CasesSourceType.SOCIALMEDIA]: 'Social Media',
+        [CasesSourceType.EMAIL]: 'Email',
+        [CasesSourceType.API]: 'API',
+        [CasesSourceType.MANUAL]: 'Manual',
       }
     },
-
-    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
+    contactGroups: {
+      contactGroups: 'Contact group | Contact groups',
+      defaultGroup: 'Default group',
+      addGroup: 'Add group',
+      assignee: 'Assignee',
+      types: {
+        [WebitelContactsGroupType.DYNAMIC]: 'Dynamic',
+        [WebitelContactsGroupType.STATIC]: 'Static',
+      },
+    },
     [CrmSections.STATUSES]: 'Statuses',
   },
   cases: {

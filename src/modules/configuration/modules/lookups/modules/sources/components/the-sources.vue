@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="router.push({ name: `${CrmSections.SOURCES}-card`, params: { id: 'new' }})"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
                   deleted: selected,
                   callback: () => deleteData(selected),
@@ -73,7 +73,7 @@
               </template>
 
               <template #type="{ item }">
-                {{ t(`lookups.sources.types.${item.type}`) }}
+                {{ t(`lookups.sources.types.${item.type.toUpperCase()}`) }}
               </template>
 
               <template #description="{ item }">
@@ -108,6 +108,9 @@
 </template>
 
 <script setup>
+import { computed, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -120,12 +123,8 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { computed, onUnmounted, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import filters from '../modules/filters/store/filters.js';
 
 const baseNamespace = 'configuration/lookups/sources';
 
@@ -158,12 +157,10 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -179,7 +176,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const path = computed(() => [
@@ -202,22 +198,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
-
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
-
-  resetState();
-  loadData();
-};
-
-watch(() => filtersValue.value, () => {
-  // https://webitel.atlassian.net/browse/WTEL-5744
-  // because 'selected' value needs cleaned when changing filters
-
-  resetState();
-});
+} = useTableEmpty({ dataList, error, isLoading });
 </script>
 
 <style lang="scss" scoped>

@@ -133,7 +133,11 @@ async function addServiceToStore(serviceCatalogData) {
     const { service, catalog } = serviceCatalogData;
     await setServiceToStore(service);
     await setCatalogToStore(catalog);
-
+    //TODO: keep this so backend can work propperly
+    await setItemProp({
+      path: 'close_reason_group',
+      value: { id: '3' },
+    });
     await setItemProp({
       path: 'service',
       value: { id: service.id, name: service.name },
@@ -153,7 +157,7 @@ async function initializeComponent() {
     if (serviceId) {
       const serviceResponse = await ServiceAPI.get({ itemId: serviceId });
       const catalogResponse = await CatalogAPI.get({ itemId: serviceResponse.catalogId });
-      await addServiceToStore({ service: serviceResponse, catalog: catalogResponse });
+      await addServiceToStore({ service: serviceResponse, catalog: catalogResponse.catalog });
     }
   } catch (err) {
     throw err;

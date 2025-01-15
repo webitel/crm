@@ -11,7 +11,6 @@
       </wt-page-header>
     </template>
     <template #main>
-
       <delete-confirmation-popup
         :callback="deleteCallback"
         :delete-count="deleteCount"
@@ -41,7 +40,7 @@
               @click="deleteSelectedItems"
             />
             <template #search-bar>
-              <wt-search-bar/>
+              <wt-search-bar />
             </template>
           </wt-action-bar>
         </header>
@@ -58,22 +57,36 @@
             @sort="sort"
             @update:selected="setSelected"
           >
-            <!--TODO: replace item.id with item.name when it will be available from API-->
             <template #id="{ item }">
               <wt-item-link
                 :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
               >
-                {{ item.id }}
+                <div class="case-link-content">
+                  <wt-icon
+                    :color="item.priority?.color"
+                    icon="cases"
+                  />
+
+                  {{ item.name }}
+                </div>
               </wt-item-link>
             </template>
             <template #priority="{ item }">
-              {{ item.priority?.name }}
+              <span
+                :class="{ 'case-priority': !!item.priority?.color }"
+                :style="{ color: item.priority?.color }"
+              >
+                {{ item.priority?.name }}
+              </span>
             </template>
-            <template #status="{ item }">
+            <template #statusCondition="{ item }">
               {{ item.statusCondition?.name }}
             </template>
             <template #source="{ item }">
-              {{ item.source?.name }}
+              <wt-icon
+                color="info"
+                :icon="sourceTypeIcon(item.source.type)"
+              />
             </template>
             <template #createdAt="{ item }">
               {{ prettifyDate(item.createdAt) }}
@@ -99,7 +112,7 @@
             <template #appliedSLA="{ item }">
               {{ item.sla?.name }}
             </template>
-            <template #appliedCondition="{ item }">
+            <template #slaCondition="{ item }">
               {{ item.slaCondition?.name }}
             </template>
             <template #plannedReactionAt="{ item }">
@@ -159,7 +172,8 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, onUnmounted, } from 'vue';
+import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -229,6 +243,11 @@ const path = computed(() => [
   },
 ]);
 
+function sourceTypeIcon(type) {
+  if (!type) return '';
+  return snakeToKebab(type.toLowerCase());
+}
+
 function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
@@ -254,4 +273,14 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
+.case-link-content {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+//TODO: typo-body-1 bold
+.case-priority {
+  @extend %typo-body-1;
+  font-weight: bold;
+}
 </style>
