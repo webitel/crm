@@ -15,7 +15,6 @@ const state = {
   isLoading: false,
 };
 
-
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
   FILTERS: (state, getters) => getters['filters/GET_FILTERS'],

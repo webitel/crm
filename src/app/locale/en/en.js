@@ -145,8 +145,6 @@ export default {
       addCondition: 'Add a reason',
       editCondition: 'Edit a reason',
     },
-
-    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',
   },
 };

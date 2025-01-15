@@ -128,13 +128,7 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.closeReasonGroups.closeReasonGroups', 2), route: '/lookups/close-reason-groups' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
-    },
+    { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
 

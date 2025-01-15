@@ -145,8 +145,6 @@ export default {
       addCondition: 'Додати причину',
       editCondition: 'Редагувати причину',
     },
-
-    [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
     [CrmSections.STATUSES]: 'Статуси',
   },
 };

@@ -144,8 +144,6 @@ export default {
       addCondition: 'Добавить причину',
       editCondition: 'Редактировать причину',
     },
-
-    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',
   },
 };
