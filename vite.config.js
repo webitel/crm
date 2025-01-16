@@ -2,7 +2,7 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
-import {resolve} from 'path';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {

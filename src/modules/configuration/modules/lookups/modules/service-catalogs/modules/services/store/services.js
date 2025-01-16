@@ -4,35 +4,43 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import SlasAPI from '../api/slas.js';
+import ServicesAPI from '../api/services.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
-import conditions from '../modules/conditions/store/conditions';
+
+const resetTableState = {
+  dataList: [],
+  selected: [],
+  error: {},
+  isLoading: false,
+  isNextPage: false,
+};
 
 const resetCardState = {
   itemId: '',
   itemInstance: {
     name: '',
-    status: {},
-    prefix: '',
-    reasons: {},
-    sla: {},
-    team: {},
     code: '',
-    skill: {},
-    description: '',
     state: true,
+    description: '',
   },
 };
 
+const actions = {
+  SELECT_ROOT: async ({ commit }, { rootId }) => {
+    commit('SET', { path: 'rootId', value: rootId });
+  },
+}
+
 const api = createApiStoreModule({
   state: {
-    api: SlasAPI,
+    api: ServicesAPI,
   },
 });
 
 const table = createTableStoreModule({
-  state: { headers },
+  state: { _resettable: resetTableState, headers, rootId: null },
+  actions,
   modules: {
     filters,
     api,
@@ -40,18 +48,18 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState },
+  state: { _resettable: resetCardState, rootId: null },
+  actions,
   modules: {
     api,
-    conditions,
   },
 });
 
-const slas = createBaseStoreModule({
+const services = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default slas;
+export default services;

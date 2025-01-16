@@ -1,6 +1,8 @@
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { createRouter, createWebHistory } from 'vue-router';
+import OpenedServiceCatalogs
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
@@ -40,10 +42,18 @@ import OpenedContactGroupsConditions
   from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
 import PermissionsTab
   from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
+import TheServiceCatalogs
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/the-service-catalogs.vue';
 
 import store from '../store';
 import TheConfiguration
   from '../../modules/configuration/components/the-configuration.vue';
+import OpenedServiceCatalogsGeneral
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs-general.vue';
+import TheCatalogServices
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/the-catalog-services.vue';
+import OpenedServices
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/opened-services.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -215,6 +225,35 @@ const routes = [
                 path: 'permissions/:permissionId?',
                 name: `${CrmSections.CONTACT_GROUPS}-permissions`,
                 component: PermissionsTab,
+              },
+              {
+                path: 'service-catalogs',
+                name: CrmSections.SERVICE_CATALOGS,
+                component: TheServiceCatalogs,
+                // beforeEnter: checkRouteAccess,
+              },
+              {
+                path: 'service-catalogs/:id',
+                name: `${CrmSections.SERVICE_CATALOGS}-card`,
+                component: OpenedServiceCatalogs,
+                redirect: { name: `${CrmSections.SERVICE_CATALOGS}-general` },
+                children: [
+                  {
+                    path: 'general',
+                    name: `${CrmSections.SERVICE_CATALOGS}-general`,
+                    component: OpenedServiceCatalogsGeneral,
+                  },
+                ],
+              },
+              {
+                path: 'service-catalogs/:id/services',
+                name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                component: TheCatalogServices,
+              },
+              {
+                path: 'service-catalogs/:id/services/:serviceId',
+                name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+                component: OpenedServices,
               },
             ],
           },
