@@ -70,7 +70,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { catalogId: item.catalog_id ? item.catalog_id : item.id, rootId: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
@@ -81,8 +81,8 @@
               <template #statuses="{ item }">
                 {{ displayText(item.status?.name) }}
               </template>
-              <template #close_reason="{ item }">
-                {{ displayText(item.close_reason?.name) }}
+              <template #close_reason_group="{ item }">
+                {{ displayText(item.close_reason_group?.name) }}
               </template>
 
               <template

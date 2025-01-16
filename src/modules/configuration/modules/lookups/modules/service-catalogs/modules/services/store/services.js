@@ -19,6 +19,7 @@ const resetTableState = {
 const resetCardState = {
   itemId: '',
   rootId: '',
+  catalogId: '',
   itemInstance: {
     name: '',
     code: '',
@@ -33,6 +34,9 @@ const resetCardState = {
 const actions = {
   SELECT_ROOT: async ({ commit }, { rootId }) => {
     commit('SET', { path: 'rootId', value: rootId });
+  },
+  SELECT_CATALOG: async ({ commit }, { catalogId }) => {
+    commit('SET', { path: 'catalogId', value: catalogId });
   },
 }
 

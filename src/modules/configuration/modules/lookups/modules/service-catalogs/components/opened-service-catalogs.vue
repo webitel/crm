@@ -73,7 +73,7 @@ const v$ = useVuelidate(computed(() => ({
     name: { required },
     sla: { required },
     prefix: { required },
-    closeReason: { required },
+    closeReasonGroup: { required },
     status: { required },
   },
 })), { itemInstance }, { $autoDirty: true });

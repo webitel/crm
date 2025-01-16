@@ -85,7 +85,7 @@ const preRequestHandler = (item) => {
   }
 };
 
-const addService = async ({ itemInstance, rootId, }) => {
+const addService = async ({ itemInstance, rootId, catalogId }) => {
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -93,6 +93,7 @@ const addService = async ({ itemInstance, rootId, }) => {
   ]);
 
   item.root_id = rootId;
+  item.catalog_id = catalogId;
 
   try {
     const response = await servicesService.createService(item);
@@ -104,11 +105,14 @@ const addService = async ({ itemInstance, rootId, }) => {
   }
 };
 
-const updateService = async ({ itemInstance, itemId: id }) => {
+const updateService = async ({ itemInstance, itemId: id, rootId, catalogId }) => {
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
+
+  item.root_id = rootId;
+  item.catalog_id = catalogId;
   try {
     const response = await servicesService.updateService(id, item);
     return applyTransform(response.data, [snakeToCamel()]);

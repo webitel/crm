@@ -220,12 +220,12 @@ const routes = [
             ],
           },
           {
-            path: 'service-catalogs/:id/services',
+            path: 'service-catalogs/:catalogId/:rootId/services',
             name: `${CrmSections.SERVICE_CATALOGS}-services`,
             component: TheCatalogServices,
           },
           {
-            path: 'service-catalogs/:catalogId/services/:id',
+            path: 'service-catalogs/:catalogId/:rootId/services/:id',
             name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
             component: OpenedServices,
             redirect: { name: `${CrmSections.SERVICE_CATALOGS}-services-card-general` },

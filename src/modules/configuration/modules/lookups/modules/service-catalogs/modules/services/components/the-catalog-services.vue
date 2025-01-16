@@ -68,7 +68,10 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: {
+                    catalogId: route.params?.id,
+                    rootId: item.id
+                  }}"
                 >
                   {{ item.name }}
                 </wt-item-link>
@@ -158,6 +161,7 @@ import filters from '../modules/filters/store/filters.js';
 import { useRoute } from 'vue-router';
 import CatalogsAPI from '../../../api/service-catalogs.js';
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
+import ServicesAPI from '../api/services.js';
 
 const route = useRoute();
 const store = useStore()
@@ -179,6 +183,7 @@ const {
 } = useDeleteConfirmationPopup();
 
 const rootService = ref(null);
+const catalog = ref(null);
 
 const {
   namespace,
@@ -212,7 +217,7 @@ subscribe({
 });
 
 const rootServiceName = computed(() => {
-  return rootService.value?.name;
+  return rootService.value?.name || catalog.value?.name;
 });
 
 const path = computed(() => {
@@ -231,7 +236,11 @@ const { close } = useClose('configuration');
 function edit(item) {
   return router.push({
     name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
-    params: { catalogId: route.params?.id, id: item.id },
+    params: {
+      catalogId: route.params?.id,
+      rootId: route.params?.rootId,
+      id: item.id,
+    },
   });
 }
 
@@ -245,31 +254,38 @@ const {
 const addNewService = () => {
   router.push({
     name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
-    params: { catalogId: route.params?.id, id: 'new' },
+    params: {
+      catalogId: route.params?.catalogId,
+      rootId: route.params?.rootId,
+      id: 'new' },
   })
 }
 
 const loadRootService = async () => {
-  rootService.value = await CatalogsAPI.get({
-    itemId: route.params.id
+  rootService.value = await ServicesAPI.get({
+    itemId: route.params.rootId
+  })
+}
+
+const loadCatalog = async () => {
+  catalog.value = await CatalogsAPI.get({
+    itemId: route.params.catalogId
   })
 }
 
 const loadServices = async () => {
   try {
-    await loadRootService();
-
-
+    if(route.params.rootId === route.params.catalogId) {
+      await loadCatalog();
+    } else {
+      await loadRootService();
+    }
   } catch {
     router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
 
-  if(!rootService.value)  {
-    router.push({ name: CrmSections.SERVICE_CATALOGS})
-  }
-
   await store.dispatch(`${baseNamespace}/table/SELECT_ROOT`, {
-    rootId: route.params.id,
+    rootId: route.params.rootId,
   })
 
   await restoreFilters();
@@ -281,7 +297,7 @@ onUnmounted(() => {
 
 loadServices()
 
-watch(() => route.params.id, async () => {
+watch(() => route.params, async () => {
   await loadServices();
 });
 </script>

@@ -17,7 +17,7 @@ const resetCardState = {
     skills: [],
     status: {},
     prefix: '',
-    closeReason: {},
+    closeReasonGroup: {},
     description: '',
     services: [],
     state: true,

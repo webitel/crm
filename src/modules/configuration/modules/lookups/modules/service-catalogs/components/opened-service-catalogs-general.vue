@@ -35,11 +35,11 @@
       <wt-select
         :label="t('lookups.serviceCatalogs.closureReasons')"
         :search-method="loadReasonList"
-        :value="itemInstance.closeReason"
-        :v="v.itemInstance.closeReason"
+        :value="itemInstance.closeReasonGroup"
+        :v="v.itemInstance.closeReasonGroup"
         required
         :clearable="false"
-        @input="setItemProp({ path: 'closeReason', value: $event })"
+        @input="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
 
       <wt-select

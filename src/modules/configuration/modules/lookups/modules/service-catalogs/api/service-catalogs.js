@@ -17,8 +17,8 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
-const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
+const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason_group', 'reason', 'description', 'services'];
+const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id', 'catalog_id'];
 
 const getCatalogsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -85,7 +85,7 @@ const preRequestHandler = (item) => {
 };
 
 const addCatalog = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason', 'teams', 'skills'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason_group', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -102,7 +102,7 @@ const addCatalog = async ({ itemInstance }) => {
 };
 
 const updateCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason', 'teams', 'skills'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason_group', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),
@@ -116,7 +116,7 @@ const updateCatalog = async ({ itemInstance, itemId: id }) => {
 };
 
 const patchCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_group', 'team_ids', 'skill_ids'];
   const item = applyTransform(itemInstance, [
     preRequestHandler,
     camelToSnake(),

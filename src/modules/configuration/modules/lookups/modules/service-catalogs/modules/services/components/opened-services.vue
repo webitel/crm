@@ -22,6 +22,7 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            :v="v$"
             :namespace="cardNamespace"
             :is-new="isNew"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
@@ -38,7 +39,7 @@
 
 <script setup>
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
@@ -46,29 +47,16 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import ServicesAPI from '../api/services.js';
+import CatalogsAPI from '../../../api/service-catalogs.js';
 
 const { t } = useI18n();
 const store = useStore();
 const route = useRoute();
-const router = useRouter();
 
 const baseNamespace = 'configuration/lookups/services';
-const catalogNamespace = 'configuration/lookups/catalogs';
-
-const {
-  id: idCatalog,
-  itemInstance: itemInstanceCatalog,
-  setId,
-  loadItem,
-  ...restCatalogStore
-} = useCardStore(catalogNamespace);
-
-const { pathName: pathNameCatalog } = useCardComponent({
-  ...restCatalogStore,
-  loadItem,
-  id: idCatalog,
-  itemInstance: itemInstanceCatalog,
-});
 
 const {
   namespace: cardNamespace,
@@ -78,11 +66,38 @@ const {
   ...restStore
 } = useCardStore(baseNamespace);
 
+const v$ = useVuelidate({
+  itemInstance: {
+    name: { required },
+  },
+}, { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
+
 const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
 });
+
+const rootService = ref(null);
+const catalog = ref(null);
+
+const rootServiceName = computed(() => {
+  return rootService.value?.name || catalog.value?.name;
+});
+
+const loadRootService = async () => {
+  rootService.value = await ServicesAPI.get({
+    itemId: rootId.value
+  })
+}
+
+const loadCatalog = async () => {
+  catalog.value = await CatalogsAPI.get({
+    itemId: catalogId.value
+  })
+}
 
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
@@ -93,10 +108,10 @@ const path = computed(() => {
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.serviceCatalogs.serviceCatalogs', 2), route: '/lookups/service-catalogs' },
     {
-      name: pathNameCatalog.value,
+      name: rootServiceName.value,
       route: {
         name: `${CrmSections.SERVICE_CATALOGS}-services`,
-        params: { id: catalogId.value }
+        params: { catalogId: catalogId.value, rootId: rootId.value }
       }
     },
     {
@@ -107,6 +122,7 @@ const path = computed(() => {
 
 const { close } = useClose('configuration');
 
+const rootId = computed(() => route.params.rootId);
 const catalogId = computed(() => route.params.catalogId);
 
 async function initializeCatalog() {
@@ -126,11 +142,20 @@ initializeCatalog();
 initialize();
 
 onMounted(async () => {
-  if(catalogId.value === 'new')  {
+  try {
+    if(rootId.value === catalogId.value) {
+      await loadCatalog();
+    } else {
+      await loadRootService();
+    }
+  } catch {
     router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
 
   store.dispatch(`${baseNamespace}/card/SELECT_ROOT`, {
+    rootId: rootId.value,
+  })
+  store.dispatch(`${baseNamespace}/card/SELECT_CATALOG`, {
     rootId: catalogId.value,
   })
 });

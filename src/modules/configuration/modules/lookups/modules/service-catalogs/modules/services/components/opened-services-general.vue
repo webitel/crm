@@ -9,6 +9,7 @@
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
+        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -26,6 +27,7 @@
         :label="t('lookups.slas.slas')"
         :search-method="loadSlaList"
         :value="itemInstance.sla"
+        :v="v.itemInstance.sla"
         required
         :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
@@ -73,6 +75,10 @@ import { WebitelContactsGroupType } from 'webitel-sdk';
 const props = defineProps({
   namespace: {
     type: String,
+    required: true,
+  },
+  v: {
+    type: Object,
     required: true,
   },
   isNew: {
