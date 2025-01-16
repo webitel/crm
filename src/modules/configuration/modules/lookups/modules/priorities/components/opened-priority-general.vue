@@ -28,20 +28,20 @@
           :options="prioritiesColorsOptions"
           :label="t('vocabulary.color')"
           :v="v.itemInstance.color"
-          use-value-from-options-by-prop="color"
+          use-value-from-options-by-prop="id"
           required
           option-label="name"
           @input="setItemProp({ path: 'color', value: $event })"
         >
-          <template #singleLabel="{ option }">
+          <template #singleLabel="{ option, optionLabel }">
             <div class="opened-priority-general-color__option">
               <case-priority-color-component
-                :color="option"
+                :color="option.id"
                 component-type="wt-indicator"
               />
 
               <span class="opened-priority-general-color__name">
-                {{ option }}
+                {{ option[optionLabel] }}
               </span>
             </div>
           </template>
@@ -97,8 +97,6 @@ const prioritiesColorsOptions = computed(() => Object.values(PrioritiesColors).m
     name: type,
   };
 }));
-
-const currentPriorityColor = ref('')
 
 function setDefaultColorOption() {
   if (itemInstance.value?.color) {
