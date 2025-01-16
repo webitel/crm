@@ -1,8 +1,6 @@
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { createRouter, createWebHistory } from 'vue-router';
-import OpenedCloseReasonGroup
-  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import TheCloseReasonGroups
   from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/the-close-reason-groups.vue';
 import ContactCommunications
@@ -38,6 +36,8 @@ import OpenedCloseReasonGroups
   from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral
   from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
+import OpenedCloseReasons
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/modules/close-reasons/components/opened-close-reasons.vue';
 import TheContactGroups
   from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroup
@@ -215,8 +215,8 @@ const routes = [
               },
               {
                 path: 'close-reasons/:closeReasonsId?',
-                name: `${CrmSections.CLOSE_REASON_GROUPS}-close-reasons`,
-                // component: OpenedCloseReasons,
+                name: `close-reasons`,
+                component: OpenedCloseReasons,
               },
             ],
           },

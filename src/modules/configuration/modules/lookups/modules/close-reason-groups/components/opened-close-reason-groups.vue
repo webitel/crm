@@ -48,10 +48,8 @@
 </template>
 
 <script setup>
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
@@ -63,7 +61,6 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 const namespace = 'configuration/lookups/closeReasonGroups';
 
 const { t } = useI18n();
-const route = useRoute();
 
 const {
   namespace: cardNamespace,
@@ -86,8 +83,6 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   setId,
 });
 
-const { disableUserInput } = useAccessControl();
-
 const { close } = useClose(CrmSections.CLOSE_REASON_GROUPS);
 
 const v$ = useVuelidate(computed(() => ({
@@ -107,9 +102,9 @@ const tabs = computed(() => {
     pathName: `${CrmSections.CLOSE_REASON_GROUPS}-general`,
   };
   const closeReasons = {
-    text: t('lookups.closeReasonGroup.closeReasons', 2),
+    text: t('lookups.closeReasonGroups.reason', 2),
     value: 'closeReasons',
-    pathName: `${CrmSections.CLOSE_REASON_GROUPS}-close-reasons`,
+    pathName: `close-reasons`,
   };
 
   const tabs = [general];
