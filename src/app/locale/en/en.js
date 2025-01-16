@@ -109,7 +109,9 @@ export default {
       editCondition: 'Edit condition',
       addCondition: 'Add condition',
       reactionTime: 'Reaction time',
+      reactionTimeTitle: 'Reaction time (dd:hh:mm)',
       resolutionTime: 'Resolution time',
+      resolutionTimeTitle: 'Reaction time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
@@ -141,7 +143,6 @@ export default {
       service: 'Service | Services',
     },
 
-    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     contactGroups: {
       contactGroups: 'Contact group | Contact groups',
       defaultGroup: 'Default group',

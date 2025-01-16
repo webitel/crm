@@ -108,7 +108,9 @@ export default {
       editCondition: 'Редактировать условие',
       addCondition: 'Добавить условие',
       reactionTime: 'Плановое время реакции',
+      reactionTimeTitle: 'Плановое время реакции (dd:hh:mm)',
       resolutionTime: 'Плановое время решения',
+      resolutionTimeTitle: 'Плановое время решения (dd:hh:mm)',
       validFrom: 'Действителен с',
       validTo: 'Действителен до',
     },
@@ -140,7 +142,6 @@ export default {
       service: 'Сервисы | Сервисы',
     },
 
-    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     contactGroups: {
       contactGroups: 'Группа контактов | Группы контактов',
       defaultGroup: 'Группа по умолчанию',

@@ -200,6 +200,7 @@ const routes = [
               },
             ],
           },
+
           {
             path: 'service-catalogs',
             name: CrmSections.SERVICE_CATALOGS,
