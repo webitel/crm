@@ -61,7 +61,7 @@
               <wt-item-link
                 :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
               >
-                <div class="case-link-content">
+                <div class="cases__link-content">
                   <wt-icon
                     :color="item.priority?.color"
                     icon="cases"
@@ -85,7 +85,7 @@
             <template #source="{ item }">
               <wt-icon
                 color="info"
-                :icon="sourceTypeIcon(item.source.type)"
+                :icon="item?.source?.type"
               />
             </template>
             <template #createdAt="{ item }">
@@ -243,11 +243,6 @@ const path = computed(() => [
   },
 ]);
 
-function sourceTypeIcon(type) {
-  if (!type) return '';
-  return snakeToKebab(type.toLowerCase());
-}
-
 function add() {
   return router.push({
     name: `${CrmSections.CASES}-card`,
@@ -273,7 +268,7 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
-.case-link-content {
+.cases__link-content {
   display: flex;
   gap: var(--spacing-xs);
 }

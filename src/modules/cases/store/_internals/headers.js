@@ -26,7 +26,7 @@ export default [
     value: 'statusCondition',
     locale: 'cases.status',
     show: true,
-    field: 'statusCondition',
+    field: 'status_condition',
     sort: SortSymbols.NONE,
   },
   {
@@ -40,7 +40,7 @@ export default [
     value: 'createdAt',
     locale: 'reusable.createdAt',
     show: true,
-    field: 'createdAt',
+    field: 'created_at',
     sort: SortSymbols.NONE,
   },
   {
@@ -96,7 +96,7 @@ export default [
     value: 'slaCondition',
     locale: 'cases.appliedCondition',
     show: true,
-    field: 'slaCondition',
+    field: 'sla_condition',
     sort: SortSymbols.NONE,
   },
   {

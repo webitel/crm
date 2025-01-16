@@ -99,10 +99,6 @@ const path = computed(() => {
     },
     {
       name: id.value ? `${itemInstance.value?.name} ${itemInstance.value?.subject}` : t('reusable.new'),
-      route: {
-        name: router.currentRoute.name,
-        query: router.currentRoute.query,
-      },
     },
   ];
 });

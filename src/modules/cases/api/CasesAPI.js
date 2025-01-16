@@ -13,6 +13,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { CasesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -41,6 +42,22 @@ const fieldsToSend = [
   'status_condition',
   'close_reason_group',
 ];
+
+function transformSourceType(data) {
+  if (Array.isArray(data)) {
+    return data.map((item) => {
+      if (item.source?.type) {
+        item.source.type = snakeToKebab(item.source.type.toLowerCase());
+      }
+      return item;
+    });
+  }
+
+  if (data.source?.type) {
+    data.source.type = snakeToKebab(data.source.type.toLowerCase());
+  }
+  return data;
+}
 
 const getCasesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'ids', 'sort', 'fields', 'filters'];
@@ -83,7 +100,7 @@ const getCasesList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, [snakeToCamel()]),
+      items: applyTransform(items, [snakeToCamel(), transformSourceType]),
       next,
     };
   } catch (err) {
@@ -125,7 +142,7 @@ const getCase = async ({ itemId: id }) => {
   ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);
-    return applyTransform(response.data, [snakeToCamel()]);
+    return applyTransform(response.data, [snakeToCamel(), transformSourceType]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }

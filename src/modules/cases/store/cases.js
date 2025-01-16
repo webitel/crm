@@ -9,7 +9,7 @@ import service from '../modules/service/store/service.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
-const resettableState = {
+const resetCardState = {
   itemInstance: {
     id:'',
     name: '',
@@ -80,8 +80,8 @@ const table = createTableStoreModule({
 });
 const card = createCardStoreModule({
   state: {
-    _resettable: resettableState,
-    itemInstance: resettableState.itemInstance,
+    _resettable: resetCardState,
+    itemInstance: resetCardState.itemInstance,
     ...state,
   },
   modules: {
