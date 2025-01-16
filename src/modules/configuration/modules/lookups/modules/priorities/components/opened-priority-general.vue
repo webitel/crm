@@ -15,37 +15,45 @@
         @input="setItemProp({ path: 'name', value: $event })"
       />
 
-      <div class="opened-card-input-grid__color">
-        <wt-icon-wrapper
+      <div class="opened-priority-general-color">
+        <case-priority-color-component
           :color="itemInstance.color"
+          component-type="wt-icon"
           icon="cases"
           size="xl"
         />
 
         <wt-select
-          :label="t('lookups.priorities.color')"
+          :value="itemInstance.color"
           :options="prioritiesColorsOptions"
-          :value="currentPriorityColor"
+          :label="t('vocabulary.color')"
           :v="v.itemInstance.color"
+          use-value-from-options-by-prop="color"
           required
           option-label="name"
-          @input="setItemProp({ path: 'color', value: $event.id })"
+          @input="setItemProp({ path: 'color', value: $event })"
         >
-          <template #singleLabel="{ option, optionLabel }">
-            <div class="color-select-option">
-              <color-preview :color="option.id" />
+          <template #singleLabel="{ option }">
+            <div class="opened-priority-general-color__option">
+              <case-priority-color-component
+                :color="option"
+                component-type="wt-indicator"
+              />
 
-              <span class="color-select-option__name">
-                {{ option[optionLabel] }}
+              <span class="opened-priority-general-color__name">
+                {{ option }}
               </span>
             </div>
           </template>
 
           <template #option="{ option, optionLabel }">
-            <div class="color-select-option">
-              <color-preview :color="option.id" />
+            <div class="opened-priority-general-color__option">
+              <case-priority-color-component
+                :color="option.id"
+                component-type="wt-indicator"
+              />
 
-              <span class="color-select-option__name">
+              <span class="opened-priority-general-color__name">
                 {{ option[optionLabel] }}
               </span>
             </div>
@@ -63,12 +71,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import WtIconWrapper from '../../../../../../../app/components/utils/wt-icon-wrapper/wt-icon-wrapper.vue';
+import CasePriorityColorComponent from '../../../../../../../app/components/utils/case-priority-color-component.vue';
 import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
-import ColorPreview from './color-preview.vue';
 
 const props = defineProps({
   namespace: {
@@ -91,33 +98,34 @@ const prioritiesColorsOptions = computed(() => Object.values(PrioritiesColors).m
   };
 }));
 
-const currentPriorityColor = computed(() => {
-  return prioritiesColorsOptions.value.find((type) => type.id === itemInstance.value?.color);
-});
+const currentPriorityColor = ref('')
 
-onMounted(() => {
-  if (!itemInstance.value?.color) {
-    setItemProp({ path: 'color', value: prioritiesColorsOptions.value[0].id });
+function setDefaultColorOption() {
+  if (itemInstance.value?.color) {
+    return
   }
-})
+
+  setItemProp({ path: 'color', value: prioritiesColorsOptions.value[0].id });
+}
+setDefaultColorOption()
 </script>
 
 <style lang="scss" scoped>
-.opened-card-input-grid {
-  &__color {
+.opened-priority-general {
+  &-color {
     display: flex;
     align-items: flex-start;
-    grid-gap: 8px;
+    grid-gap: var(--spacing-xs);
 
     .wt-icon {
-      margin-top: 25px;
+      margin-top: var(--spacing-md);
     }
-  }
 
-  .color-select-option {
-    display: flex;
-    grid-gap: 4px;
-    align-items: center;
+    &__option {
+      display: flex;
+      grid-gap: 4px;
+      align-items: center;
+    }
 
     &__name {
       &::first-letter {

@@ -17,7 +17,7 @@ export default [
   },
   {
     value: 'color',
-    locale: 'lookups.priorities.color',
+    locale: 'vocabulary.color',
     show: true,
     field: 'color',
     sort: SortSymbols.ASC,

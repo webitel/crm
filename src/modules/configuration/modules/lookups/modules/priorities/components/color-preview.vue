@@ -2,7 +2,7 @@
   <div class="color-preview">
     <wt-indicator
       :class="[
-        `color-preview__indicator--color-${color}`,
+        `color-preview__indicator-${color}`,
       ]"
       class="color-preview__indicator"
     />
@@ -22,7 +22,7 @@ const { color } = defineProps({
 </script>
 
 <style lang="scss">
-@use '../../../../../../../app/components/utils/wt-icon-wrapper/variables';
+@use '../../../../../../../app/components/utils/wt-color-component/variables';
 </style>
 
 <style lang="scss" scoped>
@@ -34,74 +34,72 @@ const { color } = defineProps({
 
 .color-preview {
   &__indicator {
-    &--color {
-      &-green  {
-        @include set-icon-color(--icon-color-green);
-      }
+    &-green  {
+      @include set-icon-color(--icon-color-green);
+    }
 
-      &-red {
-        @include set-icon-color(--icon-color-red);
-      }
+    &-red {
+      @include set-icon-color(--icon-color-red);
+    }
 
-      &-pink {
-        @include set-icon-color(--icon-color-pink);
-      }
+    &-pink {
+      @include set-icon-color(--icon-color-pink);
+    }
 
-      &-purple {
-        @include set-icon-color(--icon-color-purple);
-      }
+    &-purple {
+      @include set-icon-color(--icon-color-purple);
+    }
 
-      &-deep-purple {
-        @include set-icon-color(--icon-color-deep-purple);
-      }
+    &-deep-purple {
+      @include set-icon-color(--icon-color-deep-purple);
+    }
 
-      &-indigo {
-        @include set-icon-color(--icon-color-indigo);
-      }
+    &-indigo {
+      @include set-icon-color(--icon-color-indigo);
+    }
 
-      &-blue {
-        @include set-icon-color(--icon-color-blue);
-      }
+    &-blue {
+      @include set-icon-color(--icon-color-blue);
+    }
 
-      &-light-blue {
-        @include set-icon-color(--icon-color-light-blue);
-      }
+    &-light-blue {
+      @include set-icon-color(--icon-color-light-blue);
+    }
 
-      &-cyan {
-        @include set-icon-color(--icon-color-cyan);
-      }
+    &-cyan {
+      @include set-icon-color(--icon-color-cyan);
+    }
 
-      &-teal {
-        @include set-icon-color(--icon-color-teal);
-      }
+    &-teal {
+      @include set-icon-color(--icon-color-teal);
+    }
 
-      &-green {
-        @include set-icon-color(--icon-color-green);
-      }
+    &-green {
+      @include set-icon-color(--icon-color-green);
+    }
 
-      &-light-green {
-        @include set-icon-color(--icon-color-light-green);
-      }
+    &-light-green {
+      @include set-icon-color(--icon-color-light-green);
+    }
 
-      &-lime {
-        @include set-icon-color(--icon-color-lime);
-      }
+    &-lime {
+      @include set-icon-color(--icon-color-lime);
+    }
 
-      &-yellow {
-        @include set-icon-color(--icon-color-yellow);
-      }
+    &-yellow {
+      @include set-icon-color(--icon-color-yellow);
+    }
 
-      &-amber {
-        @include set-icon-color(--icon-color-amber);
-      }
+    &-amber {
+      @include set-icon-color(--icon-color-amber);
+    }
 
-      &-orange {
-        @include set-icon-color(--icon-color-orange);
-      }
+    &-orange {
+      @include set-icon-color(--icon-color-orange);
+    }
 
-      &-deep-orange {
-        @include set-icon-color(--icon-color-deep-orange);
-      }
+    &-deep-orange {
+      @include set-icon-color(--icon-color-deep-orange);
     }
   }
 }

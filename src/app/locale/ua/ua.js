@@ -137,10 +137,6 @@ export default {
         [WebitelContactsGroupType.STATIC]: 'Статична',
       },
     },
-    priorities: {
-      priorities: 'Пріоритет | Пріоритети',
-      color: 'Колір'
-    },
 
     [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
     [CrmSections.STATUSES]: 'Статуси',

@@ -116,14 +116,13 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import filters from '../modules/filters/store/filters.js';
 
 const baseNamespace = 'configuration/lookups/slas';
 
@@ -197,7 +196,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, error, isLoading });
 </script>
 
 <style lang="scss" scoped>

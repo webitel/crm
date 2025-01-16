@@ -137,11 +137,6 @@ export default {
       },
     },
 
-    priorities: {
-      priorities: 'Пріоритет | Пріоритети',
-      color: 'Колір'
-    },
-
     [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     [CrmSections.STATUSES]: 'Статусы',
   },

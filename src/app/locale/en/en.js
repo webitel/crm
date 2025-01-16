@@ -136,10 +136,6 @@ export default {
         [WebitelContactsGroupType.STATIC]: 'Static',
       },
     },
-    priorities: {
-      priorities: 'Priority | Priorities',
-      color: 'Color',
-    },
 
     [CrmSections.CONTACT_GROUPS]: 'Contact groups',
     [CrmSections.STATUSES]: 'Statuses',

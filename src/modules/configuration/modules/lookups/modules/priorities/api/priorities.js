@@ -73,12 +73,6 @@ const getPriority = async ({ itemId: id }) => {
   }
 };
 
-const getConditionsLookup = (params) =>
-  getPrioritiesList({
-    ...params,
-    fields: params.fields || ['id', 'name'],
-  });
-
 const addPriority = async ({ itemInstance, parentId }) => {
   const item = applyTransform(itemInstance, [
     camelToSnake(),
@@ -115,6 +109,12 @@ const deletePriority = async ({ id }) => {
     throw applyTransform(err, [notify]);
   }
 };
+
+const getConditionsLookup = (params) =>
+  getPrioritiesList({
+    ...params,
+    fields: params.fields || ['id', 'name'],
+  });
 
 const PrioritiesAPI = {
   getList: getPrioritiesList,

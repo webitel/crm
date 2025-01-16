@@ -16,7 +16,7 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.priorities.priorities') }}
+            {{ t('vocabulary.priority') }}
           </h3>
 
           <wt-action-bar
@@ -25,9 +25,9 @@
             @click:add="router.push({ name: `${CrmSections.PRIORITIES}-card`, params: { id: 'new' }})"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })"
           >
             <template #search-bar>
               <filter-search
@@ -75,7 +75,10 @@
               </template>
 
               <template #color="{ item }">
-                <color-preview :color="item.color" />
+                <case-priority-color-component
+                  :color="item.color"
+                  component-type="wt-indicator"
+                />
               </template>
 
               <template #actions="{ item }">
@@ -122,7 +125,7 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import ColorPreview from './color-preview.vue';
+import CasePriorityColorComponent from '../../../../../../../app/components/utils/case-priority-color-component.vue';
 
 const baseNamespace = 'configuration/lookups/priorities';
 
@@ -179,7 +182,7 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.priorities.priorities', 2) },
+  { name: t('vocabulary.priority', 2) },
 ]);
 
 const { close } = useClose('configuration');
@@ -202,7 +205,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, error, isLoading });
 </script>
 
 <style lang="scss" scoped>
