@@ -40,6 +40,11 @@ const nav = reactive([
         name: computed(() => t('vocabulary.priority', 2)),
         route: 'lookups/priorities',
       },
+      {
+        value: CrmSections.SERVICE_CATALOGS,
+        name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+        route: 'lookups/service-catalogs',
+      },
     ],
   },
 ]);

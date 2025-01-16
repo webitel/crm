@@ -4,35 +4,44 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import SlasAPI from '../api/slas.js';
+import CatalogsAPI from '../api/service-catalogs.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
-import conditions from '../modules/conditions/store/conditions';
+
+const resetTableState = {
+  dataList: [],
+  selected: [],
+  error: {},
+  isLoading: false,
+  isNextPage: false,
+};
 
 const resetCardState = {
   itemId: '',
   itemInstance: {
     name: '',
+    code: '',
+    sla: {},
+    statuses: '',
+    teams: [],
+    skills: [],
     status: {},
     prefix: '',
-    reasons: {},
-    sla: {},
-    team: {},
-    code: '',
-    skill: {},
+    closeReason: {},
     description: '',
+    services: [],
     state: true,
   },
 };
 
 const api = createApiStoreModule({
   state: {
-    api: SlasAPI,
+    api: CatalogsAPI,
   },
 });
 
 const table = createTableStoreModule({
-  state: { headers },
+  state: { _resettable: resetTableState, headers },
   modules: {
     filters,
     api,
@@ -43,15 +52,14 @@ const card = createCardStoreModule({
   state: { _resettable: resetCardState },
   modules: {
     api,
-    conditions,
   },
 });
 
-const slas = createBaseStoreModule({
+const catalogs = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default slas;
+export default catalogs;
