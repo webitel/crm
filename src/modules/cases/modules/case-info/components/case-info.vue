@@ -65,6 +65,7 @@
       </editable-field>
     </div>
   </div>
+  <case-comments :namespace="namespace"/>
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
@@ -75,6 +76,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import EditableField from './editable-field.vue';
+import CaseComments from '../modules/comments/components/case-comments.vue';
 
 const { t } = useI18n();
 
