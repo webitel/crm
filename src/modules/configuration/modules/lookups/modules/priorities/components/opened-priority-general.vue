@@ -16,7 +16,7 @@
       />
 
       <div class="opened-priority-general-color">
-        <case-priority-color-component
+        <color-component-wrapper
           :color="itemInstance.color"
           component-type="wt-icon"
           icon="cases"
@@ -35,7 +35,7 @@
         >
           <template #singleLabel="{ option, optionLabel }">
             <div class="opened-priority-general-color__option">
-              <case-priority-color-component
+              <color-component-wrapper
                 :color="option.id"
                 component-type="wt-indicator"
               />
@@ -48,7 +48,7 @@
 
           <template #option="{ option, optionLabel }">
             <div class="opened-priority-general-color__option">
-              <case-priority-color-component
+              <color-component-wrapper
                 :color="option.id"
                 component-type="wt-indicator"
               />
@@ -74,7 +74,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import CasePriorityColorComponent from '../../../../../../../app/components/utils/case-priority-color-component.vue';
+import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
 
 const props = defineProps({

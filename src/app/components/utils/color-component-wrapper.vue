@@ -1,11 +1,11 @@
 <template>
   <component
     v-bind="attrs"
-    :is="componentType"
+    :is="component"
     :class="[
-      `wt-color-component-${color}`,
+      `case-priority-color-component-${color}`,
     ]"
-    class="wt-color-component"
+    class="case-priority-color-component"
   />
 </template>
 
@@ -16,7 +16,7 @@ const props = defineProps({
   /**
    * Component type to render. For example, 'wt-icon' or 'wt-indicator'.
    */
-  componentType: {
+  component: {
     type: String,
     required: true,
     default: 'wt-indicator'
@@ -40,7 +40,7 @@ const colorVariable = computed(() => `var(--case-priority-color-${props.color})`
 </style>
 
 <style scoped lang="scss">
-.wt-color-component {
+.case-priority-color-component {
   :deep(.wt-indicator__indicator) {
     background: v-bind(colorVariable);
   }

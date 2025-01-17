@@ -75,7 +75,7 @@
               </template>
 
               <template #color="{ item }">
-                <case-priority-color-component
+                <color-component-wrapper
                   :color="item.color"
                   component-type="wt-indicator"
                 />
@@ -118,14 +118,13 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import {
   useTableEmpty
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import filters from '../modules/filters/store/filters.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import CasePriorityColorComponent from '../../../../../../../app/components/utils/case-priority-color-component.vue';
+import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 
 const baseNamespace = 'configuration/lookups/priorities';
 

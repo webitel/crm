@@ -32,7 +32,7 @@ const nav = reactive([
       },
       {
         value: CrmSections.CONTACT_GROUPS,
-        name: computed(() => t('vocabulary.contactGroups', 2)),
+        name: computed(() => t('lookups.contactGroups.contactGroups', 2)),
         route: 'lookups/contact-groups',
       },
       {
