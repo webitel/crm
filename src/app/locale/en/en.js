@@ -152,7 +152,12 @@ export default {
       },
     },
 
-    [CrmSections.CONTACT_GROUPS]: 'Contact groups',
+    closeReasonGroups: {
+      closeReasonGroups: 'Closure reasons',
+      reason: 'Reason | Reasons',
+      addCondition: 'Add a reason',
+      editCondition: 'Edit a reason',
+    },
     [CrmSections.STATUSES]: 'Statuses',
   },
 };

@@ -128,6 +128,7 @@ export default {
       },
     },
 
+
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
     },
@@ -147,7 +148,12 @@ export default {
       },
     },
 
-    [CrmSections.CONTACT_GROUPS]: 'Групи контактів',
+    closeReasonGroups: {
+      closeReasonGroups: 'Причини закриття',
+      reason: 'Причина | Причини',
+      addCondition: 'Додати причину',
+      editCondition: 'Редагувати причину',
+    },
     [CrmSections.STATUSES]: 'Статуси',
   },
 };
