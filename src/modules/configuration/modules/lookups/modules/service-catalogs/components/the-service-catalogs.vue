@@ -79,7 +79,21 @@
                 {{ displayText(item.sla?.name) }}
               </template>
               <template #statuses="{ item }">
-                {{ displayText(item.status?.name) }}
+                <template v-if="isRootElement(item)">
+                  {{ displayText(item.status?.name) }}
+                </template>
+                <template v-else>
+                  <wt-item-link
+                    v-if="item.assignee?.id"
+                    class="the-service-catalogs__service-assignee"
+                    :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
+                  >
+                    {{ item.assignee.name }}
+                  </wt-item-link>
+                  <template v-else>
+                    {{ displayText(item.assignee?.name) }}
+                  </template>
+                </template>
               </template>
               <template #closeReasonGroup="{ item }">
                 {{ displayText(item.closeReasonGroup?.name) }}
@@ -90,12 +104,14 @@
               >
                 {{ displayText(item.prefix) }}
               </template>
-
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
                   @change="changeState(item, index)"
                 />
+              </template>
+              <template #code="{ item }">
+                {{ displayText(item.code) }}
               </template>
               <template #teams="{ item }">
                 <template v-if="!isRootElement(item)">
@@ -270,3 +286,11 @@ const changeState = async (item) => {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.the-service-catalogs {
+  &__service-assignee {
+    color: var(--text-link-color) !important;
+  }
+}
+</style>

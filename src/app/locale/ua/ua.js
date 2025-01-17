@@ -134,10 +134,7 @@ export default {
       prefix: 'Префікс',
       code: 'Код',
       statuses: 'Статуси',
-      closureReasons: 'Причини закриття',
       skills: 'Навички',
-      assignee: 'Виконавець',
-      group: 'Група виконавців',
     },
 
     service: {

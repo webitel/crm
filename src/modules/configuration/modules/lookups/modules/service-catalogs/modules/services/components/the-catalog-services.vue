@@ -89,7 +89,7 @@
               >
                 <wt-item-link
                   v-if="item.assignee?.id"
-
+                  class="the-catalog-service__service-assignee"
                   :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
                 >
                   {{ item.assignee.name }}
@@ -306,7 +306,7 @@ watch(() => route.params, async () => {
 </script>
 
 <style scoped lang="scss">
-.the-catalog-service{
+.the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;
   }

@@ -15,7 +15,7 @@
       />
 
       <wt-select
-        :label="t('lookups.serviceCatalogs.assignee')"
+        :label="t('lookups.contactGroups.assignee')"
         :search-method="loadContact"
         :value="itemInstance.assignee"
         :clearable="true"
@@ -33,7 +33,7 @@
       />
 
       <wt-select
-        :label="t('lookups.serviceCatalogs.group')"
+        :label="t('lookups.contactGroups.contactGroups')"
         :search-method="loadContactGroupsList"
         :value="itemInstance.group"
         :clearable="true"

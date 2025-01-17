@@ -33,7 +33,7 @@
       />
 
       <wt-select
-        :label="t('lookups.serviceCatalogs.closureReasons')"
+        :label="t('lookups.closeReasonGroups.closeReasonGroups')"
         :search-method="loadReasonList"
         :value="itemInstance.closeReasonGroup"
         :v="v.itemInstance.closeReasonGroup"

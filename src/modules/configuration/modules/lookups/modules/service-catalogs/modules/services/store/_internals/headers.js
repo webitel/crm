@@ -1,7 +1,6 @@
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
 export default [
-  // TODO Implement another columns after finished created service https://webitel.atlassian.net/browse/WTEL-5658
   {
     value: 'name',
     locale: 'reusable.name',
@@ -25,14 +24,14 @@ export default [
   },
   {
     value: 'assignee',
-    locale: 'lookups.serviceCatalogs.assignee',
+    locale: 'lookups.contactGroups.assignee',
     show: true,
     field: 'assignee',
     sort: SortSymbols.NONE,
   },
   {
     value: 'group',
-    locale: 'lookups.serviceCatalogs.group',
+    locale: 'lookups.contactGroups.contactGroups',
     show: true,
     field: 'group',
     sort: SortSymbols.NONE,
