@@ -127,6 +127,7 @@ export default {
       },
     },
 
+
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
     },
@@ -145,6 +146,13 @@ export default {
         [WebitelContactsGroupType.DYNAMIC]: 'Динамическая',
         [WebitelContactsGroupType.STATIC]: 'Статическая',
       },
+    },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Причины закрытия',
+      reason: 'Причина | Причины',
+      addCondition: 'Добавить причину',
+      editCondition: 'Редактировать причину',
     },
     [CrmSections.STATUSES]: 'Статусы',
   },

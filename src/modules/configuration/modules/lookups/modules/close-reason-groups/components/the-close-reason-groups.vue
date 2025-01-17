@@ -15,14 +15,14 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.slas.slas') }}
+            {{ t('lookups.closeReasonGroups.closeReasonGroups') }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
-            @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
-            @click:refresh="loadData"
+            @click:add="router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' }})"
+            @click:refresh="refresh"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
@@ -66,16 +66,13 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
               </template>
               <template #description="{ item }">
                 {{ item.description }}
-              </template>
-              <template #calendar="{ item }">
-                {{ item.calendar.name }}
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
@@ -108,6 +105,7 @@
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -122,12 +120,13 @@ import DeleteConfirmationPopup
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import filters from '../modules/filters/store/filters.js';
 
-const baseNamespace = 'configuration/lookups/slas';
+const baseNamespace = 'configuration/lookups/closeReasonGroups';
 
 const { t } = useI18n();
 const router = useRouter();
+
+const store = useStore();
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
@@ -159,6 +158,7 @@ const {
 
 const {
   namespace: filtersNamespace,
+  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -180,23 +180,24 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.slas.slas', 2) },
+  { name: t('lookups.closeReasonGroups.closeReasonGroups', 2) },
 ]);
 
 const { close } = useClose('configuration');
-
-function edit(item) {
-  return router.push({
-    name: `${CrmSections.SLAS}-card`,
-    params: { id: item.id },
-  });
-}
 
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, error, isLoading });
+
+function edit(item) {
+  return router.push({
+    name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
+    params: { id: item.id },
+  });
+}
+
 </script>
 
 <style lang="scss" scoped>

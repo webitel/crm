@@ -151,6 +151,13 @@ export default {
         [WebitelContactsGroupType.STATIC]: 'Static',
       },
     },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Closure reasons',
+      reason: 'Reason | Reasons',
+      addCondition: 'Add a reason',
+      editCondition: 'Edit a reason',
+    },
     [CrmSections.STATUSES]: 'Statuses',
   },
 };
