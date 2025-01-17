@@ -1,7 +1,6 @@
 <template>
   <wt-popup
     :shown="!!closeReasonsId"
-    class="opened-close-reasons-popup"
     size="sm"
     @close="close"
   >
@@ -10,7 +9,7 @@
       {{ t('lookups.closeReasonGroups.reason', 1).toLowerCase() }}
     </template>
     <template #main>
-      <form class="opened-close-reasons-popup__wrapper">
+      <form>
         <wt-input
           :label="t('reusable.name')"
           :value="itemInstance.name"

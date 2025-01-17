@@ -66,7 +66,7 @@ const getCloseReason = async ({ parentId, itemId: id }) => {
   };
 
   try {
-    const response = await closeReasonsService.locateCloseReason(parentId, id, fieldsToSend);
+    const response = await closeReasonsService.locateCloseReason(parentId, id);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
