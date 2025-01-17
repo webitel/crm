@@ -19,7 +19,9 @@
 </template>
 
 <script setup>
+import CatalogAPI from '../api/CatalogAPI.js';
 import { serviceCatalogData } from '../api/example.js';
+import ServiceAPI from '../api/ServiceAPI.js';
 
 const props = defineProps({
   shown: {
@@ -30,9 +32,12 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'close']);
 
+// TODO: get rid of hardcoded values after service selection is implemented
+async function save() {
+  const catalog = await CatalogAPI.get({itemId: 45})
+  const service = await ServiceAPI.get({itemId: 77})
 
-function save() {
-  emit('save', serviceCatalogData);
+  await emit('save', {catalog: catalog.catalog, service: service});
   close();
 }
 

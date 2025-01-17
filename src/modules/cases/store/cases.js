@@ -9,31 +9,41 @@ import service from '../modules/service/store/service.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
-const resettableState = {
+const resetCardState = {
   itemInstance: {
+    id:'',
     name: '',
-    subject: '',
-    priority: '',
-    status: '',
-    source: '',
+    assignee: {},
+    author: {},
+    close: {
+      closeReason: {},
+      closeResult: '',
+    },
+    closeReasonGroup: {},
+    comments: {},
+    contactInfo: '',
     createdAt: '',
-    service: '',
-    about: '',
     createdBy: '',
-    group: '',
-    assignee: '',
-    reporter: '',
-    sla: '',
-    slaCondition: '',
+    description: '',
+    group: {},
+    impacted: {},
+    links: {},
     plannedReactionAt: '',
     plannedResolutionAt: '',
-    reactedAt: '',
-    resolvedAt: '',
-    closeReason: '',
-    closeResult: '',
-    rate: '',
-    statusCondition: '',
-    contactInfo: '',
+    priority: {},
+    rate: {
+      rating: '',
+      ratingComment: '',
+    },
+    reporter: {},
+    service: {},
+    sla: {},
+    slaCondition: {},
+    source: {},
+    status: {},
+    statusCondition: {},
+    subject: '',
+    timing: {},
   },
 };
 
@@ -70,7 +80,8 @@ const table = createTableStoreModule({
 });
 const card = createCardStoreModule({
   state: {
-    _resettable: resettableState,
+    _resettable: resetCardState,
+    itemInstance: resetCardState.itemInstance,
     ...state,
   },
   modules: {

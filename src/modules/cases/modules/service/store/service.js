@@ -8,7 +8,7 @@ const state = {
 
 const getters = {
   CLOSE_REASON_ID: (state) => state.catalog?.closeReason.id,
-  STATUS_ID: (state) => state.catalog?.status.id,
+  STATUS: (state) => state.catalog?.status,
   SLA: (state) => resolvePropertyFromHierarchy(state, 'sla'),
   GROUP: (state) => resolvePropertyFromHierarchy(state, 'group'),
   ASSIGNEE: (state) => resolvePropertyFromHierarchy(state, 'assignee'),
