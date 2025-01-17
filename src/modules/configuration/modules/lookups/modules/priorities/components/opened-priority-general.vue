@@ -15,7 +15,7 @@
         @input="setItemProp({ path: 'name', value: $event })"
       />
 
-      <div class="opened-priority-general-color">
+      <div class="opened-priority-general__wrapper">
         <color-component-wrapper
           :color="itemInstance.color"
           component-type="wt-icon"
@@ -34,26 +34,26 @@
           @input="setItemProp({ path: 'color', value: $event })"
         >
           <template #singleLabel="{ option, optionLabel }">
-            <div class="opened-priority-general-color__option">
+            <div class="opened-priority-general__color-wrapper">
               <color-component-wrapper
                 :color="option.id"
                 component-type="wt-indicator"
               />
 
-              <span class="opened-priority-general-color__name">
+              <span class="opened-priority-general__color-name">
                 {{ option[optionLabel] }}
               </span>
             </div>
           </template>
 
           <template #option="{ option, optionLabel }">
-            <div class="opened-priority-general-color__option">
+            <div class="opened-priority-general__color-wrapper">
               <color-component-wrapper
                 :color="option.id"
                 component-type="wt-indicator"
               />
 
-              <span class="opened-priority-general-color__name">
+              <span class="opened-priority-general__color-name">
                 {{ option[optionLabel] }}
               </span>
             </div>
