@@ -41,7 +41,10 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState },
+  state: {
+    itemInstance: resetCardState.itemInstance,
+    _resettable: resetCardState
+  },
   modules: {
     api,
   },

@@ -1,5 +1,5 @@
 <template>
-  <section class="opened-service-catalog-general">
+  <section>
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
@@ -118,30 +118,23 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-function loadStatusesList(search) {
-  return StatusesApi.getLookup(search);
+function loadStatusesList(params) {
+  return StatusesApi.getLookup(params);
 }
 
-function loadReasonList(search) {
-  return CloseReasonsApi.getLookup(search);
+function loadReasonList(params) {
+  return CloseReasonsApi.getLookup(params);
 }
 
-function loadSlaList(search) {
-  return SlasAPI.getLookup(search);
+function loadSlaList(params) {
+  return SlasAPI.getLookup(params);
 }
 
-function loadTeamsList(search) {
-  return TeamsAPI.getLookup(search);
+function loadTeamsList(params) {
+  return TeamsAPI.getLookup(params);
 }
 
-function loadSkillsList(search) {
-  return SkillsAPI.getLookup(search);
+function loadSkillsList(params) {
+  return SkillsAPI.getLookup(params);
 }
 </script>
-
-<style lang="scss" scoped>
-.opened-sla-general__wrapper {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-</style>

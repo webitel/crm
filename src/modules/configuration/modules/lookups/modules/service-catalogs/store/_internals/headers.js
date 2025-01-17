@@ -58,7 +58,7 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'close_reason_group',
+    value: 'closeReasonGroup',
     locale: 'lookups.serviceCatalogs.closureReasons',
     show: true,
     field: 'close_reason_group',

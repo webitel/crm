@@ -73,8 +73,9 @@ const v$ = useVuelidate({
 }, { itemInstance }, { $autoDirty: true });
 
 v$.value.$touch();
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
-const { isNew, pathName, disabledSave, saveText, save, initialize } = useCardComponent({
+const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
@@ -125,23 +126,7 @@ const { close } = useClose('configuration');
 const rootId = computed(() => route.params.rootId);
 const catalogId = computed(() => route.params.catalogId);
 
-async function initializeCatalog() {
-  try {
-    if (catalogId.value) {
-      await setId(catalogId.value);
-      await loadItem();
-    } else {
-
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-initializeCatalog();
-initialize();
-
-onMounted(async () => {
+const initializeBreadcrumbs = async () => {
   try {
     if(rootId.value === catalogId.value) {
       await loadCatalog();
@@ -151,12 +136,17 @@ onMounted(async () => {
   } catch {
     router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
+}
 
-  store.dispatch(`${baseNamespace}/card/SELECT_ROOT`, {
-    rootId: rootId.value,
-  })
-  store.dispatch(`${baseNamespace}/card/SELECT_CATALOG`, {
-    rootId: catalogId.value,
-  })
+const setCatalogAndRootService = () => {
+  store.commit(`${baseNamespace}/card/SET`, { path: 'rootId', value: rootId.value })
+  store.commit(`${baseNamespace}/card/SET`, { path: 'catalogId', value: catalogId.value })
+}
+
+initialize();
+
+onMounted(async () => {
+  await initializeBreadcrumbs();
+  setCatalogAndRootService()
 });
 </script>

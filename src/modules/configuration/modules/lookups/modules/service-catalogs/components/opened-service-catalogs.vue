@@ -51,7 +51,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
@@ -124,9 +124,11 @@ const path = computed(() => {
 
 initialize();
 
-if(isNew.value) {
-  resetState();
-}
+onMounted(() => {
+  if(isNew.value) {
+    resetState();
+  }
+})
 </script>
 
 <style scoped lang="scss">

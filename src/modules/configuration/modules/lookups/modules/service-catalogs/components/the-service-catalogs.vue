@@ -70,7 +70,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { catalogId: item.catalog_id ? item.catalog_id : item.id, rootId: item.id } }"
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { catalogId: item.catalogId ? item.catalogId : item.id, rootId: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
@@ -81,8 +81,8 @@
               <template #statuses="{ item }">
                 {{ displayText(item.status?.name) }}
               </template>
-              <template #close_reason_group="{ item }">
-                {{ displayText(item.close_reason_group?.name) }}
+              <template #closeReasonGroup="{ item }">
+                {{ displayText(item.closeReasonGroup?.name) }}
               </template>
 
               <template
@@ -245,7 +245,7 @@ const edit = (item) => {
   });
 }
 
-const isRootElement = (item) => !item.root_id;
+const isRootElement = (item) => !item.rootId;
 
 const changeState = async (item) => {
   if(isRootElement(item)) {
@@ -259,13 +259,14 @@ const changeState = async (item) => {
 
     item.state = !item.state;
   } else {
-
-    ServicesAPI.patch({
+    await ServicesAPI.patch({
       changes: {
         state: !item.state,
       },
       id: item.id,
     })
+
+    item.state = !item.state;
   }
 }
 </script>

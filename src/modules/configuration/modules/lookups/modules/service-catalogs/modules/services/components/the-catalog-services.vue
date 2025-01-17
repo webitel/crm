@@ -89,7 +89,7 @@
               >
                 <wt-item-link
                   v-if="item.assignee?.id"
-                  class="the-catalog-service__service-assignee"
+
                   :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
                 >
                   {{ item.assignee.name }}
@@ -273,7 +273,7 @@ const loadCatalog = async () => {
   })
 }
 
-const loadServices = async () => {
+const initializeBreadcrumbs = async () => {
   try {
     if(route.params.rootId === route.params.catalogId) {
       await loadCatalog();
@@ -283,11 +283,14 @@ const loadServices = async () => {
   } catch {
     router.push({ name: CrmSections.SERVICE_CATALOGS})
   }
+}
+const setRootForServices = () => {
+  store.commit(`${baseNamespace}/table/SET`, { path: 'rootId', value: route.params.rootId })
+}
 
-  await store.dispatch(`${baseNamespace}/table/SELECT_ROOT`, {
-    rootId: route.params.rootId,
-  })
-
+const loadServices = async () => {
+  await initializeBreadcrumbs();
+  setRootForServices();
   await restoreFilters();
 }
 

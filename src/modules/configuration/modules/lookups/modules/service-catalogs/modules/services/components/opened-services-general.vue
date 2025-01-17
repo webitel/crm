@@ -1,5 +1,5 @@
 <template>
-  <section class="opened-service-catalog-general">
+  <section>
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
@@ -16,7 +16,7 @@
 
       <wt-select
         :label="t('lookups.serviceCatalogs.assignee')"
-        :search-method="loadAssigneeList"
+        :search-method="loadContact"
         :value="itemInstance.assignee"
         :clearable="true"
         :disabled="itemInstance.group?.type === WebitelContactsGroupType.DYNAMIC"
@@ -28,14 +28,13 @@
         :search-method="loadSlaList"
         :value="itemInstance.sla"
         :v="v.itemInstance.sla"
-        required
         :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
       />
 
       <wt-select
         :label="t('lookups.serviceCatalogs.group')"
-        :search-method="loadGroupList"
+        :search-method="loadContactGroupsList"
         :value="itemInstance.group"
         :clearable="true"
         @input="setItemProp({ path: 'group', value: $event })"
@@ -91,26 +90,19 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-const loadSlaList = (search) => {
-  return SlasAPI.getLookup(search);
+const loadSlaList = (params) => {
+  return SlasAPI.getLookup(params);
 }
 
-const loadGroupList = (search) => {
+const loadContactGroupsList = (params) => {
   return ContactGroupsAPI.getLookup({
-    ...search,
+    ...params,
     fields: ['id', 'name', 'type']
   });
 }
 
-const loadAssigneeList = (search) => {
-  return contacts.getLookup(search);
+const loadContact = (params) => {
+  return contacts.getLookup(params);
 }
 
 </script>
-
-<style lang="scss" scoped>
-.opened-sla-general__wrapper {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-</style>

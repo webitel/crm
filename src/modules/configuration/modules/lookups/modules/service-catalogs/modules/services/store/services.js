@@ -31,15 +31,6 @@ const resetCardState = {
   },
 };
 
-const actions = {
-  SELECT_ROOT: async ({ commit }, { rootId }) => {
-    commit('SET', { path: 'rootId', value: rootId });
-  },
-  SELECT_CATALOG: async ({ commit }, { catalogId }) => {
-    commit('SET', { path: 'catalogId', value: catalogId });
-  },
-}
-
 const api = createApiStoreModule({
   state: {
     api: ServicesAPI,
@@ -48,7 +39,6 @@ const api = createApiStoreModule({
 
 const table = createTableStoreModule({
   state: { _resettable: resetTableState, headers, rootId: null },
-  actions,
   modules: {
     filters,
     api,
@@ -56,8 +46,11 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState, rootId: null },
-  actions,
+  state: {
+    itemInstance: resetCardState.itemInstance,
+    _resettable: resetCardState,
+    rootId: null,
+    catalogId: null },
   modules: {
     api,
   },
