@@ -128,6 +128,19 @@ export default {
       }
     },
 
+    serviceCatalogs: {
+      serviceCatalogs: 'Service catalog | Service catalogs',
+      prefix: 'Prefix',
+      code: 'Code',
+      statuses: 'Statuses',
+      closureReasons: 'Closure reasons',
+      skills: 'Skills',
+    },
+
+    service: {
+      service: 'Service | Services',
+    },
+
     contactGroups: {
       contactGroups: 'Contact group | Contact groups',
       defaultGroup: 'Default group',

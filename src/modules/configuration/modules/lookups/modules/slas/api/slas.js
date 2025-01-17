@@ -111,8 +111,15 @@ const deleteSla = async ({ id }) => {
   }
 };
 
+const getSlasLookup = (params) =>
+  getSlasList({
+    ...params,
+    fields: params.fields || ['id', 'name'],
+  });
+
 const SlasAPI = {
   getList: getSlasList,
+  getLookup: getSlasLookup,
   get: getSla,
   add: addSla,
   update: updateSla,

@@ -128,6 +128,15 @@ export default {
       },
     },
 
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
+    },
+
+    service: {
+      service: 'Cервіси | Cервіси',
+    },
+
     contactGroups: {
       contactGroups: 'Група контактів | Групи контактів',
       defaultGroup: 'Група за замовчуванням',

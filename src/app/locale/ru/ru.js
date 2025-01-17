@@ -127,6 +127,16 @@ export default {
       },
     },
 
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
+    },
+
+    service: {
+      service: 'Сервисы | Сервисы',
+    },
+
+    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     contactGroups: {
       contactGroups: 'Группа контактов | Группы контактов',
       defaultGroup: 'Группа по умолчанию',
