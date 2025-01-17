@@ -34,7 +34,7 @@
     <div class="opened-card-input-grid">
       <editable-field
         color="info"
-        :icon="sourceTypeIcon(itemInstance.source?.type)"
+        :icon="itemInstance.source?.type"
         :edit-mode="editMode"
         :label="t('cases.source')"
         :value="itemInstance.source?.name"
@@ -94,11 +94,6 @@ const {
 } = useCardStore(props.namespace);
 
 const editMode = inject('editMode');
-
-function sourceTypeIcon(type) {
-  if (!type) return '';
-  return snakeToKebab(type.toLowerCase());
-}
 </script>
 
 <style lang="scss" scoped>

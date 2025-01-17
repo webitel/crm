@@ -13,6 +13,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { CasesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -21,14 +22,9 @@ const configuration = getDefaultOpenAPIConfig();
 const casesService = new CasesApiFactory(configuration, '', instance);
 
 const fieldsToSend = [
-  'etag',
-  'name',
   'subject',
   'description',
   'contact_info',
-  'created_at',
-  'planned_reaction_at',
-  'planned_resolve_at',
   'status_lookup',
   'close_reason_lookup',
   'author',
@@ -40,17 +36,28 @@ const fieldsToSend = [
   'source',
   'status',
   'close',
-  'rate',
-  'timing',
   'sla_condition',
-  'difference_in_reaction',
   'sla',
   'service',
-  'comments',
-  'related_cases',
-  'links',
   'status_condition',
+  'close_reason_group',
 ];
+
+function transformSourceType(data) {
+  if (Array.isArray(data)) {
+    return data.map((item) => {
+      if (item.source?.type) {
+        item.source.type = snakeToKebab(item.source.type.toLowerCase());
+      }
+      return item;
+    });
+  }
+
+  if (data.source?.type) {
+    data.source.type = snakeToKebab(data.source.type.toLowerCase());
+  }
+  return data;
+}
 
 const getCasesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'ids', 'sort', 'fields', 'filters'];
@@ -93,7 +100,7 @@ const getCasesList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, [snakeToCamel()]),
+      items: applyTransform(items, [snakeToCamel(), transformSourceType]),
       next,
     };
   } catch (err) {
@@ -102,9 +109,40 @@ const getCasesList = async (params) => {
 };
 
 const getCase = async ({ itemId: id }) => {
+  const fieldsToSend = [
+    'etag',
+    'name',
+    'subject',
+    'description',
+    'contact_info',
+    'created_at',
+    'planned_reaction_at',
+    'planned_resolve_at',
+    'status_lookup',
+    'close_reason_lookup',
+    'author',
+    'assignee',
+    'reporter',
+    'impacted',
+    'group',
+    'priority',
+    'source',
+    'status',
+    'close',
+    'rate',
+    'timing',
+    'sla_condition',
+    'difference_in_reaction',
+    'sla',
+    'service',
+    'comments',
+    'related_cases',
+    'links',
+    'status_condition',
+  ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);
-    return applyTransform(response.data, [snakeToCamel()]);
+    return applyTransform(response.data, [snakeToCamel(), transformSourceType]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
@@ -119,36 +157,16 @@ const deleteCase = async ({ id }) => {
   }
 };
 
-const updateCase = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = [
-    'name',
-    'subject',
-    'description',
-    'contact_info',
-    'status_lookup',
-    'close_reason_lookup',
-    'author',
-    'assignee',
-    'reporter',
-    'impacted',
-    'group',
-    'priority',
-    'source',
-    'status',
-    'close',
-    'rate',
-    'sla_condition',
-    'sla',
-    'service',
-    'status_condition',
-  ];
+const updateCase = async ({ itemInstance }) => {
+  const { etag } = itemInstance;
+
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
 
   try {
-    const response = await casesService.updateCase(id, item);
+    const response = await casesService.updateCase(etag, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -156,27 +174,6 @@ const updateCase = async ({ itemInstance, itemId: id }) => {
 };
 
 const addCase = async ({ itemInstance }) => {
-  const fieldsToSend = [
-    'subject',
-    'description',
-    'contact_info',
-    'status_lookup',
-    'close_reason_lookup',
-    'author',
-    'assignee',
-    'reporter',
-    'impacted',
-    'group',
-    'priority',
-    'source',
-    'status',
-    'close',
-    'sla_condition',
-    'sla',
-    'service',
-    'status_condition',
-    'close_reason_group',
-  ];
 
   const item = applyTransform(itemInstance, [
     camelToSnake(),

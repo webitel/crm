@@ -116,8 +116,6 @@ watch(
     }
   },
 );
-
-initialize();
 </script>
 
 <style lang="scss" scoped>

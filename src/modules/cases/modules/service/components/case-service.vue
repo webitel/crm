@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { inject, onUnmounted, ref } from 'vue';
+import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
@@ -73,8 +73,6 @@ const {
   setId,
   resetState,
 });
-
-initializeComponent();
 
 const { t } = useI18n();
 const store = useStore();
@@ -133,7 +131,8 @@ async function addServiceToStore(serviceCatalogData) {
     const { service, catalog } = serviceCatalogData;
     await setServiceToStore(service);
     await setCatalogToStore(catalog);
-    //TODO: keep this so backend can work propperly
+
+    //TODO: keep this so backend can work properly until close_reason_group is removed from required
     await setItemProp({
       path: 'close_reason_group',
       value: { id: '3' },
@@ -149,20 +148,15 @@ async function addServiceToStore(serviceCatalogData) {
   }
 }
 
-// Loads initial data for the component.
-async function initializeComponent() {
-  try {
-    await initializeCard();
-    const serviceId = itemInstance.value?.service?.id;
-    if (serviceId) {
-      const serviceResponse = await ServiceAPI.get({ itemId: serviceId });
-      const catalogResponse = await CatalogAPI.get({ itemId: serviceResponse.catalogId });
-      await addServiceToStore({ service: serviceResponse, catalog: catalogResponse.catalog });
-    }
-  } catch (err) {
-    throw err;
-  }
-}
+watch(
+  () => itemInstance.value?.service?.id,
+  async (newService) => {
+    if (!newService) return;
+    const serviceResponse = await ServiceAPI.get({ itemId: newService });
+    const catalogResponse = await CatalogAPI.get({ itemId: serviceResponse.catalogId });
+    await addServiceToStore({ service: serviceResponse, catalog: catalogResponse.catalog });
+  },
+);
 
 onUnmounted(() => {
   setServiceToStore(null);
