@@ -1,9 +1,9 @@
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { CasesSourceType } from 'webitel-sdk';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 import ChatGatewayProvider
   from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import TypesSourcesEnum
-  from '../../../modules/configuration/modules/lookups/modules/sources/enums/TypesSources.enum.js';
 import AccessMode
   from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum
@@ -112,7 +112,9 @@ export default {
       editCondition: 'Редактировать условие',
       addCondition: 'Добавить условие',
       reactionTime: 'Плановое время реакции',
+      reactionTimeTitle: 'Плановое время реакции (dd:hh:mm)',
       resolutionTime: 'Плановое время решения',
+      resolutionTimeTitle: 'Плановое время решения (dd:hh:mm)',
       validFrom: 'Действителен с',
       validTo: 'Действителен до',
     },
@@ -120,15 +122,45 @@ export default {
     sources: {
       sources: 'Источник обращений | Источники обращений',
       types: {
-        [TypesSourcesEnum.CALL]: 'Звонок',
-        [TypesSourcesEnum.CHAT]: 'Чат',
-        [TypesSourcesEnum.SOCIAL_MEDIA]: 'Социальная сеть',
-        [TypesSourcesEnum.EMAIL]: 'Письмо',
-        [TypesSourcesEnum.API]: 'API',
-        [TypesSourcesEnum.MANUAL]: 'Созданное вручную',
+        [CasesSourceType.CALL]: 'Звонок',
+        [CasesSourceType.CHAT]: 'Чат',
+        [CasesSourceType.SOCIALMEDIA]: 'Социальная сеть',
+        [CasesSourceType.EMAIL]: 'Письмо',
+        [CasesSourceType.API]: 'API',
+        [CasesSourceType.MANUAL]: 'Созданное вручную',
       },
     },
-    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
+
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
+      prefix: 'Префикс',
+      code: 'Код',
+      statuses: 'Статусы',
+      skills: 'Навыки',
+    },
+
+    service: {
+      service: 'Сервисы | Сервисы',
+    },
+
+    contactGroups: {
+      contactGroups: 'Группа контактов | Группы контактов',
+      defaultGroup: 'Группа по умолчанию',
+      addGroup: 'Добавить контакты',
+      assignee: 'Исполнитель',
+      types: {
+        [WebitelContactsGroupType.DYNAMIC]: 'Динамическая',
+        [WebitelContactsGroupType.STATIC]: 'Статическая',
+      },
+    },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Причины закрытия',
+      reason: 'Причина | Причины',
+      addCondition: 'Добавить причину',
+      editCondition: 'Редактировать причину',
+    },
     [CrmSections.STATUSES]: 'Статусы',
   },
   cases: {

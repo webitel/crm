@@ -22,11 +22,11 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })"
           >
             <template #search-bar>
               <filter-search
@@ -47,7 +47,6 @@
         <div
           class="table-section__table-wrapper"
         >
-
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -88,9 +87,9 @@
                   v-if="hasDeleteAccess"
                   action="delete"
                   @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })"
                 />
               </template>
             </wt-table>
@@ -106,10 +105,9 @@
 </template>
 
 <script setup>
-import { computed, onUnmounted, watch } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -130,8 +128,6 @@ const baseNamespace = 'configuration/lookups/slas';
 
 const { t } = useI18n();
 const router = useRouter();
-
-const store = useStore();
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
@@ -159,12 +155,10 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -180,7 +174,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const path = computed(() => [
@@ -204,21 +197,6 @@ const {
   image: imageEmpty,
   text: textEmpty,
 } = useTableEmpty({ dataList, filters, error, isLoading });
-
-const refresh = () => {
-  // https://webitel.atlassian.net/browse/WTEL-5711
-  // because 'selected' value needs cleaned
-
-  resetState();
-  loadData();
-};
-
-watch(() => filtersValue.value, () => {
-  // https://webitel.atlassian.net/browse/WTEL-5744
-  // because 'selected' value needs cleaned when changing filters
-
-  resetState();
-});
 </script>
 
 <style lang="scss" scoped>

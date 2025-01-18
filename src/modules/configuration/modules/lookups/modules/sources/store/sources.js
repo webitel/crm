@@ -8,14 +8,6 @@ import SourcesAPI from '../api/sources.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
 
-const resetTableState = {
-  dataList: [],
-  selected: [],
-  error: {},
-  isLoading: false,
-  isNextPage: false,
-};
-
 const resetCardState = {
   itemInstance: {
     name: '',
@@ -33,7 +25,6 @@ const api = createApiStoreModule({
 const table = createTableStoreModule({
   state: {
     headers,
-    _resettable: resetTableState,
   },
   modules: {
     filters,
