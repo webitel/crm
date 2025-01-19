@@ -10,15 +10,22 @@
       <wt-search-bar
         :value="search"
         placeholder="Search"
+        class="case-service-popup__search-bar"
         @input="search = $event"
+        @search="loadCatalogs"
       />
       <wt-tree
+        v-if="catalogData.length"
         :model-value="selectedElement"
         style="height: 350px"
         :data="catalogData"
         item-label="name"
         children-prop="service"
         @update:model-value="selectedElement = $event"
+      />
+      <wt-empty
+        v-else
+        :text="$t('empty.text.empty')"
       />
     </template>
     <template #actions>
@@ -39,7 +46,6 @@
 </template>
 
 <script setup>
-import { serviceCatalogData } from '../api/example.js';
 import { onMounted, ref } from 'vue';
 import CatalogsAPI from '../../../../configuration/modules/lookups/modules/service-catalogs/api/service-catalogs.js';
 
@@ -54,18 +60,16 @@ const props = defineProps({
   },
 });
 
-const check = (event) => {
-  console.log('event', event)
-}
-
 const selectedElement = ref(props.value ?? null)
 const search = ref('')
 
 const emit = defineEmits(['save', 'close']);
 
-
 function save() {
-  emit('save', selectedElement.value);
+  emit('save', {
+    service: selectedElement.value,
+    catalog: catalogData.value.find((item) => item.id === selectedElement.value.catalogId),
+  });
   close();
 }
 
@@ -78,6 +82,7 @@ const catalogData = ref([]);
 const loadCatalogs = async () => {
    const { items } = await CatalogsAPI.getList({
      size: -1,
+     search: search.value,
      fields: ['id', 'name', 'service'],
   });
 
@@ -90,5 +95,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
+.case-service-popup {
+  &__search-bar {
+    margin-bottom: var(--spacing-sm);
+  }
+}
 </style>
