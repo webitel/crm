@@ -158,6 +158,15 @@ export default {
       addCondition: 'Add a reason',
       editCondition: 'Edit a reason',
     },
-    [CrmSections.STATUSES]: 'Statuses',
+
+    [CrmSections.STATUSES]: {
+      name: ({ plural, linked }) => plural(['Status', linked('lookups.serviceCatalogs.statuses')]),
+      initial: 'Initial',
+      final: 'Final',
+      addStatus: ({ linked }) => linked('reusable.add') + ' a ' + linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase(),
+      editStatus: ({ linked }) => linked('reusable.edit') + ' a ' + linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase(),
+      statusType: 'Status type',
+      finalStatusValidationText: 'You should have at least one final status and only one initial. Please, return and check its type.'
+    },
   },
 };
