@@ -9,13 +9,14 @@
     <template #main>
       <wt-search-bar
         :value="search"
-        placeholder="Search"
+        :placeholder="$t('reusable.search')"
         class="case-service-popup__search-bar"
         @input="search = $event"
         @search="loadCatalogs"
       />
+      <wt-loader v-if="loading" />
       <wt-tree
-        v-if="catalogData.length"
+        v-else-if="catalogData.length"
         :model-value="selectedElement"
         style="height: 350px"
         :data="catalogData"
@@ -25,7 +26,7 @@
       />
       <wt-empty
         v-else
-        :text="$t('empty.text.empty')"
+        :text="$t('webitelUI.empty.text.empty')"
       />
     </template>
     <template #actions>
@@ -46,7 +47,9 @@
 </template>
 
 <script setup>
+import deepCopy from 'deep-copy';
 import { onMounted, ref } from 'vue';
+
 import CatalogsAPI from '../../../../configuration/modules/lookups/modules/service-catalogs/api/service-catalogs.js';
 
 const props = defineProps({
@@ -60,15 +63,18 @@ const props = defineProps({
   },
 });
 
-const selectedElement = ref(props.value ?? null)
-const search = ref('')
-
 const emit = defineEmits(['save', 'close']);
+
+const selectedElement = ref(props.value ?? null);
+const search = ref('');
+const loading = ref(false);
 
 function save() {
   emit('save', {
     service: selectedElement.value,
-    catalog: catalogData.value.find((item) => item.id === selectedElement.value.catalogId),
+    catalog: catalogData.value.find(
+      (item) => item.id === selectedElement.value.catalogId,
+    ),
   });
   close();
 }
@@ -80,15 +86,20 @@ function close() {
 const catalogData = ref([]);
 
 const loadCatalogs = async () => {
-   const { items } = await CatalogsAPI.getList({
-     size: -1,
-     search: search.value,
-     fields: ['id', 'name', 'service'],
-     hasSubservices: true
-  });
+  try {
+    loading.value = true;
 
-  catalogData.value = items;
-}
+    const { items } = await CatalogsAPI.getList({
+      search: search.value,
+      fields: ['id', 'name', 'service'],
+      hasSubservices: true,
+    });
+
+    catalogData.value = deepCopy(items);
+  } finally {
+    loading.value = false;
+  }
+};
 
 onMounted(() => {
   loadCatalogs();
