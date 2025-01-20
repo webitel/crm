@@ -1,6 +1,10 @@
 import CrmSections
   from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { createRouter, createWebHistory } from 'vue-router';
+import TheCloseReasonGroups
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/the-close-reason-groups.vue';
+import OpenedServiceCatalogs
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs.vue';
 import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
@@ -34,6 +38,12 @@ import OpenedSourceGeneral
   from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 import OpenedSlaConditions
   from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
+import OpenedCloseReasonGroups
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
+import OpenedCloseReasonGroupsGeneral
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
+import OpenedCloseReasons
+  from '../../modules/configuration/modules/lookups/modules/close-reason-groups/modules/close-reasons/components/opened-close-reasons.vue';
 import TheContactGroups
   from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroup
@@ -44,10 +54,20 @@ import OpenedContactGroupsConditions
   from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
 import PermissionsTab
   from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
+import TheServiceCatalogs
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/the-service-catalogs.vue';
 
 import store from '../store';
 import TheConfiguration
   from '../../modules/configuration/components/the-configuration.vue';
+import OpenedServiceCatalogsGeneral
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs-general.vue';
+import TheCatalogServices
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/the-catalog-services.vue';
+import OpenedServices
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/opened-services.vue';
+import OpenedServicesGeneral
+  from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/opened-services-general.vue';
 
 const checkAppAccess = (to, from, next) => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
@@ -216,7 +236,67 @@ const routes = [
               },
             ],
           },
-
+          {
+            path: 'close-reason-groups',
+            name: CrmSections.CLOSE_REASON_GROUPS,
+            component: TheCloseReasonGroups,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'close-reason-groups/:id',
+            name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
+            component: OpenedCloseReasonGroups,
+            redirect: { name: `${CrmSections.CLOSE_REASON_GROUPS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.CLOSE_REASON_GROUPS}-general`,
+                component: OpenedCloseReasonGroupsGeneral,
+              },
+              {
+                path: 'close-reasons/:closeReasonsId?',
+                name: `close-reasons`,
+                component: OpenedCloseReasons,
+              },
+            ],
+          },
+          {
+            path: 'service-catalogs',
+            name: CrmSections.SERVICE_CATALOGS,
+            component: TheServiceCatalogs,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'service-catalogs/:id',
+            name: `${CrmSections.SERVICE_CATALOGS}-card`,
+            component: OpenedServiceCatalogs,
+            redirect: { name: `${CrmSections.SERVICE_CATALOGS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SERVICE_CATALOGS}-general`,
+                component: OpenedServiceCatalogsGeneral,
+              },
+            ],
+          },
+          {
+            path: 'service-catalogs/:catalogId/:rootId/services',
+            name: `${CrmSections.SERVICE_CATALOGS}-services`,
+            component: TheCatalogServices,
+          },
+          {
+            path: 'service-catalogs/:catalogId/:rootId/services/:id',
+            name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+            component: OpenedServices,
+            redirect: { name: `${CrmSections.SERVICE_CATALOGS}-services-card-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SERVICE_CATALOGS}-services-card-general`,
+                component: OpenedServicesGeneral,
+              },
+            ],
+          },
           {
             path: 'contact-groups',
             name: CrmSections.CONTACT_GROUPS,

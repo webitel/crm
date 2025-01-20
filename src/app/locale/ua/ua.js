@@ -131,6 +131,20 @@ export default {
         [CasesSourceType.MANUAL]: 'Створене вручну',
       },
     },
+
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
+      prefix: 'Префікс',
+      code: 'Код',
+      statuses: 'Статуси',
+      skills: 'Навички',
+    },
+
+    service: {
+      service: 'Cервіси | Cервіси',
+    },
+
     contactGroups: {
       contactGroups: 'Група контактів | Групи контактів',
       defaultGroup: 'Група за замовчуванням',
@@ -140,6 +154,13 @@ export default {
         [WebitelContactsGroupType.DYNAMIC]: 'Динамічна',
         [WebitelContactsGroupType.STATIC]: 'Статична',
       },
+    },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Причини закриття',
+      reason: 'Причина | Причини',
+      addCondition: 'Додати причину',
+      editCondition: 'Редагувати причину',
     },
     [CrmSections.STATUSES]: 'Статуси',
   },

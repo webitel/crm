@@ -35,6 +35,16 @@ const nav = reactive([
         name: computed(() => t('lookups.contactGroups.contactGroups', 2)),
         route: 'lookups/contact-groups',
       },
+      {
+        value: CrmSections.CLOSE_REASON_GROUPS,
+        name: computed(() => t('lookups.closeReasonGroups.closeReasonGroups', 2)),
+        route: 'lookups/close-reason-groups',
+      },
+      {
+        value: CrmSections.SERVICE_CATALOGS,
+        name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+        route: 'lookups/service-catalogs',
+      },
     ],
   },
 ]);

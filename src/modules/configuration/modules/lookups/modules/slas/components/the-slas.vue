@@ -24,9 +24,9 @@
             @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })"
           >
             <template #search-bar>
               <filter-search
@@ -47,7 +47,6 @@
         <div
           class="table-section__table-wrapper"
         >
-
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -88,9 +87,9 @@
                   v-if="hasDeleteAccess"
                   action="delete"
                   @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })"
                 />
               </template>
             </wt-table>

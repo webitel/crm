@@ -13,12 +13,15 @@ const resetCardState = {
   itemId: '',
   itemInstance: {
     name: '',
+    status: {},
+    prefix: '',
+    reasons: {},
+    sla: {},
+    team: {},
+    code: '',
+    skill: {},
     description: '',
-    calendar: {},
-    reactionTime: 0,
-    resolutionTime: 0,
-    validTo: 0,
-    validFrom: 0,
+    state: true,
   },
 };
 
