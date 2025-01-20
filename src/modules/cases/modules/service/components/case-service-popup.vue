@@ -9,7 +9,6 @@
     <template #main>
       <wt-search-bar
         :value="search"
-        :placeholder="$t('reusable.search')"
         class="case-service-popup__search-bar"
         @input="search = $event"
         @search="loadCatalogs"
