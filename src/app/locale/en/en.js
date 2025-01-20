@@ -158,8 +158,8 @@ export default {
     closeReasonGroups: {
       closeReasonGroups: 'Closure reasons',
       reason: 'Reason | Reasons',
-      addCondition: 'Add a reason',
-      editCondition: 'Edit a reason',
+      addReason: 'Add reason',
+      editReason: 'Edit reason',
     },
     [CrmSections.STATUSES]: 'Statuses',
   },

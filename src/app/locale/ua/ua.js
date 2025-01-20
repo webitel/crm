@@ -159,8 +159,8 @@ export default {
     closeReasonGroups: {
       closeReasonGroups: 'Причини закриття',
       reason: 'Причина | Причини',
-      addCondition: 'Додати причину',
-      editCondition: 'Редагувати причину',
+      addReason: 'Додати причину',
+      editReason: 'Редагувати причину',
     },
     [CrmSections.STATUSES]: 'Статуси',
   },
