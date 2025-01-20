@@ -49,6 +49,8 @@
           :data="dataList"
           :headers="headers"
           :selected="selected"
+          sortable
+          @sort="sort"
           @update:selected="setSelected"
         >
           <template #name="{ item }">
@@ -130,6 +132,7 @@ const {
   deleteData,
   setSelected,
   onFilterEvent,
+  sort,
 } = useTableStore(namespace);
 
 const {
