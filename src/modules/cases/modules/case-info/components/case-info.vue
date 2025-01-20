@@ -34,7 +34,7 @@
     <div class="opened-card-input-grid">
       <editable-field
         color="info"
-        :icon="itemInstance?.source?.type"
+        :icon="itemInstance.source?.type"
         :edit-mode="editMode"
         :label="t('cases.source')"
         :value="itemInstance.source?.name"
@@ -68,6 +68,7 @@
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -93,7 +94,6 @@ const {
 } = useCardStore(props.namespace);
 
 const editMode = inject('editMode');
-
 </script>
 
 <style lang="scss" scoped>

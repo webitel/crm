@@ -9,7 +9,7 @@
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
-        :key="statusId"
+        :key="status?.id"
         :clearable="false"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
@@ -105,68 +105,76 @@ function getIndicatorColor(option) {
   return 'other-status';
 }
 
-const statusId = computed(() => store.getters[`${props.namespace}/service/STATUS_ID`]);
+const status = computed(() => store.getters[`${props.namespace}/service/STATUS`]);
 
-const fetchStatusConditions = async (params) =>
-  await StatusConditionsAPI.getLookup({
-    ...params,
-    statusId: statusId.value,
-  });
+const fetchStatusConditions = async (params) => {
+  if (!status?.value?.id) {
+    return { items: [] };
+  }
+
+  try {
+    return await StatusConditionsAPI.getLookup({
+      ...params,
+      fields: ['id', 'name', 'initial', 'final'],
+      statusId: status.value.id,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+async function patchStatusCondition(condition) {
+  try {
+    await setItemProp({
+      path: 'statusCondition',
+      value: condition,
+    });
+
+    await setItemProp({
+      path: 'status',
+      value: status.value,
+    });
+
+    if (!isNew.value) {
+      await CasesAPI.patch({
+        changes: {
+          statusCondition: condition,
+          status: status.value,
+        },
+        etag: itemInstance.value.etag,
+      });
+    }
+  } catch (err) {
+    throw err;
+  }
+}
 
 async function handleSelect(value) {
   if (value.final) isResultPopup.value = true;
 
   try {
-    const statusResponse = await StatusesAPI.get({ itemId: statusId.value });
-    const status = {
-      id: statusResponse.id,
-      name: statusResponse.name,
-    };
-    await setItemProp({
-      path: 'status',
-      value: status,
-    });
-    await setItemProp({
-      path: 'statusCondition',
-      value,
-    });
-    await CasesAPI.patch({
-      itemId: id.value,
-      itemInstance: {
-        statusCondition: value,
-        status,
-      },
-    });
+    await patchStatusCondition(value);
   } catch (err) {
     throw err;
   }
 }
 
 async function updateStatusCondition() {
-  if (!statusId.value && !itemInstance.value.statusCondition) return;
+  if (!status?.value?.id || itemInstance.value.statusCondition.id) return;
 
   try {
-    const { items } = await StatusConditionsAPI.getList({ statusId: statusId.value });
+    const { items } = await StatusConditionsAPI.getList({ statusId: status.value.id });
 
     const initialCondition = items.find((item) => item.initial);
-
-    await setItemProp({
-      path: 'statusCondition',
-      value: initialCondition,
-    });
-
-    await CasesAPI.patch({
-      itemId: id.value,
-      itemInstance: {
-        statusCondition: initialCondition,
-      },
-    });
+    if (initialCondition) {
+      await patchStatusCondition(initialCondition);
+    }
   } catch (err) {
     throw err;
   }
 }
 
-watch(statusId, updateStatusCondition);
+watch(() => status?.value?.id, updateStatusCondition, { immediate: true, deep: true });
 </script>
 
 <style lang="scss" scoped>

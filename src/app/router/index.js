@@ -9,6 +9,10 @@ import TheCloseReasonGroups
   from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/the-close-reason-groups.vue';
 import OpenedServiceCatalogs
   from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs.vue';
+import OpenedCase from '../../modules/cases/components/opened-case.vue';
+import TheCases from '../../modules/cases/components/the-cases.vue';
+import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
+import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import ContactCommunications
   from '../../modules/contacts/components/opened-contact-communications.vue';
 import OpenedContact
@@ -326,7 +330,7 @@ const routes = [
               },
             ],
           },
-      ],
+        ],
       },
     ],
   },

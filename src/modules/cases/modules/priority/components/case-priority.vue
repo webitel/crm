@@ -10,7 +10,7 @@
         <template #default="props">
           <wt-select
             :clearable="false"
-            :search-method="PriorityAPI.getLookup"
+            :search-method="PrioritiesAPI.getLookup"
             class="case-priority__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -22,11 +22,11 @@
 </template>
 
 <script setup>
-import { inject, onMounted } from 'vue';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/ priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import PriorityAPI from '../api/PriorityAPI.js';
 
 const { t } = useI18n();
 
@@ -44,22 +44,6 @@ const {
 } = useCardStore(props.namespace);
 
 const editMode = inject('editMode');
-
-// TODO: replace p1 with actual priority id after API is implemented
-async function initializePriority() {
-  if (!itemInstance.value.priority) {
-    try {
-      const priority = await PriorityAPI.get({ itemId: 'p1' });
-      await setItemProp({ path: 'priority', value: priority });
-    } catch (err) {
-      throw err
-    }
-  }
-}
-
-onMounted(() => {
-  initializePriority();
-});
 </script>
 
 <style lang="scss" scoped>

@@ -23,10 +23,10 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'status',
+    value: 'statusCondition',
     locale: 'cases.status',
     show: true,
-    field: 'status',
+    field: 'status_condition',
     sort: SortSymbols.NONE,
   },
   {
@@ -40,7 +40,7 @@ export default [
     value: 'createdAt',
     locale: 'reusable.createdAt',
     show: true,
-    field: 'timing',
+    field: 'created_at',
     sort: SortSymbols.NONE,
   },
   {
@@ -89,14 +89,14 @@ export default [
     value: 'appliedSLA',
     locale: 'cases.appliedSLA',
     show: true,
-    field: 'service',
+    field: 'sla',
     sort: SortSymbols.NONE,
   },
   {
-    value: 'appliedCondition',
+    value: 'slaCondition',
     locale: 'cases.appliedCondition',
     show: true,
-    field: 'slaCondition',
+    field: 'sla_condition',
     sort: SortSymbols.NONE,
   },
   {
