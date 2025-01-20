@@ -16,10 +16,21 @@
       </h3>
 
       <wt-action-bar
-        :include="[IconAction.ADD, IconAction.REFRESH]"
+        :disabled:delete="!selected.length"
+        :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         @click:add="router.push({ ...route, params: { closeReasonsId: 'new' } })"
         @click:refresh="loadData"
+        @click:delete="askDeleteConfirmation({
+                  deleted: selected,
+                  callback: () => deleteData(selected),
+                })"
       >
+        <template #search-bar>
+          <filter-search
+            :namespace="filtersNamespace"
+            name="search"
+          />
+        </template>
       </wt-action-bar>
     </header>
 
@@ -38,6 +49,8 @@
           :data="dataList"
           :headers="headers"
           :selected="selected"
+          sortable
+          @sort="sort"
           @update:selected="setSelected"
         >
           <template #name="{ item }">
@@ -70,6 +83,7 @@
 </template>
 
 <script setup>
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -118,6 +132,7 @@ const {
   deleteData,
   setSelected,
   onFilterEvent,
+  sort,
 } = useTableStore(namespace);
 
 const {
