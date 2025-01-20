@@ -9,18 +9,19 @@
         <span>{{ prettifyDate(time) }}</span>
       </div>
       <span
-        v-if="formattedTimeDifference"
+        v-if="timeDifference"
         :class="{
           'case-deadline__time-difference_positive': timeDifference > 0,
           'case-deadline__time-difference_negative': timeDifference < 0
         }"
-      >{{ formattedTimeDifference }}</span>
+      >{{ convertDurationWithDays(timeDifference, true) }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import convertDurationWithDays
+  from '../../../../../app/scripts/convertDurationWithDays.js';
 import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
@@ -37,23 +38,6 @@ const props = defineProps({
     default: '',
   },
 });
-
-const formattedTimeDifference = computed(() => {
-  //value is in seconds
-  const value = Number(props.timeDifference);
-  if (!value) return '';
-
-  const totalSeconds = Math.abs(value);
-  const isNegative = value < 0;
-
-  const days = Math.floor(totalSeconds / (24 * 60 * 60));
-  const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
-  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-
-  const formatted = `${days}d ${hours}h ${minutes}m`;
-
-  return isNegative ? `- ${formatted}` : formatted;
-});
 </script>
 
 <style lang="scss" scoped>
@@ -64,8 +48,8 @@ const formattedTimeDifference = computed(() => {
 
   &__value-wrapper {
     display: flex;
-    gap: var(--spacing-xs);
     text-align: end;
+    gap: var(--spacing-xs);
   }
 
   &__item-content {
