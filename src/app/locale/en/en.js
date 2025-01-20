@@ -133,7 +133,6 @@ export default {
       prefix: 'Prefix',
       code: 'Code',
       statuses: 'Statuses',
-      closureReasons: 'Closure reasons',
       skills: 'Skills',
     },
 

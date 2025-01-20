@@ -17,8 +17,8 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
-const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
+const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason_group', 'reason', 'description', 'services'];
+const servicesFieldsToSend = ['id', 'name', 'group', 'assignee', 'assignee.name', 'description', 'code', 'prefix', 'state', 'sla', 'root_id', 'catalog_id'];
 
 const getCatalogsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -53,7 +53,7 @@ undefined,
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, []),
+      items: applyTransform(items, [snakeToCamel()]),
       next,
     };
   } catch (err) {
@@ -77,22 +77,9 @@ const getCatalog = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    state: item.state ?? true,
-    sla_id: item.sla?.id,
-    status_id: item.status?.id,
-    close_reason_id: item.closeReason?.id,
-    team_ids: item.teams?.map((team) => team.id),
-    skill_ids: item.skills?.map((skill) => skill.id),
-  }
-};
-
 const addCatalog = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason_group', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -107,9 +94,8 @@ const addCatalog = async ({ itemInstance }) => {
 };
 
 const updateCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason_group', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
   try {
@@ -121,9 +107,8 @@ const updateCatalog = async ({ itemInstance, itemId: id }) => {
 };
 
 const patchCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'state'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
   try {

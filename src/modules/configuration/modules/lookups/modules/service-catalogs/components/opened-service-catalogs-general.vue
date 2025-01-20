@@ -1,5 +1,5 @@
 <template>
-  <section class="opened-service-catalog-general">
+  <section>
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
@@ -9,6 +9,7 @@
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
+        :v="v.itemInstance.name"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -17,6 +18,7 @@
         :label="t('lookups.serviceCatalogs.statuses')"
         :search-method="loadStatusesList"
         :value="itemInstance.status"
+        :v="v.itemInstance.status"
         required
         :clearable="false"
         @input="setItemProp({ path: 'status', value: $event })"
@@ -25,23 +27,26 @@
       <wt-input
         :label="t('lookups.serviceCatalogs.prefix')"
         :value="itemInstance.prefix"
+        :v="v.itemInstance.prefix"
         required
         @input="setItemProp({ path: 'prefix', value: $event })"
       />
 
       <wt-select
-        :label="t('lookups.serviceCatalogs.closureReasons')"
+        :label="t('lookups.closeReasonGroups.closeReasonGroups')"
         :search-method="loadReasonList"
-        :value="itemInstance.closeReason"
+        :value="itemInstance.closeReasonGroup"
+        :v="v.itemInstance.closeReasonGroup"
         required
         :clearable="false"
-        @input="setItemProp({ path: 'closeReason', value: $event })"
+        @input="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
 
       <wt-select
         :label="t('lookups.slas.slas')"
         :search-method="loadSlaList"
         :value="itemInstance.sla"
+        :v="v.itemInstance.sla"
         required
         :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
@@ -99,6 +104,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  v: {
+    type: Object,
+    required: true,
+  },
   isNew: {
     type: Boolean,
     required: true,
@@ -109,30 +118,23 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-function loadStatusesList(search) {
-  return StatusesApi.getLookup(search);
+function loadStatusesList(params) {
+  return StatusesApi.getLookup(params);
 }
 
-function loadReasonList(search) {
-  return CloseReasonsApi.getLookup(search);
+function loadReasonList(params) {
+  return CloseReasonsApi.getLookup(params);
 }
 
-function loadSlaList(search) {
-  return SlasAPI.getLookup(search);
+function loadSlaList(params) {
+  return SlasAPI.getLookup(params);
 }
 
-function loadTeamsList(search) {
-  return TeamsAPI.getLookup(search);
+function loadTeamsList(params) {
+  return TeamsAPI.getLookup(params);
 }
 
-function loadSkillsList(search) {
-  return SkillsAPI.getLookup(search);
+function loadSkillsList(params) {
+  return SkillsAPI.getLookup(params);
 }
 </script>
-
-<style lang="scss" scoped>
-.opened-sla-general__wrapper {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-</style>
