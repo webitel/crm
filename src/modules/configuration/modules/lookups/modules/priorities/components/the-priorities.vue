@@ -11,17 +11,18 @@
         <wt-headline-nav :path="path" />
       </wt-page-header>
     </template>
+
     <template #main>
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.slas.slas') }}
+            {{ t('vocabulary.priority') }}
           </h3>
+
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-            :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
-            @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
+            @click:add="router.push({ name: `${CrmSections.PRIORITIES}-card`, params: { id: 'new' }})"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
@@ -60,40 +61,40 @@
               :data="dataList"
               :headers="headers"
               :selected="selected"
+              :selectable="true"
               sortable
               @sort="sort"
               @update:selected="setSelected"
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.PRIORITIES}-card`, params: { id: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
               </template>
-              <template #description="{ item }">
-                {{ item.description }}
+
+              <template #color="{ item }">
+                <color-component-wrapper
+                  :color="item.color"
+                  component="wt-indicator"
+                />
               </template>
-              <template #calendar="{ item }">
-                {{ item.calendar.name }}
-              </template>
+
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
                   action="edit"
                   @click="edit(item)"
                 />
+
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
                   action="delete"
-                  @click="askDeleteConfirmation({
-                    deleted: [item],
-                    callback: () => deleteData(item),
-                  })"
+                  @click="askDeleteConfirmationWrapper(item)"
                 />
               </template>
             </wt-table>
           </div>
+
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"
@@ -105,30 +106,30 @@
 </template>
 
 <script setup>
-import { computed, onUnmounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import {computed, onUnmounted} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {useRouter} from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import {
-  useDeleteConfirmationPopup,
+  useDeleteConfirmationPopup
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 
-const baseNamespace = 'configuration/lookups/slas';
+const baseNamespace = 'configuration/lookups/priorities';
 
 const { t } = useI18n();
 const router = useRouter();
-
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -158,6 +159,7 @@ const {
 
 const {
   namespace: filtersNamespace,
+  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -179,14 +181,21 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.slas.slas', 2) },
+  { name: t('vocabulary.priority', 2) },
 ]);
 
 const { close } = useClose('configuration');
 
+function askDeleteConfirmationWrapper(item) {
+  askDeleteConfirmation({
+    deleted: [item],
+    callback: () => deleteData(item),
+  })
+}
+
 function edit(item) {
   return router.push({
-    name: `${CrmSections.SLAS}-card`,
+    name: `${CrmSections.PRIORITIES}-card`,
     params: { id: item.id },
   });
 }

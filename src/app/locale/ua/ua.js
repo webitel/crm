@@ -131,6 +131,10 @@ export default {
 
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
+      prefix: 'Префікс',
+      code: 'Код',
+      statuses: 'Статуси',
+      skills: 'Навички',
     },
 
     service: {

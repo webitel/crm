@@ -4,7 +4,7 @@ import {
   getDefaultInstance,
   getDefaultOpenAPIConfig
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import { ServicesApiFactory } from 'webitel-sdk';
+import { ServicesApiFactory, WebitelContactsGroupType } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
   merge, notify,
@@ -17,7 +17,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const servicesService = new ServicesApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+const fieldsToSend = ['name', 'code', 'sla', 'status', 'state', 'description', 'group', 'assignee', 'services', 'root_id', 'catalog_id'];
 
 const getServicesList = async ({ rootId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -60,7 +60,7 @@ const getServicesList = async ({ rootId, ...rest }) => {
 };
 
 const getService = async ({ itemId: id }) => {
-  const fieldsToSend = ['name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
+  const fieldsToSend = ['name', 'code', 'sla', 'state', 'prefix', 'group', 'assignee', 'description', 'catalog_id'];
 
   const itemResponseHandler = (item) => {
     return item.service;
@@ -77,25 +77,22 @@ const getService = async ({ itemId: id }) => {
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
+const preRequestHandler = ({ rootId, catalogId }) => {
+  return (item) => ({
     ...item,
-    state: item.state ?? true,
-    sla_id: item.sla?.id,
-    status_id: item.status?.id,
-    close_reason_id: item.closeReason?.id,
-    team_ids: item.teams?.map((team) => team.id),
-    skill_ids: item.skills?.map((skill) => skill.id),
-  }
+    assignee: item.group?.type === WebitelContactsGroupType.DYNAMIC ? {} : item.assignee,
+    rootId,
+    catalogId
+  })
 };
 
-const addService = async ({ itemInstance }) => {
-
+const addService = async ({ itemInstance, rootId, catalogId }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
+    preRequestHandler({ rootId, catalogId }),
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
+
   try {
     const response = await servicesService.createService(item);
     return applyTransform(response.data, [
@@ -106,11 +103,12 @@ const addService = async ({ itemInstance }) => {
   }
 };
 
-const updateService = async ({ itemInstance, itemId: id }) => {
+const updateService = async ({ itemInstance, itemId: id, rootId, catalogId }) => {
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
+    preRequestHandler({ rootId, catalogId }),
     camelToSnake(),
     sanitize(fieldsToSend)]);
+
   try {
     const response = await servicesService.updateService(id, item);
     return applyTransform(response.data, [snakeToCamel()]);

@@ -36,6 +36,11 @@ const nav = reactive([
         route: 'lookups/contact-groups',
       },
       {
+        value: CrmSections.PRIORITIES,
+        name: computed(() => t('vocabulary.priority', 2)),
+        route: 'lookups/priorities',
+      },
+      {
         value: CrmSections.CLOSE_REASON_GROUPS,
         name: computed(() => t('lookups.closeReasonGroups.closeReasonGroups', 2)),
         route: 'lookups/close-reason-groups',

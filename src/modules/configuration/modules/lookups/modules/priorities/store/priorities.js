@@ -4,36 +4,27 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import CatalogsAPI from '../api/service-catalogs.js';
+import PrioritiesAPI from '../api/priorities.js';
 import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
 
 const resetCardState = {
+  itemId: '',
   itemInstance: {
     name: '',
-    code: '',
-    sla: {},
-    teams: [],
-    skills: [],
-    status: {},
-    prefix: '',
-    closeReasonGroup: {},
     description: '',
-    services: [],
-    state: true,
+    color: '',
   },
 };
 
 const api = createApiStoreModule({
   state: {
-    api: CatalogsAPI,
+    api: PrioritiesAPI,
   },
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers
-  },
+  state: { headers },
   modules: {
     filters,
     api,
@@ -41,20 +32,17 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: {
-    itemInstance: resetCardState.itemInstance,
-    _resettable: resetCardState
-  },
+  state: { _resettable: resetCardState, itemInstance: resetCardState.itemInstance },
   modules: {
     api,
   },
 });
 
-const catalogs = createBaseStoreModule({
+const priorities = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default catalogs;
+export default priorities;
