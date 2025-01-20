@@ -5,8 +5,7 @@
     @close="close"
   >
     <template #title>
-      {{ !isNew ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('lookups.closeReasonGroups.reason', 1).toLowerCase() }}
+      {{ !isNew ? t('lookups.closeReasonGroups.editReason') : t('lookups.closeReasonGroups.addReason') }}
     </template>
     <template #main>
       <form>
