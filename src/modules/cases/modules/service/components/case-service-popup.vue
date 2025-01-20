@@ -84,6 +84,7 @@ const loadCatalogs = async () => {
      size: -1,
      search: search.value,
      fields: ['id', 'name', 'service'],
+     hasSubservices: true
   });
 
   catalogData.value = items;
