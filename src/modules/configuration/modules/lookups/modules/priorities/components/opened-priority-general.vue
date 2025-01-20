@@ -18,7 +18,7 @@
       <div class="opened-priority-general__wrapper">
         <color-component-wrapper
           :color="itemInstance.color"
-          component-type="wt-icon"
+          component="wt-icon"
           icon="cases"
           size="xl"
         />
@@ -37,7 +37,7 @@
             <div class="opened-priority-general__color-wrapper">
               <color-component-wrapper
                 :color="option.id"
-                component-type="wt-indicator"
+                component="wt-indicator"
               />
 
               <span class="opened-priority-general__color-name">
@@ -50,7 +50,7 @@
             <div class="opened-priority-general__color-wrapper">
               <color-component-wrapper
                 :color="option.id"
-                component-type="wt-indicator"
+                component="wt-indicator"
               />
 
               <span class="opened-priority-general__color-name">

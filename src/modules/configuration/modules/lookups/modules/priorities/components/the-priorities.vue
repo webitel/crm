@@ -77,7 +77,7 @@
               <template #color="{ item }">
                 <color-component-wrapper
                   :color="item.color"
-                  component-type="wt-indicator"
+                  component="wt-indicator"
                 />
               </template>
 
