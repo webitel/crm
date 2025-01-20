@@ -130,13 +130,16 @@ export default {
 
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
+      prefix: 'Префикс',
+      code: 'Код',
+      statuses: 'Статусы',
+      skills: 'Навыки',
     },
 
     service: {
       service: 'Сервисы | Сервисы',
     },
 
-    [CrmSections.CONTACT_GROUPS]: 'Группы контактов',
     contactGroups: {
       contactGroups: 'Группа контактов | Группы контактов',
       defaultGroup: 'Группа по умолчанию',

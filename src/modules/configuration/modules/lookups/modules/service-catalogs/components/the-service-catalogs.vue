@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:add="addNewCatalog"
-            @click:refresh="refresh"
+            @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
@@ -70,7 +70,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { id: item.id } }"
+                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { catalogId: item.catalogId ? item.catalogId : item.id, rootId: item.id } }"
                 >
                   {{ item.name }}
                 </wt-item-link>
@@ -79,10 +79,24 @@
                 {{ displayText(item.sla?.name) }}
               </template>
               <template #statuses="{ item }">
-                {{ displayText(item.status?.name) }}
+                <template v-if="isRootElement(item)">
+                  {{ displayText(item.status?.name) }}
+                </template>
+                <template v-else>
+                  <wt-item-link
+                    v-if="item.assignee?.id"
+                    class="the-service-catalogs__service-assignee"
+                    :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
+                  >
+                    {{ item.assignee.name }}
+                  </wt-item-link>
+                  <template v-else>
+                    {{ displayText(item.assignee?.name) }}
+                  </template>
+                </template>
               </template>
-              <template #close_reason="{ item }">
-                {{ displayText(item.close_reason?.name) }}
+              <template #closeReasonGroup="{ item }">
+                {{ displayText(item.closeReasonGroup?.name) }}
               </template>
 
               <template
@@ -90,12 +104,14 @@
               >
                 {{ displayText(item.prefix) }}
               </template>
-
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
                   @change="changeState(item, index)"
                 />
+              </template>
+              <template #code="{ item }">
+                {{ displayText(item.code) }}
               </template>
               <template #teams="{ item }">
                 <template v-if="!isRootElement(item)">
@@ -163,9 +179,10 @@ import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import DisplayChipItems from './display-chip-items.vue';
 import ServicesAPI from '../modules/services/api/services.js';
+import { displayText } from '../../../../../../../app/utils/displayText.js';
 
 const baseNamespace = 'configuration/lookups/catalogs';
-const EMPTY_CELL = '-'
+
 
 const { t } = useI18n();
 const router = useRouter();
@@ -205,12 +222,10 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  resetState,
 } = useTableStore(baseNamespace);
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -226,7 +241,6 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
-  resetState();
 });
 
 const {
@@ -247,12 +261,7 @@ const edit = (item) => {
   });
 }
 
-const refresh = () => {
-  resetState();
-  loadData();
-};
-
-const isRootElement = (item) => !item.root_id;
+const isRootElement = (item) => !item.rootId;
 
 const changeState = async (item) => {
   if(isRootElement(item)) {
@@ -266,18 +275,22 @@ const changeState = async (item) => {
 
     item.state = !item.state;
   } else {
-
-    ServicesAPI.patch({
+    await ServicesAPI.patch({
       changes: {
         state: !item.state,
       },
       id: item.id,
     })
+
+    item.state = !item.state;
   }
 }
-const displayText = (text) => text && EMPTY_CELL;
-
-watch(() => filtersValue.value, () => {
-  resetState();
-});
 </script>
+
+<style scoped lang="scss">
+.the-service-catalogs {
+  &__service-assignee {
+    color: var(--text-link-color) !important;
+  }
+}
+</style>
