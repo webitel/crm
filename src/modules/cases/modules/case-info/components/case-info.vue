@@ -65,7 +65,10 @@
       </editable-field>
     </div>
   </div>
-  <case-comments :namespace="namespace"/>
+  <case-comments
+    :item-id="id"
+    :namespace="commentsNamespace"
+  />
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
@@ -93,7 +96,10 @@ const {
   namespace: cardNamespace,
   itemInstance,
   setItemProp,
+  id,
 } = useCardStore(props.namespace);
+
+const commentsNamespace = `${props.namespace}/comments`;
 
 const editMode = inject('editMode');
 </script>

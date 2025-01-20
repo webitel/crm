@@ -47,8 +47,6 @@ const getConditionsList = async ({ parentId, ...rest }) => {
     camelToSnake(),
   ]);
 
-  console.log(priorityId);
-
   try {
     const response = await slaConditionsService.listSLAConditions(
       parentId,

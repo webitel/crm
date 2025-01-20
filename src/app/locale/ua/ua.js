@@ -174,6 +174,11 @@ export default {
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
-    }
+    },
+    comments: {
+      comments: 'Коментарі',
+      edited: 'Відредаговано',
+      yourCommentHere: 'Ваш коментар тут',
+    },
   },
 };

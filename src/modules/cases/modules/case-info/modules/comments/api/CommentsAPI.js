@@ -53,6 +53,7 @@ const fieldsToSend = [
 ];
 
 const getCommentsList = async (params) => {
+  console.log(params);
   const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
 
   const {
@@ -76,7 +77,7 @@ const getCommentsList = async (params) => {
   ]);
   try {
     const response = await commentsService.listComments(
-        etag,
+      "ZwQwmQh",
         page,
         size,
         q,
@@ -155,35 +156,9 @@ const updateCase = async ({ itemInstance, itemId: id }) => {
   }
 };
 
-const addCase = async ({ itemInstance }) => {
-  const fieldsToSend = [
-    'subject',
-    'description',
-    'contact_info',
-    'status_lookup',
-    'close_reason_lookup',
-    'author',
-    'assignee',
-    'reporter',
-    'impacted',
-    'group',
-    'priority',
-    'source',
-    'status',
-    'close',
-    'sla_condition',
-    'sla',
-    'service',
-    'status_condition',
-    'close_reason_group',
-  ];
-
-  const item = applyTransform(itemInstance, [
-    camelToSnake(),
-    sanitize(fieldsToSend),
-  ]);
+const addComment = async ({ etag, input }) => {
   try {
-    const response = await casesService.createCase(item);
+    const response = await commentsService.publishComment(etag, input);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -213,7 +188,7 @@ const commentsAPI = {
   // get: getComment,
   // delete: deleteComment,
   // update: updateComment,
-  // add: addComment,
+  add: addComment,
   // patch: patchComment,
 };
 
