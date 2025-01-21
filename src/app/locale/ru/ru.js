@@ -81,7 +81,7 @@ export default {
     edit: 'Редактировать',
     delete: 'Удалить',
     granteePopup: {
-      title: 'Добавить получателя',
+      title: 'Добавить владельца прав',
     },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Запрещено',
