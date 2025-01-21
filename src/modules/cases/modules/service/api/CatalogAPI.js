@@ -17,11 +17,11 @@ const configuration = getDefaultOpenAPIConfig();
 
 const catalogsService = new CatalogsApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason', 'reason', 'description', 'services'];
-const servicesFieldsToSend = ['id', 'name', 'group', 'description', 'code', 'prefix', 'state', 'sla', 'root_id'];
+const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 'state', 'prefix', 'close_reason_group', 'reason', 'description', 'services'];
+const servicesFieldsToSend = ['id', 'name', 'group', 'assignee', 'assignee.name', 'description', 'code', 'prefix', 'state', 'sla', 'root_id', 'catalog_id'];
 
 const getCatalogsList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'hasSubservices'];
 
   const {
     page,
@@ -30,6 +30,7 @@ const getCatalogsList = async (params) => {
     sort,
     id,
     q,
+    has_subservices
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -47,13 +48,14 @@ const getCatalogsList = async (params) => {
       q,
       true,
       undefined,
-      servicesFieldsToSend
+      servicesFieldsToSend,
+      has_subservices,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, []),
+      items: applyTransform(items, [snakeToCamel()]),
       next,
     };
   } catch (err) {
@@ -62,32 +64,24 @@ const getCatalogsList = async (params) => {
 };
 
 const getCatalog = async ({ itemId: id }) => {
+  const itemResponseHandler = (item) => {
+    return item.catalog;
+  };
+
   try {
     const response = await catalogsService.locateCatalog(id, fieldsToSend);
     return applyTransform(response.data, [
       snakeToCamel(),
+      itemResponseHandler,
     ]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const preRequestHandler = (item) => {
-  return {
-    ...item,
-    state: item.state ?? true,
-    sla_id: item.sla?.id,
-    status_id: item.status?.id,
-    close_reason_id: item.closeReason?.id,
-    team_ids: item.teams?.map((team) => team.id),
-    skill_ids: item.skills?.map((skill) => skill.id),
-  }
-};
-
 const addCatalog = async ({ itemInstance }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason_group', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
@@ -102,9 +96,8 @@ const addCatalog = async ({ itemInstance }) => {
 };
 
 const updateCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla', 'status', 'close_reason_group', 'teams', 'skills'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
   try {
@@ -116,9 +109,8 @@ const updateCatalog = async ({ itemInstance, itemId: id }) => {
 };
 
 const patchCatalog = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = ['name', 'description', 'prefix', 'code',  'state', 'sla_id', 'status_id', 'close_reason_id', 'team_ids', 'skill_ids'];
+  const fieldsToSend = ['name', 'description', 'state'];
   const item = applyTransform(itemInstance, [
-    preRequestHandler,
     camelToSnake(),
     sanitize(fieldsToSend)]);
   try {
@@ -138,7 +130,7 @@ const deleteCatalog = async ({ id }) => {
   }
 };
 
-const catalogsAPI = {
+const CatalogsAPI = {
   getList: getCatalogsList,
   get: getCatalog,
   add: addCatalog,
@@ -147,4 +139,4 @@ const catalogsAPI = {
   delete: deleteCatalog,
 }
 
-export default catalogsAPI;
+export default CatalogsAPI;

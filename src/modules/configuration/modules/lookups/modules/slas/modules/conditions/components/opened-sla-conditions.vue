@@ -86,10 +86,10 @@
             </div>
           </template>
           <template #reactionTime="{ item }">
-            {{ ConvertDurationWithDays(item.reactionTime / 60) }}
+            {{ ConvertDurationWithDays(item.reactionTime) }}
           </template>
           <template #resolutionTime="{ item }">
-            {{ ConvertDurationWithDays(item.resolutionTime / 60) }}
+            {{ ConvertDurationWithDays(item.resolutionTime) }}
           </template>
           <template #actions="{ item }">
             <wt-icon-action
@@ -131,7 +131,7 @@ import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js'
 import FilterSearch
   from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import ConditionPopup from './opened-sla-condition-popup.vue';
-import ConvertDurationWithDays from '../scripts/convertDurationWithDays.js'
+import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js'
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import filters from '../modules/filters/store/filters.js';
 

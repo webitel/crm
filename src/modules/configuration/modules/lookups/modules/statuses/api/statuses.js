@@ -2,42 +2,53 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
+  getDefaultOpenAPIConfig
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
+import { StatusesApiFactory } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   merge,
-  mergeEach,
   notify,
   sanitize,
-  snakeToCamel,
-  starToSearch,
+  starToSearch
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 
 const instance = getDefaultInstance();
+const configuration = getDefaultOpenAPIConfig();
 
-const baseUrl = '/cases/priorities';
+const closeReasonsService = new StatusesApiFactory(configuration, '', instance);
 
-const fieldsToSend = ['name', 'description', 'color'];
-
-const getPrioritiesList = async (params) => {
+const getStatusesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const url = applyTransform(params, [
+  const {
+    page,
+    size,
+    fields,
+    sort,
+    id,
+    q,
+  } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(baseUrl),
   ]);
   try {
-    const response = await instance.get(url);
+    const response = await closeReasonsService.listStatuses(
+      page,
+      size,
+      fields,
+      sort,
+      id,
+      q,
+    );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(items, []),
+      items,
       next,
     };
   } catch (err) {
@@ -45,15 +56,14 @@ const getPrioritiesList = async (params) => {
   }
 };
 
-const getConditionsLookup = (params) =>
-  getPrioritiesList({
-    ...params,
-    fields: params.fields || ['id', 'name'],
-  });
+const getStatusesLookup = async (params) => getStatusesList({
+  ...params,
+  fields: params.fields || ['id', 'name'],
+})
 
-const PrioritiesAPI = {
-  getList: getPrioritiesList,
-  getLookup: getConditionsLookup,
+const StatusesApi = {
+  getList: getStatusesList,
+  getLookup: getStatusesLookup,
 }
 
-export default PrioritiesAPI;
+export default StatusesApi;

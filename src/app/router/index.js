@@ -1,56 +1,51 @@
-import CrmSections
-  from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+
 import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
-import ContactCommunications
-  from '../../modules/contacts/components/opened-contact-communications.vue';
-import OpenedContact
-  from '../../modules/contacts/components/opened-contact.vue';
-import ContactPermissions
-  from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
-import ContactTimeline
-  from '../../modules/contacts/modules/timeline/components/the-timeline.vue';
-import ContactVariables
-  from '../../modules/contacts/modules/variables/components/the-variables.vue';
+import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
+import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
+import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
+import TheCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/the-close-reason-groups.vue';
+import OpenedCloseReasons from '../../modules/configuration/modules/lookups/modules/close-reason-groups/modules/close-reasons/components/opened-close-reasons.vue';
+import OpenedContactGroup from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group.vue';
+import OpenedContactGroupGeneral from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
+import TheContactGroups from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
+import OpenedContactGroupsConditions from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import OpenedPriority from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
+import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
+import ThePriorities from '../../modules/configuration/modules/lookups/modules/priorities/components/the-priorities.vue';
+import OpenedServiceCatalogs from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs.vue';
+import OpenedServiceCatalogsGeneral from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs-general.vue';
+import TheServiceCatalogs from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/the-service-catalogs.vue';
+import OpenedServices from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/opened-services.vue';
+import OpenedServicesGeneral from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/opened-services-general.vue';
+import TheCatalogServices from '../../modules/configuration/modules/lookups/modules/service-catalogs/modules/services/components/the-catalog-services.vue';
+import OpenedSla from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
+import OpenedSlaGeneral from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
+import TheSlas from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
+import OpenedSlaConditions from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
+import OpenedSource from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
+import OpenedSourceGeneral from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
+import TheSources from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
+import OpenedContact from '../../modules/contacts/components/opened-contact.vue';
+import ContactCommunications from '../../modules/contacts/components/opened-contact-communications.vue';
+import TheContacts from '../../modules/contacts/components/the-contacts.vue';
+import ContactPermissions from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
+import ContactTimeline from '../../modules/contacts/modules/timeline/components/the-timeline.vue';
+import ContactVariables from '../../modules/contacts/modules/variables/components/the-variables.vue';
+import TheStartPage from '../../modules/start-page/components/the-start-page.vue';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
-import TheStartPage
-  from '../../modules/start-page/components/the-start-page.vue';
-import TheContacts from '../../modules/contacts/components/the-contacts.vue';
-import TheSlas
-  from '../../modules/configuration/modules/lookups/modules/slas/components/the-slas.vue';
-import OpenedSla
-  from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla.vue';
-import OpenedSlaGeneral
-  from '../../modules/configuration/modules/lookups/modules/slas/components/opened-sla-general.vue';
-import TheSources
-  from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
-import OpenedSource
-  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
-import OpenedSourceGeneral
-  from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
-import OpenedSlaConditions
-  from '../../modules/configuration/modules/lookups/modules/slas/modules/conditions/components/opened-sla-conditions.vue';
-import TheContactGroups
-  from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
-import OpenedContactGroup
-  from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group.vue';
-import OpenedContactGroupGeneral
-  from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
-import OpenedContactGroupsConditions
-  from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
-import PermissionsTab
-  from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
-
 import store from '../store';
-import TheConfiguration
-  from '../../modules/configuration/components/the-configuration.vue';
 
 const checkAppAccess = (to, from, next) => {
-  const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](store.getters['userinfo/THIS_APP']);
+  const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](
+    store.getters['userinfo/THIS_APP'],
+  );
   if (hasReadAccess) {
     next();
   } else {
@@ -58,16 +53,17 @@ const checkAppAccess = (to, from, next) => {
   }
 };
 
-const checkRouteAccess = ((to, from, next) => {
+const checkRouteAccess = (to, from, next) => {
   // has Role Section Access AND (Select role permissions || ObAC permissions access)
-  const hasReadAccess = store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to })
-    && store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
+  const hasReadAccess =
+    store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to }) &&
+    store.getters['userinfo/HAS_READ_ACCESS']({ name: 'contacts' });
   if (hasReadAccess) {
     next();
   } else {
     next('/access-denied');
   }
-});
+};
 
 const routes = [
   {
@@ -216,7 +212,69 @@ const routes = [
               },
             ],
           },
-
+          {
+            path: 'close-reason-groups',
+            name: CrmSections.CLOSE_REASON_GROUPS,
+            component: TheCloseReasonGroups,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'close-reason-groups/:id',
+            name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
+            component: OpenedCloseReasonGroups,
+            redirect: { name: `${CrmSections.CLOSE_REASON_GROUPS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.CLOSE_REASON_GROUPS}-general`,
+                component: OpenedCloseReasonGroupsGeneral,
+              },
+              {
+                path: 'close-reasons/:closeReasonsId?',
+                name: `close-reasons`,
+                component: OpenedCloseReasons,
+              },
+            ],
+          },
+          {
+            path: 'service-catalogs',
+            name: CrmSections.SERVICE_CATALOGS,
+            component: TheServiceCatalogs,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'service-catalogs/:id',
+            name: `${CrmSections.SERVICE_CATALOGS}-card`,
+            component: OpenedServiceCatalogs,
+            redirect: { name: `${CrmSections.SERVICE_CATALOGS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SERVICE_CATALOGS}-general`,
+                component: OpenedServiceCatalogsGeneral,
+              },
+            ],
+          },
+          {
+            path: 'service-catalogs/:catalogId/:rootId/services',
+            name: `${CrmSections.SERVICE_CATALOGS}-services`,
+            component: TheCatalogServices,
+          },
+          {
+            path: 'service-catalogs/:catalogId/:rootId/services/:id',
+            name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+            component: OpenedServices,
+            redirect: {
+              name: `${CrmSections.SERVICE_CATALOGS}-services-card-general`,
+            },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.SERVICE_CATALOGS}-services-card-general`,
+                component: OpenedServicesGeneral,
+              },
+            ],
+          },
           {
             path: 'contact-groups',
             name: CrmSections.CONTACT_GROUPS,
@@ -243,6 +301,24 @@ const routes = [
                 path: 'permissions/:permissionId?',
                 name: `${CrmSections.CONTACT_GROUPS}-permissions`,
                 component: PermissionsTab,
+              },
+            ],
+          },
+          {
+            path: 'priorities',
+            name: CrmSections.PRIORITIES,
+            component: ThePriorities,
+          },
+          {
+            path: 'priorities/:id',
+            name: `${CrmSections.PRIORITIES}-card`,
+            component: OpenedPriority,
+            redirect: { name: `${CrmSections.PRIORITIES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.PRIORITIES}-general`,
+                component: OpenedPriorityGeneral,
               },
             ],
           },

@@ -119,6 +119,7 @@ export default {
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
+
     sources: {
       sources: 'Case source | Case sources',
       types: {
@@ -130,6 +131,19 @@ export default {
         [CasesSourceType.MANUAL]: 'Manual',
       }
     },
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Service catalog | Service catalogs',
+      prefix: 'Prefix',
+      code: 'Code',
+      statuses: 'Statuses',
+      skills: 'Skills',
+    },
+
+    service: {
+      service: 'Service | Services',
+    },
+
     contactGroups: {
       contactGroups: 'Contact group | Contact groups',
       defaultGroup: 'Default group',
@@ -139,6 +153,13 @@ export default {
         [WebitelContactsGroupType.DYNAMIC]: 'Dynamic',
         [WebitelContactsGroupType.STATIC]: 'Static',
       },
+    },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Closure reasons',
+      reason: 'Reason | Reasons',
+      addReason: 'Add reason',
+      editReason: 'Edit reason',
     },
     [CrmSections.STATUSES]: 'Statuses',
   },
@@ -151,23 +172,22 @@ export default {
     source: 'Source',
     author: 'Author',
     group: 'Group',
-    service: 'Service',
-    assignee: 'Assignee',
+    service: '@:lookups.service.service',
+    assignee: '@:lookups.contactGroups.assignee',
     reporter: 'Reporter',
     impacted: 'Impacted',
     appliedSLA: 'Applied SLA',
     appliedCondition: 'Applied condition',
-    reactionTime: 'Reaction time',
-    resolutionTime: 'Resolution time',
+    reactionTime: '@:lookups.slas.reactionTime',
+    resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Actual reaction time',
     actualResolutionTime: 'Actual resolution time',
-    reason: 'Reason',
+    reason: '@:lookups.closeReasonGroups.reason',
     result: 'Result',
     rating: 'Rating',
     persons: 'Persons',
     selectAService: 'Select a service',
     deadlines: 'Deadlines',
-    createdAt: 'Created at',
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
     caseInfo: {

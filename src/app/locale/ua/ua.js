@@ -131,6 +131,20 @@ export default {
         [CasesSourceType.MANUAL]: 'Створене вручну',
       },
     },
+
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
+      prefix: 'Префікс',
+      code: 'Код',
+      statuses: 'Статуси',
+      skills: 'Навички',
+    },
+
+    service: {
+      service: 'Cервіси | Cервіси',
+    },
+
     contactGroups: {
       contactGroups: 'Група контактів | Групи контактів',
       defaultGroup: 'Група за замовчуванням',
@@ -140,6 +154,13 @@ export default {
         [WebitelContactsGroupType.DYNAMIC]: 'Динамічна',
         [WebitelContactsGroupType.STATIC]: 'Статична',
       },
+    },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Причини закриття',
+      reason: 'Причина | Причини',
+      addReason: 'Додати причину',
+      editReason: 'Редагувати причину',
     },
     [CrmSections.STATUSES]: 'Статуси',
   },
@@ -152,23 +173,22 @@ export default {
     source: 'Джерело',
     author: 'Автор',
     group: 'Група виконавців',
-    service: 'Сервіс',
-    assignee: 'Виконавець',
+    service: '@:lookups.service.service',
+    assignee: '@:lookups.contactGroups.assignee',
     reporter: 'Ініціатор',
     impacted: 'Впливає на',
     appliedSLA: 'Застосований SLA',
     appliedCondition: 'Застосована умова',
-    reactionTime: 'Плановий час реакції',
-    resolutionTime: 'Плановий час вирішення',
+    reactionTime: '@:lookups.slas.reactionTime',
+    resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Фактичний час реакції',
     actualResolutionTime: 'Фактичний час вирішення',
-    reason: 'Причина',
+    reason: '@:lookups.closeReasonGroups.reason',
     result: 'Результат',
     rating: 'Оцінка',
     persons: 'Особи',
     selectAService: 'Виберіть сервіс',
     deadlines: 'Терміни',
-    createdAt: 'Створено',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
     caseInfo: {

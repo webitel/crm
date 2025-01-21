@@ -15,7 +15,7 @@ const resetCardState = {
     id:'',
     name: '',
     assignee: {},
-    author: {},
+    author: '',
     close: {
       closeReason: {},
       closeResult: '',
