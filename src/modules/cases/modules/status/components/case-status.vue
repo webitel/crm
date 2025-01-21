@@ -114,9 +114,9 @@ const fetchStatusConditions = async (params) => {
 
   try {
     return await StatusConditionsAPI.getLookup({
+      statusId: status.value.id,
       ...params,
       fields: ['id', 'name', 'initial', 'final'],
-      statusId: status.value.id,
     });
   } catch (err) {
     throw err;

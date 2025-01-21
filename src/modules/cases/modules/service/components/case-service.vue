@@ -154,7 +154,7 @@ watch(
     if (!newService) return;
     const serviceResponse = await ServiceAPI.get({ itemId: newService });
     const catalogResponse = await CatalogAPI.get({ itemId: serviceResponse.catalogId });
-    await addServiceToStore({ service: serviceResponse, catalog: catalogResponse.catalog });
+    await addServiceToStore({ service: serviceResponse, catalog: catalogResponse });
   },
 );
 

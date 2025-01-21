@@ -21,7 +21,7 @@ const fieldsToSend = ['id', 'name', 'code', 'sla', 'teams', 'skills', 'status', 
 const servicesFieldsToSend = ['id', 'name', 'group', 'assignee', 'assignee.name', 'description', 'code', 'prefix', 'state', 'sla', 'root_id', 'catalog_id'];
 
 const getCatalogsList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'hasSubservices'];
 
   const {
     page,
@@ -30,6 +30,7 @@ const getCatalogsList = async (params) => {
     sort,
     id,
     q,
+    has_subservices
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -47,7 +48,8 @@ const getCatalogsList = async (params) => {
       q,
       true,
 undefined,
-      servicesFieldsToSend
+      servicesFieldsToSend,
+      has_subservices,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
