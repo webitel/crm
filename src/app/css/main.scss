@@ -2,8 +2,8 @@
 
 //disables scrollbar on 100vh auth on small laptops
 body {
-  @extend %wt-scrollbar;
   @extend %typo-body-1;
+  @extend %wt-scrollbar;
   display: flex;
   min-width: 100%;
   min-height: 100%;
