@@ -90,14 +90,14 @@
 </template>
 
 <script setup>
+import SkillsAPI from '@webitel/ui-sdk/src/api/clients/skills/skills.js';
+import TeamsAPI from '@webitel/ui-sdk/src/api/clients/teams/teams.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
+import CloseReasonGroupsAPI from '../../close-reason-groups/api/closeReasonGroups.js';
 import SlasAPI from '../../slas/api/slas.js';
-import TeamsAPI from '@webitel/ui-sdk/src/api/clients/teams/teams.js';
-import CloseReasonsApi from '../../сlosure-reasons/api/closure-reasons.js';
 import StatusesApi from '../../statuses/api/statuses.js';
-import SkillsAPI from '@webitel/ui-sdk/src/api/clients/skills/skills.js';
 
 const props = defineProps({
   namespace: {
@@ -111,7 +111,7 @@ const props = defineProps({
   isNew: {
     type: Boolean,
     required: true,
-  }
+  },
 });
 
 const { t } = useI18n();
@@ -123,7 +123,7 @@ function loadStatusesList(params) {
 }
 
 function loadReasonList(params) {
-  return CloseReasonsApi.getLookup(params);
+  return CloseReasonGroupsAPI.getLookup(params);
 }
 
 function loadSlaList(params) {

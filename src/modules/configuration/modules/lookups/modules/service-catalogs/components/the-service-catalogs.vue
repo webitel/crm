@@ -23,10 +23,12 @@
             :disabled:delete="!selected.length"
             @click:add="addNewCatalog"
             @click:refresh="loadData"
-            @click:delete="askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteData(selected),
-            })"
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
           >
             <template #search-bar>
               <filter-search
@@ -44,9 +46,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -70,7 +70,13 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: { catalogId: item.catalogId ? item.catalogId : item.id, rootId: item.id } }"
+                  :link="{
+                    name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                    params: {
+                      catalogId: item.catalogId ? item.catalogId : item.id,
+                      rootId: item.id,
+                    },
+                  }"
                 >
                   {{ item.name }}
                 </wt-item-link>
@@ -86,7 +92,10 @@
                   <wt-item-link
                     v-if="item.assignee?.id"
                     class="the-service-catalogs__service-assignee"
-                    :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
+                    :link="{
+                      name: `${CrmSections.CONTACTS}-card`,
+                      params: { id: item.assignee.id },
+                    }"
                   >
                     {{ item.assignee.name }}
                   </wt-item-link>
@@ -99,9 +108,7 @@
                 {{ displayText(item.closeReasonGroup?.name) }}
               </template>
 
-              <template
-                #prefix="{ item }"
-              >
+              <template #prefix="{ item }">
                 {{ displayText(item.prefix) }}
               </template>
               <template #state="{ item, index }">
@@ -114,17 +121,13 @@
                 {{ displayText(item.code) }}
               </template>
               <template #teams="{ item }">
-                <template v-if="!isRootElement(item)">
-                  -
-                </template>
+                <template v-if="!isRootElement(item)"> - </template>
                 <template v-else>
                   <display-chip-items :items="item.teams" />
                 </template>
               </template>
               <template #skills="{ item }">
-                <template v-if="!isRootElement(item)">
-                  -
-                </template>
+                <template v-if="!isRootElement(item)"> - </template>
                 <template v-else>
                   <display-chip-items :items="item.skills" />
                 </template>
@@ -138,10 +141,12 @@
                 <wt-icon-action
                   v-if="hasDeleteAccess"
                   action="delete"
-                  @click="askDeleteConfirmation({
-                    deleted: [item],
-                    callback: () => deleteData(item),
-                  })"
+                  @click="
+                    askDeleteConfirmation({
+                      deleted: [item],
+                      callback: () => deleteData(item),
+                    })
+                  "
                 />
               </template>
             </wt-tree-table>
@@ -157,32 +162,28 @@
 </template>
 
 <script setup>
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useRouter } from 'vue-router';
 
+import { displayText } from '../../../../../../../app/utils/displayText.js';
 import filters from '../../slas/modules/filters/store/filters.js';
 import CatalogsAPI from '../api/service-catalogs.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import DisplayChipItems from './display-chip-items.vue';
 import ServicesAPI from '../modules/services/api/services.js';
-import { displayText } from '../../../../../../../app/utils/displayText.js';
+import DisplayChipItems from './display-chip-items.vue';
 
 const baseNamespace = 'configuration/lookups/catalogs';
-
 
 const { t } = useI18n();
 const router = useRouter();
@@ -251,27 +252,41 @@ const {
 } = useTableEmpty({ dataList, filters, error, isLoading });
 
 const addNewCatalog = () => {
-  router.push({ name: `${CrmSections.SERVICE_CATALOGS}-card`, params: { id: 'new' }})
-}
+  router.push({
+    name: `${CrmSections.SERVICE_CATALOGS}-card`,
+    params: { id: 'new' },
+  });
+};
 
 const edit = (item) => {
-  return router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-card`,
-    params: { id: item.id },
-  });
-}
+  if (isRootElement(item)) {
+    return router.push({
+      name: `${CrmSections.SERVICE_CATALOGS}-card`,
+      params: { id: item.id },
+    });
+  } else {
+    return router.push({
+      name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+      params: {
+        catalogId: item.catalogId,
+        rootId: item.rootId,
+        id: item.id,
+      },
+    });
+  }
+};
 
 const isRootElement = (item) => !item.rootId;
 
 const changeState = async (item) => {
-  if(isRootElement(item)) {
+  if (isRootElement(item)) {
     await CatalogsAPI.update({
       itemInstance: {
         ...item,
         state: !item.state,
       },
       itemId: item.id,
-    })
+    });
 
     item.state = !item.state;
   } else {
@@ -280,11 +295,11 @@ const changeState = async (item) => {
         state: !item.state,
       },
       id: item.id,
-    })
+    });
 
     item.state = !item.state;
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
