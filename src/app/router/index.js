@@ -15,6 +15,9 @@ import OpenedContactGroup from '../../modules/configuration/modules/lookups/modu
 import OpenedContactGroupGeneral from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroupsConditions from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import OpenedPriority from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
+import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
+import ThePriorities from '../../modules/configuration/modules/lookups/modules/priorities/components/the-priorities.vue';
 import OpenedServiceCatalogs from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs.vue';
 import OpenedServiceCatalogsGeneral from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/opened-service-catalogs-general.vue';
 import TheServiceCatalogs from '../../modules/configuration/modules/lookups/modules/service-catalogs/components/the-service-catalogs.vue';
@@ -298,6 +301,24 @@ const routes = [
                 path: 'permissions/:permissionId?',
                 name: `${CrmSections.CONTACT_GROUPS}-permissions`,
                 component: PermissionsTab,
+              },
+            ],
+          },
+          {
+            path: 'priorities',
+            name: CrmSections.PRIORITIES,
+            component: ThePriorities,
+          },
+          {
+            path: 'priorities/:id',
+            name: `${CrmSections.PRIORITIES}-card`,
+            component: OpenedPriority,
+            redirect: { name: `${CrmSections.PRIORITIES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.PRIORITIES}-general`,
+                component: OpenedPriorityGeneral,
               },
             ],
           },
