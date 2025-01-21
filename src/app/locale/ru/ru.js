@@ -1,13 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -131,7 +129,6 @@ export default {
       },
     },
 
-
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
       prefix: 'Префикс',
@@ -163,6 +160,10 @@ export default {
     },
     [CrmSections.STATUSES]: 'Статусы',
   },
+  customization: {
+    customization: 'Персонализация',
+    customLookups: 'Пользовательские справочники',
+  },
   cases: {
     case: 'Обращение | Обращения',
     id: 'Индентификатор',
@@ -193,6 +194,6 @@ export default {
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
-    }
+    },
   },
 };
