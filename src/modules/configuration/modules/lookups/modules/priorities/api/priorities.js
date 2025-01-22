@@ -5,9 +5,7 @@ import {
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
@@ -74,14 +72,14 @@ const getPriority = async ({ itemId: id }) => {
   }
 };
 
-const addPriority = async ({ itemInstance, parentId }) => {
+const addPriority = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
 
   try {
-    const response = await priorityService.createPriority(parentId, item);
+    const response = await priorityService.createPriority(item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
