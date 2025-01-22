@@ -1,14 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections
-  from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -125,7 +122,7 @@ export default {
         [CasesSourceType.EMAIL]: 'Email',
         [CasesSourceType.API]: 'API',
         [CasesSourceType.MANUAL]: 'Manual',
-      }
+      },
     },
 
     serviceCatalogs: {
@@ -159,13 +156,17 @@ export default {
     },
 
     [CrmSections.STATUSES]: {
-      name: ({ plural, linked }) => plural(['Status', linked('lookups.serviceCatalogs.statuses')]),
+      name: ({ plural, linked }) =>
+        plural(['Status', linked('lookups.serviceCatalogs.statuses')]),
       initial: 'Initial',
       final: 'Final',
-      addStatus: ({ linked }) => linked('reusable.add') + ' a ' + linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase(),
-      editStatus: ({ linked }) => linked('reusable.edit') + ' a ' + linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase(),
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
       statusType: 'Status type',
-      finalStatusValidationText: 'You should have at least one final status and only one initial. Please, return and check its type.'
+      finalStatusValidationText:
+        'You should have at least one final status and only one initial. Please, return and check its type.',
     },
   },
 };

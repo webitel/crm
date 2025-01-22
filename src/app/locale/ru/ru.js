@@ -1,13 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -127,7 +125,6 @@ export default {
       },
     },
 
-
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
       prefix: 'Префикс',
@@ -157,6 +154,19 @@ export default {
       addCondition: 'Добавить причину',
       editCondition: 'Редактировать причину',
     },
-    [CrmSections.STATUSES]: 'Статусы',
+
+    [CrmSections.STATUSES]: {
+      name: ({ plural, linked }) =>
+        plural(['Статус', linked('lookups.serviceCatalogs.statuses')]),
+      initial: 'Начальный',
+      final: 'Конечный',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+      statusType: 'Тип статуса',
+      finalStatusValidationText:
+        'У вас должен быть хотя бы один конечный статус и только один начальный. Пожалуйста, вернитесь и проверте типы.',
+    },
   },
 };

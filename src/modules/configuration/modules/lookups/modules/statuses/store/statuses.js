@@ -4,9 +4,11 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import StatusesAPI from '../api/statuses.js';
-import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import statusConditions from '../modules/status-conditions/store/status-conditions';
+import headers from './_internals/headers';
 
 const resetCardState = {
   itemId: '',
@@ -31,9 +33,13 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState },
+  state: {
+    _resettable: resetCardState,
+    itemInstance: resetCardState.itemInstance,
+  },
   modules: {
     api,
+    statusConditions,
   },
 });
 

@@ -15,4 +15,18 @@ export default [
     field: 'description',
     sort: SortSymbols.NONE,
   },
+  {
+    value: 'initial',
+    locale: 'lookups.statuses.initial',
+    show: true,
+    field: 'initial',
+    sort: SortSymbols.NONE,
+  },
+  {
+    value: 'final',
+    locale: 'lookups.statuses.final',
+    show: true,
+    field: 'final',
+    sort: SortSymbols.NONE,
+  },
 ];

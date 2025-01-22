@@ -12,7 +12,7 @@
     />
     <header class="table-title">
       <h3 class="table-title__title">
-        {{ t('lookups.slas.conditions', 2) }}
+        {{ t('lookups.slas.statusConditions', 2) }}
       </h3>
 
       <wt-action-bar
@@ -20,10 +20,12 @@
         :disabled:delete="!selected.length"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
-        @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+        @click:delete="
+          askDeleteConfirmation({
+            deleted: selected,
+            callback: () => deleteData(selected),
+          })
+        "
       >
         <template #search-bar>
           <filter-search
@@ -34,10 +36,7 @@
       </wt-action-bar>
     </header>
 
-    <div
-      class="table-section__table-wrapper"
-    >
-
+    <div class="table-section__table-wrapper">
       <wt-empty
         v-show="showEmpty"
         :image="imageEmpty"
@@ -69,14 +68,12 @@
                 :triggers="['click']"
               >
                 <template #activator>
-                  <wt-chip>
-                    +{{ item.priorities?.length - 1 }}
-                  </wt-chip>
+                  <wt-chip> +{{ item.priorities?.length - 1 }} </wt-chip>
                 </template>
 
                 <ul>
                   <li
-                    v-for="({ id, name }) of item.priorities?.slice(1)"
+                    v-for="{ id, name } of item.priorities?.slice(1)"
                     :key="id"
                   >
                     <p>{{ name }}</p>
@@ -94,14 +91,18 @@
           <template #actions="{ item }">
             <wt-icon-action
               action="edit"
-              @click="router.push({ ...route, params: { conditionId: item.id } })"
+              @click="
+                router.push({ ...route, params: { conditionId: item.id } })
+              "
             />
             <wt-icon-action
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -115,25 +116,22 @@
 </template>
 
 <script setup>
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
 import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import FilterSearch
-  from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import ConditionPopup from './opened-sla-condition-popup.vue';
-import ConvertDurationWithDays from '../scripts/convertDurationWithDays.js'
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+
 import filters from '../modules/filters/store/filters.js';
+import ConvertDurationWithDays from '../scripts/convertDurationWithDays.js';
+import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
   namespace: {
@@ -142,12 +140,11 @@ const props = defineProps({
   },
 });
 
-const {
-  namespace: parentCardNamespace,
-  id: parentId,
-} = useCardStore(props.namespace);
+const { namespace: parentCardNamespace, id: parentId } = useCardStore(
+  props.namespace,
+);
 
-const namespace = `${parentCardNamespace}/conditions`;
+const namespace = `${parentCardNamespace}/statusConditions`;
 
 const router = useRouter();
 const route = useRoute();

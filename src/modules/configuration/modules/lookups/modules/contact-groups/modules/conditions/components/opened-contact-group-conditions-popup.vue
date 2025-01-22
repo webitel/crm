@@ -7,7 +7,7 @@
   >
     <template #title>
       {{ !isNew ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('lookups.slas.conditions', 1).toLowerCase() }}
+      {{ t('lookups.slas.statusConditions', 1).toLowerCase() }}
     </template>
     <template #main>
       <form class="opened-contact-group-conditions-popup__wrapper">
@@ -53,17 +53,18 @@
 </template>
 
 <script setup>
-import { computed, watch, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
-import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
+
 import ContactGroupsAPI from '../../../api/contactGroups.js';
 
 const props = defineProps({
@@ -88,19 +89,23 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    expression: { required },
-    group: { required },
-  },
-})), { itemInstance }, { $autoDirty: true });
+const v$ = useVuelidate(
+  computed(() => ({
+    itemInstance: {
+      expression: { required },
+      group: { required },
+    },
+  })),
+  { itemInstance },
+  { $autoDirty: true },
+);
 v$.value.$touch();
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 const contactList = ref([]);
 
-const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
+const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-statusConditions`);
 
 function loadDataList() {
   emit('load-data');
@@ -118,11 +123,17 @@ const save = async () => {
 };
 
 async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC });
+  return await ContactGroupsAPI.getLookup({
+    ...params,
+    type: WebitelContactsGroupType.STATIC,
+  });
 }
 
 async function loadContacts(params) {
-  return await ContactsAPI.getLookup({ ...params, groupId: itemInstance.value.group?.id });
+  return await ContactsAPI.getLookup({
+    ...params,
+    groupId: itemInstance.value.group?.id,
+  });
 }
 
 async function setGroups(value) {
@@ -134,7 +145,7 @@ async function setGroups(value) {
 
   if (!IsEmpty(value)) {
     const { items } = await loadContacts();
-    if(items.length) {
+    if (items.length) {
       contactList.value = items;
     }
   }
@@ -147,13 +158,17 @@ async function initializePopup() {
   }
 }
 
-watch(() => conditionId.value, (value) => {
-  if (value) {
-    initializePopup();
-  } else {
-    resetState();
-  }
-}, { immediate: true });
+watch(
+  () => conditionId.value,
+  (value) => {
+    if (value) {
+      initializePopup();
+    } else {
+      resetState();
+    }
+  },
+  { immediate: true },
+);
 </script>
 <style lang="scss" scoped>
 .opened-contact-group-conditions-popup__wrapper {
