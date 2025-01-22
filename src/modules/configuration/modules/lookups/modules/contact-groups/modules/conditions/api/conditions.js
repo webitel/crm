@@ -12,7 +12,10 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import i18n from '../../../../../../../../../app/locale/i18n.js';
 import { DynamicConditionsApiFactory } from 'webitel-sdk';
+
+const { t} = i18n.global;
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
@@ -87,7 +90,12 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
     const response = await dynamicGroupConditionsService.updateCondition(id, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [notify]);
+    throw applyTransform(err, [
+      notify(({ callback }) => callback({
+        type: 'error',
+        text: err.response.data.code === 500 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
+      })),
+    ]);
   }
 };
 
@@ -101,7 +109,12 @@ const addCondition = async ({ itemInstance, parentId }) => {
     const response = await dynamicGroupConditionsService.createCondition(parentId, item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [notify]);
+    throw applyTransform(err, [
+      notify(({ callback }) => callback({
+        type: 'error',
+        text: err.response.data.code === 500 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
+      })),
+    ]);
   }
 };
 

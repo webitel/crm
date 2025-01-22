@@ -161,6 +161,7 @@ export default {
       reason: 'Причина | Причини',
       addReason: 'Додати причину',
       editReason: 'Редагувати причину',
+      sameConditionError: 'Така умова вже існує',
     },
     [CrmSections.STATUSES]: 'Статуси',
   },
