@@ -10,8 +10,8 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
 import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
-import customizationIcon from '../../../app/assets/icons/sprite/customization.svg';
 
 const { t } = useI18n();
 
