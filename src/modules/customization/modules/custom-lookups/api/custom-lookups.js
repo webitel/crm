@@ -17,10 +17,6 @@ const instance = getDefaultInstance();
 
 const baseUrl = '/types/dictionaries';
 
-const prettierData = (data) => {
-  return data?.map((item) => ({ ...item, id: item.repo }));
-};
-
 const getCustomLookupsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
@@ -39,7 +35,7 @@ const getCustomLookupsList = async (params) => {
     ]);
 
     return {
-      items: applyTransform(data, [prettierData]),
+      items: applyTransform(data, []),
       next,
     };
   } catch (err) {
