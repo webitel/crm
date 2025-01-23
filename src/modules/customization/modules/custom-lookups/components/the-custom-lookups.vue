@@ -22,6 +22,12 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:refresh="loadData"
+            @click:add="
+              router.push({
+                name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+                params: { repo: 'new' },
+              })
+            "
           >
             <template #search-bar>
               <filter-search
@@ -60,8 +66,8 @@
               <template #name="{ item }">
                 <wt-item-link
                   :link="{
-                    name: `${CrmSections.SLAS}-card`,
-                    params: { id: item.id },
+                    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+                    params: { repo: item.repo },
                   }"
                 >
                   {{ item.name }}
@@ -185,7 +191,10 @@ const path = computed(() => [
 const { close } = useClose('configuration');
 
 function edit(item) {
-  console.log('item', item);
+  router.push({
+    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+    params: { repo: item.repo },
+  });
 }
 
 const {
