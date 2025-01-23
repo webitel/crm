@@ -70,8 +70,11 @@
               <template #description="{ item }">
                 {{ item.description }}
               </template>
-              <template #calendar="{ item }">
-                {{ item.calendar.name }}
+              <template #createdAt="{ item }">
+                {{ prettifyDate(item.createdAt) }}
+              </template>
+              <template #createdBy="{ item }">
+                {{ item.createdBy.name }}
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
@@ -117,6 +120,8 @@ import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreM
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+
+import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 
 const baseNamespace = 'customization/customLookups';
 
