@@ -13,8 +13,8 @@
           {{ t('cases.comments.comments') }}
         </h3>
         <wt-action-bar
-          :include="[IconAction.ADD]"
           :disabled:add="addingCommentMode || editingComment"
+          :include="[IconAction.ADD]"
           @click:add="startAddingComment"
         >
           <wt-icon-btn
@@ -28,11 +28,11 @@
         class="comment-form"
       >
         <wt-input
-          class="comment-form__input"
           v-model="commentText"
           :placeholder="addingCommentMode
             ? t('cases.comments.yourCommentHere')
             : t('cases.comments.editYourComment')"
+          class="comment-form__input"
         />
         <div class="comment-form__actions-wrapper">
           <wt-rounded-action
@@ -53,10 +53,10 @@
         class="table-section__table-wrapper"
       >
         <wt-table
-          headless
           :data="dataList"
           :headers="headers"
           :selected="selected"
+          headless
           sortable
           @sort="sort"
           @update:selected="setSelected"
@@ -71,13 +71,7 @@
               <div class="case-comment__wrapper">
                 <div class="case-comment__header">
                   <div class="case-comment__author">
-                    <wt-item-link
-                      :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.author.id } }"
-                      class="case-comment__author-link"
-                      target="_blank"
-                    >
-                      {{ item.author.name }}
-                    </wt-item-link>
+                    {{ item?.createdBy?.name }}
                   </div>
                   <div class="case-comment__date">
                     {{ prettifyDate(item.createdAt) }}
@@ -97,6 +91,7 @@
           </template>
           <template #actions="{ item }">
             <wt-icon-action
+              v-if="item.canEdit"
               :disabled="addingCommentMode"
               action="edit"
               @click="startEditingComment(item)"
@@ -110,6 +105,11 @@
             />
           </template>
         </wt-table>
+
+        <filter-pagination
+          :namespace="filtersNamespace"
+          :is-next="isNext"
+        />
       </div>
     </section>
   </div>
@@ -117,18 +117,19 @@
 
 <script setup>
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import prettifyDate from '../../../../../utils/prettifyDate.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { ref, onUnmounted } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
+import prettifyDate from '../../../../../utils/prettifyDate.js';
 import CommentsAPI from '../api/CommentsAPI.js';
 
 const props = defineProps({
@@ -143,6 +144,7 @@ const props = defineProps({
 });
 
 const store = useStore();
+
 const { t } = useI18n();
 
 const {
@@ -207,14 +209,18 @@ function cancelComment() {
 }
 
 async function submitComment() {
-  //TODO: refactor API usage after API is ready
   try {
     if (editingComment.value) {
-      await CommentsAPI.update(editingComment.value.id, {
-        text: commentText.value,
+      await CommentsAPI.patch({
+        parentId: props.itemId,
+        commentId: editingComment.value.etag,
+        changes: { text: commentText.value },
       });
     } else {
-      await CommentsAPI.add({ text: commentText.value });
+      await CommentsAPI.add({
+        parentId: props.itemId,
+        input: { text: commentText.value },
+      });
     }
     await loadData();
     cancelComment();
@@ -239,11 +245,10 @@ async function submitComment() {
       flex-direction: column;
     }
 
-    &__author-link {
+    &__author {
       //TODO: use typo-body bold when it's ready
       @extend %typo-body-1;
       font-weight: bold;
-      color: var(--link-color);
     }
   }
 

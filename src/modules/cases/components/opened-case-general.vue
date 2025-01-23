@@ -6,10 +6,10 @@
     <case-priority
       :namespace="namespace"
     />
-    <case-deadlines
+    <case-service
       :namespace="namespace"
     />
-    <case-service
+    <case-deadlines
       :namespace="namespace"
     />
     <case-persons

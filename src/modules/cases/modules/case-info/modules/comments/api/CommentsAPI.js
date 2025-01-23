@@ -20,46 +20,12 @@ const configuration = getDefaultOpenAPIConfig();
 
 const commentsService = new CaseCommentsApiFactory(configuration, '', instance);
 
-const fieldsToSend = [
-  'etag',
-  'name',
-  'subject',
-  'description',
-  'contact_info',
-  'created_at',
-  'planned_reaction_at',
-  'planned_resolve_at',
-  'status_lookup',
-  'close_reason_lookup',
-  'author',
-  'assignee',
-  'reporter',
-  'impacted',
-  'group',
-  'priority',
-  'source',
-  'status',
-  'close',
-  'rate',
-  'timing',
-  'sla_condition',
-  'difference_in_reaction',
-  'sla',
-  'service',
-  'comments',
-  'related_cases',
-  'links',
-  'status_condition',
-];
-
 const getCommentsList = async (params) => {
-  console.log(params);
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
+  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters', 'parentId'];
 
   const {
-    etag,
+    parentId,
     page,
-    size,
     q,
     ids,
     sort,
@@ -77,14 +43,14 @@ const getCommentsList = async (params) => {
   ]);
   try {
     const response = await commentsService.listComments(
-      "ZwQwmQh",
-        page,
-        size,
-        q,
-        ids,
-        sort,
-        fields,
-        options,
+      '382',
+      page,
+      5,
+      q,
+      ids,
+      sort,
+      fields,
+      options,
     );
 
     const {
@@ -102,77 +68,31 @@ const getCommentsList = async (params) => {
   }
 };
 
-const getCase = async ({ itemId: id }) => {
+const addComment = async ({
+  parentId,
+  input,
+}) => {
   try {
-    const response = await casesService.locateCase(id, fieldsToSend);
+    const response = await commentsService.publishComment(parentId, input);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const deleteCase = async ({ id }) => {
-  try {
-    const response = await casesService.deleteCase(id);
-    return applyTransform(response.data, []);
-  } catch (err) {
-    throw applyTransform(err, [notify]);
-  }
-};
-
-const updateCase = async ({ itemInstance, itemId: id }) => {
-  const fieldsToSend = [
-    'name',
-    'subject',
-    'description',
-    'contact_info',
-    'status_lookup',
-    'close_reason_lookup',
-    'author',
-    'assignee',
-    'reporter',
-    'impacted',
-    'group',
-    'priority',
-    'source',
-    'status',
-    'close',
-    'rate',
-    'sla_condition',
-    'sla',
-    'service',
-    'status_condition',
-  ];
-  const item = applyTransform(itemInstance, [
-    camelToSnake(),
-    sanitize(fieldsToSend),
-  ]);
-
-  try {
-    const response = await casesService.updateCase(id, item);
-    return applyTransform(response.data, [snakeToCamel()]);
-  } catch (err) {
-    throw applyTransform(err, [notify]);
-  }
-};
-
-const addComment = async ({ etag, input }) => {
-  try {
-    const response = await commentsService.publishComment(etag, input);
-    return applyTransform(response.data, [snakeToCamel()]);
-  } catch (err) {
-    throw applyTransform(err, [notify]);
-  }
-};
-
-const patchCase = async ({ changes, etag }) => {
-  const fieldsToSend = ['status_condition', 'status'];
+const patchComment = async ({
+  parentId,
+  commentId,
+  changes,
+}) => {
+  const fieldsToSend = ['text'];
   const body = applyTransform(changes, [
-    camelToSnake(),
     sanitize(fieldsToSend),
+    camelToSnake(),
   ]);
+  console.log('patchComment', parentId, commentId, body);
   try {
-    const response = await casesService.updateCase(etag, body);
+    const response = await commentsService.updateComment(commentId, body);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);
@@ -183,13 +103,23 @@ const patchCase = async ({ changes, etag }) => {
   }
 };
 
+const deleteComment= async ({ id }) => {
+  try {
+    const response = await commentsService.deleteComment(id)
+    return applyTransform(response.data, [
+    ]);
+  } catch (err) {
+    throw applyTransform(err, [
+      notify,
+    ]);
+  }
+};
+
 const commentsAPI = {
   getList: getCommentsList,
-  // get: getComment,
-  // delete: deleteComment,
-  // update: updateComment,
+  delete: deleteComment,
   add: addComment,
-  // patch: patchComment,
+  patch: patchComment,
 };
 
 export default commentsAPI;

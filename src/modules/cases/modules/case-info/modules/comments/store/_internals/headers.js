@@ -5,6 +5,7 @@ export default [
     value: 'content',
     show: true,
     sort: SortSymbols.NONE,
+    field: 'text',
   },
 ];
 

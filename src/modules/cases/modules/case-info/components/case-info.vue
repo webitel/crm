@@ -64,11 +64,11 @@
         </template>
       </editable-field>
     </div>
+    <case-comments
+      :item-id="id"
+      :namespace="commentsNamespace"
+    />
   </div>
-  <case-comments
-    :item-id="id"
-    :namespace="commentsNamespace"
-  />
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';

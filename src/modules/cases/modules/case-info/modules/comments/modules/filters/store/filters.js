@@ -8,8 +8,8 @@ const filtersList = [
   },
   {
     name: 'size',
-    value: 10,
-    defaultValue: 10,
+    value: 5,
+    defaultValue: 5,
   },
   { name: 'sort' },
   { name: 'search' },
