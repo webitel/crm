@@ -93,7 +93,7 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
     throw applyTransform(err, [
       notify(({ callback }) => callback({
         type: 'error',
-        text: err.response.data.code === 403 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
+        text: err.response.data.code === 409 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
       })),
     ]);
   }
@@ -112,7 +112,7 @@ const addCondition = async ({ itemInstance, parentId }) => {
     throw applyTransform(err, [
       notify(({ callback }) => callback({
         type: 'error',
-        text: err.response.data.code === 403 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
+        text: err.response.data.code === 409 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
       })),
     ]);
   }
