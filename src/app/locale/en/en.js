@@ -162,7 +162,9 @@ export default {
   },
   customization: {
     customization: 'Customization',
-    customLookups: 'Custom lookups',
+    customLookups: {
+      customLookups: 'Custom lookups',
+    },
   },
   cases: {
     case: 'Case | Cases',

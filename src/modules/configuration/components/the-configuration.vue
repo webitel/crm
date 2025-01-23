@@ -62,7 +62,7 @@ const nav = reactive([
     subNav: [
       {
         value: CrmSections.CUSTOM_LOOKUPS,
-        name: computed(() => t('customization.customLookups')),
+        name: computed(() => t('customization.customLookups.customLookups')),
         route: 'customization/custom-lookups',
       },
     ],

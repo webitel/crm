@@ -163,7 +163,9 @@ export default {
   },
   customization: {
     customization: 'Персоналізація',
-    customLookups: 'Користувацькі довідники',
+    customLookups: {
+      customLookups: 'Користувацькі довідники',
+    },
   },
   cases: {
     case: 'Звернення | Звернення',

@@ -162,7 +162,9 @@ export default {
   },
   customization: {
     customization: 'Персонализация',
-    customLookups: 'Пользовательские справочники',
+    customLookups: {
+      customLookups: 'Пользовательские справочники',
+    },
   },
   cases: {
     case: 'Обращение | Обращения',
