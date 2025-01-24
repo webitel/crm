@@ -160,6 +160,7 @@ export default {
       reason: 'Reason | Reasons',
       addReason: 'Add reason',
       editReason: 'Edit reason',
+      sameConditionError: 'Such condition already exists',
     },
     [CrmSections.STATUSES]: 'Statuses',
   },

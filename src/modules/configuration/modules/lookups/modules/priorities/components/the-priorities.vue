@@ -61,7 +61,6 @@
               :data="dataList"
               :headers="headers"
               :selected="selected"
-              :selectable="true"
               sortable
               @sort="sort"
               @update:selected="setSelected"
@@ -79,6 +78,9 @@
                   :color="item.color"
                   component="wt-indicator"
                 />
+              </template>
+              <template #description="{ item }">
+                {{ item.description }}
               </template>
 
               <template #actions="{ item }">

@@ -81,7 +81,7 @@ export default {
     edit: 'Редагувати',
     delete: 'Видаляти',
     granteePopup: {
-      title: 'Додати отримувача',
+      title: 'Додати власника прав',
     },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Заборонено',
@@ -161,6 +161,7 @@ export default {
       reason: 'Причина | Причини',
       addReason: 'Додати причину',
       editReason: 'Редагувати причину',
+      sameConditionError: 'Така умова вже існує',
     },
     [CrmSections.STATUSES]: 'Статуси',
   },
