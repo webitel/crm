@@ -193,6 +193,11 @@ export default {
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
-    }
+    },
+    comments: {
+      comments: 'Comments',
+      edited: 'Edited',
+      yourCommentHere: 'Your comment here',
+    },
   },
 };

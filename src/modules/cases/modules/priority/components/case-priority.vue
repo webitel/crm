@@ -9,6 +9,7 @@
       >
         <template #default="props">
           <wt-select
+            :placeholder="t('cases.priority')"
             :clearable="false"
             :search-method="PrioritiesAPI.getLookup"
             class="case-priority__select"

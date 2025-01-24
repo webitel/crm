@@ -193,6 +193,11 @@ export default {
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
-    }
+    },
+    comments: {
+      comments: 'Комментарии',
+      edited: 'Отредактировано',
+      yourCommentHere: 'Ваш комментарий здесь',
+    },
   },
 };
