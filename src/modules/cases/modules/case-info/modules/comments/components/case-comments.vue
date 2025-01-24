@@ -29,9 +29,7 @@
       >
         <wt-input
           v-model="commentText"
-          :placeholder="addingCommentMode
-            ? t('cases.comments.yourCommentHere')
-            : t('cases.comments.editYourComment')"
+          :placeholder="t('cases.comments.yourCommentHere')"
           class="comment-form__input"
         />
         <div class="comment-form__actions-wrapper">
@@ -62,32 +60,9 @@
           @update:selected="setSelected"
         >
           <template #content="{ item }">
-            <div class="case-comment">
-              <div class="case-comment__icon">
-                <wt-icon
-                  icon="cases"
-                />
-              </div>
-              <div class="case-comment__wrapper">
-                <div class="case-comment__header">
-                  <div class="case-comment__author">
-                    {{ item?.createdBy?.name }}
-                  </div>
-                  <div class="case-comment__date">
-                    {{ prettifyDate(item.createdAt) }}
-                  </div>
-                  <div
-                    v-if="item.edited"
-                    class="case-comment__edited"
-                  >
-                    {{ t('cases.comments.edited') }}
-                  </div>
-                </div>
-                <div class="case-comment__text">
-                  {{ item.text }}
-                </div>
-              </div>
-            </div>
+            <case-comment-item
+              :comment="item"
+            />
           </template>
           <template #actions="{ item }">
             <wt-icon-action
@@ -97,6 +72,7 @@
               @click="startEditingComment(item)"
             />
             <wt-icon-action
+              v-if="item.canEdit"
               action="delete"
               @click="askDeleteConfirmation({
                 deleted: [item],
@@ -107,8 +83,8 @@
         </wt-table>
 
         <filter-pagination
-          :namespace="filtersNamespace"
           :is-next="isNext"
+          :namespace="filtersNamespace"
         />
       </div>
     </section>
@@ -129,8 +105,8 @@ import { onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
-import prettifyDate from '../../../../../utils/prettifyDate.js';
 import CommentsAPI from '../api/CommentsAPI.js';
+import CaseCommentItem from './case-comment-item.vue';
 
 const props = defineProps({
   namespace: {
@@ -232,26 +208,6 @@ async function submitComment() {
 
 <style lang="scss" scoped>
 .case-comments {
-  .case-comment {
-    display: flex;
-    gap: var(--spacing-xs);
-
-    &__header, &__wrapper {
-      display: flex;
-      gap: var(--spacing-xs);
-    }
-
-    &__wrapper {
-      flex-direction: column;
-    }
-
-    &__author {
-      //TODO: use typo-body bold when it's ready
-      @extend %typo-body-1;
-      font-weight: bold;
-    }
-  }
-
   .comment-form {
     display: flex;
     gap: var(--spacing-xs);
