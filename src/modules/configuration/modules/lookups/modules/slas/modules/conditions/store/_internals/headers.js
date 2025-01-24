@@ -13,7 +13,6 @@ export default [
     locale: 'vocabulary.priority',
     show: true,
     field: 'priorities',
-    sort: SortSymbols.NONE,
   },
   {
     value: 'reactionTime',

@@ -2,23 +2,24 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
-  getDefaultOpenAPIConfig
+  getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import { CloseReasonGroupsApiFactory } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
   merge,
   notify,
   sanitize,
-  starToSearch
+  snakeToCamel,
+  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { CloseReasonsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const closeReasonsService = new CloseReasonGroupsApiFactory(configuration, '', instance);
+const closeReasonsService = new CloseReasonsApiFactory(configuration, '', instance);
 
-const getClosureReasonsList = async (params) => {
+const getCloseReasonsList = async ({closeReasonGroupId, ...rest}) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const {
@@ -28,15 +29,17 @@ const getClosureReasonsList = async (params) => {
     sort,
     id,
     q,
-  } = applyTransform(params, [
+  } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
+
   try {
-    const response = await closeReasonsService.listCloseReasonGroups(
+    const response = await closeReasonsService.listCloseReasons(
+      closeReasonGroupId,
       page,
       size,
       fields,
@@ -48,22 +51,24 @@ const getClosureReasonsList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items,
+      items: applyTransform(items, [snakeToCamel()]),
       next,
     };
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-};
-
-const getClosureReasonsLookup = async (params) => getClosureReasonsList({
-  ...params,
-  fields: params.fields || ['id', 'name'],
-})
-
-const CloseReasonsApi = {
-  getList: getClosureReasonsList,
-  getLookup: getClosureReasonsLookup,
 }
 
-export default CloseReasonsApi;
+const getCloseReasonsLookup = (params) => {
+  return getCloseReasonsList({
+    ...params,
+    fields: params.fields || ['id', 'name'],
+  });
+};
+
+const CloseReasonsAPI = {
+  getList: getCloseReasonsList,
+  getLookup: getCloseReasonsLookup,
+};
+
+export default CloseReasonsAPI;

@@ -6,8 +6,7 @@
     @close="close"
   >
     <template #title>
-      {{ !isNew ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('lookups.slas.statusConditions', 1).toLowerCase() }}
+      {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
     <template #main>
       <form class="opened-contact-group-conditions-popup__wrapper">
@@ -123,10 +122,7 @@ const save = async () => {
 };
 
 async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({
-    ...params,
-    type: WebitelContactsGroupType.STATIC,
-  });
+  return await ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
 }
 
 async function loadContacts(params) {

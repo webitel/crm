@@ -34,7 +34,7 @@ const fieldsToSend = [
 ];
 
 const getContactGroupsList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'type'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'type', 'enabled'];
   const defaultObject = {
     enabled: false,
   };
@@ -48,6 +48,7 @@ const getContactGroupsList = async (params) => {
     q,
     name,
     type,
+    enabled,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -66,6 +67,7 @@ const getContactGroupsList = async (params) => {
       q,
       name,
       type,
+      enabled,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),

@@ -79,7 +79,7 @@ export default {
     edit: 'Редактировать',
     delete: 'Удалить',
     granteePopup: {
-      title: 'Добавить получателя',
+      title: 'Добавить владельца прав',
     },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Запрещено',
@@ -91,6 +91,10 @@ export default {
     [CrmSections.CONTACTS]: {
       name: 'Контакты',
       text: 'В этом разделе вы можете работать с Контактами: клиентами, партнерами и т.д.',
+    },
+    [CrmSections.CASES]: {
+      name: 'Обращения',
+      text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
     },
     configuration: {
       name: 'Конфигурация',
@@ -151,8 +155,9 @@ export default {
     closeReasonGroups: {
       closeReasonGroups: 'Причины закрытия',
       reason: 'Причина | Причины',
-      addCondition: 'Добавить причину',
-      editCondition: 'Редактировать причину',
+      addReason: 'Добавить причину',
+      editReason: 'Редактировать причину',
+      sameConditionError: 'Такое условие уже существует',
     },
 
     [CrmSections.STATUSES]: {
@@ -168,5 +173,37 @@ export default {
       finalStatusValidationText:
         'У вас должен быть хотя бы один конечный статус и только один начальный. Пожалуйста, вернитесь и проверте типы.',
     },
+  },
+  cases: {
+    case: 'Обращение | Обращения',
+    id: 'Индентификатор',
+    subject: 'Тема',
+    priority: 'Приоритет',
+    status: 'Статус',
+    source: 'Источник',
+    author: 'Автор',
+    group: 'Группа исполнителей',
+    service: '@:lookups.service.service',
+    assignee: '@:lookups.contactGroups.assignee',
+    reporter: 'Инициатор',
+    impacted: 'Влияет на',
+    appliedSLA: 'Примененный SLA',
+    appliedCondition: 'Примененное условие',
+    reactionTime: '@:lookups.slas.reactionTime',
+    resolutionTime: '@:lookups.slas.resolutionTime',
+    actualReactionTime: 'Фактическое время реакции',
+    actualResolutionTime: 'Фактическое время решения',
+    reason: '@:lookups.closeReasonGroups.reason',
+    result: 'Результат',
+    rating: 'Оценка',
+    persons: 'Персоны',
+    selectAService: 'Выберите сервис',
+    deadlines: 'Сроки',
+    ratingComment: 'Комментарий к оценке',
+    caseResult: 'Результат обращения',
+    caseInfo: {
+      caseInfo: 'Информация',
+      contactInfo: 'Контактная информация',
+    }
   },
 };

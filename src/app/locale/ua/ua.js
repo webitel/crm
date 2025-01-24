@@ -79,7 +79,7 @@ export default {
     edit: 'Редагувати',
     delete: 'Видаляти',
     granteePopup: {
-      title: 'Додати отримувача',
+      title: 'Додати власника прав',
     },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Заборонено',
@@ -91,6 +91,10 @@ export default {
     [CrmSections.CONTACTS]: {
       name: 'Контакти',
       text: 'У цьому розділі ви можете працювати з Контактами: клієнтами, партнерами тощо.',
+    },
+    [CrmSections.CASES]: {
+      name: 'Звернення',
+      text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
     },
     configuration: {
       name: 'Конфігурація',
@@ -152,8 +156,9 @@ export default {
     closeReasonGroups: {
       closeReasonGroups: 'Причини закриття',
       reason: 'Причина | Причини',
-      addCondition: 'Додати причину',
-      editCondition: 'Редагувати причину',
+      addReason: 'Додати причину',
+      editReason: 'Редагувати причину',
+      sameConditionError: 'Така умова вже існує',
     },
 
     [CrmSections.STATUSES]: {
@@ -169,5 +174,37 @@ export default {
       finalStatusValidationText:
         'У вас має бути принаймні один кінцевий статус і лише один початковий. Будь ласка, поверніться і перевірте типи.',
     },
+  },
+  cases: {
+    case: 'Звернення | Звернення',
+    id: 'Індентифікатор',
+    subject: 'Тема',
+    priority: 'Пріорітет',
+    status: 'Статус',
+    source: 'Джерело',
+    author: 'Автор',
+    group: 'Група виконавців',
+    service: '@:lookups.service.service',
+    assignee: '@:lookups.contactGroups.assignee',
+    reporter: 'Ініціатор',
+    impacted: 'Впливає на',
+    appliedSLA: 'Застосований SLA',
+    appliedCondition: 'Застосована умова',
+    reactionTime: '@:lookups.slas.reactionTime',
+    resolutionTime: '@:lookups.slas.resolutionTime',
+    actualReactionTime: 'Фактичний час реакції',
+    actualResolutionTime: 'Фактичний час вирішення',
+    reason: '@:lookups.closeReasonGroups.reason',
+    result: 'Результат',
+    rating: 'Оцінка',
+    persons: 'Особи',
+    selectAService: 'Виберіть сервіс',
+    deadlines: 'Терміни',
+    ratingComment: 'Коментар до оцінки',
+    caseResult: 'Результат звернення',
+    caseInfo: {
+      caseInfo: 'Інформація',
+      contactInfo: 'Контактна інформація',
+    }
   },
 };

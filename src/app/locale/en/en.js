@@ -92,6 +92,10 @@ export default {
       name: 'Contacts',
       text: 'In this section, you can work with your contacts: clients, customers etc.',
     },
+    [CrmSections.CASES]: {
+      name: 'Cases',
+      text: 'Here you can view Cases registered in the system.',
+    },
     configuration: {
       name: 'Configuration',
       text: 'In this section, you will set up the Case management process.',
@@ -151,8 +155,9 @@ export default {
     closeReasonGroups: {
       closeReasonGroups: 'Closure reasons',
       reason: 'Reason | Reasons',
-      addCondition: 'Add a reason',
-      editCondition: 'Edit a reason',
+      addReason: 'Add reason',
+      editReason: 'Edit reason',
+      sameConditionError: 'Such condition already exists',
     },
 
     [CrmSections.STATUSES]: {
@@ -168,5 +173,37 @@ export default {
       finalStatusValidationText:
         'You should have at least one final status and only one initial. Please, return and check its type.',
     },
+  },
+  cases: {
+    case: 'Case | Cases',
+    id: 'ID',
+    subject: 'Subject',
+    priority: 'Priority',
+    status: 'Status',
+    source: 'Source',
+    author: 'Author',
+    group: 'Group',
+    service: '@:lookups.service.service',
+    assignee: '@:lookups.contactGroups.assignee',
+    reporter: 'Reporter',
+    impacted: 'Impacted',
+    appliedSLA: 'Applied SLA',
+    appliedCondition: 'Applied condition',
+    reactionTime: '@:lookups.slas.reactionTime',
+    resolutionTime: '@:lookups.slas.resolutionTime',
+    actualReactionTime: 'Actual reaction time',
+    actualResolutionTime: 'Actual resolution time',
+    reason: '@:lookups.closeReasonGroups.reason',
+    result: 'Result',
+    rating: 'Rating',
+    persons: 'Persons',
+    selectAService: 'Select a service',
+    deadlines: 'Deadlines',
+    ratingComment: 'Rating comment',
+    caseResult: 'Case result',
+    caseInfo: {
+      caseInfo: 'Case info',
+      contactInfo: 'Contact info',
+    }
   },
 };

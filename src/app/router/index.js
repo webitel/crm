@@ -2,6 +2,10 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
+import OpenedCase from '../../modules/cases/components/opened-case.vue';
+import TheCases from '../../modules/cases/components/the-cases.vue';
+import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
+import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -31,6 +35,7 @@ import OpenedStatus from '../../modules/configuration/modules/lookups/modules/st
 import OpenedStatusGeneral from '../../modules/configuration/modules/lookups/modules/statuses/components/opened-status-general.vue';
 import TheStatuses from '../../modules/configuration/modules/lookups/modules/statuses/components/the-statuses.vue';
 import OpenedStatusConditions from '../../modules/configuration/modules/lookups/modules/statuses/modules/status-conditions/components/opened-status-conditions.vue';
+import TheSources from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
 import OpenedContact from '../../modules/contacts/components/opened-contact.vue';
 import ContactCommunications from '../../modules/contacts/components/opened-contact-communications.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
@@ -77,6 +82,30 @@ const routes = [
         path: 'start-page',
         name: 'the-start-page',
         component: TheStartPage,
+      },
+      {
+        path: 'cases',
+        name: CrmSections.CASES,
+        component: TheCases,
+        // redirect: { name: `the-start-page` },
+      },
+      {
+        path: 'cases/:id',
+        name: `${CrmSections.CASES}-card`,
+        component: OpenedCase,
+        redirect: { name: `${CrmSections.CASES}-case-info` },
+        children: [
+          {
+            path: 'case-info',
+            name: `${CrmSections.CASES}-case-info`,
+            component: CaseInfo,
+          },
+          {
+            path: 'result',
+            name: `${CrmSections.CASES}-result`,
+            component: CaseResult,
+          },
+        ],
       },
       {
         path: 'contacts',

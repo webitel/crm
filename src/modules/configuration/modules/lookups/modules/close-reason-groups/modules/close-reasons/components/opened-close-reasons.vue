@@ -34,8 +34,6 @@
       </wt-action-bar>
     </header>
 
-    <wt-loader v-show="isLoading" />
-
     <div class="table-section__table-wrapper">
 
       <wt-empty
@@ -43,6 +41,8 @@
         :image="imageEmpty"
         :text="textEmpty"
       />
+
+      <wt-loader v-show="isLoading" />
 
       <div v-if="dataList.length && !isLoading">
         <wt-table
