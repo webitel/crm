@@ -155,7 +155,6 @@ const watchServiceValues = (valueRef, path) => {
   watch(
     valueRef,
     (newValue, oldValue) => {
-      console.log('watchServiceValues', valueRef, path, newValue, oldValue);
 
       if (newValue !== oldValue) {
         setItemProp({

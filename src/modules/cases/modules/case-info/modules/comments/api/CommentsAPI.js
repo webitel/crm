@@ -20,18 +20,20 @@ const configuration = getDefaultOpenAPIConfig();
 
 const commentsService = new CaseCommentsApiFactory(configuration, '', instance);
 
-const getCommentsList = async (params) => {
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters', 'parentId'];
-
+const getCommentsList = async ({
+  parentId,
+  ...rest
+}) => {
+  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters',];
   const {
-    parentId,
     page,
+    size,
     q,
     ids,
     sort,
     fields,
     options,
-  } = applyTransform(params, [
+  } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
@@ -43,9 +45,9 @@ const getCommentsList = async (params) => {
   ]);
   try {
     const response = await commentsService.listComments(
-      '382',
+      parentId,
       page,
-      5,
+      size,
       q,
       ids,
       sort,
@@ -81,7 +83,6 @@ const addComment = async ({
 };
 
 const patchComment = async ({
-  parentId,
   commentId,
   changes,
 }) => {
@@ -90,7 +91,7 @@ const patchComment = async ({
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
-  console.log('patchComment', parentId, commentId, body);
+
   try {
     const response = await commentsService.updateComment(commentId, body);
     return applyTransform(response.data, [
@@ -103,11 +104,10 @@ const patchComment = async ({
   }
 };
 
-const deleteComment= async ({ id }) => {
+const deleteComment = async ({ id }) => {
   try {
-    const response = await commentsService.deleteComment(id)
-    return applyTransform(response.data, [
-    ]);
+    const response = await commentsService.deleteComment(id);
+    return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [
       notify,

@@ -188,7 +188,6 @@ async function submitComment() {
   try {
     if (editingComment.value) {
       await CommentsAPI.patch({
-        parentId: props.itemId,
         commentId: editingComment.value.etag,
         changes: { text: commentText.value },
       });
