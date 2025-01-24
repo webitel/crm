@@ -39,7 +39,6 @@
         :value="itemInstance.impacted?.name"
         icon="impacted"
         horizontal-view
-        required
         @update:value="setItemProp({ path: 'impacted', value: $event })"
       >
         <template #default="props">
@@ -61,7 +60,6 @@
         color="success"
         icon="assignee"
         horizontal-view
-        required
         @update:value="setItemProp({ path: 'assignee', value: $event })"
       >
         <template #default="props">
@@ -85,7 +83,6 @@
         color="success"
         icon="group"
         horizontal-view
-        required
         @update:value="setItemProp({ path: 'group', value: $event })"
       >
         <template #default="props">
@@ -158,6 +155,7 @@ const watchServiceValues = (valueRef, path) => {
   watch(
     valueRef,
     (newValue, oldValue) => {
+
       if (newValue !== oldValue) {
         setItemProp({
           path,
