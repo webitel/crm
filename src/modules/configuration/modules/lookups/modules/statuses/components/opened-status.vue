@@ -95,18 +95,21 @@ const disabledSave = computed(
 );
 
 const tabs = computed(() => {
-  return [
-    {
-      text: t('reusable.general'),
-      value: 'general',
-      pathName: `${CrmSections.STATUSES}-general`,
-    },
-    {
-      text: t('lookups.statuses.name', 2),
-      value: 'statuses',
-      pathName: `status-conditions`,
-    },
-  ];
+  const general = {
+    text: t('reusable.general'),
+    value: 'general',
+    pathName: `${CrmSections.STATUSES}-general`,
+  };
+  const statusConditions = {
+    text: t('lookups.statuses.name', 2),
+    value: 'statuses',
+    pathName: `status-conditions`,
+  };
+
+  const tabs = [general];
+
+  if (id.value) tabs.push(statusConditions);
+  return tabs;
 });
 
 const { currentTab, changeTab } = useCardTabs(tabs);

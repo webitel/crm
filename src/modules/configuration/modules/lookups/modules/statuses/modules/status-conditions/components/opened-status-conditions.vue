@@ -13,7 +13,7 @@
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
       :delete-count="deleteCount"
-      :callback="deleteCallback"
+      :callback="deleteCallbackWrapper"
       @close="closeDelete"
     />
 
@@ -74,16 +74,14 @@
           <template #initial="{ item, index }">
             <wt-switcher
               :value="item.initial"
-              @change="
-                changeInitialStatus({ index, prop: 'initial', value: $event })
-              "
+              @change="changeInitialStatus({ index, value: $event })"
             />
           </template>
 
           <template #final="{ item, index }">
             <wt-switcher
               :value="item.final"
-              @change="changeProperty({ index, prop: 'final', value: $event })"
+              @change="changeFinalStatus({ index, value: $event })"
             />
           </template>
 
@@ -199,6 +197,22 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+async function deleteCallbackWrapper() {
+  try {
+    await deleteCallback.value();
+  } catch (error) {
+    if (Array.isArray(error)) {
+      const isInitialOrFinalStatusDeleted = error.find(
+        (err) => err?.reason?.status === 403,
+      );
+
+      isStatusWarningPopupOpened.value = !!isInitialOrFinalStatusDeleted;
+    } else {
+      isStatusWarningPopupOpened.value = error.status === 403;
+    }
+  }
+}
+
 const {
   showEmpty,
   image: imageEmpty,
@@ -209,17 +223,34 @@ function closeWarningPopup() {
   isStatusWarningPopupOpened.value = false;
 }
 
-async function changeInitialStatus({ index, prop, value }) {
-  await patchProperty({ index, prop, value });
-  await loadData();
+async function changeInitialStatus({ index, value }) {
+  const prevIndex = dataList.value.findIndex((el) => el.initial);
+  try {
+    if (!value) {
+      isStatusWarningPopupOpened.value = true;
+      return;
+    }
+
+    dataList.value.forEach((el) => (el.initial = false));
+    await patchProperty({ index, prop: 'initial', value });
+    dataList.value[index].initial = true;
+  } catch (err) {
+    if (prevIndex !== -1) {
+      dataList.value[prevIndex].initial = true;
+    } else {
+      await loadData();
+    }
+    console.error(err);
+  }
 }
 
-async function changeProperty({ index, prop, value }) {
+async function changeFinalStatus({ index, value }) {
   try {
-    await patchProperty({ index, prop, value });
+    await patchProperty({ index, prop: 'final', value });
   } catch (err) {
-    isStatusWarningPopupOpened.value = true;
-    console.error(err);
+    if (err.status === 403) {
+      isStatusWarningPopupOpened.value = true;
+    }
   }
 }
 </script>

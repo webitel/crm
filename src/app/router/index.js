@@ -35,7 +35,6 @@ import OpenedStatus from '../../modules/configuration/modules/lookups/modules/st
 import OpenedStatusGeneral from '../../modules/configuration/modules/lookups/modules/statuses/components/opened-status-general.vue';
 import TheStatuses from '../../modules/configuration/modules/lookups/modules/statuses/components/the-statuses.vue';
 import OpenedStatusConditions from '../../modules/configuration/modules/lookups/modules/statuses/modules/status-conditions/components/opened-status-conditions.vue';
-import TheSources from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
 import OpenedContact from '../../modules/contacts/components/opened-contact.vue';
 import ContactCommunications from '../../modules/contacts/components/opened-contact-communications.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
