@@ -171,7 +171,7 @@ const formState = reactive({
 function startAddingComment() {
   formState.isAdding = true;
   formState.editingComment = null;
-  formState.commentText = '';
+  updateCommentText('');
 }
 
 function startEditingComment(comment) {
