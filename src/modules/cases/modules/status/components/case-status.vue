@@ -39,7 +39,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, ref, watch } from 'vue';
+import {computed, inject, ref, watch} from 'vue';
 import { useStore } from 'vuex';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
@@ -88,6 +88,8 @@ const {
   setId,
   resetState,
 });
+
+const editMode = inject('editMode');
 
 const isResultPopup = ref(false);
 
@@ -141,7 +143,7 @@ async function patchStatusCondition(condition) {
       value: status.value,
     });
 
-    if (!isNew.value) {
+    if (!isNew.value && !editMode.value) {
       await CasesAPI.patch({
         changes: {
           statusCondition: condition,
@@ -149,6 +151,9 @@ async function patchStatusCondition(condition) {
         },
         etag: itemInstance.value.etag,
       });
+
+      //NOTE: needed to get new etag so new patch will work correctly
+      await loadItem();
     }
   } catch (err) {
     throw err;
