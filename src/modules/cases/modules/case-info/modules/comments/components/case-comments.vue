@@ -13,24 +13,27 @@
           {{ t('cases.comments.comments') }}
         </h3>
         <wt-action-bar
-          :disabled:add="addingCommentMode || editingComment"
+          :disabled:add="formState.isAdding || formState.editingComment"
           :include="[IconAction.ADD]"
           @click:add="startAddingComment"
         >
           <wt-icon-btn
             class="icon-action"
             icon="bucket"
+            @click="askDeleteConfirmation({
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })"
           />
         </wt-action-bar>
       </header>
-      <div
-        v-if="addingCommentMode || editingComment"
-        class="comment-form"
-      >
+
+      <div v-if="formState.isAdding || formState.editingComment" class="comment-form">
         <wt-input
-          v-model="commentText"
           :placeholder="t('cases.comments.yourCommentHere')"
+          :value="formState.commentText"
           class="comment-form__input"
+          @input="updateCommentText"
         />
         <div class="comment-form__actions-wrapper">
           <wt-rounded-action
@@ -41,10 +44,11 @@
           <wt-rounded-action
             class="comment-form__action"
             icon="close"
-            @click="cancelComment"
+            @click="resetForm"
           />
         </div>
       </div>
+
       <wt-loader v-show="isLoading" />
       <div
         v-show="!isLoading && dataList.length"
@@ -60,14 +64,12 @@
           @update:selected="setSelected"
         >
           <template #content="{ item }">
-            <case-comment-item
-              :comment="item"
-            />
+            <case-comment-item :comment="item" />
           </template>
           <template #actions="{ item }">
             <wt-icon-action
               v-if="item.canEdit"
-              :disabled="addingCommentMode"
+              :disabled="formState.isAdding"
               action="edit"
               @click="startEditingComment(item)"
             />
@@ -101,10 +103,9 @@ import {
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { onUnmounted, ref } from 'vue';
+import { onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-
 import CommentsAPI from '../api/CommentsAPI.js';
 import CaseCommentItem from './case-comment-item.vue';
 
@@ -120,9 +121,7 @@ const props = defineProps({
 });
 
 const store = useStore();
-
 const { t } = useI18n();
-
 const {
   namespace,
   dataList,
@@ -159,48 +158,55 @@ subscribe({
 });
 
 restoreFilters();
-
 onUnmounted(() => {
   flushSubscribers();
 });
 
-const addingCommentMode = ref(false);
-const editingComment = ref(null);
-const commentText = ref('');
+const formState = reactive({
+  isAdding: false,
+  editingComment: null,
+  commentText: '',
+});
 
 function startAddingComment() {
-  addingCommentMode.value = true;
-  commentText.value = '';
+  formState.isAdding = true;
+  formState.editingComment = null;
+  formState.commentText = '';
 }
 
 function startEditingComment(comment) {
-  editingComment.value = comment;
-  commentText.value = comment.text;
+  formState.isAdding = false;
+  formState.editingComment = comment;
+  formState.commentText = comment.text;
 }
 
-function cancelComment() {
-  addingCommentMode.value = false;
-  editingComment.value = null;
-  commentText.value = '';
+function resetForm() {
+  formState.isAdding = false;
+  formState.editingComment = null;
+  formState.commentText = '';
+}
+
+function updateCommentText(value) {
+  formState.commentText = value;
 }
 
 async function submitComment() {
   try {
-    if (editingComment.value) {
+    if (formState.editingComment) {
       await CommentsAPI.patch({
-        commentId: editingComment.value.etag,
-        changes: { text: commentText.value },
+        commentId: formState.editingComment.etag,
+        changes: { text: formState.commentText },
       });
     } else {
       await CommentsAPI.add({
         parentId: props.itemId,
-        input: { text: commentText.value },
+        input: { text: formState.commentText },
       });
     }
     await loadData();
-    cancelComment();
+    resetForm();
   } catch (error) {
-    console.error('Error submitting comment:', error);
+    throw error;
   }
 }
 </script>

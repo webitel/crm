@@ -104,9 +104,9 @@ const patchComment = async ({
   }
 };
 
-const deleteComment = async ({ id }) => {
+const deleteComment = async ({ etag }) => {
   try {
-    const response = await commentsService.deleteComment(id);
+    const response = await commentsService.deleteComment(etag);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [
