@@ -177,13 +177,13 @@ function startAddingComment() {
 function startEditingComment(comment) {
   formState.isAdding = false;
   formState.editingComment = comment;
-  formState.commentText = comment.text;
+  updateCommentText(comment.text);
 }
 
 function resetForm() {
   formState.isAdding = false;
   formState.editingComment = null;
-  formState.commentText = '';
+  updateCommentText('');
 }
 
 function updateCommentText(value) {

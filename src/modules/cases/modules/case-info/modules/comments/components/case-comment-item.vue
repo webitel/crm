@@ -1,26 +1,26 @@
 <template>
-  <div class="case-comment">
-    <div class="case-comment__icon">
+  <div class="case-comment-item">
+    <div class="case-comment-item__icon">
       <wt-icon
         icon="cases"
       />
     </div>
-    <div class="case-comment__wrapper">
-      <div class="case-comment__header">
-        <div class="case-comment__author">
+    <div class="case-comment-item__wrapper">
+      <div class="case-comment-item__header">
+        <div class="case-comment-item__author">
           {{ comment.createdBy.name }}
         </div>
-        <div class="case-comment__date">
+        <div class="case-comment-item__date">
           {{ prettifyDate(comment.createdAt) }}
         </div>
         <div
           v-if="comment.edited"
-          class="case-comment__edited"
+          class="case-comment-item__edited"
         >
           {{ t('cases.comments.edited') }}
         </div>
       </div>
-      <div class="case-comment__text">
+      <div class="case-comment-item__text">
         {{ comment.text }}
       </div>
     </div>
@@ -44,7 +44,7 @@ const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>
-.case-comment {
+.case-comment-item {
   display: flex;
   gap: var(--spacing-xs);
 
