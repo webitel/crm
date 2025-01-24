@@ -194,7 +194,7 @@ const patchCase = async ({ changes, etag }) => {
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await casesService.updateCase(etag, body);
+    const response = await casesService.updateCase2(etag, body);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);
