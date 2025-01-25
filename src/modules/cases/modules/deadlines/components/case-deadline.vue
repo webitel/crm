@@ -3,18 +3,18 @@
     <wt-label>{{ label }}</wt-label>
     <div class="case-deadline__item-content">
       <div
-        v-if="time"
-        class="case-deadline__value-wrapper"
+          v-if="time"
+          class="case-deadline__value-wrapper"
       >
         <span>{{ prettifyDate(time) }}</span>
       </div>
       <span
-        v-if="timeDifference"
-        :class="{
-          'case-deadline__time-difference_positive': timeDifference > 0,
-          'case-deadline__time-difference_negative': timeDifference < 0
+          v-if="timeDifference"
+          :class="{
+          'case-deadline__time-difference_positive': Number(timeDifference) > 0,
+          'case-deadline__time-difference_negative': Number(timeDifference) < 0
         }"
-      >{{ convertDurationWithDays(timeDifference, true) }}</span>
+      >{{ convertDurationWithDays(Number(timeDifference), true) }}</span>
     </div>
   </div>
 </template>
