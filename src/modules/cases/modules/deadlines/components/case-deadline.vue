@@ -11,8 +11,8 @@
       <span
         v-if="timeDifference"
         :class="{
-        'case-deadline__time-difference_positive': Number(timeDifference) > 0,
-        'case-deadline__time-difference_negative': Number(timeDifference) < 0
+          'case-deadline__time-difference_positive': Number(timeDifference) > 0,
+          'case-deadline__time-difference_negative': Number(timeDifference) < 0
         }"
       >{{ convertDurationWithDays(Number(timeDifference), true) }}</span>
     </div>
