@@ -201,5 +201,8 @@ export default {
       edited: 'Відредаговано',
       yourCommentHere: 'Ваш коментар тут',
     },
+    attachments: {
+      attachments: 'Додатки',
+    },
   },
 };

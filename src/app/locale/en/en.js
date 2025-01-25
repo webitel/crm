@@ -200,5 +200,8 @@ export default {
       edited: 'Edited',
       yourCommentHere: 'Your comment here',
     },
+    attachments: {
+      attachments: 'Attachments',
+    },
   },
 };

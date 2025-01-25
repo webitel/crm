@@ -200,5 +200,8 @@ export default {
       edited: 'Отредактировано',
       yourCommentHere: 'Ваш комментарий здесь',
     },
+    attachments: {
+      attachments: 'Вложения',
+    },
   },
 };
