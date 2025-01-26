@@ -234,13 +234,12 @@ async function changeInitialStatus({ index, value }) {
     dataList.value.forEach((el) => (el.initial = false));
     await patchProperty({ index, prop: 'initial', value });
     dataList.value[index].initial = true;
-  } catch (err) {
+  } catch {
     if (prevIndex !== -1) {
       dataList.value[prevIndex].initial = true;
     } else {
       await loadData();
     }
-    console.error(err);
   }
 }
 
@@ -248,9 +247,10 @@ async function changeFinalStatus({ index, value }) {
   try {
     await patchProperty({ index, prop: 'final', value });
   } catch (err) {
-    if (err.status === 403) {
-      isStatusWarningPopupOpened.value = true;
+    if (err.status !== 403) {
+      return;
     }
+    isStatusWarningPopupOpened.value = true;
   }
 }
 </script>
