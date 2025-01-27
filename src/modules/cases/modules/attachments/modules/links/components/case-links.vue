@@ -232,20 +232,8 @@ async function submitLink() {
 <style lang="scss" scoped>
 .case-links {
   .link-form {
-    display: flex;
-    gap: var(--spacing-xs);
-
     &__input {
       flex: 1;
-    }
-
-    &__actions-wrapper {
-      display: flex;
-      gap: var(--spacing-xs);
-    }
-
-    &__action {
-      padding: var(--spacing-xs);
     }
   }
 }

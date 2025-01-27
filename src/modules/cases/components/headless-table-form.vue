@@ -52,8 +52,5 @@ function reset() {
   &__action {
     padding: var(--spacing-xs);
   }
-  &__input {
-    flex: 1;
-  }
 }
 </style>

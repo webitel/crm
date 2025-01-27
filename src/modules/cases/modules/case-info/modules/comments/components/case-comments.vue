@@ -204,20 +204,8 @@ async function submitComment() {
 <style lang="scss" scoped>
 .case-comments {
   .comment-form {
-    display: flex;
-    gap: var(--spacing-xs);
-
     &__input {
       flex: 1;
-    }
-
-    &__actions-wrapper {
-      display: flex;
-      gap: var(--spacing-xs);
-    }
-
-    &__action {
-      padding: var(--spacing-xs);
     }
   }
 }
