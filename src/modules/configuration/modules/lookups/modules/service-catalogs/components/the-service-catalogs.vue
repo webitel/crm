@@ -120,6 +120,9 @@
               <template #code="{ item }">
                 {{ displayText(item.code) }}
               </template>
+              <template #description="{ item }">
+                {{ displayText(item.description) }}
+              </template>
               <template #teams="{ item }">
                 <template v-if="!isRootElement(item)"> - </template>
                 <template v-else>
