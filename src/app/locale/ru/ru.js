@@ -164,6 +164,8 @@ export default {
     customization: 'Персонализация',
     customLookups: {
       customLookups: 'Пользовательские справочники',
+      code: 'Код',
+      controlPermissions: 'Контролировать права доступа',
     },
   },
   cases: {

@@ -164,6 +164,8 @@ export default {
     customization: 'Customization',
     customLookups: {
       customLookups: 'Custom lookups',
+      code: 'Code',
+      controlPermissions: 'Control permissions',
     },
   },
   cases: {

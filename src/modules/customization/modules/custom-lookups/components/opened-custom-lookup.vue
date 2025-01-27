@@ -54,7 +54,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { minValue, required } from '@vuelidate/validators';
+import { required } from '@vuelidate/validators';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
@@ -96,7 +96,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 });
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
-const { close } = useClose(CrmSections.SLAS);
+const { close } = useClose(CrmSections.CUSTOM_LOOKUPS);
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );

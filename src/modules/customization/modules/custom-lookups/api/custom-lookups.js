@@ -26,7 +26,7 @@ const dictionariesService = new DictionariesApiFactory(
   instance,
 );
 
-const fieldsToSend = ['name', 'description', 'dictionary'];
+const fieldsToSend = ['name', 'description', 'dictionary', 'columns', 'repo'];
 
 const getCustomLookupsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -78,9 +78,40 @@ const getCustomLookup = async ({ itemId: itemRepo }) => {
   }
 };
 
+const addCustomLookup = async ({ itemInstance }) => {
+  const repo = itemInstance.repo;
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await dictionariesService.createType(repo, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
+  const repo = itemInstance.repo;
+
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await dictionariesService.updateType(repo, id, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const CustomLookupsApi = {
   getList: getCustomLookupsList,
   get: getCustomLookup,
+  add: addCustomLookup,
+  update: updateCustomLookup,
 
   ...generatePermissionsApi(baseUrl),
 };

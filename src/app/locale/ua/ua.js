@@ -165,6 +165,8 @@ export default {
     customization: 'Персоналізація',
     customLookups: {
       customLookups: 'Користувацькі довідники',
+      code: 'Код',
+      controlPermissions: 'Контролювати права доступу',
     },
   },
   cases: {
