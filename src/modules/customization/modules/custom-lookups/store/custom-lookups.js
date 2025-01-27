@@ -10,7 +10,7 @@ import CustomLookupsApi from '../api/custom-lookups.js';
 import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';
 
-const defaultColumns = [
+const defaultFields = [
   {
     default: '$(nextval)',
     id: 'id',
@@ -76,10 +76,10 @@ const resetCardState = {
     name: '',
     repo: '',
     description: '',
-    controlPermissions: false,
+    administered: false,
     primary: 'id',
     display: 'name',
-    columns: deepCopy(defaultColumns),
+    fields: deepCopy(defaultFields),
   },
 };
 

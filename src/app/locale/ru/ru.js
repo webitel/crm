@@ -165,7 +165,11 @@ export default {
     customLookups: {
       customLookups: 'Пользовательские справочники',
       code: 'Код',
+      columns: 'Колонки',
+      addColumn: 'Добавить колонку',
+      editColumn: 'Редактировать колонку',
       controlPermissions: 'Контролировать права доступа',
+      invalidRepo: 'Код должен содержать только буквы (A-Z, a-z) и цифры (0-9)',
     },
   },
   cases: {

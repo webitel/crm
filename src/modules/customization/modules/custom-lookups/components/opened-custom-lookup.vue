@@ -33,6 +33,7 @@
           <component
             :is="Component"
             :v="v$"
+            :is-new="isNew"
             :namespace="cardNamespace"
             :access="{
               read: true,
@@ -54,7 +55,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { helpers, required } from '@vuelidate/validators';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
@@ -69,6 +70,11 @@ const namespace = 'customization/customLookups';
 const { t } = useI18n();
 const route = useRoute();
 
+const mustBeRepo = (repo) => {
+  const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+  return regex.test(repo);
+};
+
 const {
   namespace: cardNamespace,
   id,
@@ -80,7 +86,12 @@ const v$ = useVuelidate(
   computed(() => ({
     itemInstance: {
       name: { required },
-      repo: { required },
+      repo: {
+        mustBeRepo: helpers.withMessage(
+          t('customization.customLookups.invalidRepo'),
+          mustBeRepo,
+        ),
+      },
     },
   })),
   { itemInstance },
@@ -126,7 +137,12 @@ const path = computed(() => {
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('customization.customization'), route: '/customization' },
-    { name: t('customization.customLookups.customLookups') },
+    {
+      name: t('customization.customLookups.customLookups'),
+      route: {
+        name: CrmSections.CUSTOM_LOOKUPS,
+      },
+    },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
       route: {

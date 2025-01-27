@@ -26,7 +26,16 @@ const dictionariesService = new DictionariesApiFactory(
   instance,
 );
 
-const fieldsToSend = ['name', 'description', 'dictionary', 'columns', 'repo'];
+const fieldsToSend = [
+  'name',
+  'description',
+  'dictionary',
+  'fields',
+  'repo',
+  'administered',
+  'primary',
+  'display',
+];
 
 const getCustomLookupsList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
@@ -78,6 +87,11 @@ const getCustomLookup = async ({ itemId: itemRepo }) => {
   }
 };
 
+const itemResponseHandler = (item) => ({
+  ...item,
+  id: item.repo,
+});
+
 const addCustomLookup = async ({ itemInstance }) => {
   const repo = itemInstance.repo;
   const item = applyTransform(itemInstance, [
@@ -86,22 +100,22 @@ const addCustomLookup = async ({ itemInstance }) => {
   ]);
   try {
     const response = await dictionariesService.createType(repo, item);
-    return applyTransform(response.data, [snakeToCamel()]);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
 const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
-  const repo = itemInstance.repo;
+  const repo = id;
 
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await dictionariesService.updateType(repo, id, item);
-    return applyTransform(response.data, [snakeToCamel()]);
+    const response = await dictionariesService.updateType(repo, item);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }

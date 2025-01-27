@@ -13,11 +13,17 @@
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
-
       <wt-input
         :label="t('customization.customLookups.code')"
         :value="itemInstance.repo"
         :v="v.itemInstance.repo"
+        :disabled="!isNew"
+        :custom-validators="[
+          {
+            name: 'mustBeRepo',
+            text: $t('customization.customLookups.invalidRepo'),
+          },
+        ]"
         required
         @input="setItemProp({ path: 'repo', value: $event })"
       />
@@ -30,13 +36,10 @@
 
       <wt-switcher
         :label="t('customization.customLookups.controlPermissions')"
-        :value="itemInstance.controlPermission"
-        @change="setItemProp({ path: 'controlPermission', value: $event })"
+        :value="itemInstance.administered"
+        @change="setItemProp({ path: 'administered', value: $event })"
       />
     </div>
-    <pre>
-      {{ itemInstance }}
-    </pre>
   </section>
 </template>
 
@@ -51,6 +54,10 @@ const props = defineProps({
   },
   v: {
     type: Object,
+    required: true,
+  },
+  isNew: {
+    type: Boolean,
     required: true,
   },
 });

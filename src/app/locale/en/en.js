@@ -165,7 +165,12 @@ export default {
     customLookups: {
       customLookups: 'Custom lookups',
       code: 'Code',
+      columns: 'Columns',
+      addColumn: 'Add column',
+      editColumn: 'Edit column',
       controlPermissions: 'Control permissions',
+      invalidRepo:
+        'The code must contain only letters (A-Z, a-z) and numbers (0-9)',
     },
   },
   cases: {
