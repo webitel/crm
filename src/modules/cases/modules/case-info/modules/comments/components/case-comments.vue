@@ -28,26 +28,18 @@
         </wt-action-bar>
       </header>
 
-      <div v-if="formState.isAdding || formState.editingComment" class="comment-form">
+      <headless-table-form
+        v-if="formState.isAdding || formState.editingComment"
+        @reset="resetForm"
+        @submit="submitComment"
+      >
         <wt-input
           :placeholder="t('cases.comments.yourCommentHere')"
           :value="formState.commentText"
           class="comment-form__input"
           @input="updateCommentText"
         />
-        <div class="comment-form__actions-wrapper">
-          <wt-rounded-action
-            class="comment-form__action"
-            icon="tick"
-            @click="submitComment"
-          />
-          <wt-rounded-action
-            class="comment-form__action"
-            icon="close"
-            @click="resetForm"
-          />
-        </div>
-      </div>
+      </headless-table-form>
 
       <wt-loader v-show="isLoading" />
       <div
@@ -95,17 +87,15 @@
 
 <script setup>
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import HeadlessTableForm from '../../../../../components/headless-table-form.vue';
 import CommentsAPI from '../api/CommentsAPI.js';
 import CaseCommentItem from './case-comment-item.vue';
 

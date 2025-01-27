@@ -29,7 +29,11 @@
         </wt-action-bar>
       </header>
 
-      <div v-if="formState.isAdding || formState.editingLink" class="link-form">
+      <headless-table-form
+        v-if="formState.isAdding || formState.editingLink"
+        @reset="resetForm"
+        @submit="submitLink"
+      >
         <wt-input
           :placeholder="t('cases.attachments.url')"
           :value="formState.linkUrl"
@@ -42,19 +46,7 @@
           class="link-form__input"
           @input="updateLinkText"
         />
-        <div class="link-form__actions-wrapper">
-          <wt-rounded-action
-            class="link-form__action"
-            icon="tick"
-            @click="submitLink"
-          />
-          <wt-rounded-action
-            class="link-form__action"
-            icon="close"
-            @click="resetForm"
-          />
-        </div>
-      </div>
+      </headless-table-form>
 
       <wt-loader v-show="isLoading" />
       <div
@@ -115,6 +107,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import HeadlessTableForm from '../../../../../components/headless-table-form.vue';
 import LinksAPI from '../api/LinksAPI.js';
 
 const props = defineProps({
