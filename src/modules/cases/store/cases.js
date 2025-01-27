@@ -4,15 +4,17 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import CasesAPI from '../api/CasesAPI.js';
 import comments from '../modules/case-info/modules/comments/store/comments.js';
-import service from '../modules/service/store/service.js';
+import relatedCases from '../modules/case-info/modules/related-cases/store/related-cases.js';
 import filters from '../modules/filters/store/filters.js';
+import service from '../modules/service/store/service.js';
 import headers from './_internals/headers.js';
 
 const resetCardState = {
   itemInstance: {
-    id:'',
+    id: '',
     name: '',
     assignee: '',
     author: '',
@@ -98,6 +100,7 @@ const cases = createBaseStoreModule({
     card,
     service,
     comments,
+    relatedCases,
   },
 });
 

@@ -1,13 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -44,7 +42,7 @@ export default {
       },
     },
     communications: {
-      communications: 'Засіб зв\'язку | Засоби зв\'язку',
+      communications: "Засіб зв'язку | Засоби зв'язку",
       channel: 'Канал',
       destination: 'Призначення',
       setAsPrimary: 'Встановити як основний',
@@ -61,7 +59,7 @@ export default {
       messaging: {
         gateway: 'Шлюз',
         provider: 'Провайдер',
-        username: 'Ім\'я користувача',
+        username: "Ім'я користувача",
         dummy: 'Поки ще не було текстових діалогів',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
@@ -132,7 +130,6 @@ export default {
       },
     },
 
-
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
       prefix: 'Префікс',
@@ -200,6 +197,22 @@ export default {
       comments: 'Коментарі',
       edited: 'Відредаговано',
       yourCommentHere: 'Ваш коментар тут',
+    },
+    relatedCases: {
+      relatedCases: 'Звʼязані звернення',
+      searchCasesPlaceholder: 'Шукати звернення',
+      relationType: {
+        relationTypeUnspecified: 'relation type unspecified',
+        duplicates: 'дублює',
+        isDuplicatedBy: 'дублюється',
+        blocks: 'блокує',
+        isBlockedBy: 'блокується',
+        causes: 'спричинило',
+        isCausedBy: 'спричинене',
+        isChildOf: 'дочірнє до',
+        isParentOf: 'батьківське для',
+        relatesTo: 'стосується',
+      },
     },
   },
 };

@@ -1,14 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections
-  from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -129,7 +126,7 @@ export default {
         [CasesSourceType.EMAIL]: 'Email',
         [CasesSourceType.API]: 'API',
         [CasesSourceType.MANUAL]: 'Manual',
-      }
+      },
     },
 
     serviceCatalogs: {
@@ -199,6 +196,22 @@ export default {
       comments: 'Comments',
       edited: 'Edited',
       yourCommentHere: 'Your comment here',
+    },
+    relatedCases: {
+      relatedCases: 'Related cases',
+      searchCasesPlaceholder: 'Search for a case',
+      relationType: {
+        relationTypeUnspecified: 'relation type unspecified',
+        duplicates: 'duplicates',
+        isDuplicatedBy: 'is duplicated by',
+        blocks: 'blocks',
+        isBlockedBy: 'is blocked by',
+        causes: 'causes',
+        isCausedBy: 'is caused by',
+        isChildOf: 'is child of',
+        isParentOf: 'is parent of',
+        relatesTo: 'relates to',
+      },
     },
   },
 };

@@ -15,7 +15,6 @@
       </template>
     </editable-field>
 
-
     <editable-field
       :edit-mode="editMode"
       :label="t('vocabulary.description')"
@@ -64,10 +63,16 @@
         </template>
       </editable-field>
     </div>
-    <case-comments
+
+    <case-related-cases
       :item-id="id"
-      :namespace="commentsNamespace"
+      :namespace="relatedCasesNamespace"
     />
+
+    <!--    <case-comments-->
+    <!--      :item-id="id"-->
+    <!--      :namespace="commentsNamespace"-->
+    <!--    />-->
   </div>
 </template>
 <script setup>
@@ -77,9 +82,11 @@ import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
-import EditableField from './editable-field.vue';
 import CaseComments from '../modules/comments/components/case-comments.vue';
+import CaseRelatedCases from '../modules/related-cases/components/case-related-cases.vue';
+import EditableField from './editable-field.vue';
 
 const { t } = useI18n();
 
@@ -99,11 +106,10 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const commentsNamespace = `${props.namespace}/comments`;
+const commentsNamespace = `${props.namespace}/relatedComments`;
+const relatedCasesNamespace = `${props.namespace}/relatedCases`;
 
 const editMode = inject('editMode');
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
