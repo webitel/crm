@@ -13,18 +13,18 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { CaseCommentsApiFactory } from 'webitel-sdk';
+import { CaseLinksApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const commentsService = new CaseCommentsApiFactory(configuration, '', instance);
+const linksService = new CaseLinksApiFactory(configuration, '', instance);
 
-const getCommentsList = async ({
+const getLinksList = async ({
   parentId,
   ...rest
 }) => {
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters',];
+  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
   const {
     page,
     size,
@@ -44,7 +44,7 @@ const getCommentsList = async ({
     camelToSnake(),
   ]);
   try {
-    const response = await commentsService.listComments(
+    const response = await linksService.listLinks(
       parentId,
       page,
       size,
@@ -70,30 +70,38 @@ const getCommentsList = async ({
   }
 };
 
-const addComment = async ({
+const addLink = async ({
   parentId,
   input,
 }) => {
+  const fieldsToSend = ['name', 'url'];
+  const {
+    url,
+    name,
+  } = input;
+
   try {
-    const response = await commentsService.publishComment(parentId, input);
+
+    const response = await linksService.createLink(parentId, fieldsToSend, null, url, name);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const patchComment = async ({
-  commentId,
+const patchLink = async ({
+  parentId,
+  linkId,
   changes,
 }) => {
-  const fieldsToSend = ['text'];
+  // const fieldsToSend = ['text'];
   const body = applyTransform(changes, [
-    sanitize(fieldsToSend),
+    // sanitize(fieldsToSend),
     camelToSnake(),
   ]);
 
   try {
-    const response = await commentsService.updateComment(commentId, body);
+    const response = await linksService.updateLink(parentId, linkId, body);
     return applyTransform(response.data, [
       snakeToCamel(),
     ]);
@@ -104,9 +112,12 @@ const patchComment = async ({
   }
 };
 
-const deleteComment = async ({ etag }) => {
+const deleteLink = async ({
+  parentId,
+  etag,
+}) => {
   try {
-    const response = await commentsService.deleteComment(etag);
+    const response = await linksService.deleteLink(parentId, etag);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [
@@ -116,10 +127,10 @@ const deleteComment = async ({ etag }) => {
 };
 
 const linksAPI = {
-  getList: getCommentsList,
-  delete: deleteComment,
-  add: addComment,
-  patch: patchComment,
+  getList: getLinksList,
+  delete: deleteLink,
+  add: addLink,
+  patch: patchLink,
 };
 
 export default linksAPI;

@@ -8,7 +8,7 @@ export default [
     field: 'name',
   },
   {
-    value: 'created_by',
+    value: 'createdBy',
     show: true,
     sort: SortSymbols.NONE,
     field: 'created_by',

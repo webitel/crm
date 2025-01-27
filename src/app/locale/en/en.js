@@ -202,6 +202,9 @@ export default {
     },
     attachments: {
       attachments: 'Attachments',
+      links: 'Links',
+      url: 'URL',
+      linkText: 'Link text',
     },
   },
 };

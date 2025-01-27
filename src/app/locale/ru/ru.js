@@ -202,6 +202,9 @@ export default {
     },
     attachments: {
       attachments: 'Вложения',
+      links: 'Ссылки',
+      url: 'URL',
+      linkText: 'Текст ссылки',
     },
   },
 };

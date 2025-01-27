@@ -8,7 +8,7 @@ const filtersList = [
   },
   {
     name: 'size',
-    value: 5,
+    value: null,
     defaultValue: 5,
   },
   { name: 'sort' },

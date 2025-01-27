@@ -203,6 +203,9 @@ export default {
     },
     attachments: {
       attachments: 'Додатки',
+      links: 'Посилання',
+      url: 'URL',
+      linkText: 'Текст посилання',
     },
   },
 };
