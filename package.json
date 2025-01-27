@@ -10,7 +10,8 @@
     "lint:js": "eslint",
     "lint:prettier": "prettier --check .",
     "lint": "npm run lint:js && npm run lint:prettier",
-    "lint:fix": "prettier --write --list-different . && npm run lint:js --fix"
+    "lint:fix": "prettier --write --list-different . && npm run lint:js --fix",
+    "tsc": "vue-tsc -p tsconfig.json"
   },
   "type": "module",
   "dependencies": {
@@ -26,6 +27,7 @@
     "linkifyjs": "^4.1.3",
     "lodash": "^4.17.21",
     "markdown-it": "^14.1.0",
+    "pinia": "^2.3.1",
     "sortablejs": "^1.15.6",
     "vue": "^3.5.1",
     "vue-i18n": "^9.13.1",
@@ -35,9 +37,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.10.10",
     "@vitejs/plugin-vue": "5.1.3",
     "@vitest/coverage-v8": "^2.0.5",
     "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.7.0",
     "deep-copy": "^1.4.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -47,14 +52,20 @@
     "prettier": "^3.4.2",
     "sass": "^1.77.2",
     "tslib": "^2.7.0",
+    "typescript": "^5.6.3",
     "typescript-eslint": "^8.20.0",
     "vite": "^5.4.3",
+    "vite-plugin-checker": "^0.8.0",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-svg-sprite": "^0.5.2",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "vue-tsc": "^2.1.10"
   },
   "optionalDependencies": {
     "@esbuild/darwin-arm64": "^0.24.0",
     "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  },
+  "overrides": {
+    "vue-tsc": "^2.2.0"
   }
 }
