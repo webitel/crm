@@ -7,7 +7,7 @@
 
     <opened-status-condition-warning-popup
       :shown="isStatusWarningPopupOpened"
-      @close="closeWarningPopup"
+      @close="setWarningPopupState(false)"
     />
 
     <delete-confirmation-popup
@@ -206,9 +206,9 @@ async function deleteCallbackWrapper() {
         (err) => err?.reason?.status === 403,
       );
 
-      isStatusWarningPopupOpened.value = !!isInitialOrFinalStatusDeleted;
+      setWarningPopupState(!!isInitialOrFinalStatusDeleted);
     } else {
-      isStatusWarningPopupOpened.value = error.status === 403;
+      setWarningPopupState(error.status === 403);
     }
   }
 }
@@ -219,15 +219,15 @@ const {
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
-function closeWarningPopup() {
-  isStatusWarningPopupOpened.value = false;
+function setWarningPopupState(value) {
+  isStatusWarningPopupOpened.value = value;
 }
 
 async function changeInitialStatus({ index, value }) {
   const prevIndex = dataList.value.findIndex((el) => el.initial);
   try {
     if (!value) {
-      isStatusWarningPopupOpened.value = true;
+      setWarningPopupState(true);
       return;
     }
 
@@ -250,7 +250,7 @@ async function changeFinalStatus({ index, value }) {
     if (err.status !== 403) {
       return;
     }
-    isStatusWarningPopupOpened.value = true;
+    setWarningPopupState(true);
   }
 }
 </script>

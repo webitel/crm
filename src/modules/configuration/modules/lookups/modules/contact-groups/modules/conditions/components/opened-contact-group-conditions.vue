@@ -12,7 +12,7 @@
     />
     <header class="table-title">
       <h3 class="table-title__title">
-        {{ t('lookups.slas.statusConditions', 2) }}
+        {{ t('lookups.slas.conditions', 2) }}
       </h3>
 
       <wt-action-bar
@@ -111,7 +111,7 @@ const { namespace: parentCardNamespace, id: parentId } = useCardStore(
   props.namespace,
 );
 
-const namespace = `${parentCardNamespace}/statusConditions`;
+const namespace = `${parentCardNamespace}/conditions`;
 
 const router = useRouter();
 const route = useRoute();

@@ -160,15 +160,14 @@ export default {
       sameConditionError: 'Такое условие уже существует',
     },
 
-    [CrmSections.STATUSES]: {
-      name: ({ plural, linked }) =>
-        plural(['Статус', linked('lookups.serviceCatalogs.statuses')]),
+    statuses: {
+      statuses: 'Статус | Статусы',
       initial: 'Начальный',
       final: 'Конечный',
       addStatus: ({ linked }) =>
-        `${linked('reusable.add')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+        `${linked('reusable.add')} ${linked(`statuses.name`, 1).toLowerCase()}`,
       editStatus: ({ linked }) =>
-        `${linked('reusable.edit')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+        `${linked('reusable.edit')} ${linked(`statuses.name`, 1).toLowerCase()}`,
       statusType: 'Тип статуса',
       finalStatusValidationText:
         'У вас должен быть хотя бы один конечный статус и только один начальный. Пожалуйста, вернитесь и проверте типы.',
@@ -204,6 +203,6 @@ export default {
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
-    }
+    },
   },
 };

@@ -160,15 +160,14 @@ export default {
       sameConditionError: 'Such condition already exists',
     },
 
-    [CrmSections.STATUSES]: {
-      name: ({ plural, linked }) =>
-        plural(['Status', linked('lookups.serviceCatalogs.statuses')]),
+    statuses: {
+      statuses: 'Status | Statuses',
       initial: 'Initial',
       final: 'Final',
       addStatus: ({ linked }) =>
-        `${linked('reusable.add')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+        `${linked('reusable.add')} ${linked(`statuses.name`, 1).toLowerCase()}`,
       editStatus: ({ linked }) =>
-        `${linked('reusable.edit')} ${linked(`${[CrmSections.STATUSES]}.name`, 1).toLowerCase()}`,
+        `${linked('reusable.edit')} ${linked(`statuses.name`, 1).toLowerCase()}`,
       statusType: 'Status type',
       finalStatusValidationText:
         'You should have at least one final status and only one initial. Please, return and check its type.',
@@ -204,6 +203,6 @@ export default {
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
-    }
+    },
   },
 };

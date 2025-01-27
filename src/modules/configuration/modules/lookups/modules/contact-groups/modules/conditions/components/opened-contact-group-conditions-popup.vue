@@ -6,7 +6,11 @@
     @close="close"
   >
     <template #title>
-      {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
+      {{
+        !isNew
+          ? t('lookups.slas.editCondition')
+          : t('lookups.slas.addCondition')
+      }}
     </template>
     <template #main>
       <form class="opened-contact-group-conditions-popup__wrapper">
@@ -104,7 +108,7 @@ const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 const contactList = ref([]);
 
-const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-statusConditions`);
+const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
 
 function loadDataList() {
   emit('load-data');
@@ -122,7 +126,11 @@ const save = async () => {
 };
 
 async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
+  return await ContactGroupsAPI.getLookup({
+    ...params,
+    type: WebitelContactsGroupType.STATIC,
+    enabled: true,
+  });
 }
 
 async function loadContacts(params) {
