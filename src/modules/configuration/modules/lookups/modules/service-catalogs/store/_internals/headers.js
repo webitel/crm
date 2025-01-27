@@ -31,7 +31,7 @@ export default [
   },
   {
     value: 'teams',
-    locale: 'objects.team',
+    locale: ['objects.team', 2],
     show: true,
     field: 'teams',
     sort: SortSymbols.NONE,
