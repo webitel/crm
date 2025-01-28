@@ -29,32 +29,36 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :is-new="isNew"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :access="{
+              read: true,
+              edit: !disableUserInput,
+              delete: !disableUserInput,
+              add: !disableUserInput,
+            }"
           />
         </router-view>
         <input
           hidden
           type="submit"
-        > <!--  submit form on Enter  -->
+        />
+        <!--  submit form on Enter  -->
       </form>
     </template>
   </wt-page-wrapper>
 </template>
 
 <script setup>
-
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import { computed, onMounted } from 'vue';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
@@ -68,15 +72,19 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-    sla: { required },
-    prefix: { required },
-    closeReasonGroup: { required },
-    status: { required },
-  },
-})), { itemInstance }, { $autoDirty: true });
+const v$ = useVuelidate(
+  computed(() => ({
+    itemInstance: {
+      name: { required },
+      sla: { required },
+      prefix: { required },
+      closeReasonGroup: { required },
+      status: { required },
+    },
+  })),
+  { itemInstance },
+  { $autoDirty: true },
+);
 
 v$.value.$touch();
 
@@ -90,7 +98,9 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const disabledSave = computed(
+  () => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 const tabs = computed(() => {
   const general = {
@@ -111,7 +121,10 @@ const path = computed(() => {
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.serviceCatalogs.serviceCatalogs', 2), route: '/lookups/service-catalogs' },
+    {
+      name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+      route: '/lookups/service-catalogs',
+    },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
       route: {
@@ -125,12 +138,10 @@ const path = computed(() => {
 initialize();
 
 onMounted(() => {
-  if(isNew.value) {
+  if (isNew.value) {
     resetState();
   }
-})
+});
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
