@@ -28,7 +28,7 @@
         </wt-action-bar>
       </header>
 
-      <headless-table-form
+      <table-top-row-bar
         v-if="formState.isAdding || formState.editingComment"
         @reset="resetForm"
         @submit="submitComment"
@@ -39,7 +39,7 @@
           class="comment-form__input"
           @input="updateCommentText"
         />
-      </headless-table-form>
+      </table-top-row-bar>
 
       <wt-loader v-show="isLoading" />
       <div
@@ -95,7 +95,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import HeadlessTableForm from '../../../../../components/headless-table-form.vue';
+import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI.js';
 import CaseCommentItem from './case-comment-item.vue';
 

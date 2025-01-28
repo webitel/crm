@@ -1,16 +1,16 @@
 <template>
-  <div class="headless-table-form">
-    <div class="headless-table-form__inputs-wrapper">
+  <div class="table-top-row-bar">
+    <div class="table-top-row-bar__inputs-wrapper">
       <slot/>
     </div>
-    <div class="headless-table-form__actions-wrapper">
+    <div class="table-top-row-bar__actions-wrapper">
       <wt-rounded-action
-        class="headless-table-form__action"
+        class="table-top-row-bar__action"
         icon="tick"
         @click="submit"
       />
       <wt-rounded-action
-        class="headless-table-form__action"
+        class="table-top-row-bar__action"
         icon="close"
         @click="reset"
       />
@@ -34,13 +34,13 @@ function reset() {
 </script>
 
 <style scoped lang="scss">
-.headless-table-form {
+.table-top-row-bar {
   display: flex;
   gap: var(--spacing-xs);
 
   &__inputs-wrapper {
     display: flex;
-    gap: 8px;
+    gap: var(--spacing-xs);
     flex: 1;
   }
 

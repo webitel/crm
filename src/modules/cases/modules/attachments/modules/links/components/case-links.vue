@@ -29,7 +29,7 @@
         </wt-action-bar>
       </header>
 
-      <headless-table-form
+      <table-top-row-bar
         v-if="formState.isAdding || formState.editingLink"
         @reset="resetForm"
         @submit="submitLink"
@@ -46,7 +46,7 @@
           class="link-form__input"
           @input="updateLinkText"
         />
-      </headless-table-form>
+      </table-top-row-bar>
 
       <wt-loader v-show="isLoading" />
       <div
@@ -107,7 +107,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import HeadlessTableForm from '../../../../../components/headless-table-form.vue';
+import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import LinksAPI from '../api/LinksAPI.js';
 
 const props = defineProps({

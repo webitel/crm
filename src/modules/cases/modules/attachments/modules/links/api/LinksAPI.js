@@ -24,15 +24,11 @@ const getLinksList = async ({
   parentId,
   ...rest
 }) => {
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
+  const fieldsToSend = ['etag', 'page', 'size', 'q'];
   const {
     page,
     size,
     q,
-    ids,
-    sort,
-    fields,
-    options,
   } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -49,10 +45,6 @@ const getLinksList = async ({
       page,
       size,
       q,
-      ids,
-      sort,
-      fields,
-      options,
     );
 
     const {
@@ -94,9 +86,9 @@ const patchLink = async ({
   linkId,
   changes,
 }) => {
-  // const fieldsToSend = ['text'];
+  const fieldsToSend = ['name', 'url'];
   const body = applyTransform(changes, [
-    // sanitize(fieldsToSend),
+    sanitize(fieldsToSend),
     camelToSnake(),
   ]);
 
