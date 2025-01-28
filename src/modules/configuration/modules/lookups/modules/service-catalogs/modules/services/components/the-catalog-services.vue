@@ -68,6 +68,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
+                  class="the-catalog-service__service-name"
                   :link="{
                     name: `${CrmSections.SERVICE_CATALOGS}-services`,
                     params: {
@@ -80,7 +81,9 @@
                 </wt-item-link>
               </template>
               <template #description="{ item }">
-                {{ displayText(item.description) }}
+                <p class="the-catalog-service__service-description">
+                  {{ displayText(item.description) }}
+                </p>
               </template>
               <template #group="{ item }">
                 {{ displayText(item.group?.name) }}
@@ -316,6 +319,12 @@ watch(
 .the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;
+  }
+
+  &__service-name,
+  &__service-description {
+    max-width: 300px;
+    text-wrap: wrap;
   }
 }
 </style>
