@@ -84,7 +84,7 @@
               </template>
               <template #description="{ item }">
                 <p class="the-service-catalogs__service-description">
-                  {{ item.description }}
+                  {{ displayText(item.description) }}
                 </p>
               </template>
               <template #sla="{ item }">
@@ -130,9 +130,6 @@
               </template>
               <template #code="{ item }">
                 {{ displayText(item.code) }}
-              </template>
-              <template #description="{ item }">
-                {{ displayText(item.description) }}
               </template>
               <template #teams="{ item }">
                 <template v-if="!isRootElement(item)"> - </template>
