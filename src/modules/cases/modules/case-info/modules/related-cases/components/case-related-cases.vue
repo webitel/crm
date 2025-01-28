@@ -85,7 +85,15 @@
           @update:selected="setSelected"
         >
           <template #content="{ item }">
-            {{ item }}
+            <!--              :color="itemInstance.color"-->
+            <color-component-wrapper
+              color="red"
+              component="wt-icon"
+              icon="cases"
+              size="xl"
+            />
+            {{ item.relatedCase.name }}
+            {{ item.relationType }}
             <!--            <case-comment-item :comment="item" />-->
           </template>
 
@@ -125,6 +133,7 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { CasesRelationType } from 'webitel-sdk';
 
+import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesAPI from '../../../../../api/CasesAPI.js';
 import RelatedCasesAPI from '../api/related-cases.js';
 
@@ -138,7 +147,6 @@ const props = defineProps({
     required: true,
   },
 });
-CasesRelationType;
 
 const store = useStore();
 const { t } = useI18n();
@@ -189,7 +197,7 @@ const formState = reactive({
 });
 
 const relatedTypesOptions = computed(() =>
-  Object.values({}).map((type) => {
+  Object.values(CasesRelationType).map((type) => {
     return {
       id: type,
       name: t(

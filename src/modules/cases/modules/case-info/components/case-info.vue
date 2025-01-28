@@ -69,10 +69,10 @@
       :namespace="relatedCasesNamespace"
     />
 
-    <!--    <case-comments-->
-    <!--      :item-id="id"-->
-    <!--      :namespace="commentsNamespace"-->
-    <!--    />-->
+    <case-comments
+      :item-id="id"
+      :namespace="commentsNamespace"
+    />
   </div>
 </template>
 <script setup>

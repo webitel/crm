@@ -20,20 +20,9 @@ const configuration = getDefaultOpenAPIConfig();
 
 const commentsService = new CaseCommentsApiFactory(configuration, '', instance);
 
-const getCommentsList = async ({
-  parentId,
-  ...rest
-}) => {
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters',];
-  const {
-    page,
-    size,
-    q,
-    ids,
-    sort,
-    fields,
-    options,
-  } = applyTransform(rest, [
+const getCommentsList = async ({ parentId, ...rest }) => {
+  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
+  const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
@@ -55,10 +44,7 @@ const getCommentsList = async ({
       options,
     );
 
-    const {
-      items,
-      next,
-    } = applyTransform(response.data, [
+    const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
     return {
@@ -70,10 +56,7 @@ const getCommentsList = async ({
   }
 };
 
-const addComment = async ({
-  parentId,
-  input,
-}) => {
+const addComment = async ({ parentId, input }) => {
   try {
     const response = await commentsService.publishComment(parentId, input);
     return applyTransform(response.data, [snakeToCamel()]);
@@ -82,10 +65,7 @@ const addComment = async ({
   }
 };
 
-const patchComment = async ({
-  commentId,
-  changes,
-}) => {
+const patchComment = async ({ commentId, changes }) => {
   const fieldsToSend = ['text'];
   const body = applyTransform(changes, [
     sanitize(fieldsToSend),
@@ -94,13 +74,9 @@ const patchComment = async ({
 
   try {
     const response = await commentsService.updateComment(commentId, body);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -109,9 +85,7 @@ const deleteComment = async ({ etag }) => {
     const response = await commentsService.deleteComment(etag);
     return applyTransform(response.data, []);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 

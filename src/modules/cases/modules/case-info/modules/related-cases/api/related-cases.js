@@ -24,7 +24,16 @@ const relatedCasesService = new RelatedCasesApiFactory(
 );
 
 const getRelatedCasesList = async ({ parentId, ...rest }) => {
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
+  const fieldsToSend = [
+    'etag',
+    'page',
+    'size',
+    'q',
+    'ids',
+    'sort',
+    'filters',
+    'canEdit',
+  ];
   const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -47,11 +56,12 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
       options,
     );
 
-    const { items, next } = applyTransform(response.data, [
+    const { data, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
+
     return {
-      items: applyTransform(items, [snakeToCamel()]),
+      items: applyTransform(data, [snakeToCamel()]),
       next,
     };
   } catch (err) {
