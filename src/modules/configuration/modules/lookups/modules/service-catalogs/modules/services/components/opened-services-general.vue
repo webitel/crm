@@ -46,7 +46,6 @@
       />
 
       <wt-switcher
-        v-if="!isNew"
         :label="t('reusable.state')"
         :value="itemInstance.state"
         @change="setItemProp({ path: 'state', value: $event })"
@@ -77,10 +76,6 @@ const props = defineProps({
   },
   v: {
     type: Object,
-    required: true,
-  },
-  isNew: {
-    type: Boolean,
     required: true,
   },
 });
