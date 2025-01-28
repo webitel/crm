@@ -197,6 +197,12 @@ export default {
       edited: 'Отредактировано',
       yourCommentHere: 'Ваш комментарий здесь',
     },
+    attachments: {
+      attachments: 'Вложения',
+      links: 'Ссылки',
+      url: 'URL',
+      linkText: 'Текст ссылки',
+    },
     relatedCases: {
       relatedCases: 'Связанные обращения',
       searchCasesPlaceholder: 'Найти обращение',

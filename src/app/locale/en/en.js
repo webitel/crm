@@ -197,6 +197,12 @@ export default {
       edited: 'Edited',
       yourCommentHere: 'Your comment here',
     },
+    attachments: {
+      attachments: 'Attachments',
+      links: 'Links',
+      url: 'URL',
+      linkText: 'Link text',
+    },
     relatedCases: {
       relatedCases: 'Related cases',
       searchCasesPlaceholder: 'Search for a case',

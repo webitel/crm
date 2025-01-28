@@ -6,18 +6,19 @@
     @close="closeDelete"
   />
 
-  <div class="case-comments table-page">
+  <div class="case-links table-page">
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
-          {{ t('cases.comments.comments') }}
+          {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
-          :disabled:add="formState.isAdding || formState.editingComment"
+          :disabled:add="formState.isAdding || formState.editingLink"
           :include="[IconAction.ADD]"
-          @click:add="startAddingComment"
+          @click:add="startAddingLink"
         >
           <wt-icon-btn
+            :disabled="!editMode"
             class="icon-action"
             icon="bucket"
             @click="askDeleteConfirmation({
@@ -29,15 +30,21 @@
       </header>
 
       <table-top-row-bar
-        v-if="formState.isAdding || formState.editingComment"
+        v-if="formState.isAdding || formState.editingLink"
         @reset="resetForm"
-        @submit="submitComment"
+        @submit="submitLink"
       >
         <wt-input
-          :placeholder="t('cases.comments.yourCommentHere')"
-          :value="formState.commentText"
-          class="comment-form__input"
-          @input="updateCommentText"
+          :placeholder="t('cases.attachments.url')"
+          :value="formState.linkUrl"
+          class="link-form__input"
+          @input="updateLinkUrl"
+        />
+        <wt-input
+          :placeholder="t('cases.attachments.linkText')"
+          :value="formState.linkText"
+          class="link-form__input"
+          @input="updateLinkText"
         />
       </table-top-row-bar>
 
@@ -51,22 +58,30 @@
           :headers="headers"
           :selected="selected"
           headless
-          sortable
-          @sort="sort"
           @update:selected="setSelected"
         >
-          <template #content="{ item }">
-            <case-comment-item :comment="item" />
+
+          <template #name="{ item }">
+            <a
+              :href="item?.url"
+              target="_blank"
+            >
+              {{ item?.name }}
+            </a>
           </template>
+
+          <template #createdBy="{ item }">
+            {{ item?.createdBy?.name }}
+          </template>
+
           <template #actions="{ item }">
             <wt-icon-action
-              v-if="item.canEdit"
-              :disabled="formState.isAdding"
+              :disabled="!editMode || formState.isAdding"
               action="edit"
-              @click="startEditingComment(item)"
+              @click="startEditingLink(item)"
             />
             <wt-icon-action
-              v-if="item.canEdit"
+              :disabled="!editMode"
               action="delete"
               @click="askDeleteConfirmation({
                 deleted: [item],
@@ -75,11 +90,6 @@
             />
           </template>
         </wt-table>
-
-        <filter-pagination
-          :is-next="isNext"
-          :namespace="filtersNamespace"
-        />
       </div>
     </section>
   </div>
@@ -87,17 +97,18 @@
 
 <script setup>
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { onUnmounted, reactive } from 'vue';
+import { inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
-import CommentsAPI from '../api/CommentsAPI.js';
-import CaseCommentItem from './case-comment-item.vue';
+import LinksAPI from '../api/LinksAPI.js';
 
 const props = defineProps({
   namespace: {
@@ -152,45 +163,62 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
+const editMode = inject('editMode');
+
 const formState = reactive({
   isAdding: false,
-  editingComment: null,
-  commentText: '',
+  editingLink: null,
+  linkText: '',
+  linkUrl: '',
 });
 
-function startAddingComment() {
+function startAddingLink() {
   formState.isAdding = true;
-  formState.editingComment = null;
-  updateCommentText('');
+  formState.editingLink = null;
+  updateLinkText('');
+  updateLinkUrl('');
 }
 
-function startEditingComment(comment) {
+function startEditingLink(link) {
   formState.isAdding = false;
-  formState.editingComment = comment;
-  updateCommentText(comment.text);
+  formState.editingLink = link;
+  updateLinkText(link.name);
+  updateLinkUrl(link.url);
 }
 
 function resetForm() {
   formState.isAdding = false;
-  formState.editingComment = null;
-  updateCommentText('');
+  formState.editingLink = null;
+  updateLinkText('');
+  updateLinkUrl('');
 }
 
-function updateCommentText(value) {
-  formState.commentText = value;
+function updateLinkText(value) {
+  formState.linkText = value;
 }
 
-async function submitComment() {
+function updateLinkUrl(value) {
+  formState.linkUrl = value;
+}
+
+async function submitLink() {
   try {
-    if (formState.editingComment) {
-      await CommentsAPI.patch({
-        commentId: formState.editingComment.etag,
-        changes: { text: formState.commentText },
+    if (formState.editingLink) {
+      await LinksAPI.patch({
+        parentId: props.itemId,
+        linkId: formState.editingLink.etag,
+        changes: {
+          name: formState.linkText,
+          url: formState.linkUrl,
+        },
       });
     } else {
-      await CommentsAPI.add({
+      await LinksAPI.add({
         parentId: props.itemId,
-        input: { text: formState.commentText },
+        input: {
+          name: formState.linkText,
+          url: formState.linkUrl,
+        },
       });
     }
     await loadData();
@@ -202,8 +230,8 @@ async function submitComment() {
 </script>
 
 <style lang="scss" scoped>
-.case-comments {
-  .comment-form {
+.case-links {
+  .link-form {
     &__input {
       flex: 1;
     }
