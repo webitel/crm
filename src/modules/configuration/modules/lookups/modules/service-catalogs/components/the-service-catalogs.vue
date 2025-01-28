@@ -112,7 +112,11 @@
                 </template>
               </template>
               <template #closeReasonGroup="{ item }">
-                {{ displayText(item.closeReasonGroup?.name) }}
+                {{
+                  isRootElement(item)
+                    ? displayText(item.closeReasonGroup?.name)
+                    : displayText(item.group?.name)
+                }}
               </template>
 
               <template #prefix="{ item }">
