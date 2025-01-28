@@ -20,7 +20,7 @@
         :disabled="!isNew"
         :custom-validators="[
           {
-            name: 'mustBeRepo',
+            name: 'checkRepo',
             text: $t('customization.customLookups.invalidRepo'),
           },
         ]"

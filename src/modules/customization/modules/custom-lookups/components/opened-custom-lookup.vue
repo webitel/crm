@@ -64,13 +64,11 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 
 const namespace = 'customization/customLookups';
 const { t } = useI18n();
-const route = useRoute();
 
-const mustBeRepo = (repo) => {
+const checkRepo = (repo) => {
   const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
   return regex.test(repo);
 };
@@ -87,9 +85,9 @@ const v$ = useVuelidate(
     itemInstance: {
       name: { required },
       repo: {
-        mustBeRepo: helpers.withMessage(
+        checkRepo: helpers.withMessage(
           t('customization.customLookups.invalidRepo'),
-          mustBeRepo,
+          checkRepo,
         ),
       },
     },
@@ -145,10 +143,6 @@ const path = computed(() => {
     },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
     },
   ];
 });
