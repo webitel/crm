@@ -18,8 +18,9 @@
         :label="t('lookups.contactGroups.assignee')"
         :search-method="loadContact"
         :value="itemInstance.assignee"
-        :clearable="true"
-        :disabled="itemInstance.group?.type === WebitelContactsGroupType.DYNAMIC"
+        :disabled="
+          itemInstance.group?.type === WebitelContactsGroupType.DYNAMIC
+        "
         @input="setItemProp({ path: 'assignee', value: $event })"
       />
 
@@ -28,7 +29,6 @@
         :search-method="loadSlaList"
         :value="itemInstance.sla"
         :v="v.itemInstance.sla"
-        :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
       />
 
@@ -36,7 +36,6 @@
         :label="t('lookups.contactGroups.contactGroups')"
         :search-method="loadContactGroupsList"
         :value="itemInstance.group"
-        :clearable="true"
         @input="setItemProp({ path: 'group', value: $event })"
       />
 
@@ -63,13 +62,13 @@
 </template>
 
 <script setup>
+import { contacts } from '@webitel/ui-sdk/src/api/clients/сontacts/index.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-
-import SlasAPI from '../../../../slas/api/slas.js';
-import ContactGroupsAPI from '../../../../contact-groups/api/contactGroups.js';
-import { contacts } from '@webitel/ui-sdk/src/api/clients/сontacts/index.js';
 import { WebitelContactsGroupType } from 'webitel-sdk';
+
+import ContactGroupsAPI from '../../../../contact-groups/api/contactGroups.js';
+import SlasAPI from '../../../../slas/api/slas.js';
 
 const props = defineProps({
   namespace: {
@@ -83,7 +82,7 @@ const props = defineProps({
   isNew: {
     type: Boolean,
     required: true,
-  }
+  },
 });
 
 const { t } = useI18n();
@@ -92,17 +91,16 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const loadSlaList = (params) => {
   return SlasAPI.getLookup(params);
-}
+};
 
 const loadContactGroupsList = (params) => {
   return ContactGroupsAPI.getLookup({
     ...params,
-    fields: ['id', 'name', 'type']
+    fields: ['id', 'name', 'type'],
   });
-}
+};
 
 const loadContact = (params) => {
   return contacts.getLookup(params);
-}
-
+};
 </script>

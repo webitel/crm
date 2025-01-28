@@ -20,7 +20,6 @@
         :value="itemInstance.status"
         :v="v.itemInstance.status"
         required
-        :clearable="false"
         @input="setItemProp({ path: 'status', value: $event })"
       />
 
@@ -38,7 +37,6 @@
         :value="itemInstance.closeReasonGroup"
         :v="v.itemInstance.closeReasonGroup"
         required
-        :clearable="false"
         @input="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
 
@@ -48,7 +46,6 @@
         :value="itemInstance.sla"
         :v="v.itemInstance.sla"
         required
-        :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
       />
       <wt-select
