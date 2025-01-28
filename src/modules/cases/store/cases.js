@@ -5,6 +5,7 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 import CasesAPI from '../api/CasesAPI.js';
+import links from '../modules/attachments/modules/links/store/links.js';
 import comments from '../modules/case-info/modules/comments/store/comments.js';
 import service from '../modules/service/store/service.js';
 import filters from '../modules/filters/store/filters.js';
@@ -98,6 +99,7 @@ const cases = createBaseStoreModule({
     card,
     service,
     comments,
+    links,
   },
 });
 
