@@ -70,6 +70,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
+                  class="the-service-catalogs__service-name"
                   :link="{
                     name: `${CrmSections.SERVICE_CATALOGS}-services`,
                     params: {
@@ -80,6 +81,11 @@
                 >
                   {{ item.name }}
                 </wt-item-link>
+              </template>
+              <template #description="{ item }">
+                <p class="the-service-catalogs__service-description">
+                  {{ item.description }}
+                </p>
               </template>
               <template #sla="{ item }">
                 {{ displayText(item.sla?.name) }}
@@ -307,6 +313,12 @@ const changeState = async (item) => {
 .the-service-catalogs {
   &__service-assignee {
     color: var(--text-link-color) !important;
+  }
+
+  &__service-name,
+  &__service-description {
+    max-width: 300px;
+    text-wrap: wrap;
   }
 }
 </style>
