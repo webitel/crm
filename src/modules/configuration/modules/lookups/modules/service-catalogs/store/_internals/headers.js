@@ -48,14 +48,12 @@ export default [
     locale: 'objects.team',
     show: true,
     field: 'teams',
-    sort: SortSymbols.NONE,
   },
   {
     value: 'skills',
     locale: 'lookups.serviceCatalogs.skills',
     show: true,
     field: 'skills',
-    sort: SortSymbols.NONE,
   },
   {
     value: 'prefix',
