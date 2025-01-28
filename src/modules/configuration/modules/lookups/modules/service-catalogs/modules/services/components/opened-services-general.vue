@@ -18,7 +18,6 @@
         :label="t('lookups.contactGroups.assignee')"
         :search-method="loadContact"
         :value="itemInstance.assignee"
-        :clearable="true"
         :disabled="
           itemInstance.group?.type === WebitelContactsGroupType.DYNAMIC
         "
@@ -30,7 +29,6 @@
         :search-method="loadSlaList"
         :value="itemInstance.sla"
         :v="v.itemInstance.sla"
-        :clearable="false"
         @input="setItemProp({ path: 'sla', value: $event })"
       />
 
@@ -38,7 +36,6 @@
         :label="t('lookups.contactGroups.contactGroups')"
         :search-method="loadContactGroupsList"
         :value="itemInstance.group"
-        :clearable="true"
         @input="setItemProp({ path: 'group', value: $event })"
       />
 
