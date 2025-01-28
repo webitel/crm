@@ -5,7 +5,9 @@
         {{ t('reusable.generalInfo') }}
       </h3>
     </header>
-    <div class="opened-custom-lookup-general__form">
+    <div
+      class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50"
+    >
       <wt-input
         :label="t('reusable.name')"
         :value="itemInstance.name"
@@ -21,7 +23,7 @@
         :custom-validators="[
           {
             name: 'checkRepo',
-            text: $t('customization.customLookups.invalidRepo'),
+            text: $t('validation.latinWithNumber'),
           },
         ]"
         required
@@ -66,14 +68,3 @@ const { t } = useI18n();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 </script>
-
-<style lang="scss" scoped>
-.opened-custom-lookup-general {
-  &__form {
-    max-width: max(650px, 60%);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-}
-</style>

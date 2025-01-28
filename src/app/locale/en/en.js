@@ -169,8 +169,6 @@ export default {
       addColumn: 'Add column',
       editColumn: 'Edit column',
       controlPermissions: 'Control permissions',
-      invalidRepo:
-        'The code must contain only letters (A-Z, a-z) and numbers (0-9)',
     },
   },
   cases: {

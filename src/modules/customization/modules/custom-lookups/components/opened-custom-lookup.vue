@@ -86,7 +86,7 @@ const v$ = useVuelidate(
       name: { required },
       repo: {
         checkRepo: helpers.withMessage(
-          t('customization.customLookups.invalidRepo'),
+          t('validation.latinWithNumber'),
           checkRepo,
         ),
       },

@@ -170,7 +170,6 @@ export default {
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
       controlPermissions: 'Контролювати права доступу',
-      invalidRepo: 'Код повинен містити лише літери (A-Z, a-z) та цифри (0-9)',
     },
   },
   cases: {
