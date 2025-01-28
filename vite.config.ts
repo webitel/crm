@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
 import { resolve } from 'path';
+import checker from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -51,6 +52,10 @@ export default ({ mode }) => {
       }),
       createSvgSpritePlugin({
         include: '**/sprite/*.svg',
+      }),
+      checker({
+        typescript: false,
+        vueTsc: false,
       }),
     ],
     test: {

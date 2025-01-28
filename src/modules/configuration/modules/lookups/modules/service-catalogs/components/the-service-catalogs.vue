@@ -92,6 +92,7 @@
                   <wt-item-link
                     v-if="item.assignee?.id"
                     class="the-service-catalogs__service-assignee"
+                    target="_blank"
                     :link="{
                       name: `${CrmSections.CONTACTS}-card`,
                       params: { id: item.assignee.id },
