@@ -204,5 +204,16 @@ export default {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
     },
+    comments: {
+      comments: 'Comments',
+      edited: 'Edited',
+      yourCommentHere: 'Your comment here',
+    },
+    attachments: {
+      attachments: 'Attachments',
+      links: 'Links',
+      url: 'URL',
+      linkText: 'Link text',
+    },
   },
 };

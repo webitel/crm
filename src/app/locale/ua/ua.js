@@ -205,5 +205,16 @@ export default {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
     },
+    comments: {
+      comments: 'Коментарі',
+      edited: 'Відредаговано',
+      yourCommentHere: 'Ваш коментар тут',
+    },
+    attachments: {
+      attachments: 'Додатки',
+      links: 'Посилання',
+      url: 'URL',
+      linkText: 'Текст посилання',
+    },
   },
 };

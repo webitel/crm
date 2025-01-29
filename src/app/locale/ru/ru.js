@@ -204,5 +204,16 @@ export default {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
     },
+    comments: {
+      comments: 'Комментарии',
+      edited: 'Отредактировано',
+      yourCommentHere: 'Ваш комментарий здесь',
+    },
+    attachments: {
+      attachments: 'Вложения',
+      links: 'Ссылки',
+      url: 'URL',
+      linkText: 'Текст ссылки',
+    },
   },
 };

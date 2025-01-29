@@ -136,6 +136,7 @@ const {
   restoreFilters,
   subscribe,
   flushSubscribers,
+  resetFilters,
 } = useTableFilters(tableNamespace);
 
 subscribe({
@@ -227,6 +228,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   flushSubscribers();
+  resetFilters();
   if (sortableInstance) {
     sortableInstance.destroy();
     sortableInstance = null;

@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "allowJs": false,
+    "skipLibCheck": true,
+
+    "moduleResolution": "Bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "noEmitOnError": false,
+
+    "strict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": [
+    "src",
+    "node_modules/vite-plugin-checker/dist/esm/checkers/vueTsc/typescript-vue-tsc/lib/lib.dom.d.ts"
+  ]
+}

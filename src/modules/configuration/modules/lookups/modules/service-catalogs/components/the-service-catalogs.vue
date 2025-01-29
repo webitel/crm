@@ -70,6 +70,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
+                  class="the-service-catalogs__service-name"
                   :link="{
                     name: `${CrmSections.SERVICE_CATALOGS}-services`,
                     params: {
@@ -80,6 +81,11 @@
                 >
                   {{ item.name }}
                 </wt-item-link>
+              </template>
+              <template #description="{ item }">
+                <p class="the-service-catalogs__service-description">
+                  {{ item.description }}
+                </p>
               </template>
               <template #sla="{ item }">
                 {{ displayText(item.sla?.name) }}
@@ -92,6 +98,7 @@
                   <wt-item-link
                     v-if="item.assignee?.id"
                     class="the-service-catalogs__service-assignee"
+                    target="_blank"
                     :link="{
                       name: `${CrmSections.CONTACTS}-card`,
                       params: { id: item.assignee.id },
@@ -105,7 +112,11 @@
                 </template>
               </template>
               <template #closeReasonGroup="{ item }">
-                {{ displayText(item.closeReasonGroup?.name) }}
+                {{
+                  isRootElement(item)
+                    ? displayText(item.closeReasonGroup?.name)
+                    : displayText(item.group?.name)
+                }}
               </template>
 
               <template #prefix="{ item }">
@@ -306,6 +317,12 @@ const changeState = async (item) => {
 .the-service-catalogs {
   &__service-assignee {
     color: var(--text-link-color) !important;
+  }
+
+  &__service-name,
+  &__service-description {
+    max-width: 300px;
+    text-wrap: wrap;
   }
 }
 </style>
