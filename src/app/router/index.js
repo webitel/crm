@@ -350,7 +350,7 @@ const routes = [
                 component: OpenedCustomLookupGeneral,
               },
               {
-                path: 'general',
+                path: 'columns',
                 name: `${CrmSections.CUSTOM_LOOKUPS}-columns`,
                 component: OpenedCustomLookupColumns,
               },

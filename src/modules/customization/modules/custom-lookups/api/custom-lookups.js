@@ -81,6 +81,7 @@ const getCustomLookup = async ({ itemId: itemRepo }) => {
       itemRepo,
       fieldsToSend,
     );
+
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);

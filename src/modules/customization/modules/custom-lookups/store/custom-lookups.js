@@ -12,21 +12,22 @@ import headers from './_internals/headers';
 
 const defaultFields = [
   {
-    default: '$(nextval)',
-    id: 'id',
-    kind: 'int64',
-    readonly: true,
-    required: true,
-  },
-  {
     id: 'name',
     kind: 'string',
     name: 'Name',
     required: true,
   },
   {
+    default: '$(nextval)',
+    id: 'id',
+    name: 'Id',
+    kind: 'int64',
+    readonly: true,
+    required: true,
+  },
+  {
     id: 'created_at',
-    name: 'Creation Date',
+    name: 'Created on',
     kind: 'datetime',
     datetime: {
       part: 'full',
@@ -37,7 +38,7 @@ const defaultFields = [
   },
   {
     id: 'created_by',
-    name: 'Author',
+    name: 'Created by',
     kind: 'lookup',
     lookup: {
       id: 'id',
@@ -49,7 +50,7 @@ const defaultFields = [
   },
   {
     id: 'updated_at',
-    name: 'Last Modified',
+    name: 'Modified on',
     kind: 'datetime',
     datetime: {
       part: 'full',
@@ -60,13 +61,18 @@ const defaultFields = [
   },
   {
     id: 'updated_by',
-    name: 'Editor',
+    name: 'Modified by',
     kind: 'lookup',
     lookup: {
       type: 'users',
     },
     always: '$(user)',
     readonly: true,
+  },
+  {
+    id: 'description',
+    name: 'Description',
+    kind: 'string',
   },
 ];
 

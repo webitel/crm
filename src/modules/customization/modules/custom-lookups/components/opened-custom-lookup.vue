@@ -32,6 +32,7 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            v-if="currentTab.value === 'columns' ? itemInstance.repo : true"
             :v="v$"
             :is-new="isNew"
             :namespace="cardNamespace"
