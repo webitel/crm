@@ -134,7 +134,7 @@ export default {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
       prefix: 'Префікс',
       code: 'Код',
-      statuses: 'Статуси',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Навички',
     },
 
@@ -166,12 +166,12 @@ export default {
       initial: 'Початковий',
       final: 'Кінцевий',
       addStatus: ({ linked }) =>
-        `${linked('reusable.add')} ${linked(`statuses.name`, 1).toLowerCase()}`,
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
       editStatus: ({ linked }) =>
-        `${linked('reusable.edit')} ${linked(`statuses.name`, 1).toLowerCase()}`,
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
       statusType: 'Тип статусу',
       finalStatusValidationText:
-        'У вас має бути принаймні один кінцевий статус і лише один початковий. Будь ласка, поверніться і перевірте типи.',
+        'У вас має бути принаймні один кінцевий статус і лише один початковий.\n Будь ласка, поверніться і перевірте типи.',
     },
   },
   cases: {

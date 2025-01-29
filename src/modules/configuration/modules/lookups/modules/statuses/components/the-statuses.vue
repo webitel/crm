@@ -16,7 +16,7 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.statuses.name', 2) }}
+            {{ t('lookups.statuses.statuses', 2) }}
           </h3>
 
           <wt-action-bar
@@ -186,7 +186,7 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.statuses.name', 2) },
+  { name: t('lookups.statuses.statuses', 2) },
 ]);
 
 const { close } = useClose('configuration');

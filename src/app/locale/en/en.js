@@ -133,7 +133,7 @@ export default {
       serviceCatalogs: 'Service catalog | Service catalogs',
       prefix: 'Prefix',
       code: 'Code',
-      statuses: 'Statuses',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Skills',
     },
 
@@ -165,12 +165,12 @@ export default {
       initial: 'Initial',
       final: 'Final',
       addStatus: ({ linked }) =>
-        `${linked('reusable.add')} ${linked(`statuses.name`, 1).toLowerCase()}`,
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
       editStatus: ({ linked }) =>
-        `${linked('reusable.edit')} ${linked(`statuses.name`, 1).toLowerCase()}`,
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
       statusType: 'Status type',
       finalStatusValidationText:
-        'You should have at least one final status and only one initial. Please, return and check its type.',
+        'You should have at least one final status and only one initial.\n Please, return and check its type.',
     },
   },
   cases: {

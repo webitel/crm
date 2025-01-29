@@ -49,7 +49,6 @@ function close() {
     margin: 0 auto;
     text-align: center;
     grid-gap: var(--spacing-sm);
-    max-width: 283px;
   }
 
   .wt-button {

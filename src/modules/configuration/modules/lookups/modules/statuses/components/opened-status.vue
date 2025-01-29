@@ -101,7 +101,7 @@ const tabs = computed(() => {
     pathName: `${CrmSections.STATUSES}-general`,
   };
   const statusConditions = {
-    text: t('lookups.statuses.name', 2),
+    text: t('lookups.statuses.statuses', 2),
     value: 'statuses',
     pathName: `status-conditions`,
   };
@@ -119,7 +119,7 @@ const path = computed(() => {
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.statuses.name', 2), route: '/lookups/statuses' },
+    { name: t('lookups.statuses.statuses', 2), route: '/lookups/statuses' },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
       route: {

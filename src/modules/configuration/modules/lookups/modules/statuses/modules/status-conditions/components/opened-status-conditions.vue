@@ -19,7 +19,7 @@
 
     <header class="table-title">
       <h3 class="table-title__title">
-        {{ t('lookups.statuses.name', 2) }}
+        {{ t('lookups.statuses.statuses', 2) }}
       </h3>
 
       <wt-action-bar
