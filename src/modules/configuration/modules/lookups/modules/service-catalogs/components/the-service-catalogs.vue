@@ -84,7 +84,7 @@
               </template>
               <template #description="{ item }">
                 <p class="the-service-catalogs__service-description">
-                  {{ item.description }}
+                  {{ displayText(item.description) }}
                 </p>
               </template>
               <template #sla="{ item }">

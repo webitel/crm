@@ -82,7 +82,7 @@
               </template>
               <template #description="{ item }">
                 <p class="the-catalog-service__service-description">
-                  {{ item.description }}
+                  {{ displayText(item.description) }}
                 </p>
               </template>
               <template #group="{ item }">
