@@ -64,7 +64,8 @@
       </editable-field>
     </div>
 
-    <case-related-cases
+    <related-cases
+      :edit-mode="editMode"
       :item-id="id"
       :namespace="relatedCasesNamespace"
     />
@@ -85,7 +86,7 @@ import { useStore } from 'vuex';
 
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import CaseComments from '../modules/comments/components/case-comments.vue';
-import CaseRelatedCases from '../modules/related-cases/components/case-related-cases.vue';
+import RelatedCases from '../modules/related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
 const { t } = useI18n();
@@ -106,7 +107,7 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const commentsNamespace = `${props.namespace}/relatedComments`;
+const commentsNamespace = `${props.namespace}/comments`;
 const relatedCasesNamespace = `${props.namespace}/relatedCases`;
 
 const editMode = inject('editMode');

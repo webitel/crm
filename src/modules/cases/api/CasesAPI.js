@@ -202,7 +202,7 @@ const patchCase = async ({ changes, etag }) => {
 const getCasesLookup = (params) =>
   getCasesList({
     ...params,
-    fields: params.fields || ['id', 'name'],
+    fields: params.fields || ['id', 'name', 'subject', 'priority'],
   });
 
 const casesAPI = {

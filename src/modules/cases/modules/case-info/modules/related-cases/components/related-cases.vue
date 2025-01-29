@@ -6,7 +6,7 @@
     @close="closeDelete"
   />
 
-  <div class="case-related-cases table-page">
+  <div class="related-cases table-page">
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
@@ -31,17 +31,19 @@
         </wt-action-bar>
       </header>
 
-      <div
+      <table-top-row-bar
         v-if="formState.mode === 'create' || formState.mode === 'edit'"
-        class="related-cases-form"
+        @reset="resetForm"
+        @submit="submitCase"
       >
         <wt-select
           :value="formState.relationType"
           :options="relatedTypesOptions"
           :clearable="false"
           :searchable="false"
+          use-value-from-options-by-prop="id"
           option-label="name"
-          class="related-cases-form__select"
+          class="type-select"
           @input="formState.relationType = $event"
         />
 
@@ -50,24 +52,19 @@
           :clearable="false"
           :search-method="CasesAPI.getLookup"
           :placeholder="t('cases.relatedCases.searchCasesPlaceholder')"
-          class="related-cases-form__input"
+          class="case-select"
+          option-label="name"
           @input="formState.relatedCase = $event"
-        />
-
-        <div class="related-cases-form__actions-wrapper">
-          <wt-rounded-action
-            class="related-cases-form__action"
-            icon="tick"
-            @click="submitComment"
-          />
-
-          <wt-rounded-action
-            class="related-cases-form__action"
-            icon="close"
-            @click="resetForm"
-          />
-        </div>
-      </div>
+        >
+          <template #option="{ option }">
+            <related-case-item
+              :color="option.priority?.color"
+              :name="option.name"
+              :subject="option.subject"
+            />
+          </template>
+        </wt-select>
+      </table-top-row-bar>
 
       <wt-loader v-show="isLoading" />
 
@@ -86,20 +83,17 @@
         >
           <template #content="{ item }">
             <!--              :color="itemInstance.color"-->
-            <color-component-wrapper
+            <related-case-item
               color="red"
-              component="wt-icon"
-              icon="cases"
-              size="xl"
+              :name="item.relatedCase.name"
+              :subject="item.relatedCase.subject"
+              :relation-type="getRelatedTypeTranslate(item.relationType)"
             />
-            {{ item.relatedCase.name }}
-            {{ item.relationType }}
-            <!--            <case-comment-item :comment="item" />-->
           </template>
 
           <template #actions="{ item }">
             <wt-icon-action
-              v-if="item.canEdit"
+              :disabled="!props.editMode"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -121,21 +115,21 @@
 </template>
 
 <script setup>
-import { snakeToCamel } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
+import { objSnakeToCamel } from '@webitel/ui-sdk/src/scripts/index.js';
 import { computed, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 import { CasesRelationType } from 'webitel-sdk';
 
-import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesAPI from '../../../../../api/CasesAPI.js';
+import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import RelatedCasesAPI from '../api/related-cases.js';
+import RelatedCaseItem from './related-case-item.vue';
 
 const props = defineProps({
   namespace: {
@@ -146,9 +140,12 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  editMode: {
+    type: Boolean,
+    required: true,
+  },
 });
 
-const store = useStore();
 const { t } = useI18n();
 const {
   namespace,
@@ -193,16 +190,19 @@ const formState = reactive({
   mode: null,
   isAdding: false,
   relatedCase: null,
-  relationType: 'IS_BLOCKED_BY',
+  relationType: null,
 });
+
+function getRelatedTypeTranslate(type) {
+  const convertedType = objSnakeToCamel([type.toLowerCase()])[0];
+  return t(`cases.relatedCases.relationType.${convertedType}`);
+}
 
 const relatedTypesOptions = computed(() =>
   Object.values(CasesRelationType).map((type) => {
     return {
       id: type,
-      name: t(
-        `cases.relatedCases.relationType.${snakeToCamel(type.toLowerCase())}`,
-      ),
+      name: getRelatedTypeTranslate(type),
     };
   }),
 );
@@ -210,6 +210,7 @@ const relatedTypesOptions = computed(() =>
 function startAddingComment() {
   formState.mode = 'create';
   formState.editingComment = null;
+  formState.relationType = relatedTypesOptions.value[0].id;
   updateCommentText('');
 }
 
@@ -223,7 +224,7 @@ function updateCommentText(value) {
   formState.commentText = value;
 }
 
-async function submitComment() {
+async function submitCase() {
   try {
     if (formState.editingComment) {
       await RelatedCasesAPI.patch({
@@ -251,26 +252,25 @@ async function submitComment() {
 </script>
 
 <style lang="scss" scoped>
-.case-related-cases {
-  .related-cases-form {
-    display: flex;
-    gap: var(--spacing-xs);
+.related-cases {
+  .type-select {
+    flex: 1;
+  }
 
-    &__select {
-      flex: 1;
-    }
+  .case-select {
+    flex: 2;
 
-    &__input {
-      flex: 2;
-    }
-
-    &__actions-wrapper {
+    &__option {
       display: flex;
-      gap: var(--spacing-xs);
-    }
+      align-items: start;
 
-    &__action {
-      padding: var(--spacing-xs);
+      &-name {
+        margin-left: var(--spacing-xs);
+      }
+
+      &-subject {
+        margin-left: var(--space-lg);
+      }
     }
   }
 }

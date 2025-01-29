@@ -7,5 +7,10 @@ export default [
     sort: SortSymbols.NONE,
     field: 'text',
   },
+  {
+    value: 'name',
+    show: true,
+    sort: SortSymbols.NONE,
+    field: 'name',
+  },
 ];
-

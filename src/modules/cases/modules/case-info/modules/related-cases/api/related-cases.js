@@ -29,11 +29,12 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
     'page',
     'size',
     'q',
-    'ids',
     'sort',
+    'fields',
+    'ids',
     'filters',
-    'canEdit',
   ];
+  // const fieldsToSend = ['etag'];
   const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -44,15 +45,17 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
+  console.log(ids, ' ids');
+  console.log(fields, ' fields');
   try {
     const response = await relatedCasesService.listRelatedCases(
       parentId,
       page,
       size,
       q,
-      ids,
       sort,
       fields,
+      ids,
       options,
     );
 
