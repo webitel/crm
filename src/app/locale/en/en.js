@@ -115,7 +115,7 @@ export default {
       reactionTime: 'Reaction time',
       reactionTimeTitle: 'Reaction time (dd:hh:mm)',
       resolutionTime: 'Resolution time',
-      resolutionTimeTitle: 'Reaction time (dd:hh:mm)',
+      resolutionTimeTitle: 'Resolution time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
