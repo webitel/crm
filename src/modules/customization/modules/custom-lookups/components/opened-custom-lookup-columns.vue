@@ -7,11 +7,18 @@
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!selected.length"
+        @click:refresh="loadItem"
+        @click:delete="
+          askDeleteConfirmation({
+            deleted: selected,
+            callback: () => deleteSelected(selected),
+          })
+        "
       >
         <template #search-bar>
           <wt-search-bar
             :value="search"
-            @search="search = $event"
+            @input="search = $event"
           />
         </template>
       </wt-action-bar>
@@ -25,18 +32,17 @@
     />
 
     <div class="table-section__table-wrapper">
-      <!--      <wt-empty-->
-      <!--        v-show="showEmpty"-->
-      <!--        :image="imageEmpty"-->
-      <!--        :text="textEmpty"-->
-      <!--      />-->
+      <wt-empty
+        v-show="showEmpty"
+        :image="imageEmpty"
+        :text="textEmpty"
+      />
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="displayFields.length && !isLoading">
+      <div v-if="fields.length && !isLoading">
         <wt-table
-          v-if="!search"
-          :data="displayFields"
+          :data="fields"
           :headers="headers"
           :selected="selected"
           sortable
@@ -51,6 +57,7 @@
               class="sortable-btn"
               icon="move"
             />
+            <!--            TODO Impelemnt edit button when will start working on form for add and edit fields-->
             <!--            <wt-icon-action-->
             <!--              v-if="hasEditAccess"-->
             <!--              action="edit"-->
@@ -62,48 +69,12 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => {
-                    console.log('delete', item);
-                  },
+                  callback: () => deleteField(item),
                 })
               "
             />
           </template>
         </wt-table>
-        <template v-else>
-          <wt-table
-            :data="searchedFields"
-            :headers="headers"
-            :selected="selected"
-            sortable
-            @update:selected="setSelected"
-          >
-            <template #title="{ item }">
-              {{ item[itemInstance.display] }}
-            </template>
-            <template #actions="{ item }">
-              <!--            <wt-icon-action-->
-              <!--              v-if="hasEditAccess"-->
-              <!--              action="edit"-->
-              <!--              @click="edit(item)"-->
-              <!--            />-->
-              <wt-icon-action
-                v-if="!item.readonly && item.id !== 'name'"
-                action="delete"
-                @click="
-                  askDeleteConfirmation({
-                    deleted: [item],
-                    callback: () => {
-                      console.log('delete', item);
-                    },
-                  })
-                "
-              />
-            </template>
-          </wt-table>
-
-          <!--          TODO Implement empty state for searched elements-->
-        </template>
       </div>
     </div>
   </section>
@@ -113,8 +84,8 @@
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import deepCopy from 'deep-copy';
 import Sortable, { Swap } from 'sortablejs';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -136,16 +107,18 @@ const props = defineProps({
 
 const { t } = useI18n();
 
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
+const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 
-const fields = computed(() => itemInstance.value.fields);
-const displayFields = ref(deepCopy(fields.value));
-const searchedFields = computed(() => {
-  return fields.value.filter((field) => {
-    return field[itemInstance.value.display]
-      .toLowerCase()
-      .includes(search.value?.toLowerCase());
-  });
+const fields = computed(() => {
+  if (search.value) {
+    return fields.value.filter((field) => {
+      return field[itemInstance.value.display]
+        .toLowerCase()
+        .includes(search.value?.toLowerCase());
+    });
+  }
+
+  return itemInstance.value.fields;
 });
 
 const isLoading = computed(() => !itemInstance.value?.repo);
@@ -195,7 +168,7 @@ const sortableConfig = {
 
 let sortableInstance = null;
 
-function initSortable(wrapper) {
+const initSortable = (wrapper) => {
   if (sortableInstance) {
     sortableInstance.destroy();
     sortableInstance = null;
@@ -205,18 +178,28 @@ function initSortable(wrapper) {
     ...sortableConfig,
 
     async onEnd({ oldIndex, newIndex }) {
+      // TODO Need continue work with change position for searched items, with some reason we didn't got filtered array by search string
       // Swap items in the array
       if (oldIndex === newIndex) return; // No need to swap if indexes are the same
 
-      const movedItem = fields.value[oldIndex];
-      const replaceItem = fields.value[newIndex];
-      fields.value.splice(newIndex, 1, movedItem);
-      fields.value.splice(oldIndex, 1, replaceItem);
+      const changePositionArray = !search.value
+        ? fields.value
+        : fields.value.filter((field) => {
+            return field[itemInstance.value.display]
+              .toLowerCase()
+              .includes(search.value?.toLowerCase());
+          });
 
-      setItemProp({ path: 'fields', value: fields.value });
+      const movedItem = changePositionArray[newIndex];
+      const movedItemPosition = movedItem.position;
+      const replaceItem = changePositionArray[oldIndex];
+      movedItem.position = replaceItem.position;
+      replaceItem.position = movedItemPosition;
+
+      setItemProp({ path: 'fields', value: changePositionArray });
     },
   });
-}
+};
 
 function callSortable() {
   setTimeout(() => {
@@ -236,10 +219,28 @@ const {
 } = useDeleteConfirmationPopup();
 
 const deleteField = (field) => {
-  console.log('field', field);
+  const itemIndex = fields.value.findIndex((item) => item.id === field.id);
+  fields.value.splice(itemIndex, 1);
+  setItemProp({ path: 'fields', value: fields.value });
 };
 
+const deleteSelected = (selectedFields) => {
+  selectedFields.filter((field) => !field.readonly).forEach(deleteField);
+
+  selected.value = [];
+};
+
+// Implemented for correct for table empty composable
+const error = computed(() => null);
+
+const {
+  showEmpty,
+  image: imageEmpty,
+  text: textEmpty,
+} = useTableEmpty({ dataList: fields, error, isLoading });
+
 watch(fields, () => callSortable());
+
 onMounted(async () => {
   if (!Sortable.__pluginsMounted) {
     Sortable.mount(new Swap());

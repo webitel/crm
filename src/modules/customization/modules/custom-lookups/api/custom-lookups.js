@@ -13,6 +13,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import deepCopy from 'deep-copy';
 import { DictionariesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -76,13 +77,35 @@ const getCustomLookupsList = async (params) => {
 };
 
 const getCustomLookup = async ({ itemId: itemRepo }) => {
+  function* createPositionGenerator() {
+    let position = 1;
+    while (true) {
+      const item = yield;
+      if (item.readonly) {
+        yield null;
+      } else {
+        yield position++;
+      }
+    }
+  }
+  const generator = createPositionGenerator();
+  generator.next();
+
+  const itemResponseHandler = (item) => ({
+    ...item,
+    fields: item.fields.map((field) => ({
+      ...field,
+      position: generator.next(field).value,
+    })),
+  });
+
   try {
     const response = await dictionariesService.locateType(
       itemRepo,
       fieldsToSend,
     );
 
-    return applyTransform(response.data, [snakeToCamel()]);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
@@ -110,7 +133,25 @@ const addCustomLookup = async ({ itemInstance }) => {
 const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
   const repo = id;
 
+  const sortFields = (item) => {
+    const unSortableFields = item.fields.filter((field) => !field.position);
+
+    const fields = deepCopy(item.fields)
+      .filter((field) => field.position)
+      .sort((a, b) => {
+        return a.position - b.position;
+      });
+
+    fields.splice(1, 0, ...unSortableFields);
+
+    return {
+      ...item,
+      fields,
+    };
+  };
+
   const item = applyTransform(itemInstance, [
+    sortFields,
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
