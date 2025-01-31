@@ -68,6 +68,7 @@
             >
               <template #name="{ item }">
                 <wt-item-link
+                  class="the-catalog-service__service-name"
                   :link="{
                     name: `${CrmSections.SERVICE_CATALOGS}-services`,
                     params: {
@@ -80,7 +81,9 @@
                 </wt-item-link>
               </template>
               <template #description="{ item }">
-                {{ item.description }}
+                <p class="the-catalog-service__service-description">
+                  {{ item.description }}
+                </p>
               </template>
               <template #group="{ item }">
                 {{ displayText(item.group?.name) }}
@@ -156,8 +159,10 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
-import CatalogsAPI from '../../../api/service-catalogs.js';
+import { useStore } from 'vuex';
+
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
+import CatalogsAPI from '../../../api/service-catalogs.js';
 import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
 
@@ -312,7 +317,6 @@ const initializeBreadcrumbs = async () => {
     router.push({ name: CrmSections.SERVICE_CATALOGS });
   }
 };
-
 const setRootForServices = () => {
   store.commit(`${baseNamespace}/table/SET`, {
     path: 'rootId',
@@ -344,6 +348,12 @@ watch(
 .the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;
+  }
+
+  &__service-name,
+  &__service-description {
+    max-width: 300px;
+    text-wrap: wrap;
   }
 }
 </style>
