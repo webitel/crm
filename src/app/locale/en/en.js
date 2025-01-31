@@ -188,6 +188,7 @@ export default {
     deadlines: 'Deadlines',
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
+    emptyCases: 'There are no {e} yet',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',

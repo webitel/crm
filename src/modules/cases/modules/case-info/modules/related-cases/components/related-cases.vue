@@ -14,11 +14,12 @@
         </h3>
 
         <wt-action-bar
-          :disabled:add="formState.mode !== null"
+          :disabled:add="!props.editMode"
           :include="[IconAction.ADD]"
           @click:add="startAddingComment"
         >
           <wt-icon-btn
+            :disabled="!props.editMode"
             class="icon-action"
             icon="bucket"
             @click="
@@ -32,7 +33,7 @@
       </header>
 
       <table-top-row-bar
-        v-if="formState.mode === 'create' || formState.mode === 'edit'"
+        v-if="formState.mode === 'create'"
         @reset="resetForm"
         @submit="submitCase"
       >
@@ -66,25 +67,28 @@
         </wt-select>
       </table-top-row-bar>
 
+      <wt-empty
+        v-show="showEmpty"
+        :text="emptyTableText"
+      />
+
       <wt-loader v-show="isLoading" />
 
-      <div
-        v-show="!isLoading && dataList.length"
-        class="table-section__table-wrapper"
-      >
+      <div class="table-section__table-wrapper">
         <wt-table
+          v-show="!isLoading && dataList.length"
           :data="dataList"
           :headers="headers"
           :selected="selected"
           headless
           sortable
+          class="related-cases__table"
           @sort="sort"
           @update:selected="setSelected"
         >
           <template #content="{ item }">
-            <!--              :color="itemInstance.color"-->
             <related-case-item
-              color="red"
+              :color="item.relatedCase.color"
               :name="item.relatedCase.name"
               :subject="item.relatedCase.subject"
               :relation-type="getRelatedTypeTranslate(item.relationType)"
@@ -104,11 +108,6 @@
             />
           </template>
         </wt-table>
-
-        <filter-pagination
-          :is-next="isNext"
-          :namespace="filtersNamespace"
-        />
       </div>
     </section>
   </div>
@@ -118,10 +117,10 @@
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { objSnakeToCamel } from '@webitel/ui-sdk/src/scripts/index.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CasesRelationType } from 'webitel-sdk';
@@ -153,7 +152,6 @@ const {
   selected,
   isLoading,
   headers,
-  isNext,
   loadData,
   deleteData,
   sort,
@@ -161,12 +159,8 @@ const {
   onFilterEvent,
 } = useTableStore(props.namespace);
 
-const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
+const { restoreFilters, subscribe, flushSubscribers } =
+  useTableFilters(namespace);
 
 const {
   isVisible: isConfirmationPopup,
@@ -175,6 +169,13 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const emptyTableText = computed(() =>
+  t('cases.emptyCases', {
+    e: t('cases.relatedCases.relatedCases').toLowerCase(),
+  }),
+);
 
 subscribe({
   event: '*',
@@ -194,6 +195,9 @@ const formState = reactive({
 });
 
 function getRelatedTypeTranslate(type) {
+  if (!type) {
+    return '';
+  }
   const convertedType = objSnakeToCamel([type.toLowerCase()])[0];
   return t(`cases.relatedCases.relationType.${convertedType}`);
 }
@@ -226,23 +230,16 @@ function updateCommentText(value) {
 
 async function submitCase() {
   try {
-    if (formState.editingComment) {
-      await RelatedCasesAPI.patch({
-        commentId: formState.editingComment.etag,
-        changes: { text: formState.commentText },
-      });
-    } else {
-      await RelatedCasesAPI.add({
-        parentId: props.itemId,
-        input: {
-          relatedCase: {
-            id: formState.relatedCase.id,
-            name: formState.relatedCase.name,
-          },
-          relationType: formState.relationType,
+    await RelatedCasesAPI.add({
+      parentId: props.itemId,
+      input: {
+        relatedCase: {
+          id: formState.relatedCase.id,
+          name: formState.relatedCase.name,
         },
-      });
-    }
+        relationType: formState.relationType,
+      },
+    });
     await loadData();
     resetForm();
   } catch (error) {
@@ -272,6 +269,11 @@ async function submitCase() {
         margin-left: var(--space-lg);
       }
     }
+  }
+
+  &__table {
+    max-height: 210px;
+    overflow-y: scroll;
   }
 }
 </style>

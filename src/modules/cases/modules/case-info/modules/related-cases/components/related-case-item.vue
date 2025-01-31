@@ -53,7 +53,7 @@ const props = defineProps({
   grid-gap: var(--spacing-xs);
 
   &__name {
-    flex: 140px;
+    flex: 140px 0;
   }
 
   &__subject {

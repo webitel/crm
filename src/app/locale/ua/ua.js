@@ -189,6 +189,7 @@ export default {
     deadlines: 'Терміни',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
+    emptyCases: 'Тут ще немає {e}',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',

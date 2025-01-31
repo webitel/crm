@@ -34,19 +34,19 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
     'ids',
     'filters',
   ];
-  // const fieldsToSend = ['etag'];
+
   const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
       ...params,
       q: params.search,
+      fields: [...params.fields, 'primary_case', 'relation', 'name'],
     }),
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
-  console.log(ids, ' ids');
-  console.log(fields, ' fields');
+
   try {
     const response = await relatedCasesService.listRelatedCases(
       parentId,
@@ -72,7 +72,7 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
   }
 };
 
-const addComment = async ({ parentId, input }) => {
+const addRelatedCase = async ({ parentId, input }) => {
   try {
     const response = await relatedCasesService.createRelatedCase(
       parentId,
@@ -84,25 +84,7 @@ const addComment = async ({ parentId, input }) => {
   }
 };
 
-const patchComment = async ({ commentId, changes }) => {
-  const fieldsToSend = ['text'];
-  const body = applyTransform(changes, [
-    sanitize(fieldsToSend),
-    camelToSnake(),
-  ]);
-
-  try {
-    const response = await relatedCasesService.updateRelatedCase2(
-      commentId,
-      body,
-    );
-    return applyTransform(response.data, [snakeToCamel()]);
-  } catch (err) {
-    throw applyTransform(err, [notify]);
-  }
-};
-
-const deleteComment = async ({ etag }) => {
+const deleteRelatedCase = async ({ etag }) => {
   try {
     const response = await relatedCasesService.deleteRelatedCase(etag);
     return applyTransform(response.data, []);
@@ -113,9 +95,8 @@ const deleteComment = async ({ etag }) => {
 
 const relatedCasesAPI = {
   getList: getRelatedCasesList,
-  delete: deleteComment,
-  add: addComment,
-  patch: patchComment,
+  delete: deleteRelatedCase,
+  add: addRelatedCase,
 };
 
 export default relatedCasesAPI;

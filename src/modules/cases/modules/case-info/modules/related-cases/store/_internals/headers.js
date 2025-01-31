@@ -5,12 +5,6 @@ export default [
     value: 'content',
     show: true,
     sort: SortSymbols.NONE,
-    field: 'text',
-  },
-  {
-    value: 'name',
-    show: true,
-    sort: SortSymbols.NONE,
-    field: 'name',
+    field: 'related_case',
   },
 ];
