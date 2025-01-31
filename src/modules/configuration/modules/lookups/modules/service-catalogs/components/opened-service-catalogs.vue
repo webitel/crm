@@ -60,6 +60,8 @@ import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
+
 const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
 const route = useRoute();
@@ -127,7 +129,9 @@ const path = computed(() => {
       route: '/lookups/service-catalogs',
     },
     {
-      name: isNew.value ? t('reusable.new') : pathName.value,
+      name: isNew.value
+        ? t('reusable.new')
+        : prettifyBreadcrumbName(pathName.value),
       route: {
         name: currentTab.value.pathName,
         query: route.query,

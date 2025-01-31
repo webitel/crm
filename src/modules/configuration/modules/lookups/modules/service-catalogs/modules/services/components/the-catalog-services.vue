@@ -160,6 +160,7 @@ import { useStore } from 'vuex';
 
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
 import CatalogsAPI from '../../../api/service-catalogs.js';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
 
@@ -216,12 +217,8 @@ subscribe({
   callback: onFilterEvent,
 });
 
-const rootServiceName = computed(() => {
-  return rootService.value?.name || catalog.value?.name;
-});
-
 const path = computed(() => {
-  return [
+  const routes = [
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
@@ -229,10 +226,38 @@ const path = computed(() => {
       name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
       route: '/lookups/service-catalogs',
     },
-    {
-      name: rootServiceName.value,
-    },
   ];
+
+  if (route.params.rootId === route.params.catalogId) {
+    routes.push({
+      name: prettifyBreadcrumbName(catalog.value?.name),
+    });
+
+    return routes;
+  } else {
+    routes.push({
+      name: prettifyBreadcrumbName(catalog.value?.name),
+      route: {
+        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        params: {
+          catalogId: catalog.value?.id,
+          rootId: catalog.value?.id,
+        },
+      },
+    });
+  }
+
+  if (catalog.value?.id !== rootService.value?.rootId) {
+    routes.push({
+      name: '···',
+    });
+  }
+
+  routes.push({
+    name: prettifyBreadcrumbName(rootService.value?.name),
+  });
+
+  return routes;
 });
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
 
@@ -278,10 +303,12 @@ const loadCatalog = async () => {
 };
 
 const initializeBreadcrumbs = async () => {
+  rootService.value = null;
+
   try {
-    if (route.params.rootId === route.params.catalogId) {
-      await loadCatalog();
-    } else {
+    await loadCatalog();
+
+    if (route.params.rootId !== route.params.catalogId) {
       await loadRootService();
     }
   } catch {
