@@ -120,7 +120,7 @@ function loadDataList() {
 }
 
 function getPriorities(params) {
-  return PrioritiesAPI.getLookup({ ...params, notInSla: route.params.id });
+  return PrioritiesAPI.getLookup({ ...params, inSla: route.params.id });
 }
 
 const save = async () => {
