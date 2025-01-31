@@ -77,25 +77,17 @@ const getCustomLookupsList = async (params) => {
 };
 
 const getCustomLookup = async ({ itemId: itemRepo }) => {
-  function* createPositionGenerator() {
+  const createPositionGenerator = () => {
     let position = 1;
-    while (true) {
-      const item = yield;
-      if (item.readonly) {
-        yield null;
-      } else {
-        yield position++;
-      }
-    }
-  }
-  const generator = createPositionGenerator();
-  generator.next();
+    return (item) => (item.readonly ? null : position++);
+  };
+  const getPosition = createPositionGenerator();
 
   const itemResponseHandler = (item) => ({
     ...item,
     fields: item.fields.map((field) => ({
       ...field,
-      position: generator.next(field).value,
+      position: getPosition(field),
     })),
   });
 

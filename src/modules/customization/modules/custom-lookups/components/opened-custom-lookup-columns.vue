@@ -8,6 +8,7 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!selected.length"
         @click:refresh="loadItem"
+        @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
             deleted: selected,
@@ -77,6 +78,11 @@
         </wt-table>
       </div>
     </div>
+    <field-popup
+      :shown="showAddFieldPopup"
+      @close="showAddFieldPopup = false"
+      @save="addNewField"
+    />
   </section>
 </template>
 
@@ -89,6 +95,8 @@ import { useCardStore } from '@webitel/ui-sdk/store';
 import Sortable, { Swap } from 'sortablejs';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+import FieldPopup from './field-popup.vue';
 
 const props = defineProps({
   namespace: {
@@ -239,7 +247,22 @@ const {
   text: textEmpty,
 } = useTableEmpty({ dataList: fields, error, isLoading });
 
-watch(fields, () => callSortable());
+const showAddFieldPopup = ref(false);
+
+const addNewField = (field) => {
+  const filtered = itemInstance.value.fields.filter((field) => field.position);
+
+  const lastField = filtered.sort((a, b) => b - a)[filtered.length - 1];
+
+  const createField = {
+    ...field,
+    position: lastField ? lastField.position + 1 : 1,
+  };
+
+  fields.value.push(createField);
+  setItemProp({ path: 'fields', value: fields.value });
+  showAddFieldPopup.value = false;
+};
 
 onMounted(async () => {
   if (!Sortable.__pluginsMounted) {
