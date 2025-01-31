@@ -115,7 +115,7 @@ export default {
       reactionTime: 'Reaction time',
       reactionTimeTitle: 'Reaction time (dd:hh:mm)',
       resolutionTime: 'Resolution time',
-      resolutionTimeTitle: 'Reaction time (dd:hh:mm)',
+      resolutionTimeTitle: 'Resolution time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
@@ -199,6 +199,12 @@ export default {
       comments: 'Comments',
       edited: 'Edited',
       yourCommentHere: 'Your comment here',
+    },
+    attachments: {
+      attachments: 'Attachments',
+      links: 'Links',
+      url: 'URL',
+      linkText: 'Link text',
     },
   },
 };
