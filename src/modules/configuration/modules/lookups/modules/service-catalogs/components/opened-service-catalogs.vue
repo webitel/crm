@@ -29,7 +29,6 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :is-new="isNew"
             :access="{
               read: true,
               edit: !disableUserInput,

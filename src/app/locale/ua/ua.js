@@ -201,5 +201,11 @@ export default {
       edited: 'Відредаговано',
       yourCommentHere: 'Ваш коментар тут',
     },
+    attachments: {
+      attachments: 'Додатки',
+      links: 'Посилання',
+      url: 'URL',
+      linkText: 'Текст посилання',
+    },
   },
 };
