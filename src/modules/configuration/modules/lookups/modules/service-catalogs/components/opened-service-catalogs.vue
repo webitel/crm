@@ -98,6 +98,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );

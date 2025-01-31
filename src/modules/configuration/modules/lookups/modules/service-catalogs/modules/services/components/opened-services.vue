@@ -47,7 +47,6 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted, ref } from 'vue';
@@ -61,6 +60,7 @@ import ServicesAPI from '../api/services.js';
 const { t } = useI18n();
 const store = useStore();
 const route = useRoute();
+const router = useRouter();
 
 const baseNamespace = 'configuration/lookups/services';
 
@@ -136,7 +136,13 @@ const path = computed(() => {
   ];
 });
 
-const { close } = useClose('configuration');
+const close = () => {
+  if (window.history.length === 1) window.close();
+  return router.push({
+    name: `${CrmSections.SERVICE_CATALOGS}-services`,
+    params: { catalogId: catalogId.value, rootId: rootId.value },
+  });
+};
 
 const rootId = computed(() => route.params.rootId);
 const catalogId = computed(() => route.params.catalogId);

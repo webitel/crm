@@ -234,7 +234,7 @@ const path = computed(() => {
     },
   ];
 });
-const { close } = useClose('configuration');
+const { close } = useClose(CrmSections.SERVICE_CATALOGS);
 
 function edit(item) {
   return router.push({
