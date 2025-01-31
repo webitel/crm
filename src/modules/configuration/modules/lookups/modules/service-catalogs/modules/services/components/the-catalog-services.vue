@@ -159,10 +159,8 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
-import { useStore } from 'vuex';
-
-import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import CatalogsAPI from '../../../api/service-catalogs.js';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
 
