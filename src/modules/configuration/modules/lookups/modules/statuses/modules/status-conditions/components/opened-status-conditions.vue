@@ -203,12 +203,12 @@ async function deleteCallbackWrapper() {
   } catch (error) {
     if (Array.isArray(error)) {
       const isInitialOrFinalStatusDeleted = error.find(
-        (err) => err?.reason?.status === 403,
+        (err) => err?.reason?.status === 400,
       );
 
       setWarningPopupState(!!isInitialOrFinalStatusDeleted);
     } else {
-      setWarningPopupState(error.status === 403);
+      setWarningPopupState(error.status === 400);
     }
   }
 }
@@ -247,7 +247,7 @@ async function changeFinalStatus({ index, value }) {
   try {
     await patchProperty({ index, prop: 'final', value });
   } catch (err) {
-    if (err.status !== 403) {
+    if (err.status !== 400) {
       return;
     }
     setWarningPopupState(true);
