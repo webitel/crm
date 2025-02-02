@@ -235,10 +235,9 @@ onUnmounted(() => {
 });
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   {
     name: t('cases.case', 2),
-    route: '/',
   },
 ]);
 
@@ -263,7 +262,6 @@ function deleteSelectedItems() {
     callback: () => deleteData([...selected.value]),
   });
 }
-
 </script>
 
 <style lang="scss" scoped>

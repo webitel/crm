@@ -197,8 +197,8 @@ const isContactPopup = ref(false);
 const editedContactId = ref(null);
 
 const path = computed(() => [
-  { name: t('crm') },
-  { name: t('contacts.contact', 2), route: '/' },
+  { name: t('crm'), route: '/start-page' },
+  { name: t('contacts.contact', 2) },
 ]);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));

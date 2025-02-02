@@ -200,7 +200,7 @@ const { t } = useI18n();
 const router = useRouter();
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.serviceCatalogs.serviceCatalogs', 2) },
