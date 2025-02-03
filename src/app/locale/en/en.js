@@ -133,7 +133,7 @@ export default {
       serviceCatalogs: 'Service catalog | Service catalogs',
       prefix: 'Prefix',
       code: 'Code',
-      statuses: 'Statuses',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Skills',
     },
 
@@ -159,7 +159,19 @@ export default {
       editReason: 'Edit reason',
       sameConditionError: 'Such condition already exists',
     },
-    [CrmSections.STATUSES]: 'Statuses',
+
+    statuses: {
+      statuses: 'Status | Statuses',
+      initial: 'Initial',
+      final: 'Final',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      statusType: 'Status type',
+      finalStatusValidationText:
+        'You should have at least one final status and only one initial.\n Please, return and check its type.',
+    },
   },
   cases: {
     case: 'Case | Cases',
