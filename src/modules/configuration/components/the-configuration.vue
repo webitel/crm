@@ -85,7 +85,7 @@ const { close } = useClose('the-start-page');
   height: 100%;
 }
 
-::v-deep.wt-page-wrapper .wt-page-wrapper__main {
+.wt-page-wrapper :deep(.wt-page-wrapper__main) {
   background: transparent;
 }
 </style>
