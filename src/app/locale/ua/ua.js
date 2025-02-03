@@ -170,6 +170,7 @@ export default {
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
       controlPermissions: 'Контролювати права доступу',
+      object: "Об'єкт",
     },
   },
   cases: {

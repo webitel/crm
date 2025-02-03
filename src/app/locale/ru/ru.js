@@ -169,6 +169,7 @@ export default {
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',
       controlPermissions: 'Контролировать права доступа',
+      object: 'Объект',
     },
   },
   cases: {

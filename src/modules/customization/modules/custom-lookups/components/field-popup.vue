@@ -6,7 +6,11 @@
     @close="close"
   >
     <template #header>
-      {{ $t('customization.customLookups.addColumn') }}
+      {{
+        field
+          ? $t('customization.customLookups.editColumn')
+          : $t('customization.customLookups.addColumn')
+      }}
     </template>
     <template #main>
       <div class="field-popup-wrapper">
@@ -19,9 +23,15 @@
         />
 
         <wt-input
-          :label="$t('customization.customLookups.columns')"
+          :label="t('customization.customLookups.code')"
           :value="value.id"
           :v="v$.value.id"
+          :custom-validators="[
+            {
+              name: 'checkId',
+              text: $t('validation.latinWithNumber'),
+            },
+          ]"
           required
           @input="value.id = $event"
         />
@@ -40,7 +50,7 @@
         :disabled="disabledSave"
         @click="save"
       >
-        {{ $t('reusable.add') }}
+        {{ field ? $t('reusable.save') : $t('reusable.add') }}
       </wt-button>
       <wt-button
         color="secondary"
@@ -54,9 +64,10 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { helpers, required } from '@vuelidate/validators';
 import deepCopy from 'deep-copy';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import TypeFieldSelect from './type-field-select.vue';
 
@@ -82,13 +93,23 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'close']);
 
+const { t } = useI18n();
+
+const checkId = (repo) => {
+  const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+  return regex.test(repo);
+};
+
 const value = ref(Object.assign(deepCopy(fieldInstant), deepCopy(props.field)));
 
 const v$ = useVuelidate(
   computed(() => ({
     value: {
       name: { required },
-      id: { required },
+      id: {
+        required,
+        checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
+      },
       kind: { required },
     },
   })),
@@ -101,7 +122,15 @@ v$.value.$touch();
 const disabledSave = computed(() => v$.value?.$invalid);
 
 const save = () => {
-  emit('save', deepCopy(value.value));
+  const savedFiled = deepCopy(value.value);
+
+  Object.keys(savedFiled).forEach((key) => {
+    if (!savedFiled[key]) {
+      delete savedFiled[key];
+    }
+  });
+
+  emit('save', savedFiled);
   close();
 
   if (!props.field) {
@@ -112,6 +141,27 @@ const save = () => {
 const close = () => {
   emit('close');
 };
+
+watch(
+  () => props.field,
+  () => {
+    if (props.field) {
+      Object.assign(value.value, deepCopy(props.field));
+    }
+  },
+  {
+    deep: true,
+  },
+);
+
+watch(
+  () => props.shown,
+  (shown) => {
+    if (!shown && props.field) {
+      Object.assign(value.value, deepCopy(props.field));
+    }
+  },
+);
 </script>
 
 <style lang="scss" scoped>

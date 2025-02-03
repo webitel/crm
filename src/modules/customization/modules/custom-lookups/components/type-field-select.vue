@@ -7,10 +7,28 @@
     use-value-from-options-by-prop="type"
     @input="changeType($event)"
   />
-  <!--  TODO Implement display input by type-->
+  <wt-select
+    v-if="value.kind === FieldType.SELECT"
+    :value="value.lookup"
+    :label="$t('customization.customLookups.object')"
+    :search-method="loadLookupList"
+    track-by="name"
+    :clearable="false"
+    @input="selectSingleObject($event)"
+  />
+  <wt-select
+    v-if="value.kind === FieldType.MULTISELECT"
+    :value="value.list?.lookup"
+    :label="$t('customization.customLookups.object')"
+    :search-method="loadLookupList"
+    track-by="name"
+    :clearable="false"
+    @input="selectMultiObject($event)"
+  />
 </template>
 
 <script setup>
+import CustomLookupsApi from '../api/custom-lookups.js';
 import FieldType from '../enums/FieldType.enum.js';
 
 const props = defineProps({
@@ -32,7 +50,29 @@ const options = [
 ];
 
 const changeType = (value) => {
+  if (value === FieldType.SELECT || value === FieldType.MULTISELECT) {
+    props.value.list = null;
+    props.value.lookup = null;
+  }
   props.value.kind = value;
+};
+const selectSingleObject = (value) => {
+  props.value.lookup = {
+    type: value.path,
+    name: value.name,
+  };
+};
+const selectMultiObject = (value) => {
+  props.value.list = {
+    kind: 'lookup',
+    lookup: {
+      type: value.path,
+      name: value.name,
+    },
+  };
+};
+const loadLookupList = (params) => {
+  return CustomLookupsApi.getLookup(params);
 };
 </script>
 

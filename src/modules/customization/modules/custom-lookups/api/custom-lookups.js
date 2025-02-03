@@ -148,18 +148,25 @@ const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await dictionariesService.updateType(repo, item);
+    const response = await dictionariesService.updateType2(repo, item);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
+const getCustomLookupLookup = async (params) =>
+  getCustomLookupsList({
+    ...params,
+    fields: params.fields || ['id', 'name'],
+  });
+
 const CustomLookupsApi = {
   getList: getCustomLookupsList,
   get: getCustomLookup,
   add: addCustomLookup,
   update: updateCustomLookup,
+  getLookup: getCustomLookupLookup,
 
   ...generatePermissionsApi(baseUrl),
 };
