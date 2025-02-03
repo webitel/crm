@@ -5,46 +5,31 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import ConditionsAPI from '../api/conditions.js';
+import StatusConditionsAPI from '../api/status-conditions.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
 const resetCardState = {
   itemId: '',
   itemInstance: {
-    id: '',
     name: '',
-    priorities: [],
-    reactionTime: 0,
-    resolutionTime: 0,
-    slaId: 0,
+    description: '',
   },
 };
 
 const getters = {
   PARENT_ID: (s, g, rootState) =>
-    rootState.configuration.lookups.slas.card.itemId,
-};
-
-const actions = {
-  ADD_ITEM: async (context) => {
-    await context.dispatch('api/POST_ITEM', { context });
-  },
-  UPDATE_ITEM: async (context) => {
-    await context.dispatch('api/UPD_ITEM', { context });
-  },
+    rootState.configuration.lookups.statuses.card.itemId,
 };
 
 const api = createApiStoreModule({
   state: {
-    api: ConditionsAPI,
+    api: StatusConditionsAPI,
   },
 });
 
 const table = createTableStoreModule({
-  state: {
-    headers,
-  },
+  state: { headers },
   getters,
   modules: {
     api,
@@ -53,19 +38,21 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState },
+  state: {
+    _resettable: resetCardState,
+    itemInstance: resetCardState.itemInstance,
+  },
   getters,
-  actions,
   modules: {
     api,
   },
 });
 
-const conditions = createBaseStoreModule({
+const statusConditions = createBaseStoreModule({
   modules: {
     table,
     card,
   },
 });
 
-export default conditions;
+export default statusConditions;
