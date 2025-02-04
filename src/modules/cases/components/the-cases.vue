@@ -26,6 +26,7 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH]"
             @click:add="add"
+            @click:refresh="loadDataList"
           >
             <wt-icon-btn
               icon="filter"
@@ -34,7 +35,7 @@
               icon="column-select"
             />
             <wt-icon-btn
-              v-if="selected.length"
+              v-if="selected?.length"
               class="icon-action"
               icon="bucket"
               @click="deleteSelectedItems"
@@ -46,7 +47,7 @@
         </header>
         <wt-loader v-show="isLoading" />
         <div
-          v-show="!isLoading && dataList.length"
+          v-show="!isLoading && dataList?.length"
           class="table-section__table-wrapper"
         >
           <wt-table
@@ -54,12 +55,11 @@
             :headers="headers"
             :selected="selected"
             sortable
-            @sort="sort"
-            @update:selected="setSelected"
+            @sort="updateSort"
           >
             <template #id="{ item }">
               <wt-item-link
-                :link="{ name: `${CrmSections.CASES}-card`, params: { id: item.id } }"
+                :link="{ name: `${CrmSections.CASES}-card`, params: { id: item?.id } }"
               >
                 <div class="cases__link-content">
                   <wt-icon
@@ -150,10 +150,17 @@
               />
             </template>
           </wt-table>
-          <filter-pagination
-            :is-next="isNext"
-            :namespace="filtersNamespace"
+
+          <wt-pagination
+            :next="next"
+            :prev="page > 1"
+            :size="size"
+            debounce
+            @change="updateSize"
+            @next="updatePage(page+1)"
+            @prev="updatePage(page-1)"
           />
+
         </div>
       </section>
     </template>
@@ -169,10 +176,9 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, onUnmounted } from 'vue';
+import { useTableStore } from '../store/cases.store.ts';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -188,6 +194,26 @@ const store = useStore();
 
 const { close } = useClose('the-start-page');
 
+const tableStore = useTableStore();
+
+const {
+  dataList,
+  selected,
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+} = storeToRefs(tableStore);
+
+const {
+  initialize,
+  loadDataList,
+  updatePage,
+  updateSize,
+  updateSort,
+} = tableStore;
+
 const {
   isVisible: isDeleteConfirmationPopup,
   deleteCount,
@@ -196,43 +222,6 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
-
-const {
-  namespace,
-
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
-
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(baseNamespace);
-
-
-const {
-  namespace: filtersNamespace,
-  restoreFilters,
-
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
-
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-  flushSubscribers();
-});
 
 const path = computed(() => [
   { name: t('crm') },
@@ -263,6 +252,8 @@ function deleteSelectedItems() {
     callback: () => deleteData([...selected.value]),
   });
 }
+
+initialize();
 
 </script>
 
