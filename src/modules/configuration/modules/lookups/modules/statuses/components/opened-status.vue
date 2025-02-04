@@ -2,7 +2,6 @@
   <wt-page-wrapper :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
@@ -24,19 +23,20 @@
         class="main-container"
         @submit.prevent="save"
       >
+        <wt-tabs
+          :current="currentTab"
+          :tabs="tabs"
+          @change="changeTab"
+        />
+
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :access="{
-              read: true,
-              edit: !disableUserInput,
-              delete: !disableUserInput,
-              add: !disableUserInput,
-            }"
           />
         </router-view>
+
         <input
           hidden
           type="submit"
@@ -50,19 +50,17 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, onMounted } from 'vue';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
-import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
+const namespace = 'configuration/lookups/statuses';
 
-const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
 const route = useRoute();
 
@@ -70,7 +68,6 @@ const {
   namespace: cardNamespace,
   id,
   itemInstance,
-  resetState,
   ...restStore
 } = useCardStore(namespace);
 
@@ -78,10 +75,6 @@ const v$ = useVuelidate(
   computed(() => ({
     itemInstance: {
       name: { required },
-      sla: { required },
-      prefix: { required },
-      closeReasonGroup: { required },
-      status: { required },
     },
   })),
   { itemInstance },
@@ -94,13 +87,9 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
-  resetState,
 });
 
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
-
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
-
+const { close } = useClose(CrmSections.STATUSES);
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );
@@ -109,29 +98,30 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.SERVICE_CATALOGS}-general`,
+    pathName: `${CrmSections.STATUSES}-general`,
+  };
+  const statusConditions = {
+    text: t('lookups.statuses.statuses', 2),
+    value: 'statuses',
+    pathName: `status-conditions`,
   };
 
   const tabs = [general];
 
+  if (id.value) tabs.push(statusConditions);
   return tabs;
 });
 
-const { currentTab } = useCardTabs(tabs);
+const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
   return [
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
+    { name: t('lookups.statuses.statuses', 2), route: '/lookups/statuses' },
     {
-      name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
-      route: '/lookups/service-catalogs',
-    },
-    {
-      name: isNew.value
-        ? t('reusable.new')
-        : prettifyBreadcrumbName(pathName.value),
+      name: isNew.value ? t('reusable.new') : pathName.value,
       route: {
         name: currentTab.value.pathName,
         query: route.query,
@@ -139,14 +129,7 @@ const path = computed(() => {
     },
   ];
 });
-
 initialize();
-
-onMounted(() => {
-  if (isNew.value) {
-    resetState();
-  }
-});
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>
