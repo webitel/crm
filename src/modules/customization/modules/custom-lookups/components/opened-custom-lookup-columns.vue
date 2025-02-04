@@ -19,7 +19,7 @@
         <template #search-bar>
           <wt-search-bar
             :value="search"
-            @search="search = $event"
+            @input="search = $event"
           />
         </template>
       </wt-action-bar>
@@ -154,7 +154,7 @@ const fields = computed(() => {
   return sortFields(itemInstance.value?.fields);
 });
 
-const isLoading = computed(() => !itemInstance.value?.repo);
+const isLoading = ref(!itemInstance.value?.repo);
 
 const search = ref('');
 
@@ -223,6 +223,8 @@ const initSortable = (wrapper) => {
     ...sortableConfig,
 
     async onEnd({ oldIndex, newIndex }) {
+      // change value to true for hide table and trigger re-render table with new positions items
+      isLoading.value = true;
       // Swap items in the array
       if (oldIndex === newIndex) return; // No need to swap if indexes are the same
 
@@ -243,6 +245,11 @@ const initSortable = (wrapper) => {
       });
 
       setItemProp({ path: 'fields', value: itemInstance.value.fields });
+
+      // wait until all data will be loaded and then display table
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 100);
     },
   });
 };
@@ -317,8 +324,6 @@ const addNewField = (field) => {
     filtered.length - 1
   ];
 
-  console.log('lastField', lastField);
-
   const createField = {
     ...field,
     position: lastField ? lastField.position + 1 : 1,
@@ -340,7 +345,21 @@ watch(
   },
 );
 
+// IMPORTANT that watch trigger for isLoading, because we need to wait until all data will be loaded and then call sortable
+watch(
+  () => isLoading.value,
+  (value) => {
+    if (!value) {
+      setTimeout(() => {
+        callSortable();
+      }, 300);
+    }
+  },
+);
+
 onMounted(async () => {
+  isLoading.value = false;
+
   if (!Sortable.__pluginsMounted) {
     Sortable.mount(new Swap());
     Sortable.__pluginsMounted = true;
