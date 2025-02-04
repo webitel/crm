@@ -5,10 +5,15 @@ import userinfo from '../../modules/userinfo/store/userinfo';
 import appearance from '../../modules/appearance/store/appearance';
 import instance from '../api/instance';
 import configuration from '../../modules/configuration/store/configuration';
+import webSocketClientController from '../../../node_modules/@webitel/ui-sdk/src/websocket/WebSocketClientController';
 
 export default createStore({
   state: {
     router: null,
+    client: webSocketClientController,
+  },
+  getters: {
+    CLIENT: (state) => state.client,
   },
   actions: {
     OPEN_SESSION: async (context) => {
