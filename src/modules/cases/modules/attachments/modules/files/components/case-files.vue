@@ -41,14 +41,26 @@
           @update:selected="setSelected"
         >
           <template #name="{ item }">
-            {{ item?.name }}
+            <div class="case-files__name-wrapper">
+              <wt-icon
+                :icon="getFileIcon(item.mime)"
+              />
+              <span class="case-files__name" @click="openFileInNewTab(item)">{{ item?.name }}</span>
+            </div>
           </template>
 
           <template #createdBy="{ item }">
             {{ item?.createdBy?.name }}
           </template>
+          <template #size="{ item }">
+            {{ prettifyFileSize(item.size) }}
+          </template>
 
           <template #actions="{ item }">
+            <wt-icon-action
+              action="download"
+              @click="downloadFile({ id: item?.id, name: item?.name, type: item?.mime })"
+            />
             <wt-icon-action
               :disabled="!editMode"
               action="delete"
@@ -70,9 +82,13 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { inject, onUnmounted, reactive, ref } from 'vue';
+import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
+import { inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import downloadFile from '../../../../../../../app/utils/downloadFile.js';
+import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
+import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
 
 const props = defineProps({
   namespace: {
@@ -133,9 +149,6 @@ onUnmounted(() => {
 const editMode = inject('editMode');
 
 const fileInput = ref(null);
-const uploadingSnapshots = ref([]);
-
-const emit = defineEmits(['fileUploaded']);
 
 const handleFileInput = async (event) => {
   const files = Array.from(event.target.files);
@@ -149,59 +162,16 @@ const handleFileInput = async (event) => {
 };
 
 const uploadFile = async (uploadedFile) => {
-  const snapshot = makeFileSnapshot(uploadedFile);
-  uploadingSnapshots.value.push(snapshot);
   try {
-    const fileUploadProgress = ({ loaded, total }) => {
-      snapshot.metadata.progress = { loaded, total };
-    };
     const cliInstance = await client.getCliInstance();
-    const storedFile = await cliInstance.storeFile(props.itemId, [uploadedFile], fileUploadProgress, 'case');
-    console.log(storedFile);
-    handleFileSuccessUpload(snapshot, storedFile);
+    await cliInstance.storeFile(props.itemId, [uploadedFile], null, 'case');
   } catch (err) {
-    handleFileErrorUpload(snapshot, err);
+    throw err;
+  }
+  finally {
+    loadData();
   }
 };
-
-const handleFileSuccessUpload = (snapshot, file) => {
-  snapshot.metadata.done = true;
-  setTimeout(() => {
-    const index = uploadingSnapshots.value.indexOf(snapshot);
-    if (index > -1) {
-      uploadingSnapshots.value.splice(index, 1);
-    }
-    emit('fileUploaded', file);
-  }, 1600);
-};
-
-const handleFileErrorUpload = (snapshot, err) => {
-  snapshot.metadata.error = true;
-  setTimeout(() => {
-    snapshot.metadata.close = () => {
-      const index = uploadingSnapshots.value.indexOf(snapshot);
-      if (index > -1) {
-        uploadingSnapshots.value.splice(index, 1);
-      }
-    };
-  }, 1600);
-};
-
-const makeFileSnapshot = (file) =>
-  reactive({
-    name: file.name,
-    mime: file.type,
-    size: file.size,
-    metadata: {
-      progress: {
-        total: 0,
-        loaded: 0,
-      },
-      done: false,
-      close: false,
-      error: false,
-    },
-  });
 
 const openFileDialog = () => {
   const input = document.createElement('input');
@@ -210,7 +180,24 @@ const openFileDialog = () => {
   input.addEventListener('change', handleFileInput);
   input.click();
 };
+
 </script>
 
 <style lang="scss" scoped>
+.case-files {
+  &__name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  &__name {
+    color: var(--info-color);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--info-hover-color);
+    }
+  }
+}
 </style>

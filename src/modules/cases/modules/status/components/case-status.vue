@@ -108,8 +108,8 @@ async function saveResult({
 }
 
 function getIndicatorColor(option) {
-  if (option?.initial) return 'initial-status';
   if (option?.final) return 'final-status';
+  if (option?.initial) return 'initial-status';
   return 'other-status';
 }
 
