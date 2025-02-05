@@ -19,10 +19,12 @@
             :disabled="!editMode"
             class="icon-action"
             icon="bucket"
-            @click="askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteData(selected),
-            })"
+            @click="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
           />
         </wt-action-bar>
       </header>
@@ -42,10 +44,12 @@
         >
           <template #name="{ item }">
             <div class="case-files__name-wrapper">
-              <wt-icon
-                :icon="getFileIcon(item.mime)"
-              />
-              <span class="case-files__name" @click="openFileInNewTab(item)">{{ item?.name }}</span>
+              <wt-icon :icon="getFileIcon(item.mime)" />
+              <span
+                class="case-files__name"
+                @click="openFileInNewTab(item)"
+                >{{ item?.name }}</span
+              >
             </div>
           </template>
 
@@ -59,15 +63,23 @@
           <template #actions="{ item }">
             <wt-icon-action
               action="download"
-              @click="downloadFile({ id: item?.id, name: item?.name, type: item?.mime })"
+              @click="
+                downloadFile({
+                  id: item?.id,
+                  name: item?.name,
+                  type: item?.mime,
+                })
+              "
             />
             <wt-icon-action
               :disabled="!editMode"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -102,8 +114,6 @@ const props = defineProps({
 });
 
 const store = useStore();
-
-const client = store.getters['CLIENT'];
 
 const { t } = useI18n();
 const {
@@ -150,7 +160,7 @@ const editMode = inject('editMode');
 
 const fileInput = ref(null);
 
-const handleFileInput = async (event) => {
+async function handleFileInput(event) {
   const files = Array.from(event.target.files);
   for (const file of files) {
     await uploadFile(file);
@@ -159,28 +169,28 @@ const handleFileInput = async (event) => {
   if (fileInput.value) {
     fileInput.value.value = '';
   }
-};
+}
 
-const uploadFile = async (uploadedFile) => {
+const client = store.getters['CLIENT'];
+
+async function uploadFile(uploadedFile) {
   try {
     const cliInstance = await client.getCliInstance();
     await cliInstance.storeFile(props.itemId, [uploadedFile], null, 'case');
   } catch (err) {
     throw err;
-  }
-  finally {
+  } finally {
     loadData();
   }
-};
+}
 
-const openFileDialog = () => {
+function openFileDialog() {
   const input = document.createElement('input');
   input.type = 'file';
   input.multiple = true;
   input.addEventListener('change', handleFileInput);
   input.click();
-};
-
+}
 </script>
 
 <style lang="scss" scoped>
