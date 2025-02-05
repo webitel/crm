@@ -173,6 +173,7 @@ const {
   namespace: filtersNamespace,
   restoreFilters,
 
+  resetFilters,
   subscribe,
   flushSubscribers,
 } = useTableFilters(tableNamespace);
@@ -186,6 +187,7 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
+  resetFilters();
 });
 
 const {
