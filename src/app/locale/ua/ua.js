@@ -165,6 +165,11 @@ export default {
     customization: 'Персоналізація',
     customLookups: {
       customLookups: 'Користувацькі довідники',
+      code: 'Код',
+      columns: 'Колонки',
+      addColumn: 'Додати колонку',
+      editColumn: 'Редагувати колонку',
+      controlPermissions: 'Контролювати права доступу',
     },
   },
   cases: {

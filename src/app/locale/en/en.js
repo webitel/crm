@@ -164,6 +164,11 @@ export default {
     customization: 'Customization',
     customLookups: {
       customLookups: 'Custom lookups',
+      code: 'Code',
+      columns: 'Columns',
+      addColumn: 'Add column',
+      editColumn: 'Edit column',
+      controlPermissions: 'Control permissions',
     },
   },
   cases: {

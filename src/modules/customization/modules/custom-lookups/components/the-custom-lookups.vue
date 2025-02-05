@@ -25,7 +25,7 @@
             @click:add="
               router.push({
                 name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                params: { repo: 'new' },
+                params: { id: 'new' },
               })
             "
           >
@@ -67,7 +67,7 @@
                 <wt-item-link
                   :link="{
                     name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                    params: { repo: item.repo },
+                    params: { id: item.repo },
                   }"
                 >
                   {{ item.name }}
@@ -80,7 +80,7 @@
                 {{ prettifyDate(item.createdAt) }}
               </template>
               <template #createdBy="{ item }">
-                {{ item.createdBy.name }}
+                {{ item.createdBy?.name }}
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
@@ -193,7 +193,7 @@ const { close } = useClose('configuration');
 function edit(item) {
   router.push({
     name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-    params: { repo: item.repo },
+    params: { id: item.repo },
   });
 }
 
