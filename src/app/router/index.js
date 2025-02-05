@@ -43,6 +43,10 @@ import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import ContactPermissions from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
 import ContactTimeline from '../../modules/contacts/modules/timeline/components/the-timeline.vue';
 import ContactVariables from '../../modules/contacts/modules/variables/components/the-variables.vue';
+import OpenedCustomLookup from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup.vue';
+import OpenedCustomLookupColumns from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-columns.vue';
+import OpenedCustomLookupGeneral from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-general.vue';
+import TheCustomLookups from '../../modules/customization/modules/custom-lookups/components/the-custom-lookups.vue';
 import TheStartPage from '../../modules/start-page/components/the-start-page.vue';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
@@ -403,6 +407,36 @@ const routes = [
                 path: 'status-conditions/:statusConditionId?',
                 name: `status-conditions`,
                 component: OpenedStatusConditions,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'customization',
+        name: 'customization',
+        redirect: { name: 'configuration' },
+        children: [
+          {
+            path: 'custom-lookups',
+            name: CrmSections.CUSTOM_LOOKUPS,
+            component: TheCustomLookups,
+          },
+          {
+            path: 'custom-lookups/:id',
+            name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+            component: OpenedCustomLookup,
+            redirect: { name: `${CrmSections.CUSTOM_LOOKUPS}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.CUSTOM_LOOKUPS}-general`,
+                component: OpenedCustomLookupGeneral,
+              },
+              {
+                path: 'columns',
+                name: `${CrmSections.CUSTOM_LOOKUPS}-columns`,
+                component: OpenedCustomLookupColumns,
               },
             ],
           },
