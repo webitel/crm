@@ -4,10 +4,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
+import CaseAttachments from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
-import CaseAttachments
-  from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -17,6 +16,7 @@ import OpenedContactGroup from '../../modules/configuration/modules/lookups/modu
 import OpenedContactGroupGeneral from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroupsConditions from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import TheCustomLookup from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/the-custom-lookup.vue';
 import OpenedPriority from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
 import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
 import ThePriorities from '../../modules/configuration/modules/lookups/modules/priorities/components/the-priorities.vue';
@@ -409,6 +409,11 @@ const routes = [
                 component: OpenedStatusConditions,
               },
             ],
+          },
+          {
+            path: ':repo',
+            name: 'custom-lookup',
+            component: TheCustomLookup,
           },
         ],
       },
