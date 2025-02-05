@@ -5,12 +5,12 @@
     :label="$t('vocabulary.type')"
     track-by="name"
     use-value-from-options-by-prop="type"
-    @input="changeType($event)"
+    @input="changeType"
   />
   <wt-select
     v-if="value.kind === FieldType.SELECT"
     :value="value.lookup"
-    :label="$t('customization.customLookups.object')"
+    :label="$t('reusable.object')"
     :search-method="loadLookupList"
     track-by="name"
     :clearable="false"
@@ -19,7 +19,7 @@
   <wt-select
     v-if="value.kind === FieldType.MULTISELECT"
     :value="value.list?.lookup"
-    :label="$t('customization.customLookups.object')"
+    :label="$t('reusable.object')"
     :search-method="loadLookupList"
     track-by="name"
     :clearable="false"

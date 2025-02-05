@@ -169,7 +169,6 @@ export default {
       addColumn: 'Add column',
       editColumn: 'Edit column',
       controlPermissions: 'Control permissions',
-      object: 'Object',
     },
   },
   cases: {

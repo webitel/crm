@@ -71,15 +71,6 @@ import { useI18n } from 'vue-i18n';
 
 import TypeFieldSelect from './type-field-select.vue';
 
-const fieldInstant = {
-  name: '',
-  id: '',
-  kind: '',
-  required: false,
-  lookup: null,
-  list: null,
-};
-
 const props = defineProps({
   field: {
     type: Object,
@@ -93,6 +84,14 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'close']);
 
+const draft = {
+  name: '',
+  id: '',
+  kind: '',
+  required: false,
+  lookup: null,
+  list: null,
+};
 const { t } = useI18n();
 
 const checkId = (repo) => {
@@ -100,7 +99,11 @@ const checkId = (repo) => {
   return regex.test(repo);
 };
 
-const value = ref(Object.assign(deepCopy(fieldInstant), deepCopy(props.field)));
+const value = ref(Object.assign(deepCopy(draft), deepCopy(props.field)));
+
+const updateValue = (newValue) => {
+  Object.assign(value.value, deepCopy(newValue));
+};
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -134,7 +137,7 @@ const save = () => {
   close();
 
   if (!props.field) {
-    Object.assign(value.value, fieldInstant);
+    updateValue(draft);
   }
 };
 
@@ -146,7 +149,7 @@ watch(
   () => props.field,
   () => {
     if (props.field) {
-      Object.assign(value.value, deepCopy(props.field));
+      updateValue(props.field);
     }
   },
   {
@@ -158,7 +161,7 @@ watch(
   () => props.shown,
   (shown) => {
     if (!shown && props.field) {
-      Object.assign(value.value, deepCopy(props.field));
+      updateValue(props.field);
     }
   },
 );
