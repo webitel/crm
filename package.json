@@ -33,7 +33,7 @@
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0",
-    "webitel-sdk": "^24.10.27"
+    "webitel-sdk": "^24.10.29"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
