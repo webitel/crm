@@ -116,7 +116,7 @@ const { currentTab, changeTab } = useCardTabs(tabs);
 const path = computed(() => {
 
   return [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.slas.slas', 2), route: '/lookups/slas' },

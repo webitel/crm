@@ -183,7 +183,7 @@ onUnmounted(() => {
 });
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.statuses.statuses', 2) },
