@@ -6,6 +6,7 @@ export default [
     locale: 'reusable.name',
     show: true,
     field: 'name',
+    width: '300px',
     sort: SortSymbols.NONE,
   },
   {
@@ -41,6 +42,7 @@ export default [
     locale: 'vocabulary.description',
     show: true,
     field: 'description',
+    width: '300px',
     sort: SortSymbols.NONE,
   },
   {
