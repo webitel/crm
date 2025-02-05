@@ -77,25 +77,17 @@ const getCustomLookupsList = async (params) => {
 };
 
 const getCustomLookup = async ({ itemId: itemRepo }) => {
-  function* createPositionGenerator() {
+  const createPositionGenerator = () => {
     let position = 1;
-    while (true) {
-      const item = yield;
-      if (item.readonly) {
-        yield null;
-      } else {
-        yield position++;
-      }
-    }
-  }
-  const generator = createPositionGenerator();
-  generator.next();
+    return (item) => (item.readonly ? null : position++);
+  };
+  const getPosition = createPositionGenerator();
 
   const itemResponseHandler = (item) => ({
     ...item,
     fields: item.fields.map((field) => ({
       ...field,
-      position: generator.next(field).value,
+      position: getPosition(field),
     })),
   });
 
@@ -156,18 +148,25 @@ const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await dictionariesService.updateType(repo, item);
+    const response = await dictionariesService.updateType2(repo, item);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
+const getCustomLookupLookup = async (params) =>
+  getCustomLookupsList({
+    ...params,
+    fields: params.fields || ['id', 'name'],
+  });
+
 const CustomLookupsApi = {
   getList: getCustomLookupsList,
   get: getCustomLookup,
   add: addCustomLookup,
   update: updateCustomLookup,
+  getLookup: getCustomLookupLookup,
 
   ...generatePermissionsApi(baseUrl),
 };

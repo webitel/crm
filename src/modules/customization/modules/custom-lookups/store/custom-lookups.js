@@ -70,6 +70,11 @@ const defaultFields = [
     readonly: true,
   },
   {
+    id: 'customDate',
+    name: 'Custom Date on',
+    kind: 'datetime',
+  },
+  {
     id: 'description',
     name: 'Description',
     kind: 'string',
