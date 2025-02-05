@@ -19,6 +19,7 @@
         :model-value="selectedElement"
         style="height: 350px"
         :data="catalogData"
+        item-data="id"
         item-label="name"
         children-prop="service"
         @update:model-value="selectedElement = $event"
@@ -50,6 +51,8 @@ import deepCopy from 'deep-copy';
 import { onMounted, ref, watch } from 'vue';
 
 import CatalogsAPI from '../../../../configuration/modules/lookups/modules/service-catalogs/api/service-catalogs.js';
+import CatalogAPI from '../api/CatalogAPI.js';
+import ServiceAPI from '../api/ServiceAPI.js';
 
 const props = defineProps({
   value: {
@@ -64,19 +67,22 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'close']);
 
-const selectedElement = ref(props.value ?? null);
+const selectedElement = ref(props.value?.id ?? null);
 const search = ref('');
 const loading = ref(false);
 
-function save() {
+const save = async () => {
+  const service = await ServiceAPI.get({ itemId: selectedElement.value });
+  const catalog = await CatalogAPI.get({
+    itemId: service.catalogId,
+  });
+
   emit('save', {
-    service: selectedElement.value,
-    catalog: catalogData.value.find(
-      (item) => item.id === selectedElement.value.catalogId,
-    ),
+    service: service,
+    catalog: catalog,
   });
   close();
-}
+};
 
 function close() {
   emit('close');
@@ -104,7 +110,18 @@ const loadCatalogs = async () => {
 watch(
   () => props.value,
   () => {
-    selectedElement.value = props.value;
+    selectedElement.value = props.value?.id;
+  },
+);
+
+watch(
+  () => props.shown,
+  (newVal) => {
+    if (newVal) {
+      search.value = '';
+      selectedElement.value = props.value?.id;
+      loadCatalogs();
+    }
   },
 );
 
