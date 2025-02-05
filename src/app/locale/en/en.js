@@ -112,7 +112,7 @@ export default {
       reactionTime: 'Reaction time',
       reactionTimeTitle: 'Reaction time (dd:hh:mm)',
       resolutionTime: 'Resolution time',
-      resolutionTimeTitle: 'Reaction time (dd:hh:mm)',
+      resolutionTimeTitle: 'Resolution time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
     },
@@ -133,7 +133,7 @@ export default {
       serviceCatalogs: 'Service catalog | Service catalogs',
       prefix: 'Prefix',
       code: 'Code',
-      statuses: 'Statuses',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Skills',
     },
 
@@ -157,8 +157,21 @@ export default {
       reason: 'Reason | Reasons',
       addReason: 'Add reason',
       editReason: 'Edit reason',
+      sameConditionError: 'Such condition already exists',
     },
-    [CrmSections.STATUSES]: 'Statuses',
+
+    statuses: {
+      statuses: 'Status | Statuses',
+      initial: 'Initial',
+      final: 'Final',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      statusType: 'Status type',
+      finalStatusValidationText:
+        'You should have at least one final status and only one initial.\n Please, return and check its type.',
+    },
   },
   customization: {
     customization: 'Customization',
@@ -201,6 +214,17 @@ export default {
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
+    },
+    comments: {
+      comments: 'Comments',
+      edited: 'Edited',
+      yourCommentHere: 'Your comment here',
+    },
+    attachments: {
+      attachments: 'Attachments',
+      links: 'Links',
+      url: 'URL',
+      linkText: 'Link text',
     },
   },
 };

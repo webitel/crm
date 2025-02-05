@@ -64,6 +64,10 @@
         </template>
       </editable-field>
     </div>
+    <case-comments
+      :item-id="id"
+      :namespace="commentsNamespace"
+    />
   </div>
 </template>
 <script setup>
@@ -75,6 +79,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import EditableField from './editable-field.vue';
+import CaseComments from '../modules/comments/components/case-comments.vue';
 
 const { t } = useI18n();
 
@@ -91,7 +96,10 @@ const {
   namespace: cardNamespace,
   itemInstance,
   setItemProp,
+  id,
 } = useCardStore(props.namespace);
+
+const commentsNamespace = `${props.namespace}/comments`;
 
 const editMode = inject('editMode');
 </script>

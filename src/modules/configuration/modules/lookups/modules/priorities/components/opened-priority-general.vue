@@ -34,7 +34,7 @@
           @input="setItemProp({ path: 'color', value: $event })"
         >
           <template #singleLabel="{ option, optionLabel }">
-            <div class="opened-priority-general__color-wrapper">
+            <div class="opened-priority-general__wrapper">
               <color-component-wrapper
                 :color="option.id"
                 component="wt-indicator"
@@ -47,7 +47,7 @@
           </template>
 
           <template #option="{ option, optionLabel }">
-            <div class="opened-priority-general__color-wrapper">
+            <div class="opened-priority-general__wrapper">
               <color-component-wrapper
                 :color="option.id"
                 component="wt-indicator"
@@ -110,25 +110,15 @@ setDefaultColorOption()
 
 <style lang="scss" scoped>
 .opened-priority-general {
-  &-color {
+  &__wrapper {
     display: flex;
-    align-items: flex-start;
-    grid-gap: var(--spacing-xs);
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
 
-    .wt-icon {
-      margin-top: var(--spacing-md);
-    }
-
-    &__option {
-      display: flex;
-      grid-gap: 4px;
-      align-items: center;
-    }
-
-    &__name {
-      &::first-letter {
-        text-transform: uppercase;
-      }
+  &__color-name {
+    &::first-letter {
+      text-transform: uppercase;
     }
   }
 }

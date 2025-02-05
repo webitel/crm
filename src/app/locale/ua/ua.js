@@ -79,7 +79,7 @@ export default {
     edit: 'Редагувати',
     delete: 'Видаляти',
     granteePopup: {
-      title: 'Додати отримувача',
+      title: 'Додати власника прав',
     },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Заборонено',
@@ -134,7 +134,7 @@ export default {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
       prefix: 'Префікс',
       code: 'Код',
-      statuses: 'Статуси',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Навички',
     },
 
@@ -158,8 +158,21 @@ export default {
       reason: 'Причина | Причини',
       addReason: 'Додати причину',
       editReason: 'Редагувати причину',
+      sameConditionError: 'Така умова вже існує',
     },
-    [CrmSections.STATUSES]: 'Статуси',
+
+    statuses: {
+      statuses: 'Статус | Статуси',
+      initial: 'Початковий',
+      final: 'Кінцевий',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      statusType: 'Тип статусу',
+      finalStatusValidationText:
+        'У вас має бути принаймні один кінцевий статус і лише один початковий.\n Будь ласка, поверніться і перевірте типи.',
+    },
   },
   customization: {
     customization: 'Персоналізація',
@@ -202,6 +215,17 @@ export default {
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
+    },
+    comments: {
+      comments: 'Коментарі',
+      edited: 'Відредаговано',
+      yourCommentHere: 'Ваш коментар тут',
+    },
+    attachments: {
+      attachments: 'Додатки',
+      links: 'Посилання',
+      url: 'URL',
+      linkText: 'Текст посилання',
     },
   },
 };

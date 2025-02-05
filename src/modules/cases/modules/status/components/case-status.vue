@@ -6,6 +6,8 @@
     @save="saveResult"
   />
   <div class="case-status">
+    <span class="case-status__title">{{ t('cases.status') }}</span>
+
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
@@ -14,6 +16,7 @@
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
+        class="case-status__select"
         @input="handleSelect"
       >
         <template #singleLabel="{ option }">
@@ -36,7 +39,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, ref, watch } from 'vue';
+import {computed, inject, ref, watch} from 'vue';
 import { useStore } from 'vuex';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
@@ -86,9 +89,14 @@ const {
   resetState,
 });
 
+const editMode = inject('editMode');
+
 const isResultPopup = ref(false);
 
-async function saveResult({ reason, result }) {
+async function saveResult({
+  reason,
+  result,
+}) {
   await setItemProp({
     path: 'close.closeReason',
     value: reason,
@@ -135,7 +143,7 @@ async function patchStatusCondition(condition) {
       value: status.value,
     });
 
-    if (!isNew.value) {
+    if (!isNew.value && !editMode.value) {
       await CasesAPI.patch({
         changes: {
           statusCondition: condition,
@@ -143,6 +151,9 @@ async function patchStatusCondition(condition) {
         },
         etag: itemInstance.value.etag,
       });
+
+      //NOTE: needed to get new etag so new patch will work correctly
+      await loadItem();
     }
   } catch (err) {
     throw err;
@@ -174,11 +185,23 @@ async function updateStatusCondition() {
   }
 }
 
-watch(() => status?.value?.id, updateStatusCondition, { immediate: true, deep: true });
+watch(() => status?.value?.id, updateStatusCondition, {
+  immediate: true,
+  deep: true,
+});
 </script>
 
 <style lang="scss" scoped>
 .case-status {
   width: 100%;
+
+  &__title {
+    display: block;
+    @extend %typo-heading-4;
+  }
+
+  &__select, &__title {
+    padding: var(--spacing-xs);
+  }
 }
 </style>

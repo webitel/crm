@@ -1,6 +1,7 @@
 <template>
   <div class="case-service">
     <case-service-popup
+      :value="serviceResponse"
       :shown="isServicePopup"
       @close="isServicePopup = false"
       @save="addServiceToStore"
@@ -10,7 +11,8 @@
       <span
         v-if="servicePath"
         class="case-service__path"
-      >{{ servicePath }}</span>
+        >{{ servicePath }}</span
+      >
     </div>
     <wt-button
       v-if="editMode"
@@ -24,12 +26,13 @@
 </template>
 
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+
 import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
@@ -92,8 +95,10 @@ function setCatalogToStore(catalog) {
 // Finds the parent service for the given service within a catalog.
 function findParentService(currentService, parentServices) {
   for (const parent of parentServices) {
-    if (parent.service?.some((child) => child.id === currentService.id)) return parent;
-    const foundParent = parent.service && findParentService(currentService, parent.service);
+    if (parent.service?.some((child) => child.id === currentService.id))
+      return parent;
+    const foundParent =
+      parent.service && findParentService(currentService, parent.service);
     if (foundParent) return foundParent;
   }
   return null;
@@ -116,7 +121,7 @@ function buildServicePath(service, catalog) {
 // Generates the service path as a string.
 function generateServicePath(service, catalog) {
   if (!service || !catalog) {
-    console.error("Invalid service or catalog data");
+    console.error('Invalid service or catalog data');
     return '';
   }
 
@@ -126,16 +131,16 @@ function generateServicePath(service, catalog) {
 
 // Updates the store and component state with service and catalog data.
 async function addServiceToStore(serviceCatalogData) {
-  if (!serviceCatalogData) return console.error('No serviceCatalogData provided');
+  if (!serviceCatalogData)
+    return console.error('No serviceCatalogData provided');
   try {
     const { service, catalog } = serviceCatalogData;
     await setServiceToStore(service);
     await setCatalogToStore(catalog);
 
-    //TODO: keep this so backend can work properly until close_reason_group is removed from required
     await setItemProp({
       path: 'close_reason_group',
-      value: { id: '3' },
+      value: { id: catalog.closeReasonGroup.id },
     });
     await setItemProp({
       path: 'service',
@@ -147,14 +152,20 @@ async function addServiceToStore(serviceCatalogData) {
     throw err;
   }
 }
+const serviceResponse = ref(null);
 
 watch(
   () => itemInstance.value?.service?.id,
   async (newService) => {
     if (!newService) return;
-    const serviceResponse = await ServiceAPI.get({ itemId: newService });
-    const catalogResponse = await CatalogAPI.get({ itemId: serviceResponse.catalogId });
-    await addServiceToStore({ service: serviceResponse, catalog: catalogResponse });
+    serviceResponse.value = await ServiceAPI.get({ itemId: newService });
+    const catalogResponse = await CatalogAPI.get({
+      itemId: serviceResponse.value.catalogId,
+    });
+    await addServiceToStore({
+      service: serviceResponse.value,
+      catalog: catalogResponse,
+    });
   },
 );
 
@@ -163,7 +174,6 @@ onUnmounted(() => {
   setCatalogToStore(null);
   resetState();
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -178,7 +188,8 @@ onUnmounted(() => {
     flex-direction: column;
   }
 
-  &__title, &__path {
+  &__title,
+  &__path {
     padding: var(--spacing-xs);
   }
 

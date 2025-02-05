@@ -1,9 +1,10 @@
 import {
   createApiStoreModule,
   createBaseStoreModule,
-  createTableStoreModule,
   createCardStoreModule,
+  createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import ConditionsAPI from '../api/conditions.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
@@ -21,7 +22,8 @@ const resetCardState = {
 };
 
 const getters = {
-  PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.slas.card.itemId,
+  PARENT_ID: (s, g, rootState) =>
+    rootState.configuration.lookups.slas.card.itemId,
 };
 
 const actions = {
@@ -31,7 +33,7 @@ const actions = {
   UPDATE_ITEM: async (context) => {
     await context.dispatch('api/UPD_ITEM', { context });
   },
-}
+};
 
 const api = createApiStoreModule({
   state: {
@@ -41,7 +43,7 @@ const api = createApiStoreModule({
 
 const table = createTableStoreModule({
   state: {
-    headers
+    headers,
   },
   getters,
   modules: {

@@ -5,9 +5,7 @@ import {
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
@@ -23,8 +21,7 @@ const priorityService = new PrioritiesApiFactory(configuration, '', instance);
 const fieldsToSend = ['name', 'description', 'color'];
 
 const getPrioritiesList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
-
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'notInSla', 'inSla'];
   const {
     page,
     size,
@@ -32,6 +29,8 @@ const getPrioritiesList = async (params) => {
     sort,
     id,
     q,
+    not_in_sla: notInSla,
+    in_sla: inSla,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -47,6 +46,8 @@ const getPrioritiesList = async (params) => {
       sort,
       id,
       q,
+      notInSla,
+      inSla,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
@@ -73,14 +74,14 @@ const getPriority = async ({ itemId: id }) => {
   }
 };
 
-const addPriority = async ({ itemInstance, parentId }) => {
+const addPriority = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
 
   try {
-    const response = await priorityService.createPriority(parentId, item);
+    const response = await priorityService.createPriority(item);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);

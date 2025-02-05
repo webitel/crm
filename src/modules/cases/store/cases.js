@@ -5,6 +5,8 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 import CasesAPI from '../api/CasesAPI.js';
+import links from '../modules/attachments/modules/links/store/links.js';
+import comments from '../modules/case-info/modules/comments/store/comments.js';
 import service from '../modules/service/store/service.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
@@ -13,7 +15,7 @@ const resetCardState = {
   itemInstance: {
     id:'',
     name: '',
-    assignee: {},
+    assignee: '',
     author: '',
     close: {
       closeReason: {},
@@ -26,7 +28,7 @@ const resetCardState = {
     createdBy: '',
     description: '',
     group: {},
-    impacted: {},
+    impacted: '',
     links: {},
     plannedReactionAt: '',
     plannedResolutionAt: '',
@@ -96,6 +98,8 @@ const cases = createBaseStoreModule({
     table,
     card,
     service,
+    comments,
+    links,
   },
 });
 

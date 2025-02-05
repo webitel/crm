@@ -47,7 +47,7 @@
 
 <script setup>
 import deepCopy from 'deep-copy';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import CatalogsAPI from '../../../../configuration/modules/lookups/modules/service-catalogs/api/service-catalogs.js';
 
@@ -100,6 +100,13 @@ const loadCatalogs = async () => {
     loading.value = false;
   }
 };
+
+watch(
+  () => props.value,
+  () => {
+    selectedElement.value = props.value;
+  },
+);
 
 onMounted(() => {
   loadCatalogs();

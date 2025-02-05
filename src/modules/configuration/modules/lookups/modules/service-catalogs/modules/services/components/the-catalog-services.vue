@@ -23,10 +23,12 @@
             :disabled:delete="!selected.length"
             @click:add="addNewService"
             @click:refresh="loadData"
-            @click:delete="askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteData(selected),
-            })"
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
           >
             <template #search-bar>
               <filter-search
@@ -44,9 +46,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -68,29 +68,34 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.SERVICE_CATALOGS}-services`, params: {
-                    catalogId: route.params?.id,
-                    rootId: item.id
-                  }}"
+                  class="the-catalog-service__service-name"
+                  :link="{
+                    name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                    params: {
+                      catalogId: route.params?.id,
+                      rootId: item.id,
+                    },
+                  }"
                 >
                   {{ item.name }}
                 </wt-item-link>
               </template>
               <template #description="{ item }">
-                {{ item.description }}
+                <p class="the-catalog-service__service-description">
+                  {{ item.description }}
+                </p>
               </template>
-              <template
-                #group="{ item }"
-              >
+              <template #group="{ item }">
                 {{ displayText(item.group?.name) }}
               </template>
-              <template
-                #assignee="{ item }"
-              >
+              <template #assignee="{ item }">
                 <wt-item-link
                   v-if="item.assignee?.id"
                   class="the-catalog-service__service-assignee"
-                  :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.assignee.id } }"
+                  :link="{
+                    name: `${CrmSections.CONTACTS}-card`,
+                    params: { id: item.assignee.id },
+                  }"
                 >
                   {{ item.assignee.name }}
                 </wt-item-link>
@@ -98,16 +103,12 @@
                   {{ displayText(item.assignee?.name) }}
                 </template>
               </template>
-              <template
-                #state="
-                  {
-                    item,
-                    index
-                  }"
-              >
+              <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
-                  @change="patchProperty({index, prop: 'state', value: $event})"
+                  @change="
+                    patchProperty({ index, prop: 'state', value: $event })
+                  "
                 />
               </template>
               <template #actions="{ item }">
@@ -119,10 +120,12 @@
                 <wt-icon-action
                   v-if="hasDeleteAccess"
                   action="delete"
-                  @click="askDeleteConfirmation({
-                    deleted: [item],
-                    callback: () => deleteData(item),
-                  })"
+                  @click="
+                    askDeleteConfirmation({
+                      deleted: [item],
+                      callback: () => deleteData(item),
+                    })
+                  "
                 />
               </template>
             </wt-table>
@@ -138,33 +141,31 @@
 </template>
 
 <script setup>
+import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+
+import { displayText } from '../../../../../../../../../app/utils/displayText.js';
+import CatalogsAPI from '../../../api/service-catalogs.js';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
+import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
 
-import { useRoute } from 'vue-router';
-import CatalogsAPI from '../../../api/service-catalogs.js';
-import { displayText } from '../../../../../../../../../app/utils/displayText.js';
-import ServicesAPI from '../api/services.js';
-
 const route = useRoute();
-const store = useStore()
+const store = useStore();
 
 const baseNamespace = 'configuration/lookups/services';
 
@@ -200,7 +201,7 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  patchProperty
+  patchProperty,
 } = useTableStore(baseNamespace);
 
 const {
@@ -216,22 +217,49 @@ subscribe({
   callback: onFilterEvent,
 });
 
-const rootServiceName = computed(() => {
-  return rootService.value?.name || catalog.value?.name;
-});
-
 const path = computed(() => {
-  return [
+  const routes = [
     { name: t('crm') },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.serviceCatalogs.serviceCatalogs', 2), route: '/lookups/service-catalogs' },
     {
-      name: rootServiceName.value,
+      name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+      route: '/lookups/service-catalogs',
     },
   ];
+
+  if (route.params.rootId === route.params.catalogId) {
+    routes.push({
+      name: prettifyBreadcrumbName(catalog.value?.name),
+    });
+
+    return routes;
+  } else {
+    routes.push({
+      name: prettifyBreadcrumbName(catalog.value?.name),
+      route: {
+        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        params: {
+          catalogId: catalog.value?.id,
+          rootId: catalog.value?.id,
+        },
+      },
+    });
+  }
+
+  if (catalog.value?.id !== rootService.value?.rootId) {
+    routes.push({
+      name: '···',
+    });
+  }
+
+  routes.push({
+    name: prettifyBreadcrumbName(rootService.value?.name),
+  });
+
+  return routes;
 });
-const { close } = useClose('configuration');
+const { close } = useClose(CrmSections.SERVICE_CATALOGS);
 
 function edit(item) {
   return router.push({
@@ -257,58 +285,73 @@ const addNewService = () => {
     params: {
       catalogId: route.params?.catalogId,
       rootId: route.params?.rootId,
-      id: 'new' },
-  })
-}
+      id: 'new',
+    },
+  });
+};
 
 const loadRootService = async () => {
   rootService.value = await ServicesAPI.get({
-    itemId: route.params.rootId
-  })
-}
+    itemId: route.params.rootId,
+  });
+};
 
 const loadCatalog = async () => {
   catalog.value = await CatalogsAPI.get({
-    itemId: route.params.catalogId
-  })
-}
+    itemId: route.params.catalogId,
+  });
+};
 
 const initializeBreadcrumbs = async () => {
+  rootService.value = null;
+
   try {
-    if(route.params.rootId === route.params.catalogId) {
-      await loadCatalog();
-    } else {
+    await loadCatalog();
+
+    if (route.params.rootId !== route.params.catalogId) {
       await loadRootService();
     }
   } catch {
-    router.push({ name: CrmSections.SERVICE_CATALOGS})
+    router.push({ name: CrmSections.SERVICE_CATALOGS });
   }
-}
+};
 const setRootForServices = () => {
-  store.commit(`${baseNamespace}/table/SET`, { path: 'rootId', value: route.params.rootId })
-}
+  store.commit(`${baseNamespace}/table/SET`, {
+    path: 'rootId',
+    value: route.params.rootId,
+  });
+};
 
 const loadServices = async () => {
   await initializeBreadcrumbs();
   setRootForServices();
   await restoreFilters();
-}
+};
 
 onUnmounted(() => {
   flushSubscribers();
 });
 
-loadServices()
+loadServices();
 
-watch(() => route.params, async () => {
-  await loadServices();
-});
+watch(
+  () => route.params,
+  async () => {
+    await loadServices();
+  },
+);
 </script>
 
 <style scoped lang="scss">
 .the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;
+  }
+
+  &__service-name,
+  &__service-description {
+    max-width: 300px;
+    text-wrap: wrap;
   }
 }
 </style>

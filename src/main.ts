@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from './app.vue';
 import router from './app/router';
 import i18n from './app/locale/i18n';
@@ -29,10 +30,13 @@ const fetchConfig = async () => {
   return response.json();
 };
 
+const pinia = createPinia();
+
 const initApp = () => createApp(App)
 .use(store)
 .use(router)
 .use(i18n)
+.use(pinia)
 .use(...WebitelUi);
 
 (async () => {

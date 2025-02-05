@@ -1,7 +1,11 @@
 function convertDurationWithDays(duration, timerFormatting = false) {
   if (!duration) return timerFormatting ? '' : '00:00:00';
 
-  const totalSeconds = Math.abs(Number(duration));
+  // Convert milliseconds to seconds because if timerFormatting is true, duration is in milliseconds
+  const totalSeconds = timerFormatting
+      ? Math.abs(Number(duration)) / 1000
+      : Math.abs(Number(duration));
+
   const isNegative = duration < 0;
 
   const days = Math.floor(totalSeconds / (24 * 60 * 60));

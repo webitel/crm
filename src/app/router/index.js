@@ -6,6 +6,8 @@ import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
+import CaseAttachments
+  from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -31,6 +33,10 @@ import OpenedSlaConditions from '../../modules/configuration/modules/lookups/mod
 import OpenedSource from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source.vue';
 import OpenedSourceGeneral from '../../modules/configuration/modules/lookups/modules/sources/components/opened-source-general.vue';
 import TheSources from '../../modules/configuration/modules/lookups/modules/sources/components/the-sources.vue';
+import OpenedStatus from '../../modules/configuration/modules/lookups/modules/statuses/components/opened-status.vue';
+import OpenedStatusGeneral from '../../modules/configuration/modules/lookups/modules/statuses/components/opened-status-general.vue';
+import TheStatuses from '../../modules/configuration/modules/lookups/modules/statuses/components/the-statuses.vue';
+import OpenedStatusConditions from '../../modules/configuration/modules/lookups/modules/statuses/modules/status-conditions/components/opened-status-conditions.vue';
 import OpenedContact from '../../modules/contacts/components/opened-contact.vue';
 import ContactCommunications from '../../modules/contacts/components/opened-contact-communications.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
@@ -104,6 +110,11 @@ const routes = [
             name: `${CrmSections.CASES}-result`,
             component: CaseResult,
           },
+          {
+            path: 'attachments',
+            name: `${CrmSections.CASES}-attachments`,
+            component: CaseAttachments,
+          },
         ],
       },
       {
@@ -112,6 +123,55 @@ const routes = [
         component: TheContacts,
         beforeEnter: checkRouteAccess,
         // redirect: { name: `the-start-page` },
+      },
+      {
+        path: 'contacts/:id',
+        name: `${CrmSections.CONTACTS}-card`,
+        component: OpenedContact,
+        beforeEnter: checkRouteAccess,
+        redirect: { name: `${CrmSections.CONTACTS}-timeline` },
+        children: [
+          {
+            path: 'timeline',
+            name: `${CrmSections.CONTACTS}-timeline`,
+            component: ContactTimeline,
+          },
+          {
+            path: 'communications',
+            redirect: {
+              name: `${CrmSections.CONTACTS}-communications-phones`,
+            },
+            name: `${CrmSections.CONTACTS}-communications`,
+            component: ContactCommunications,
+            children: [
+              {
+                path: 'phones/:commId?',
+                name: `${CrmSections.CONTACTS}-communications-phones`,
+                component: ContactCommunications,
+              },
+              {
+                path: 'messaging/:commId?',
+                name: `${CrmSections.CONTACTS}-communications-messaging`,
+                component: ContactCommunications,
+              },
+              {
+                path: 'emails/:commId?',
+                name: `${CrmSections.CONTACTS}-communications-emails`,
+                component: ContactCommunications,
+              },
+            ],
+          },
+          {
+            path: 'variables/:variableId?',
+            name: `${CrmSections.CONTACTS}-variables`,
+            component: ContactVariables,
+          },
+          {
+            path: 'permissions/:permissionId?',
+            name: `${CrmSections.CONTACTS}-permissions`,
+            component: ContactPermissions,
+          },
+        ],
       },
       {
         path: 'contacts/:id',
@@ -323,6 +383,30 @@ const routes = [
                 path: 'general',
                 name: `${CrmSections.PRIORITIES}-general`,
                 component: OpenedPriorityGeneral,
+              },
+            ],
+          },
+          {
+            path: 'statuses',
+            name: CrmSections.STATUSES,
+            component: TheStatuses,
+            // beforeEnter: checkRouteAccess,
+          },
+          {
+            path: 'statuses/:id',
+            name: `${CrmSections.STATUSES}-card`,
+            component: OpenedStatus,
+            redirect: { name: `${CrmSections.STATUSES}-general` },
+            children: [
+              {
+                path: 'general',
+                name: `${CrmSections.STATUSES}-general`,
+                component: OpenedStatusGeneral,
+              },
+              {
+                path: 'status-conditions/:statusConditionId?',
+                name: `status-conditions`,
+                component: OpenedStatusConditions,
               },
             ],
           },

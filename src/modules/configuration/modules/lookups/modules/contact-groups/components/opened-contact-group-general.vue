@@ -61,7 +61,7 @@ const { t } = useI18n();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC });
+  return ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
 }
 </script>
 

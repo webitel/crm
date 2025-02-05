@@ -21,7 +21,7 @@
         <wt-select
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
-          :search-method="PrioritiesAPI.getLookup"
+          :search-method="getPriorities"
           :close-on-select="false"
           multiple
           required
@@ -71,7 +71,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import PrioritiesAPI from '../../../../priorities/api/priorities.js';
 
@@ -117,6 +117,10 @@ const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._d
 
 function loadDataList() {
   emit('load-data');
+}
+
+function getPriorities(params) {
+  return PrioritiesAPI.getLookup({ ...params, inSla: route.params.id });
 }
 
 const save = async () => {

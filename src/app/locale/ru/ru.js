@@ -79,7 +79,7 @@ export default {
     edit: 'Редактировать',
     delete: 'Удалить',
     granteePopup: {
-      title: 'Добавить получателя',
+      title: 'Добавить владельца прав',
     },
     accessMode: {
       [AccessMode.FORBIDDEN]: 'Запрещено',
@@ -133,7 +133,7 @@ export default {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
       prefix: 'Префикс',
       code: 'Код',
-      statuses: 'Статусы',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Навыки',
     },
 
@@ -157,8 +157,21 @@ export default {
       reason: 'Причина | Причины',
       addReason: 'Добавить причину',
       editReason: 'Редактировать причину',
+      sameConditionError: 'Такое условие уже существует',
     },
-    [CrmSections.STATUSES]: 'Статусы',
+
+    statuses: {
+      statuses: 'Статус | Статусы',
+      initial: 'Начальный',
+      final: 'Конечный',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      statusType: 'Тип статуса',
+      finalStatusValidationText:
+        'У вас должен быть хотя бы один конечный статус и только один начальный.\n Пожалуйста, вернитесь и проверте типы.',
+    },
   },
   customization: {
     customization: 'Персонализация',
@@ -201,6 +214,17 @@ export default {
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
+    },
+    comments: {
+      comments: 'Комментарии',
+      edited: 'Отредактировано',
+      yourCommentHere: 'Ваш комментарий здесь',
+    },
+    attachments: {
+      attachments: 'Вложения',
+      links: 'Ссылки',
+      url: 'URL',
+      linkText: 'Текст ссылки',
     },
   },
 };
