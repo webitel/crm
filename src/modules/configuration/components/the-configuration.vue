@@ -1,30 +1,13 @@
 <template>
-  <wt-page-wrapper
-    class="configuration-page"
-    :actions-panel="false"
-  >
-    <template #header>
-      <wt-page-header
-        :secondary-action="close"
-        hide-primary
-      >
-        <wt-headline-nav :path="path" />
-      </wt-page-header>
-    </template>
-
-    <template #main>
-      <wt-navigation-menu
-        :nav="nav"
-        :icons="icons"
-      />
-    </template>
-  </wt-page-wrapper>
+  <wt-navigation-menu
+    :nav="nav"
+    :icons="icons"
+  />
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { computed, reactive } from 'vue';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 
@@ -70,22 +53,6 @@ const nav = reactive([
     ],
   },
 ]);
-
-const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name') },
-]);
-
-const { close } = useClose('the-start-page');
 </script>
 
-<style lang="scss" scoped>
-.configuration-page {
-  width: 100%;
-  height: 100%;
-}
-
-.wt-page-wrapper :deep(.wt-page-wrapper__main) {
-  background: transparent;
-}
-</style>
+<style lang="scss" scoped></style>
