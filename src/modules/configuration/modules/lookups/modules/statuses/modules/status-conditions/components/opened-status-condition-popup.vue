@@ -4,7 +4,7 @@
     :shown="!!statusConditionId"
     size="sm"
     overflow
-    @popup:closed="close"
+    @close="close"
   >
     <template #title>
       {{
