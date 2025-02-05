@@ -51,8 +51,6 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
-            :primary-action-text="primaryActionText"
-            @click:primary="addNewCatalog"
           />
 
           <wt-loader v-show="isLoading" />

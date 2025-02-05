@@ -133,6 +133,14 @@ const path = computed(() => {
     },
   });
 
+  if (route.params.rootId === route.params.catalogId) {
+    routes.push({
+      name: isNew.value ? t('reusable.new') : pathName.value,
+    });
+
+    return routes;
+  }
+
   if (catalog.value?.id !== rootService.value?.rootId) {
     routes.push({
       name: '···',

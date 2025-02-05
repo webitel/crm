@@ -6,14 +6,16 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n';
-import { computed, reactive } from 'vue';
-import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { computed, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
+import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 
 const { t } = useI18n();
 
-const icons = [lookupsIcon];
+const icons = [lookupsIcon, customizationIcon];
 
 const nav = reactive([
   {
@@ -42,13 +44,31 @@ const nav = reactive([
       },
       {
         value: CrmSections.CLOSE_REASON_GROUPS,
-        name: computed(() => t('lookups.closeReasonGroups.closeReasonGroups', 2)),
+        name: computed(() =>
+          t('lookups.closeReasonGroups.closeReasonGroups', 2),
+        ),
         route: 'lookups/close-reason-groups',
       },
       {
         value: CrmSections.SERVICE_CATALOGS,
-        name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+        name: computed(() => t('lookups.serviceCatalogs.serviceCatalogs', 2)),
         route: 'lookups/service-catalogs',
+      },
+      {
+        value: CrmSections.STATUSES,
+        name: computed(() => t(`lookups.statuses.statuses`, 2)),
+        route: 'lookups/statuses',
+      },
+    ],
+  },
+  {
+    value: 'customization',
+    name: computed(() => t('customization.customization')),
+    subNav: [
+      {
+        value: CrmSections.CUSTOM_LOOKUPS,
+        name: computed(() => t('customization.customLookups.customLookups')),
+        route: 'customization/custom-lookups',
       },
     ],
   },

@@ -26,7 +26,6 @@
     <wt-loader v-show="isLoading" />
 
     <div class="table-section__table-wrapper">
-
       <wt-empty
         v-show="showEmpty"
         :image="imageEmpty"
@@ -50,19 +49,21 @@
             {{ item.assignee.name }}
           </template>
           <template #actions="{ item }">
-            <wt-icon-btn
-              icon="move"
-            />
+            <wt-icon-btn icon="move" />
             <wt-icon-action
               action="edit"
-              @click="router.push({ ...route, params: { conditionId: item.id } })"
+              @click="
+                router.push({ ...route, params: { conditionId: item.id } })
+              "
             />
             <wt-icon-action
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -76,23 +77,21 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import Sortable, { Swap } from 'sortablejs';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import ConditionPopup from './opened-contact-group-conditions-popup.vue';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import Sortable, { Swap } from 'sortablejs';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+
 import ConditionsAPI from '../api/conditions.js';
+import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 
 const props = defineProps({
   namespace: {
@@ -108,10 +107,9 @@ const sortableConfig = {
   easing: 'cubic-bezier(1, 0, 0, 1)', // Easing for animation. Defaults to null. See https://easings.net/ for examples.
 };
 
-const {
-  namespace: parentCardNamespace,
-  id: parentId,
-} = useCardStore(props.namespace);
+const { namespace: parentCardNamespace, id: parentId } = useCardStore(
+  props.namespace,
+);
 
 const namespace = `${parentCardNamespace}/conditions`;
 
@@ -165,15 +163,17 @@ const {
 let sortableInstance = null;
 
 function setPosition(newIndex, list) {
-  if (newIndex === 0) return {
-    condDown: dataList.value[0].id,
-    condUp: 0,
-  };
+  if (newIndex === 0)
+    return {
+      condDown: dataList.value[0].id,
+      condUp: 0,
+    };
 
-  if (newIndex === list.length - 1) return {
-    condDown: 0,
-    condUp: dataList.value[dataList.value.length - 1].id,
-  };
+  if (newIndex === list.length - 1)
+    return {
+      condDown: 0,
+      condUp: dataList.value[dataList.value.length - 1].id,
+    };
 
   return {
     condDown: list[newIndex - 1].id,
@@ -182,14 +182,12 @@ function setPosition(newIndex, list) {
 }
 
 function initSortable(wrapper) {
-
   if (sortableInstance) {
     sortableInstance.destroy();
     sortableInstance = null;
   }
 
   sortableInstance = new Sortable(wrapper, {
-
     ...sortableConfig,
 
     async onEnd({ oldIndex, newIndex }) {

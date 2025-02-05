@@ -1,13 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -131,12 +129,11 @@ export default {
       },
     },
 
-
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервисов | Каталоги сервисов',
       prefix: 'Префикс',
       code: 'Код',
-      statuses: 'Статусы',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Навыки',
     },
 
@@ -162,7 +159,30 @@ export default {
       editReason: 'Редактировать причину',
       sameConditionError: 'Такое условие уже существует',
     },
-    [CrmSections.STATUSES]: 'Статусы',
+
+    statuses: {
+      statuses: 'Статус | Статусы',
+      initial: 'Начальный',
+      final: 'Конечный',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      statusType: 'Тип статуса',
+      finalStatusValidationText:
+        'У вас должен быть хотя бы один конечный статус и только один начальный.\n Пожалуйста, вернитесь и проверте типы.',
+    },
+  },
+  customization: {
+    customization: 'Персонализация',
+    customLookups: {
+      customLookups: 'Пользовательские справочники',
+      code: 'Код',
+      columns: 'Колонки',
+      addColumn: 'Добавить колонку',
+      editColumn: 'Редактировать колонку',
+      controlPermissions: 'Контролировать права доступа',
+    },
   },
   cases: {
     case: 'Обращение | Обращения',

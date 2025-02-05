@@ -2,33 +2,29 @@ import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
-  getDefaultOpenAPIConfig
+  getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import { StatusesApiFactory } from 'webitel-sdk';
 import applyTransform, {
   camelToSnake,
   merge,
   notify,
   sanitize,
-  starToSearch
+  snakeToCamel,
+  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import { StatusesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const closeReasonsService = new StatusesApiFactory(configuration, '', instance);
+const statusesService = new StatusesApiFactory(configuration, '', instance);
+
+const fieldsToSend = ['name', 'description'];
 
 const getStatusesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const {
-    page,
-    size,
-    fields,
-    sort,
-    id,
-    q,
-  } = applyTransform(params, [
+  const { page, size, fields, sort, id, q } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
@@ -36,7 +32,7 @@ const getStatusesList = async (params) => {
     camelToSnake(),
   ]);
   try {
-    const response = await closeReasonsService.listStatuses(
+    const response = await statusesService.listStatuses(
       page,
       size,
       fields,
@@ -48,7 +44,7 @@ const getStatusesList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items,
+      items: applyTransform(items, []),
       next,
     };
   } catch (err) {
@@ -56,14 +52,69 @@ const getStatusesList = async (params) => {
   }
 };
 
-const getStatusesLookup = async (params) => getStatusesList({
-  ...params,
-  fields: params.fields || ['id', 'name'],
-})
+const getStatus = async ({ itemId: id }) => {
+  const itemResponseHandler = (item) => {
+    return item.status;
+  };
+
+  try {
+    const response = await statusesService.locateStatus(id, fieldsToSend);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const addStatus = async ({ itemInstance }) => {
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+
+  try {
+    const response = await statusesService.createStatus(item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const updateStatus = async ({ itemInstance, itemId: id }) => {
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+
+  try {
+    const response = await statusesService.updateStatus(id, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const deleteStatus = async ({ id }) => {
+  try {
+    const response = await statusesService.deleteStatus(id);
+    return applyTransform(response.data, []);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const getStatusesLookup = async (params) =>
+  getStatusesList({
+    ...params,
+    fields: params.fields || ['id', 'name'],
+  });
 
 const StatusesApi = {
   getList: getStatusesList,
+  get: getStatus,
+  update: updateStatus,
   getLookup: getStatusesLookup,
-}
+  delete: deleteStatus,
+  add: addStatus,
+};
 
 export default StatusesApi;

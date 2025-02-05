@@ -1,13 +1,11 @@
+import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import ChatGatewayProvider
-  from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import AccessMode
-  from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum
-  from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+
+import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
+import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -44,7 +42,7 @@ export default {
       },
     },
     communications: {
-      communications: 'Засіб зв\'язку | Засоби зв\'язку',
+      communications: "Засіб зв'язку | Засоби зв'язку",
       channel: 'Канал',
       destination: 'Призначення',
       setAsPrimary: 'Встановити як основний',
@@ -61,7 +59,7 @@ export default {
       messaging: {
         gateway: 'Шлюз',
         provider: 'Провайдер',
-        username: 'Ім\'я користувача',
+        username: "Ім'я користувача",
         dummy: 'Поки ще не було текстових діалогів',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
@@ -132,12 +130,11 @@ export default {
       },
     },
 
-
     serviceCatalogs: {
       serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
       prefix: 'Префікс',
       code: 'Код',
-      statuses: 'Статуси',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
       skills: 'Навички',
     },
 
@@ -163,7 +160,30 @@ export default {
       editReason: 'Редагувати причину',
       sameConditionError: 'Така умова вже існує',
     },
-    [CrmSections.STATUSES]: 'Статуси',
+
+    statuses: {
+      statuses: 'Статус | Статуси',
+      initial: 'Початковий',
+      final: 'Кінцевий',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+      statusType: 'Тип статусу',
+      finalStatusValidationText:
+        'У вас має бути принаймні один кінцевий статус і лише один початковий.\n Будь ласка, поверніться і перевірте типи.',
+    },
+  },
+  customization: {
+    customization: 'Персоналізація',
+    customLookups: {
+      customLookups: 'Користувацькі довідники',
+      code: 'Код',
+      columns: 'Колонки',
+      addColumn: 'Додати колонку',
+      editColumn: 'Редагувати колонку',
+      controlPermissions: 'Контролювати права доступу',
+    },
   },
   cases: {
     case: 'Звернення | Звернення',
