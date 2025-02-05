@@ -81,7 +81,7 @@
           <template #final="{ item, index }">
             <wt-switcher
               :value="item.final"
-              @change="changeFinalStatus({ index, value: $event })"
+              @change="changeFinalStatus({ item, index, value: $event })"
             />
           </template>
 
@@ -127,10 +127,12 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { onUnmounted, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
+import StatusConditionsAPI from '../api/status-conditions.js';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
 
@@ -148,8 +150,11 @@ const cardNamespace = `${parentCardNamespace}/statusConditions`;
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+const store = useStore();
 
 const isStatusWarningPopupOpened = ref(false);
+
+const { patch } = StatusConditionsAPI;
 
 const {
   namespace: tableNamespace,
@@ -219,33 +224,43 @@ const {
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
-function setWarningPopupState(value) {
+async function setWarningPopupState(value) {
   isStatusWarningPopupOpened.value = value;
+
+  if (!value) {
+    await loadData();
+  }
 }
 
 async function changeInitialStatus({ index, value }) {
-  const prevIndex = dataList.value.findIndex((el) => el.initial);
   try {
-    if (!value) {
+    dataList.value[index].initial = value;
+    const hasTrueValue = dataList.value.find((el) => el.initial);
+    if (!value && !hasTrueValue) {
       setWarningPopupState(true);
       return;
     }
 
     dataList.value.forEach((el) => (el.initial = false));
+    dataList.value[index].initial = value;
+
     await patchProperty({ index, prop: 'initial', value });
-    dataList.value[index].initial = true;
-  } catch {
-    if (prevIndex !== -1) {
-      dataList.value[prevIndex].initial = true;
-    } else {
-      await loadData();
-    }
+  } catch (err) {
+    console.error(err);
   }
 }
 
-async function changeFinalStatus({ index, value }) {
+const parentId = computed(
+  () => store.getters[`${cardNamespace}/table/PARENT_ID`],
+);
+async function changeFinalStatus({ item, index, value }) {
   try {
-    await patchProperty({ index, prop: 'final', value });
+    dataList.value[index].final = value;
+    await patch({
+      id: item.id,
+      parentId: parentId.value,
+      changes: { final: value },
+    });
   } catch (err) {
     if (err.status !== 400) {
       return;
