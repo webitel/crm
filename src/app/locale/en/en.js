@@ -173,6 +173,17 @@ export default {
         'You should have at least one final status and only one initial.\n Please, return and check its type.',
     },
   },
+  customization: {
+    customization: 'Customization',
+    customLookups: {
+      customLookups: 'Custom lookups',
+      code: 'Code',
+      columns: 'Columns',
+      addColumn: 'Add column',
+      editColumn: 'Edit column',
+      controlPermissions: 'Control permissions',
+    },
+  },
   cases: {
     case: 'Case | Cases',
     id: 'ID',
