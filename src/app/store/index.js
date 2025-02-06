@@ -1,10 +1,12 @@
 import { createStore } from 'vuex';
-import cases from '../../modules/cases/store/cases';
-import contacts from '../../modules/contacts/store/contacts';
-import userinfo from '../../modules/userinfo/store/userinfo';
+
 import appearance from '../../modules/appearance/store/appearance';
-import instance from '../api/instance';
+import cases from '../../modules/cases/store/cases';
 import configuration from '../../modules/configuration/store/configuration';
+import contacts from '../../modules/contacts/store/contacts';
+import customization from '../../modules/customization/store/customization';
+import userinfo from '../../modules/userinfo/store/userinfo';
+import instance from '../api/instance';
 import webSocketClientController from '@webitel/ui-sdk/src/api//websocket/websocketErrorEventHandler.js';
 
 export default createStore({
@@ -17,7 +19,11 @@ export default createStore({
   },
   actions: {
     OPEN_SESSION: async (context) => {
-      await context.dispatch('userinfo/OPEN_SESSION', { instance }, { root: true });
+      await context.dispatch(
+        'userinfo/OPEN_SESSION',
+        { instance },
+        { root: true },
+      );
     },
   },
   mutations: {
@@ -30,6 +36,7 @@ export default createStore({
     userinfo,
     appearance,
     configuration,
+    customization,
     cases,
   },
 });

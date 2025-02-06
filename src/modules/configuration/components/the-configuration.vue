@@ -10,11 +10,12 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
 import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 
 const { t } = useI18n();
 
-const icons = [lookupsIcon];
+const icons = [lookupsIcon, customizationIcon];
 
 const nav = reactive([
   {
@@ -57,6 +58,17 @@ const nav = reactive([
         value: CrmSections.STATUSES,
         name: computed(() => t(`lookups.statuses.statuses`, 2)),
         route: 'lookups/statuses',
+      },
+    ],
+  },
+  {
+    value: 'customization',
+    name: computed(() => t('customization.customization')),
+    subNav: [
+      {
+        value: CrmSections.CUSTOM_LOOKUPS,
+        name: computed(() => t('customization.customLookups.customLookups')),
+        route: 'customization/custom-lookups',
       },
     ],
   },
