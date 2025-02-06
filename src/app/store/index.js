@@ -5,7 +5,7 @@ import userinfo from '../../modules/userinfo/store/userinfo';
 import appearance from '../../modules/appearance/store/appearance';
 import instance from '../api/instance';
 import configuration from '../../modules/configuration/store/configuration';
-import webSocketClientController from '../../../node_modules/@webitel/ui-sdk/src/websocket/WebSocketClientController';
+import webSocketClientController from '@webitel/ui-sdk/src/api//websocket/websocketErrorEventHandler.js';
 
 export default createStore({
   state: {

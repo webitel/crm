@@ -189,7 +189,7 @@ async function uploadFile(uploadedFile) {
   } catch (err) {
     throw err;
   } finally {
-    loadData();
+    await loadData();
   }
 }
 
