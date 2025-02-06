@@ -154,8 +154,6 @@ const store = useStore();
 
 const isStatusWarningPopupOpened = ref(false);
 
-const { patch } = StatusConditionsAPI;
-
 const {
   namespace: tableNamespace,
 
@@ -256,7 +254,7 @@ const parentId = computed(
 async function changeFinalStatus({ item, index, value }) {
   try {
     dataList.value[index].final = value;
-    await patch({
+    await StatusConditionsAPI.patch({
       id: item.id,
       parentId: parentId.value,
       changes: { final: value },
