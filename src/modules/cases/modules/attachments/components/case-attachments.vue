@@ -1,7 +1,7 @@
 <template>
   <div class="case-attachments">
-    <case-links :item-id="id" :namespace="linksNamespace" />
     <case-files :item-id="id" :namespace="filesNamespace" />
+    <case-links :item-id="id" :namespace="linksNamespace" />
   </div>
 </template>
 <script setup>
