@@ -3,7 +3,7 @@
     class="opened-status-condition-warning-popup"
     size="sm"
     overflow
-    @popup:closed="close"
+    @close="close"
   >
     <template #title>
       {{ t('lookups.statuses.statusType') }}
