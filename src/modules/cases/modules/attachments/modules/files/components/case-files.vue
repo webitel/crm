@@ -12,20 +12,16 @@
           {{ t('cases.attachments.attachments') }}
         </h3>
         <wt-action-bar
-          :include="[IconAction.ADD]"
+          :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
+          :disabled:delete="!editMode || !selected.length"
+          :disabled:download="!selected.length"
           @click:add="openFileDialog"
+          @click:download="handleSelectedFilesDownload"
+          @click:delete="askDeleteConfirmation({
+              deleted: selected,
+              callback: () => deleteData(selected),
+          })"
         >
-          <wt-icon-btn
-            :disabled="!editMode"
-            class="icon-action"
-            icon="bucket"
-            @click="
-              askDeleteConfirmation({
-                deleted: selected,
-                callback: () => deleteData(selected),
-              })
-            "
-          />
         </wt-action-bar>
       </header>
 
@@ -98,9 +94,11 @@ import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import downloadFile from '../../../../../../../app/utils/downloadFile.js';
-import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
+import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
 import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
+import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
 
 const props = defineProps({
   namespace: {
@@ -157,6 +155,17 @@ onUnmounted(() => {
 });
 
 const editMode = inject('editMode');
+
+async function handleSelectedFilesDownload() {
+  const token = localStorage.getItem('access-token');
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  try {
+    await downloadFilesInZip(selected.value, apiUrl, token);
+  } catch (error) {
+    throw error;
+  }
+}
 
 const fileInput = ref(null);
 

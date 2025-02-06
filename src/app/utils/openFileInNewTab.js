@@ -1,4 +1,4 @@
-export default async function openFileInNewTab (item) {
+export default async function openFileInNewTab(item) {
   if (!item?.id) return;
 
   try {
@@ -18,4 +18,4 @@ export default async function openFileInNewTab (item) {
   } catch (error) {
     console.error('Error opening file:', error);
   }
-};
+}

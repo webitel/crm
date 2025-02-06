@@ -18,18 +18,11 @@ import { CaseFilesApiFactory } from 'webitel-sdk';
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const linksService = new CaseFilesApiFactory(configuration, '', instance);
+const filesService = new CaseFilesApiFactory(configuration, '', instance);
 
-const getFilesList = async ({
-  parentId,
-  ...rest
-}) => {
+const getFilesList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['etag', 'page', 'size', 'q'];
-  const {
-    page,
-    size,
-    q,
-  } = applyTransform(rest, [
+  const { page, size, q } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
@@ -40,17 +33,9 @@ const getFilesList = async ({
     camelToSnake(),
   ]);
   try {
-    const response = await linksService.listFiles(
-      parentId,
-      page,
-      size,
-      q,
-    );
+    const response = await filesService.listFiles(parentId, page, size, q);
 
-    const {
-      items,
-      next,
-    } = applyTransform(response.data, [
+    const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
     return {
@@ -62,8 +47,18 @@ const getFilesList = async ({
   }
 };
 
+const deleteFile = async ({ parentId, id }) => {
+  try {
+    const response = await filesService.deleteFile(parentId, id);
+    return applyTransform(response.data, []);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const filesAPI = {
   getList: getFilesList,
+  delete: deleteFile,
 };
 
 export default filesAPI;
