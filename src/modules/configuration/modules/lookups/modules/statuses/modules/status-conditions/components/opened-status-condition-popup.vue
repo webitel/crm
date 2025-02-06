@@ -120,6 +120,7 @@ const save = async () => {
 async function initializePopup() {
   try {
     if (isNew.value) {
+      await resetState();
       return;
     }
 
