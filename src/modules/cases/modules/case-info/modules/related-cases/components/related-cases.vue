@@ -277,5 +277,12 @@ async function submitCase() {
     max-height: 210px;
     overflow-y: scroll;
   }
+
+  &__item-wrapper {
+    display: flex;
+    align-items: start;
+    width: 100%;
+    grid-gap: var(--spacing-xs);
+  }
 }
 </style>

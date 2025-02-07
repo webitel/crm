@@ -84,9 +84,9 @@ const addRelatedCase = async ({ parentId, input }) => {
   }
 };
 
-const deleteRelatedCase = async ({ etag }) => {
+const deleteRelatedCase = async ({ id }) => {
   try {
-    const response = await relatedCasesService.deleteRelatedCase(etag);
+    const response = await relatedCasesService.deleteRelatedCase(id);
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);
