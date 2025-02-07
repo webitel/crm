@@ -4,7 +4,7 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import relatedCasesAPI from '../api/related-cases.js';
+import relatedCasesAPI from '../api/related-cases-api.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 

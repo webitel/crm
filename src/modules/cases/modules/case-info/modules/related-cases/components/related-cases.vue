@@ -15,25 +15,19 @@
 
         <wt-action-bar
           :disabled:add="!props.editMode"
-          :include="[IconAction.ADD]"
-          @click:add="startAddingComment"
-        >
-          <wt-icon-btn
-            :disabled="!props.editMode"
-            class="icon-action"
-            icon="bucket"
-            @click="
-              askDeleteConfirmation({
-                deleted: selected,
-                callback: () => deleteData(selected),
-              })
-            "
-          />
-        </wt-action-bar>
+          :include="[IconAction.ADD, IconAction.DELETE]"
+          @click:add="startAddingRelatedCase"
+          @click:delete="
+            askDeleteConfirmation({
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })
+          "
+        />
       </header>
 
       <table-top-row-bar
-        v-if="formState.mode === 'create'"
+        v-if="formState.createMode"
         @reset="resetForm"
         @submit="submitCase"
       >
@@ -86,13 +80,25 @@
           @sort="sort"
           @update:selected="setSelected"
         >
-          <template #content="{ item }">
-            <related-case-item
-              :color="item.relatedCase.color"
-              :name="item.relatedCase.name"
-              :subject="item.relatedCase.subject"
-              :relation-type="getRelatedTypeTranslate(item.relationType)"
-            />
+          <template #name="{ item }">
+            <div class="related-cases__item-wrapper">
+              <color-component-wrapper
+                :color="item.relatedCase.color"
+                component="wt-icon"
+                icon="cases"
+                size="md"
+              />
+
+              <span>{{ item.relatedCase.name }}</span>
+            </div>
+          </template>
+
+          <template #subject="{ item }">
+            {{ item.relatedCase.subject }}
+          </template>
+
+          <template #relationType="{ item }">
+            {{ getRelatedTypeTranslate(item.relationType) }}
           </template>
 
           <template #actions="{ item }">
@@ -125,9 +131,10 @@ import { computed, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CasesRelationType } from 'webitel-sdk';
 
+import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesAPI from '../../../../../api/CasesAPI.js';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
-import RelatedCasesAPI from '../api/related-cases.js';
+import RelatedCasesAPI from '../api/related-cases-api.js';
 import RelatedCaseItem from './related-case-item.vue';
 
 const props = defineProps({
@@ -188,7 +195,7 @@ onUnmounted(() => {
 });
 
 const formState = reactive({
-  mode: null,
+  createMode: false,
   isAdding: false,
   relatedCase: null,
   relationType: null,
@@ -211,21 +218,16 @@ const relatedTypesOptions = computed(() =>
   }),
 );
 
-function startAddingComment() {
-  formState.mode = 'create';
+function startAddingRelatedCase() {
+  formState.createMode = true;
   formState.editingComment = null;
   formState.relationType = relatedTypesOptions.value[0].id;
-  updateCommentText('');
 }
 
 function resetForm() {
-  formState.mode = null;
+  formState.createMode = false;
   formState.relationType = null;
   formState.relatedCase = null;
-}
-
-function updateCommentText(value) {
-  formState.commentText = value;
 }
 
 async function submitCase() {
