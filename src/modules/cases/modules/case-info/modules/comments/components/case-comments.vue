@@ -14,17 +14,16 @@
         </h3>
         <wt-action-bar
           :disabled:add="formState.isAdding || formState.editingComment"
-          :include="[IconAction.ADD]"
+          :disabled:delete="!selected.length"
+          :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingComment"
+          @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
         >
-          <wt-icon-btn
-            class="icon-action"
-            icon="bucket"
-            @click="askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteData(selected),
-            })"
-          />
         </wt-action-bar>
       </header>
 
