@@ -7,10 +7,15 @@ import contacts from '../../modules/contacts/store/contacts';
 import customization from '../../modules/customization/store/customization';
 import userinfo from '../../modules/userinfo/store/userinfo';
 import instance from '../api/instance';
+import webSocketClientController from '@webitel/ui-sdk/src/api//websocket/websocketErrorEventHandler.js';
 
 export default createStore({
   state: {
     router: null,
+    client: webSocketClientController,
+  },
+  getters: {
+    CLIENT: (state) => state.client,
   },
   actions: {
     OPEN_SESSION: async (context) => {
