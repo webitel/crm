@@ -74,7 +74,7 @@
           <template #initial="{ item, index }">
             <wt-switcher
               :value="item.initial"
-              @change="changeInitialStatus({ index, value: $event })"
+              @change="changeInitialStatus({ item, index, value: $event })"
             />
           </template>
 
@@ -153,6 +153,9 @@ const { t } = useI18n();
 const store = useStore();
 
 const isStatusWarningPopupOpened = ref(false);
+const parentId = computed(
+  () => store.getters[`${cardNamespace}/table/PARENT_ID`],
+);
 
 const {
   namespace: tableNamespace,
@@ -169,7 +172,6 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  patchProperty,
 } = useTableStore(cardNamespace);
 
 const {
@@ -232,27 +234,22 @@ async function setWarningPopupState(value) {
   }
 }
 
-async function changeInitialStatus({ index, value }) {
+async function changeInitialStatus({ item, index, value }) {
   try {
     dataList.value[index].initial = value;
-    const hasTrueValue = dataList.value.find((el) => el.initial);
-    if (!value && !hasTrueValue) {
-      setWarningPopupState(true);
+    await StatusConditionsAPI.patch({
+      id: item.id,
+      parentId: parentId.value,
+      changes: { initial: value },
+    });
+  } catch (err) {
+    if (err.status !== 400) {
       return;
     }
-
-    dataList.value.forEach((el) => (el.initial = false));
-    dataList.value[index].initial = value;
-
-    await patchProperty({ index, prop: 'initial', value });
-  } catch (err) {
-    console.error(err);
+    setWarningPopupState(true);
   }
 }
 
-const parentId = computed(
-  () => store.getters[`${cardNamespace}/table/PARENT_ID`],
-);
 async function changeFinalStatus({ item, index, value }) {
   try {
     dataList.value[index].final = value;
