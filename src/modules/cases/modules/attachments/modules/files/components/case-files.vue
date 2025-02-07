@@ -17,10 +17,12 @@
           :disabled:download="!selected.length"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
-          @click:delete="askDeleteConfirmation({
+          @click:delete="
+            askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
-          })"
+            })
+          "
         >
         </wt-action-bar>
       </header>
@@ -161,7 +163,7 @@ async function handleSelectedFilesDownload() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   try {
-    await downloadFilesInZip(selected.value, apiUrl, token);
+    await downloadFilesInZip({ selected: selected.value, apiUrl, token });
   } catch (error) {
     throw error;
   }
