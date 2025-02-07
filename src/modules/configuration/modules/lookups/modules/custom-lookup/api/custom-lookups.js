@@ -62,7 +62,7 @@ const getCustomLookupList = async ({ repo, ...params }) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(data, [snakeToCamel()]),
+      items: applyTransform(data, []),
       next,
     };
   } catch (err) {

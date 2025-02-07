@@ -15,7 +15,7 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('lookups.customLookups.allValues') }}
+            {{ t('customization.customLookups.allValues') }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
@@ -55,7 +55,15 @@
               sortable
               @sort="sort"
               @update:selected="setSelected"
-            ></wt-table>
+            >
+              <template
+                v-for="header in headers"
+                :key="header.value"
+                #[header.value]="{ item }"
+              >
+                {{ displayDynamicField(header, item) }}
+              </template>
+            </wt-table>
           </div>
           <filter-pagination
             :namespace="filtersNamespace"
@@ -71,13 +79,13 @@
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -85,6 +93,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
+import { displayDynamicField } from '../utils/displayDynamicField.js';
 
 const baseNamespace = 'configuration/lookups/customLookup';
 
@@ -101,6 +110,20 @@ const repo = ref(route.params.repo);
 const loadDictionary = async () => {
   try {
     dictionary.value = await CustomLookupsApi.get({ itemId: repo.value });
+
+    store.commit(`${baseNamespace}/table/SET`, {
+      path: 'headers',
+      value: dictionary.value.fields
+        .filter((field) => !field.hidden && field.id !== 'id')
+        .map((field) => ({
+          value: field.id,
+          locale: field.name,
+          show: true,
+          field: field.id,
+          sort: SortSymbols.NONE,
+          kind: field.kind,
+        })),
+    });
   } catch (e) {
     console.error(e);
   }
@@ -110,8 +133,6 @@ store.commit(`${baseNamespace}/table/SET`, {
   path: 'repo',
   value: repo.value,
 });
-
-store.dispatch(`${baseNamespace}/set`, repo.value);
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
@@ -168,7 +189,7 @@ const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('LOOKUP NAMEEEEE', 2) },
+  { name: dictionary.value?.name },
 ]);
 
 const { close } = useClose('configuration');
@@ -178,11 +199,4 @@ const {
   image: imageEmpty,
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
-
-function edit(item) {
-  return router.push({
-    name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
-    params: { id: item.id },
-  });
-}
 </script>
