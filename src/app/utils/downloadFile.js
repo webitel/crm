@@ -1,11 +1,9 @@
 const downloadFile = ({ id, name, type, url }) => {
-
   const a = document.createElement('a');
   const token = localStorage.getItem('access-token');
 
-  if(url) {
+  if (url) {
     a.href = url;
-
   } else {
     let link = `${import.meta.env.VITE_API_URL}/storage/file/${id}/download?access_token=${token}`;
 

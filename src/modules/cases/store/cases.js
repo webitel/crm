@@ -6,6 +6,7 @@ import {
 } from '@webitel/ui-sdk/store';
 
 import CasesAPI from '../api/CasesAPI.js';
+import files from '../modules/attachments/modules/files/store/files.js';
 import links from '../modules/attachments/modules/links/store/links.js';
 import comments from '../modules/case-info/modules/comments/store/comments.js';
 import relatedCases from '../modules/case-info/modules/related-cases/store/related-cases.js';
@@ -103,6 +104,7 @@ const cases = createBaseStoreModule({
     comments,
     links,
     relatedCases,
+    files,
   },
 });
 

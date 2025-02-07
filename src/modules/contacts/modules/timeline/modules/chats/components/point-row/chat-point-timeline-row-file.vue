@@ -12,7 +12,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import downloadFile from '../../../../utils/downloadFile.js';
+import downloadFile from '../../../../../../../../app/utils/downloadFile.js';
 
 const props = defineProps({
   file: {

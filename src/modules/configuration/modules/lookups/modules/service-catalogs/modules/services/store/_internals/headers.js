@@ -20,6 +20,7 @@ export default [
     locale: 'vocabulary.description',
     show: true,
     field: 'description',
+    width: '300px',
     sort: SortSymbols.NONE,
   },
   {
