@@ -1,11 +1,15 @@
-import { createApp } from 'vue';
+import './app/assets/icons/sprite';
+
 import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+
 import App from './app.vue';
-import router from './app/router';
+import { createUserAccessControl } from './app/composables/useUserAccessControl';
 import i18n from './app/locale/i18n';
 import WebitelUi from './app/plugins/webitel-ui';
+import router from './app/router';
 import store from './app/store';
-import './app/assets/icons/sprite';
+import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
 const setTokenFromUrl = () => {
   try {
@@ -32,12 +36,22 @@ const fetchConfig = async () => {
 
 const pinia = createPinia();
 
-const initApp = () => createApp(App)
-.use(store)
-.use(router)
-.use(i18n)
-.use(pinia)
-.use(...WebitelUi);
+const initApp = async () => {
+  const app = createApp(App)
+      .use(store)
+      .use(i18n)
+      .use(pinia)
+      .use(...WebitelUi);
+
+  const { initialize, routeAccessGuard } = useUserinfoStore();
+  await initialize();
+  createUserAccessControl(useUserinfoStore);
+  router.beforeEach(routeAccessGuard);
+
+  app.use(router);
+
+  return app;
+}
 
 (async () => {
   let config;
@@ -49,7 +63,7 @@ const initApp = () => createApp(App)
   } catch (err) {
     console.error('before app mount error:', err);
   } finally {
-    const app = initApp();
+    const app = await initApp();
     app.provide('$config', config);
     app.mount('#app');
   }
