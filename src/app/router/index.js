@@ -1,13 +1,14 @@
+import { CrmSections as CrmSectionsNew,WtObject } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
-import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
-import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import CaseAttachments
   from '../../modules/cases/modules/attachments/components/case-attachments.vue';
+import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
+import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -343,6 +344,10 @@ const routes = [
             path: 'contact-groups',
             name: CrmSections.CONTACT_GROUPS,
             component: TheContactGroups,
+            meta: {
+              WtObject: WtObject.ContactGroup,
+              UiSection: CrmSectionsNew.ContactGroups,
+            },
             // beforeEnter: checkRouteAccess,
           },
           {
@@ -350,6 +355,10 @@ const routes = [
             name: `${CrmSections.CONTACT_GROUPS}-card`,
             component: OpenedContactGroup,
             redirect: { name: `${CrmSections.CONTACT_GROUPS}-general` },
+            meta: {
+              WtObject: WtObject.ContactGroup,
+              UiSection: CrmSectionsNew.ContactGroups,
+            },
             children: [
               {
                 path: 'general',
