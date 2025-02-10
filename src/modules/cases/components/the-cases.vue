@@ -62,9 +62,11 @@
                 :link="{ name: `${CrmSections.CASES}-card`, params: { id: item?.id } }"
               >
                 <div class="cases__link-content">
-                  <wt-icon
+                  <color-component-wrapper
                     :color="item.priority?.color"
+                    component="wt-icon"
                     icon="cases"
+                    size="md"
                   />
 
                   {{ item.name }}
@@ -183,6 +185,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import prettifyDate from '../utils/prettifyDate.js';
+import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 
 const baseNamespace = 'cases';
 
@@ -218,7 +221,6 @@ const {
   isVisible: isDeleteConfirmationPopup,
   deleteCount,
   deleteCallback,
-
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
