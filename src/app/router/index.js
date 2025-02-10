@@ -116,6 +116,11 @@ const routes = [
             name: `${CrmSections.CASES}-attachments`,
             component: CaseAttachments,
           },
+          {
+            path: 'permissions/:permissionId?',
+            name: `${CrmSections.CASES}-permissions`,
+            component: PermissionsTab,
+          },
         ],
       },
       {
