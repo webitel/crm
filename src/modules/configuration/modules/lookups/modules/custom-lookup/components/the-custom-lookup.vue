@@ -21,6 +21,12 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
+            @click:add="
+              router.push({
+                name: 'custom-lookup-record',
+                params: { id: 'new' },
+              })
+            "
           >
             <template #search-bar>
               <filter-search

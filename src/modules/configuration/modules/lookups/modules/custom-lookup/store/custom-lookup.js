@@ -34,12 +34,17 @@ const table = createTableStoreModule({
   },
 });
 
+const getters = {
+  LOOKUP_FIELDS: (state) => state.fields,
+};
+
 const card = createCardStoreModule({
   state: {
-    itemInstance: resetCardState.itemInstance,
+    fields: [],
     _resettable: resetCardState,
     repo: null,
   },
+  getters,
   modules: {
     api,
   },

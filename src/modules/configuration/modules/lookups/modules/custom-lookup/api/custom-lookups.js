@@ -38,7 +38,7 @@ const fieldsToSend = [
   'display',
 ];
 
-const getCustomLookupList = async ({ repo, ...params }) => {
+const getCustomLookupRecords = async ({ repo, ...params }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const { page, size, fields, sort, id, q } = applyTransform(params, [
@@ -70,8 +70,50 @@ const getCustomLookupList = async ({ repo, ...params }) => {
   }
 };
 
+const getCustomLookupRecord = async ({ itemId: id, repo }) => {
+  try {
+    const response = await dictionariesService.locateData(
+      repo,
+      id,
+      fieldsToSend,
+    );
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const addCustomLookupRecord = async ({ itemInstance, repo }) => {
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await dictionariesService.createData(repo, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const updateCustomLookupRecord = async ({ itemInstance, itemId: id, repo }) => {
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await dictionariesService.updateData(repo, id, item);
+    return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const CustomLookupApi = {
-  getList: getCustomLookupList,
+  getList: getCustomLookupRecords,
+  get: getCustomLookupRecord,
+  add: addCustomLookupRecord,
+  update: updateCustomLookupRecord,
 
   ...generatePermissionsApi(baseUrl),
 };
