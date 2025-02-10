@@ -1,6 +1,5 @@
 import './app/assets/icons/sprite';
 
-import { window } from 'happy-dom/lib/PropertySymbol.d.ts.js';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 
