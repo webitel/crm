@@ -22,7 +22,7 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             @click:add="
               router.push({
                 name: `${CrmSections.PRIORITIES}-card`,
