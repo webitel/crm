@@ -14,7 +14,7 @@
         </h3>
         <wt-action-bar
           :disabled:add="formState.isAdding || formState.editingComment"
-          :disabled:delete="!selected.length"
+          :disabled:delete="!selected.length || !editableSelectedComments"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingComment"
           @click:delete="
@@ -91,7 +91,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { onUnmounted, reactive } from 'vue';
+import { computed, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
@@ -150,6 +150,10 @@ restoreFilters();
 onUnmounted(() => {
   flushSubscribers();
 });
+
+const editableSelectedComments = computed(() =>
+  !!selected.value.every((comment) => comment.canEdit),
+);
 
 const formState = reactive({
   isAdding: false,
