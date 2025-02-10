@@ -9,6 +9,7 @@ import CaseAttachments
   from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
+import CaseDetails from '../../modules/cases/modules/details/components/case-details.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -115,6 +116,11 @@ const routes = [
             path: 'attachments',
             name: `${CrmSections.CASES}-attachments`,
             component: CaseAttachments,
+          },
+          {
+            path: 'details',
+            name: `${CrmSections.CASES}-details`,
+            component: CaseDetails,
           },
         ],
       },

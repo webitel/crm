@@ -226,5 +226,8 @@ export default {
       url: 'URL',
       linkText: 'Link text',
     },
+    details: {
+      details: 'Details',
+    }
   },
 };

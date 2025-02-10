@@ -43,6 +43,11 @@ const tabs = computed(() => [
     value: 'attachments',
     pathName: `${CrmSections.CASES}-attachments`,
   },
+  {
+    text: t('cases.details.details'),
+    value: 'details',
+    pathName: `${CrmSections.CASES}-details`,
+  },
 ]);
 
 const {
