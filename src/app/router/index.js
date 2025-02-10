@@ -268,12 +268,20 @@ const routes = [
             name: CrmSections.SOURCES,
             component: TheSources,
             // beforeEnter: checkRouteAccess,
+            meta: {
+              WtObject: WtObject.Source,
+              UiSection: CrmSectionsNew.Sources,
+            },
           },
           {
             path: 'sources/:id',
             name: `${CrmSections.SOURCES}-card`,
             component: OpenedSource,
             redirect: { name: `${CrmSections.SOURCES}-general` },
+            meta: {
+              WtObject: WtObject.Source,
+              UiSection: CrmSectionsNew.Sources,
+            },
             children: [
               {
                 path: 'general',
