@@ -21,13 +21,21 @@
 
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
-            @click:add="router.push({ name: `${CrmSections.PRIORITIES}-card`, params: { id: 'new' }})"
+            @click:add="
+              router.push({
+                name: `${CrmSections.PRIORITIES}-card`,
+                params: { id: 'new' },
+              })
+            "
             @click:refresh="loadData"
-            @click:delete="askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteData(selected),
-            })"
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
           >
             <template #search-bar>
               <filter-search
@@ -45,9 +53,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -67,7 +73,10 @@
             >
               <template #name="{ item }">
                 <wt-item-link
-                  :link="{ name: `${CrmSections.PRIORITIES}-card`, params: { id: item.id } }"
+                  :link="{
+                    name: `${CrmSections.PRIORITIES}-card`,
+                    params: { id: item.id },
+                  }"
                 >
                   {{ item.name }}
                 </wt-item-link>
@@ -85,11 +94,13 @@
 
               <template #actions="{ item }">
                 <wt-icon-action
+                  v-if="hasUpdateAccess"
                   action="edit"
                   @click="edit(item)"
                 />
 
                 <wt-icon-action
+                  v-if="hasDeleteAccess"
                   action="delete"
                   @click="askDeleteConfirmationWrapper(item)"
                 />
@@ -108,30 +119,30 @@
 </template>
 
 <script setup>
-import {computed, onUnmounted} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {useRouter} from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import {
-  useDeleteConfirmationPopup
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { computed, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl.ts';
 
 const baseNamespace = 'configuration/lookups/priorities';
 
 const { t } = useI18n();
 const router = useRouter();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -161,7 +172,6 @@ const {
 
 const {
   namespace: filtersNamespace,
-  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -192,7 +202,7 @@ function askDeleteConfirmationWrapper(item) {
   askDeleteConfirmation({
     deleted: [item],
     callback: () => deleteData(item),
-  })
+  });
 }
 
 function edit(item) {
@@ -209,5 +219,4 @@ const {
 } = useTableEmpty({ dataList, error, isLoading });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

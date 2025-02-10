@@ -1,12 +1,11 @@
-import { CrmSections as CrmSectionsNew,WtObject } from '@webitel/ui-sdk/enums';
+import { CrmSections as CrmSectionsNew, WtObject } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
-import CaseAttachments
-  from '../../modules/cases/modules/attachments/components/case-attachments.vue';
+import CaseAttachments from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -386,6 +385,10 @@ const routes = [
             path: 'priorities',
             name: CrmSections.PRIORITIES,
             component: ThePriorities,
+            meta: {
+              WtObject: WtObject.Priorities,
+              UiSection: CrmSectionsNew.Priorities,
+            },
           },
           {
             path: 'priorities/:id',
