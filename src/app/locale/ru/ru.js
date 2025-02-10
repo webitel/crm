@@ -186,7 +186,7 @@ export default {
   },
   cases: {
     case: 'Обращение | Обращения',
-    id: 'Индентификатор',
+    id: 'ID',
     subject: 'Тема',
     priority: 'Приоритет',
     status: 'Статус',
@@ -217,7 +217,7 @@ export default {
     },
     comments: {
       comments: 'Комментарии',
-      edited: 'Отредактировано',
+      edited: 'Редактировано',
       yourCommentHere: 'Ваш комментарий здесь',
     },
     attachments: {

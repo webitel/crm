@@ -1,4 +1,4 @@
-import webSocketClientController from '@webitel/ui-sdk/src/api//websocket/websocketErrorEventHandler.js';
+import webSocketClientController from '@webitel/ui-sdk/src/api/websocket/WebSocketClientController.js';
 import { createStore } from 'vuex';
 
 import appearance from '../../modules/appearance/store/appearance';
