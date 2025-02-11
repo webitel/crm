@@ -20,7 +20,7 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             @click:add="addGroup"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
@@ -89,7 +89,7 @@
 
               <template #state="{ item, index }">
                 <wt-switcher
-                  :disabled="!hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   :value="item.enabled"
                   @change="patchProperty({ item, index, prop: 'enabled', value: $event})"
                 />
@@ -97,12 +97,12 @@
 
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   action="edit"
                   @click="edit(item)"
                 />
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
+                  :disabled="!hasDeleteAccess"
                   action="delete"
                   @click="askDeleteConfirmation({
                 deleted: [item],
@@ -123,23 +123,24 @@
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { computed, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
 const baseNamespace = 'configuration/lookups/contactGroups';
@@ -147,7 +148,7 @@ const baseNamespace = 'configuration/lookups/contactGroups';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,

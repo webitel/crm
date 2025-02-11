@@ -119,7 +119,9 @@ const props = defineProps({
   },
 });
 
+
 const {
+  namespace: cardNamespace,
   id,
   itemInstance,
   setItemProp,
@@ -144,8 +146,8 @@ async function loadStaticContactGroupsList(params) {
   return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
 }
 
-const serviceGroup = computed(() => store.getters[`${props.namespace}/service/GROUP`]);
-const serviceAssignee = computed(() => store.getters[`${props.namespace}/service/ASSIGNEE`]);
+const serviceGroup = computed(() => store.getters[`${cardNamespace}/service/GROUP`]);
+const serviceAssignee = computed(() => store.getters[`${cardNamespace}/service/ASSIGNEE`]);
 
 const userinfo = computed(() => store.state.userinfo);
 

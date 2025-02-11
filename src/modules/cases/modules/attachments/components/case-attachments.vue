@@ -5,7 +5,7 @@
   </div>
 </template>
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import CaseFiles from '../modules/files/components/case-files.vue';
 import CaseLinks from '../modules/links/components/case-links.vue';
 

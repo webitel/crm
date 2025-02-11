@@ -77,8 +77,7 @@
   </div>
 </template>
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -107,8 +106,8 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const commentsNamespace = `${props.namespace}/comments`;
-const relatedCasesNamespace = `${props.namespace}/relatedCases`;
+const commentsNamespace = `${cardNamespace}/comments`;
+const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
 
 const editMode = inject('editMode');
 </script>

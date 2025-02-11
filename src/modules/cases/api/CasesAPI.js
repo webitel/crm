@@ -1,4 +1,7 @@
 import {
+  generatePermissionsApi
+} from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
+import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
@@ -20,6 +23,8 @@ const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
 const casesService = new CasesApiFactory(configuration, '', instance);
+
+const baseUrl = '/cases';
 
 const fieldsToSend = [
   'subject',
@@ -213,6 +218,8 @@ const casesAPI = {
   update: updateCase,
   add: addCase,
   patch: patchCase,
+
+  ...generatePermissionsApi(baseUrl),
 };
 
 export default casesAPI;

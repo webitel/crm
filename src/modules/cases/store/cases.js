@@ -1,4 +1,7 @@
 import {
+  createObjectPermissionsStoreModule
+} from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index';
+import {
   createApiStoreModule,
   createBaseStoreModule,
   createCardStoreModule,
@@ -74,6 +77,20 @@ const api = createApiStoreModule({
     api: CasesAPI,
   },
 });
+
+const permissions = createObjectPermissionsStoreModule({
+  modules: {
+    table: {
+      getters: {
+        PARENT_ID: (s, g, rootState) => rootState.cases.card.itemId,
+      },
+      modules: {
+        api,
+      },
+    },
+  },
+});
+
 const table = createTableStoreModule({
   state: {
     headers,
@@ -91,6 +108,12 @@ const card = createCardStoreModule({
   },
   modules: {
     api,
+    service,
+    comments,
+    links,
+    files,
+    permissions,
+    relatedCases,
   },
   actions,
   getters,
@@ -100,11 +123,6 @@ const cases = createBaseStoreModule({
   modules: {
     table,
     card,
-    service,
-    comments,
-    links,
-    relatedCases,
-    files,
   },
 });
 

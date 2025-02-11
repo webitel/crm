@@ -7,6 +7,7 @@
         :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
+        :hide-primary="!hasSaveActionAccess"
         :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
@@ -47,23 +48,29 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import dynamicContactGroupsAPI from '../api/dynamicGroups.js';
 
 const namespace = 'configuration/lookups/contactGroups';
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
+
+const {
+  hasSaveActionAccess,
+} = useUserAccessControl();
 
 const {
   namespace: cardNamespace,

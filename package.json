@@ -11,7 +11,9 @@
     "lint:prettier": "prettier --check .",
     "lint": "npm run lint:js && npm run lint:prettier",
     "lint:fix": "prettier --write --list-different . && npm run lint:js --fix",
-    "tsc": "vue-tsc -p tsconfig.json"
+    "tsc": "vue-tsc -p tsconfig.json",
+    "link:webitel-ui": "npm link @webitel/ui-sdk --save --bin-links=false",
+    "i": "npm i"
   },
   "type": "module",
   "dependencies": {
@@ -19,7 +21,7 @@
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^11.0.3",
-    "@webitel/ui-sdk": "^24.12.94",
+    "@webitel/ui-sdk": "^24.12.97",
     "axios": "^1.7.7",
     "deep-equal": "^2.2.1",
     "dompurify": "^3.1.2",
@@ -35,7 +37,7 @@
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0",
-    "webitel-sdk": "^25.2.4"
+    "webitel-sdk": "^25.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
