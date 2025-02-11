@@ -2,9 +2,8 @@
   <wt-page-wrapper :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >

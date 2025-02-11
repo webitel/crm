@@ -10,7 +10,7 @@
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -19,7 +19,7 @@
         :label="t('lookups.serviceCatalogs.statuses')"
         :search-method="loadStatusesList"
         :value="itemInstance.status"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         :v="v.itemInstance.status"
         required
         @input="setItemProp({ path: 'status', value: $event })"
@@ -29,7 +29,7 @@
         :label="t('lookups.serviceCatalogs.prefix')"
         :value="itemInstance.prefix"
         :v="v.itemInstance.prefix"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'prefix', value: $event })"
       />
@@ -39,7 +39,7 @@
         :search-method="loadReasonList"
         :value="itemInstance.closeReasonGroup"
         :v="v.itemInstance.closeReasonGroup"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
@@ -49,7 +49,7 @@
         :search-method="loadSlaList"
         :value="itemInstance.sla"
         :v="v.itemInstance.sla"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'sla', value: $event })"
       />
@@ -57,14 +57,14 @@
         :label="t('objects.team', 2)"
         :search-method="loadTeamsList"
         :value="itemInstance.teams"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         multiple
         @input="setItemProp({ path: 'teams', value: $event })"
       />
 
       <wt-input
         :label="t('lookups.serviceCatalogs.code')"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         :value="itemInstance.code"
         @input="setItemProp({ path: 'code', value: $event })"
       />
@@ -73,20 +73,20 @@
         :label="t('lookups.serviceCatalogs.skills')"
         :search-method="loadSkillsList"
         :value="itemInstance.skills"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         multiple
         @input="setItemProp({ path: 'skills', value: $event })"
       />
 
       <wt-textarea
         :label="t('vocabulary.description')"
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
       />
 
       <wt-switcher
-        :disabled="!disableUserInput"
+        :disabled="disableUserInput"
         :label="t('reusable.state')"
         :value="itemInstance.state"
         @change="setItemProp({ path: 'state', value: $event })"
