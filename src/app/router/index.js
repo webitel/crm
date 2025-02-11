@@ -242,13 +242,20 @@ const routes = [
             path: 'slas',
             name: CrmSections.SLAS,
             component: TheSlas,
-            // beforeEnter: checkRouteAccess,
+            meta: {
+              WtObject: WtObject.Slas,
+              UiSection: CrmSectionsNew.Slas,
+            },
           },
           {
             path: 'slas/:id',
             name: `${CrmSections.SLAS}-card`,
             component: OpenedSla,
             redirect: { name: `${CrmSections.SLAS}-general` },
+            meta: {
+              WtObject: WtObject.Slas,
+              UiSection: CrmSectionsNew.Slas,
+            },
             children: [
               {
                 path: 'general',
@@ -292,13 +299,20 @@ const routes = [
             path: 'close-reason-groups',
             name: CrmSections.CLOSE_REASON_GROUPS,
             component: TheCloseReasonGroups,
-            // beforeEnter: checkRouteAccess,
+            meta: {
+              WtObject: WtObject.CloseReasonGroup,
+              UiSection: CrmSectionsNew.CloseReasonGroups,
+            },
           },
           {
             path: 'close-reason-groups/:id',
             name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
             component: OpenedCloseReasonGroups,
             redirect: { name: `${CrmSections.CLOSE_REASON_GROUPS}-general` },
+            meta: {
+              WtObject: WtObject.CloseReasonGroup,
+              UiSection: CrmSectionsNew.CloseReasonGroups,
+            },
             children: [
               {
                 path: 'general',
@@ -316,13 +330,20 @@ const routes = [
             path: 'service-catalogs',
             name: CrmSections.SERVICE_CATALOGS,
             component: TheServiceCatalogs,
-            // beforeEnter: checkRouteAccess,
+            meta: {
+              WtObject: WtObject.ServiceCatalog,
+              UiSection: CrmSectionsNew.ServiceCatalogs,
+            },
           },
           {
             path: 'service-catalogs/:id',
             name: `${CrmSections.SERVICE_CATALOGS}-card`,
             component: OpenedServiceCatalogs,
             redirect: { name: `${CrmSections.SERVICE_CATALOGS}-general` },
+            meta: {
+              WtObject: WtObject.ServiceCatalog,
+              UiSection: CrmSectionsNew.ServiceCatalogs,
+            },
             children: [
               {
                 path: 'general',
@@ -335,6 +356,10 @@ const routes = [
             path: 'service-catalogs/:catalogId/:rootId/services',
             name: `${CrmSections.SERVICE_CATALOGS}-services`,
             component: TheCatalogServices,
+            meta: {
+              WtObject: WtObject.ServiceCatalog,
+              UiSection: CrmSectionsNew.ServiceCatalogs,
+            },
           },
           {
             path: 'service-catalogs/:catalogId/:rootId/services/:id',
@@ -342,6 +367,10 @@ const routes = [
             component: OpenedServices,
             redirect: {
               name: `${CrmSections.SERVICE_CATALOGS}-services-card-general`,
+            },
+            meta: {
+              WtObject: WtObject.ServiceCatalog,
+              UiSection: CrmSectionsNew.ServiceCatalogs,
             },
             children: [
               {
@@ -392,12 +421,20 @@ const routes = [
             path: 'priorities',
             name: CrmSections.PRIORITIES,
             component: ThePriorities,
+            meta: {
+              WtObject: WtObject.Priorities,
+              UiSection: CrmSectionsNew.Priorities,
+            },
           },
           {
             path: 'priorities/:id',
             name: `${CrmSections.PRIORITIES}-card`,
             component: OpenedPriority,
             redirect: { name: `${CrmSections.PRIORITIES}-general` },
+            meta: {
+              WtObject: WtObject.Priorities,
+              UiSection: CrmSectionsNew.Priorities,
+            },
             children: [
               {
                 path: 'general',
@@ -410,13 +447,20 @@ const routes = [
             path: 'statuses',
             name: CrmSections.STATUSES,
             component: TheStatuses,
-            // beforeEnter: checkRouteAccess,
+            meta: {
+              WtObject: WtObject.Status,
+              UiSection: CrmSectionsNew.Statuses,
+            },
           },
           {
             path: 'statuses/:id',
             name: `${CrmSections.STATUSES}-card`,
             component: OpenedStatus,
             redirect: { name: `${CrmSections.STATUSES}-general` },
+            meta: {
+              WtObject: WtObject.Status,
+              UiSection: CrmSectionsNew.Statuses,
+            },
             children: [
               {
                 path: 'general',

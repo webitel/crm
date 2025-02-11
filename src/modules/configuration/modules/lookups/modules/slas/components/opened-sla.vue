@@ -4,9 +4,8 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -36,7 +35,7 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
@@ -49,21 +48,24 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
-import { required, minValue } from '@vuelidate/validators';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import { minValue,required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const namespace = 'configuration/lookups/slas';
 const { t } = useI18n();
 const route = useRoute();
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -88,7 +90,6 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   id,
   itemInstance,
 });
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SLAS);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);

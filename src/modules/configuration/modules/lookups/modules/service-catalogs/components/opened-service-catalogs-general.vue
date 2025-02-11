@@ -10,6 +10,7 @@
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
+        :disabled="!disableUserInput"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -18,6 +19,7 @@
         :label="t('lookups.serviceCatalogs.statuses')"
         :search-method="loadStatusesList"
         :value="itemInstance.status"
+        :disabled="!disableUserInput"
         :v="v.itemInstance.status"
         required
         @input="setItemProp({ path: 'status', value: $event })"
@@ -27,6 +29,7 @@
         :label="t('lookups.serviceCatalogs.prefix')"
         :value="itemInstance.prefix"
         :v="v.itemInstance.prefix"
+        :disabled="!disableUserInput"
         required
         @input="setItemProp({ path: 'prefix', value: $event })"
       />
@@ -36,6 +39,7 @@
         :search-method="loadReasonList"
         :value="itemInstance.closeReasonGroup"
         :v="v.itemInstance.closeReasonGroup"
+        :disabled="!disableUserInput"
         required
         @input="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
@@ -45,6 +49,7 @@
         :search-method="loadSlaList"
         :value="itemInstance.sla"
         :v="v.itemInstance.sla"
+        :disabled="!disableUserInput"
         required
         @input="setItemProp({ path: 'sla', value: $event })"
       />
@@ -52,12 +57,14 @@
         :label="t('objects.team', 2)"
         :search-method="loadTeamsList"
         :value="itemInstance.teams"
+        :disabled="!disableUserInput"
         multiple
         @input="setItemProp({ path: 'teams', value: $event })"
       />
 
       <wt-input
         :label="t('lookups.serviceCatalogs.code')"
+        :disabled="!disableUserInput"
         :value="itemInstance.code"
         @input="setItemProp({ path: 'code', value: $event })"
       />
@@ -66,17 +73,20 @@
         :label="t('lookups.serviceCatalogs.skills')"
         :search-method="loadSkillsList"
         :value="itemInstance.skills"
+        :disabled="!disableUserInput"
         multiple
         @input="setItemProp({ path: 'skills', value: $event })"
       />
 
       <wt-textarea
         :label="t('vocabulary.description')"
+        :disabled="!disableUserInput"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
       />
 
       <wt-switcher
+        :disabled="!disableUserInput"
         :label="t('reusable.state')"
         :value="itemInstance.state"
         @change="setItemProp({ path: 'state', value: $event })"
@@ -91,6 +101,7 @@ import TeamsAPI from '@webitel/ui-sdk/src/api/clients/teams/teams.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CloseReasonGroupsAPI from '../../close-reason-groups/api/closeReasonGroups.js';
 import SlasAPI from '../../slas/api/slas.js';
 import StatusesApi from '../../statuses/api/statuses.js';
@@ -107,6 +118,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

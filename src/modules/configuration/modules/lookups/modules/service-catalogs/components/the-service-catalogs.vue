@@ -19,8 +19,8 @@
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
             @click:add="addNewCatalog"
             @click:refresh="loadData"
             @click:delete="
@@ -123,6 +123,7 @@
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
+                  :disabled="!hasUpdateAccess"
                   @change="changeState(item, index)"
                 />
               </template>
@@ -143,12 +144,12 @@
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   action="edit"
                   @click="edit(item)"
                 />
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
+                  :disabled="!hasDeleteAccess"
                   action="delete"
                   @click="
                     askDeleteConfirmation({
@@ -171,7 +172,6 @@
 </template>
 
 <script setup>
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -186,6 +186,7 @@ import { computed, onUnmounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../app/utils/displayText.js';
 import filters from '../../slas/modules/filters/store/filters.js';
 import CatalogsAPI from '../api/service-catalogs.js';
@@ -206,7 +207,8 @@ const path = computed(() => [
 
 const { close } = useClose('configuration');
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
