@@ -61,7 +61,7 @@ const {
 const { t } = useI18n();
 
 const store = useStore();
-const serviceSLA = computed(() => store.getters[`${props.namespace}/service/SLA`]);
+const serviceSLA = computed(() => store.getters[`${cardNamespace}/service/SLA`]);
 
 const slaConditionName = computed(() => itemInstance?.value?.slaCondition?.name || '');
 
