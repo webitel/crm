@@ -41,7 +41,7 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
     (params) => ({
       ...params,
       q: params.search,
-      // fields: [...params.fields, 'primary_case', 'relation', 'name'],
+      fields: [...params.fields, 'primary_case'],
     }),
     sanitize(fieldsToSend),
     camelToSnake(),

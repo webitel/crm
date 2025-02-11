@@ -17,6 +17,6 @@ export default [
     value: 'relationType',
     show: true,
     sort: SortSymbols.NONE,
-    field: 'relation_type',
+    field: 'relation',
   },
 ];
