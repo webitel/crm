@@ -1,12 +1,12 @@
 <template>
-  <delete-confirmation-popup
-    :callback="deleteCallback"
-    :delete-count="deleteCount"
-    :shown="isConfirmationPopup"
-    @close="closeDelete"
-  />
-
   <div class="related-cases table-page">
+    <delete-confirmation-popup
+      :callback="deleteCallback"
+      :delete-count="deleteCount"
+      :shown="isConfirmationPopup"
+      @close="closeDelete"
+    />
+
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
@@ -94,7 +94,9 @@
           </template>
 
           <template #subject="{ item }">
-            {{ item.relatedCase.subject }}
+            <span class="related-cases__subject">
+              {{ item.relatedCase.subject }}
+            </span>
           </template>
 
           <template #relationType="{ item }">
@@ -283,6 +285,15 @@ async function submitCase() {
     align-items: start;
     width: 100%;
     grid-gap: var(--spacing-xs);
+  }
+
+  &__subject {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
   }
 }
 </style>

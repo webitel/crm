@@ -65,6 +65,7 @@
     </div>
 
     <related-cases
+      v-if="!isNew"
       :edit-mode="editMode"
       :item-id="id"
       :namespace="relatedCasesNamespace"
@@ -79,12 +80,9 @@
 </template>
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
 
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import CaseComments from '../modules/comments/components/case-comments.vue';
@@ -92,9 +90,6 @@ import RelatedCases from '../modules/related-cases/components/related-cases.vue'
 import EditableField from './editable-field.vue';
 
 const { t } = useI18n();
-
-const store = useStore();
-const route = useRoute();
 
 const props = defineProps({
   namespace: {
@@ -109,9 +104,7 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const {
-  isNew,
-} = useCardComponent({
+const { isNew } = useCardComponent({
   id,
   itemInstance,
 });

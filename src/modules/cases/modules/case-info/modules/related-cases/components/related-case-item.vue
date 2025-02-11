@@ -47,33 +47,23 @@ const props = defineProps({
 
 <style scoped lang="scss">
 .related-case-item {
-  display: flex;
+  display: grid;
   align-items: start;
   width: 100%;
   grid-gap: var(--spacing-xs);
+  grid-template-columns: auto 1fr 2fr;
 
   &__name {
-    flex: 2;
   }
 
   &__subject {
-    flex: 5;
-
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
-  }
-
-  &__type {
-    margin-left: var(--space-lg);
-    flex: 2;
-
-    &::first-letter {
-      text-transform: uppercase;
-    }
+    max-width: 380px;
   }
 }
 </style>
