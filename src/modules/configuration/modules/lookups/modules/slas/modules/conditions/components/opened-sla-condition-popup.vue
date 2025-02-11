@@ -21,7 +21,7 @@
         <wt-select
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
-          :search-method="getPriorities"
+          :search-method="id ? getConditionPriorities : getFreePriorities"
           :close-on-select="false"
           multiple
           required
@@ -119,8 +119,12 @@ function loadDataList() {
   emit('load-data');
 }
 
-function getPriorities(params) {
-  return PrioritiesAPI.getLookup({ ...params, inSla: route.params.id });
+function getFreePriorities(params) {
+  return PrioritiesAPI.getLookup({ ...params,notInSla: route.params.id });
+}
+
+function getConditionPriorities(params) {
+  return PrioritiesAPI.getLookup({ ...params, inSlaCond: id.value });
 }
 
 const save = async () => {
