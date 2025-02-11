@@ -10,6 +10,7 @@
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -19,12 +20,14 @@
         :options="typesSourcesOptions"
         :value="currentTypeSource"
         :v="v.itemInstance.type"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'type', value: $event.id })"
       />
 
       <wt-textarea
         :label="t('vocabulary.description')"
+        :disabled="disableUserInput"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
       />
@@ -33,10 +36,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CasesSourceType } from 'webitel-sdk';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
   namespace: {
@@ -50,6 +55,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

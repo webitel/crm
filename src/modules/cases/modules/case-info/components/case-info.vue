@@ -71,12 +71,15 @@
     />
 
     <case-comments
+      v-if="!isNew"
       :item-id="id"
       :namespace="commentsNamespace"
     />
   </div>
 </template>
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -105,6 +108,13 @@ const {
   setItemProp,
   id,
 } = useCardStore(props.namespace);
+
+const {
+  isNew,
+} = useCardComponent({
+  id,
+  itemInstance,
+});
 
 const commentsNamespace = `${cardNamespace}/comments`;
 const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
