@@ -5,9 +5,8 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -24,12 +23,7 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :access="{
-              read: true,
-              edit: !disableUserInput,
-              delete: !disableUserInput,
-              add: !disableUserInput,
-            }"
+            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
@@ -45,7 +39,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
@@ -54,6 +47,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import CatalogsAPI from '../../../api/service-catalogs.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
@@ -64,6 +58,8 @@ const route = useRoute();
 const router = useRouter();
 
 const baseNamespace = 'configuration/lookups/services';
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -108,8 +104,6 @@ const loadCatalog = async () => {
     itemId: catalogId.value,
   });
 };
-
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const path = computed(() => {
   const routes = [

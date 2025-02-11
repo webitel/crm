@@ -11,6 +11,7 @@
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -28,6 +29,7 @@
           :options="prioritiesColorsOptions"
           :label="t('vocabulary.color')"
           :v="v.itemInstance.color"
+          :disabled="disableUserInput"
           use-value-from-options-by-prop="id"
           required
           option-label="name"
@@ -62,6 +64,7 @@
       </div>
 
       <wt-textarea
+        :disabled="disableUserInput"
         :label="t('vocabulary.description')"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
@@ -71,10 +74,12 @@
 </template>
 
 <script setup>
+import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useCardStore } from '@webitel/ui-sdk/store';
+
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
 
 const props = defineProps({
@@ -89,6 +94,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const { disableUserInput } = useUserAccessControl();
+
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const prioritiesColorsOptions = computed(() => Object.values(PrioritiesColors).map((type) => {

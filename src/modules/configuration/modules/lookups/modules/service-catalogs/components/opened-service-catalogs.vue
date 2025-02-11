@@ -29,12 +29,7 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :access="{
-              read: true,
-              edit: !disableUserInput,
-              delete: !disableUserInput,
-              add: !disableUserInput,
-            }"
+            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
@@ -50,7 +45,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -60,11 +54,14 @@ import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
 
 const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
 const route = useRoute();
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -96,8 +93,6 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   itemInstance,
   resetState,
 });
-
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
 

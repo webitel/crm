@@ -5,7 +5,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -36,6 +36,7 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
+            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
         <input
@@ -48,19 +49,23 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const namespace = 'configuration/lookups/closeReasonGroups';
 
 const { t } = useI18n();
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
