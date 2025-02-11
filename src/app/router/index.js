@@ -52,7 +52,7 @@ import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
 import store from '../store';
 
-const checkAppAccess = (to, from) => {
+const checkAppAccess = () => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](
     store.getters['userinfo/THIS_APP'],
   );
@@ -63,7 +63,7 @@ const checkAppAccess = (to, from) => {
   }
 };
 
-const checkRouteAccess = (to, from) => {
+const checkRouteAccess = (to) => {
   // has Role Section Access AND (Select role permissions || ObAC permissions access)
   const hasReadAccess =
     store.getters['userinfo/CHECK_OBJECT_ACCESS']({ route: to }) &&
