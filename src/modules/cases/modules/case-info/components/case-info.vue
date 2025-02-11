@@ -65,21 +65,24 @@
       </editable-field>
     </div>
     <case-comments
+      v-if="!isNew"
       :item-id="id"
       :namespace="commentsNamespace"
     />
   </div>
 </template>
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
-import EditableField from './editable-field.vue';
 import CaseComments from '../modules/comments/components/case-comments.vue';
+import EditableField from './editable-field.vue';
 
 const { t } = useI18n();
 
@@ -98,6 +101,13 @@ const {
   setItemProp,
   id,
 } = useCardStore(props.namespace);
+
+const {
+  isNew,
+} = useCardComponent({
+  id,
+  itemInstance,
+});
 
 const commentsNamespace = `${cardNamespace}/comments`;
 
