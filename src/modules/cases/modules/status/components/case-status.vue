@@ -108,12 +108,12 @@ async function saveResult({
 }
 
 function getIndicatorColor(option) {
-  if (option?.initial) return 'initial-status';
   if (option?.final) return 'final-status';
+  if (option?.initial) return 'initial-status';
   return 'other-status';
 }
 
-const status = computed(() => store.getters[`${props.namespace}/service/STATUS`]);
+const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
 
 const fetchStatusConditions = async (params) => {
   if (!status?.value?.id) {

@@ -5,7 +5,7 @@
       <wt-icon
         :icon="icon"
       />
-      <span class="email-points-timeline-row-file__name" @click="openFileInNewTab">{{ file.name }}</span>
+      <span class="email-points-timeline-row-file__name" @click="openFileInNewTab(props.file)">{{ file.name }}</span>
     </div>
 
     <span >{{ prettifyFileSize(file.size) }}</span>
@@ -22,7 +22,9 @@
 <script setup>
 import { computed } from 'vue';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
-import downloadFile from '../../../../utils/downloadFile.js';
+import downloadFile from '../../../../../../../../app/utils/downloadFile.js';
+import openFileInNewTab from '../../../../../../../../app/utils/openFileInNewTab.js';
+import getFileIcon from '../../../../../../../../app/utils/fileTypeIcon.js';
 
 const props = defineProps({
   file: {
@@ -31,27 +33,7 @@ const props = defineProps({
   },
 });
 
-const icon = computed(() => {
-  if (props.file.mime.includes('image')) return 'preview-tag-image';
-  if (props.file.mime.includes('video')) return 'preview-tag-video';
-  if (props.file.mime.includes('audio')) return 'preview-tag-audio';
-  return 'attach';
-});
-
-const openFileInNewTab = async () => {
-  const link = document.createElement('a');
-  const token = localStorage.getItem('access-token');
-  const url = `${import.meta.env.VITE_API_URL}/storage/file/${props.file.id}/download?access_token=${token}`;
-
-  const file = await fetch(url)
-  .then((res) => res.blob())
-  .then((res) => new File([res], props.file.name, { type: res.type }));
-
-  const blob = new Blob([file], { type: file.type });
-  link.href = URL.createObjectURL(blob);
-  window.open(link.href, '_blank');
-};
-
+const icon = computed(() => getFileIcon(props.file.mime));
 </script>
 
 <style scoped lang="scss">

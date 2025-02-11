@@ -21,7 +21,7 @@ const priorityService = new PrioritiesApiFactory(configuration, '', instance);
 const fieldsToSend = ['name', 'description', 'color'];
 
 const getPrioritiesList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'notInSla', 'inSla'];
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'notInSla', 'inSla', 'inSlaCond'];
   const {
     page,
     size,
@@ -30,7 +30,7 @@ const getPrioritiesList = async (params) => {
     id,
     q,
     not_in_sla: notInSla,
-    in_sla: inSla,
+    in_sla_cond: inSlaCond,
   } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
@@ -47,7 +47,7 @@ const getPrioritiesList = async (params) => {
       id,
       q,
       notInSla,
-      inSla,
+      inSlaCond,
     );
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),

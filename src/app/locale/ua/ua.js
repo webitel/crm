@@ -187,9 +187,9 @@ export default {
   },
   cases: {
     case: 'Звернення | Звернення',
-    id: 'Індентифікатор',
+    id: 'ID',
     subject: 'Тема',
-    priority: 'Пріорітет',
+    priority: 'Пріоритет',
     status: 'Статус',
     source: 'Джерело',
     author: 'Автор',
@@ -218,7 +218,7 @@ export default {
     },
     comments: {
       comments: 'Коментарі',
-      edited: 'Відредаговано',
+      edited: 'Редаговано',
       yourCommentHere: 'Ваш коментар тут',
     },
     attachments: {
