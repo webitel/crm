@@ -392,6 +392,10 @@ const routes = [
             path: 'priorities',
             name: CrmSections.PRIORITIES,
             component: ThePriorities,
+            meta: {
+              WtObject: WtObject.Priorities,
+              UiSection: CrmSectionsNew.Priorities,
+            },
           },
           {
             path: 'priorities/:id',
