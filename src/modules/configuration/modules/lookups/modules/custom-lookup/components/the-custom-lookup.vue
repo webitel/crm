@@ -69,6 +69,23 @@
               >
                 {{ displayDynamicField(header, item) }}
               </template>
+              <template #actions="{ item }">
+                <wt-icon-action
+                  v-if="hasEditAccess"
+                  action="edit"
+                  @click="edit(item)"
+                />
+                <wt-icon-action
+                  v-if="hasDeleteAccess"
+                  action="delete"
+                  @click="
+                    askDeleteConfirmation({
+                      deleted: [item],
+                      callback: () => deleteData(item),
+                    })
+                  "
+                />
+              </template>
             </wt-table>
           </div>
           <filter-pagination
@@ -205,4 +222,11 @@ const {
   image: imageEmpty,
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
+
+const edit = (item) => {
+  router.push({
+    name: 'custom-lookup-record',
+    params: { id: item.id },
+  });
+};
 </script>

@@ -80,11 +80,12 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-});
+const { isNew, pathName, saveText, save, initialize, initializeCard } =
+  useCardComponent({
+    ...restStore,
+    id,
+    itemInstance,
+  });
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const close = () => {
@@ -147,10 +148,14 @@ const loadDictionary = async () => {
 
     store.commit(`${namespace}/card/SET`, {
       path: 'itemInstance',
-      value: {
-        test1: '1',
-        test2: '2',
-      },
+      value: dictionary.value.fields.reduce((acc, field) => {
+        if (field.hidden || field.default || field.always) {
+          return acc;
+        }
+
+        acc[field.id] = '';
+        return acc;
+      }, {}),
     });
   } catch (e) {
     console.error(e);
@@ -160,7 +165,7 @@ const loadDictionary = async () => {
 onMounted(async () => {
   await loadDictionary();
 
-  initialize();
+  await initializeCard();
 });
 </script>
 

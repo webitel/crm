@@ -1,4 +1,3 @@
-import { generatePermissionsApi } from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi.js';
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
@@ -7,19 +6,17 @@ import {
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
+  generateUrl,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import deepCopy from 'deep-copy';
 import { DictionariesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
-
-const baseUrl = '/types/dictionaries';
 
 const dictionariesService = new DictionariesApiFactory(
   configuration,
@@ -109,13 +106,42 @@ const updateCustomLookupRecord = async ({ itemInstance, itemId: id, repo }) => {
   }
 };
 
+const prettierData = (data) => {
+  return data?.map((item) => ({ ...item, id: item.repo }));
+};
+
+const getCustomLookupLookup = async ({ type, ...params }) => {
+  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
+
+  const url = applyTransform(params, [
+    merge(getDefaultGetParams()),
+    (params) => ({ ...params, q: params.search }),
+    sanitize(fieldsToSend),
+    camelToSnake(),
+    generateUrl(type),
+  ]);
+  try {
+    const response = await instance.get(url);
+    const { data, next } = applyTransform(response.data, [
+      snakeToCamel(),
+      merge(getDefaultGetListResponse()),
+    ]);
+
+    return {
+      items: applyTransform(data, [prettierData]),
+      next,
+    };
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const CustomLookupApi = {
   getList: getCustomLookupRecords,
   get: getCustomLookupRecord,
   add: addCustomLookupRecord,
   update: updateCustomLookupRecord,
-
-  ...generatePermissionsApi(baseUrl),
+  getLookup: getCustomLookupLookup,
 };
 
 export default CustomLookupApi;
