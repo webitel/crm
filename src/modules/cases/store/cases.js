@@ -107,6 +107,10 @@ const card = createCardStoreModule({
   },
   modules: {
     api,
+    service,
+    comments,
+    links,
+    files,
     permissions,
   },
   actions,
@@ -117,10 +121,6 @@ const cases = createBaseStoreModule({
   modules: {
     table,
     card,
-    service,
-    comments,
-    links,
-    files,
   },
 });
 
