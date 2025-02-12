@@ -83,24 +83,26 @@
           <template #name="{ item }">
             <div class="related-cases__item-wrapper">
               <color-component-wrapper
-                :color="item.relatedCase.color"
+                :color="getRevertedCase(item).color"
                 component="wt-icon"
                 icon="cases"
                 size="md"
               />
 
-              <span>{{ item.relatedCase.name }}</span>
+              <span>
+                {{ getRevertedCase(item).name }}
+              </span>
             </div>
           </template>
 
           <template #subject="{ item }">
             <span class="related-cases__subject">
-              {{ item.relatedCase.subject }}
+              {{ getRevertedCase(item).subject }}
             </span>
           </template>
 
           <template #relationType="{ item }">
-            {{ getRelatedTypeTranslate(item.relationType) }}
+            {{ getRelatedTypeTranslate(getRevertedCaseRelation(item)) }}
           </template>
 
           <template #actions="{ item }">
@@ -230,6 +232,38 @@ function resetForm() {
   formState.createMode = false;
   formState.relationType = null;
   formState.relatedCase = null;
+}
+
+const needToRevert = (item) => {
+  return item.relatedCase.id === props.itemId;
+};
+
+function getRevertedCase(item) {
+  if (!needToRevert(item)) {
+    return item.relatedCase;
+  }
+
+  return item.primaryCase;
+}
+
+function getRevertedCaseRelation(item) {
+  if (!needToRevert(item)) {
+    return item.relationType;
+  }
+
+  const relationPairs = new Map([
+    ['BLOCKS', 'IS_BLOCKED_BY'],
+    ['CAUSES', 'IS_CAUSED_BY'],
+    ['IS_CHILD_OF', 'IS_PARENT_OF'],
+    ['DUPLICATES', 'IS_DUPLICATED_BY'],
+  ]);
+
+  const inverseRelation = (type) =>
+    relationPairs.get(type) ||
+    [...relationPairs.entries()].find(([_, v]) => v === type)?.[0] ||
+    type;
+
+  return inverseRelation(item.relationType);
 }
 
 async function submitCase() {

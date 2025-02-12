@@ -51,19 +51,17 @@ const props = defineProps({
   align-items: start;
   width: 100%;
   grid-gap: var(--spacing-xs);
-  grid-template-columns: auto 1fr 2fr;
+  grid-template-columns: auto 120px auto;
 
   &__name {
   }
 
   &__subject {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    display: inline;
     overflow: hidden;
     text-overflow: ellipsis;
-    word-break: break-word;
-    max-width: 380px;
+    white-space: nowrap;
+    max-width: 100%;
   }
 }
 </style>
