@@ -15,6 +15,7 @@
           :value="itemInstance.name"
           :label="t('reusable.name')"
           :v="v$.itemInstance.name"
+          :disabled="disableUserInput"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
@@ -23,6 +24,7 @@
           :label="t('vocabulary.priority')"
           :search-method="id ? getConditionPriorities : getFreePriorities"
           :close-on-select="false"
+          :disabled="disableUserInput"
           multiple
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
@@ -31,6 +33,7 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           :v="v$.itemInstance.reactionTime"
+          :disabled="disableUserInput"
           format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'reactionTime', value: +$event })"
@@ -40,6 +43,7 @@
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           :v="v$.itemInstance.resolutionTime"
+          :disabled="disableUserInput"
           format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'resolutionTime', value: +$event })"
@@ -49,7 +53,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="disabledSave"
+        :disabled="!hasSaveActionAccess || disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -69,10 +73,12 @@ import { useVuelidate } from '@vuelidate/core';
 import { minValue, required } from '@vuelidate/validators';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { useCardStore } from '@webitel/ui-sdk/store';
+
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import PrioritiesAPI from '../../../../priorities/api/priorities.js';
 
 const props = defineProps({
@@ -86,6 +92,8 @@ const emit = defineEmits(['load-data']);
 
 const route = useRoute();
 const { t } = useI18n();
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,

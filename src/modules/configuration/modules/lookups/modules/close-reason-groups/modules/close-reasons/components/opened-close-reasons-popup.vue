@@ -13,11 +13,13 @@
           :label="t('reusable.name')"
           :value="itemInstance.name"
           :v="v$.itemInstance.name"
+          :disabled="disableUserInput"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
 
         <wt-textarea
+          :disabled="disableUserInput"
           :label="t('vocabulary.description')"
           :value="itemInstance.description"
           @input="setItemProp({ path: 'description', value: $event })"
@@ -26,7 +28,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="disabledSave"
+        :disabled="!hasSaveActionAccess || disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -42,13 +44,15 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
   namespace: {
@@ -61,6 +65,7 @@ const emit = defineEmits(['load-data']);
 
 const route = useRoute();
 const { t } = useI18n();
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
