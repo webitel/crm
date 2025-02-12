@@ -26,14 +26,10 @@
       </wt-page-header>
     </template>
     <template #side-panel>
-      <opened-case-general
-        :namespace="namespace"
-      />
+      <opened-case-general :namespace="namespace" />
     </template>
     <template #main>
-      <opened-case-tabs
-        :namespace="namespace"
-      />
+      <opened-case-tabs :namespace="namespace" />
     </template>
   </wt-dual-panel>
 </template>
@@ -45,7 +41,6 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
@@ -55,15 +50,15 @@ import OpenedCaseTabs from './opened-case-tabs.vue';
 const namespace = 'cases';
 
 const store = useStore();
-const router = useRouter();
-const route = useRoute();
 const { t } = useI18n();
 
-const {
-  hasCreateAccess,
-  hasUpdateAccess,
-  hasSaveActionAccess,
-} = useUserAccessControl();
+const editMode = computed(() => {
+  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+});
+
+provide('editMode', editMode);
+
+const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -75,18 +70,9 @@ const {
   updateItem,
   setId,
   resetState,
-  setItemProp,
-  deleteItem,
 } = useCardStore(namespace);
 
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-} = useCardComponent({
+const { isNew, disabledSave, save, initialize } = useCardComponent({
   id,
   itemInstance,
   loadItem,
@@ -95,6 +81,8 @@ const {
   setId,
   resetState,
 });
+
+initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
@@ -108,28 +96,21 @@ const path = computed(() => {
       route: baseUrl,
     },
     {
-      name: id.value ? `${itemInstance.value?.name} ${itemInstance.value?.subject}` : t('reusable.new'),
+      name: id.value
+        ? `${itemInstance.value?.name} ${itemInstance.value?.subject}`
+        : t('reusable.new'),
     },
   ];
 });
 
-const editMode = computed(() => {
-  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
-});
-
-provide('editMode', editMode);
-
-async function toggleEditMode(value) {
-  await store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
-}
-
-const saveCase = () => {
-  toggleEditMode(false);
-  save();
+const toggleEditMode = (value) => {
+  return store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
 };
 
-initialize();
+const saveCase = async () => {
+  await save();
+  await toggleEditMode(false);
+};
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
