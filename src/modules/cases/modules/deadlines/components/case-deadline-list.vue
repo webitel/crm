@@ -31,23 +31,18 @@
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import CaseDeadline from './case-deadline.vue';
 
 const { t } = useI18n();
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
 
 const {
-  id,
   itemInstance,
-  setItemProp,
-} = useCardStore(props.namespace);
+} = useCardStore(namespace);
 </script>
 
 <style lang="scss" scoped>

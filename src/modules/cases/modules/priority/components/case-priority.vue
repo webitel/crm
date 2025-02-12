@@ -23,28 +23,23 @@
 </template>
 
 <script setup>
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 
 const { t } = useI18n();
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+
+const namespace = inject('namespace');
+const editMode = inject('editMode');
 
 const {
-  id,
   itemInstance,
   setItemProp,
-} = useCardStore(props.namespace);
-
-const editMode = inject('editMode');
+} = useCardStore(namespace);
 </script>
 
 <style lang="scss" scoped>

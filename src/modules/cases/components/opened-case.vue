@@ -26,15 +26,20 @@
       </wt-page-header>
     </template>
     <template #side-panel>
-      <opened-case-general :namespace="namespace" />
+      <opened-case-general />
     </template>
     <template #main>
-      <opened-case-tabs :namespace="namespace" />
+      <opened-case-tabs
+        :v="v$"
+        :namespace="namespace"
+      />
     </template>
   </wt-dual-panel>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -56,6 +61,7 @@ const editMode = computed(() => {
   return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
 });
 
+provide('namespace', namespace);
 provide('editMode', editMode);
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
@@ -72,6 +78,20 @@ const {
   resetState,
 } = useCardStore(namespace);
 
+const v$ = useVuelidate(computed(() => ({
+  itemInstance: {
+    subject: { required },
+    sla: { required },
+    priority: { required },
+    status: { required },
+    // close: { required }, // TODO
+  },
+})), { itemInstance }, { $autoDirty: true });
+
+provide('v$', v$);
+
+v$.value.$touch();
+
 const { isNew, disabledSave, save, initialize } = useCardComponent({
   id,
   itemInstance,
@@ -80,6 +100,8 @@ const { isNew, disabledSave, save, initialize } = useCardComponent({
   updateItem,
   setId,
   resetState,
+
+  invalid: v$.value.$invalid,
 });
 
 initialize();
