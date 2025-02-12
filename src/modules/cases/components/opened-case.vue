@@ -116,7 +116,7 @@ const userContact = ref({});
 
 const isCaseAssignable = computed(() => {
   return (
-    itemInstance.assignee?.name !== userContact.value.id && userContact.value.id
+    userContact.value.id && (itemInstance.value.assignee?.id !== userContact.value.id)
   );
 });
 
