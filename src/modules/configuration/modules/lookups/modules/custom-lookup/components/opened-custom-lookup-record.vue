@@ -55,9 +55,6 @@
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -80,12 +77,11 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, saveText, save, initialize, initializeCard } =
-  useCardComponent({
-    ...restStore,
-    id,
-    itemInstance,
-  });
+const { isNew, pathName, saveText, save, initializeCard } = useCardComponent({
+  ...restStore,
+  id,
+  itemInstance,
+});
 const { hasSaveActionAccess, disableUserInput } = useAccessControl();
 
 const close = () => {
@@ -144,6 +140,13 @@ const loadDictionary = async () => {
     store.commit(`${namespace}/card/SET`, {
       path: 'fields',
       value: dictionary.value.fields,
+    });
+
+    store.commit(`${namespace}/card/SET`, {
+      path: 'fieldsToSend',
+      value: dictionary.value.fields
+        .filter((field) => !field.hidden && !field.default && !field.always)
+        .map((field) => field.id),
     });
 
     store.commit(`${namespace}/card/SET`, {

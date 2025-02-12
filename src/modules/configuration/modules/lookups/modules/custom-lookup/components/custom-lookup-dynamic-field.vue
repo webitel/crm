@@ -3,6 +3,7 @@
     v-if="field.kind === FieldType.TEXT"
     :value="itemInstance[field.id]"
     :label="field.name"
+    :required="field.required"
     @input="setItemProp({ prop: field.id, value: $event })"
   />
   <wt-input
@@ -10,12 +11,14 @@
     :value="itemInstance[field.id]"
     :label="field.name"
     type="number"
+    :required="field.required"
     @input="setItemProp({ prop: field.id, value: $event })"
   />
   <wt-switcher
     v-if="field.kind === FieldType.BOOLEAN"
     :label="field.name"
     :value="itemInstance[field.id]"
+    :required="field.required"
     @change="setItemProp({ path: field.id, value: $event })"
   />
   <wt-select
@@ -25,14 +28,27 @@
     :search-method="loadLookupList(field.lookup.type)"
     track-by="name"
     clearable
-    @input="selectTest"
+    :required="field.required"
+    @input="selectElement"
+  />
+  <wt-select
+    v-if="field.kind === FieldType.MULTISELECT"
+    :label="field.name"
+    :value="itemInstance[field.id]"
+    :search-method="loadLookupList(field.lookup.type)"
+    track-by="name"
+    clearable
+    multiple
+    :required="field.required"
+    @input="selectElements"
   />
   <wt-datepicker
     v-if="field.kind === FieldType.CALENDAR"
     :label="field.name"
     :value="itemInstance[field.id]"
     mode="datetime"
-    @input="setItemProp({ path: 'validFrom', value: +$event })"
+    :required="field.required"
+    @input="setItemProp({ path: field.id, value: +$event })"
   />
 </template>
 
@@ -59,7 +75,23 @@ const loadLookupList = (type) => () => {
   return CustomLookupApi.getLookup({ type });
 };
 
-const selectTest = (value) => {
-  console.log(value);
+const selectElement = (value) => {
+  setItemProp({
+    path: props.field.id,
+    value: {
+      id: value.id,
+      name: value.name,
+    },
+  });
+};
+
+const selectElements = (value) => {
+  setItemProp({
+    path: props.field.id,
+    value: value.map((item) => ({
+      id: item.id,
+      name: item.name,
+    })),
+  });
 };
 </script>

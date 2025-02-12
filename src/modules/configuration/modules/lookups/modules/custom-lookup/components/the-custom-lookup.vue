@@ -21,6 +21,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
+            @click:refresh="loadData"
             @click:add="
               router.push({
                 name: 'custom-lookup-record',
@@ -67,7 +68,10 @@
                 :key="header.value"
                 #[header.value]="{ item }"
               >
-                {{ displayDynamicField(header, item) }}
+                <display-dynamic-field
+                  :field="header"
+                  :value="item"
+                />
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
@@ -108,7 +112,6 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -116,7 +119,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
-import { displayDynamicField } from '../utils/displayDynamicField.js';
+import DisplayDynamicField from './display-dynamic-field.vue';
 
 const baseNamespace = 'configuration/lookups/customLookup';
 
@@ -143,7 +146,7 @@ const loadDictionary = async () => {
           locale: field.name,
           show: true,
           field: field.id,
-          sort: SortSymbols.NONE,
+          sort: undefined,
           kind: field.kind,
         })),
     });

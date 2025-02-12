@@ -43,6 +43,7 @@ const card = createCardStoreModule({
     fields: [],
     _resettable: resetCardState,
     repo: null,
+    fieldsToSend: [],
   },
   getters,
   modules: {

@@ -24,8 +24,8 @@ const dictionariesService = new DictionariesApiFactory(
   instance,
 );
 
-const fieldsToSend = [
-  'name',
+const fieldsToRemove = [
+  '_dirty',
   'description',
   'dictionary',
   'fields',
@@ -69,18 +69,15 @@ const getCustomLookupRecords = async ({ repo, ...params }) => {
 
 const getCustomLookupRecord = async ({ itemId: id, repo }) => {
   try {
-    const response = await dictionariesService.locateData(
-      repo,
-      id,
-      fieldsToSend,
-    );
+    const response = await dictionariesService.locateData(repo, id);
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const addCustomLookupRecord = async ({ itemInstance, repo }) => {
+const addCustomLookupRecord = async ({ itemInstance, fieldsToSend, repo }) => {
+  console.log('fieldsToSend', fieldsToSend);
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
@@ -93,7 +90,13 @@ const addCustomLookupRecord = async ({ itemInstance, repo }) => {
   }
 };
 
-const updateCustomLookupRecord = async ({ itemInstance, itemId: id, repo }) => {
+const updateCustomLookupRecord = async ({
+  itemInstance,
+  fieldsToSend,
+  itemId: id,
+  repo,
+}) => {
+  console.log('fieldsToSend', fieldsToSend);
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
@@ -104,10 +107,6 @@ const updateCustomLookupRecord = async ({ itemInstance, itemId: id, repo }) => {
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-};
-
-const prettierData = (data) => {
-  return data?.map((item) => ({ ...item, id: item.repo }));
 };
 
 const getCustomLookupLookup = async ({ type, ...params }) => {
@@ -128,7 +127,7 @@ const getCustomLookupLookup = async ({ type, ...params }) => {
     ]);
 
     return {
-      items: applyTransform(data, [prettierData]),
+      items: data,
       next,
     };
   } catch (err) {
