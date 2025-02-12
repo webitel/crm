@@ -15,6 +15,7 @@ export const headersStore: WtTableHeader[] = [
     show: true,
     field: 'subject',
     sort: SortSymbols.NONE,
+    width: '400px',
   },
   {
     value: 'priority',

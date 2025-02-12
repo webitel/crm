@@ -211,6 +211,7 @@ export default {
     deadlines: 'Сроки',
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
+    assignToMe: 'Назначить на меня',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
