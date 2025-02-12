@@ -7,6 +7,7 @@
       <wt-page-header
         :hide-primary="!isNew && !editMode"
         :primary-action="saveCase"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
@@ -15,6 +16,7 @@
         <template #actions>
           <wt-button
             v-if="!isNew && !editMode"
+            :disabled="!hasUpdateAccess"
             color="secondary"
             @click="toggleEditMode(true)"
           >
@@ -44,9 +46,11 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
-import { useStore } from 'vuex';
 
 const namespace = 'cases';
 
@@ -54,6 +58,12 @@ const store = useStore();
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+
+const {
+  hasCreateAccess,
+  hasUpdateAccess,
+  hasSaveActionAccess,
+} = useUserAccessControl();
 
 const {
   namespace: cardNamespace,

@@ -25,6 +25,8 @@
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH]"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
+            :disabled:add="!hasCreateAccess"
             @click:add="add"
             @click:refresh="loadDataList"
           >
@@ -140,10 +142,12 @@
             </template>
             <template #actions="{ item }">
               <wt-icon-action
+                :disabled="!hasUpdateAccess"
                 action="edit"
                 @click="edit(item)"
               />
               <wt-icon-action
+                :disabled="!hasDeleteAccess"
                 action="delete"
                 @click="askDeleteConfirmation({
                   deleted: [item],
@@ -178,14 +182,16 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableStore } from '../store/cases.store.ts';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import prettifyDate from '../utils/prettifyDate.js';
+
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { useTableStore } from '../store/cases.store.ts';
+import prettifyDate from '../utils/prettifyDate.js';
 
 const baseNamespace = 'cases';
 
@@ -194,6 +200,9 @@ const router = useRouter();
 const route = useRoute();
 
 const store = useStore();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const { close } = useClose('the-start-page');
 
