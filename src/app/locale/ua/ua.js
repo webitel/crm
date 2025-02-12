@@ -212,6 +212,7 @@ export default {
     deadlines: 'Терміни',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
+    assignToMe: 'Призначити на мене',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',

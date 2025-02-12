@@ -142,7 +142,7 @@ async function addServiceToStore(serviceCatalogData) {
       path: 'close_reason_group',
       value: { id: catalog.closeReasonGroup.id },
     });
-    console.log('service', service.id);
+
     await setItemProp({
       path: 'service',
       value: { id: service.id, name: service.name },

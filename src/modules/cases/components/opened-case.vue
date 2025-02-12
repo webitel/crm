@@ -13,25 +13,31 @@
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <wt-button
-            v-if="!isNew && !editMode"
-            color="secondary"
-            @click="toggleEditMode(true)"
-          >
-            {{ t('reusable.edit') }}
-          </wt-button>
+          <div class="opened-case__actions-wrapper">
+            <wt-button
+              :disabled="!isCaseAssignable"
+              color="success"
+              @click="assignCaseToMe"
+            >
+              {{ t('cases.assignToMe') }}
+            </wt-button>
+
+            <wt-button
+              v-if="!isNew && !editMode"
+              color="secondary"
+              @click="toggleEditMode(true)"
+            >
+              {{ t('reusable.edit') }}
+            </wt-button>
+          </div>
         </template>
       </wt-page-header>
     </template>
     <template #side-panel>
-      <opened-case-general
-        :namespace="namespace"
-      />
+      <opened-case-general :namespace="namespace" />
     </template>
     <template #main>
-      <opened-case-tabs
-        :namespace="namespace"
-      />
+      <opened-case-tabs :namespace="namespace" />
     </template>
   </wt-dual-panel>
 </template>
@@ -41,12 +47,14 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, provide } from 'vue';
+import { computed, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
 import { useStore } from 'vuex';
+import casesAPI from '../api/CasesAPI.js';
+import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 
 const namespace = 'cases';
 
@@ -103,6 +111,58 @@ const path = computed(() => {
   ];
 });
 
+const userinfo = computed(() => store.state.userinfo);
+const userContact = ref({});
+
+const isCaseAssignable = computed(() => {
+  return (
+    userContact.value.id && (itemInstance.value.assignee?.id !== userContact.value.id)
+  );
+});
+
+async function fetchUserContact(userId) {
+  if (!userId) {
+    userContact.value = {};
+    return;
+  }
+
+  try {
+    const user = await UsersAPI.get({ itemId: userId });
+    userContact.value = user?.contact || {};
+  } catch (err) {
+    throw err;
+  }
+}
+
+watch(
+  () => userinfo.value?.userId,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await fetchUserContact(newVal);
+    }
+  },
+  { immediate: true },
+);
+
+async function assignCaseToMe() {
+  if (!userContact.value?.id) {
+    return;
+  }
+
+  try {
+    await casesAPI.patch({
+      changes: {
+        assignee: { id: userContact.value.id, name: userContact.value.name },
+      },
+      etag: itemInstance.value.etag,
+    });
+  } catch (err) {
+    throw err;
+  } finally {
+    await loadItem();
+  }
+}
+
 const editMode = computed(() => {
   return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
 });
@@ -122,4 +182,10 @@ initialize();
 </script>
 
 <style lang="scss" scoped>
+.opened-case {
+  &__actions-wrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+}
 </style>
