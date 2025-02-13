@@ -14,7 +14,7 @@
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
           :disabled:delete="!editMode || !selected.length"
-          :disabled:download="!selected.length"
+          :disabled:download="!dataList.length"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
           @click:delete="
@@ -42,7 +42,10 @@
         >
           <template #name="{ item }">
             <div class="case-files__name-wrapper">
-              <wt-icon :icon="getFileIcon(item.mime)" />
+              <wt-icon
+                class="case-files__icon"
+                :icon="getFileIcon(item.mime)"
+              />
               <span
                 class="case-files__name"
                 @click="openFileInNewTab(item)"
@@ -162,8 +165,12 @@ async function handleSelectedFilesDownload() {
   const token = localStorage.getItem('access-token');
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const filesToDownload = selected.value.length
+    ? selected.value
+    : dataList.value;
+
   try {
-    await downloadFilesInZip({ selected: selected.value, apiUrl, token });
+    await downloadFilesInZip({ filesToDownload, apiUrl, token });
   } catch (error) {
     throw error;
   }
@@ -208,8 +215,11 @@ function openFileDialog() {
 .case-files {
   &__name-wrapper {
     display: flex;
-    align-items: center;
     gap: var(--spacing-xs);
+  }
+
+  &__icon {
+    flex-shrink: 0;
   }
 
   &__name {
