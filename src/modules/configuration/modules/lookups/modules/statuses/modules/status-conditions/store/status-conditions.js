@@ -22,6 +22,15 @@ const getters = {
     rootState.configuration.lookups.statuses.card.itemId,
 };
 
+const actions = {
+  ADD_ITEM: async (context) => {
+    await context.dispatch('api/POST_ITEM', { context });
+  },
+  UPDATE_ITEM: async (context) => {
+    await context.dispatch('api/UPD_ITEM', { context });
+  },
+};
+
 const api = createApiStoreModule({
   state: {
     api: StatusConditionsAPI,
@@ -43,6 +52,7 @@ const card = createCardStoreModule({
     itemInstance: resetCardState.itemInstance,
   },
   getters,
+  actions,
   modules: {
     api,
   },

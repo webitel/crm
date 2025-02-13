@@ -14,14 +14,24 @@
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <wt-button
-            v-if="!isNew && !editMode"
-            :disabled="!hasUpdateAccess"
-            color="secondary"
-            @click="toggleEditMode(true)"
-          >
-            {{ t('reusable.edit') }}
-          </wt-button>
+          <div class="opened-case__actions-wrapper">
+            <wt-button
+              :disabled="!isCaseAssignable"
+              color="success"
+              @click="assignCaseToMe"
+            >
+              {{ t('cases.assignToMe') }}
+            </wt-button>
+
+            <wt-button
+              v-if="!isNew && !editMode"
+              :disabled="!hasUpdateAccess"
+              color="secondary"
+              @click="toggleEditMode(true)"
+            >
+              {{ t('reusable.edit') }}
+            </wt-button>
+          </div>
         </template>
       </wt-page-header>
     </template>
@@ -40,15 +50,17 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, provide } from 'vue';
+import { computed, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
 
@@ -78,15 +90,19 @@ const {
   resetState,
 } = useCardStore(namespace);
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    subject: { required },
-    sla: { required },
-    priority: { required },
-    status: { required },
-    // close: { required }, // TODO
-  },
-})), { itemInstance }, { $autoDirty: true });
+const v$ = useVuelidate(
+  computed(() => ({
+    itemInstance: {
+      subject: { required },
+      sla: { required },
+      priority: { required },
+      status: { required },
+      // close: { required }, // TODO
+    },
+  })),
+  { itemInstance },
+  { $autoDirty: true },
+);
 
 provide('v$', v$);
 
@@ -125,6 +141,52 @@ const path = computed(() => {
   ];
 });
 
+const userinfo = computed(() => store.state.userinfo);
+const userContact = ref({});
+
+const isCaseAssignable = computed(() => {
+  return (
+    userContact.value.id &&
+    itemInstance.value.assignee?.id !== userContact.value.id
+  );
+});
+
+async function fetchUserContact(userId) {
+  if (!userId) {
+    userContact.value = {};
+    return;
+  }
+  const user = await UsersAPI.get({ itemId: userId });
+  userContact.value = user?.contact || {};
+}
+
+watch(
+  () => userinfo.value?.userId,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await fetchUserContact(newVal);
+    }
+  },
+  { immediate: true },
+);
+
+async function assignCaseToMe() {
+  if (!userContact.value?.id) {
+    return;
+  }
+
+  try {
+    await casesAPI.patch({
+      changes: {
+        assignee: { id: userContact.value.id, name: userContact.value.name },
+      },
+      etag: itemInstance.value.etag,
+    });
+  } finally {
+    await loadItem();
+  }
+}
+
 const toggleEditMode = (value) => {
   return store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
 };
@@ -136,3 +198,11 @@ const saveCase = async () => {
 </script>
 
 <style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.opened-case {
+  &__actions-wrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+}
+</style>

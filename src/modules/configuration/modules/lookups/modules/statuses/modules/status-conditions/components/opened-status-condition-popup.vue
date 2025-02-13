@@ -119,12 +119,10 @@ const save = async () => {
 
 async function initializePopup() {
   try {
-    if (isNew.value) {
-      return;
+    if (!isNew.value) {
+      await setId(statusConditionId.value);
+      await loadItem();
     }
-
-    await setId(statusConditionId.value);
-    await loadItem();
   } catch (error) {
     throw Error(error);
   }

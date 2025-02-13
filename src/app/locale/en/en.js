@@ -211,6 +211,7 @@ export default {
     deadlines: 'Deadlines',
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
+    assignToMe: 'Assign to me',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
