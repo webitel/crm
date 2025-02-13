@@ -26,58 +26,26 @@
 </template>
 
 <script setup>
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
 
 const {
   namespace: cardNamespace,
-  id,
   itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
   resetState,
   setItemProp,
-  deleteItem,
-} = useCardStore(props.namespace);
-
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-  initializeCard,
-} = useCardComponent({
-  id,
-  itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
-});
+} = useCardStore(namespace);
 
 const { t } = useI18n();
 const store = useStore();
-const route = useRoute();
 const isServicePopup = ref(false);
 const servicePath = ref('');
 const editMode = inject('editMode');
@@ -133,26 +101,24 @@ function generateServicePath(service, catalog) {
 async function addServiceToStore(serviceCatalogData) {
   if (!serviceCatalogData)
     return console.error('No serviceCatalogData provided');
-  try {
-    const { service, catalog } = serviceCatalogData;
-    await setServiceToStore(service);
-    await setCatalogToStore(catalog);
 
-    await setItemProp({
-      path: 'close_reason_group',
-      value: { id: catalog.closeReasonGroup.id },
-    });
+  const { service, catalog } = serviceCatalogData;
+  await setServiceToStore(service);
+  await setCatalogToStore(catalog);
 
-    await setItemProp({
-      path: 'service',
-      value: { id: service.id, name: service.name },
-    });
+  await setItemProp({
+    path: 'close_reason_group',
+    value: { id: catalog.closeReasonGroup.id },
+  });
 
-    servicePath.value = generateServicePath(service, catalog);
-  } catch (err) {
-    throw err;
-  }
+  await setItemProp({
+    path: 'service',
+    value: { id: service.id, name: service.name },
+  });
+
+  servicePath.value = generateServicePath(service, catalog);
 }
+
 const serviceResponse = ref(null);
 
 watch(

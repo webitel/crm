@@ -117,7 +117,7 @@
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, inject, watch, watchEffect } from 'vue';
+import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -128,19 +128,13 @@ import EditableField from '../../case-info/components/editable-field.vue';
 const store = useStore();
 const { t } = useI18n();
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
 
 const {
   namespace: cardNamespace,
-  id,
   itemInstance,
   setItemProp,
-} = useCardStore(props.namespace);
+} = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
   id,
@@ -162,8 +156,8 @@ function handleReporterInput(value) {
 }
 
 // TODO: replace STATIC type with type from TypeContactGroups.enum.js
-async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
+function loadStaticContactGroupsList(params) {
+  return ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
 }
 
 const serviceGroup = computed(
