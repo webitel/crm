@@ -92,13 +92,20 @@ const routes = [
         path: 'cases',
         name: CrmSections.CASES,
         component: TheCases,
-        // redirect: { name: `the-start-page` },
+        meta: {
+          WtObject: WtObject.Case,
+          UiSection: CrmSectionsNew.Cases,
+        },
       },
       {
         path: 'cases/:id',
         name: `${CrmSections.CASES}-card`,
         component: OpenedCase,
         redirect: { name: `${CrmSections.CASES}-case-info` },
+        meta: {
+          WtObject: WtObject.Case,
+          UiSection: CrmSectionsNew.Cases,
+        },
         children: [
           {
             path: 'case-info',

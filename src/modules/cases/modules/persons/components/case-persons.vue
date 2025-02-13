@@ -101,10 +101,11 @@
 
 <script setup>
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, inject, watch, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { computed, inject, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import ContactsAPI from '../../../../contacts/api/ContactsAPI.js';
 import EditableField from '../../case-info/components/editable-field.vue';
@@ -112,20 +113,13 @@ import EditableField from '../../case-info/components/editable-field.vue';
 const store = useStore();
 const { t } = useI18n();
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
-
+const namespace = inject('namespace');
 
 const {
   namespace: cardNamespace,
-  id,
   itemInstance,
   setItemProp,
-} = useCardStore(props.namespace);
+} = useCardStore(namespace);
 
 function handleReporterInput(value) {
   setItemProp({
@@ -142,8 +136,8 @@ function handleReporterInput(value) {
 }
 
 // TODO: replace STATIC type with type from TypeContactGroups.enum.js
-async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
+function loadStaticContactGroupsList(params) {
+  return ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
 }
 
 const serviceGroup = computed(() => store.getters[`${cardNamespace}/service/GROUP`]);
