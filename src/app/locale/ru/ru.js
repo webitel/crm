@@ -1,6 +1,9 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import {
+  CasesRelationType,
+  WebitelContactsTimelineEventType,
+} from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
@@ -231,16 +234,17 @@ export default {
       relatedCases: 'Связанные обращения',
       searchCasesPlaceholder: 'Найти обращение',
       relationType: {
-        relationTypeUnspecified: 'relation type unspecified',
-        duplicates: 'дублирует',
-        isDuplicatedBy: 'дублируется',
-        blocks: 'блокирует',
-        isBlockedBy: 'блокируется',
-        causes: 'вызывает',
-        isCausedBy: 'вызванное',
-        isChildOf: 'дочернее для',
-        isParentOf: 'родительское для',
-        relatesTo: 'относится к',
+        [CasesRelationType.RELATIONTYPEUNSPECIFIED]:
+          'relation type unspecified',
+        [CasesRelationType.DUPLICATES]: 'дублирует',
+        [CasesRelationType.ISDUPLICATEDBY]: 'дублируется',
+        [CasesRelationType.BLOCKS]: 'блокирует',
+        [CasesRelationType.ISBLOCKEDBY]: 'блокируется',
+        [CasesRelationType.CAUSES]: 'вызывает',
+        [CasesRelationType.ISCAUSEDBY]: 'вызванное',
+        [CasesRelationType.ISCHILDOF]: 'дочернее для',
+        [CasesRelationType.ISPARENTOF]: 'родительское для',
+        [CasesRelationType.RELATESTO]: 'относится к',
       },
     },
   },

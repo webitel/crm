@@ -68,7 +68,6 @@
       v-if="!isNew"
       :edit-mode="editMode"
       :item-id="id"
-      :namespace="relatedCasesNamespace"
     />
 
     <case-comments
@@ -81,7 +80,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
-import { inject } from 'vue';
+import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
@@ -111,6 +110,7 @@ const { isNew } = useCardComponent({
 
 const commentsNamespace = `${cardNamespace}/comments`;
 const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
+provide('relatedCasesNamespace', relatedCasesNamespace);
 
 const editMode = inject('editMode');
 </script>

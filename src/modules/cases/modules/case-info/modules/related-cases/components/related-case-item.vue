@@ -51,7 +51,7 @@ const props = defineProps({
   align-items: start;
   width: 100%;
   grid-gap: var(--spacing-xs);
-  grid-template-columns: auto 120px auto;
+  grid-template-columns: auto 120px 1fr;
 
   &__name {
   }

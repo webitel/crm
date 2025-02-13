@@ -102,7 +102,11 @@
           </template>
 
           <template #relationType="{ item }">
-            {{ getRelatedTypeTranslate(getRevertedCaseRelation(item)) }}
+            {{
+              t(
+                `cases.relatedCases.relationType.${getRevertedCaseRelation(item)}`,
+              )
+            }}
           </template>
 
           <template #actions="{ item }">
@@ -129,9 +133,8 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { objSnakeToCamel } from '@webitel/ui-sdk/src/scripts/index.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, onUnmounted, reactive } from 'vue';
+import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CasesRelationType } from 'webitel-sdk';
 
@@ -142,10 +145,6 @@ import RelatedCasesAPI from '../api/related-cases-api.js';
 import RelatedCaseItem from './related-case-item.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
   itemId: {
     type: String,
     required: true,
@@ -157,6 +156,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const relatedCasesNamespace = inject('relatedCasesNamespace', '');
+
 const {
   namespace,
   dataList,
@@ -168,7 +169,7 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-} = useTableStore(props.namespace);
+} = useTableStore(relatedCasesNamespace);
 
 const { restoreFilters, subscribe, flushSubscribers } =
   useTableFilters(namespace);
@@ -205,19 +206,11 @@ const formState = reactive({
   relationType: null,
 });
 
-function getRelatedTypeTranslate(type) {
-  if (!type) {
-    return '';
-  }
-  const convertedType = objSnakeToCamel([type.toLowerCase()])[0];
-  return t(`cases.relatedCases.relationType.${convertedType}`);
-}
-
 const relatedTypesOptions = computed(() =>
   Object.values(CasesRelationType).map((type) => {
     return {
       id: type,
-      name: getRelatedTypeTranslate(type),
+      name: t(`cases.relatedCases.relationType.${type}`),
     };
   }),
 );
@@ -234,33 +227,29 @@ function resetForm() {
   formState.relatedCase = null;
 }
 
-const needToRevert = (item) => {
+const isNeedToRevert = (item) => {
   return item.relatedCase.id === props.itemId;
 };
 
 function getRevertedCase(item) {
-  if (!needToRevert(item)) {
-    return item.relatedCase;
-  }
-
-  return item.primaryCase;
+  return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
 }
 
+const relationPairsMap = new Map([
+  ['BLOCKS', 'IS_BLOCKED_BY'],
+  ['CAUSES', 'IS_CAUSED_BY'],
+  ['IS_CHILD_OF', 'IS_PARENT_OF'],
+  ['DUPLICATES', 'IS_DUPLICATED_BY'],
+]);
+
 function getRevertedCaseRelation(item) {
-  if (!needToRevert(item)) {
+  if (!isNeedToRevert(item)) {
     return item.relationType;
   }
 
-  const relationPairs = new Map([
-    ['BLOCKS', 'IS_BLOCKED_BY'],
-    ['CAUSES', 'IS_CAUSED_BY'],
-    ['IS_CHILD_OF', 'IS_PARENT_OF'],
-    ['DUPLICATES', 'IS_DUPLICATED_BY'],
-  ]);
-
   const inverseRelation = (type) =>
-    relationPairs.get(type) ||
-    [...relationPairs.entries()].find(([_, v]) => v === type)?.[0] ||
+    relationPairsMap.get(type) ||
+    [...relationPairsMap.entries()].find(([_, v]) => v === type)?.[0] ||
     type;
 
   return inverseRelation(item.relationType);

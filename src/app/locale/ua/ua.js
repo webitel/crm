@@ -1,6 +1,9 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import {
+  CasesRelationType,
+  WebitelContactsTimelineEventType,
+} from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
@@ -232,16 +235,17 @@ export default {
       relatedCases: 'Звʼязані звернення',
       searchCasesPlaceholder: 'Шукати звернення',
       relationType: {
-        relationTypeUnspecified: 'relation type unspecified',
-        duplicates: 'дублює',
-        isDuplicatedBy: 'дублюється',
-        blocks: 'блокує',
-        isBlockedBy: 'блокується',
-        causes: 'спричинило',
-        isCausedBy: 'спричинене',
-        isChildOf: 'дочірнє до',
-        isParentOf: 'батьківське для',
-        relatesTo: 'стосується',
+        [CasesRelationType.RELATIONTYPEUNSPECIFIED]:
+          'relation type unspecified',
+        [CasesRelationType.DUPLICATES]: 'дублює',
+        [CasesRelationType.ISDUPLICATEDBY]: 'дублюється',
+        [CasesRelationType.BLOCKS]: 'блокує',
+        [CasesRelationType.ISBLOCKEDBY]: 'блокується',
+        [CasesRelationType.CAUSES]: 'спричинило',
+        [CasesRelationType.ISCAUSEDBY]: 'спричинене',
+        [CasesRelationType.ISCHILDOF]: 'дочірнє до',
+        [CasesRelationType.ISPARENTOF]: 'батьківське для',
+        [CasesRelationType.RELATESTO]: 'стосується',
       },
     },
   },
