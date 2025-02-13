@@ -1,12 +1,12 @@
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
-export default async function downloadFilesInZip({ selected, apiUrl, token }) {
-  if (!selected?.length) return;
+export default async function downloadFilesInZip({ filesToDownload, apiUrl, token }) {
+  if (!filesToDownload?.length) return;
 
   const zip = new JSZip();
 
-  const filePromises = selected.map(async (item) => {
+  const filePromises = filesToDownload.map(async (item) => {
     const { id, name } = item;
     const fileUrl = `${apiUrl}/storage/file/${id}/download?access_token=${token}`;
 
