@@ -27,29 +27,29 @@
       </header>
 
       <table-top-row-bar
-        v-if="formState.createMode"
+        v-if="defaultState.createMode"
         @reset="resetForm"
         @submit="submitCase"
       >
         <wt-select
-          :value="formState.relationType"
+          :value="defaultState.relationType"
           :options="relatedTypesOptions"
           :clearable="false"
           :searchable="false"
           use-value-from-options-by-prop="id"
           option-label="name"
           class="type-select"
-          @input="formState.relationType = $event"
+          @input="defaultState.relationType = $event"
         />
 
         <wt-select
-          :value="formState.relatedCase"
+          :value="defaultState.relatedCase"
           :clearable="false"
           :search-method="CasesAPI.getLookup"
           :placeholder="t('cases.relatedCases.searchCasesPlaceholder')"
           class="case-select"
           option-label="name"
-          @input="formState.relatedCase = $event"
+          @input="defaultState.relatedCase = $event"
         >
           <template #option="{ option }">
             <related-case-item
@@ -75,9 +75,7 @@
           :headers="headers"
           :selected="selected"
           headless
-          sortable
           class="related-cases__table"
-          @sort="sort"
           @update:selected="setSelected"
         >
           <template #name="{ item }">
@@ -166,7 +164,6 @@ const {
   headers,
   loadData,
   deleteData,
-  sort,
   setSelected,
   onFilterEvent,
 } = useTableStore(relatedCasesNamespace);
@@ -199,32 +196,33 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
-const formState = reactive({
+const defaultState = reactive({
   createMode: false,
   isAdding: false,
   relatedCase: null,
   relationType: null,
 });
 
-const relatedTypesOptions = computed(() =>
-  Object.values(CasesRelationType).map((type) => {
+const relatedTypesOptions = computed(() => {
+  const types = Object.values(CasesRelationType).map((type) => {
     return {
       id: type,
       name: t(`cases.relatedCases.relationType.${type}`),
     };
-  }),
-);
+  });
+  return types.filter((el) => el.id !== 'RELATION_TYPE_UNSPECIFIED');
+});
 
 function startAddingRelatedCase() {
-  formState.createMode = true;
-  formState.editingComment = null;
-  formState.relationType = relatedTypesOptions.value[0].id;
+  defaultState.createMode = true;
+  defaultState.editingComment = null;
+  defaultState.relationType = relatedTypesOptions.value[0].id;
 }
 
 function resetForm() {
-  formState.createMode = false;
-  formState.relationType = null;
-  formState.relatedCase = null;
+  defaultState.createMode = false;
+  defaultState.relationType = null;
+  defaultState.relatedCase = null;
 }
 
 const isNeedToRevert = (item) => {
@@ -261,10 +259,10 @@ async function submitCase() {
       parentId: props.itemId,
       input: {
         relatedCase: {
-          id: formState.relatedCase.id,
-          name: formState.relatedCase.name,
+          id: defaultState.relatedCase.id,
+          name: defaultState.relatedCase.name,
         },
-        relationType: formState.relationType,
+        relationType: defaultState.relationType,
       },
     });
     await loadData();

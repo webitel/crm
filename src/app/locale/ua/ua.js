@@ -235,8 +235,6 @@ export default {
       relatedCases: 'Звʼязані звернення',
       searchCasesPlaceholder: 'Шукати звернення',
       relationType: {
-        [CasesRelationType.RELATIONTYPEUNSPECIFIED]:
-          'relation type unspecified',
         [CasesRelationType.DUPLICATES]: 'дублює',
         [CasesRelationType.ISDUPLICATEDBY]: 'дублюється',
         [CasesRelationType.BLOCKS]: 'блокує',

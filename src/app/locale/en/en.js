@@ -232,8 +232,6 @@ export default {
       relatedCases: 'Related cases',
       searchCasesPlaceholder: 'Search for a case',
       relationType: {
-        [CasesRelationType.RELATIONTYPEUNSPECIFIED]:
-          'relation type unspecified',
         [CasesRelationType.DUPLICATES]: 'duplicates',
         [CasesRelationType.ISDUPLICATEDBY]: 'is duplicated by',
         [CasesRelationType.BLOCKS]: 'blocks',

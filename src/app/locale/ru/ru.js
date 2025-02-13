@@ -234,8 +234,6 @@ export default {
       relatedCases: 'Связанные обращения',
       searchCasesPlaceholder: 'Найти обращение',
       relationType: {
-        [CasesRelationType.RELATIONTYPEUNSPECIFIED]:
-          'relation type unspecified',
         [CasesRelationType.DUPLICATES]: 'дублирует',
         [CasesRelationType.ISDUPLICATEDBY]: 'дублируется',
         [CasesRelationType.BLOCKS]: 'блокирует',
