@@ -137,7 +137,6 @@ const {
 } = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
-  id,
   itemInstance,
 });
 
