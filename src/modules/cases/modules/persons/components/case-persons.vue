@@ -13,7 +13,10 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.reporter')"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.reporter?.id } }"
+        :link="{
+          name: `${CrmSections.CONTACTS}-card`,
+          params: { id: itemInstance.reporter?.id },
+        }"
         :value="itemInstance.reporter?.name"
         color="info"
         icon="reporter"
@@ -35,7 +38,10 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.impacted')"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.impacted?.id } }"
+        :link="{
+          name: `${CrmSections.CONTACTS}-card`,
+          params: { id: itemInstance.impacted?.id },
+        }"
         :value="itemInstance.impacted?.name"
         icon="impacted"
         horizontal-view
@@ -55,12 +61,20 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.assignee')"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.assignee?.id } }"
+        :link="{
+          name: `${CrmSections.CONTACTS}-card`,
+          params: { id: itemInstance.assignee?.id },
+        }"
         :value="itemInstance.assignee?.name"
         color="success"
         icon="assignee"
         horizontal-view
-        @update:value="setItemProp({ path: 'assignee', value: $event })"
+        @update:value="
+          setItemProp({
+            path: 'assignee',
+            value: { id: $event.id, name: $event.name },
+          })
+        "
       >
         <template #default="props">
           <wt-select
@@ -100,6 +114,7 @@
 </template>
 
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, inject, watch } from 'vue';
@@ -121,6 +136,11 @@ const {
   setItemProp,
 } = useCardStore(namespace);
 
+const { isNew } = useCardComponent({
+  id,
+  itemInstance,
+});
+
 function handleReporterInput(value) {
   setItemProp({
     path: 'reporter',
@@ -140,33 +160,35 @@ function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
 }
 
-const serviceGroup = computed(() => store.getters[`${cardNamespace}/service/GROUP`]);
-const serviceAssignee = computed(() => store.getters[`${cardNamespace}/service/ASSIGNEE`]);
+const serviceGroup = computed(
+  () => store.getters[`${cardNamespace}/service/GROUP`],
+);
+const serviceAssignee = computed(
+  () => store.getters[`${cardNamespace}/service/ASSIGNEE`],
+);
+
+const serviceId = computed(
+  () => store.getters[`${cardNamespace}/service/SERVICE_ID`],
+);
 
 const userinfo = computed(() => store.state.userinfo);
 
 const editMode = inject('editMode');
 
-const watchServiceValues = (valueRef, path) => {
-  watch(
-    valueRef,
-    (newValue, oldValue) => {
-
-      if ((newValue !== oldValue) && !oldValue) {
-        setItemProp({
-          path,
-          value: newValue,
-        });
-      }
+watch(
+  serviceId,
+  (newServiceId, oldServiceId) => {
+    if (!!oldServiceId || (!oldServiceId && isNew.value)) {
+      setItemProp({
+        path: 'group',
+        value: { id: serviceGroup.value.id, name: serviceGroup.value.name },
+      });
+      setItemProp({ path: 'assignee', value: serviceAssignee.value });
     }
-  );
-};
-
-watchServiceValues(serviceGroup, 'group');
-watchServiceValues(serviceAssignee, 'assignee');
-
+  },
+  { deep: true },
+);
 </script>
-
 
 <style lang="scss" scoped>
 .case-persons {
