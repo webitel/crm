@@ -28,6 +28,12 @@
                 params: { id: 'new' },
               })
             "
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
           >
             <template #search-bar>
               <filter-search

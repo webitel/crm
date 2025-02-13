@@ -52,6 +52,7 @@
 </template>
 
 <script setup>
+import { useVuelidate } from '@vuelidate/core';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
@@ -92,7 +93,15 @@ const close = () => {
     },
   });
 };
-const disabledSave = computed(() => !itemInstance.value._dirty);
+
+// This case need to get validation from child fields
+const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
+
+const disabledSave = computed(
+  () => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 const tabs = computed(() => {
   const general = {

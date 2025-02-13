@@ -24,17 +24,6 @@ const dictionariesService = new DictionariesApiFactory(
   instance,
 );
 
-const fieldsToRemove = [
-  '_dirty',
-  'description',
-  'dictionary',
-  'fields',
-  'repo',
-  'administered',
-  'primary',
-  'display',
-];
-
 const getCustomLookupRecords = async ({ repo, ...params }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
@@ -96,7 +85,6 @@ const updateCustomLookupRecord = async ({
   itemId: id,
   repo,
 }) => {
-  console.log('fieldsToSend', fieldsToSend);
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
@@ -104,6 +92,15 @@ const updateCustomLookupRecord = async ({
   try {
     const response = await dictionariesService.updateData(repo, id, item);
     return applyTransform(response.data, [snakeToCamel()]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const deleteCustomLookupRecord = async ({ repo, id }) => {
+  try {
+    const response = await dictionariesService.deleteData2(repo, id);
+    return response.data;
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
@@ -140,6 +137,8 @@ const CustomLookupApi = {
   get: getCustomLookupRecord,
   add: addCustomLookupRecord,
   update: updateCustomLookupRecord,
+  delete: deleteCustomLookupRecord,
+
   getLookup: getCustomLookupLookup,
 };
 
