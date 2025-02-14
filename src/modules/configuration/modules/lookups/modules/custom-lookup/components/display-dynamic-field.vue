@@ -10,21 +10,20 @@
     v-else-if="field.kind === FieldType.BOOLEAN"
     :value="value[field.value]"
   ></wt-switcher>
-  <template v-else-if="field.kind === FieldType.CALENDAR">
-    {{ displayText(prettifyDate(value[field.value])) }}
-  </template>
   <template v-else>
-    {{ displayText(value[field.value]) }}
+    {{ showText }}
   </template>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 import { displayText } from '../../../../../../../app/utils/displayText.js';
 import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import FieldType from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum.js';
 import DisplayChipItems from '../../service-catalogs/components/display-chip-items.vue';
 
-defineProps({
+const props = defineProps({
   field: {
     type: Object,
     required: true,
@@ -33,6 +32,16 @@ defineProps({
     type: Object,
     required: true,
   },
+});
+
+const showText = computed(() => {
+  const value = props.value[props.field.value];
+
+  if (props.field.kind === FieldType.CALENDAR) {
+    return displayText(prettifyDate(value));
+  }
+
+  return displayText(value);
 });
 </script>
 

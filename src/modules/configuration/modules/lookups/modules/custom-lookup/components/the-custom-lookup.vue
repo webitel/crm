@@ -152,7 +152,6 @@ const loadDictionary = async () => {
           locale: field.name,
           show: true,
           field: field.id,
-          sort: undefined,
           kind: field.kind,
         })),
     });

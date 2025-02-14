@@ -106,7 +106,10 @@ const deleteCustomLookupRecord = async ({ repo, id }) => {
   }
 };
 
-const getCustomLookupLookup = async ({ type, ...params }) => {
+// In this method we are using the same API as in getCustomLookupRecords,
+// but we are using different parameters, so we need to create a new method where we can pass the type of the lookup where type is path to api
+// for example: 'cities' has type 'dictionary/cities'
+const getCustomLookupRecordsLookup = async ({ type, ...params }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const url = applyTransform(params, [
@@ -139,7 +142,7 @@ const CustomLookupApi = {
   update: updateCustomLookupRecord,
   delete: deleteCustomLookupRecord,
 
-  getLookup: getCustomLookupLookup,
+  getLookup: getCustomLookupRecordsLookup,
 };
 
 export default CustomLookupApi;

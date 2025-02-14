@@ -170,7 +170,7 @@ const loadDictionary = async () => {
       }, {}),
     });
   } catch (e) {
-    console.error(e);
+    throw e;
   }
 };
 

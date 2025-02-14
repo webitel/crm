@@ -2,33 +2,33 @@
   <wt-input
     v-if="field.kind === FieldType.TEXT"
     :value="itemInstance[field.id]"
-    :v="field.required ? v$.itemInstance[field.id] : null"
+    :v="v$.itemInstance[field.id]"
     :label="field.name"
     :required="field.required"
-    @input="setItemProp({ prop: field.id, value: $event })"
+    @input="setItemProp({ path: field.id, value: $event })"
   />
   <wt-input
-    v-if="field.kind === FieldType.NUMBER"
+    v-else-if="field.kind === FieldType.NUMBER"
     :value="itemInstance[field.id]"
-    :v="field.required ? v$.itemInstance[field.id] : null"
+    :v="v$.itemInstance[field.id]"
     :label="field.name"
     type="number"
     :required="field.required"
-    @input="setItemProp({ prop: field.id, value: $event })"
+    @input="setItemProp({ path: field.id, value: $event })"
   />
   <wt-switcher
-    v-if="field.kind === FieldType.BOOLEAN"
+    v-else-if="field.kind === FieldType.BOOLEAN"
     :label="field.name"
     :value="itemInstance[field.id]"
-    :v="field.required ? v$.itemInstance[field.id] : null"
+    :v="v$.itemInstance[field.id]"
     :required="field.required"
     @change="setItemProp({ path: field.id, value: $event })"
   />
   <wt-select
-    v-if="field.kind === FieldType.SELECT"
+    v-else-if="field.kind === FieldType.SELECT"
     :label="field.name"
     :value="itemInstance[field.id]"
-    :v="field.required ? v$.itemInstance[field.id] : null"
+    :v="v$.itemInstance[field.id]"
     :search-method="loadLookupList(field.lookup.type)"
     track-by="name"
     clearable
@@ -36,10 +36,10 @@
     @input="selectElement"
   />
   <wt-select
-    v-if="field.kind === FieldType.MULTISELECT"
+    v-else-if="field.kind === FieldType.MULTISELECT"
     :label="field.name"
     :value="itemInstance[field.id]"
-    :v="field.required ? v$.itemInstance[field.id] : null"
+    :v="v$.itemInstance[field.id]"
     :search-method="loadLookupList(field.lookup.type)"
     track-by="name"
     clearable
@@ -48,7 +48,7 @@
     @input="selectElements"
   />
   <wt-datepicker
-    v-if="field.kind === FieldType.CALENDAR"
+    v-else-if="field.kind === FieldType.CALENDAR"
     :label="field.name"
     :value="itemInstance[field.id]"
     mode="datetime"
@@ -81,17 +81,19 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const v$ = useVuelidate(
   computed(() => {
-    if (props.field.required) {
-      return {
-        itemInstance: {
-          [props.field.id]: {
-            required: props.field.required ? required : undefined,
-          },
-        },
-      };
+    const rules = {
+      itemInstance: {},
+    };
+
+    if (!rules[props.field.id]) {
+      rules.itemInstance[props.field.id] = {};
     }
 
-    return {};
+    if (props.field.required) {
+      rules.itemInstance[props.field.id].required = required;
+    }
+
+    return rules;
   }),
   { itemInstance },
   { $autoDirty: true },
