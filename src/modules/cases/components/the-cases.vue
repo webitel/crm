@@ -8,6 +8,9 @@
         <wt-headline-nav :path="path" />
       </wt-page-header>
     </template>
+    <template #actions-panel>
+      <cases-filters />
+    </template>
     <template #main>
       <delete-confirmation-popup
         :callback="deleteCallback"
@@ -196,6 +199,7 @@ import ColorComponentWrapper from '../../../app/components/utils/color-component
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useTableStore } from '../store/cases.store.ts';
 import prettifyDate from '../utils/prettifyDate.js';
+import casesFilters from '../filters/cases-filters.vue';
 
 const baseNamespace = 'cases';
 
