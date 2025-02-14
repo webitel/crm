@@ -38,6 +38,7 @@
             {{ value }}
           </wt-item-link>
           <wt-icon
+            class="editable-field__link-icon"
             v-if="link && value"
             icon="link"
             size="sm"
@@ -162,6 +163,10 @@ const updateValue = (newValue) => {
 
     .editable-field__link {
       color: var(--link-color);
+    }
+
+    .editable-field__link-icon {
+      flex-shrink: 0;
     }
   }
 }
