@@ -212,6 +212,7 @@ export default {
     deadlines: 'Deadlines',
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
+    assignToMe: 'Assign to me',
     emptyCases: 'There are no {e} yet',
     caseInfo: {
       caseInfo: 'Case info',

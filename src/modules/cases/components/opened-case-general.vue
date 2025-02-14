@@ -1,23 +1,11 @@
 <template>
   <article class="opened-case-general">
-    <case-status
-      :namespace="namespace"
-    />
-    <case-priority
-      :namespace="namespace"
-    />
-    <case-service
-      :namespace="namespace"
-    />
-    <case-deadlines
-      :namespace="namespace"
-    />
-    <case-persons
-      :namespace="namespace"
-    />
-    <case-sla
-      :namespace="namespace"
-    />
+    <case-status />
+    <case-priority />
+    <case-service />
+    <case-deadlines />
+    <case-persons />
+    <case-sla />
   </article>
 </template>
 
@@ -28,13 +16,6 @@ import CasePriority from '../modules/priority/components/case-priority.vue';
 import CaseService from '../modules/service/components/case-service.vue';
 import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
-
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
 
 </script>
 <style lang="scss" scoped>

@@ -215,6 +215,7 @@ export default {
     deadlines: 'Терміни',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
+    assignToMe: 'Призначити на мене',
     emptyCases: 'Тут ще немає {e}',
     caseInfo: {
       caseInfo: 'Інформація',

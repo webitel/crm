@@ -191,7 +191,7 @@ const addCase = async ({ itemInstance }) => {
 };
 
 const patchCase = async ({ changes, etag }) => {
-  const fieldsToSend = ['status_condition', 'status'];
+  const fieldsToSend = ['status_condition', 'status', 'assignee'];
   const body = applyTransform(changes, [
     camelToSnake(),
     sanitize(fieldsToSend),

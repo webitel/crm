@@ -7,6 +7,7 @@ const state = {
 };
 
 const getters = {
+  SERVICE_ID: (state) => state.service?.id,
   CLOSE_REASON_ID: (state) => state.catalog?.closeReasonGroup?.id,
   STATUS: (state) => state.catalog?.status,
   SLA: (state) => resolvePropertyFromHierarchy(state, 'sla'),

@@ -1,7 +1,5 @@
 <template>
-  <wt-page-wrapper
-    class="cases table-page"
-  >
+  <wt-page-wrapper class="cases table-page">
     <template #header>
       <wt-page-header
         :secondary-action="close"
@@ -24,25 +22,22 @@
             {{ $t('cases.case', 2) }}
           </h3>
           <wt-action-bar
-            :include="[IconAction.ADD, IconAction.REFRESH]"
+            :include="[
+              IconAction.ADD,
+              IconAction.REFRESH,
+              /* IconAction.FILTERS, */
+              /* IconAction.COLUMNS, */
+              IconAction.DELETE,
+            ]"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
+            :disabled:add="!hasCreateAccess"
             @click:add="add"
             @click:refresh="loadDataList"
+            @click:delete="deleteSelectedItems"
           >
-            <wt-icon-btn
-              icon="filter"
-            />
-            <wt-icon-btn
-              icon="column-select"
-            />
-            <wt-icon-btn
-              v-if="selected?.length"
-              class="icon-action"
-              icon="bucket"
-              @click="deleteSelectedItems"
-            />
-            <template #search-bar>
-              <wt-search-bar />
-            </template>
+            <!--            <template #search-bar>-->
+            <!--              <wt-search-bar />-->
+            <!--            </template>-->
           </wt-action-bar>
         </header>
         <wt-loader v-show="isLoading" />
@@ -59,7 +54,10 @@
           >
             <template #id="{ item }">
               <wt-item-link
-                :link="{ name: `${CrmSections.CASES}-card`, params: { id: item?.id } }"
+                :link="{
+                  name: `${CrmSections.CASES}-card`,
+                  params: { id: item?.id },
+                }"
               >
                 <div class="cases__link-content">
                   <color-component-wrapper
@@ -140,15 +138,19 @@
             </template>
             <template #actions="{ item }">
               <wt-icon-action
+                :disabled="!hasUpdateAccess"
                 action="edit"
                 @click="edit(item)"
               />
               <wt-icon-action
+                :disabled="!hasDeleteAccess"
                 action="delete"
-                @click="askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })
+                "
               />
             </template>
           </wt-table>
@@ -159,10 +161,9 @@
             :size="size"
             debounce
             @change="updateSize"
-            @next="updatePage(page+1)"
-            @prev="updatePage(page-1)"
+            @next="updatePage(page + 1)"
+            @prev="updatePage(page - 1)"
           />
-
         </div>
       </section>
     </template>
@@ -173,19 +174,18 @@
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableStore } from '../store/cases.store.ts';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import prettifyDate from '../utils/prettifyDate.js';
+
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { useTableStore } from '../store/cases.store.ts';
+import prettifyDate from '../utils/prettifyDate.js';
 
 const baseNamespace = 'cases';
 
@@ -195,27 +195,18 @@ const route = useRoute();
 
 const store = useStore();
 
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
+
 const { close } = useClose('the-start-page');
 
 const tableStore = useTableStore();
 
-const {
-  dataList,
-  selected,
-  isLoading,
-  page,
-  size,
-  next,
-  headers,
-} = storeToRefs(tableStore);
+const { dataList, selected, isLoading, page, size, next, headers } =
+  storeToRefs(tableStore);
 
-const {
-  initialize,
-  loadDataList,
-  updatePage,
-  updateSize,
-  updateSort,
-} = tableStore;
+const { initialize, loadDataList, updatePage, updateSize, updateSort } =
+  tableStore;
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -241,6 +232,10 @@ function add() {
 }
 
 function edit(item) {
+  /*
+  at "edit", only(!) store state is used to determine read/edit mode
+  because store is much reliable as the state source, comparing to url query
+   */
   store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
   return router.push({
     name: `${CrmSections.CASES}-card`,
@@ -256,7 +251,6 @@ function deleteSelectedItems() {
 }
 
 initialize();
-
 </script>
 
 <style lang="scss" scoped>

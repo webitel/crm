@@ -7,53 +7,76 @@
       <wt-page-header
         :hide-primary="!isNew && !editMode"
         :primary-action="saveCase"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <wt-button
-            v-if="!isNew && !editMode"
-            color="secondary"
-            @click="toggleEditMode(true)"
-          >
-            {{ t('reusable.edit') }}
-          </wt-button>
+          <div class="opened-case__actions-wrapper">
+            <wt-button
+              :disabled="!isCaseAssignable"
+              color="success"
+              @click="assignCaseToMe"
+            >
+              {{ t('cases.assignToMe') }}
+            </wt-button>
+
+            <wt-button
+              v-if="!isNew && !editMode"
+              :disabled="!hasUpdateAccess"
+              color="secondary"
+              @click="toggleEditMode(true)"
+            >
+              {{ t('reusable.edit') }}
+            </wt-button>
+          </div>
         </template>
       </wt-page-header>
     </template>
     <template #side-panel>
-      <opened-case-general
-        :namespace="namespace"
-      />
+      <opened-case-general />
     </template>
     <template #main>
       <opened-case-tabs
+        :v="v$"
         :namespace="namespace"
       />
     </template>
   </wt-dual-panel>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, provide } from 'vue';
+import { computed, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
-import { useStore } from 'vuex';
 
 const namespace = 'cases';
 
 const store = useStore();
-const router = useRouter();
-const route = useRoute();
 const { t } = useI18n();
+
+const editMode = computed(() => {
+  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+});
+
+provide('namespace', namespace);
+provide('editMode', editMode);
+
+const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -65,18 +88,27 @@ const {
   updateItem,
   setId,
   resetState,
-  setItemProp,
-  deleteItem,
 } = useCardStore(namespace);
 
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-} = useCardComponent({
+const v$ = useVuelidate(
+  computed(() => ({
+    itemInstance: {
+      subject: { required },
+      sla: { required },
+      priority: { required },
+      status: { required },
+      // close: { required }, // TODO
+    },
+  })),
+  { itemInstance },
+  { $autoDirty: true },
+);
+
+provide('v$', v$);
+
+v$.value.$touch();
+
+const { isNew, disabledSave, save, initialize } = useCardComponent({
   id,
   itemInstance,
   loadItem,
@@ -84,7 +116,11 @@ const {
   updateItem,
   setId,
   resetState,
+
+  invalid: v$.value.$invalid,
 });
+
+initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
@@ -98,28 +134,75 @@ const path = computed(() => {
       route: baseUrl,
     },
     {
-      name: id.value ? `${itemInstance.value?.name} ${itemInstance.value?.subject}` : t('reusable.new'),
+      name: id.value
+        ? `${itemInstance.value?.name} ${itemInstance.value?.subject}`
+        : t('reusable.new'),
     },
   ];
 });
 
-const editMode = computed(() => {
-  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+const userinfo = computed(() => store.state.userinfo);
+const userContact = ref({});
+
+const isCaseAssignable = computed(() => {
+  return (
+    userContact.value.id &&
+    itemInstance.value.assignee?.id !== userContact.value.id
+  );
 });
 
-provide('editMode', editMode);
-
-async function toggleEditMode(value) {
-  await store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
+async function fetchUserContact(userId) {
+  if (!userId) {
+    userContact.value = {};
+    return;
+  }
+  const user = await UsersAPI.get({ itemId: userId });
+  userContact.value = user?.contact || {};
 }
 
-const saveCase = () => {
-  toggleEditMode(false);
-  save();
+watch(
+  () => userinfo.value?.userId,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await fetchUserContact(newVal);
+    }
+  },
+  { immediate: true },
+);
+
+async function assignCaseToMe() {
+  if (!userContact.value?.id) {
+    return;
+  }
+
+  try {
+    await casesAPI.patch({
+      changes: {
+        assignee: { id: userContact.value.id, name: userContact.value.name },
+      },
+      etag: itemInstance.value.etag,
+    });
+  } finally {
+    await loadItem();
+  }
+}
+
+const toggleEditMode = (value) => {
+  return store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
 };
 
-initialize();
+const saveCase = async () => {
+  await save();
+  await toggleEditMode(false);
+};
 </script>
 
+<style lang="scss" scoped></style>
 <style lang="scss" scoped>
+.opened-case {
+  &__actions-wrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+}
 </style>

@@ -214,6 +214,7 @@ export default {
     deadlines: 'Сроки',
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
+    assignToMe: 'Назначить на меня',
     emptyCases: 'Тут еще нет {e}',
     caseInfo: {
       caseInfo: 'Информация',

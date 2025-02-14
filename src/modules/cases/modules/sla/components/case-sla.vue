@@ -22,48 +22,32 @@
 </template>
 
 <script setup>
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, watch } from 'vue';
+import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import ConditionsAPI from '../../../../configuration/modules/lookups/modules/slas/modules/conditions/api/conditions.js';
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
 
 const {
   namespace: cardNamespace,
-  id,
+
   itemInstance,
   setItemProp,
-  ...restStore
-} = useCardStore(props.namespace);
-
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-  initializeCard,
-} = useCardComponent({
-  id,
-  itemInstance,
-  ...restStore,
-});
+} = useCardStore(namespace);
 
 const { t } = useI18n();
 
 const store = useStore();
-const serviceSLA = computed(() => store.getters[`${cardNamespace}/service/SLA`]);
+const serviceSLA = computed(
+  () => store.getters[`${cardNamespace}/service/SLA`],
+);
 
-const slaConditionName = computed(() => itemInstance?.value?.slaCondition?.name || '');
+const slaConditionName = computed(
+  () => itemInstance?.value?.slaCondition?.name || '',
+);
 
 const updateSlaCondition = async (slaId, priorityId) => {
   if (!slaId || !priorityId) {
@@ -71,7 +55,10 @@ const updateSlaCondition = async (slaId, priorityId) => {
     return;
   }
   try {
-    const response = await ConditionsAPI.getList({ parentId: slaId, priorityId });
+    const response = await ConditionsAPI.getList({
+      parentId: slaId,
+      priorityId,
+    });
     //NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
     await setItemProp({ path: 'slaCondition', value: response.items[0] });
   } catch (err) {
@@ -79,7 +66,6 @@ const updateSlaCondition = async (slaId, priorityId) => {
     throw err;
   }
 };
-
 
 const resetSlaCondition = async () => {
   await setItemProp({ path: 'slaCondition', value: null });
@@ -97,23 +83,15 @@ watch(
       return;
     }
 
-    try {
-      await setItemProp({ path: 'sla', value: serviceSLA.value });
-      await updateSlaCondition(newSlaId, itemInstance.value.priority?.id);
-    } catch (err) {
-      throw err;
-    }
+    await setItemProp({ path: 'sla', value: serviceSLA.value });
+    await updateSlaCondition(newSlaId, itemInstance.value.priority?.id);
   },
 );
 
 watch(
   () => itemInstance.value.priority?.id,
   async (newPriorityId) => {
-    try {
-      await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
-    } catch (err) {
-      throw err;
-    }
+    await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
   },
 );
 </script>
