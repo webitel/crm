@@ -52,7 +52,7 @@
             sortable
             @sort="updateSort"
           >
-            <template #id="{ item }">
+            <template #name="{ item }">
               <wt-item-link
                 :link="{
                   name: `${CrmSections.CASES}-card`,
@@ -69,6 +69,16 @@
 
                   {{ item.name }}
                 </div>
+              </wt-item-link>
+            </template>
+            <template #subject="{ item }">
+              <wt-item-link
+                :link="{
+                  name: `${CrmSections.CASES}-card`,
+                  params: { id: item?.id },
+                }"
+              >
+              {{ item.subject }}
               </wt-item-link>
             </template>
             <template #priority="{ item }">
@@ -148,7 +158,7 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteData(item),
+                    callback: () => deleteEls(item),
                   })
                 "
               />
@@ -205,7 +215,7 @@ const tableStore = useTableStore();
 const { dataList, selected, isLoading, page, size, next, headers } =
   storeToRefs(tableStore);
 
-const { initialize, loadDataList, updatePage, updateSize, updateSort } =
+const { initialize, loadDataList, updatePage, updateSize, updateSort, deleteEls } =
   tableStore;
 
 const {

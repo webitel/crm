@@ -223,11 +223,11 @@ function openFileDialog() {
   }
 
   &__name {
-    color: var(--info-color);
+    color: var(--link-color);
     cursor: pointer;
 
     &:hover {
-      color: var(--info-hover-color);
+      color: var(--link--hover-color);
     }
   }
 }
