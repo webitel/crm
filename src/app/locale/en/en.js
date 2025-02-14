@@ -3,6 +3,7 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { WebitelContactsTimelineEventType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
+import { CasesRelationType } from 'webitel-sdk';
 
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
@@ -212,6 +213,7 @@ export default {
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
     assignToMe: 'Assign to me',
+    emptyCases: 'There are no {e} yet',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
@@ -226,6 +228,21 @@ export default {
       links: 'Links',
       url: 'URL',
       linkText: 'Link text',
+    },
+    relatedCases: {
+      relatedCases: 'Related cases',
+      searchCasesPlaceholder: 'Search for a case',
+      relationType: {
+        [CasesRelationType.DUPLICATES]: 'duplicates',
+        [CasesRelationType.ISDUPLICATEDBY]: 'is duplicated by',
+        [CasesRelationType.BLOCKS]: 'blocks',
+        [CasesRelationType.ISBLOCKEDBY]: 'is blocked by',
+        [CasesRelationType.CAUSES]: 'causes',
+        [CasesRelationType.ISCAUSEDBY]: 'is caused by',
+        [CasesRelationType.ISCHILDOF]: 'is child of',
+        [CasesRelationType.ISPARENTOF]: 'is parent of',
+        [CasesRelationType.RELATESTO]: 'relates to',
+      },
     },
   },
 };

@@ -1,9 +1,9 @@
 import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
 import { defineConfig, loadEnv } from 'vite';
+import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
-import { resolve } from 'path';
-import checker from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -12,8 +12,9 @@ export default ({ mode }) => {
   return defineConfig({
     base: '/crm',
     define: {
-      'process.env': JSON.parse(JSON.stringify(env)
-      .replaceAll('VITE_', 'VUE_APP_')),
+      'process.env': JSON.parse(
+        JSON.stringify(env).replaceAll('VITE_', 'VUE_APP_'),
+      ),
     },
     server: {
       host: true,
@@ -76,4 +77,4 @@ export default ({ mode }) => {
       setupFiles: ['./tests/config/config.js'],
     },
   });
-}
+};
