@@ -233,6 +233,7 @@ function getRevertedCase(item) {
   return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
 }
 
+// link to the code explanation https://webitel.atlassian.net/browse/WTEL-5492?focusedCommentId=655118
 const relationPairsMap = new Map([
   ['BLOCKS', 'IS_BLOCKED_BY'],
   ['CAUSES', 'IS_CAUSED_BY'],
