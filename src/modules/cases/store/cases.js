@@ -8,6 +8,7 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
+import timeline from '../../contacts/modules/timeline/store/timeline';
 import CasesAPI from '../api/CasesAPI.js';
 import files from '../modules/attachments/modules/files/store/files.js';
 import links from '../modules/attachments/modules/links/store/links.js';
@@ -111,6 +112,7 @@ const card = createCardStoreModule({
     comments,
     links,
     files,
+    timeline,
     permissions,
   },
   actions,

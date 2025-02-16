@@ -121,6 +121,10 @@ const routes = [
             path: 'attachments',
             name: `${CrmSections.CASES}-attachments`,
             component: CaseAttachments,
+          },     {
+            path: 'timeline',
+            name: `${CrmSections.CASES}-timeline`,
+            component: ContactTimeline,
           },
           {
             path: 'permissions/:permissionId?',

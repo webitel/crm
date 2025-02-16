@@ -3,10 +3,11 @@ import ApiStoreModule
 import BaseStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 import set from 'lodash/set.js';
+
 import TimelineAPI from '../api/TimelineAPI';
-import filters from '../modules/filters/store/filters';
-import chats from '../modules/chats/store/chats.js';
 import calls from '../modules/calls/store/calls.js';
+import chats from '../modules/chats/store/chats.js';
+import filters from '../modules/filters/store/filters';
 
 const state = {
   dataList: [],
@@ -16,7 +17,8 @@ const state = {
 };
 
 const getters = {
-  PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
+  // PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
+  PARENT_ID: (state, getters, rootState) => rootState.cases.card.itemId,
   FILTERS: (state, getters) => getters['filters/GET_FILTERS'],
 };
 

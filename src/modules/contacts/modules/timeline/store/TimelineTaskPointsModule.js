@@ -1,5 +1,6 @@
 import BaseStoreModule
   from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+
 import MessageHistoryAPI from '../modules/chats/api/MessageHistoryAPI.js';
 
 export default class TimelineTaskPointsModule extends BaseStoreModule {
@@ -15,7 +16,8 @@ export default class TimelineTaskPointsModule extends BaseStoreModule {
 
   actions = {
     LOAD_HISTORY: async (context, { taskId }) => {
-      const parentId = context.rootGetters['contacts/card/timeline/PARENT_ID'];
+      const parentId = context.rootGetters['cases/card/timeline/PARENT_ID'];
+      // const parentId = context.rootGetters['contacts/card/timeline/PARENT_ID'];
 
       const { items } = await this.apiModule.getList({
         taskId,

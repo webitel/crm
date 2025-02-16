@@ -3,16 +3,17 @@ import applyTransform, {
   sanitize, snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import deepCopy from 'deep-copy';
-import { TimelineApiFactory, WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { /*TimelineApiFactory,*/ CaseTimelineApiFactory, WebitelContactsTimelineEventType } from 'webitel-sdk';
+
 import getDefaultGetListResponse
   from '../../../../../app/api/defaults/getDefaultGetListResponse';
-import configuration from '../../../../../app/api/openAPIConfig';
 import instance from '../../../../../app/api/instance';
+import configuration from '../../../../../app/api/openAPIConfig';
 
-const timeline = new TimelineApiFactory(configuration, '', instance);
+const timeline = new CaseTimelineApiFactory(configuration, '', instance);
 
 const listHandler = (items) => {
-  let copy = deepCopy(items);
+  const copy = deepCopy(items);
   if(copy.length) {
     return copy.map(day => ({
       ...day,

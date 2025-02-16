@@ -2,6 +2,7 @@
   <timeline-container class="the-timeline">
     <template #header>
       <timeline-header
+        v-if="contactId"
         :list="dataList"
         :contact-id="contactId"
         :filters-namespace="filtersNamespace"
@@ -56,6 +57,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
+
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
