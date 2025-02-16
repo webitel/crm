@@ -6,15 +6,15 @@ export default {
   contacts: {
     contact: 'Байланыс | Байланыстар',
     manager: 'Иесі | Иелері',
-    timeline: {
-      timeline: 'Хронология',
-    },
     communications: {
       communications: 'Байланыс құралы | Байланыс құралдары',
       channel: 'Арна',
       destination: 'Тағайындау',
       setAsPrimary: 'Негізгісі ретінде орнату',
     },
+  },
+  timeline: {
+    timeline: 'Хронология',
   },
   permissions: {
     read: 'Оқу',

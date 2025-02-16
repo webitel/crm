@@ -8,6 +8,7 @@ import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseAttachments from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
+import CaseTimeline from '../../modules/cases/modules/timeline/components/case-timeline.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -41,7 +42,7 @@ import OpenedContact from '../../modules/contacts/components/opened-contact.vue'
 import ContactCommunications from '../../modules/contacts/components/opened-contact-communications.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import ContactPermissions from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
-import ContactTimeline from '../../modules/contacts/modules/timeline/components/the-timeline.vue';
+import ContactTimeline from '../../modules/contacts/modules/timeline/components/contact-timeline.vue';
 import ContactVariables from '../../modules/contacts/modules/variables/components/the-variables.vue';
 import OpenedCustomLookup from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup.vue';
 import OpenedCustomLookupColumns from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-columns.vue';
@@ -124,7 +125,7 @@ const routes = [
           },     {
             path: 'timeline',
             name: `${CrmSections.CASES}-timeline`,
-            component: ContactTimeline,
+            component: CaseTimeline,
           },
           {
             path: 'permissions/:permissionId?',
