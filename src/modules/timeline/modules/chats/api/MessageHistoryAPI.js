@@ -60,11 +60,16 @@ const getCaseMessages = (params) => {
   return instance.get(url);
 };
 
-export default {
+const ModeApiMap = {
   [TimelineMode.Contact]: {
     getList: getList(getContactMessages),
   },
   [TimelineMode.Case]: {
     getList: getList(getCaseMessages),
   }
+};
+
+export default {
+  getList: ({ mode, ...rest }) => ModeApiMap[mode].getList(rest),
+
 };

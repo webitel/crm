@@ -17,7 +17,8 @@ export default class TimelineTaskPointsModule extends BaseStoreModule {
       const mode = context.rootGetters['timeline/MODE'];
       const parentId = context.rootGetters['timeline/PARENT_ID'];
 
-      const { items } = await this.apiModule[mode].getList({
+      const { items } = await this.apiModule.getList({
+        mode,
         taskId,
         parentId,
       });

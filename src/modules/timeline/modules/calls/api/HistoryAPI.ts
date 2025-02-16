@@ -14,7 +14,7 @@ import instance from '../../../../../app/api/instance.js';
 import configuration from '../../../../../app/api/openAPIConfig.js';
 import {TimelineMode} from "../../../enums/TimelineMode";
 
-const callService = new CallServiceApiFactory(configuration, '', instance);
+const callService = CallServiceApiFactory(configuration, '', instance);
 
 const getList = ({
                    paramsTransformers = [],
@@ -138,11 +138,15 @@ const getHistory = getList({
   responseItemsTransformers: [],
 });
 
-export default {
+const ModeApiMap = {
   [TimelineMode.Contact]: {
     getList: ({ taskId }) => getHistory({ dependencyId: taskId, hasTransfer: true }),
   },
   [TimelineMode.Case]: {
     getList: ({ taskId }) => getHistory({ dependencyId: taskId, hasTransfer: true }),
   },
+};
+
+export default {
+  getList: ({ mode, ...rest }) => ModeApiMap[mode].getList(rest),
 };
