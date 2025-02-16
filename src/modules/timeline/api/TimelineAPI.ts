@@ -3,7 +3,7 @@ import applyTransform, {
   notify,
   sanitize,
   snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers';
+} from '@webitel/ui-sdk/src/api/transformers/index';
 import deepCopy from 'deep-copy';
 import {
   CaseTimelineApiFactory,
@@ -92,10 +92,10 @@ const getCounters = (getTimelineCounter) => async (params) => {
   }
 };
 
-const contactTimeline = new TimelineApiFactory(configuration, '', instance);
-const caseTimeline = new CaseTimelineApiFactory(configuration, '', instance);
+const contactTimeline = TimelineApiFactory(configuration, '', instance);
+const caseTimeline = CaseTimelineApiFactory(configuration, '', instance);
 
-export default {
+const ApiModeMap = {
   [TimelineMode.Contact]: {
     getList: getList(contactTimeline.getTimeline),
     getCounters: getCounters(contactTimeline.getTimelineCounter),
@@ -104,4 +104,9 @@ export default {
     getList: getList(caseTimeline.getTimeline),
     getCounters: getCounters(caseTimeline.getTimelineCounter),
   },
+};
+
+export default {
+  getList: ({ mode, ...rest}) => ApiModeMap[mode].getList(rest),
+  getCounters: ({ mode, ...rest }) => ApiModeMap[mode].getCounters(rest),
 };

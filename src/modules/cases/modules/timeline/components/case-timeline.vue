@@ -2,7 +2,7 @@
   <the-timeline
     v-if="parentId"
     :parent-id="parentId"
-    :mode="TimelineMode"
+    :mode="TimelineMode.Case"
   />
 </template>
 

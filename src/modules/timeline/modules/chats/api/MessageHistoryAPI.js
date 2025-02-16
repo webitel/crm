@@ -3,7 +3,7 @@ import applyTransform, {
   generateUrl,
   notify,
   snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers';
+} from '@webitel/ui-sdk/src/api/transformers/index';
 
 import instance from '../../../../../app/api/instance';
 import { TimelineMode } from '../../../enums/TimelineMode';

@@ -32,7 +32,8 @@ const actions = {
     try {
       context.commit('SET', { path: 'isLoading', value: true });
       context.commit('SET', { path: 'page', value: 1 });
-      const { items, next } = await TimelineAPI[mode].getList({
+      const { items, next } = await context.dispatch('api/GET_LIST', {
+        mode,
         context,
         params: context.getters.FILTERS(),
       });
@@ -48,7 +49,8 @@ const actions = {
     const mode = context.getters.MODE;
 
     context.commit('SET', { path: 'page', value: context.state.page + 1 });
-    const { items, next } = await TimelineAPI[mode].getList({
+    const { items, next } = await context.dispatch('api/GET_LIST', {
+      mode,
       context,
       params: {
         ...context.getters.FILTERS(),

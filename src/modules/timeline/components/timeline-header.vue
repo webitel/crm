@@ -77,7 +77,7 @@ async function loadCounters() {
     callsCount: sourceCallsCount,
     chatsCount: sourceChatsCount,
     emailsCount: sourceEmailsCount,
-  } = await TimelineAPI[mode].getCounters({ parentId: props.parentId });
+  } = await TimelineAPI.getCounters({ mode, parentId: props.parentId });
 
   callsCount.value = sourceCallsCount;
   chatsCount.value = sourceChatsCount;
