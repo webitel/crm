@@ -6,6 +6,7 @@ import cases from '../../modules/cases/store/cases';
 import configuration from '../../modules/configuration/store/configuration';
 import contacts from '../../modules/contacts/store/contacts';
 import customization from '../../modules/customization/store/customization';
+import timeline from '../../modules/timeline/store/timeline';
 import userinfo from '../../modules/userinfo/store/deprecated/userinfo';
 import instance from '../api/instance';
 
@@ -38,5 +39,6 @@ export default createStore({
     configuration,
     customization,
     cases,
+    timeline,
   },
 });

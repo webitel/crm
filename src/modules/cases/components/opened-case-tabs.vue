@@ -44,6 +44,11 @@ const tabs = computed(() => {
       value: 'result',
       pathName: `${CrmSections.CASES}-result`,
     },
+    {
+      text: t('timeline.timeline'),
+      value: 'timeline',
+      pathName: `${CrmSections.CASES}-timeline`,
+    },
   ];
 
   const attachments = {

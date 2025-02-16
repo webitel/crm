@@ -2,13 +2,13 @@ import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/C
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import {
   CasesRelationType,
-  WebitelContactsTimelineEventType,
 } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
+import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -17,33 +17,6 @@ export default {
     manager: 'Власник | Власники',
     destination: 'Призначення',
     collapseAll: 'Згорнути все',
-    timeline: {
-      timeline: 'Хронологія',
-      totalDuration: 'Загальна тривалість',
-      actions: {
-        openInHistory: 'Відкрити в історії',
-        playRecording: 'Програти запис',
-        transcription: 'Транскрипція',
-      },
-      status: {
-        [TimelineTaskStatusEnum.STARTED]: 'Початок',
-        [TimelineTaskStatusEnum.MISSED]: 'Пропущений',
-        [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
-        [TimelineTaskStatusEnum.ENDED]: 'Кінець',
-        [TimelineTaskStatusEnum.SENT]: 'Надіслано',
-        [TimelineTaskStatusEnum.RECEIVED]: 'Отримано',
-      },
-      eventType: {
-        [WebitelContactsTimelineEventType.Call]: 'Дзвінок | Дзвінки',
-        [WebitelContactsTimelineEventType.Chat]: 'Чат | Чати',
-        [WebitelContactsTimelineEventType.Email]: 'Лист | Листи',
-      },
-      emails: {
-        to: 'Кому',
-        cc: 'CC',
-        subject: 'Тема',
-      },
-    },
     communications: {
       communications: "Засіб зв'язку | Засоби зв'язку",
       channel: 'Канал',
@@ -76,6 +49,33 @@ export default {
       },
     },
     attributes: 'Атрибут | Атрибути',
+  },
+  timeline: {
+    timeline: 'Хронологія',
+    totalDuration: 'Загальна тривалість',
+    actions: {
+      openInHistory: 'Відкрити в історії',
+      playRecording: 'Програти запис',
+      transcription: 'Транскрипція',
+    },
+    status: {
+      [TimelineTaskStatusEnum.STARTED]: 'Початок',
+      [TimelineTaskStatusEnum.MISSED]: 'Пропущений',
+      [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
+      [TimelineTaskStatusEnum.ENDED]: 'Кінець',
+      [TimelineTaskStatusEnum.SENT]: 'Надіслано',
+      [TimelineTaskStatusEnum.RECEIVED]: 'Отримано',
+    },
+    eventType: {
+      [TimelineEventType.Call]: 'Дзвінок | Дзвінки',
+      [TimelineEventType.Chat]: 'Чат | Чати',
+      [TimelineEventType.Email]: 'Лист | Листи',
+    },
+    emails: {
+      to: 'Кому',
+      cc: 'CC',
+      subject: 'Тема',
+    },
   },
   permissions: {
     read: 'Читати',
@@ -169,9 +169,15 @@ export default {
       initial: 'Початковий',
       final: 'Кінцевий',
       addStatus: ({ linked }) =>
-        `${linked('reusable.add')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+        `${linked('reusable.add')} ${linked(
+          `lookups.statuses.statuses`,
+          1,
+        ).toLowerCase()}`,
       editStatus: ({ linked }) =>
-        `${linked('reusable.edit')} ${linked(`lookups.statuses.statuses`, 1).toLowerCase()}`,
+        `${linked('reusable.edit')} ${linked(
+          `lookups.statuses.statuses`,
+          1,
+        ).toLowerCase()}`,
       statusType: 'Тип статусу',
       finalStatusValidationText:
         'У вас має бути принаймні один кінцевий статус і лише один початковий.\n Будь ласка, поверніться і перевірте типи.',
