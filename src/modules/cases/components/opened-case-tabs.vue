@@ -45,16 +45,17 @@ const tabs = computed(() => {
       pathName: `${CrmSections.CASES}-result`,
     },
     {
-      text: t('cases.attachments.attachments'),
-      value: 'attachments',
-      pathName: `${CrmSections.CASES}-attachments`,
-    },
-    {
       text: t('timeline.timeline'),
       value: 'timeline',
       pathName: `${CrmSections.CASES}-timeline`,
     },
   ];
+
+  const attachments = {
+    text: t('cases.attachments.attachments'),
+    value: 'attachments',
+    pathName: `${CrmSections.CASES}-attachments`,
+  };
 
   const permissions = {
     text: t('vocabulary.permissions', 2),
@@ -62,7 +63,7 @@ const tabs = computed(() => {
     pathName: `${CrmSections.CASES}-permissions`,
   };
 
-  if (id.value) tabs.push(permissions);
+  if (id.value) tabs.push(attachments, permissions);
 
   return tabs;
 });

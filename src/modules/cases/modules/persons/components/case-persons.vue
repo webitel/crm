@@ -26,7 +26,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"

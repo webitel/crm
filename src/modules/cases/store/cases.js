@@ -12,13 +12,14 @@ import CasesAPI from '../api/CasesAPI.js';
 import files from '../modules/attachments/modules/files/store/files.js';
 import links from '../modules/attachments/modules/links/store/links.js';
 import comments from '../modules/case-info/modules/comments/store/comments.js';
+import relatedCases from '../modules/case-info/modules/related-cases/store/related-cases.js';
 import filters from '../modules/filters/store/filters.js';
 import service from '../modules/service/store/service.js';
 import headers from './_internals/headers.js';
 
 const resetCardState = {
   itemInstance: {
-    id:'',
+    id: '',
     name: '',
     assignee: '',
     author: '',
@@ -112,6 +113,7 @@ const card = createCardStoreModule({
     links,
     files,
     permissions,
+    relatedCases,
   },
   actions,
   getters,

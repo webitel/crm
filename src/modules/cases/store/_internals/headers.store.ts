@@ -3,10 +3,10 @@ import { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtT
 
 export const headersStore: WtTableHeader[] = [
   {
-    value: 'id',
+    value: 'name',
     locale: 'cases.id',
     show: true,
-    field: 'id',
+    field: 'name',
     sort: SortSymbols.NONE,
   },
   {

@@ -1,5 +1,8 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import {
+  CasesRelationType,
+} from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
@@ -219,6 +222,7 @@ export default {
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
     assignToMe: 'Призначити на мене',
+    emptyCases: 'Тут ще немає {e}',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
@@ -233,6 +237,21 @@ export default {
       links: 'Посилання',
       url: 'URL',
       linkText: 'Текст посилання',
+    },
+    relatedCases: {
+      relatedCases: 'Звʼязані звернення',
+      searchCasesPlaceholder: 'Шукати звернення',
+      relationType: {
+        [CasesRelationType.DUPLICATES]: 'дублює',
+        [CasesRelationType.ISDUPLICATEDBY]: 'дублюється',
+        [CasesRelationType.BLOCKS]: 'блокує',
+        [CasesRelationType.ISBLOCKEDBY]: 'блокується',
+        [CasesRelationType.CAUSES]: 'спричинило',
+        [CasesRelationType.ISCAUSEDBY]: 'спричинене',
+        [CasesRelationType.ISCHILDOF]: 'дочірнє до',
+        [CasesRelationType.ISPARENTOF]: 'батьківське для',
+        [CasesRelationType.RELATESTO]: 'стосується',
+      },
     },
   },
 };
