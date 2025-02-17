@@ -29,7 +29,7 @@ const dictionariesService = new DictionariesApiFactory(
 
 const fieldsToSend = [
   'name',
-  'description',
+  'about',
   'dictionary',
   'fields',
   'repo',
