@@ -143,6 +143,7 @@ const getCase = async ({ itemId: id }) => {
     'related_cases',
     'links',
     'status_condition',
+    'created_by',
   ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);

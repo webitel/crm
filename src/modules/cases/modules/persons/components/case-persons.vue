@@ -4,7 +4,7 @@
     <div class="case-persons__wrapper">
       <editable-field
         :label="t('cases.author')"
-        :value="itemInstance.author?.name || userinfo.name"
+        :value="itemInstance.createdBy?.name || userinfo.name"
         color="info"
         icon="case-author"
         horizontal-view
