@@ -8,22 +8,15 @@
     @input="changeType"
   />
   <wt-select
-    v-if="value.kind === FieldType.SELECT"
+    v-if="
+      value.kind === FieldType.SELECT || value.kind === FieldType.MULTISELECT
+    "
     :value="value.lookup"
     :label="$t('reusable.object')"
     :search-method="loadLookupList"
     track-by="name"
     :clearable="false"
-    @input="selectSingleObject($event)"
-  />
-  <wt-select
-    v-if="value.kind === FieldType.MULTISELECT"
-    :value="value.list?.lookup"
-    :label="$t('reusable.object')"
-    :search-method="loadLookupList"
-    track-by="name"
-    :clearable="false"
-    @input="selectMultiObject($event)"
+    @input="selectObject($event)"
   />
 </template>
 
@@ -56,19 +49,10 @@ const changeType = (value) => {
   }
   props.value.kind = value;
 };
-const selectSingleObject = (value) => {
+const selectObject = (value) => {
   props.value.lookup = {
     type: value.path,
     name: value.name,
-  };
-};
-const selectMultiObject = (value) => {
-  props.value.list = {
-    kind: 'lookup',
-    lookup: {
-      type: value.path,
-      name: value.name,
-    },
   };
 };
 const loadLookupList = (params) => {

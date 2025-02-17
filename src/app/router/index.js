@@ -16,6 +16,8 @@ import OpenedContactGroup from '../../modules/configuration/modules/lookups/modu
 import OpenedContactGroupGeneral from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroupsConditions from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import OpenedCustomLookupRecord from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/opened-custom-lookup-record.vue';
+import OpenedCustomLookupRecordsColumns from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/opened-custom-lookup-records-columns.vue';
 import TheCustomLookup from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/the-custom-lookup.vue';
 import OpenedPriority from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
 import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
@@ -414,6 +416,19 @@ const routes = [
             path: ':repo',
             name: 'custom-lookup',
             component: TheCustomLookup,
+          },
+          {
+            path: ':repo/:id',
+            name: 'custom-lookup-record',
+            component: OpenedCustomLookupRecord,
+            redirect: { name: 'custom-lookup-record-columns' },
+            children: [
+              {
+                path: 'columns',
+                name: 'custom-lookup-record-columns',
+                component: OpenedCustomLookupRecordsColumns,
+              },
+            ],
           },
         ],
       },
