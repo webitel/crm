@@ -72,11 +72,11 @@ const {
 
 const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
 
-async function searchCloseReasons() {
+async function searchCloseReasons(params) {
   if (!closeReasonId.value) {
     return { items: [] };
   }
-  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value });
+  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
 }
 
 const editMode = inject('editMode');
