@@ -188,6 +188,7 @@ export default {
     customLookups: {
       customLookups: 'Користувацькі довідники',
       code: 'Код',
+      allValues: 'Всі значення',
       columns: 'Колонки',
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',

@@ -86,7 +86,7 @@ const resetCardState = {
   itemInstance: {
     name: '',
     repo: '',
-    description: '',
+    about: '',
     administered: false,
     primary: 'id',
     display: 'name',

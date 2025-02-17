@@ -15,7 +15,7 @@
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('customization.customLookups.customLookups') }}
+            {{ t('customization.customLookups.allValues') }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
@@ -24,7 +24,7 @@
             @click:refresh="loadData"
             @click:add="
               router.push({
-                name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+                name: 'custom-lookup-record',
                 params: { id: 'new' },
               })
             "
@@ -69,24 +69,15 @@
               @sort="sort"
               @update:selected="setSelected"
             >
-              <template #name="{ item }">
-                <wt-item-link
-                  :link="{
-                    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                    params: { id: item.repo },
-                  }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
-              </template>
-              <template #about="{ item }">
-                {{ item.about }}
-              </template>
-              <template #createdAt="{ item }">
-                {{ prettifyDate(item.createdAt) }}
-              </template>
-              <template #createdBy="{ item }">
-                {{ item.createdBy?.name }}
+              <template
+                v-for="header in headers"
+                :key="header.value"
+                #[header.value]="{ item }"
+              >
+                <display-dynamic-field
+                  :field="header"
+                  :value="item"
+                />
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
@@ -121,7 +112,6 @@
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
@@ -129,16 +119,51 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
-import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
+import DisplayDynamicField from './display-dynamic-field.vue';
 
-const baseNamespace = 'customization/customLookups';
+const baseNamespace = 'configuration/lookups/customLookup';
 
 const { t } = useI18n();
 const router = useRouter();
+
+const store = useStore();
+
+const route = useRoute();
+
+const dictionary = ref(null);
+const repo = ref(route.params.repo);
+
+const loadDictionary = async () => {
+  try {
+    dictionary.value = await CustomLookupsApi.get({ itemId: repo.value });
+
+    store.commit(`${baseNamespace}/table/SET`, {
+      path: 'headers',
+      value: dictionary.value.fields
+        .filter((field) => !field.hidden && field.id !== 'id')
+        .map((field) => ({
+          value: field.id,
+          locale: field.name,
+          show: true,
+          field: field.id,
+          kind: field.kind,
+        })),
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+store.commit(`${baseNamespace}/table/SET`, {
+  path: 'repo',
+  value: repo.value,
+});
 
 const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
 
@@ -183,6 +208,10 @@ subscribe({
 
 restoreFilters();
 
+onMounted(async () => {
+  await loadDictionary();
+});
+
 onUnmounted(() => {
   flushSubscribers();
 });
@@ -190,24 +219,22 @@ onUnmounted(() => {
 const path = computed(() => [
   { name: t('crm') },
   { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('customization.customization'), route: '/customization' },
-  { name: t('customization.customLookups.customLookups') },
+  { name: t('lookups.lookups'), route: '/configuration' },
+  { name: dictionary.value?.name },
 ]);
 
 const { close } = useClose('configuration');
-
-function edit(item) {
-  router.push({
-    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-    params: { id: item.repo },
-  });
-}
 
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
-</script>
 
-<style lang="scss" scoped></style>
+const edit = (item) => {
+  router.push({
+    name: 'custom-lookup-record',
+    params: { id: item.id },
+  });
+};
+</script>

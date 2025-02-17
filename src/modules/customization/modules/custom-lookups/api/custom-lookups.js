@@ -29,7 +29,7 @@ const dictionariesService = new DictionariesApiFactory(
 
 const fieldsToSend = [
   'name',
-  'description',
+  'about',
   'dictionary',
   'fields',
   'repo',
@@ -67,8 +67,15 @@ const getCustomLookupsList = async (params) => {
     const { data, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
+
+    const itemResponseHandler = (items) =>
+      (items || []).map((item) => ({
+        ...item,
+        id: item.repo,
+      }));
+
     return {
-      items: applyTransform(data, [snakeToCamel()]),
+      items: applyTransform(data, [snakeToCamel(), itemResponseHandler]),
       next,
     };
   } catch (err) {
@@ -85,6 +92,7 @@ const getCustomLookup = async ({ itemId: itemRepo }) => {
 
   const itemResponseHandler = (item) => ({
     ...item,
+    id: item.repo,
     fields: item.fields.map((field) => ({
       ...field,
       position: getPosition(field),
@@ -155,6 +163,15 @@ const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
   }
 };
 
+const deleteCustomLookup = async ({ id }) => {
+  try {
+    const response = await dictionariesService.deleteType(id);
+    return applyTransform(response.data, []);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const getCustomLookupLookup = async (params) =>
   getCustomLookupsList({
     ...params,
@@ -166,6 +183,7 @@ const CustomLookupsApi = {
   get: getCustomLookup,
   add: addCustomLookup,
   update: updateCustomLookup,
+  delete: deleteCustomLookup,
   getLookup: getCustomLookupLookup,
 
   ...generatePermissionsApi(baseUrl),
