@@ -13,7 +13,10 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.reporter')"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.reporter?.id } }"
+        :link="{
+          name: `${CrmSections.CONTACTS}-card`,
+          params: { id: itemInstance.reporter?.id },
+        }"
         :value="itemInstance.reporter?.name"
         color="info"
         icon="reporter"
@@ -23,7 +26,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
@@ -35,7 +38,10 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.impacted')"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.impacted?.id } }"
+        :link="{
+          name: `${CrmSections.CONTACTS}-card`,
+          params: { id: itemInstance.impacted?.id },
+        }"
         :value="itemInstance.impacted?.name"
         icon="impacted"
         horizontal-view
@@ -43,7 +49,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
@@ -55,16 +61,24 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.assignee')"
-        :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: itemInstance.assignee?.id } }"
+        :link="{
+          name: `${CrmSections.CONTACTS}-card`,
+          params: { id: itemInstance.assignee?.id },
+        }"
         :value="itemInstance.assignee?.name"
         color="success"
         icon="assignee"
         horizontal-view
-        @update:value="setItemProp({ path: 'assignee', value: $event })"
+        @update:value="
+          setItemProp({
+            path: 'assignee',
+            value: { id: $event.id, name: $event.name },
+          })
+        "
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
@@ -87,7 +101,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"
@@ -100,11 +114,13 @@
 </template>
 
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, inject, watch, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { computed, inject, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import ContactsAPI from '../../../../contacts/api/ContactsAPI.js';
 import EditableField from '../../case-info/components/editable-field.vue';
@@ -112,18 +128,17 @@ import EditableField from '../../case-info/components/editable-field.vue';
 const store = useStore();
 const { t } = useI18n();
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
 
 const {
-  id,
+  namespace: cardNamespace,
   itemInstance,
   setItemProp,
-} = useCardStore(props.namespace);
+} = useCardStore(namespace);
+
+const { isNew } = useCardComponent({
+  itemInstance,
+});
 
 function handleReporterInput(value) {
   setItemProp({
@@ -140,37 +155,39 @@ function handleReporterInput(value) {
 }
 
 // TODO: replace STATIC type with type from TypeContactGroups.enum.js
-async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
+function loadStaticContactGroupsList(params) {
+  return ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
 }
 
-const serviceGroup = computed(() => store.getters[`${props.namespace}/service/GROUP`]);
-const serviceAssignee = computed(() => store.getters[`${props.namespace}/service/ASSIGNEE`]);
+const serviceGroup = computed(
+  () => store.getters[`${cardNamespace}/service/GROUP`],
+);
+const serviceAssignee = computed(
+  () => store.getters[`${cardNamespace}/service/ASSIGNEE`],
+);
+
+const serviceId = computed(
+  () => store.getters[`${cardNamespace}/service/SERVICE_ID`],
+);
 
 const userinfo = computed(() => store.state.userinfo);
 
 const editMode = inject('editMode');
 
-const watchServiceValues = (valueRef, path) => {
-  watch(
-    valueRef,
-    (newValue, oldValue) => {
-
-      if (newValue !== oldValue) {
-        setItemProp({
-          path,
-          value: newValue,
-        });
-      }
+watch(
+  serviceId,
+  (newServiceId, oldServiceId) => {
+    if (!!oldServiceId || (!oldServiceId && isNew.value)) {
+      setItemProp({
+        path: 'group',
+        value: { id: serviceGroup.value.id, name: serviceGroup.value.name },
+      });
+      setItemProp({ path: 'assignee', value: serviceAssignee.value });
     }
-  );
-};
-
-watchServiceValues(serviceGroup, 'group');
-watchServiceValues(serviceAssignee, 'assignee');
-
+  },
+  { deep: true },
+);
 </script>
-
 
 <style lang="scss" scoped>
 .case-persons {

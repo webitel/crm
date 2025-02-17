@@ -42,6 +42,9 @@ import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
 import { useStore } from 'vuex';
+import {
+  useCardStore
+} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 
 const props = defineProps({
   shown: {
@@ -54,6 +57,11 @@ const props = defineProps({
   },
 });
 
+
+const {
+  namespace: cardNamespace,
+} = useCardStore(props.namespace);
+
 const store = useStore();
 
 const { t } = useI18n();
@@ -63,7 +71,7 @@ const draft = reactive({
   result: null,
 });
 
-const closeReasonId = computed(() => store.getters[`${props.namespace}/service/CLOSE_REASON_ID`]);
+const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
 
 async function searchCloseReasons() {
   return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value });

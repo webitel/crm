@@ -14,18 +14,16 @@
         </h3>
         <wt-action-bar
           :disabled:add="formState.isAdding || formState.editingLink"
-          :include="[IconAction.ADD]"
+          :disabled:delete="!editMode || !selected.length"
+          :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
-        >
-          <wt-icon-btn
-            :disabled="!editMode"
-            class="icon-action"
-            icon="bucket"
-            @click="askDeleteConfirmation({
+          @click:delete="
+            askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
-            })"
-          />
+            })
+          "
+        >
         </wt-action-bar>
       </header>
 
@@ -60,13 +58,19 @@
           headless
           @update:selected="setSelected"
         >
-
           <template #name="{ item }">
             <a
+              class="case-links__link"
               :href="item?.url"
               target="_blank"
             >
-              {{ item?.name }}
+              <wt-icon
+                class="case-links__link-icon"
+                icon="link"
+              />
+              <span>
+                {{ item?.name }}
+              </span>
             </a>
           </template>
 
@@ -83,10 +87,12 @@
             <wt-icon-action
               :disabled="!editMode"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -97,11 +103,8 @@
 
 <script setup>
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { inject, onUnmounted, reactive } from 'vue';
@@ -231,6 +234,21 @@ async function submitLink() {
 
 <style lang="scss" scoped>
 .case-links {
+  &__link {
+    display: flex;
+    gap: var(--spacing-xs);
+    color: var(--link-color);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--link--hover-color);
+    }
+  }
+
+  &__link-icon {
+    flex-shrink: 0;
+  }
+
   .link-form {
     &__input {
       flex: 1;

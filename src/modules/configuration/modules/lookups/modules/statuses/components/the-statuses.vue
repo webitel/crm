@@ -21,7 +21,8 @@
 
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-            :disabled:delete="!selected.length"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
+            :disabled:add="!hasCreateAccess"
             @click:add="
               router.push({
                 name: `${CrmSections.STATUSES}-card`,
@@ -92,10 +93,12 @@
               <template #actions="{ item }">
                 <wt-icon-action
                   action="edit"
+                  :disabled="!hasUpdateAccess"
                   @click="edit(item)"
                 />
 
                 <wt-icon-action
+                  :disabled="!hasDeleteAccess"
                   action="delete"
                   @click="
                     askDeleteConfirmation({
@@ -132,10 +135,15 @@ import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+
 const baseNamespace = 'configuration/lookups/statuses';
 
 const { t } = useI18n();
 const router = useRouter();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,

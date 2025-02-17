@@ -1,8 +1,11 @@
 <template>
   <div class="case-comment-item">
     <div class="case-comment-item__icon">
-      <wt-icon
+      <color-component-wrapper
+        :color="comment.color"
+        component="wt-icon"
         icon="cases"
+        size="md"
       />
     </div>
     <div class="case-comment-item__wrapper">
@@ -25,11 +28,12 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+
+import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import prettifyDate from '../../../../../utils/prettifyDate.js';
 
 const props = defineProps({
@@ -40,7 +44,6 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-
 </script>
 
 <style lang="scss" scoped>
@@ -48,7 +51,8 @@ const { t } = useI18n();
   display: flex;
   gap: var(--spacing-xs);
 
-  &__header, &__wrapper {
+  &__header,
+  &__wrapper {
     display: flex;
     gap: var(--spacing-xs);
   }

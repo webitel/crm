@@ -6,7 +6,7 @@
       @change="changeTab"
     />
     <router-view
-      :namespace="namespace"
+      :namespace="cardNamespace"
       class="opened-card-tabs__tab"
     />
   </article>
@@ -14,9 +14,10 @@
 
 <script setup>
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 const props = defineProps({
   namespace: {
@@ -26,30 +27,48 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const {
+  namespace: cardNamespace,
+  id,
+} = useCardStore(props.namespace);
 
-const tabs = computed(() => [
-  {
-    text: t('cases.caseInfo.caseInfo'),
-    value: 'case-info',
-    pathName: `${CrmSections.CASES}-case-info`,
-  },
-  {
-    text: t('cases.result'),
-    value: 'result',
-    pathName: `${CrmSections.CASES}-result`,
-  },
-  {
+const tabs = computed(() => {
+  const tabs = [
+    {
+      text: t('cases.caseInfo.caseInfo'),
+      value: 'case-info',
+      pathName: `${CrmSections.CASES}-case-info`,
+    },
+    {
+      text: t('cases.result'),
+      value: 'result',
+      pathName: `${CrmSections.CASES}-result`,
+    },
+    {
+      text: t('timeline.timeline'),
+      value: 'timeline',
+      pathName: `${CrmSections.CASES}-timeline`,
+    },
+  ];
+
+  const attachments = {
     text: t('cases.attachments.attachments'),
     value: 'attachments',
     pathName: `${CrmSections.CASES}-attachments`,
-  },
-]);
+  };
 
-const {
-  currentTab,
-  changeTab,
-} = useCardTabs(tabs);
+  const permissions = {
+    text: t('vocabulary.permissions', 2),
+    value: 'permissions',
+    pathName: `${CrmSections.CASES}-permissions`,
+  };
+
+  if (id.value) tabs.push(attachments, permissions);
+
+  return tabs;
+});
+
+const { currentTab, changeTab } = useCardTabs(tabs);
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

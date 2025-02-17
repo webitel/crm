@@ -74,14 +74,14 @@
           <template #initial="{ item, index }">
             <wt-switcher
               :value="item.initial"
-              @change="changeInitialStatus({ index, value: $event })"
+              @change="changeInitialStatus({ item, index, value: $event })"
             />
           </template>
 
           <template #final="{ item, index }">
             <wt-switcher
               :value="item.final"
-              @change="changeFinalStatus({ index, value: $event })"
+              @change="changeFinalStatus({ item, index, value: $event })"
             />
           </template>
 
@@ -127,10 +127,12 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { onUnmounted, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
+import StatusConditionsAPI from '../api/status-conditions.js';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
 
@@ -148,8 +150,12 @@ const cardNamespace = `${parentCardNamespace}/statusConditions`;
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+const store = useStore();
 
 const isStatusWarningPopupOpened = ref(false);
+const parentId = computed(
+  () => store.getters[`${cardNamespace}/table/PARENT_ID`],
+);
 
 const {
   namespace: tableNamespace,
@@ -166,13 +172,13 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-  patchProperty,
 } = useTableStore(cardNamespace);
 
 const {
   namespace: filtersNamespace,
   restoreFilters,
 
+  resetFilters,
   subscribe,
   flushSubscribers,
 } = useTableFilters(tableNamespace);
@@ -186,6 +192,7 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
+  resetFilters();
 });
 
 const {
@@ -219,33 +226,38 @@ const {
   text: textEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
-function setWarningPopupState(value) {
+async function setWarningPopupState(value) {
   isStatusWarningPopupOpened.value = value;
-}
 
-async function changeInitialStatus({ index, value }) {
-  const prevIndex = dataList.value.findIndex((el) => el.initial);
-  try {
-    if (!value) {
-      setWarningPopupState(true);
-      return;
-    }
-
-    dataList.value.forEach((el) => (el.initial = false));
-    await patchProperty({ index, prop: 'initial', value });
-    dataList.value[index].initial = true;
-  } catch {
-    if (prevIndex !== -1) {
-      dataList.value[prevIndex].initial = true;
-    } else {
-      await loadData();
-    }
+  if (!value) {
+    await loadData();
   }
 }
 
-async function changeFinalStatus({ index, value }) {
+async function changeInitialStatus({ item, index, value }) {
   try {
-    await patchProperty({ index, prop: 'final', value });
+    dataList.value[index].initial = value;
+    await StatusConditionsAPI.patch({
+      id: item.id,
+      parentId: parentId.value,
+      changes: { initial: value },
+    });
+  } catch (err) {
+    if (err.status !== 400) {
+      return;
+    }
+    setWarningPopupState(true);
+  }
+}
+
+async function changeFinalStatus({ item, index, value }) {
+  try {
+    dataList.value[index].final = value;
+    await StatusConditionsAPI.patch({
+      id: item.id,
+      parentId: parentId.value,
+      changes: { final: value },
+    });
   } catch (err) {
     if (err.status !== 400) {
       return;

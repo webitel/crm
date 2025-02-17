@@ -9,6 +9,8 @@
       >
         <template #default="props">
           <wt-select
+            :key="closeReasonId"
+            clearable
             v-bind="props"
             :search-method="searchCloseReasons"
             @input="props.updateValue($event)"
@@ -43,8 +45,8 @@
   </div>
 </template>
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, inject } from 'vue';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
@@ -68,9 +70,12 @@ const {
   setItemProp,
 } = useCardStore(props.namespace);
 
-const closeReasonId = computed(() => store.getters[`${props.namespace}/service/CLOSE_REASON_ID`]);
+const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
 
 async function searchCloseReasons() {
+  if (!closeReasonId.value) {
+    return { items: [] };
+  }
   return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value });
 }
 

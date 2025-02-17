@@ -15,7 +15,6 @@
       </template>
     </editable-field>
 
-
     <editable-field
       :edit-mode="editMode"
       :label="t('vocabulary.description')"
@@ -43,6 +42,7 @@
       >
         <template #default="props">
           <wt-select
+            clearable
             v-bind="props"
             :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"
@@ -64,27 +64,32 @@
         </template>
       </editable-field>
     </div>
+
+    <related-cases
+      v-if="!isNew"
+      :edit-mode="editMode"
+      :item-id="id"
+    />
+
     <case-comments
+      v-if="!isNew"
       :item-id="id"
       :namespace="commentsNamespace"
     />
   </div>
 </template>
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
-import { inject } from 'vue';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
+
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
-import EditableField from './editable-field.vue';
 import CaseComments from '../modules/comments/components/case-comments.vue';
+import RelatedCases from '../modules/related-cases/components/related-cases.vue';
+import EditableField from './editable-field.vue';
 
 const { t } = useI18n();
-
-const store = useStore();
-const route = useRoute();
 
 const props = defineProps({
   namespace: {
@@ -99,11 +104,16 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const commentsNamespace = `${props.namespace}/comments`;
+const { isNew } = useCardComponent({
+  id,
+  itemInstance,
+});
+
+const commentsNamespace = `${cardNamespace}/comments`;
+const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
+provide('relatedCasesNamespace', relatedCasesNamespace);
 
 const editMode = inject('editMode');
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
