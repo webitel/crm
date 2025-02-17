@@ -45,16 +45,13 @@ const getContactMessages = (params) => {
 };
 
 const getCaseMessages = (params) => {
-  const url = applyTransform({
-    peerType: 'case',
-    peerId: params.parentId,
-  }, [
+  const url = applyTransform({ /*...params*/ }, [
     camelToSnake(),
 
     /* equals to CatalogApiFactory.getHistory
      * https://swagger.webitel.com/#/Catalog/Catalog_GetHistory
      *  */
-    generateUrl(`chat/dialogs/${params.taskId}/messages`),
+    generateUrl(`cases/${params.parentId}/chat/${params.taskId}/messages`),
   ]);
 
   return instance.get(url);
