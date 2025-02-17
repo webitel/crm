@@ -104,7 +104,7 @@
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
-                  :disabled="!hasUpdateAccess"
+                  :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
                   @change="
                     patchProperty({ index, prop: 'state', value: $event })
                   "
@@ -159,6 +159,7 @@ import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
 import CatalogsAPI from '../../../api/service-catalogs.js';
+import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
@@ -276,7 +277,6 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-  primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
 
 const addNewService = () => {
@@ -327,6 +327,10 @@ const loadServices = async () => {
   setRootForServices();
   await restoreFilters();
 };
+
+const disableStateSwitcher = computed(() => (item) => {
+  return checkDisableState(catalog.value, item);
+});
 
 onUnmounted(() => {
   flushSubscribers();
