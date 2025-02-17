@@ -42,6 +42,7 @@
       >
         <template #default="props">
           <wt-select
+            clearable
             v-bind="props"
             :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"

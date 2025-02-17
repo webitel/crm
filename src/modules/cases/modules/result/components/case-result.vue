@@ -10,6 +10,7 @@
         <template #default="props">
           <wt-select
             :key="closeReasonId"
+            clearable
             v-bind="props"
             :search-method="searchCloseReasons"
             @input="props.updateValue($event)"
