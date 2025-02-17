@@ -21,7 +21,6 @@ const closeReasonsService = new CloseReasonsApiFactory(configuration, '', instan
 
 const getCloseReasonsList = async ({closeReasonGroupId, ...params}) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
-  console.log(params);
 
   const {
     page,
