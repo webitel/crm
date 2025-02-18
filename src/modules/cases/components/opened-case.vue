@@ -88,6 +88,7 @@ const {
   updateItem,
   setId,
   resetState,
+  setItemProp,
 } = useCardStore(namespace);
 
 const v$ = useVuelidate(
@@ -175,15 +176,22 @@ async function assignCaseToMe() {
     return;
   }
 
-  try {
-    await casesAPI.patch({
-      changes: {
-        assignee: { id: userContact.value.id, name: userContact.value.name },
-      },
-      etag: itemInstance.value.etag,
+  if (editMode.value) {
+    await setItemProp({
+      path: 'assignee',
+      value: { id: userContact.value.id, name: userContact.value.name },
     });
-  } finally {
-    await loadItem();
+  } else {
+    try {
+      await casesAPI.patch({
+        changes: {
+          assignee: { id: userContact.value.id, name: userContact.value.name },
+        },
+        etag: itemInstance.value.etag,
+      });
+    } finally {
+      await loadItem();
+    }
   }
 }
 
