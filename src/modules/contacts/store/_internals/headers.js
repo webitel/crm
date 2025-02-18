@@ -9,10 +9,17 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'managers',
-    locale: ['contacts.manager', 1],
+    value: 'user',
+    locale: ['objects.user', 1],
     show: true,
-    field: 'managers',
+    field: 'user',
+    sort: SortSymbols.NONE,
+  },
+  {
+    value: 'groups',
+    locale: 'contacts.group',
+    show: true,
+    field: 'groups',
     sort: SortSymbols.NONE,
   },
   {
@@ -20,6 +27,13 @@ export default [
     locale: ['vocabulary.labels', 1],
     show: true,
     field: 'labels',
+  },
+  {
+    value: 'managers',
+    locale: ['contacts.manager', 1],
+    show: true,
+    field: 'managers',
+    sort: SortSymbols.NONE,
   },
   {
     value: 'about',

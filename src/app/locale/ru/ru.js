@@ -1,8 +1,6 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import {
-  CasesRelationType,
-} from 'webitel-sdk';
+import { CasesRelationType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
@@ -15,6 +13,9 @@ export default {
   contacts: {
     contact: 'Контакт | Контакты',
     manager: 'Владелец | Владельцы',
+    group: ({ linked }) => {
+      return linked('cases.group');
+    },
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
     communications: {
