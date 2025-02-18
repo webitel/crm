@@ -59,7 +59,9 @@ const router = useRouter();
 
 const baseNamespace = 'configuration/lookups/services';
 
-const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
 
 const {
   namespace: cardNamespace,
