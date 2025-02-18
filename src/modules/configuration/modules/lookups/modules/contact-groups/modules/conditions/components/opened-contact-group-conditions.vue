@@ -36,8 +36,7 @@
         <wt-table
           :data="dataList"
           :headers="headers"
-          :selected="selected"
-          @update:selected="setSelected"
+          :selectable="false"
         >
           <template #expression="{ item }">
             {{ item.expression }}
@@ -120,14 +119,12 @@ const { t } = useI18n();
 const {
   namespace: tableNamespace,
   dataList,
-  selected,
   isLoading,
   headers,
   isNext,
   error,
   loadData,
   deleteData,
-  setSelected,
   onFilterEvent,
 } = useTableStore(namespace);
 
