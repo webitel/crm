@@ -4,7 +4,7 @@
     <div class="case-persons__wrapper">
       <editable-field
         :label="t('cases.author')"
-        :value="itemInstance.author?.name || userinfo.name"
+        :value="itemInstance.createdBy?.name || userinfo.name"
         color="info"
         icon="case-author"
         horizontal-view
@@ -49,7 +49,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
@@ -78,7 +78,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
@@ -101,7 +101,7 @@
       >
         <template #default="props">
           <wt-select
-            :clearable="false"
+            clearable
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"

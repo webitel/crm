@@ -32,7 +32,7 @@ const getStatusConditionsList = async ({ statusId, ...rest }) => {
   } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
-    (params) => ({ ...params, q: params.search }),
+    (rest) => ({ ...rest, q: rest.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
   ]);
@@ -63,7 +63,7 @@ const getStatusConditionsList = async ({ statusId, ...rest }) => {
 const getStatusConditionsLookup = ({ statusId, ...rest }) => {
   return getStatusConditionsList({
     statusId,
-    rest,
+    ...rest,
     fields: rest.fields || ['id', 'name'],
   });
 };

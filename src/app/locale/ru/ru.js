@@ -181,6 +181,7 @@ export default {
     customLookups: {
       customLookups: 'Пользовательские справочники',
       code: 'Код',
+      allValues: 'Все значения',
       columns: 'Колонки',
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',

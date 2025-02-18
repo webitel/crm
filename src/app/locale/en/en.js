@@ -178,6 +178,7 @@ export default {
     customization: 'Customization',
     customLookups: {
       customLookups: 'Custom lookups',
+      allValues: 'All values',
       code: 'Code',
       columns: 'Columns',
       addColumn: 'Add column',
