@@ -40,7 +40,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="v$.$invalid"
+        :disabled="disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -109,6 +109,7 @@ const isNew = computed(() => conditionId.value === 'new');
 const contactList = ref([]);
 
 const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
+const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {
   emit('load-data');
