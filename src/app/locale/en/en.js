@@ -185,6 +185,9 @@ export default {
       editColumn: 'Edit column',
       controlPermissions: 'Control permissions',
     },
+    extensions: {
+      contacts: ({ linked }) => linked('contacts.contact'),
+    },
   },
   cases: {
     case: 'Case | Cases',

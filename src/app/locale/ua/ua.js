@@ -1,8 +1,6 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import {
-  CasesRelationType,
-} from 'webitel-sdk';
+import { CasesRelationType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
@@ -193,6 +191,9 @@ export default {
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
       controlPermissions: 'Контролювати права доступу',
+    },
+    extensions: {
+      contacts: ({ linked }) => linked('contacts.contact'),
     },
   },
   cases: {
