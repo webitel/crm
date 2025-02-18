@@ -12,6 +12,7 @@
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="status?.id"
+        :disabled="!hasUpdateAccess"
         clearable
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
@@ -46,6 +47,7 @@ import { useStore } from 'vuex';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
 import CaseResultPopup from './case-result-popup.vue';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
@@ -53,6 +55,8 @@ const editMode = inject('editMode');
 const { t } = useI18n();
 
 const store = useStore();
+
+const { hasUpdateAccess } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,

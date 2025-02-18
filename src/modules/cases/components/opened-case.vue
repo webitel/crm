@@ -148,7 +148,8 @@ const userContact = ref({});
 const isCaseAssignable = computed(() => {
   return (
     userContact.value.id &&
-    itemInstance.value.assignee?.id !== userContact.value.id
+    itemInstance.value.assignee?.id !== userContact.value.id &&
+    hasUpdateAccess.value
   );
 });
 
