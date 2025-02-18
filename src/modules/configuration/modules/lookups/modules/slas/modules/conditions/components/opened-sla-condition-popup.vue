@@ -15,15 +15,17 @@
           :value="itemInstance.name"
           :label="t('reusable.name')"
           :v="v$.itemInstance.name"
+          :disabled="disableUserInput"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
         <wt-select
           :value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
-          :v="v$.itemInstance.priorities"
-          :search-method="PrioritiesAPI.getLookup"
+          :search-method="id ? getConditionPriorities : getFreePriorities"
           :close-on-select="false"
+          :disabled="disableUserInput"
+          :v="v$.itemInstance.priorities"
           multiple
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
@@ -32,6 +34,7 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           :v="v$.itemInstance.reactionTime"
+          :disabled="disableUserInput"
           format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'reactionTime', value: +$event })"
@@ -41,6 +44,7 @@
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           :v="v$.itemInstance.resolutionTime"
+          :disabled="disableUserInput"
           format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'resolutionTime', value: +$event })"
@@ -50,7 +54,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="disabledSave"
+        :disabled="!hasSaveActionAccess || disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -70,11 +74,13 @@ import { useVuelidate } from '@vuelidate/core';
 import { minValue, required } from '@vuelidate/validators';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import PrioritiesAPI from '../../../../ priorities/api/priorities.js';
+import { useRoute } from 'vue-router';
+
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import PrioritiesAPI from '../../../../priorities/api/priorities.js';
 
 const props = defineProps({
   namespace: {
@@ -87,6 +93,10 @@ const emit = defineEmits(['load-data']);
 
 const route = useRoute();
 const { t } = useI18n();
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
 
 const {
   namespace: cardNamespace,
@@ -119,6 +129,14 @@ const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._d
 
 function loadDataList() {
   emit('load-data');
+}
+
+function getFreePriorities(params) {
+  return PrioritiesAPI.getLookup({ ...params,notInSla: route.params.id });
+}
+
+function getConditionPriorities(params) {
+  return PrioritiesAPI.getLookup({ ...params, inSlaCond: id.value });
 }
 
 const save = async () => {

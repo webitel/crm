@@ -13,10 +13,10 @@
 </template>
 
 <script setup>
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 const props = defineProps({
   namespace: {
@@ -31,7 +31,7 @@ const route = useRoute();
 
 const tabs = computed(() => [
   {
-    text: t('contacts.timeline.timeline'),
+    text: t('timeline.timeline'),
     value: 'timeline',
     pathName: `${CrmSections.CONTACTS}-timeline`,
   },

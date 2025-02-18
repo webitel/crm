@@ -5,7 +5,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -36,15 +36,16 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const namespace = 'configuration/lookups/sources';
 const { t } = useI18n();
@@ -70,7 +71,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   id,
   itemInstance,
 });
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const { close } = useClose(CrmSections.SOURCES);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
