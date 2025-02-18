@@ -1,6 +1,4 @@
-import {
-  createObjectPermissionsStoreModule
-} from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index';
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -15,7 +13,7 @@ import comments from '../modules/case-info/modules/comments/store/comments.js';
 import relatedCases from '../modules/case-info/modules/related-cases/store/related-cases.js';
 import filters from '../modules/filters/store/filters.js';
 import service from '../modules/service/store/service.js';
-import headers from './_internals/headers.js';
+import { headers } from './_internals/headers';
 
 const resetCardState = {
   itemInstance: {
