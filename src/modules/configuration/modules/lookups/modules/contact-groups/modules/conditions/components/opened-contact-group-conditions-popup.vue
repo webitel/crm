@@ -3,6 +3,7 @@
     :shown="!!conditionId"
     class="opened-contact-group-conditions-popup"
     size="sm"
+    overflow
     @close="close"
   >
     <template #title>
