@@ -25,6 +25,7 @@
           :search-method="id ? getConditionPriorities : getFreePriorities"
           :close-on-select="false"
           :disabled="disableUserInput"
+          :v="v$.itemInstance.priorities"
           multiple
           required
           @input="setItemProp({ path: 'priorities', value: $event })"
@@ -115,6 +116,7 @@ const isNew = computed(() => conditionId.value === 'new');
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {
     name: { required },
+    priorities: { required },
     reactionTime: { required, minValue: minValue(1) },
     resolutionTime: { required, minValue: minValue(1) },
   },
