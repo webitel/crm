@@ -46,7 +46,23 @@ const filters = [
   {
     field: 'close_reason_group',
     param: 'closeReasonGroupsCase',
-  }
+  },
+  {
+    field: 'reaction_time',
+    param: 'reactionTime',
+  },
+  {
+    field: 'resolution_time',
+    param: 'resolutionTime',
+  },
+  {
+    field: 'actual_reaction_time',
+    param: 'actualReactionTime',
+  },
+  {
+    field: 'actual_resolution_time',
+    param: 'actualResolutionTime',
+  },
 ];
 
 export const caseFilters = (params) => {

@@ -4,7 +4,7 @@ import {
   CreatedAtToFilter,
   CreatedAtToFilterPreview,
   StatusCaseFilter,
-  StatusCasePreview,
+  StatusCaseFilterPreview,
   SourceCaseFilter,
   SourceCaseFilterPreview,
   AuthorFilter,
@@ -18,13 +18,22 @@ import {
   PriorityCaseFilter,
   PriorityCaseFilterPreview,
   CloseReasonGroupsCaseFilter,
-  CloseReasonGroupsCasePreview,
+  CloseReasonGroupsCaseFilterPreview,
   RatingFromToFilter,
   RatingFromToFilterPreview,
   SlaFilter,
   SlaFilterPreview,
   HasAttachmentFilter,
   HasAttachmentFilterPreview,
+  ReactionTimeFilter,
+  ReactionTimeFilterPreview,
+  ResolutionTimeFilter,
+  ResolutionTimeFilterPreview,
+  ActualReactionTimeFilter,
+  ActualReactionTimeFilterPreview,
+  ActualResolutionTimeFilterPreview,
+  ActualResolutionTimeFilter,
+
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
 import {Component} from "vue";
 
@@ -47,7 +56,7 @@ const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
   },
   statusCase: {
     valueField: StatusCaseFilter,
-    previewField: StatusCasePreview,
+    previewField: StatusCaseFilterPreview,
   },
   sourceCase: {
     valueField: SourceCaseFilter,
@@ -75,7 +84,7 @@ const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
   },
   closeReasonGroupsCase: {
     valueField: CloseReasonGroupsCaseFilter,
-    previewField: CloseReasonGroupsCasePreview,
+    previewField: CloseReasonGroupsCaseFilterPreview,
   },
   rating: {
     valueField: RatingFromToFilter,
@@ -88,6 +97,22 @@ const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
   hasAttachment: {
     valueField: HasAttachmentFilter,
     previewField: HasAttachmentFilterPreview
+  },
+  reactionTime: {
+    valueField: ReactionTimeFilter,
+    previewField: ReactionTimeFilterPreview
+  },
+  resolutionTime: {
+    valueField: ResolutionTimeFilter,
+    previewField: ResolutionTimeFilterPreview,
+  },
+  actualReactionTime: {
+    valueField: ActualReactionTimeFilter,
+    previewField: ActualReactionTimeFilterPreview
+  },
+  actualResolutionTime: {
+    valueField: ActualResolutionTimeFilter,
+    previewField: ActualResolutionTimeFilterPreview
   },
 }
 
