@@ -1,8 +1,9 @@
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+import type { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtTable';
 
-export default [
+export const headers: WtTableHeader[] = [
   {
-    value: 'id',
+    value: 'name',
     locale: 'cases.id',
     show: true,
     field: 'name',
@@ -14,6 +15,7 @@ export default [
     show: true,
     field: 'subject',
     sort: SortSymbols.NONE,
+    width: '400px',
   },
   {
     value: 'priority',
@@ -149,4 +151,3 @@ export default [
     sort: SortSymbols.NONE,
   },
 ];
-
