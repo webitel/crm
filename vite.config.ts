@@ -32,6 +32,7 @@ export default ({ mode }) => {
         vue: '@vue/compat',
         '@': resolve(__dirname, 'src'),
       },
+      dedupe: ['vue', '@vue/compat'],
     },
     plugins: [
       vue({

@@ -1,74 +1,95 @@
 <template>
   <section class="the-history-filters">
-    <dynamic-filter-add-action>
-      <template #form>
-        <dynamic-filter-config-form
-          :options="unappliedFilters"
-          @submit="applyFilter"
-        >
-          <template #value-input="{ filterName, filterValue, onValueChange, onValueInvalidChange }">
-            <component
-              :is="getFilterValueComponent(filterName)"
-              :key="filterName"
-              :model-value="filterValue"
-              @update:model-value="onValueChange"
-              @update:invalid="onValueInvalidChange"
-            />
-          </template>
-        </dynamic-filter-config-form>
-      </template>
-    </dynamic-filter-add-action>
-
-    <dynamic-filter-preview
-      v-for="(filter) of appliedFilters"
-      :key="filter.name"
-      :filter="filter"
-      @delete:filter="deleteAppliedFilter($event.name)"
-    >
-      <template #form>
-        <dynamic-filter-config-form
+    <dynamic-filter-panel-wrapper>
+      <template #filters>
+        <dynamic-filter-preview
+          v-for="(filter) of appliedFilters"
+          :key="filter.name"
           :filter="filter"
-          @submit="updateAppliedFilter"
+          @delete:filter="deleteAppliedFilter($event.name)"
         >
-          <template #value-input="{ filterName, filterValue, onValueChange, onValueInvalidChange }">
-            <component
-              :is="getFilterValueComponent(filterName)"
-              :key="filterName"
-              :model-value="filterValue"
-              @update:model-value="onValueChange"
-              @update:invalid="onValueInvalidChange"
-            />
+          <template #form>
+            <dynamic-filter-config-form
+              :filter="filter"
+              @submit="updateAppliedFilter"
+            >
+              <template #value-input="{ filterName, filterValue, onValueChange, onValueInvalidChange }">
+                <component
+                  :is="getFilterFieldComponent(filterName, 'valueField')"
+                  :key="filterName"
+                  :model-value="filterValue"
+                  @update:model-value="onValueChange"
+                  @update:invalid="onValueInvalidChange"
+                />
+              </template>
+            </dynamic-filter-config-form>
           </template>
-        </dynamic-filter-config-form>
+
+          <template #info>
+            <component
+              :is="getFilterFieldComponent(filter.name, 'previewField')"
+              :value="filter.value"
+            >
+            </component>
+          </template>
+        </dynamic-filter-preview>
+
+        <dynamic-filter-add-action>
+          <template #form="{ hide }">
+            <dynamic-filter-config-form
+              :options="unappliedFilters"
+              @submit="(data) => applyFilterWrapper(data, hide)"
+              @cancel="() => hide()"
+            >
+              <template #value-input="{ filterName, filterValue, onValueChange, onValueInvalidChange }">
+                <component
+                  :is="getFilterFieldComponent(filterName, 'valueField')"
+                  :key="filterName"
+                  :model-value="filterValue"
+                  @update:model-value="onValueChange"
+                  @update:invalid="onValueInvalidChange"
+                />
+              </template>
+            </dynamic-filter-config-form>
+          </template>
+        </dynamic-filter-add-action>
       </template>
 
-      <template #info>
-        <component
-          :is="getPreviewComponent(filter.name)"
-          :value="filter.value"
-        >
-        </component>
+      <template #actions>
+        <!--        TODO: <save-preset-action />-->
+
+        <wt-icon-action
+          action="close"
+          @click="emit('hide')"
+        />
       </template>
-    </dynamic-filter-preview>
+    </dynamic-filter-panel-wrapper>
   </section>
 </template>
 
 <script lang="ts" setup>
 import {computed, type Ref} from 'vue';
-import {storeToRefs} from 'pinia';
+import { storeToRefs } from 'pinia';
+import {useI18n} from "vue-i18n";
 import DynamicFilterPreview
   from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/preview/dynamic-filter-preview.vue';
 import DynamicFilterAddAction
   from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-add-action.vue';
-import {FilterName} from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
+import { FilterName } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
 import DynamicFilterConfigForm
   from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/config/dynamic-filter-config-form.vue';
+import DynamicFilterPanelWrapper
+  from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-panel-wrapper.vue';
+
 import {useTableStore} from '../store/cases.store.ts';
+import {SearchMode} from './SearchMode.enum.ts';
+import FILTER_OPTIONS_COMPONENTS_CONFIG from './filters-config.ts';
 
 const emit = defineEmits<{
   hide: [],
 }>();
 
+const { t } = useI18n();
 const tableStore = useTableStore();
 const {filtersManager} = storeToRefs(tableStore);
 window.fmanager = filtersManager;
@@ -79,6 +100,11 @@ const {
   deleteFilter: deleteAppliedFilter,
 } = tableStore;
 
+function applyFilterWrapper(data, closeCb) {
+  applyFilter(data)
+  closeCb()
+}
+
 const appliedFilters = computed(() => {
   const exclude = Object.values(SearchMode);
   return filtersManager.value.getFiltersList({exclude});
@@ -86,29 +112,17 @@ const appliedFilters = computed(() => {
 
 const unappliedFilters: Ref<Array<{ name: string, value: FilterName }>> = computed(() => {
 
-  const filterOptions = [
-    {
-      id: 'agent',
-      name: 'Agent title',
-    },
-  ];
+  const filterOptions = Object.keys(FILTER_OPTIONS_COMPONENTS_CONFIG).map(((key) => ({
+    name: t(`webitelUI.filters.${key}`),
+    value: key,
+  })));
 
   return filterOptions;
 });
 
-const getFilterValueComponent = (filterName: FilterName) => {
-  switch (filterName) {
-    case 'agent':
-      return AgentFilter;
-    default:
-  }
+const getFilterFieldComponent = (filterName: FilterName, filterField: 'valueField' | 'previewField') => {
+  const filter = FILTER_OPTIONS_COMPONENTS_CONFIG[filterName]
+  return !filter ? '' : filter[filterField] || ''
 };
 
-const getPreviewComponent = (filterName: FilterName) => {
-  switch (filterName) {
-    case 'agent':
-      return AgentFilterPreview;
-    default:
-  }
-};
 </script>
