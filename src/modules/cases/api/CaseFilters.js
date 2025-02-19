@@ -26,26 +26,47 @@ const filters = [
   {
     field: 'impacted',
     param: 'impacted',
+  },
+  {
+    field: 'rating',
+    param: 'rating',
+  },
+  {
+    field: 'assignee',
+    param: 'assignee',
+  },
+  {
+    field: 'attachments',
+    param: 'hasAttachment',
+  },
+  {
+    field: 'status_condition',
+    param: 'statusCase',
+  },
+  {
+    field: 'close_reason_group',
+    param: 'closeReasonGroupsCase',
   }
 ];
 
 export const caseFilters = (params) => {
-  const result = [];
+  const result = []
 
   filters.forEach(item => {
-    if (params[item.param || item.params]) {
-      const value = params[item.param || item.params];
 
-      if (Array.isArray(value)) {
-        value.forEach(val => {
-          result.push(`${item.field}=${val}`);
-        });
+    if (params[item.param]) {
+      const value = params[item.param];
+
+      if(value.from && value.to) {
+        result.push(`${item.field}.from=${value.from}`);
+        result.push(`${item.field}.to=${value.to}`);
+      } else if(params.statusCase || params.closeReasonGroupsCase) {
+        result.push(`${item.field}=${value.conditions}`);
       } else {
         result.push(`${item.field}=${value}`);
       }
     }
   });
-
   return result;
 }
 
