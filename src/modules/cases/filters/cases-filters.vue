@@ -81,7 +81,7 @@ import DynamicFilterConfigForm
 import DynamicFilterPanelWrapper
   from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-panel-wrapper.vue';
 
-import {useTableStore} from '../store/cases.store.ts';
+import {useCasesStore} from '../stores/cases';
 import {SearchMode} from './SearchMode.enum.ts';
 import FILTER_OPTIONS_COMPONENTS_CONFIG from './filters-config.ts';
 
@@ -90,7 +90,7 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
-const tableStore = useTableStore();
+const tableStore = useCasesStore();
 const {filtersManager} = storeToRefs(tableStore);
 window.fmanager = filtersManager;
 
