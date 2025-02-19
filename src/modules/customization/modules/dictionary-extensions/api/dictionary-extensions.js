@@ -1,31 +1,51 @@
-import { getDefaultInstance } from '@webitel/ui-sdk/src/api/defaults/index.js';
+import {
+  getDefaultInstance,
+  getDefaultOpenAPIConfig,
+} from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  generateUrl,
   notify,
   sanitize,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import deepCopy from 'deep-copy';
+import { ExtensionsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
+const configuration = getDefaultOpenAPIConfig();
 
-const baseUrl = '/types/extensions/';
+const dictionaryExtensionsService = new ExtensionsApiFactory(
+  configuration,
+  '',
+  instance,
+);
+
+const fieldsToSend = ['fields', 'repo', 'path'];
 
 const itemResponseHandler = (item) => ({
   ...item,
   id: item.repo,
 });
 
-const getExtension = async ({ itemId: itemRepo, ...params }) => {
-  const fieldsToSend = ['fields'];
+const getExtension = async ({ itemId: itemRepo }) => {
+  const createPositionGenerator = () => {
+    let position = 1;
+    return (item) => (item.readonly ? null : position++);
+  };
+  const getPosition = createPositionGenerator();
 
-  const url = applyTransform(params, [
-    sanitize(fieldsToSend),
-    camelToSnake(),
-    generateUrl(baseUrl + itemRepo),
-  ]);
+  const itemResponseHandler = (item) => ({
+    ...item,
+    id: item.repo,
+    fields: item.fields.map((field) => ({
+      ...field,
+      position: getPosition(field),
+    })),
+  });
+
   try {
-    const response = await instance.get(url);
+    const response = await dictionaryExtensionsService.locateType(itemRepo);
+
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -35,7 +55,34 @@ const getExtension = async ({ itemId: itemRepo, ...params }) => {
 const updateExtension = async ({ itemInstance, itemId: id }) => {
   const repo = id;
 
-  // TODO implement update extension
+  const sortFields = (item) => {
+    const unSortableFields = item.fields.filter((field) => !field.position);
+
+    const fields = deepCopy(item.fields)
+      .filter((field) => field.position)
+      .sort((a, b) => {
+        return a.position - b.position;
+      });
+
+    fields.splice(1, 0, ...unSortableFields);
+
+    return {
+      ...item,
+      fields,
+    };
+  };
+
+  const item = applyTransform(itemInstance, [
+    sortFields,
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await dictionaryExtensionsService.updateType(repo, item);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
 };
 
 const DictionaryExtensionApi = {

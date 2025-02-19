@@ -184,6 +184,23 @@ export default {
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',
       controlPermissions: 'Контролировать права доступа',
+      field: {
+        id: 'Ид',
+        name: ({ linked }) => linked('reusable.name'),
+        createdAt: ({ linked }) => linked('reusable.createdAt'),
+        createdBy: ({ linked }) => linked('reusable.createdBy'),
+        modifiedAt: ({ linked }) => linked('reusable.modifiedAt'),
+        modifiedBy: ({ linked }) => linked('reusable.modifiedBy'),
+      },
+      fieldType: {
+        string: 'Текст',
+        int32: 'Число',
+        int64: 'Число',
+        lookup: 'Выбор',
+        list: 'Мультивыбор',
+        datetime: 'Календарь',
+        bool: 'Логическое',
+      },
     },
     extensions: {
       contacts: ({ linked }) => linked('contacts.contact'),

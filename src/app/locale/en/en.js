@@ -184,6 +184,23 @@ export default {
       addColumn: 'Add column',
       editColumn: 'Edit column',
       controlPermissions: 'Control permissions',
+      field: {
+        id: 'Id',
+        name: ({ linked }) => linked('reusable.name'),
+        createdAt: ({ linked }) => linked('reusable.createdAt'),
+        createdBy: ({ linked }) => linked('reusable.createdBy'),
+        modifiedAt: ({ linked }) => linked('reusable.modifiedAt'),
+        modifiedBy: ({ linked }) => linked('reusable.modifiedBy'),
+      },
+      fieldType: {
+        string: 'Text',
+        int32: 'Number',
+        int64: 'Number',
+        lookup: 'Select',
+        list: 'Multiselect',
+        datetime: 'Calendar',
+        bool: 'Boolean',
+      },
     },
     extensions: {
       contacts: ({ linked }) => linked('contacts.contact'),

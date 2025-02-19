@@ -16,6 +16,11 @@
         class="main-container"
         @submit.prevent="save"
       >
+        <opened-custom-lookup-columns
+          :is-new="isNew"
+          :v="v$"
+          :namespace="cardNamespace"
+        />
         <div>
           <!--          TODO implement columns for ectensions dictionary-->
         </div>
@@ -31,6 +36,8 @@ import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+
+import OpenedCustomLookupColumns from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
 
 const router = useRouter();
 

@@ -191,6 +191,23 @@ export default {
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
       controlPermissions: 'Контролювати права доступу',
+      field: {
+        id: 'Ід',
+        name: ({ linked }) => linked('reusable.name'),
+        createdAt: ({ linked }) => linked('reusable.createdAt'),
+        createdBy: ({ linked }) => linked('reusable.createdBy'),
+        modifiedAt: ({ linked }) => linked('reusable.modifiedAt'),
+        modifiedBy: ({ linked }) => linked('reusable.modifiedBy'),
+      },
+      fieldType: {
+        string: 'Текст',
+        int32: 'Число',
+        int64: 'Число',
+        lookup: 'Вибір',
+        list: 'Мультивибір',
+        datetime: 'Календар',
+        bool: 'Логічне',
+      },
     },
     extensions: {
       contacts: ({ linked }) => linked('contacts.contact'),
