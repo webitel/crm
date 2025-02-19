@@ -98,6 +98,8 @@ const getIndicatorColor = (option) => {
 
 const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
 
+const serviceId = computed(() => store.getters[`${cardNamespace}/service/SERVICE_ID`]);
+
 const fetchStatusConditions = async (params) => {
   if (!status?.value?.id) {
     return { items: [] };
@@ -141,8 +143,9 @@ async function handleSelect(value) {
   await patchStatusCondition(value);
 }
 
-async function updateStatusCondition() {
-  if (!status?.value?.id || itemInstance.value.statusCondition.id) return;
+async function updateStatusCondition(isValidationRequired = true) {
+
+  if (isValidationRequired && (!status?.value?.id || itemInstance.value.statusCondition.id)) return;
 
   const { items } = await StatusConditionsAPI.getList({
     statusId: status.value.id,
@@ -157,6 +160,11 @@ async function updateStatusCondition() {
 watch(() => status?.value?.id, updateStatusCondition, {
   immediate: true,
   deep: true,
+});
+
+watch(() => serviceId?.value, (newValue, oldValue) => {
+  if (newValue === oldValue) return;
+  updateStatusCondition(false);
 });
 </script>
 
