@@ -26,9 +26,9 @@
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useCardComponent } from '../../../../../../../webitel-ui-sdk/src/composables/useCard/useCardComponent';
+import { useCardComponent } from '../../../../../../../webitel-ui-sdk/src/composables/useCard/useCardComponent.js';
 
-import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities';
+import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const { t } = useI18n();
