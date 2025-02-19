@@ -4,8 +4,8 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.reason')"
-        :value="itemInstance?.close?.closeReason?.name"
-        @update:value="setItemProp({ path: 'close.closeReason', value: $event })"
+        :value="itemInstance?.closeGroup?.name"
+        @update:value="setItemProp({ path: 'closeGroup', value: $event })"
       >
         <template #default="props">
           <wt-select
@@ -21,8 +21,8 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.result')"
-        :value="itemInstance?.close?.closeResult"
-        @update:value="setItemProp({ path: 'close.closeResult', value: $event })"
+        :value="itemInstance?.closeResult"
+        @update:value="setItemProp({ path: 'closeResult', value: $event })"
       >
         <template #default="props">
           <wt-input
@@ -34,12 +34,12 @@
 
       <editable-field
         :label="t('cases.rating')"
-        :value="itemInstance?.rate?.rating"
+        :value="itemInstance?.rating"
       />
 
       <editable-field
         :label="t('cases.ratingComment')"
-        :value="itemInstance?.rate?.ratingComment"
+        :value="itemInstance?.ratingComment"
       />
     </div>
   </div>

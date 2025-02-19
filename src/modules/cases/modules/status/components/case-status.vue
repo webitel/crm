@@ -81,11 +81,11 @@ const isResultPopup = ref(false);
 
 const saveResult = async ({ reason, result }) => {
   await setItemProp({
-    path: 'close.closeReason',
+    path: 'closeGroup',
     value: reason,
   });
   await setItemProp({
-    path: 'close.closeResult',
+    path: 'closeResult',
     value: result,
   });
 };
