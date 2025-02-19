@@ -13,15 +13,16 @@
     "lint:fix": "prettier --write --list-different . && npm run lint:js --fix",
     "tsc": "vue-tsc -p tsconfig.json",
     "link:webitel-ui": "npm link @webitel/ui-sdk --save --bin-links=false",
-    "i": "npm i"
+    "i": "npm i",
+    "prepare": "husky"
   },
   "type": "module",
   "dependencies": {
     "@vue/compat": "^3.5.1",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
-    "@webitel/ui-sdk": "^24.12.116",
     "@vueuse/core": "^11.0.3",
+    "@webitel/ui-sdk": "file:../webitel-ui-sdk",
     "axios": "^1.7.7",
     "deep-equal": "^2.2.1",
     "dompurify": "^3.1.2",
@@ -53,6 +54,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^9.32.0",
     "happy-dom": "^15.7.3",
+    "husky": "^9.1.7",
     "prettier": "^3.4.2",
     "sass": "^1.77.2",
     "tslib": "^2.7.0",
