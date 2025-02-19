@@ -187,7 +187,7 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
