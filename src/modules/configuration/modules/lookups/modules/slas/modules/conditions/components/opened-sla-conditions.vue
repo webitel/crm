@@ -148,7 +148,9 @@ const props = defineProps({
 });
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const {
   namespace: parentCardNamespace,

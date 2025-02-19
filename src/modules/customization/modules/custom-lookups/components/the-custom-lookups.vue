@@ -28,6 +28,12 @@
                 params: { id: 'new' },
               })
             "
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteData(selected),
+              })
+            "
           >
             <template #search-bar>
               <filter-search
@@ -73,8 +79,8 @@
                   {{ item.name }}
                 </wt-item-link>
               </template>
-              <template #description="{ item }">
-                {{ item.description }}
+              <template #about="{ item }">
+                {{ item.about }}
               </template>
               <template #createdAt="{ item }">
                 {{ prettifyDate(item.createdAt) }}

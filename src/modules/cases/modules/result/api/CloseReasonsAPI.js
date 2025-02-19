@@ -19,7 +19,7 @@ const configuration = getDefaultOpenAPIConfig();
 
 const closeReasonsService = new CloseReasonsApiFactory(configuration, '', instance);
 
-const getCloseReasonsList = async ({closeReasonGroupId, ...rest}) => {
+const getCloseReasonsList = async ({closeReasonGroupId, ...params}) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const {
@@ -29,7 +29,7 @@ const getCloseReasonsList = async ({closeReasonGroupId, ...rest}) => {
     sort,
     id,
     q,
-  } = applyTransform(rest, [
+  } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),

@@ -8,6 +8,7 @@ import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseAttachments from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
+import CaseTimeline from '../../modules/cases/modules/timeline/components/case-timeline.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
 import OpenedCloseReasonGroups from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../../modules/configuration/modules/lookups/modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -17,6 +18,9 @@ import OpenedContactGroup from '../../modules/configuration/modules/lookups/modu
 import OpenedContactGroupGeneral from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroupsConditions from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import OpenedCustomLookupRecord from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/opened-custom-lookup-record.vue';
+import OpenedCustomLookupRecordsColumns from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/opened-custom-lookup-records-columns.vue';
+import TheCustomLookup from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/the-custom-lookup.vue';
 import OpenedPriority from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
 import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
 import ThePriorities from '../../modules/configuration/modules/lookups/modules/priorities/components/the-priorities.vue';
@@ -41,7 +45,7 @@ import OpenedContact from '../../modules/contacts/components/opened-contact.vue'
 import ContactCommunications from '../../modules/contacts/components/opened-contact-communications.vue';
 import TheContacts from '../../modules/contacts/components/the-contacts.vue';
 import ContactPermissions from '../../modules/contacts/modules/permissions/components/the-permissions.vue';
-import ContactTimeline from '../../modules/contacts/modules/timeline/components/the-timeline.vue';
+import ContactTimeline from '../../modules/contacts/modules/timeline/components/contact-timeline.vue';
 import ContactVariables from '../../modules/contacts/modules/variables/components/the-variables.vue';
 import OpenedCustomLookup from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup.vue';
 import OpenedCustomLookupColumns from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-columns.vue';
@@ -121,6 +125,10 @@ const routes = [
             path: 'attachments',
             name: `${CrmSections.CASES}-attachments`,
             component: CaseAttachments,
+          },     {
+            path: 'timeline',
+            name: `${CrmSections.CASES}-timeline`,
+            component: CaseTimeline,
           },
           {
             path: 'permissions/:permissionId?',
@@ -478,6 +486,24 @@ const routes = [
                 path: 'status-conditions/:statusConditionId?',
                 name: `status-conditions`,
                 component: OpenedStatusConditions,
+              },
+            ],
+          },
+          {
+            path: ':repo',
+            name: 'custom-lookup',
+            component: TheCustomLookup,
+          },
+          {
+            path: ':repo/:id',
+            name: 'custom-lookup-record',
+            component: OpenedCustomLookupRecord,
+            redirect: { name: 'custom-lookup-record-columns' },
+            children: [
+              {
+                path: 'columns',
+                name: 'custom-lookup-record-columns',
+                component: OpenedCustomLookupRecordsColumns,
               },
             ],
           },

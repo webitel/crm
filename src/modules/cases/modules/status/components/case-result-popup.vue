@@ -73,8 +73,8 @@ const draft = reactive({
 
 const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
 
-async function searchCloseReasons() {
-  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value });
+async function searchCloseReasons(params) {
+  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
 }
 
 const emit = defineEmits(['save', 'close']);

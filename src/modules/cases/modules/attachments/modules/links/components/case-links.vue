@@ -46,6 +46,11 @@
         />
       </table-top-row-bar>
 
+      <wt-empty
+        v-show="showEmpty"
+        :text="emptyTableText"
+      />
+
       <wt-loader v-show="isLoading" />
       <div
         v-show="!isLoading && dataList.length"
@@ -107,11 +112,14 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { inject, onUnmounted, reactive } from 'vue';
+import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import LinksAPI from '../api/LinksAPI.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
@@ -155,6 +163,13 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const emptyTableText = computed(() =>
+  t('cases.emptyCases', {
+    e: t('cases.attachments.links').toLowerCase(),
+  }),
+);
 
 subscribe({
   event: '*',

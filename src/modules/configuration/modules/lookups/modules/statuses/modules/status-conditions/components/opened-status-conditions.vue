@@ -24,7 +24,8 @@
 
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-        :disabled:delete="!selected.length"
+        :disabled:add="!hasCreateAccess"
+        :disabled:delete="!hasDeleteAccess || !selected.length"
         @click:add="
           router.push({ ...route, params: { statusConditionId: 'new' } })
         "
@@ -73,6 +74,7 @@
 
           <template #initial="{ item, index }">
             <wt-switcher
+              :disabled="!hasUpdateAccess"
               :value="item.initial"
               @change="changeInitialStatus({ item, index, value: $event })"
             />
@@ -80,6 +82,7 @@
 
           <template #final="{ item, index }">
             <wt-switcher
+              :disabled="!hasUpdateAccess"
               :value="item.final"
               @change="changeFinalStatus({ item, index, value: $event })"
             />
@@ -88,6 +91,7 @@
           <template #actions="{ item }">
             <wt-icon-action
               action="edit"
+              :disabled="!hasUpdateAccess"
               @click="
                 router.push({
                   ...route,
@@ -98,6 +102,7 @@
 
             <wt-icon-action
               action="delete"
+              :disabled="!hasDeleteAccess"
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
@@ -132,6 +137,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import StatusConditionsAPI from '../api/status-conditions.js';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
@@ -151,6 +157,11 @@ const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 const store = useStore();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const isStatusWarningPopupOpened = ref(false);
 const parentId = computed(

@@ -2,13 +2,13 @@ import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/C
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import {
   CasesRelationType,
-  WebitelContactsTimelineEventType,
 } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
+import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -17,33 +17,6 @@ export default {
     manager: 'Владелец | Владельцы',
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
-    timeline: {
-      timeline: 'Хронология',
-      totalDuration: 'Общая длительность',
-      actions: {
-        openInHistory: 'Открыть в истории',
-        playRecording: 'Проиграть запись',
-        transcription: 'Транскрипция',
-      },
-      status: {
-        [TimelineTaskStatusEnum.STARTED]: 'Начало',
-        [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
-        [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
-        [TimelineTaskStatusEnum.ENDED]: 'Конец',
-        [TimelineTaskStatusEnum.SENT]: 'Отправлено',
-        [TimelineTaskStatusEnum.RECEIVED]: 'Получено',
-      },
-      eventType: {
-        [WebitelContactsTimelineEventType.Call]: 'Звонок | Звонки',
-        [WebitelContactsTimelineEventType.Chat]: 'Чат | Чаты',
-        [WebitelContactsTimelineEventType.Email]: 'Письмо | Письма',
-      },
-      emails: {
-        to: 'Кому',
-        cc: 'CC',
-        subject: 'Тема',
-      },
-    },
     communications: {
       communications: 'Средство связи | Средства связи',
       channel: 'Канал',
@@ -76,6 +49,33 @@ export default {
       },
     },
     attributes: 'Атрибут | Атрибуты',
+  },
+  timeline: {
+    timeline: 'Хронология',
+    totalDuration: 'Общая длительность',
+    actions: {
+      openInHistory: 'Открыть в истории',
+      playRecording: 'Проиграть запись',
+      transcription: 'Транскрипция',
+    },
+    status: {
+      [TimelineTaskStatusEnum.STARTED]: 'Начало',
+      [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
+      [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
+      [TimelineTaskStatusEnum.ENDED]: 'Конец',
+      [TimelineTaskStatusEnum.SENT]: 'Отправлено',
+      [TimelineTaskStatusEnum.RECEIVED]: 'Получено',
+    },
+    eventType: {
+      [TimelineEventType.Call]: 'Звонок | Звонки',
+      [TimelineEventType.Chat]: 'Чат | Чаты',
+      [TimelineEventType.Email]: 'Письмо | Письма',
+    },
+    emails: {
+      to: 'Кому',
+      cc: 'CC',
+      subject: 'Тема',
+    },
   },
   permissions: {
     read: 'Читать',
@@ -181,6 +181,7 @@ export default {
     customLookups: {
       customLookups: 'Пользовательские справочники',
       code: 'Код',
+      allValues: 'Все значения',
       columns: 'Колонки',
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',

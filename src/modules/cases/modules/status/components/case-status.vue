@@ -12,7 +12,7 @@
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="status?.id"
-        :clearable="false"
+        clearable
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"

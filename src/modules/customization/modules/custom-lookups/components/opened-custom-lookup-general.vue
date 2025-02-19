@@ -32,8 +32,8 @@
 
       <wt-textarea
         :label="t('vocabulary.description')"
-        :value="itemInstance.description"
-        @input="setItemProp({ path: 'description', value: $event })"
+        :value="itemInstance.about"
+        @input="setItemProp({ path: 'about', value: $event })"
       />
 
       <wt-switcher

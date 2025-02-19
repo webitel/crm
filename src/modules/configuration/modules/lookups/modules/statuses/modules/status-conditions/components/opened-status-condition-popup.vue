@@ -20,6 +20,7 @@
           :value="itemInstance.name"
           :label="t('reusable.name')"
           :v="v$.itemInstance.name"
+          :disabled="disableUserInput"
           required
           @input="setItemProp({ path: 'name', value: $event })"
         />
@@ -27,6 +28,7 @@
         <wt-textarea
           :label="t('vocabulary.description')"
           :value="itemInstance.description"
+          :disabled="disableUserInput"
           @input="setItemProp({ path: 'description', value: $event })"
         />
       </form>
@@ -34,7 +36,7 @@
 
     <template #actions>
       <wt-button
-        :disabled="disabledSave"
+        :disabled="!hasSaveActionAccess || disabledSave"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -59,6 +61,8 @@ import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+
 const props = defineProps({
   namespace: {
     type: String,
@@ -70,6 +74,11 @@ const emit = defineEmits(['load-data']);
 
 const route = useRoute();
 const { t } = useI18n();
+
+const { disableUserInput, hasSaveActionAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const {
   itemInstance,
