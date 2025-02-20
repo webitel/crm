@@ -19,8 +19,8 @@ const resetCardState = {
   itemInstance: {
     id: '',
     name: '',
-    assignee: '',
-    author: '',
+    assignee: {},
+    author: {},
     close: {
       closeReason: {},
       closeResult: '',
