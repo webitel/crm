@@ -78,6 +78,11 @@ export const caseFilters = (params) => {
         result.push(`${item.field}.to=${value.to}`);
       } else if(params.statusCase || params.closeReasonGroupsCase) {
         result.push(`${item.field}=${value.conditions}`);
+      } else if(params.assignee) {
+        if(value.unassigned) {
+          result.push(`${item.field}=${value.list},${null}`);
+        } else
+          result.push(`${item.field}=${value.list}`);
       } else {
         result.push(`${item.field}=${value}`);
       }
