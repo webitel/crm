@@ -3,7 +3,7 @@
     v-if="field.kind === FieldType.TEXT"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
-    :label="field.name"
+    :label="$t(field.name)"
     :required="field.required"
     @input="setItemProp({ path: field.id, value: $event })"
   />
@@ -11,14 +11,14 @@
     v-else-if="field.kind === FieldType.NUMBER"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
-    :label="field.name"
+    :label="$t(field.name)"
     type="number"
     :required="field.required"
     @input="setItemProp({ path: field.id, value: $event })"
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.BOOLEAN"
-    :label="field.name"
+    :label="$t(field.name)"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
     :required="field.required"
@@ -26,7 +26,7 @@
   />
   <wt-select
     v-else-if="field.kind === FieldType.SELECT"
-    :label="field.name"
+    :label="$t(field.name)"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
     :search-method="loadLookupList(field.lookup.type)"
@@ -37,7 +37,7 @@
   />
   <wt-select
     v-else-if="field.kind === FieldType.MULTISELECT"
-    :label="field.name"
+    :label="$t(field.name)"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
     :search-method="loadLookupList(field.lookup.type)"
@@ -49,7 +49,7 @@
   />
   <wt-datepicker
     v-else-if="field.kind === FieldType.CALENDAR"
-    :label="field.name"
+    :label="$t(field.name)"
     :value="itemInstance[field.id]"
     mode="datetime"
     :required="field.required"
