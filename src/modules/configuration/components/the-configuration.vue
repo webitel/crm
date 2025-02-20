@@ -69,7 +69,7 @@ const nav = reactive([
       {
         value: 'dictionary-extensions',
         name: computed(() => t('customization.extensions.contacts')),
-        route: 'customization/dictionary-extensions/contacts',
+        route: 'customization/types-extensions/contacts',
       },
       {
         value: CrmSections.CUSTOM_LOOKUPS,

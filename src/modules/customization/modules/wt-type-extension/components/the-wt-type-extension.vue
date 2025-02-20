@@ -1,5 +1,5 @@
 <template>
-  <wt-page-wrapper>
+  <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -19,11 +19,9 @@
         <opened-custom-lookup-columns
           :is-new="isNew"
           :v="v$"
+          :title="$t(`customization.extensions.${itemInstance.repo}`)"
           :namespace="cardNamespace"
         />
-        <div>
-          <!--          TODO implement columns for ectensions dictionary-->
-        </div>
       </form>
     </template>
   </wt-page-wrapper>
@@ -32,16 +30,14 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 
 import OpenedCustomLookupColumns from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
 
-const router = useRouter();
-
-const namespace = 'customization/dictionaryExtensions';
+const namespace = 'customization/wtTypeExtension';
 const { t } = useI18n();
 
 const {
@@ -51,17 +47,13 @@ const {
   ...restStore
 } = useCardStore(namespace);
 
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
+const { isNew, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
 });
 
-const close = () => {
-  router.push({
-    name: 'customization',
-  });
-};
+const { close } = useClose('customization');
 
 // This case need to get validation from child fields
 const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });

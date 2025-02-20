@@ -14,7 +14,7 @@ import { ExtensionsApiFactory } from 'webitel-sdk';
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const dictionaryExtensionsService = new ExtensionsApiFactory(
+const typeExtensionsService = new ExtensionsApiFactory(
   configuration,
   '',
   instance,
@@ -44,7 +44,7 @@ const getExtension = async ({ itemId: itemRepo }) => {
   });
 
   try {
-    const response = await dictionaryExtensionsService.locateType(itemRepo);
+    const response = await typeExtensionsService.locateType(itemRepo);
 
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
@@ -78,16 +78,16 @@ const updateExtension = async ({ itemInstance, itemId: id }) => {
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await dictionaryExtensionsService.updateType(repo, item);
+    const response = await typeExtensionsService.updateType(repo, item);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const DictionaryExtensionApi = {
+const WtTypeExtensionApi = {
   get: getExtension,
   update: updateExtension,
 };
 
-export default DictionaryExtensionApi;
+export default WtTypeExtensionApi;

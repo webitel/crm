@@ -2,7 +2,7 @@
   <section class="table-section opened-custom-lookup-columns">
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
-        {{ t('customization.customLookups.columns') }}
+        {{ title || t('customization.customLookups.columns') }}
       </h3>
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
@@ -118,6 +118,10 @@ const props = defineProps({
   v: {
     type: Object,
     required: true,
+  },
+  title: {
+    type: String,
+    default: undefined,
   },
   isNew: {
     type: Boolean,
