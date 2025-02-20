@@ -33,19 +33,24 @@ import {
   ActualReactionTimeFilterPreview,
   ActualResolutionTimeFilterPreview,
   ActualResolutionTimeFilter,
-
+  ContactGroupFilter,
+  ContactGroupFilterPreview,
+  // ServiceFilter,
+  // ServiceFilterPreview,
+  SlaConditionFilter,
+  SlaConditionFilterPreview
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
 import {Component} from "vue";
 
 
-interface FilterOptionsComponentsConfig {
+interface FiltersConfig {
   [key: string]: {
     valueField: Component
     previewField: Component
   }
 }
 
-const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
+export const filtersConfig: FiltersConfig = {
   createdAtFrom: {
     valueField: CreatedAtFromFilter,
     previewField: CreatedAtFromFilterPreview,
@@ -78,6 +83,10 @@ const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
     valueField: AssigneeFilter,
     previewField: AssigneeFilterPreview,
   },
+  contactGroup: {
+    valueField: ContactGroupFilter,
+    previewField: ContactGroupFilterPreview
+  },
   priorityCase: {
     valueField: PriorityCaseFilter,
     previewField: PriorityCaseFilterPreview,
@@ -90,13 +99,17 @@ const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
     valueField: RatingFromToFilter,
     previewField: RatingFromToFilterPreview
   },
+  // service: {
+  //   valueField: ServiceFilter,
+  //   previewField: ServiceFilterPreview,
+  // },
   sla: {
     valueField: SlaFilter,
     previewField: SlaFilterPreview,
   },
-  hasAttachment: {
-    valueField: HasAttachmentFilter,
-    previewField: HasAttachmentFilterPreview
+  slaCondition: {
+    valueField: SlaConditionFilter,
+    previewField: SlaConditionFilterPreview,
   },
   reactionTime: {
     valueField: ReactionTimeFilter,
@@ -114,6 +127,8 @@ const FILTER_OPTIONS_COMPONENTS_CONFIG: FilterOptionsComponentsConfig = {
     valueField: ActualResolutionTimeFilter,
     previewField: ActualResolutionTimeFilterPreview
   },
+  hasAttachment: {
+    valueField: HasAttachmentFilter,
+    previewField: HasAttachmentFilterPreview
+  },
 }
-
-export default FILTER_OPTIONS_COMPONENTS_CONFIG

@@ -200,7 +200,7 @@ import ColorComponentWrapper from '../../../app/components/utils/color-component
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
-import casesFilters from '../filters/cases-filters.vue';
+import CasesFilters from '../filters/cases-filters.vue';
 
 const baseNamespace = 'cases';
 

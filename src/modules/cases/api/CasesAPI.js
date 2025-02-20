@@ -18,7 +18,7 @@ import applyTransform, {
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { CasesApiFactory } from 'webitel-sdk';
-import { caseFilters } from '../api/CaseFilters';
+import { stringifyCaseFilters } from './stringifyCaseFilters.js';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
@@ -97,7 +97,7 @@ const getCasesList = async (params) => {
       ids,
       sort,
       fields,
-      caseFilters(params),
+      stringifyCaseFilters(params),
       options,
     );
 
