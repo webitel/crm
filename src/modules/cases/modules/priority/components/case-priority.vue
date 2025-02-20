@@ -4,16 +4,16 @@
     <div>
       <editable-field
         :edit-mode="editMode"
-        :value="itemInstance.priority?.name"
+        :value="itemInstance.priority"
         @update:value="setItemProp({ path: 'priority', value: $event });"
       >
         <template #default="props">
           <wt-select
+            v-bind="props"
             clearable
             :placeholder="t('cases.priority')"
             :search-method="PrioritiesAPI.getLookup"
             class="case-priority__select"
-            v-bind="props"
             @input="props.updateValue($event)"
           />
         </template>

@@ -36,7 +36,7 @@
         :icon="itemInstance.source?.type"
         :edit-mode="editMode"
         :label="t('cases.source')"
-        :value="itemInstance.source?.name"
+        :value="itemInstance.source"
         required
         @update:value="setItemProp({ path: 'source', value: $event })"
       >
