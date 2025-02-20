@@ -69,12 +69,7 @@
         color="success"
         icon="assignee"
         horizontal-view
-        @update:value="
-          setItemProp({
-            path: 'assignee',
-            value: { id: $event.id, name: $event.name },
-          })
-        "
+        @update:value="setItemProp({ path: 'assignee', value: $event })"
       >
         <template #default="props">
           <wt-select
