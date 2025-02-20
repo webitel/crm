@@ -200,6 +200,7 @@ const toggleEditMode = (value) => {
 };
 
 const saveCase = async () => {
+  await save();
   await toggleEditMode(false);
 };
 
