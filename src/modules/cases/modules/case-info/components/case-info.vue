@@ -76,7 +76,7 @@
     />
 
     <case-comments
-      v-if="!isNew"
+      v-if="hasReadAccess && !isNew"
       :item-id="id"
       :namespace="commentsNamespace"
     />
@@ -84,11 +84,12 @@
 </template>
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { WtObject } from '@webitel/ui-sdk/src/enums/index';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import CaseComments from '../modules/comments/components/case-comments.vue';
 import RelatedCases from '../modules/related-cases/components/related-cases.vue';
@@ -106,6 +107,7 @@ const props = defineProps({
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess } = useUserAccessControl({ resource: WtObject.CaseComment });
 
 const {
   namespace: cardNamespace,

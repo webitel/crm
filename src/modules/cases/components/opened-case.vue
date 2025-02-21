@@ -50,6 +50,7 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import {WtObject} from "@webitel/ui-sdk/enums";
 import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -76,13 +77,6 @@ const editMode = computed(() => {
 provide('namespace', namespace);
 provide('editMode', editMode);
 
-/*
-{
-  useUpdateAccessAsAllMutableChecksSource: true,
-}
-:disabled="disableUserInput"
-const { disableUserInput } = useUserAccessControl();
- */
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
 const {

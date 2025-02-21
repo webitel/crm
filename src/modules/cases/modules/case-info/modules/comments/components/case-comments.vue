@@ -13,16 +13,16 @@
           {{ t('cases.comments.comments') }}
         </h3>
         <wt-action-bar
-          :disabled:add="formState.isAdding || formState.editingComment"
-          :disabled:delete="!selected.length || !editableSelectedComments"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
+          :disabled:delete="!hasDeleteAccess || !selected.length || !editableSelectedComments"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingComment"
           @click:delete="
-              askDeleteConfirmation({
-                deleted: selected,
-                callback: () => deleteData(selected),
-              })
-            "
+            askDeleteConfirmation({
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })
+          "
         >
         </wt-action-bar>
       </header>
@@ -64,18 +64,20 @@
           </template>
           <template #actions="{ item }">
             <wt-icon-action
-              v-if="item.canEdit"
+              v-if="hasUpdateAccess && item.canEdit"
               :disabled="formState.isAdding"
               action="edit"
               @click="startEditingComment(item)"
             />
             <wt-icon-action
-              v-if="item.canEdit"
+              v-if="hasDeleteAccess && item.canEdit"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -90,21 +92,20 @@
 </template>
 
 <script setup>
-import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
+import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { computed, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI.js';
 import CaseCommentItem from './case-comment-item.vue';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
@@ -117,8 +118,11 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
 const { t } = useI18n();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl(WtObject.CaseComment);
+
 const {
   namespace,
   dataList,
@@ -126,7 +130,6 @@ const {
   isLoading,
   headers,
   isNext,
-  error,
   loadData,
   deleteData,
   sort,
@@ -166,8 +169,8 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
-const editableSelectedComments = computed(() =>
-  !!selected.value.every((comment) => comment.canEdit),
+const editableSelectedComments = computed(
+  () => !!selected.value.every((comment) => comment.canEdit),
 );
 
 const formState = reactive({
@@ -199,23 +202,19 @@ function updateCommentText(value) {
 }
 
 async function submitComment() {
-  try {
-    if (formState.editingComment) {
-      await CommentsAPI.patch({
-        commentId: formState.editingComment.etag,
-        changes: { text: formState.commentText },
-      });
-    } else {
-      await CommentsAPI.add({
-        parentId: props.itemId,
-        input: { text: formState.commentText },
-      });
-    }
-    await loadData();
-    resetForm();
-  } catch (error) {
-    throw error;
+  if (formState.editingComment) {
+    await CommentsAPI.patch({
+      commentId: formState.editingComment.etag,
+      changes: { text: formState.commentText },
+    });
+  } else {
+    await CommentsAPI.add({
+      parentId: props.itemId,
+      input: { text: formState.commentText },
+    });
   }
+  await loadData();
+  resetForm();
 }
 </script>
 
