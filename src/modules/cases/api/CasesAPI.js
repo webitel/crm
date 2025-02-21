@@ -1,5 +1,5 @@
 import {
-  generatePermissionsApi
+  generatePermissionsApi,
 } from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
 import {
   getDefaultGetListResponse,
@@ -18,6 +18,7 @@ import applyTransform, {
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { CasesApiFactory } from 'webitel-sdk';
+import { stringifyCaseFilters } from './stringifyCaseFilters.js';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
@@ -75,7 +76,7 @@ const getCasesList = async (params) => {
     'filters',
   ];
 
-  const { page, size, q, ids, sort, fields, filters, options } = applyTransform(
+  const { page, size, q, ids, sort, fields, options } = applyTransform(
     params,
     [
       merge(getDefaultGetParams()),
@@ -96,7 +97,7 @@ const getCasesList = async (params) => {
       ids,
       sort,
       fields,
-      filters,
+      stringifyCaseFilters(params),
       options,
     );
 
