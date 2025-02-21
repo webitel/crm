@@ -27,8 +27,8 @@ const filterTransformersMap = {
   },
   'resolutionTime': (value) => {
     const arr = [];
-    if(value.from) arr.push(`planned_resolved_at.from=${value.from}`);
-    if(value.to) arr.push(`planned_resolved_at.to=${value.to}`);
+    if(value.from) arr.push(`planned_resolve_at.from=${value.from}`);
+    if(value.to) arr.push(`planned_resolve_at.to=${value.to}`);
     return arr;
   },
   'actualReactionTime': (value) => {
