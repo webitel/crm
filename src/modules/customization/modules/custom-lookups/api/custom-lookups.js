@@ -156,7 +156,7 @@ const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
     sanitize(fieldsToSend),
   ]);
   try {
-    const response = await dictionariesService.updateType2(repo, item);
+    const response = await dictionariesService.updateType(repo, item);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);

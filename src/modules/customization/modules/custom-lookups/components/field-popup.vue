@@ -113,7 +113,6 @@ const v$ = useVuelidate(
         required,
         checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
       },
-      kind: { required },
     },
   })),
   { value },
