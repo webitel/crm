@@ -76,6 +76,13 @@ const editMode = computed(() => {
 provide('namespace', namespace);
 provide('editMode', editMode);
 
+/*
+{
+  useUpdateAccessAsAllMutableChecksSource: true,
+}
+:disabled="disableUserInput"
+const { disableUserInput } = useUserAccessControl();
+ */
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
 const {

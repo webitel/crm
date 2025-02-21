@@ -11,6 +11,7 @@
           <wt-select
             v-bind="props"
             clearable
+            :disabled="disableUserInput"
             :placeholder="t('cases.priority')"
             :search-method="PrioritiesAPI.getLookup"
             class="case-priority__select"
@@ -27,6 +28,7 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
@@ -36,6 +38,9 @@ const { t } = useI18n();
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
+
+const { disableUserInput } = useUserAccessControl();
+
 const {
   itemInstance,
   setItemProp,

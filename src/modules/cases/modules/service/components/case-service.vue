@@ -16,6 +16,7 @@
     </div>
     <wt-button
       v-if="editMode"
+      :disabled="disableUserInput"
       class="case-service__button"
       color="success"
       @click="isServicePopup = true"
@@ -30,12 +31,16 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
 
 const namespace = inject('namespace');
+const editMode = inject('editMode');
+
+const { disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -48,7 +53,6 @@ const { t } = useI18n();
 const store = useStore();
 const isServicePopup = ref(false);
 const servicePath = ref('');
-const editMode = inject('editMode');
 
 const serviceNamespace = `${cardNamespace}/service`;
 

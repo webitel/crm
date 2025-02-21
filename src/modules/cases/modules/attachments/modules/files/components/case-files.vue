@@ -13,8 +13,9 @@
         </h3>
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
-          :disabled:delete="!editMode || !selected.length"
+          :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           :disabled:download="!dataList.length"
+          :disabled:add="!hasCreateAccess"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
           @click:delete="
@@ -78,7 +79,7 @@
               "
             />
             <wt-icon-action
-              :disabled="!editMode"
+              :disabled="!editMode || !hasDeleteAccess"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -104,6 +105,7 @@ import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 import downloadFile from '../../../../../../../app/utils/downloadFile.js';
 import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
@@ -127,23 +129,25 @@ const props = defineProps({
 const store = useStore();
 
 const { t } = useI18n();
+
+const { hasCreateAccess, hasDeleteAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
+
 const {
   namespace,
   dataList,
   selected,
   isLoading,
   headers,
-  isNext,
-  error,
   loadData,
   deleteData,
-  sort,
   setSelected,
   onFilterEvent,
 } = useTableStore(props.namespace);
 
 const {
-  namespace: filtersNamespace,
   restoreFilters,
   subscribe,
   flushSubscribers,

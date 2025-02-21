@@ -153,8 +153,9 @@ const props = defineProps({
   },
 });
 
-const { t } = useI18n();
 const relatedCasesNamespace = inject('relatedCasesNamespace', '');
+
+const { t } = useI18n();
 
 const {
   namespace,
@@ -179,13 +180,6 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const { showEmpty } = useTableEmpty({ dataList, isLoading });
-const emptyTableText = computed(() =>
-  t('cases.emptyCases', {
-    e: t('cases.relatedCases.relatedCases').toLowerCase(),
-  }),
-);
-
 subscribe({
   event: '*',
   callback: onFilterEvent,
@@ -195,6 +189,13 @@ restoreFilters();
 onUnmounted(() => {
   flushSubscribers();
 });
+
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const emptyTableText = computed(() =>
+  t('cases.emptyCases', {
+    e: t('cases.relatedCases.relatedCases').toLowerCase(),
+  }),
+);
 
 const defaultState = reactive({
   createMode: false,
@@ -256,7 +257,6 @@ function getRevertedCaseRelation(item) {
 }
 
 async function submitCase() {
-  try {
     await RelatedCasesAPI.add({
       parentId: props.itemId,
       input: {
@@ -269,9 +269,6 @@ async function submitCase() {
     });
     await loadData();
     resetForm();
-  } catch (error) {
-    throw error;
-  }
 }
 </script>
 

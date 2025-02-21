@@ -12,6 +12,7 @@
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="status?.id"
+        :disabled="disableUserInput"
         clearable
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
@@ -42,6 +43,7 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
@@ -51,8 +53,9 @@ const namespace = inject('namespace');
 const editMode = inject('editMode');
 
 const { t } = useI18n();
-
 const store = useStore();
+
+const { disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
