@@ -31,7 +31,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import CustomLookupsApi from '../api/custom-lookups';
-import FieldType from '../enums/FieldType.enum';
+import { FieldType } from '../enums/FieldType.enum';
 
 const props = defineProps({
   value: {

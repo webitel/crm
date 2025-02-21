@@ -64,7 +64,7 @@ import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import FieldType from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
 import CustomLookupApi from '../api/custom-lookups.js';
 
 const props = defineProps({
