@@ -1,6 +1,4 @@
-import {
-  generatePermissionsApi
-} from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
+import { generatePermissionsApi } from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
@@ -46,6 +44,7 @@ const fieldsToSend = [
   'service',
   'status_condition',
   'close_reason_group',
+  'custom',
 ];
 
 function transformSourceType(data) {

@@ -250,6 +250,9 @@ export default {
       url: 'URL',
       linkText: 'Link text',
     },
+    details: {
+      details: 'Details',
+    },
     relatedCases: {
       relatedCases: 'Related cases',
       searchCasesPlaceholder: 'Search for a case',

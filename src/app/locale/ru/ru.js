@@ -250,6 +250,9 @@ export default {
       url: 'URL',
       linkText: 'Текст ссылки',
     },
+    details: {
+      details: 'Детали',
+    },
     relatedCases: {
       relatedCases: 'Связанные обращения',
       searchCasesPlaceholder: 'Найти обращение',

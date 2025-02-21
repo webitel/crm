@@ -257,6 +257,9 @@ export default {
       url: 'URL',
       linkText: 'Текст посилання',
     },
+    details: {
+      details: 'Details',
+    },
     relatedCases: {
       relatedCases: 'Звʼязані звернення',
       searchCasesPlaceholder: 'Шукати звернення',

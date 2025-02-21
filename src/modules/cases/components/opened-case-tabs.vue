@@ -27,10 +27,7 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-const {
-  namespace: cardNamespace,
-  id,
-} = useCardStore(props.namespace);
+const { namespace: cardNamespace, id } = useCardStore(props.namespace);
 
 const tabs = computed(() => {
   const tabs = [
@@ -57,13 +54,21 @@ const tabs = computed(() => {
     pathName: `${CrmSections.CASES}-attachments`,
   };
 
+  if (id.value) tabs.push(attachments);
+
+  tabs.push({
+    text: t('cases.details.details'),
+    value: 'details',
+    pathName: `${CrmSections.CASES}-details`,
+  });
+
   const permissions = {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
     pathName: `${CrmSections.CASES}-permissions`,
   };
 
-  if (id.value) tabs.push(attachments, permissions);
+  if (id.value) tabs.push(permissions);
 
   return tabs;
 });
