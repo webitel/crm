@@ -17,7 +17,7 @@
           name: `${CrmSections.CONTACTS}-card`,
           params: { id: itemInstance.reporter?.id },
         }"
-        :value="itemInstance.reporter?.name"
+        :value="itemInstance.reporter"
         color="info"
         icon="reporter"
         horizontal-view
@@ -42,7 +42,7 @@
           name: `${CrmSections.CONTACTS}-card`,
           params: { id: itemInstance.impacted?.id },
         }"
-        :value="itemInstance.impacted?.name"
+        :value="itemInstance.impacted"
         icon="impacted"
         horizontal-view
         @update:value="setItemProp({ path: 'impacted', value: $event })"
@@ -65,7 +65,7 @@
           name: `${CrmSections.CONTACTS}-card`,
           params: { id: itemInstance.assignee?.id },
         }"
-        :value="itemInstance.assignee?.name"
+        :value="itemInstance.assignee"
         color="success"
         icon="assignee"
         horizontal-view
@@ -93,7 +93,7 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.group')"
-        :value="itemInstance.group?.name"
+        :value="itemInstance.group"
         color="success"
         icon="group"
         horizontal-view

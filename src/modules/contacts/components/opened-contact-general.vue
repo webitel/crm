@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { computed, inject, toRefs } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const access = inject('access');

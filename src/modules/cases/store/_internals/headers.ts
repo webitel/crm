@@ -23,6 +23,7 @@ export const headers: WtTableHeader[] = [
     show: true,
     field: 'priority',
     sort: SortSymbols.NONE,
+    width: '100px',
   },
   {
     value: 'statusCondition',
@@ -37,6 +38,7 @@ export const headers: WtTableHeader[] = [
     show: true,
     field: 'source',
     sort: SortSymbols.NONE,
+    width: '80px',
   },
   {
     value: 'createdAt',
@@ -121,6 +123,7 @@ export const headers: WtTableHeader[] = [
     show: true,
     field: 'timing',
     sort: SortSymbols.NONE,
+    width: '200px',
   },
   {
     value: 'actualResolutionTime',
@@ -128,6 +131,7 @@ export const headers: WtTableHeader[] = [
     show: true,
     field: 'timing',
     sort: SortSymbols.NONE,
+    width: '200px',
   },
   {
     value: 'closeReason',

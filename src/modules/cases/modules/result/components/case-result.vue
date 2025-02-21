@@ -4,7 +4,7 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.reason')"
-        :value="itemInstance?.close?.closeReason?.name"
+        :value="itemInstance?.close?.closeReason"
         @update:value="setItemProp({ path: 'close.closeReason', value: $event })"
       >
         <template #default="props">

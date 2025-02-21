@@ -3,26 +3,35 @@
     :value="value.kind"
     :options="options"
     :label="$t('vocabulary.type')"
+    :v="v$.value.kind"
+    required
     track-by="name"
     use-value-from-options-by-prop="type"
     @input="changeType"
   />
   <wt-select
     v-if="
-      value.kind === FieldType.SELECT || value.kind === FieldType.MULTISELECT
+      value.kind === FieldType.Select || value.kind === FieldType.Multiselect
     "
     :value="value.lookup"
+    required
     :label="$t('reusable.object')"
     :search-method="loadLookupList"
+    :v="v$.value.lookup"
     track-by="name"
     :clearable="false"
     @input="selectObject($event)"
   />
 </template>
 
-<script setup>
-import CustomLookupsApi from '../api/custom-lookups.js';
-import FieldType from '../enums/FieldType.enum.js';
+<script setup lang="ts">
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import CustomLookupsApi from '../api/custom-lookups';
+import { FieldType } from '../enums/FieldType.enum';
 
 const props = defineProps({
   value: {
@@ -31,19 +40,61 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['changeType']);
+const { t } = useI18n();
+
+const v$ = useVuelidate(
+  computed(() => ({
+    value: {
+      kind: { required },
+      lookup: {
+        required: (value) => {
+          if (
+            props.value.kind === FieldType.Select ||
+            props.value.kind === FieldType.Multiselect
+          ) {
+            return value;
+          }
+
+          return true;
+        },
+      },
+    },
+  })),
+  { value: props.value },
+  { $autoDirty: true },
+);
+
+v$.value.$touch();
 
 const options = [
-  { name: 'Text', type: FieldType.TEXT },
-  { name: 'Number', type: FieldType.NUMBER },
-  { name: 'Select', type: FieldType.SELECT },
-  { name: 'Multiselect', type: FieldType.MULTISELECT },
-  { name: 'Calendar', type: FieldType.CALENDAR },
-  { name: 'Boolean', type: FieldType.BOOLEAN },
+  {
+    name: t(`customization.customLookups.fieldType.${FieldType.Text}`),
+    type: FieldType.Text,
+  },
+  {
+    name: t(`customization.customLookups.fieldType.${FieldType.Number}`),
+    type: FieldType.Number,
+  },
+  {
+    name: t(`customization.customLookups.fieldType.${FieldType.Select}`),
+    type: FieldType.Select,
+  },
+  {
+    name: t(`customization.customLookups.fieldType.${FieldType.Multiselect}`),
+    type: FieldType.Multiselect,
+  },
+  {
+    name: t(`customization.customLookups.fieldType.${FieldType.Calendar}`),
+    type: FieldType.Calendar,
+  },
+  {
+    name: t(`customization.customLookups.fieldType.${FieldType.Boolean}`),
+    type: FieldType.Boolean,
+  },
 ];
 
 const changeType = (value) => {
-  if (value === FieldType.SELECT || value === FieldType.MULTISELECT) {
+  if (value === FieldType.Select || value === FieldType.Multiselect) {
     props.value.list = null;
     props.value.lookup = null;
   }
