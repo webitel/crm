@@ -119,9 +119,9 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  // eslint-disable-next-line vue/require-default-prop
   title: {
     type: String,
-    default: undefined,
   },
   isNew: {
     type: Boolean,
