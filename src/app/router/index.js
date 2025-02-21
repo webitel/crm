@@ -51,6 +51,7 @@ import OpenedCustomLookup from '../../modules/customization/modules/custom-looku
 import OpenedCustomLookupColumns from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-columns.vue';
 import OpenedCustomLookupGeneral from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-general.vue';
 import TheCustomLookups from '../../modules/customization/modules/custom-lookups/components/the-custom-lookups.vue';
+import TheDictionaryExtensions from '../../modules/customization/modules/wt-type-extension/components/the-wt-type-extension.vue';
 import TheStartPage from '../../modules/start-page/components/the-start-page.vue';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
@@ -125,7 +126,8 @@ const routes = [
             path: 'attachments',
             name: `${CrmSections.CASES}-attachments`,
             component: CaseAttachments,
-          },     {
+          },
+          {
             path: 'timeline',
             name: `${CrmSections.CASES}-timeline`,
             component: CaseTimeline,
@@ -487,6 +489,11 @@ const routes = [
                 component: OpenedCustomLookupColumns,
               },
             ],
+          },
+          {
+            path: 'types-extensions/:id',
+            name: 'types-extensions',
+            component: TheDictionaryExtensions,
           },
         ],
       },
