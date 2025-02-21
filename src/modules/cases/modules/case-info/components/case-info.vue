@@ -10,6 +10,7 @@
       <template #default="props">
         <wt-input
           v-bind="props"
+          :disabled="disableUserInput"
           @input="props.updateValue($event)"
         />
       </template>
@@ -25,6 +26,7 @@
       <template #default="props">
         <wt-textarea
           v-bind="props"
+          :disabled="disableUserInput"
           @input="props.updateValue($event)"
         />
       </template>
@@ -42,8 +44,9 @@
       >
         <template #default="props">
           <wt-select
-            clearable
             v-bind="props"
+            clearable
+            :disabled="disableUserInput"
             :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"
           />
@@ -59,6 +62,7 @@
         <template #default="props">
           <wt-input
             v-bind="props"
+            :disabled="disableUserInput"
             @input="props.updateValue($event)"
           />
         </template>
@@ -72,7 +76,7 @@
     />
 
     <case-comments
-      v-if="!isNew"
+      v-if="hasCaseCommentsReadAccess && !isNew"
       :item-id="id"
       :namespace="commentsNamespace"
     />
@@ -80,16 +84,18 @@
 </template>
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { WtObject } from '@webitel/ui-sdk/src/enums/index';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import CaseComments from '../modules/comments/components/case-comments.vue';
 import RelatedCases from '../modules/related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
-const { t } = useI18n();
+const editMode = inject('editMode');
 
 const props = defineProps({
   namespace: {
@@ -97,6 +103,14 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
+const {
+  hasReadAccess: hasCaseCommentsReadAccess,
+} = useUserAccessControl({ resource: WtObject.CaseComment });
+
 const {
   namespace: cardNamespace,
   itemInstance,
@@ -104,16 +118,14 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const { isNew } = useCardComponent({
-  id,
-  itemInstance,
-});
-
 const commentsNamespace = `${cardNamespace}/comments`;
 const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
 provide('relatedCasesNamespace', relatedCasesNamespace);
 
-const editMode = inject('editMode');
+const { isNew } = useCardComponent({
+  id,
+  itemInstance,
+});
 </script>
 
 <style lang="scss" scoped></style>

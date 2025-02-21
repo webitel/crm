@@ -28,6 +28,7 @@
           <wt-select
             clearable
             :search-method="ContactsAPI.getLookup"
+            :disabled="disableUserInput"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -50,6 +51,7 @@
         <template #default="props">
           <wt-select
             clearable
+            :disabled="disableUserInput"
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
             v-bind="props"
@@ -80,6 +82,7 @@
           <wt-select
             clearable
             :search-method="ContactsAPI.getLookup"
+            :disabled="disableUserInput"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
@@ -93,6 +96,7 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.group')"
+        :disabled="disableUserInput"
         :value="itemInstance.group"
         color="success"
         icon="group"
@@ -101,6 +105,7 @@
       >
         <template #default="props">
           <wt-select
+            :disabled="disableUserInput"
             clearable
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
@@ -120,6 +125,7 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import ContactsAPI from '../../../../contacts/api/ContactsAPI.js';
@@ -129,6 +135,8 @@ const store = useStore();
 const { t } = useI18n();
 
 const namespace = inject('namespace');
+
+const { disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,

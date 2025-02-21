@@ -13,8 +13,8 @@
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
-          :disabled:add="formState.isAdding || formState.editingLink"
-          :disabled:delete="!editMode || !selected.length"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink"
+          :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
           @click:delete="
@@ -28,7 +28,7 @@
       </header>
 
       <table-top-row-bar
-        v-if="formState.isAdding || formState.editingLink"
+        v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
         @reset="resetForm"
         @submit="submitLink"
       >
@@ -85,12 +85,12 @@
 
           <template #actions="{ item }">
             <wt-icon-action
-              :disabled="!editMode || formState.isAdding"
+              :disabled="!editMode || !hasUpdateAccess || formState.isAdding"
               action="edit"
               @click="startEditingLink(item)"
             />
             <wt-icon-action
-              :disabled="!editMode"
+              :disabled="!editMode || !hasDeleteAccess"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -111,15 +111,17 @@ import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import LinksAPI from '../api/LinksAPI.js';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
@@ -134,23 +136,24 @@ const props = defineProps({
 
 const store = useStore();
 const { t } = useI18n();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
+
 const {
   namespace,
   dataList,
   selected,
   isLoading,
   headers,
-  isNext,
-  error,
   loadData,
   deleteData,
-  sort,
   setSelected,
   onFilterEvent,
 } = useTableStore(props.namespace);
 
 const {
-  namespace: filtersNamespace,
   restoreFilters,
   subscribe,
   flushSubscribers,

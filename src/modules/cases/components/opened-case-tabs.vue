@@ -7,6 +7,7 @@
     />
     <router-view
       :namespace="cardNamespace"
+      :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
       class="opened-card-tabs__tab"
     />
   </article>
@@ -19,6 +20,8 @@ import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+
 const props = defineProps({
   namespace: {
     type: String,
@@ -27,6 +30,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 const {
   namespace: cardNamespace,
   id,
