@@ -76,7 +76,7 @@
     />
 
     <case-comments
-      v-if="hasReadAccess && !isNew"
+      v-if="hasCaseCommentsReadAccess && !isNew"
       :item-id="id"
       :namespace="commentsNamespace"
     />
@@ -107,7 +107,9 @@ const props = defineProps({
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
-const { hasReadAccess } = useUserAccessControl({ resource: WtObject.CaseComment });
+const {
+  hasReadAccess: hasCaseCommentsReadAccess,
+} = useUserAccessControl({ resource: WtObject.CaseComment });
 
 const {
   namespace: cardNamespace,

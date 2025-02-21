@@ -14,8 +14,9 @@
         </h3>
 
         <wt-action-bar
-          :disabled:add="!props.editMode"
           :include="[IconAction.ADD, IconAction.DELETE]"
+          :disabled:add="!hasCreateAccess || !props.editMode"
+          :disabled:delete="!hasDeleteAccess"
           @click:add="startAddingRelatedCase"
           @click:delete="
             askDeleteConfirmation({
@@ -27,7 +28,7 @@
       </header>
 
       <table-top-row-bar
-        v-if="defaultState.createMode"
+        v-if="hasCreateAccess && defaultState.createMode"
         @reset="resetForm"
         @submit="submitCase"
       >
@@ -35,6 +36,7 @@
           :value="defaultState.relationType"
           :options="relatedTypesOptions"
           :clearable="false"
+          :disabled="!hasCreateAccess"
           :searchable="false"
           use-value-from-options-by-prop="id"
           option-label="name"
@@ -44,6 +46,7 @@
 
         <wt-select
           :value="defaultState.relatedCase"
+          :disabled="!hasCreateAccess"
           :clearable="false"
           :search-method="CasesAPI.getLookup"
           :placeholder="t('cases.relatedCases.searchCasesPlaceholder')"
@@ -109,7 +112,7 @@
 
           <template #actions="{ item }">
             <wt-icon-action
-              :disabled="!props.editMode"
+              :disabled="hasDeleteAccess || !props.editMode"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -126,7 +129,7 @@
 </template>
 
 <script setup>
-import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
+import { IconAction } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
@@ -137,6 +140,7 @@ import { useI18n } from 'vue-i18n';
 import { CasesRelationType } from 'webitel-sdk';
 
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CasesAPI from '../../../../../api/CasesAPI.js';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import RelatedCasesAPI from '../api/related-cases-api.js';
@@ -154,6 +158,10 @@ const props = defineProps({
 });
 
 const relatedCasesNamespace = inject('relatedCasesNamespace', '');
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
 
 const { t } = useI18n();
 

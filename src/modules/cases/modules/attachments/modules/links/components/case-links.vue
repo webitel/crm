@@ -13,7 +13,7 @@
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
-          :disabled:add="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink"
           :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
@@ -111,16 +111,17 @@ import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import LinksAPI from '../api/LinksAPI.js';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
