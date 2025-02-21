@@ -51,6 +51,7 @@
             :selected="selected"
             sortable
             @sort="updateSort"
+            @update:selected="updateSelected"
           >
             <template #name="{ item }">
               <wt-item-link
@@ -78,7 +79,7 @@
                   params: { id: item?.id },
                 }"
               >
-              {{ item.subject }}
+                {{ item.subject }}
               </wt-item-link>
             </template>
             <template #priority="{ item }">
@@ -194,7 +195,7 @@ import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { useTableStore } from '../store/cases.store.ts';
+import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 
 const baseNamespace = 'cases';
@@ -210,13 +211,20 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 
 const { close } = useClose('the-start-page');
 
-const tableStore = useTableStore();
+const tableStore = useCasesStore();
 
 const { dataList, selected, isLoading, page, size, next, headers } =
   storeToRefs(tableStore);
 
-const { initialize, loadDataList, updatePage, updateSize, updateSort, deleteEls } =
-  tableStore;
+const {
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+} = tableStore;
 
 const {
   isVisible: isDeleteConfirmationPopup,

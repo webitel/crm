@@ -40,6 +40,11 @@
         />
       </table-top-row-bar>
 
+      <wt-empty
+        v-show="showEmpty"
+        :text="emptyTableText"
+      />
+
       <wt-loader v-show="isLoading" />
       <div
         v-show="!isLoading && dataList.length"
@@ -97,6 +102,9 @@ import { useStore } from 'vuex';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI.js';
 import CaseCommentItem from './case-comment-item.vue';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
@@ -140,6 +148,13 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const emptyTableText = computed(() =>
+  t('cases.emptyCases', {
+    e: t('cases.comments.comments').toLowerCase(),
+  }),
+);
 
 subscribe({
   event: '*',

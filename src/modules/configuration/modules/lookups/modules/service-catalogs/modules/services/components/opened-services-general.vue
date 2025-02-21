@@ -88,7 +88,9 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
-const { disableUserInput } = useUserAccessControl();
+const { disableUserInput } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

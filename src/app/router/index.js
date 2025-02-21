@@ -196,55 +196,6 @@ const routes = [
         ],
       },
       {
-        path: 'contacts/:id',
-        name: `${CrmSections.CONTACTS}-card`,
-        component: OpenedContact,
-        beforeEnter: checkRouteAccess,
-        redirect: { name: `${CrmSections.CONTACTS}-timeline` },
-        children: [
-          {
-            path: 'timeline',
-            name: `${CrmSections.CONTACTS}-timeline`,
-            component: ContactTimeline,
-          },
-          {
-            path: 'communications',
-            redirect: {
-              name: `${CrmSections.CONTACTS}-communications-phones`,
-            },
-            name: `${CrmSections.CONTACTS}-communications`,
-            component: ContactCommunications,
-            children: [
-              {
-                path: 'phones/:commId?',
-                name: `${CrmSections.CONTACTS}-communications-phones`,
-                component: ContactCommunications,
-              },
-              {
-                path: 'messaging/:commId?',
-                name: `${CrmSections.CONTACTS}-communications-messaging`,
-                component: ContactCommunications,
-              },
-              {
-                path: 'emails/:commId?',
-                name: `${CrmSections.CONTACTS}-communications-emails`,
-                component: ContactCommunications,
-              },
-            ],
-          },
-          {
-            path: 'variables/:variableId?',
-            name: `${CrmSections.CONTACTS}-variables`,
-            component: ContactVariables,
-          },
-          {
-            path: 'permissions/:permissionId?',
-            name: `${CrmSections.CONTACTS}-permissions`,
-            component: ContactPermissions,
-          },
-        ],
-      },
-      {
         path: 'configuration',
         name: 'configuration',
         component: TheConfiguration,

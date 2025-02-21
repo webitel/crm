@@ -27,6 +27,11 @@
         </wt-action-bar>
       </header>
 
+      <wt-empty
+        v-show="showEmpty"
+        :text="emptyTableText"
+      />
+
       <wt-loader v-show="isLoading" />
 
       <div
@@ -96,7 +101,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
-import { inject, onUnmounted, ref } from 'vue';
+import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -104,6 +109,9 @@ import downloadFile from '../../../../../../../app/utils/downloadFile.js';
 import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
 import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
 import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
@@ -148,6 +156,13 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const emptyTableText = computed(() =>
+  t('cases.emptyCases', {
+    e: t('cases.attachments.attachments').toLowerCase(),
+  }),
+);
 
 subscribe({
   event: '*',

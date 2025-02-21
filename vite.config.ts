@@ -28,6 +28,9 @@ export default ({ mode }) => {
         },
       },
     },
+    optimizeDeps: {
+      include: ['clipboard-copy', 'deep-equal'],
+    },
     resolve: {
       alias: {
         vue: '@vue/compat',
