@@ -4,7 +4,7 @@ import {
   createCardStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import DictionaryExtensionApi from '../api/dictionary-extensions.js';
+import WtTypeExtensionApi from '../api/wtTypeExtension.js';
 
 const resetCardState = {
   itemId: '',
@@ -17,7 +17,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
   state: {
-    api: DictionaryExtensionApi,
+    api: WtTypeExtensionApi,
   },
 });
 
@@ -31,10 +31,10 @@ const card = createCardStoreModule({
   },
 });
 
-const dictionaryExtensions = createBaseStoreModule({
+const wtTypeExtension = createBaseStoreModule({
   modules: {
     card,
   },
 });
 
-export default dictionaryExtensions;
+export default wtTypeExtension;

@@ -127,7 +127,7 @@ const getCustomLookupRecordsLookup = async ({ type, ...params }) => {
     ]);
 
     return {
-      items: data,
+      items: data ?? [],
       next,
     };
   } catch (err) {
