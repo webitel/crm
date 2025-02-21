@@ -11,7 +11,7 @@
   />
   <wt-select
     v-if="
-      value.kind === FieldType.SELECT || value.kind === FieldType.MULTISELECT
+      value.kind === FieldType.Select || value.kind === FieldType.Multiselect
     "
     :value="value.lookup"
     required
@@ -24,7 +24,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { computed } from 'vue';
@@ -49,8 +49,8 @@ const v$ = useVuelidate(
       lookup: {
         required: (value) => {
           if (
-            props.value.kind === FieldType.SELECT ||
-            props.value.kind === FieldType.MULTISELECT
+            props.value.kind === FieldType.Select ||
+            props.value.kind === FieldType.Multiselect
           ) {
             return value;
           }
@@ -68,33 +68,33 @@ v$.value.$touch();
 
 const options = [
   {
-    name: t(`customization.customLookups.fieldType.${FieldType.TEXT}`),
-    type: FieldType.TEXT,
+    name: t(`customization.customLookups.fieldType.${FieldType.Text}`),
+    type: FieldType.Text,
   },
   {
-    name: t(`customization.customLookups.fieldType.${FieldType.NUMBER}`),
-    type: FieldType.NUMBER,
+    name: t(`customization.customLookups.fieldType.${FieldType.Number}`),
+    type: FieldType.Number,
   },
   {
-    name: t(`customization.customLookups.fieldType.${FieldType.SELECT}`),
-    type: FieldType.SELECT,
+    name: t(`customization.customLookups.fieldType.${FieldType.Select}`),
+    type: FieldType.Select,
   },
   {
-    name: t(`customization.customLookups.fieldType.${FieldType.MULTISELECT}`),
-    type: FieldType.MULTISELECT,
+    name: t(`customization.customLookups.fieldType.${FieldType.Multiselect}`),
+    type: FieldType.Multiselect,
   },
   {
-    name: t(`customization.customLookups.fieldType.${FieldType.CALENDAR}`),
-    type: FieldType.CALENDAR,
+    name: t(`customization.customLookups.fieldType.${FieldType.Calendar}`),
+    type: FieldType.Calendar,
   },
   {
-    name: t(`customization.customLookups.fieldType.${FieldType.BOOLEAN}`),
-    type: FieldType.BOOLEAN,
+    name: t(`customization.customLookups.fieldType.${FieldType.Boolean}`),
+    type: FieldType.Boolean,
   },
 ];
 
 const changeType = (value) => {
-  if (value === FieldType.SELECT || value === FieldType.MULTISELECT) {
+  if (value === FieldType.Select || value === FieldType.Multiselect) {
     props.value.list = null;
     props.value.lookup = null;
   }

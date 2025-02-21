@@ -1,13 +1,13 @@
 <template>
-  <template v-if="field.kind === FieldType.SELECT">
+  <template v-if="field.kind === FieldType.Select">
     {{ displayText(value[field.value]?.name) }}
   </template>
   <display-chip-items
-    v-else-if="field.kind === FieldType.MULTISELECT"
+    v-else-if="field.kind === FieldType.Multiselect"
     :items="value[field.value]"
   />
   <wt-switcher
-    v-else-if="field.kind === FieldType.BOOLEAN"
+    v-else-if="field.kind === FieldType.Boolean"
     :value="value[field.value]"
   ></wt-switcher>
   <template v-else>
@@ -37,7 +37,7 @@ const props = defineProps({
 const showText = computed(() => {
   const value = props.value[props.field.value];
 
-  if (props.field.kind === FieldType.CALENDAR) {
+  if (props.field.kind === FieldType.Calendar) {
     return displayText(prettifyDate(value));
   }
 

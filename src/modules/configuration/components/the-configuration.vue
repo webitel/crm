@@ -67,7 +67,7 @@ const nav = reactive([
     name: computed(() => t('customization.customization')),
     subNav: [
       {
-        value: 'dictionary-extensions',
+        value: 'type-extension-contact',
         name: computed(() => t('customization.extensions.contacts')),
         route: 'customization/types-extensions/contacts',
       },

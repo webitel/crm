@@ -4,7 +4,7 @@ import {
   createCardStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import WtTypeExtensionApi from '../api/wt-type-extension.js';
+import WtTypeExtensionApi from '../api/wtTypeExtension.js';
 
 const resetCardState = {
   itemId: '',

@@ -1,32 +1,32 @@
 <template>
   <wt-input
-    v-if="field.kind === FieldType.TEXT"
+    v-if="field.kind === FieldType.Text"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
-    :label="$t(field.name)"
+    :label="t(field.name)"
     :required="field.required"
     @input="setItemProp({ path: field.id, value: $event })"
   />
   <wt-input
-    v-else-if="field.kind === FieldType.NUMBER"
+    v-else-if="field.kind === FieldType.Number"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
-    :label="$t(field.name)"
+    :label="t(field.name)"
     type="number"
     :required="field.required"
     @input="setItemProp({ path: field.id, value: $event })"
   />
   <wt-switcher
-    v-else-if="field.kind === FieldType.BOOLEAN"
-    :label="$t(field.name)"
+    v-else-if="field.kind === FieldType.Boolean"
+    :label="t(field.name)"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
     :required="field.required"
     @change="setItemProp({ path: field.id, value: $event })"
   />
   <wt-select
-    v-else-if="field.kind === FieldType.SELECT"
-    :label="$t(field.name)"
+    v-else-if="field.kind === FieldType.Select"
+    :label="t(field.name)"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
     :search-method="loadLookupList(field.lookup.type)"
@@ -36,8 +36,8 @@
     @input="selectElement"
   />
   <wt-select
-    v-else-if="field.kind === FieldType.MULTISELECT"
-    :label="$t(field.name)"
+    v-else-if="field.kind === FieldType.Multiselect"
+    :label="t(field.name)"
     :value="itemInstance[field.id]"
     :v="v$.itemInstance[field.id]"
     :search-method="loadLookupList(field.lookup.type)"
@@ -48,8 +48,8 @@
     @input="selectElements"
   />
   <wt-datepicker
-    v-else-if="field.kind === FieldType.CALENDAR"
-    :label="$t(field.name)"
+    v-else-if="field.kind === FieldType.Calendar"
+    :label="t(field.name)"
     :value="itemInstance[field.id]"
     mode="datetime"
     :required="field.required"
@@ -62,6 +62,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import FieldType from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
 import CustomLookupApi from '../api/custom-lookups.js';
@@ -78,6 +79,8 @@ const props = defineProps({
 });
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
+
+const { t } = useI18n();
 
 const v$ = useVuelidate(
   computed(() => {
