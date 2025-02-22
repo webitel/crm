@@ -24,6 +24,9 @@
           <h3 class="table-title__title">
             {{ $t('cases.case', 2) }}
           </h3>
+
+          <dynamic-filter-search-wrapper class="cases__search-filter" />
+
           <wt-action-bar
             :include="[
               IconAction.ADD,
@@ -198,9 +201,10 @@ import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import CasesFilters from '../filters/cases-filters.vue';
+import DynamicFilterSearchWrapper from '../filters/components/dynamic-filter-search-wrapper.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
-import CasesFilters from '../filters/cases-filters.vue';
 
 const baseNamespace = 'cases';
 
@@ -276,14 +280,24 @@ initialize();
 </script>
 
 <style lang="scss" scoped>
-.cases__link-content {
-  display: flex;
-  gap: var(--spacing-xs);
-}
+.cases {
+  .table-title {
+    grid-gap: var(--spacing-xs);
+  }
 
-//TODO: typo-body-1 bold
-.case-priority {
-  @extend %typo-body-1;
-  font-weight: bold;
+  &__link-content {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  &__search-filter {
+    margin-left: auto;
+  }
+
+  //TODO: typo-body-1 bold
+  .case-priority {
+    @extend %typo-body-1;
+    font-weight: bold;
+  }
 }
 </style>
