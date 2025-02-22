@@ -26,11 +26,12 @@
       >
         <template #default="props">
           <wt-select
-            clearable
+            v-bind="props"
             :search-method="ContactsAPI.getLookup"
             :disabled="disableUserInput"
+            :v="v$.value.itemInstance.reporter"
+            :clearable="false"
             class="case-persons__select"
-            v-bind="props"
             @input="props.updateValue($event)"
           />
         </template>
@@ -50,11 +51,11 @@
       >
         <template #default="props">
           <wt-select
-            clearable
+            v-bind="props"
+            :clearable="false"
             :disabled="disableUserInput"
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
-            v-bind="props"
             @input="props.updateValue($event)"
           />
         </template>
@@ -122,6 +123,7 @@
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -135,6 +137,7 @@ const store = useStore();
 const { t } = useI18n();
 
 const namespace = inject('namespace');
+const v$ = inject('v$');
 
 const { disableUserInput } = useUserAccessControl();
 
@@ -154,7 +157,7 @@ function handleReporterInput(value) {
     value: value,
   });
 
-  if (!itemInstance.value.impacted) {
+  if (isEmpty(itemInstance.value.impacted)) {
     setItemProp({
       path: 'impacted',
       value: value,

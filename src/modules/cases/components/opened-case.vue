@@ -40,8 +40,8 @@
     </template>
     <template #main>
       <opened-case-tabs
-        :v="v$"
         :namespace="namespace"
+        :v="v$"
       />
     </template>
   </wt-dual-panel>
@@ -63,6 +63,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 
 const namespace = 'cases';
 
@@ -96,8 +97,16 @@ const v$ = useVuelidate(
     itemInstance: {
       subject: { required },
       // sla: { required }, /* sla is required, but cannot be changed in the ui */
-      priority: { required }, /* priority is required, but set automatically by default and can't be cleared in the ui */
+      priority: {
+        required,
+      } /* priority is required, but set automatically by default and can't be cleared in the ui */,
       source: { required },
+      reporter: {
+        required: (v) => {
+          return !isEmpty(v);
+        },
+      },
+      // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
       service: { required },
       // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
       // close: { required }, /* close is required if status is final, but should be entered before status=final is changed */
@@ -107,7 +116,10 @@ const v$ = useVuelidate(
   { $autoDirty: true },
 );
 
-provide('v$', computed(() => v$));
+provide(
+  'v$',
+  computed(() => v$),
+);
 
 v$.value.$touch();
 
