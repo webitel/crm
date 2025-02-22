@@ -97,6 +97,7 @@ const v$ = useVuelidate(
       subject: { required },
       // sla: { required }, /* sla is required, but cannot be changed in the ui */
       priority: { required }, /* priority is required, but set automatically by default and can't be cleared in the ui */
+      source: { required },
       service: { required },
       // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
       // close: { required }, /* close is required if status is final, but should be entered before status=final is changed */
