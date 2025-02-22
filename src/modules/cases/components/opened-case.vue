@@ -40,8 +40,8 @@
     </template>
     <template #main>
       <opened-case-tabs
-        :v="v$"
         :namespace="namespace"
+        :v="v$"
       />
     </template>
   </wt-dual-panel>
@@ -50,7 +50,6 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import {WtObject} from "@webitel/ui-sdk/enums";
 import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -64,6 +63,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 
 const namespace = 'cases';
 
@@ -96,17 +96,30 @@ const v$ = useVuelidate(
   computed(() => ({
     itemInstance: {
       subject: { required },
-      sla: { required },
-      priority: { required },
-      status: { required },
-      // close: { required }, // TODO
+      // sla: { required }, /* sla is required, but cannot be changed in the ui */
+      priority: {
+        required,
+      } /* priority is required, but set automatically by default and can't be cleared in the ui */,
+      source: { required },
+      reporter: {
+        required: (v) => {
+          return !isEmpty(v);
+        },
+      },
+      // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
+      service: { required },
+      // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
+      // close: { required }, /* close is required if status is final, but should be entered before status=final is changed */
     },
   })),
   { itemInstance },
   { $autoDirty: true },
 );
 
-provide('v$', v$);
+provide(
+  'v$',
+  computed(() => v$),
+);
 
 v$.value.$touch();
 
@@ -119,7 +132,7 @@ const { isNew, disabledSave, save, initialize } = useCardComponent({
   setId,
   resetState,
 
-  invalid: v$.value.$invalid,
+  invalid: computed(() => v$.value.$invalid),
 });
 
 initialize();
@@ -210,7 +223,6 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
 <style lang="scss" scoped>
 .opened-case {
   &__actions-wrapper {
