@@ -13,7 +13,8 @@
       <wt-select
         :key="status?.id"
         :disabled="disableUserInput"
-        clearable
+        :clearable="false"
+        :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
@@ -51,6 +52,7 @@ import CaseResultPopup from './case-result-popup.vue';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
+const v$ = inject('v$');
 
 const { t } = useI18n();
 const store = useStore();
