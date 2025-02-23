@@ -20,7 +20,7 @@
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => deleteData(selected),
+              callback: () => deleteEls(selected),
             })
           "
         >
@@ -52,67 +52,70 @@
       >
         <wt-table
           :data="dataList"
-          :headers="headers"
+          :headers="shownHeaders"
           :selected="selected"
           headless
           sortable
-          @sort="sort"
-          @update:selected="setSelected"
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #content="{ item }">
-            <case-comment-item :comment="item" />
+            <case-comment-row
+              :comment="item"
+            />
           </template>
           <template #actions="{ item }">
             <wt-icon-action
-              v-if="hasUpdateAccess && item.canEdit"
-              :disabled="formState.isAdding"
+              v-if="item.canEdit"
+              :disabled="!hasUpdateAccess || formState.isAdding"
               action="edit"
               @click="startEditingComment(item)"
             />
             <wt-icon-action
-              v-if="hasDeleteAccess && item.canEdit"
+              v-if="item.canEdit"
+              :disabled="!hasDeleteAccess"
               action="delete"
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteData(item),
+                  callback: () => deleteEls(item),
                 })
               "
             />
           </template>
         </wt-table>
 
-        <filter-pagination
-          :is-next="isNext"
-          :namespace="filtersNamespace"
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
         />
       </div>
     </section>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { computed, onUnmounted, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
-import CommentsAPI from '../api/CommentsAPI.js';
-import CaseCommentItem from './case-comment-item.vue';
+import CommentsAPI from '../api/CommentsAPI';
+import CaseCommentRow from './case-comment-row.vue';
+import {useCaseCommentsStore} from "../stores/comments";
+import {storeToRefs} from "pinia";
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  itemId: {
+  parentId: {
     type: String,
     required: true,
   },
@@ -123,26 +126,25 @@ const { t } = useI18n();
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
   useUserAccessControl(WtObject.CaseComment);
 
-const {
-  namespace,
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(props.namespace);
+const tableStore = useCaseCommentsStore();
+
+const { dataList, selected, isLoading, page, size, next, shownHeaders } =
+  storeToRefs(tableStore);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+} = tableStore;
+
+updateSize(5);
+initialize({
+  parentId: props.parentId,
+});
 
 const {
   isVisible: isConfirmationPopup,
@@ -158,16 +160,6 @@ const emptyTableText = computed(() =>
     e: t('cases.comments.comments').toLowerCase(),
   }),
 );
-
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
-});
-
-restoreFilters();
-onUnmounted(() => {
-  flushSubscribers();
-});
 
 const editableSelectedComments = computed(
   () => !!selected.value.every((comment) => comment.canEdit),
@@ -209,11 +201,11 @@ async function submitComment() {
     });
   } else {
     await CommentsAPI.add({
-      parentId: props.itemId,
+      parentId: props.parentId,
       input: { text: formState.commentText },
     });
   }
-  await loadData();
+  await loadDataList();
   resetForm();
 }
 </script>

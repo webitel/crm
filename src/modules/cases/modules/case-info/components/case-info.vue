@@ -78,9 +78,8 @@
     />
 
     <case-comments
-      v-if="hasCaseCommentsReadAccess && !isNew"
-      :item-id="id"
-      :namespace="commentsNamespace"
+      v-if="hasCaseCommentsReadAccess && id"
+      :parent-id="id"
     />
   </div>
 </template>
@@ -121,7 +120,6 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const commentsNamespace = `${cardNamespace}/comments`;
 const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
 provide('relatedCasesNamespace', relatedCasesNamespace);
 
