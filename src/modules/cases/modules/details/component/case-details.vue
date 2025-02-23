@@ -1,13 +1,14 @@
 <template>
   <div
     v-if="editMode"
-    class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50"
+    class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50"
   >
-    <wt-type-extension-dynamic-field
+    <custom-lookup-dynamic-field
       v-for="field in fields"
       :key="field.id"
       :field="field"
       :namespace="namespace"
+      path-to-field="custom"
     />
   </div>
   <div v-else>Display content</div>
@@ -18,8 +19,8 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject, ref } from 'vue';
 
+import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtTypeExtensionApi from '../../../../customization/modules/wt-type-extension/api/wtTypeExtension.js';
-import WtTypeExtensionDynamicField from '../../../../customization/modules/wt-type-extension/components/wt-type-extension-dynamic-field.vue';
 
 const editMode = inject('editMode');
 

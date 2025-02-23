@@ -1,59 +1,59 @@
 <template>
   <wt-input
     v-if="field.kind === FieldType.Text"
-    :value="itemInstance[field.id]"
-    :v="v$.itemInstance[field.id]"
-    :label="t(field.name)"
-    :required="field.required"
-    @input="setItemProp({ path: field.id, value: $event })"
+    :value="value"
+    :v="validation"
+    :label="label"
+    :required="isRequired"
+    @input="setValue($event)"
   />
   <wt-input
     v-else-if="field.kind === FieldType.Number"
-    :value="itemInstance[field.id]"
-    :v="v$.itemInstance[field.id]"
-    :label="t(field.name)"
+    :value="value"
+    :v="validation"
+    :label="label"
     type="number"
-    :required="field.required"
-    @input="setItemProp({ path: field.id, value: $event })"
+    :required="isRequired"
+    @input="setValue($event)"
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
-    :label="t(field.name)"
-    :value="itemInstance[field.id]"
-    :v="v$.itemInstance[field.id]"
-    :required="field.required"
-    @change="setItemProp({ path: field.id, value: $event })"
+    :label="label"
+    :value="value"
+    :v="validation"
+    :required="isRequired"
+    @change="setValue($event)"
   />
   <wt-select
     v-else-if="field.kind === FieldType.Select"
-    :label="t(field.name)"
-    :value="itemInstance[field.id]"
-    :v="v$.itemInstance[field.id]"
-    :search-method="loadLookupList(field.lookup.type)"
+    :label="label"
+    :value="value"
+    :v="validation"
+    :search-method="loadLookupList(field.lookup?.type)"
     track-by="name"
     clearable
-    :required="field.required"
+    :required="isRequired"
     @input="selectElement"
   />
   <wt-select
     v-else-if="field.kind === FieldType.Multiselect"
-    :label="t(field.name)"
-    :value="itemInstance[field.id]"
-    :v="v$.itemInstance[field.id]"
-    :search-method="loadLookupList(field.lookup.type)"
+    :label="label"
+    :value="value"
+    :v="validation"
+    :search-method="loadLookupList(field.lookup?.type)"
     track-by="name"
     clearable
     multiple
-    :required="field.required"
+    :required="isRequired"
     @input="selectElements"
   />
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
-    :label="t(field.name)"
-    :value="itemInstance[field.id]"
+    :label="label"
+    :value="value"
     mode="datetime"
-    :required="field.required"
-    @input="setItemProp({ path: field.id, value: +$event })"
+    :required="isRequired"
+    @input="setValue(+$event)"
   />
 </template>
 
@@ -76,6 +76,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  // If the field is nested in the itemInstance object
+  // eslint-disable-next-line vue/require-default-prop
+  pathToField: {
+    type: String,
+  },
 });
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
@@ -84,16 +89,38 @@ const { t } = useI18n();
 
 const v$ = useVuelidate(
   computed(() => {
-    const rules = {
-      itemInstance: {},
-    };
+    let rules;
 
-    if (!rules[props.field.id]) {
+    if (props.pathToField) {
+      rules = {
+        itemInstance: {
+          [props.pathToField]: {},
+        },
+      };
+    } else {
+      rules = {
+        itemInstance: {},
+      };
+    }
+
+    if (
+      props.pathToField &&
+      !rules.itemInstance[props.pathToField][props.field.id]
+    ) {
+      rules.itemInstance[props.pathToField][props.field.id] = {};
+    }
+
+    if (!props.pathToField && !rules.itemInstance[props.field.id]) {
       rules.itemInstance[props.field.id] = {};
     }
 
     if (props.field.required) {
-      rules.itemInstance[props.field.id].required = required;
+      if (props.pathToField) {
+        rules.itemInstance[props.pathToField][props.field.id].required =
+          required;
+      } else {
+        rules.itemInstance[props.field.id].required = required;
+      }
     }
 
     return rules;
@@ -104,27 +131,56 @@ const v$ = useVuelidate(
 
 v$.value.$touch();
 
+const value = computed(() => {
+  if (props.pathToField) {
+    return itemInstance.value[props.pathToField][props.field.id];
+  }
+
+  return itemInstance.value[props.field.id];
+});
+
+const validation = computed(() => {
+  if (props.pathToField) {
+    return v$.value.itemInstance[props.pathToField][props.field.id];
+  }
+
+  return v$.value.itemInstance[props.field.id];
+});
+
+const label = computed(() => {
+  return t(props.field?.name || 'Invalid label');
+});
+
+const isRequired = computed(() => {
+  return props.field.required;
+});
+
+const setValue = (value) => {
+  setItemProp({
+    path: props.pathToField
+      ? `${props.pathToField}.${props.field.id}`
+      : props.field.id,
+    value,
+  });
+};
+
 const loadLookupList = (type) => () => {
   return CustomLookupApi.getLookup({ type });
 };
 
 const selectElement = (value) => {
-  setItemProp({
-    path: props.field.id,
-    value: {
-      id: value.id,
-      name: value.name,
-    },
+  setValue({
+    id: value.id,
+    name: value.name,
   });
 };
 
 const selectElements = (value) => {
-  setItemProp({
-    path: props.field.id,
-    value: value.map((item) => ({
+  setValue(
+    value.map((item) => ({
       id: item.id,
       name: item.name,
     })),
-  });
+  );
 };
 </script>
