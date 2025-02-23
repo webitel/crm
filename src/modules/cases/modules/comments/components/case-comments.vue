@@ -107,8 +107,8 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
 import CaseCommentRow from './case-comment-row.vue';
 import {useCaseCommentsStore} from "../stores/comments";

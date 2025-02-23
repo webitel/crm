@@ -25,8 +25,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 
-import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
-import prettifyDate from '../../../../../utils/prettifyDate.js';
+import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
+import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
   comment: {
