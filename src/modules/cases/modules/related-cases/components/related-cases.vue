@@ -132,18 +132,18 @@
 <script setup>
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CasesRelationType } from 'webitel-sdk';
 
-import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CasesAPI from '../../../../../api/CasesAPI.js';
-import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
-import { RelatedCasesAPI } from '../api/RelatedCasesAPI.ts';
+import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import CasesAPI from '../../../api/CasesAPI';
+import TableTopRowBar from '../../../components/table-top-row-bar.vue';
+import { RelatedCasesAPI } from '../api/RelatedCasesAPI';
 import RelatedCaseItem from './related-case-item.vue';
 import { useCaseRelatedCasesStore } from '../stores/relatedCases';
 

@@ -92,7 +92,7 @@ import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
 import CaseComments from '../../comments/components/case-comments.vue';
-import RelatedCases from '../modules/related-cases/components/related-cases.vue';
+import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
 const editMode = inject('editMode');
