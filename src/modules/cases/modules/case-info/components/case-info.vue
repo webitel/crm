@@ -10,6 +10,7 @@
       <template #default="props">
         <wt-input
           v-bind="props"
+          :v="v$.value.itemInstance.subject"
           :disabled="disableUserInput"
           @input="props.updateValue($event)"
         />
@@ -45,6 +46,7 @@
         <template #default="props">
           <wt-select
             v-bind="props"
+            :v="v$.value.itemInstance.source"
             :clearable="false"
             :disabled="disableUserInput"
             :search-method="SourcesAPI.getLookup"
@@ -96,6 +98,7 @@ import RelatedCases from '../modules/related-cases/components/related-cases.vue'
 import EditableField from './editable-field.vue';
 
 const editMode = inject('editMode');
+const v$ = inject('v$');
 
 const props = defineProps({
   namespace: {

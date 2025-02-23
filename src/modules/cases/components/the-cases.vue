@@ -268,7 +268,7 @@ function edit(item) {
 function deleteSelectedItems() {
   return askDeleteConfirmation({
     deleted: selected.value,
-    callback: () => deleteData([...selected.value]),
+    callback: () => deleteEls([...selected.value]),
   });
 }
 
