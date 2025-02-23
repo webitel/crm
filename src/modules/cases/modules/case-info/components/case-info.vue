@@ -72,9 +72,8 @@
     </div>
 
     <related-cases
-      v-if="!isNew"
-      :edit-mode="editMode"
-      :item-id="id"
+      v-if="id"
+      :parent-id="id"
     />
 
     <case-comments
@@ -114,14 +113,10 @@ const {
 } = useUserAccessControl({ resource: WtObject.CaseComment });
 
 const {
-  namespace: cardNamespace,
   itemInstance,
   setItemProp,
   id,
 } = useCardStore(props.namespace);
-
-const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
-provide('relatedCasesNamespace', relatedCasesNamespace);
 
 const { isNew } = useCardComponent({
   id,

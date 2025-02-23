@@ -3,47 +3,35 @@ import {
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
+} from '@webitel/ui-sdk/src/api/defaults/index';
 import applyTransform, {
   camelToSnake,
   merge,
   notify,
-  sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { RelatedCasesApiFactory } from 'webitel-sdk';
+} from '@webitel/ui-sdk/src/api/transformers/index';
+import { RelatedCasesApiFactory, CasesRelatedCase } from 'webitel-sdk';
+import type { ApiModule } from "@webitel/ui-sdk/src/api/types/ApiModule.d.ts";
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const relatedCasesService = new RelatedCasesApiFactory(
+const relatedCasesService = RelatedCasesApiFactory(
   configuration,
   '',
   instance,
 );
 
 const getRelatedCasesList = async ({ parentId, ...rest }) => {
-  const fieldsToSend = [
-    'etag',
-    'page',
-    'size',
-    'q',
-    'sort',
-    'fields',
-    'ids',
-    'filters',
-  ];
-
   const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
       ...params,
       q: params.search,
-      fields: [...params.fields, 'primary_case'],
+      fields: [...params.fields, 'primary_case', 'id'],
     }),
-    sanitize(fieldsToSend),
     camelToSnake(),
   ]);
 
@@ -59,12 +47,12 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
       options,
     );
 
-    const { data, next } = applyTransform(response.data, [
+    const { items, next } = applyTransform({ ...response.data, items: response.data?.data || [] }, [
       merge(getDefaultGetListResponse()),
     ]);
 
     return {
-      items: applyTransform(data, [snakeToCamel()]),
+      items: applyTransform(items, [snakeToCamel()]),
       next,
     };
   } catch (err) {
@@ -93,10 +81,8 @@ const deleteRelatedCase = async ({ id }) => {
   }
 };
 
-const relatedCasesAPI = {
+export const RelatedCasesAPI: ApiModule<CasesRelatedCase> = {
   getList: getRelatedCasesList,
   delete: deleteRelatedCase,
   add: addRelatedCase,
 };
-
-export default relatedCasesAPI;

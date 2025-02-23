@@ -15,13 +15,13 @@
 
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DELETE]"
-          :disabled:add="!hasCreateAccess || !props.editMode"
-          :disabled:delete="!hasDeleteAccess"
+          :disabled:add="!hasCreateAccess"
+          :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           @click:add="startAddingRelatedCase"
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => deleteData(selected),
+              callback: () => deleteEls(selected),
             })
           "
         />
@@ -66,20 +66,23 @@
 
       <wt-empty
         v-show="showEmpty"
-        :text="emptyTableText"
+        :text="emptyText"
       />
 
       <wt-loader v-show="isLoading" />
 
-      <div class="table-section__table-wrapper">
+      <div
+        v-show="!isLoading && dataList.length"
+        class="table-section__table-wrapper"
+      >
         <wt-table
-          v-show="!isLoading && dataList.length"
           :data="dataList"
-          :headers="headers"
+          :headers="shownHeaders"
           :selected="selected"
           headless
-          class="related-cases__table"
-          @update:selected="setSelected"
+          sortable
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             <div class="related-cases__item-wrapper">
@@ -97,9 +100,7 @@
           </template>
 
           <template #subject="{ item }">
-            <span class="related-cases__subject">
-              {{ getRevertedCase(item).subject }}
-            </span>
+            {{ getRevertedCase(item).subject }}
           </template>
 
           <template #relationType="{ item }">
@@ -112,12 +113,12 @@
 
           <template #actions="{ item }">
             <wt-icon-action
-              :disabled="hasDeleteAccess || !props.editMode"
+              :disabled="!hasDeleteAccess || !editMode"
               action="delete"
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteData(item),
+                  callback: () => deleteEls(item),
                 })
               "
             />
@@ -132,10 +133,9 @@
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, inject, onUnmounted, reactive } from 'vue';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { storeToRefs } from 'pinia';
+import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CasesRelationType } from 'webitel-sdk';
 
@@ -143,42 +143,42 @@ import ColorComponentWrapper from '../../../../../../../app/components/utils/col
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CasesAPI from '../../../../../api/CasesAPI.js';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
-import RelatedCasesAPI from '../api/related-cases-api.js';
+import { RelatedCasesAPI } from '../api/RelatedCasesAPI.ts';
 import RelatedCaseItem from './related-case-item.vue';
+import { useCaseRelatedCasesStore } from '../stores/relatedCases';
 
 const props = defineProps({
-  itemId: {
+  parentId: {
     type: String,
     required: true,
   },
-  editMode: {
-    type: Boolean,
-    required: true,
-  },
 });
 
-const relatedCasesNamespace = inject('relatedCasesNamespace', '');
-
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
-});
+const editMode = inject('editMode');
 
 const { t } = useI18n();
 
-const {
-  namespace,
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  loadData,
-  deleteData,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(relatedCasesNamespace);
+const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
 
-const { restoreFilters, subscribe, flushSubscribers } =
-  useTableFilters(namespace);
+const tableStore = useCaseRelatedCasesStore();
+
+const { dataList, error, selected, isLoading, shownHeaders } = storeToRefs(tableStore);
+
+const {
+  initialize,
+  loadDataList,
+  updateSelected,
+  updateSize,
+  updateSort,
+  deleteEls,
+} = tableStore;
+
+updateSize(1000);
+initialize({
+  parentId: props.parentId,
+});
 
 const {
   isVisible: isConfirmationPopup,
@@ -188,22 +188,13 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
-});
+const {
+  showEmpty,
+} = useTableEmpty({ dataList, error, isLoading });
 
-restoreFilters();
-onUnmounted(() => {
-  flushSubscribers();
+const emptyText = computed(() => {
+  return t('cases.relatedCases.emptyText');
 });
-
-const { showEmpty } = useTableEmpty({ dataList, isLoading });
-const emptyTableText = computed(() =>
-  t('cases.emptyCases', {
-    e: t('cases.relatedCases.relatedCases').toLowerCase(),
-  }),
-);
 
 const defaultState = reactive({
   createMode: false,
@@ -265,18 +256,18 @@ function getRevertedCaseRelation(item) {
 }
 
 async function submitCase() {
-    await RelatedCasesAPI.add({
-      parentId: props.itemId,
-      input: {
-        relatedCase: {
-          id: defaultState.relatedCase.id,
-          name: defaultState.relatedCase.name,
-        },
-        relationType: defaultState.relationType,
+  await RelatedCasesAPI.add({
+    parentId: props.parentId,
+    input: {
+      relatedCase: {
+        id: defaultState.relatedCase.id,
+        name: defaultState.relatedCase.name,
       },
-    });
-    await loadData();
-    resetForm();
+      relationType: defaultState.relationType,
+    },
+  });
+  await loadDataList();
+  resetForm();
 }
 </script>
 

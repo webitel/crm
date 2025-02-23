@@ -252,6 +252,7 @@ export default {
     },
     relatedCases: {
       relatedCases: 'Связанные обращения',
+      emptyText: 'Тут еще нет связанных обращений',
       searchCasesPlaceholder: 'Найти обращение',
       relationType: {
         [CasesRelationType.DUPLICATES]: 'дублирует',

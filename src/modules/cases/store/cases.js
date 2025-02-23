@@ -9,7 +9,6 @@ import {
 import CasesAPI from '../api/CasesAPI.js';
 import files from '../modules/attachments/modules/files/store/files.js';
 import links from '../modules/attachments/modules/links/store/links.js';
-import relatedCases from '../modules/case-info/modules/related-cases/store/related-cases.js';
 import filters from '../modules/filters/store/filters.js';
 import service from '../modules/service/store/service.js';
 import { headers } from './_internals/headers';
@@ -109,7 +108,6 @@ const card = createCardStoreModule({
     links,
     files,
     permissions,
-    relatedCases,
   },
   actions,
   getters,

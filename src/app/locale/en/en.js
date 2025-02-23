@@ -252,6 +252,7 @@ export default {
     },
     relatedCases: {
       relatedCases: 'Related cases',
+      emptyText: 'There are no related cases yet',
       searchCasesPlaceholder: 'Search for a case',
       relationType: {
         [CasesRelationType.DUPLICATES]: 'duplicates',
