@@ -66,7 +66,7 @@ const disabledSave = computed(
 
 const path = computed(() => {
   return [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     {
       name: t('customization.customization'),
       route: '/customization',
