@@ -7,7 +7,7 @@
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!selected.length"
-        @click:refresh="loadItem"
+        @click:refresh="refreshItem"
         @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
@@ -160,6 +160,15 @@ const fields = computed(() => {
 });
 
 const isLoading = ref(!itemInstance.value?.repo);
+
+const refreshItem = async () => {
+  try {
+    isLoading.value = true;
+    await loadItem();
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const search = ref('');
 
