@@ -31,7 +31,7 @@
             @click:delete="
               askDeleteConfirmation({
                 deleted: selected,
-                callback: () => deleteData(selected),
+                callback: () => deleteMany(selected),
               })
             "
           >
@@ -202,6 +202,13 @@ function edit(item) {
     params: { id: item.repo },
   });
 }
+
+// This method for delete many lookups, one by one, because if we send many delete lookups requests at once, backend will return error
+const deleteMany = async (items) => {
+  for (const item of items) {
+    await deleteData(item);
+  }
+};
 
 const {
   showEmpty,

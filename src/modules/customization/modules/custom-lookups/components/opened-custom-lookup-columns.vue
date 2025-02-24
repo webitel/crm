@@ -295,7 +295,9 @@ const deleteField = (field) => {
 };
 
 const deleteSelected = (selectedFields) => {
-  selectedFields.filter((field) => !field.readonly).forEach(deleteField);
+  selectedFields
+    .filter((field) => !field.readonly && field.id !== 'name')
+    .forEach(deleteField);
 
   selected.value = [];
 };
