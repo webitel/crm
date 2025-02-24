@@ -9,7 +9,7 @@
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
-          {{ t('cases.attachments.attachments') }}
+          {{ t('cases.attachments.files') }}
         </h3>
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
@@ -100,20 +100,20 @@ import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import downloadFile from '../../../../../../../app/utils/downloadFile.js';
 import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
 import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
 import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 
 const props = defineProps({
   namespace: {
@@ -188,11 +188,7 @@ async function handleSelectedFilesDownload() {
     ? selected.value
     : dataList.value;
 
-  try {
-    await downloadFilesInZip({ filesToDownload, apiUrl, token });
-  } catch (error) {
-    throw error;
-  }
+  await downloadFilesInZip({ filesToDownload, apiUrl, token });
 }
 
 const fileInput = ref(null);
@@ -214,8 +210,6 @@ async function uploadFile(uploadedFile) {
   try {
     const cliInstance = await client.getCliInstance();
     await cliInstance.storeFile(props.itemId, [uploadedFile], null, 'case');
-  } catch (err) {
-    throw err;
   } finally {
     await loadData();
   }
