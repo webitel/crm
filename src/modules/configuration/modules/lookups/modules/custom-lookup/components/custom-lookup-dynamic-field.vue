@@ -148,7 +148,7 @@ const validation = computed(() => {
 });
 
 const label = computed(() => {
-  return t(props.field?.name || 'Invalid label');
+  return t(props.field?.name || 'vocabulary.labels');
 });
 
 const isRequired = computed(() => {
