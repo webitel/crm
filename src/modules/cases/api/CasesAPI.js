@@ -80,7 +80,7 @@ const getCasesList = async (params) => {
     params,
     [
       merge(getDefaultGetParams()),
-      starToSearch('search'),
+      // starToSearch('search'),
       (params) => ({
         ...params,
         q: params.search,

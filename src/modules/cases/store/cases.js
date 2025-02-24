@@ -14,6 +14,7 @@ import service from '../modules/service/store/service.js';
 import { headers } from './_internals/headers';
 
 const resetCardState = {
+  itemId: 0,
   itemInstance: {
     id: '',
     name: '',

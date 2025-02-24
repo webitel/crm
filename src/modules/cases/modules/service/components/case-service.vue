@@ -150,7 +150,7 @@ watch(
       service: serviceResponse.value,
       catalog: catalogResponse,
     });
-  },
+  }, { immediate: true },
 );
 
 onUnmounted(() => {
