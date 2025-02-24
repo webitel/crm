@@ -34,7 +34,7 @@
         :disabled="!selectedElement"
         @click="save"
       >
-        {{ $t('reusable.add') }}
+        {{ $t('reusable.ok') }}
       </wt-button>
       <wt-button
         color="secondary"
