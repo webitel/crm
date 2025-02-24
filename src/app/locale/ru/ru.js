@@ -246,6 +246,7 @@ export default {
     },
     attachments: {
       attachments: 'Вложения',
+      files: 'Файлы',
       links: 'Ссылки',
       url: 'URL',
       linkText: 'Текст ссылки',
