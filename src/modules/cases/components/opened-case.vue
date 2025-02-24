@@ -2,6 +2,7 @@
   <wt-dual-panel
     :actions-panel="false"
     class="opened-case"
+    v-if="!isLoading"
   >
     <template #header>
       <wt-page-header
@@ -123,7 +124,7 @@ provide(
 
 v$.value.$touch();
 
-const { isNew, disabledSave, save, initialize } = useCardComponent({
+const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
   id,
   itemInstance,
   loadItem,
