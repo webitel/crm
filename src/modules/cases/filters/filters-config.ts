@@ -1,53 +1,55 @@
 import {
+  ActualReactionTimeFilter,
+  ActualReactionTimeFilterPreview,
+  ActualResolutionTimeFilter,
+  ActualResolutionTimeFilterPreview,
+  AssigneeFilter,
+  AssigneeFilterPreview,
+  AuthorFilter,
+  AuthorFilterPreview,
+  CloseReasonGroupsCaseFilter,
+  CloseReasonGroupsCaseFilterPreview,
+  ContactGroupFilter,
+  ContactGroupFilterPreview,
   CreatedAtFromFilter,
   CreatedAtFromFilterPreview,
   CreatedAtToFilter,
   CreatedAtToFilterPreview,
-  StatusCaseFilter,
-  StatusCaseFilterPreview,
-  SourceCaseFilter,
-  SourceCaseFilterPreview,
-  AuthorFilter,
-  AuthorFilterPreview,
-  ReporterFilter,
-  ReporterFilterPreview,
-  ImpactedFilter,
-  ImpactedFilterPreview,
-  AssigneeFilter,
-  AssigneeFilterPreview,
-  PriorityCaseFilter,
-  PriorityCaseFilterPreview,
-  CloseReasonGroupsCaseFilter,
-  CloseReasonGroupsCaseFilterPreview,
-  RatingFromToFilter,
-  RatingFromToFilterPreview,
-  SlaFilter,
-  SlaFilterPreview,
   HasAttachmentFilter,
   HasAttachmentFilterPreview,
+  ImpactedFilter,
+  ImpactedFilterPreview,
+  PriorityCaseFilter,
+  PriorityCaseFilterPreview,
+  RatingFromToFilter,
+  RatingFromToFilterPreview,
   ReactionTimeFilter,
   ReactionTimeFilterPreview,
+  ReporterFilter,
+  ReporterFilterPreview,
   ResolutionTimeFilter,
   ResolutionTimeFilterPreview,
-  ActualReactionTimeFilter,
-  ActualReactionTimeFilterPreview,
-  ActualResolutionTimeFilterPreview,
-  ActualResolutionTimeFilter,
-  ContactGroupFilter,
-  ContactGroupFilterPreview,
-  // ServiceFilter,
-  // ServiceFilterPreview,
+  ServiceCaseFilter,
+  ServiceCaseFilterPreview,
   SlaConditionFilter,
-  SlaConditionFilterPreview
+  SlaConditionFilterPreview,
+  SlaFilter,
+  SlaFilterPreview,
+  SourceCaseFilter,
+  SourceCaseFilterPreview,
+  StatusCaseFilter,
+  StatusCaseFilterPreview,
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
-import {Component} from "vue";
-
+import { Component } from 'vue';
 
 interface FiltersConfig {
   [key: string]: {
-    valueField: Component
-    previewField: Component
-  }
+    valueField: Component;
+    previewField: Component;
+    styleOptions?: {
+      size: 'xs' | 'md';
+    };
+  };
 }
 
 export const filtersConfig: FiltersConfig = {
@@ -67,6 +69,13 @@ export const filtersConfig: FiltersConfig = {
     valueField: SourceCaseFilter,
     previewField: SourceCaseFilterPreview,
   },
+  serviceCase: {
+    valueField: ServiceCaseFilter,
+    previewField: ServiceCaseFilterPreview,
+    styleOptions: {
+      size: 'md',
+    },
+  },
   author: {
     valueField: AuthorFilter,
     previewField: AuthorFilterPreview,
@@ -85,7 +94,7 @@ export const filtersConfig: FiltersConfig = {
   },
   contactGroup: {
     valueField: ContactGroupFilter,
-    previewField: ContactGroupFilterPreview
+    previewField: ContactGroupFilterPreview,
   },
   priorityCase: {
     valueField: PriorityCaseFilter,
@@ -97,7 +106,7 @@ export const filtersConfig: FiltersConfig = {
   },
   rating: {
     valueField: RatingFromToFilter,
-    previewField: RatingFromToFilterPreview
+    previewField: RatingFromToFilterPreview,
   },
   // service: {
   //   valueField: ServiceFilter,
@@ -113,7 +122,7 @@ export const filtersConfig: FiltersConfig = {
   },
   reactionTime: {
     valueField: ReactionTimeFilter,
-    previewField: ReactionTimeFilterPreview
+    previewField: ReactionTimeFilterPreview,
   },
   resolutionTime: {
     valueField: ResolutionTimeFilter,
@@ -121,14 +130,14 @@ export const filtersConfig: FiltersConfig = {
   },
   actualReactionTime: {
     valueField: ActualReactionTimeFilter,
-    previewField: ActualReactionTimeFilterPreview
+    previewField: ActualReactionTimeFilterPreview,
   },
   actualResolutionTime: {
     valueField: ActualResolutionTimeFilter,
-    previewField: ActualResolutionTimeFilterPreview
+    previewField: ActualResolutionTimeFilterPreview,
   },
   hasAttachment: {
     valueField: HasAttachmentFilter,
-    previewField: HasAttachmentFilterPreview
+    previewField: HasAttachmentFilterPreview,
   },
-}
+};
