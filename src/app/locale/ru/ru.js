@@ -183,6 +183,8 @@ export default {
       columns: 'Колонки',
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',
+      confirmDeleteColumn:
+        'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
       controlPermissions: 'Контролировать права доступа',
       field: {
         id: 'Ид',

@@ -190,6 +190,8 @@ export default {
       columns: 'Колонки',
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
+      confirmDeleteColumn:
+        'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
       controlPermissions: 'Контролювати права доступу',
       field: {
         id: 'Ід',

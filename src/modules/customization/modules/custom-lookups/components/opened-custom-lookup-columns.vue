@@ -30,7 +30,11 @@
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
-    />
+    >
+      <template #deleteMessage>
+        {{ t('customization.customLookups.confirmDeleteColumn') }}
+      </template>
+    </delete-confirmation-popup>
 
     <div class="table-section__table-wrapper">
       <wt-empty
