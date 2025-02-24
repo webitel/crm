@@ -246,6 +246,7 @@ export default {
     },
     attachments: {
       attachments: 'Attachments',
+      files: 'Files',
       links: 'Links',
       url: 'URL',
       linkText: 'Link text',

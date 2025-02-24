@@ -252,7 +252,8 @@ export default {
       yourCommentHere: 'Ваш коментар тут',
     },
     attachments: {
-      attachments: 'Додатки',
+      attachments: 'Вкладення',
+      files: 'Файли',
       links: 'Посилання',
       url: 'URL',
       linkText: 'Текст посилання',
