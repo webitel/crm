@@ -236,11 +236,11 @@ export default {
     result: 'Результат',
     rating: 'Оцінка',
     persons: 'Особи',
-    selectAService: 'Виберіть сервіс',
+    selectAService: 'Вибрати сервіс',
     deadlines: 'Терміни',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
-    assignToMe: 'Призначити на мене',
+    assignToMe: 'Взяти на себе',
     emptyCases: 'Тут ще немає {e}',
     caseInfo: {
       caseInfo: 'Інформація',

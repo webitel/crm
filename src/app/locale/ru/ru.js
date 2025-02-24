@@ -229,11 +229,11 @@ export default {
     result: 'Результат',
     rating: 'Оценка',
     persons: 'Персоны',
-    selectAService: 'Выберите сервис',
+    selectAService: 'Выбрать сервис',
     deadlines: 'Сроки',
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
-    assignToMe: 'Назначить на меня',
+    assignToMe: 'Взять на себя',
     emptyCases: 'Тут еще нет {e}',
     caseInfo: {
       caseInfo: 'Информация',
