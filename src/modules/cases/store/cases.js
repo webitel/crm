@@ -1,22 +1,25 @@
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index';
 import {
   createApiStoreModule,
   createBaseStoreModule,
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import CasesAPI from '../api/CasesAPI.js';
+import files from '../modules/attachments/modules/files/store/files.js';
 import links from '../modules/attachments/modules/links/store/links.js';
-import comments from '../modules/case-info/modules/comments/store/comments.js';
-import service from '../modules/service/store/service.js';
 import filters from '../modules/filters/store/filters.js';
-import headers from './_internals/headers.js';
+import service from '../modules/service/store/service.js';
+import { headers } from './_internals/headers';
 
 const resetCardState = {
+  itemId: 0,
   itemInstance: {
-    id:'',
+    id: '',
     name: '',
-    assignee: '',
-    author: '',
+    assignee: {},
+    author: {},
     close: {
       closeReason: {},
       closeResult: '',
@@ -28,7 +31,7 @@ const resetCardState = {
     createdBy: '',
     description: '',
     group: {},
-    impacted: '',
+    impacted: {},
     links: {},
     plannedReactionAt: '',
     plannedResolutionAt: '',
@@ -71,6 +74,20 @@ const api = createApiStoreModule({
     api: CasesAPI,
   },
 });
+
+const permissions = createObjectPermissionsStoreModule({
+  modules: {
+    table: {
+      getters: {
+        PARENT_ID: (s, g, rootState) => rootState.cases.card.itemId,
+      },
+      modules: {
+        api,
+      },
+    },
+  },
+});
+
 const table = createTableStoreModule({
   state: {
     headers,
@@ -88,6 +105,10 @@ const card = createCardStoreModule({
   },
   modules: {
     api,
+    service,
+    links,
+    files,
+    permissions,
   },
   actions,
   getters,
@@ -97,9 +118,6 @@ const cases = createBaseStoreModule({
   modules: {
     table,
     card,
-    service,
-    comments,
-    links,
   },
 });
 

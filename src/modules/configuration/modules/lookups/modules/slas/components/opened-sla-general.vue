@@ -10,6 +10,7 @@
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -19,12 +20,14 @@
         :search-method="loadCalendarsList"
         :value="itemInstance.calendar"
         :v="v.itemInstance.calendar"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
         :label="t('vocabulary.description')"
+        :disabled="disableUserInput"
         :value="itemInstance.description"
         @input="setItemProp({ path: 'description', value: $event })"
       />
@@ -34,6 +37,7 @@
           :label="t('lookups.slas.reactionTime')"
           :value="itemInstance.reactionTime"
           :v="v.itemInstance.reactionTime"
+          :disabled="disableUserInput"
           format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'reactionTime', value: +$event })"
@@ -43,6 +47,7 @@
           :label="t('lookups.slas.resolutionTime')"
           :value="itemInstance.resolutionTime"
           :v="v.itemInstance.resolutionTime"
+          :disabled="disableUserInput"
           format="dd:hh:mm"
           required
           @input="setItemProp({ path: 'resolutionTime', value: +$event })"
@@ -51,14 +56,18 @@
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
+          :disabled="disableUserInput"
           mode="datetime"
+          clearable
           @input="setItemProp({ path: 'validFrom', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
           :value="itemInstance.validTo"
+          :disabled="disableUserInput"
           mode="datetime"
+          clearable
           @input="setItemProp({ path: 'validTo', value: +$event })"
         />
       </div>
@@ -67,9 +76,11 @@
 </template>
 
 <script setup>
+import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
   namespace: {
@@ -83,6 +94,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

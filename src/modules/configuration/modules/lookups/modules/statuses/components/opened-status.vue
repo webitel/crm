@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -33,6 +33,7 @@
           <component
             :is="Component"
             :v="v$"
+            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
             :namespace="cardNamespace"
           />
         </router-view>
@@ -59,10 +60,14 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+
 const namespace = 'configuration/lookups/statuses';
 
 const { t } = useI18n();
 const route = useRoute();
+
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,

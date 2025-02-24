@@ -1,6 +1,6 @@
 <template>
   <case-result-popup
-    :namespace="props.namespace"
+    :namespace="namespace"
     :shown="isResultPopup"
     @close="isResultPopup = false"
     @save="saveResult"
@@ -12,7 +12,9 @@
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="status?.id"
+        :disabled="disableUserInput"
         :clearable="false"
+        :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
@@ -39,24 +41,23 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import {computed, inject, ref, watch} from 'vue';
+import { computed, inject, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
-import StatusesAPI from '../api/StatusesAPI.js';
 import CaseResultPopup from './case-result-popup.vue';
-import { useI18n } from 'vue-i18n';
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
+const editMode = inject('editMode');
+const v$ = inject('v$');
 
 const { t } = useI18n();
-
 const store = useStore();
+
+const { disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -69,17 +70,9 @@ const {
   setId,
   resetState,
   setItemProp,
-  deleteItem,
-} = useCardStore(props.namespace);
+} = useCardStore(namespace);
 
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-} = useCardComponent({
+const { isNew } = useCardComponent({
   id,
   itemInstance,
   loadItem,
@@ -89,14 +82,9 @@ const {
   resetState,
 });
 
-const editMode = inject('editMode');
-
 const isResultPopup = ref(false);
 
-async function saveResult({
-  reason,
-  result,
-}) {
+const saveResult = async ({ reason, result }) => {
   await setItemProp({
     path: 'close.closeReason',
     value: reason,
@@ -105,89 +93,83 @@ async function saveResult({
     path: 'close.closeResult',
     value: result,
   });
-}
+};
 
-function getIndicatorColor(option) {
-  if (option?.initial) return 'initial-status';
+const getIndicatorColor = (option) => {
   if (option?.final) return 'final-status';
+  if (option?.initial) return 'initial-status';
   return 'other-status';
-}
+};
 
-const status = computed(() => store.getters[`${props.namespace}/service/STATUS`]);
+const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
+
+const serviceId = computed(() => store.getters[`${cardNamespace}/service/SERVICE_ID`]);
 
 const fetchStatusConditions = async (params) => {
   if (!status?.value?.id) {
     return { items: [] };
   }
 
-  try {
-    return await StatusConditionsAPI.getLookup({
-      statusId: status.value.id,
-      ...params,
-      fields: ['id', 'name', 'initial', 'final'],
-    });
-  } catch (err) {
-    throw err;
-  }
+  return await StatusConditionsAPI.getLookup({
+    statusId: status.value.id,
+    ...params,
+    fields: ['id', 'name', 'initial', 'final'],
+  });
 };
 
 async function patchStatusCondition(condition) {
-  try {
-    await setItemProp({
-      path: 'statusCondition',
-      value: condition,
+  await setItemProp({
+    path: 'statusCondition',
+    value: condition,
+  });
+
+  await setItemProp({
+    path: 'status',
+    value: status.value,
+  });
+
+  if (!isNew.value && !editMode.value) {
+    await CasesAPI.patch({
+      changes: {
+        statusCondition: condition,
+        status: status.value,
+      },
+      etag: itemInstance.value.etag,
     });
 
-    await setItemProp({
-      path: 'status',
-      value: status.value,
-    });
-
-    if (!isNew.value && !editMode.value) {
-      await CasesAPI.patch({
-        changes: {
-          statusCondition: condition,
-          status: status.value,
-        },
-        etag: itemInstance.value.etag,
-      });
-
-      //NOTE: needed to get new etag so new patch will work correctly
-      await loadItem();
-    }
-  } catch (err) {
-    throw err;
+    //NOTE: needed to get new etag so new patch will work correctly
+    await loadItem();
   }
 }
 
 async function handleSelect(value) {
   if (value.final) isResultPopup.value = true;
 
-  try {
-    await patchStatusCondition(value);
-  } catch (err) {
-    throw err;
-  }
+  await patchStatusCondition(value);
 }
 
-async function updateStatusCondition() {
-  if (!status?.value?.id || itemInstance.value.statusCondition.id) return;
+async function updateStatusCondition(isValidationRequired = true) {
 
-  try {
-    const { items } = await StatusConditionsAPI.getList({ statusId: status.value.id });
+  if (isValidationRequired && (!status?.value?.id || itemInstance.value.statusCondition.id)) return;
 
-    const initialCondition = items.find((item) => item.initial);
-    if (initialCondition) {
-      await patchStatusCondition(initialCondition);
-    }
-  } catch (err) {
-    throw err;
+  const { items } = await StatusConditionsAPI.getList({
+    statusId: status.value.id,
+  });
+
+  const initialCondition = items.find((item) => item.initial);
+  if (initialCondition) {
+    await patchStatusCondition(initialCondition);
   }
 }
 
 watch(() => status?.value?.id, updateStatusCondition, {
   immediate: true,
   deep: true,
+});
+
+watch(() => serviceId?.value, (newValue, oldValue) => {
+  if (newValue === oldValue) return;
+  updateStatusCondition(false);
 });
 </script>
 
@@ -200,7 +182,8 @@ watch(() => status?.value?.id, updateStatusCondition, {
     @extend %typo-heading-4;
   }
 
-  &__select, &__title {
+  &__select,
+  &__title {
     padding: var(--spacing-xs);
   }
 }

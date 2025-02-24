@@ -1,4 +1,7 @@
 import {
+  generatePermissionsApi,
+} from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
+import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
@@ -15,11 +18,14 @@ import applyTransform, {
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { CasesApiFactory } from 'webitel-sdk';
+import { stringifyCaseFilters } from './stringifyCaseFilters.js';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
 const casesService = new CasesApiFactory(configuration, '', instance);
+
+const baseUrl = '/cases';
 
 const fieldsToSend = [
   'subject',
@@ -60,27 +66,29 @@ function transformSourceType(data) {
 }
 
 const getCasesList = async (params) => {
-  const fieldsToSend = ['page', 'size', 'q', 'ids', 'sort', 'fields', 'filters'];
+  const fieldsToSend = [
+    'page',
+    'size',
+    'q',
+    'ids',
+    'sort',
+    'fields',
+    'filters',
+  ];
 
-  const {
-    page,
-    size,
-    q,
-    ids,
-    sort,
-    fields,
-    filters,
-    options,
-  } = applyTransform(params, [
-    merge(getDefaultGetParams()),
-    starToSearch('search'),
-    (params) => ({
-      ...params,
-      q: params.search,
-    }),
-    sanitize(fieldsToSend),
-    camelToSnake(),
-  ]);
+  const { page, size, q, ids, sort, fields, options } = applyTransform(
+    params,
+    [
+      merge(getDefaultGetParams()),
+      // starToSearch('search'),
+      (params) => ({
+        ...params,
+        q: params.search,
+      }),
+      sanitize(fieldsToSend),
+      camelToSnake(),
+    ],
+  );
   try {
     const response = await casesService.searchCases(
       page,
@@ -89,14 +97,11 @@ const getCasesList = async (params) => {
       ids,
       sort,
       fields,
-      filters,
+      stringifyCaseFilters(params),
       options,
     );
 
-    const {
-      items,
-      next,
-    } = applyTransform(response.data, [
+    const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
     return {
@@ -139,6 +144,7 @@ const getCase = async ({ itemId: id }) => {
     'related_cases',
     'links',
     'status_condition',
+    'created_by',
   ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);
@@ -174,7 +180,6 @@ const updateCase = async ({ itemInstance }) => {
 };
 
 const addCase = async ({ itemInstance }) => {
-
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
@@ -188,30 +193,35 @@ const addCase = async ({ itemInstance }) => {
 };
 
 const patchCase = async ({ changes, etag }) => {
-  const fieldsToSend = ['status_condition', 'status'];
+  const fieldsToSend = ['status_condition', 'status', 'assignee'];
   const body = applyTransform(changes, [
     camelToSnake(),
     sanitize(fieldsToSend),
   ]);
   try {
     const response = await casesService.updateCase2(etag, body);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
+const getCasesLookup = (params) =>
+  getCasesList({
+    ...params,
+    fields: params.fields || ['id', 'name', 'subject', 'priority'],
+  });
+
 const casesAPI = {
   getList: getCasesList,
+  getLookup: getCasesLookup,
   get: getCase,
   delete: deleteCase,
   update: updateCase,
   add: addCase,
   patch: patchCase,
+
+  ...generatePermissionsApi(baseUrl),
 };
 
 export default casesAPI;

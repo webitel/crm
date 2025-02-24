@@ -1,11 +1,12 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { WebitelContactsTimelineEventType } from 'webitel-sdk';
+import { CasesRelationType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
-import TimelineTaskStatusEnum from '../../../modules/contacts/modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
+import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
 export default {
   crm: 'CRM',
@@ -14,33 +15,6 @@ export default {
     manager: 'Владелец | Владельцы',
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
-    timeline: {
-      timeline: 'Хронология',
-      totalDuration: 'Общая длительность',
-      actions: {
-        openInHistory: 'Открыть в истории',
-        playRecording: 'Проиграть запись',
-        transcription: 'Транскрипция',
-      },
-      status: {
-        [TimelineTaskStatusEnum.STARTED]: 'Начало',
-        [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
-        [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
-        [TimelineTaskStatusEnum.ENDED]: 'Конец',
-        [TimelineTaskStatusEnum.SENT]: 'Отправлено',
-        [TimelineTaskStatusEnum.RECEIVED]: 'Получено',
-      },
-      eventType: {
-        [WebitelContactsTimelineEventType.Call]: 'Звонок | Звонки',
-        [WebitelContactsTimelineEventType.Chat]: 'Чат | Чаты',
-        [WebitelContactsTimelineEventType.Email]: 'Письмо | Письма',
-      },
-      emails: {
-        to: 'Кому',
-        cc: 'CC',
-        subject: 'Тема',
-      },
-    },
     communications: {
       communications: 'Средство связи | Средства связи',
       channel: 'Канал',
@@ -73,6 +47,33 @@ export default {
       },
     },
     attributes: 'Атрибут | Атрибуты',
+  },
+  timeline: {
+    timeline: 'Хронология',
+    totalDuration: 'Общая длительность',
+    actions: {
+      openInHistory: 'Открыть в истории',
+      playRecording: 'Проиграть запись',
+      transcription: 'Транскрипция',
+    },
+    status: {
+      [TimelineTaskStatusEnum.STARTED]: 'Начало',
+      [TimelineTaskStatusEnum.MISSED]: 'Пропущен',
+      [TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
+      [TimelineTaskStatusEnum.ENDED]: 'Конец',
+      [TimelineTaskStatusEnum.SENT]: 'Отправлено',
+      [TimelineTaskStatusEnum.RECEIVED]: 'Получено',
+    },
+    eventType: {
+      [TimelineEventType.Call]: 'Звонок | Звонки',
+      [TimelineEventType.Chat]: 'Чат | Чаты',
+      [TimelineEventType.Email]: 'Письмо | Письма',
+    },
+    emails: {
+      to: 'Кому',
+      cc: 'CC',
+      subject: 'Тема',
+    },
   },
   permissions: {
     read: 'Читать',
@@ -178,15 +179,38 @@ export default {
     customLookups: {
       customLookups: 'Пользовательские справочники',
       code: 'Код',
+      allValues: 'Все значения',
       columns: 'Колонки',
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',
+      confirmDeleteColumn:
+        'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
       controlPermissions: 'Контролировать права доступа',
+      field: {
+        id: 'Ид',
+        name: ({ linked }) => linked('reusable.name'),
+        createdAt: ({ linked }) => linked('reusable.createdAt'),
+        createdBy: ({ linked }) => linked('reusable.createdBy'),
+        modifiedAt: ({ linked }) => linked('reusable.modifiedAt'),
+        modifiedBy: ({ linked }) => linked('reusable.modifiedBy'),
+      },
+      fieldType: {
+        string: 'Текст',
+        int32: 'Число',
+        int64: 'Число',
+        lookup: 'Выбор',
+        list: 'Мультивыбор',
+        datetime: 'Календарь',
+        bool: 'Логическое',
+      },
+    },
+    extensions: {
+      contacts: ({ linked }) => linked('contacts.contact'),
     },
   },
   cases: {
     case: 'Обращение | Обращения',
-    id: 'Индентификатор',
+    id: 'ID',
     subject: 'Тема',
     priority: 'Приоритет',
     status: 'Статус',
@@ -207,24 +231,43 @@ export default {
     result: 'Результат',
     rating: 'Оценка',
     persons: 'Персоны',
-    selectAService: 'Выберите сервис',
+    selectAService: 'Выбрать сервис',
     deadlines: 'Сроки',
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
+    assignToMe: 'Взять на себя',
+    emptyCases: 'Тут еще нет {e}',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
     },
     comments: {
       comments: 'Комментарии',
-      edited: 'Отредактировано',
+      edited: 'Редактировано',
       yourCommentHere: 'Ваш комментарий здесь',
     },
     attachments: {
       attachments: 'Вложения',
+      files: 'Файлы',
       links: 'Ссылки',
       url: 'URL',
       linkText: 'Текст ссылки',
+    },
+    relatedCases: {
+      relatedCases: 'Связанные обращения',
+      emptyText: 'Тут еще нет связанных обращений',
+      searchCasesPlaceholder: 'Найти обращение',
+      relationType: {
+        [CasesRelationType.DUPLICATES]: 'дублирует',
+        [CasesRelationType.ISDUPLICATEDBY]: 'дублируется',
+        [CasesRelationType.BLOCKS]: 'блокирует',
+        [CasesRelationType.ISBLOCKEDBY]: 'блокируется',
+        [CasesRelationType.CAUSES]: 'вызывает',
+        [CasesRelationType.ISCAUSEDBY]: 'вызванное',
+        [CasesRelationType.ISCHILDOF]: 'дочернее для',
+        [CasesRelationType.ISPARENTOF]: 'родительское для',
+        [CasesRelationType.RELATESTO]: 'относится к',
+      },
     },
   },
 };

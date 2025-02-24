@@ -2,58 +2,83 @@
   <wt-dual-panel
     :actions-panel="false"
     class="opened-case"
+    v-if="!isLoading"
   >
     <template #header>
       <wt-page-header
         :hide-primary="!isNew && !editMode"
         :primary-action="saveCase"
+        :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <wt-button
-            v-if="!isNew && !editMode"
-            color="secondary"
-            @click="toggleEditMode(true)"
-          >
-            {{ t('reusable.edit') }}
-          </wt-button>
+          <div class="opened-case__actions-wrapper">
+            <wt-button
+              :disabled="!isCaseAssignable"
+              color="success"
+              @click="assignCaseToMe"
+            >
+              {{ t('cases.assignToMe') }}
+            </wt-button>
+
+            <wt-button
+              v-if="!isNew && !editMode"
+              :disabled="!hasUpdateAccess"
+              color="secondary"
+              @click="toggleEditMode(true)"
+            >
+              {{ t('reusable.edit') }}
+            </wt-button>
+          </div>
         </template>
       </wt-page-header>
     </template>
     <template #side-panel>
-      <opened-case-general
-        :namespace="namespace"
-      />
+      <opened-case-general />
     </template>
     <template #main>
       <opened-case-tabs
         :namespace="namespace"
+        :v="v$"
       />
     </template>
   </wt-dual-panel>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, provide } from 'vue';
+import { computed, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
-import { useStore } from 'vuex';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 
 const namespace = 'cases';
 
 const store = useStore();
-const router = useRouter();
-const route = useRoute();
 const { t } = useI18n();
+
+const editMode = computed(() => {
+  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+});
+
+provide('namespace', namespace);
+provide('editMode', editMode);
+
+const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -66,17 +91,40 @@ const {
   setId,
   resetState,
   setItemProp,
-  deleteItem,
 } = useCardStore(namespace);
 
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-} = useCardComponent({
+const v$ = useVuelidate(
+  computed(() => ({
+    itemInstance: {
+      subject: { required },
+      // sla: { required }, /* sla is required, but cannot be changed in the ui */
+      priority: {
+        required,
+      } /* priority is required, but set automatically by default and can't be cleared in the ui */,
+      source: { required },
+      reporter: {
+        required: (v) => {
+          return !isEmpty(v);
+        },
+      },
+      // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
+      service: { required },
+      // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
+      // close: { required }, /* close is required if status is final, but should be entered before status=final is changed */
+    },
+  })),
+  { itemInstance },
+  { $autoDirty: true },
+);
+
+provide(
+  'v$',
+  computed(() => v$),
+);
+
+v$.value.$touch();
+
+const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
   id,
   itemInstance,
   loadItem,
@@ -84,7 +132,11 @@ const {
   updateItem,
   setId,
   resetState,
+
+  invalid: computed(() => v$.value.$invalid),
 });
+
+initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
@@ -98,28 +150,85 @@ const path = computed(() => {
       route: baseUrl,
     },
     {
-      name: id.value ? `${itemInstance.value?.name} ${itemInstance.value?.subject}` : t('reusable.new'),
+      name: id.value
+        ? `${itemInstance.value?.name} ${itemInstance.value?.subject}`
+        : t('reusable.new'),
     },
   ];
 });
 
-const editMode = computed(() => {
-  return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
+const userinfo = computed(() => store.state.userinfo);
+const userContact = ref({});
+
+const isCaseAssignable = computed(() => {
+  return (
+    userContact.value.id &&
+    itemInstance.value.assignee?.id !== userContact.value.id
+  );
 });
 
-provide('editMode', editMode);
-
-async function toggleEditMode(value) {
-  await store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
+async function fetchUserContact(userId) {
+  if (!userId) {
+    userContact.value = {};
+    return;
+  }
+  const user = await UsersAPI.get({ itemId: userId });
+  userContact.value = user?.contact || {};
 }
 
-const saveCase = () => {
-  toggleEditMode(false);
-  save();
+watch(
+  () => userinfo.value?.userId,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await fetchUserContact(newVal);
+    }
+  },
+  { immediate: true },
+);
+
+async function assignCaseToMe() {
+  if (!userContact.value?.id) {
+    return;
+  }
+
+  if (editMode.value) {
+    await setItemProp({
+      path: 'assignee',
+      value: { id: userContact.value.id, name: userContact.value.name },
+    });
+  } else {
+    try {
+      await casesAPI.patch({
+        changes: {
+          assignee: { id: userContact.value.id, name: userContact.value.name },
+        },
+        etag: itemInstance.value.etag,
+      });
+    } finally {
+      await loadItem();
+    }
+  }
+}
+
+const toggleEditMode = (value) => {
+  return store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
 };
 
-initialize();
+const saveCase = async () => {
+  await save();
+  await toggleEditMode(false);
+};
+
+onUnmounted(() => {
+  toggleEditMode(false);
+});
 </script>
 
 <style lang="scss" scoped>
+.opened-case {
+  &__actions-wrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+}
 </style>

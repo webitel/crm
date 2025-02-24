@@ -7,7 +7,20 @@
       @save="addServiceToStore"
     />
     <div class="case-service__wrapper">
-      <span class="case-service__title">{{ t('cases.service') }}</span>
+      <span class="case-service__title">
+        {{ t('cases.service') }}
+
+        <wt-tooltip v-if="!servicePath">
+          <template #activator>
+            <wt-icon
+              icon="attention"
+              color="error"
+            />
+          </template>
+
+            {{ t('validation.required') }}
+        </wt-tooltip>
+      </span>
       <span
         v-if="servicePath"
         class="case-service__path"
@@ -16,6 +29,7 @@
     </div>
     <wt-button
       v-if="editMode"
+      :disabled="disableUserInput"
       class="case-service__button"
       color="success"
       @click="isServicePopup = true"
@@ -26,63 +40,34 @@
 </template>
 
 <script setup>
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
+const namespace = inject('namespace');
+const editMode = inject('editMode');
 
-const serviceNamespace = `${props.namespace}/service`;
+const { disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
-  id,
   itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
   resetState,
   setItemProp,
-  deleteItem,
-} = useCardStore(props.namespace);
-
-const {
-  isNew,
-  pathName,
-  disabledSave,
-  saveText,
-  save,
-  initialize,
-  initializeCard,
-} = useCardComponent({
-  id,
-  itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
-});
+} = useCardStore(namespace);
 
 const { t } = useI18n();
 const store = useStore();
-const route = useRoute();
 const isServicePopup = ref(false);
 const servicePath = ref('');
-const editMode = inject('editMode');
+
+const serviceNamespace = `${cardNamespace}/service`;
 
 function setServiceToStore(service) {
   return store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
@@ -133,25 +118,24 @@ function generateServicePath(service, catalog) {
 async function addServiceToStore(serviceCatalogData) {
   if (!serviceCatalogData)
     return console.error('No serviceCatalogData provided');
-  try {
-    const { service, catalog } = serviceCatalogData;
-    await setServiceToStore(service);
-    await setCatalogToStore(catalog);
 
-    await setItemProp({
-      path: 'close_reason_group',
-      value: { id: catalog.closeReasonGroup.id },
-    });
-    await setItemProp({
-      path: 'service',
-      value: { id: service.id, name: service.name },
-    });
+  const { service, catalog } = serviceCatalogData;
+  await setServiceToStore(service);
+  await setCatalogToStore(catalog);
 
-    servicePath.value = generateServicePath(service, catalog);
-  } catch (err) {
-    throw err;
-  }
+  await setItemProp({
+    path: 'close_reason_group',
+    value: { id: catalog.closeReasonGroup.id },
+  });
+
+  await setItemProp({
+    path: 'service',
+    value: { id: service.id, name: service.name },
+  });
+
+  servicePath.value = generateServicePath(service, catalog);
 }
+
 const serviceResponse = ref(null);
 
 watch(
@@ -166,7 +150,7 @@ watch(
       service: serviceResponse.value,
       catalog: catalogResponse,
     });
-  },
+  }, { immediate: true },
 );
 
 onUnmounted(() => {
@@ -199,6 +183,10 @@ onUnmounted(() => {
 
   &__title {
     @extend %typo-heading-4;
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
   }
 
   &__button {

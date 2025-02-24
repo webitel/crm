@@ -1,21 +1,26 @@
-import { createApp } from 'vue';
+import './app/assets/icons/sprite';
+
 import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+
 import App from './app.vue';
-import router from './app/router';
+import { createUserAccessControl } from './app/composables/useUserAccessControl';
 import i18n from './app/locale/i18n';
 import WebitelUi from './app/plugins/webitel-ui';
+import router from './app/router';
 import store from './app/store';
-import './app/assets/icons/sprite';
+import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
 const setTokenFromUrl = () => {
   try {
-    const queryMap = window.location.search.slice(1)
-    .split('&')
-    .reduce((obj, query) => {
-      const [key, value] = query.split('=');
-      obj[key] = value;
-      return obj;
-    }, {});
+    const queryMap = window.location.search
+      .slice(1)
+      .split('&')
+      .reduce((obj, query) => {
+        const [key, value] = query.split('=');
+        obj[key] = value;
+        return obj;
+      }, {});
 
     if (queryMap.accessToken) {
       localStorage.setItem('access-token', queryMap.accessToken);
@@ -32,12 +37,26 @@ const fetchConfig = async () => {
 
 const pinia = createPinia();
 
-const initApp = () => createApp(App)
-.use(store)
-.use(router)
-.use(i18n)
-.use(pinia)
-.use(...WebitelUi);
+const initApp = async () => {
+  const app = createApp(App)
+    .use(store)
+    .use(i18n)
+    .use(pinia)
+    .use(...WebitelUi);
+
+  const { initialize, routeAccessGuard } = useUserinfoStore();
+  try {
+    await initialize();
+    createUserAccessControl(useUserinfoStore);
+    router.beforeEach(routeAccessGuard);
+  } catch (err) {
+    console.error('Error initializing app', err);
+  }
+
+  app.use(router);
+
+  return app;
+};
 
 (async () => {
   let config;
@@ -49,7 +68,7 @@ const initApp = () => createApp(App)
   } catch (err) {
     console.error('before app mount error:', err);
   } finally {
-    const app = initApp();
+    const app = await initApp();
     app.provide('$config', config);
     app.mount('#app');
   }

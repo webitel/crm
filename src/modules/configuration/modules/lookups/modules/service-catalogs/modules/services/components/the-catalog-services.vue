@@ -19,8 +19,8 @@
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
             @click:add="addNewService"
             @click:refresh="loadData"
             @click:delete="
@@ -104,6 +104,7 @@
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
+                  :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
                   @change="
                     patchProperty({ index, prop: 'state', value: $event })
                   "
@@ -111,12 +112,12 @@
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   action="edit"
                   @click="edit(item)"
                 />
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
+                  :disabled="!hasDeleteAccess"
                   action="delete"
                   @click="
                     askDeleteConfirmation({
@@ -139,7 +140,6 @@
 </template>
 
 <script setup>
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -156,8 +156,10 @@ import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
 import CatalogsAPI from '../../../api/service-catalogs.js';
+import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
@@ -170,7 +172,10 @@ const baseNamespace = 'configuration/lookups/services';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -274,7 +279,6 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-  primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
 
 const addNewService = () => {
@@ -325,6 +329,10 @@ const loadServices = async () => {
   setRootForServices();
   await restoreFilters();
 };
+
+const disableStateSwitcher = computed(() => (item) => {
+  return checkDisableState(catalog.value, item);
+});
 
 onUnmounted(() => {
   flushSubscribers();

@@ -13,24 +13,22 @@
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
-          :disabled:add="formState.isAdding || formState.editingLink"
-          :include="[IconAction.ADD]"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink"
+          :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
+          :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
-        >
-          <wt-icon-btn
-            :disabled="!editMode"
-            class="icon-action"
-            icon="bucket"
-            @click="askDeleteConfirmation({
+          @click:delete="
+            askDeleteConfirmation({
               deleted: selected,
               callback: () => deleteData(selected),
-            })"
-          />
+            })
+          "
+        >
         </wt-action-bar>
       </header>
 
       <table-top-row-bar
-        v-if="formState.isAdding || formState.editingLink"
+        v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
         @reset="resetForm"
         @submit="submitLink"
       >
@@ -48,6 +46,11 @@
         />
       </table-top-row-bar>
 
+      <wt-empty
+        v-show="showEmpty"
+        :text="emptyTableText"
+      />
+
       <wt-loader v-show="isLoading" />
       <div
         v-show="!isLoading && dataList.length"
@@ -60,13 +63,19 @@
           headless
           @update:selected="setSelected"
         >
-
           <template #name="{ item }">
             <a
+              class="case-links__link"
               :href="item?.url"
               target="_blank"
             >
-              {{ item?.name }}
+              <wt-icon
+                class="case-links__link-icon"
+                icon="link"
+              />
+              <span>
+                {{ item?.name }}
+              </span>
             </a>
           </template>
 
@@ -76,17 +85,19 @@
 
           <template #actions="{ item }">
             <wt-icon-action
-              :disabled="!editMode || formState.isAdding"
+              :disabled="!editMode || !hasUpdateAccess || formState.isAdding"
               action="edit"
               @click="startEditingLink(item)"
             />
             <wt-icon-action
-              :disabled="!editMode"
+              :disabled="!editMode || !hasDeleteAccess"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -97,16 +108,17 @@
 
 <script setup>
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { inject, onUnmounted, reactive } from 'vue';
+import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import LinksAPI from '../api/LinksAPI.js';
 
@@ -121,25 +133,27 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const editMode = inject('editMode');
+
 const { t } = useI18n();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
+
 const {
   namespace,
   dataList,
   selected,
   isLoading,
   headers,
-  isNext,
-  error,
   loadData,
   deleteData,
-  sort,
   setSelected,
   onFilterEvent,
 } = useTableStore(props.namespace);
 
 const {
-  namespace: filtersNamespace,
   restoreFilters,
   subscribe,
   flushSubscribers,
@@ -153,6 +167,13 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const emptyTableText = computed(() =>
+  t('cases.emptyCases', {
+    e: t('cases.attachments.links').toLowerCase(),
+  }),
+);
+
 subscribe({
   event: '*',
   callback: onFilterEvent,
@@ -162,8 +183,6 @@ restoreFilters();
 onUnmounted(() => {
   flushSubscribers();
 });
-
-const editMode = inject('editMode');
 
 const formState = reactive({
   isAdding: false,
@@ -202,35 +221,49 @@ function updateLinkUrl(value) {
 }
 
 async function submitLink() {
-  try {
-    if (formState.editingLink) {
-      await LinksAPI.patch({
-        parentId: props.itemId,
-        linkId: formState.editingLink.etag,
-        changes: {
-          name: formState.linkText,
-          url: formState.linkUrl,
-        },
-      });
-    } else {
-      await LinksAPI.add({
-        parentId: props.itemId,
-        input: {
-          name: formState.linkText,
-          url: formState.linkUrl,
-        },
-      });
-    }
-    await loadData();
-    resetForm();
-  } catch (error) {
-    throw error;
+  const { editingLink, linkText, linkUrl } = formState;
+  const name = linkText || linkUrl;
+
+  if (editingLink) {
+    await LinksAPI.patch({
+      parentId: props.itemId,
+      linkId: editingLink.etag,
+      changes: {
+        name: name,
+        url: linkUrl,
+      },
+    });
+  } else {
+    await LinksAPI.add({
+      parentId: props.itemId,
+      input: {
+        name: name,
+        url: linkUrl,
+      },
+    });
   }
+  await loadData();
+  resetForm();
 }
 </script>
 
 <style lang="scss" scoped>
 .case-links {
+  &__link {
+    display: flex;
+    gap: var(--spacing-xs);
+    color: var(--link-color);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--link--hover-color);
+    }
+  }
+
+  &__link-icon {
+    flex-shrink: 0;
+  }
+
   .link-form {
     &__input {
       flex: 1;

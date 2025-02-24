@@ -19,8 +19,8 @@
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
             @click:add="addNewCatalog"
             @click:refresh="loadData"
             @click:delete="
@@ -123,6 +123,13 @@
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
+                  :disabled="
+                    !hasUpdateAccess ||
+                    checkParentState({
+                      catalog: getCatalog(item),
+                      item,
+                    })
+                  "
                   @change="changeState(item, index)"
                 />
               </template>
@@ -143,12 +150,12 @@
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   action="edit"
                   @click="edit(item)"
                 />
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
+                  :disabled="!hasDeleteAccess"
                   action="delete"
                   @click="
                     askDeleteConfirmation({
@@ -171,7 +178,6 @@
 </template>
 
 <script setup>
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -181,15 +187,17 @@ import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/fil
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, onUnmounted, watch } from 'vue';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../app/utils/displayText.js';
 import filters from '../../slas/modules/filters/store/filters.js';
 import CatalogsAPI from '../api/service-catalogs.js';
 import ServicesAPI from '../modules/services/api/services.js';
+import { checkDisableState } from '../utils/checkDisableState.js';
 import DisplayChipItems from './display-chip-items.vue';
 
 const baseNamespace = 'configuration/lookups/catalogs';
@@ -206,7 +214,8 @@ const path = computed(() => [
 
 const { close } = useClose('configuration');
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -257,7 +266,6 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-  primaryActionText,
 } = useTableEmpty({ dataList, filters, error, isLoading });
 
 const addNewCatalog = () => {
@@ -286,6 +294,19 @@ const edit = (item) => {
 };
 
 const isRootElement = (item) => !item.rootId;
+
+const getCatalog = (item) => {
+  return dataList.value.find((catalog) => catalog.id === item.catalogId);
+};
+
+// That computed property is used in the template with dynamic pass params, we can't get catalog inside because reactivity doesn't work correctly. For resolve issue with reactivity we need pass catalog py params
+const checkParentState = computed(() => ({ catalog, item }) => {
+  if (!catalog) {
+    return false;
+  }
+
+  return checkDisableState(catalog, item);
+});
 
 const changeState = async (item) => {
   if (isRootElement(item)) {

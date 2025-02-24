@@ -19,8 +19,8 @@
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
             @click:add="router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' }})"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
@@ -76,12 +76,12 @@
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   action="edit"
                   @click="edit(item)"
                 />
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
+                  :disabled="!hasDeleteAccess"
                   action="delete"
                   @click="askDeleteConfirmation({
                     deleted: [item],
@@ -102,24 +102,25 @@
 </template>
 
 <script setup>
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const baseNamespace = 'configuration/lookups/closeReasonGroups';
 
@@ -128,7 +129,8 @@ const router = useRouter();
 
 const store = useStore();
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
