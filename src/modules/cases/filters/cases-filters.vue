@@ -92,18 +92,18 @@ import DynamicFilterConfigForm from '@webitel/ui-sdk/src/modules/Filters/v2/filt
 import DynamicFilterAddAction from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-add-action.vue';
 import DynamicFilterPanelWrapper from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-panel-wrapper.vue';
 import DynamicFilterPreview from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/preview/dynamic-filter-preview.vue';
-import {
+import type {
   FilterInitParams,
+  FilterName,
   IFilter,
-} from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter';
-import { FilterName } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
+} from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
 import { storeToRefs } from 'pinia';
 import { computed, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useCasesStore } from '../stores/cases';
-import { filtersConfig } from './filters-config.ts';
-import { SearchMode } from './SearchMode.ts';
+import { filtersConfig } from './filters-config';
+import { SearchMode } from './SearchMode';
 
 const emit = defineEmits<{
   hide: [];
@@ -121,9 +121,7 @@ const {
 } = tableStore;
 
 const resetFilters = () => {
-  filtersManager.value.reset({
-    include: [],
-  });
+  filtersManager.value.reset();
 };
 
 function setFilterWrapperAction(

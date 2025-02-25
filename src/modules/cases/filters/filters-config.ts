@@ -7,7 +7,11 @@ import {
   AssigneeFilterPreview,
   AuthorFilter,
   AuthorFilterPreview,
-  CloseReasonGroupsCaseFilter,
+  CasePriorityFilter,
+  CasePriorityFilterPreview,
+  CaseSourceFilter,
+  CaseSourceFilterPreview,  CaseStatusFilter,
+  CaseStatusFilterPreview,  CloseReasonGroupsCaseFilter,
   CloseReasonGroupsCaseFilterPreview,
   ContactGroupFilter,
   ContactGroupFilterPreview,
@@ -19,8 +23,6 @@ import {
   HasAttachmentFilterPreview,
   ImpactedFilter,
   ImpactedFilterPreview,
-  PriorityCaseFilter,
-  PriorityCaseFilterPreview,
   RatingFromToFilter,
   RatingFromToFilterPreview,
   ReactionTimeFilter,
@@ -44,12 +46,9 @@ import { Component } from 'vue';
 
 interface FiltersConfig {
   [key: string]: {
-    valueField: Component;
-    previewField: Component;
-    styleOptions?: {
-      size: 'xs' | 'md';
-    };
-  };
+    valueField: Component
+    previewField: Component
+  }
 }
 
 export const filtersConfig: FiltersConfig = {
@@ -62,19 +61,16 @@ export const filtersConfig: FiltersConfig = {
     previewField: CreatedAtToFilterPreview,
   },
   statusCase: {
-    valueField: StatusCaseFilter,
-    previewField: StatusCaseFilterPreview,
+    valueField: CaseStatusFilter,
+    previewField: CaseStatusFilterPreview,
   },
   sourceCase: {
-    valueField: SourceCaseFilter,
-    previewField: SourceCaseFilterPreview,
+    valueField: CaseSourceFilter,
+    previewField: CaseSourceFilterPreview,
   },
   serviceCase: {
     valueField: ServiceCaseFilter,
     previewField: ServiceCaseFilterPreview,
-    styleOptions: {
-      size: 'md',
-    },
   },
   author: {
     valueField: AuthorFilter,
@@ -97,8 +93,8 @@ export const filtersConfig: FiltersConfig = {
     previewField: ContactGroupFilterPreview,
   },
   priorityCase: {
-    valueField: PriorityCaseFilter,
-    previewField: PriorityCaseFilterPreview,
+    valueField: CasePriorityFilter,
+    previewField: CasePriorityFilterPreview,
   },
   closeReasonGroupsCase: {
     valueField: CloseReasonGroupsCaseFilter,
@@ -108,10 +104,6 @@ export const filtersConfig: FiltersConfig = {
     valueField: RatingFromToFilter,
     previewField: RatingFromToFilterPreview,
   },
-  // service: {
-  //   valueField: ServiceFilter,
-  //   previewField: ServiceFilterPreview,
-  // },
   sla: {
     valueField: SlaFilter,
     previewField: SlaFilterPreview,
