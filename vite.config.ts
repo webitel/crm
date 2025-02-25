@@ -30,7 +30,7 @@ export default ({ mode }) => {
     },
     optimizeDeps: {
       // exclude: ['@webitel/ui-sdk'],
-      include: ['clipboard-copy', 'deep-equal'],
+      include: ['clipboard-copy', 'deep-equal', 'deepmerge'],
     },
     resolve: {
       alias: {

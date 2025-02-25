@@ -41,9 +41,7 @@ const defaultFields = [
     name: 'customization.customLookups.field.createdBy',
     kind: 'lookup',
     lookup: {
-      id: 'id',
-      name: 'name',
-      type: 'users',
+      path: 'users',
     },
     default: '$(user)',
     readonly: true,
@@ -64,7 +62,7 @@ const defaultFields = [
     name: 'customization.customLookups.field.modifiedBy',
     kind: 'lookup',
     lookup: {
-      type: 'users',
+      path: 'users',
     },
     always: '$(user)',
     readonly: true,
