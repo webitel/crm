@@ -108,7 +108,7 @@ const changeType = (value) => {
 };
 const selectObject = (value) => {
   props.value.lookup = {
-    type: value.path,
+    path: value.path,
     name: value.name,
   };
 };

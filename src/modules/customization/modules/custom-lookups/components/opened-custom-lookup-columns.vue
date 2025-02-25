@@ -54,10 +54,10 @@
           @update:selected="setSelected"
         >
           <template #title="{ item }">
-            {{ item.name }}
+            {{ t(item?.name ?? 'reusable.title') }}
           </template>
           <template #type="{ item }">
-            {{ $t(`customization.customLookups.fieldType.${item.kind}`) }}
+            {{ t(`customization.customLookups.fieldType.${item.kind}`) }}
           </template>
           <template #actions="{ item }">
             <template v-if="!isSystemField(item)">
