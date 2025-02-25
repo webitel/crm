@@ -19,8 +19,8 @@
 import { computed } from 'vue';
 
 import { displayText } from '../../../../../../../app/utils/displayText.js';
-import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum.js';
+import prettifyCustomLookupDate from '../../../../../../customization/modules/custom-lookups/utils/prettifyDate.js';
 import DisplayChipItems from '../../service-catalogs/components/display-chip-items.vue';
 
 const props = defineProps({
@@ -38,7 +38,7 @@ const showText = computed(() => {
   const value = props.value[props.field.value];
 
   if (props.field.kind === FieldType.Calendar) {
-    return displayText(prettifyDate(value));
+    return displayText(prettifyCustomLookupDate(value));
   }
 
   return displayText(value);
