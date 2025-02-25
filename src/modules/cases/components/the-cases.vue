@@ -54,16 +54,33 @@
                 />
               </wt-badge>
             </template>
+            <template #columns>
+            <wt-table-column-select
+              :headers="headers"
+              @change="updateShownHeaders"
+            />
+          </template>
           </wt-action-bar>
         </header>
         <wt-loader v-show="isLoading" />
+
+        <wt-empty
+        v-if="showEmpty"
+        :image="emptyImage"
+        :headline="emptyHeadline"
+        :title="emptyTitle"
+        :text="emptyText"
+        :primary-action-text="emptyPrimaryActionText"
+        :disabled-primary-action="!hasCreateAccess"
+      />
+
         <div
           v-show="!isLoading && dataList?.length"
           class="table-section__table-wrapper"
         >
           <wt-table
             :data="dataList"
-            :headers="headers"
+            :headers="shownHeaders"
             :selected="selected"
             sortable
             @sort="updateSort"
@@ -198,11 +215,13 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -230,7 +249,7 @@ const { close } = useClose('the-start-page');
 
 const tableStore = useCasesStore();
 
-const { dataList, selected, isLoading, page, size, next, headers, filtersManager } =
+const { dataList, selected, error, isLoading, page, size, next, headers, shownHeaders, filtersManager } =
   storeToRefs(tableStore);
 
 const {
@@ -241,6 +260,7 @@ const {
   updateSize,
   updateSort,
   deleteEls,
+  updateShownHeaders,
 } = tableStore;
 
 const {
@@ -250,6 +270,20 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const {
+  showEmpty,
+  image: emptyImage,
+  headline: emptyHeadline,
+  title: emptyTitle,
+  text: emptyText,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList,
+  error,
+  filters: computed(() => filtersManager.value.getAllValues()),
+  isLoading,
+});
 
 const showActionsPanel = ref(true);
 
