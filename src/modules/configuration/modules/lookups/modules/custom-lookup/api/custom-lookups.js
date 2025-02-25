@@ -106,10 +106,24 @@ const deleteCustomLookupRecord = async ({ repo, id }) => {
   }
 };
 
+const transformItemsForSelect =
+  ({ primary, display }) =>
+  (items) => {
+    return items.map((item) => ({
+      id: item[primary],
+      name: item[display],
+    }));
+  };
+
 // In this method we are using the same API as in getCustomLookupRecords,
 // but we are using different parameters, so we need to create a new method where we can pass the type of the lookup where type is path to api
 // for example: 'cities' has type 'dictionary/cities'
-const getCustomLookupRecordsLookup = async ({ type, ...params }) => {
+const getCustomLookupRecordsLookup = async ({
+  path,
+  display,
+  primary,
+  ...params
+}) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
   const url = applyTransform(params, [
@@ -117,7 +131,7 @@ const getCustomLookupRecordsLookup = async ({ type, ...params }) => {
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
-    generateUrl(type),
+    generateUrl(path),
   ]);
   try {
     const response = await instance.get(url);
@@ -127,7 +141,9 @@ const getCustomLookupRecordsLookup = async ({ type, ...params }) => {
     ]);
 
     return {
-      items: data ?? [],
+      items:
+        applyTransform(data, [transformItemsForSelect({ display, primary })]) ??
+        [],
       next,
     };
   } catch (err) {
