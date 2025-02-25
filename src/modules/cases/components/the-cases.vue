@@ -34,7 +34,7 @@
               IconAction.ADD,
               IconAction.REFRESH,
                IconAction.FILTERS,
-              /* IconAction.COLUMNS, */
+               IconAction.COLUMNS,
               IconAction.DELETE,
             ]"
             :disabled:delete="!hasDeleteAccess || !selected.length"
