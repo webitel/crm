@@ -38,6 +38,9 @@ export default ({ mode }) => {
         '@': resolve(__dirname, 'src'),
         'lodash/fp': 'lodash-es',
         'lodash': 'lodash-es',
+      /* vue-datepicker v4 relies on date-fns v2
+       where "/esm" dir still exists. need to update vue-datepicker to v8 at least */
+        'date-fns/esm': 'date-fns',
       },
       dedupe: ['vue', '@vue/compat'],
     },
