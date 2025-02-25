@@ -79,7 +79,7 @@ const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._d
 const path = computed(() => {
 
   return [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },

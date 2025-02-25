@@ -188,7 +188,7 @@ onUnmounted(() => {
 });
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('customization.customization'), route: '/customization' },
   { name: t('customization.customLookups.customLookups') },
