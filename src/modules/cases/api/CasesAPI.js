@@ -76,8 +76,19 @@ const getCasesList = async (params) => {
     'filters',
   ];
 
+  let ftsIds = null;
+  const { fts } = params;
+  if (fts) {
+    try {
+      const { items } = await ftsApi();
+      ftsIds = items.map(({ id }) => id);
+    } catch {
+      // skip error, load cases without fts
+    }
+  }
+
   const { page, size, q, ids, sort, fields, options } = applyTransform(
-    params,
+    { ...params, ids: params.ids || ftsIds },
     [
       merge(getDefaultGetParams()),
       // starToSearch('search'),
