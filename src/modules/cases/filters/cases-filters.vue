@@ -43,9 +43,7 @@
         </template>
       </dynamic-filter-preview>
 
-      <dynamic-filter-add-action
-        :show-label="!appliedFilters.length"
-      >
+      <dynamic-filter-add-action :show-label="!appliedFilters.length">
         <template #form="{ hide }">
           <dynamic-filter-config-form
             :options="unappliedFilters"

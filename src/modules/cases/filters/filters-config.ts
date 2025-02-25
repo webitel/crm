@@ -9,9 +9,13 @@ import {
   AuthorFilterPreview,
   CasePriorityFilter,
   CasePriorityFilterPreview,
+  CaseServiceFilter,
+  CaseServiceFilterPreview,
   CaseSourceFilter,
-  CaseSourceFilterPreview,  CaseStatusFilter,
-  CaseStatusFilterPreview,  CloseReasonGroupsCaseFilter,
+  CaseSourceFilterPreview,
+  CaseStatusFilter,
+  CaseStatusFilterPreview,
+  CloseReasonGroupsCaseFilter,
   CloseReasonGroupsCaseFilterPreview,
   ContactGroupFilter,
   ContactGroupFilterPreview,
@@ -31,14 +35,12 @@ import {
   ReporterFilterPreview,
   ResolutionTimeFilter,
   ResolutionTimeFilterPreview,
-  // ServiceFilter,
-  // ServiceFilterPreview,
   SlaConditionFilter,
   SlaConditionFilterPreview,
   SlaFilter,
-  SlaFilterPreview} from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
-import {Component} from "vue";
-
+  SlaFilterPreview,
+} from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
+import { Component } from 'vue';
 
 interface FiltersConfig {
   [key: string]: {
@@ -56,13 +58,17 @@ export const filtersConfig: FiltersConfig = {
     valueField: CreatedAtToFilter,
     previewField: CreatedAtToFilterPreview,
   },
-  caseStatus: {
+  statusCase: {
     valueField: CaseStatusFilter,
     previewField: CaseStatusFilterPreview,
   },
   sourceCase: {
     valueField: CaseSourceFilter,
     previewField: CaseSourceFilterPreview,
+  },
+  serviceCase: {
+    valueField: CaseServiceFilter,
+    previewField: CaseServiceFilterPreview,
   },
   author: {
     valueField: AuthorFilter,
@@ -82,7 +88,7 @@ export const filtersConfig: FiltersConfig = {
   },
   contactGroup: {
     valueField: ContactGroupFilter,
-    previewField: ContactGroupFilterPreview
+    previewField: ContactGroupFilterPreview,
   },
   priorityCase: {
     valueField: CasePriorityFilter,
@@ -94,12 +100,8 @@ export const filtersConfig: FiltersConfig = {
   },
   rating: {
     valueField: RatingFromToFilter,
-    previewField: RatingFromToFilterPreview
+    previewField: RatingFromToFilterPreview,
   },
-  // service: {
-  //   valueField: ServiceFilter,
-  //   previewField: ServiceFilterPreview,
-  // },
   sla: {
     valueField: SlaFilter,
     previewField: SlaFilterPreview,
@@ -110,7 +112,7 @@ export const filtersConfig: FiltersConfig = {
   },
   reactionTime: {
     valueField: ReactionTimeFilter,
-    previewField: ReactionTimeFilterPreview
+    previewField: ReactionTimeFilterPreview,
   },
   resolutionTime: {
     valueField: ResolutionTimeFilter,
@@ -118,14 +120,14 @@ export const filtersConfig: FiltersConfig = {
   },
   actualReactionTime: {
     valueField: ActualReactionTimeFilter,
-    previewField: ActualReactionTimeFilterPreview
+    previewField: ActualReactionTimeFilterPreview,
   },
   actualResolutionTime: {
     valueField: ActualResolutionTimeFilter,
-    previewField: ActualResolutionTimeFilterPreview
+    previewField: ActualResolutionTimeFilterPreview,
   },
   hasAttachment: {
     valueField: HasAttachmentFilter,
-    previewField: HasAttachmentFilterPreview
+    previewField: HasAttachmentFilterPreview,
   },
-}
+};
