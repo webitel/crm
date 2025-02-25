@@ -9,9 +9,13 @@ import {
   AuthorFilterPreview,
   CasePriorityFilter,
   CasePriorityFilterPreview,
+  CaseServiceFilter,
+  CaseServiceFilterPreview,
   CaseSourceFilter,
-  CaseSourceFilterPreview,  CaseStatusFilter,
-  CaseStatusFilterPreview,  CloseReasonGroupsCaseFilter,
+  CaseSourceFilterPreview,
+  CaseStatusFilter,
+  CaseStatusFilterPreview,
+  CloseReasonGroupsCaseFilter,
   CloseReasonGroupsCaseFilterPreview,
   ContactGroupFilter,
   ContactGroupFilterPreview,
@@ -31,16 +35,10 @@ import {
   ReporterFilterPreview,
   ResolutionTimeFilter,
   ResolutionTimeFilterPreview,
-  ServiceCaseFilter,
-  ServiceCaseFilterPreview,
   SlaConditionFilter,
   SlaConditionFilterPreview,
   SlaFilter,
   SlaFilterPreview,
-  SourceCaseFilter,
-  SourceCaseFilterPreview,
-  StatusCaseFilter,
-  StatusCaseFilterPreview,
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
 import { Component } from 'vue';
 
@@ -69,8 +67,8 @@ export const filtersConfig: FiltersConfig = {
     previewField: CaseSourceFilterPreview,
   },
   serviceCase: {
-    valueField: ServiceCaseFilter,
-    previewField: ServiceCaseFilterPreview,
+    valueField: CaseServiceFilter,
+    previewField: CaseServiceFilterPreview,
   },
   author: {
     valueField: AuthorFilter,

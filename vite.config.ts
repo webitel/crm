@@ -4,7 +4,7 @@ import { defineConfig, loadEnv } from 'vite';
 import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
-import vueDevTools from 'vite-plugin-vue-devtools'
+import vueDevTools from 'vite-plugin-vue-devtools';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -19,7 +19,7 @@ export default ({ mode }) => {
     },
     server: {
       host: true,
-      port: 8080,
+      port: 8082,
     },
     css: {
       preprocessorOptions: {
@@ -37,8 +37,8 @@ export default ({ mode }) => {
         vue: '@vue/compat',
         '@': resolve(__dirname, 'src'),
         'lodash/fp': 'lodash-es',
-        'lodash': 'lodash-es',
-      /* vue-datepicker v4 relies on date-fns v2
+        lodash: 'lodash-es',
+        /* vue-datepicker v4 relies on date-fns v2
        where "/esm" dir still exists. need to update vue-datepicker to v8 at least */
         'date-fns/esm': 'date-fns',
       },
