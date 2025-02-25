@@ -116,7 +116,13 @@ function applyFilterWrapper(data, closeCb) {
 
 const appliedFilters = computed(() => {
   const exclude = Object.values(SearchMode);
-  return filtersManager.value.getFiltersList({ exclude });
+  const filters = filtersManager.value.getFiltersList({ exclude });
+  return filters.map((item) => {
+    return {
+      ...item,
+      styleOptions: getFilterFieldComponentOptions(item.name),
+    };
+  });
 });
 
 const getFilterFieldComponentOptions = (filterName: FilterName) => {
