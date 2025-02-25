@@ -91,7 +91,14 @@
                 <wt-switcher
                   :disabled="!hasUpdateAccess"
                   :value="item.enabled"
-                  @change="patchProperty({ item, index, prop: 'enabled', value: $event})"
+                  @change="
+                    patchProperty({
+                      item,
+                      index,
+                      prop: 'enabled',
+                      value: $event,
+                    })
+                  "
                 />
               </template>
 
@@ -207,7 +214,7 @@ const {
 const isCreateGroupPopup = ref(false);
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.contactGroups.contactGroups', 2) },

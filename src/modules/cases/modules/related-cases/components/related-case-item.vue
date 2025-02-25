@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 
 const props = defineProps({
   color: {

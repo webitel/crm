@@ -190,6 +190,8 @@ export default {
       columns: 'Колонки',
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
+      confirmDeleteColumn:
+        'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
       controlPermissions: 'Контролювати права доступу',
       field: {
         id: 'Ід',
@@ -236,11 +238,11 @@ export default {
     result: 'Результат',
     rating: 'Оцінка',
     persons: 'Особи',
-    selectAService: 'Виберіть сервіс',
+    selectAService: 'Вибрати сервіс',
     deadlines: 'Терміни',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
-    assignToMe: 'Призначити на мене',
+    assignToMe: 'Взяти на себе',
     emptyCases: 'Тут ще немає {e}',
     caseInfo: {
       caseInfo: 'Інформація',
@@ -252,13 +254,15 @@ export default {
       yourCommentHere: 'Ваш коментар тут',
     },
     attachments: {
-      attachments: 'Додатки',
+      attachments: 'Вкладення',
+      files: 'Файли',
       links: 'Посилання',
       url: 'URL',
       linkText: 'Текст посилання',
     },
     relatedCases: {
       relatedCases: 'Звʼязані звернення',
+      emptyText: 'Тут ще немає звʼязаних звернень',
       searchCasesPlaceholder: 'Шукати звернення',
       relationType: {
         [CasesRelationType.DUPLICATES]: 'дублює',

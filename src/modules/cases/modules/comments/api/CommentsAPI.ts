@@ -3,33 +3,31 @@ import {
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
+} from '@webitel/ui-sdk/src/api/defaults/index';
 import applyTransform, {
   camelToSnake,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { CaseCommentsApiFactory } from 'webitel-sdk';
+} from '@webitel/ui-sdk/src/api/transformers/index';
+import type { ApiModule } from "@webitel/ui-sdk/src/api/types/ApiModule";
+import { CaseCommentsApiFactory, CasesCaseComment } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const commentsService = new CaseCommentsApiFactory(configuration, '', instance);
+const commentsService = CaseCommentsApiFactory(configuration, '', instance);
 
 const getCommentsList = async ({ parentId, ...rest }) => {
-  const fieldsToSend = ['etag', 'page', 'size', 'q', 'ids', 'sort', 'filters'];
-  const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
+  const { page, size, q, ids, sort, /*fields,*/ options } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
       ...params,
       q: params.search,
     }),
-    sanitize(fieldsToSend),
     camelToSnake(),
   ]);
   try {
@@ -40,7 +38,7 @@ const getCommentsList = async ({ parentId, ...rest }) => {
       q,
       ids,
       sort,
-      fields,
+      ['id', 'etag', 'text', 'created_at', 'updated_at', 'created_by', 'author', 'can_edit'],
       options,
     );
 
@@ -89,11 +87,11 @@ const deleteComment = async ({ etag }) => {
   }
 };
 
-const commentsAPI = {
+export const CommentsAPI: ApiModule<CasesCaseComment> = {
   getList: getCommentsList,
   delete: deleteComment,
   add: addComment,
   patch: patchComment,
 };
 
-export default commentsAPI;
+export default CommentsAPI;

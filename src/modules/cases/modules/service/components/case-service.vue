@@ -7,7 +7,20 @@
       @save="addServiceToStore"
     />
     <div class="case-service__wrapper">
-      <span class="case-service__title">{{ t('cases.service') }}</span>
+      <span class="case-service__title">
+        {{ t('cases.service') }}
+
+        <wt-tooltip v-if="!servicePath">
+          <template #activator>
+            <wt-icon
+              icon="attention"
+              color="error"
+            />
+          </template>
+
+            {{ t('validation.required') }}
+        </wt-tooltip>
+      </span>
       <span
         v-if="servicePath"
         class="case-service__path"
@@ -137,7 +150,7 @@ watch(
       service: serviceResponse.value,
       catalog: catalogResponse,
     });
-  },
+  }, { immediate: true },
 );
 
 onUnmounted(() => {
@@ -170,6 +183,10 @@ onUnmounted(() => {
 
   &__title {
     @extend %typo-heading-4;
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
   }
 
   &__button {

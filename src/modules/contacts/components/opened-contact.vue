@@ -106,7 +106,7 @@ const path = computed(() => {
   const baseUrl = '/contacts';
 
   return [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     { name: t('contacts.contact', 2), route: baseUrl },
     {
       name: itemInstance.value?.name || 'Contact',

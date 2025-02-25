@@ -10,6 +10,7 @@
       <template #default="props">
         <wt-input
           v-bind="props"
+          :v="v$.value.itemInstance.subject"
           :disabled="disableUserInput"
           @input="props.updateValue($event)"
         />
@@ -45,7 +46,8 @@
         <template #default="props">
           <wt-select
             v-bind="props"
-            clearable
+            :v="v$.value.itemInstance.source"
+            :clearable="false"
             :disabled="disableUserInput"
             :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"
@@ -70,15 +72,13 @@
     </div>
 
     <related-cases
-      v-if="!isNew"
-      :edit-mode="editMode"
-      :item-id="id"
+      v-if="id"
+      :parent-id="id"
     />
 
     <case-comments
-      v-if="hasCaseCommentsReadAccess && !isNew"
-      :item-id="id"
-      :namespace="commentsNamespace"
+      v-if="hasCaseCommentsReadAccess && id"
+      :parent-id="id"
     />
   </div>
 </template>
@@ -91,11 +91,12 @@ import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
-import CaseComments from '../modules/comments/components/case-comments.vue';
-import RelatedCases from '../modules/related-cases/components/related-cases.vue';
+import CaseComments from '../../comments/components/case-comments.vue';
+import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
 const editMode = inject('editMode');
+const v$ = inject('v$');
 
 const props = defineProps({
   namespace: {
@@ -112,15 +113,10 @@ const {
 } = useUserAccessControl({ resource: WtObject.CaseComment });
 
 const {
-  namespace: cardNamespace,
   itemInstance,
   setItemProp,
   id,
 } = useCardStore(props.namespace);
-
-const commentsNamespace = `${cardNamespace}/comments`;
-const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
-provide('relatedCasesNamespace', relatedCasesNamespace);
 
 const { isNew } = useCardComponent({
   id,

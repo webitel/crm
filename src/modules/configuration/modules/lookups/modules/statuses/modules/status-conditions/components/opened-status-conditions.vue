@@ -247,6 +247,9 @@ async function setWarningPopupState(value) {
 
 async function changeInitialStatus({ item, index, value }) {
   try {
+    dataList.value.forEach((el) => {
+      el.initial = false;
+    });
     dataList.value[index].initial = value;
     await StatusConditionsAPI.patch({
       id: item.id,

@@ -132,17 +132,6 @@ function logout() {
 async function logoutUser() {
   return logout();
 }
-
-function setLanguage() {
-  const lang = localStorage.getItem('lang');
-  const { locale } = useI18n();
-  if (lang) locale.value = lang;
-}
-
-onMounted(() => {
-  setLanguage();
-});
-
 </script>
 
 <style lang="scss" scoped>

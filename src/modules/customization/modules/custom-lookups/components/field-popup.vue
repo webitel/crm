@@ -7,7 +7,7 @@
   >
     <template #header>
       {{
-        field
+        !isNew
           ? $t('customization.customLookups.editColumn')
           : $t('customization.customLookups.addColumn')
       }}
@@ -25,6 +25,7 @@
         <wt-input
           :label="t('customization.customLookups.code')"
           :value="value.id"
+          :disabled="!isNew"
           :v="v$.value.id"
           :custom-validators="[
             {
@@ -36,7 +37,10 @@
           @input="value.id = $event"
         />
 
-        <type-field-select :value="value" />
+        <type-field-select
+          :disabled="!isNew"
+          :value="value"
+        />
 
         <wt-switcher
           :value="value.required"
@@ -100,6 +104,7 @@ const checkId = (repo) => {
 };
 
 const value = ref(Object.assign(deepCopy(draft), deepCopy(props.field)));
+const isNew = computed(() => !props.field);
 
 const updateValue = (newValue) => {
   Object.assign(value.value, deepCopy(newValue));

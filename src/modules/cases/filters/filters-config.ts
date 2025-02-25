@@ -1,47 +1,46 @@
 import {
+  ActualReactionTimeFilter,
+  ActualReactionTimeFilterPreview,
+  ActualResolutionTimeFilter,
+  ActualResolutionTimeFilterPreview,
+  AssigneeFilter,
+  AssigneeFilterPreview,
+  AuthorFilter,
+  AuthorFilterPreview,
+  CasePriorityFilter,
+  CasePriorityFilterPreview,
+  CaseServiceFilter,
+  CaseServiceFilterPreview,
+  CaseSourceFilter,
+  CaseSourceFilterPreview,
+  CaseStatusFilter,
+  CaseStatusFilterPreview,
+  CloseReasonGroupsCaseFilter,
+  CloseReasonGroupsCaseFilterPreview,
+  ContactGroupFilter,
+  ContactGroupFilterPreview,
   CreatedAtFromFilter,
   CreatedAtFromFilterPreview,
   CreatedAtToFilter,
   CreatedAtToFilterPreview,
-  StatusCaseFilter,
-  StatusCaseFilterPreview,
-  SourceCaseFilter,
-  SourceCaseFilterPreview,
-  AuthorFilter,
-  AuthorFilterPreview,
-  ReporterFilter,
-  ReporterFilterPreview,
-  ImpactedFilter,
-  ImpactedFilterPreview,
-  AssigneeFilter,
-  AssigneeFilterPreview,
-  PriorityCaseFilter,
-  PriorityCaseFilterPreview,
-  CloseReasonGroupsCaseFilter,
-  CloseReasonGroupsCaseFilterPreview,
-  RatingFromToFilter,
-  RatingFromToFilterPreview,
-  SlaFilter,
-  SlaFilterPreview,
   HasAttachmentFilter,
   HasAttachmentFilterPreview,
+  ImpactedFilter,
+  ImpactedFilterPreview,
+  RatingFromToFilter,
+  RatingFromToFilterPreview,
   ReactionTimeFilter,
   ReactionTimeFilterPreview,
+  ReporterFilter,
+  ReporterFilterPreview,
   ResolutionTimeFilter,
   ResolutionTimeFilterPreview,
-  ActualReactionTimeFilter,
-  ActualReactionTimeFilterPreview,
-  ActualResolutionTimeFilterPreview,
-  ActualResolutionTimeFilter,
-  ContactGroupFilter,
-  ContactGroupFilterPreview,
-  // ServiceFilter,
-  // ServiceFilterPreview,
   SlaConditionFilter,
-  SlaConditionFilterPreview
+  SlaConditionFilterPreview,
+  SlaFilter,
+  SlaFilterPreview,
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/values/index.js';
-import {Component} from "vue";
-
+import { Component } from 'vue';
 
 interface FiltersConfig {
   [key: string]: {
@@ -60,12 +59,16 @@ export const filtersConfig: FiltersConfig = {
     previewField: CreatedAtToFilterPreview,
   },
   statusCase: {
-    valueField: StatusCaseFilter,
-    previewField: StatusCaseFilterPreview,
+    valueField: CaseStatusFilter,
+    previewField: CaseStatusFilterPreview,
   },
   sourceCase: {
-    valueField: SourceCaseFilter,
-    previewField: SourceCaseFilterPreview,
+    valueField: CaseSourceFilter,
+    previewField: CaseSourceFilterPreview,
+  },
+  serviceCase: {
+    valueField: CaseServiceFilter,
+    previewField: CaseServiceFilterPreview,
   },
   author: {
     valueField: AuthorFilter,
@@ -85,11 +88,11 @@ export const filtersConfig: FiltersConfig = {
   },
   contactGroup: {
     valueField: ContactGroupFilter,
-    previewField: ContactGroupFilterPreview
+    previewField: ContactGroupFilterPreview,
   },
   priorityCase: {
-    valueField: PriorityCaseFilter,
-    previewField: PriorityCaseFilterPreview,
+    valueField: CasePriorityFilter,
+    previewField: CasePriorityFilterPreview,
   },
   closeReasonGroupsCase: {
     valueField: CloseReasonGroupsCaseFilter,
@@ -97,12 +100,8 @@ export const filtersConfig: FiltersConfig = {
   },
   rating: {
     valueField: RatingFromToFilter,
-    previewField: RatingFromToFilterPreview
+    previewField: RatingFromToFilterPreview,
   },
-  // service: {
-  //   valueField: ServiceFilter,
-  //   previewField: ServiceFilterPreview,
-  // },
   sla: {
     valueField: SlaFilter,
     previewField: SlaFilterPreview,
@@ -113,7 +112,7 @@ export const filtersConfig: FiltersConfig = {
   },
   reactionTime: {
     valueField: ReactionTimeFilter,
-    previewField: ReactionTimeFilterPreview
+    previewField: ReactionTimeFilterPreview,
   },
   resolutionTime: {
     valueField: ResolutionTimeFilter,
@@ -121,14 +120,14 @@ export const filtersConfig: FiltersConfig = {
   },
   actualReactionTime: {
     valueField: ActualReactionTimeFilter,
-    previewField: ActualReactionTimeFilterPreview
+    previewField: ActualReactionTimeFilterPreview,
   },
   actualResolutionTime: {
     valueField: ActualResolutionTimeFilter,
-    previewField: ActualResolutionTimeFilterPreview
+    previewField: ActualResolutionTimeFilterPreview,
   },
   hasAttachment: {
     valueField: HasAttachmentFilter,
-    previewField: HasAttachmentFilterPreview
+    previewField: HasAttachmentFilterPreview,
   },
-}
+};

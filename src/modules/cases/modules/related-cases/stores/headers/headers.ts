@@ -1,6 +1,6 @@
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
-export default [
+export const headers = [
   {
     value: 'name',
     show: true,
@@ -20,3 +20,4 @@ export default [
     field: 'relation',
   },
 ];
+
