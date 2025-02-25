@@ -7,11 +7,13 @@
         :filter="filter"
         @delete:filter="deleteAppliedFilter($event.name)"
       >
-        <template #form>
+        <template #form="{ hide }">
           <dynamic-filter-config-form
             :filter="filter"
-            :style-options="getFilterFieldComponentOptions(filter.name)"
-            @submit="updateAppliedFilter"
+            @submit="
+              (data) => setFilterWrapperAction(data, updateAppliedFilter, hide)
+            "
+            @cancel="() => hide()"
           >
             <template
               #value-input="{
@@ -45,8 +47,8 @@
         <template #form="{ hide }">
           <dynamic-filter-config-form
             :options="unappliedFilters"
-            @submit="(data) => applyFilterWrapper(data, hide)"
-            @cancel="hide"
+            @submit="(data) => setFilterWrapperAction(data, applyFilter, hide)"
+            @cancel="() => hide()"
           >
             <template
               #value-input="{
@@ -73,6 +75,11 @@
       <!--        TODO: <save-preset-action />-->
 
       <wt-icon-action
+        action="clear"
+        @click="resetFilters"
+      />
+
+      <wt-icon-action
         action="close"
         @click="emit('hide')"
       />
@@ -85,6 +92,10 @@ import DynamicFilterConfigForm from '@webitel/ui-sdk/src/modules/Filters/v2/filt
 import DynamicFilterAddAction from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-add-action.vue';
 import DynamicFilterPanelWrapper from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-panel-wrapper.vue';
 import DynamicFilterPreview from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/preview/dynamic-filter-preview.vue';
+import {
+  FilterInitParams,
+  IFilter,
+} from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter';
 import { FilterName } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
 import { storeToRefs } from 'pinia';
 import { computed, type Ref } from 'vue';
@@ -109,36 +120,38 @@ const {
   deleteFilter: deleteAppliedFilter,
 } = tableStore;
 
-function applyFilterWrapper(data, closeCb) {
-  applyFilter(data);
+const resetFilters = () => {
+  filtersManager.value.reset({
+    include: [],
+  });
+};
+
+function setFilterWrapperAction(
+  data: FilterInitParams,
+  filterAction: (d: FilterInitParams) => IFilter,
+  closeCb: () => void,
+) {
+  filterAction(data);
   closeCb();
 }
 
 const appliedFilters = computed(() => {
   const exclude = Object.values(SearchMode);
-  const filters = filtersManager.value.getFiltersList({ exclude });
-  return filters.map((item) => {
-    return {
-      ...item,
-      styleOptions: getFilterFieldComponentOptions(item.name),
-    };
-  });
+  return filtersManager.value.getFiltersList({ exclude });
 });
-
-const getFilterFieldComponentOptions = (filterName: FilterName) => {
-  const filter = filtersConfig[filterName];
-  return !filter ? undefined : filter.styleOptions || undefined;
-};
 
 const unappliedFilters: Ref<Array<{ name: string; value: FilterName }>> =
   computed(() => {
-    const filterOptions = Object.keys(filtersConfig).map((key) => ({
-      name: t(`webitelUI.filters.${key}`),
-      value: key,
-      styleOptions: getFilterFieldComponentOptions(key),
-    }));
+    const excludeNames = new Set(
+      filtersManager.value.getFiltersList().map((item) => item.name),
+    );
 
-    return filterOptions;
+    return Object.keys(filtersConfig)
+      .filter((key) => !excludeNames.has(key))
+      .map((key) => ({
+        name: t(`webitelUI.filters.${key}`),
+        value: key,
+      }));
   });
 
 const getFilterFieldComponent = (
