@@ -7,7 +7,7 @@
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!selected.length"
-        @click:refresh="loadItem"
+        @click:refresh="refreshItem"
         @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
@@ -30,7 +30,11 @@
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
-    />
+    >
+      <template #deleteMessage>
+        {{ t('customization.customLookups.confirmDeleteColumn') }}
+      </template>
+    </delete-confirmation-popup>
 
     <div class="table-section__table-wrapper">
       <wt-empty
@@ -160,6 +164,15 @@ const fields = computed(() => {
 });
 
 const isLoading = ref(!itemInstance.value?.repo);
+
+const refreshItem = async () => {
+  try {
+    isLoading.value = true;
+    await loadItem();
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const search = ref('');
 
@@ -295,7 +308,9 @@ const deleteField = (field) => {
 };
 
 const deleteSelected = (selectedFields) => {
-  selectedFields.filter((field) => !field.readonly).forEach(deleteField);
+  selectedFields
+    .filter((field) => !field.readonly && field.id !== 'name')
+    .forEach(deleteField);
 
   selected.value = [];
 };

@@ -4,6 +4,7 @@
     :options="options"
     :label="$t('vocabulary.type')"
     :v="v$.value.kind"
+    :disabled="disabled"
     required
     track-by="name"
     use-value-from-options-by-prop="type"
@@ -15,6 +16,7 @@
     "
     :value="value.lookup"
     required
+    :disabled="disabled"
     :label="$t('reusable.object')"
     :search-method="loadLookupList"
     :v="v$.value.lookup"
@@ -37,6 +39,10 @@ const props = defineProps({
   value: {
     type: Object,
     required: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 

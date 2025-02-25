@@ -117,7 +117,6 @@ import {
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
@@ -134,7 +133,8 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const editMode = inject('editMode');
+
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl({
@@ -184,8 +184,6 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
-const editMode = inject('editMode');
-
 const formState = reactive({
   isAdding: false,
   editingLink: null,
@@ -223,30 +221,29 @@ function updateLinkUrl(value) {
 }
 
 async function submitLink() {
-  try {
-    if (formState.editingLink) {
-      await LinksAPI.patch({
-        parentId: props.itemId,
-        linkId: formState.editingLink.etag,
-        changes: {
-          name: formState.linkText,
-          url: formState.linkUrl,
-        },
-      });
-    } else {
-      await LinksAPI.add({
-        parentId: props.itemId,
-        input: {
-          name: formState.linkText,
-          url: formState.linkUrl,
-        },
-      });
-    }
-    await loadData();
-    resetForm();
-  } catch (error) {
-    throw error;
+  const { editingLink, linkText, linkUrl } = formState;
+  const name = linkText || linkUrl;
+
+  if (editingLink) {
+    await LinksAPI.patch({
+      parentId: props.itemId,
+      linkId: editingLink.etag,
+      changes: {
+        name: name,
+        url: linkUrl,
+      },
+    });
+  } else {
+    await LinksAPI.add({
+      parentId: props.itemId,
+      input: {
+        name: name,
+        url: linkUrl,
+      },
+    });
   }
+  await loadData();
+  resetForm();
 }
 </script>
 

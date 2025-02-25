@@ -183,6 +183,8 @@ export default {
       columns: 'Columns',
       addColumn: 'Add column',
       editColumn: 'Edit column',
+      confirmDeleteColumn:
+        'After deleting the column and saving, all the entered data in the corresponding field will be deleted as well.',
       controlPermissions: 'Control permissions',
       field: {
         id: 'Id',
@@ -246,6 +248,7 @@ export default {
     },
     attachments: {
       attachments: 'Attachments',
+      files: 'Files',
       links: 'Links',
       url: 'URL',
       linkText: 'Link text',
