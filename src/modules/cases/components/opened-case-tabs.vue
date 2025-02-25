@@ -7,7 +7,12 @@
     />
     <router-view
       :namespace="cardNamespace"
-      :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+      :access="/*is used by permissions tab*/{
+        read: true,
+         edit: !disableUserInput && editMode,
+          delete: !disableUserInput && editMode,
+           add: !disableUserInput && editMode,
+            }"
       class="opened-card-tabs__tab"
     />
   </article>
@@ -17,7 +22,7 @@
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
@@ -28,6 +33,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const editMode = inject('editMode');
 
 const { t } = useI18n();
 
