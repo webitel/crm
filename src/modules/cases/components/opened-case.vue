@@ -144,7 +144,7 @@ const path = computed(() => {
   const baseUrl = '/cases';
 
   return [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     {
       name: t('cases.case', 2),
       route: baseUrl,

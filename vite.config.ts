@@ -29,14 +29,15 @@ export default ({ mode }) => {
       },
     },
     optimizeDeps: {
+      // exclude: ['@webitel/ui-sdk'],
       include: ['clipboard-copy', 'deep-equal'],
     },
     resolve: {
       alias: {
         vue: '@vue/compat',
         '@': resolve(__dirname, 'src'),
-        // 'lodash/fp': 'lodash-es',
-        // 'lodash': 'lodash-es',
+        'lodash/fp': 'lodash-es',
+        'lodash': 'lodash-es',
       },
       dedupe: ['vue', '@vue/compat'],
     },
