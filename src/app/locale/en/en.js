@@ -269,5 +269,9 @@ export default {
         [CasesRelationType.RELATESTO]: 'relates to',
       },
     },
+    slaRecalculationPopup: {
+      title: 'SLA recalculation',
+      message: 'After changing the service, the SLA of the Case will be recalculated.',
+    },
   },
 };
