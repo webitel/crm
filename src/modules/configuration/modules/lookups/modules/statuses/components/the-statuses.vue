@@ -23,12 +23,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            @click:add="
-              router.push({
-                name: `${CrmSections.STATUSES}-card`,
-                params: { id: 'new' },
-              })
-            "
+            @click:add="add"
             @click:refresh="loadData"
             @click:delete="
               askDeleteConfirmation({
@@ -60,6 +55,7 @@
             :text="textEmpty"
             :primary-action-text="primaryActionTextEmpty"
             :disabled-primary-action="!hasCreateAccess"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -215,6 +211,13 @@ const {
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
+
+const add = () => {
+  return router.push({
+    name: `${CrmSections.STATUSES}-card`,
+    params: { id: 'new' },
+  });
+};
 </script>
 
 <style lang="scss" scoped></style>

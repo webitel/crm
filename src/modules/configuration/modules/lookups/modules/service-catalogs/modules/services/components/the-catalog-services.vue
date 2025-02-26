@@ -53,6 +53,7 @@
             :text="textEmpty"
             :primary-action-text="primaryActionTextEmpty"
             :disabled-primary-action="!hasCreateAccess"
+            @click:primary="addNewService"
           />
 
           <wt-loader v-show="isLoading" />

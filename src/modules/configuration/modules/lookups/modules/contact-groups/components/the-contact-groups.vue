@@ -60,6 +60,7 @@
             :text="textEmpty"
             :primary-action-text="primaryActionTextEmpty"
             :disabled-primary-action="!hasCreateAccess"
+            @click:primary="addGroup"
           />
 
           <wt-loader v-show="isLoading" />

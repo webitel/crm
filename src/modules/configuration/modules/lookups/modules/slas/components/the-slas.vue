@@ -21,7 +21,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            @click:add="router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }})"
+            @click:add="add"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
@@ -53,6 +53,7 @@
             :text="textEmpty"
             :primary-action-text="primaryActionTextEmpty"
             :disabled-primary-action="!hasCreateAccess"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -179,6 +180,10 @@ restoreFilters();
 onUnmounted(() => {
   flushSubscribers();
 });
+
+const add = () => {
+  return router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }});
+};
 
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },

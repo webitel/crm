@@ -75,6 +75,7 @@
         :text="emptyText"
         :primary-action-text="emptyPrimaryActionText"
         :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
         <div
@@ -234,8 +235,8 @@ import { useStore } from 'vuex';
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import CasesFilters from '../filters/cases-filters.vue';
-import { SearchMode } from '../filters/SearchMode';
 import DynamicFilterSearchWrapper from '../filters/components/dynamic-filter-search-wrapper.vue';
+import { SearchMode } from '../filters/SearchMode';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 

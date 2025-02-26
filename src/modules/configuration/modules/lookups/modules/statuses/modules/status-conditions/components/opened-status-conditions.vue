@@ -26,9 +26,7 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:add="!hasCreateAccess"
         :disabled:delete="!hasDeleteAccess || !selected.length"
-        @click:add="
-          router.push({ ...route, params: { statusConditionId: 'new' } })
-        "
+        @click:add="add"
         @click:refresh="loadData"
         @click:delete="
           askDeleteConfirmation({
@@ -53,6 +51,7 @@
         :text="textEmpty"
         :primary-action-text="primaryActionTextEmpty"
         :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
       <wt-loader v-show="isLoading" />
@@ -217,6 +216,10 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const add = () => {
+  return router.push({ ...route, params: { statusConditionId: 'new' } });
+};
 
 async function deleteCallbackWrapper() {
   try {

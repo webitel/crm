@@ -18,7 +18,7 @@
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH]"
         :disabled:add="!hasCreateAccess"
-        @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
+        @click:add="add"
         @click:refresh="loadData"
       >
       </wt-action-bar>
@@ -33,6 +33,7 @@
         :text="textEmpty"
         :primary-action-text="primaryActionTextEmpty"
         :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
       <div v-if="dataList.length && !isLoading">
@@ -175,6 +176,10 @@ const {
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
+
+const add = () => {
+  return router.push({ ...route, params: { conditionId: 'new' } });
+};
 
 let sortableInstance = null;
 

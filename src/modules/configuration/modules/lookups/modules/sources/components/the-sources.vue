@@ -21,12 +21,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!hasDeleteAccess || !selected.length"
-            @click:add="
-              router.push({
-                name: `${CrmSections.SOURCES}-card`,
-                params: { id: 'new' },
-              })
-            "
+            @click:add="add"
             @click:refresh="loadData"
             @click:delete="
               askDeleteConfirmation({
@@ -58,6 +53,7 @@
             :text="textEmpty"
             :primary-action-text="primaryActionTextEmpty"
             :disabled-primary-action="!hasCreateAccess"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -198,6 +194,13 @@ const path = computed(() => [
 ]);
 
 const { close } = useClose('configuration');
+
+const add = () => {
+  return router.push({
+    name: `${CrmSections.SOURCES}-card`,
+    params: { id: 'new' },
+  })
+};
 
 function edit(item) {
   return router.push({

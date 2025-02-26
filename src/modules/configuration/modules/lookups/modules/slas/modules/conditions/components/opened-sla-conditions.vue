@@ -19,7 +19,7 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!hasDeleteAccess || !selected.length"
         :disabled:add="!hasCreateAccess"
-        @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
+        @click:add="add"
         @click:refresh="loadData"
         @click:delete="askDeleteConfirmation({
                   deleted: selected,
@@ -45,6 +45,7 @@
         :text="textEmpty"
         :primary-action-text="primaryActionTextEmpty"
         :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
       <wt-loader v-show="isLoading" />
@@ -217,6 +218,10 @@ const {
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, filters, error, isLoading });
+
+const add = () => {
+  return router.push({ ...route, params: { conditionId: 'new' } });
+};
 </script>
 
 <style lang="scss" scoped>
