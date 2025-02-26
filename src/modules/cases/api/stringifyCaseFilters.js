@@ -4,15 +4,15 @@ import deepmerge from 'deepmerge';
 const filterTransformersMap = {
   'createdAtFrom': (value) => `created_at.from=${value}`,
   'createdAtTo': (value) => `created_at.to=${value}`,
-  'statusCase': (value) => `status_condition=${value.conditions}`,
-  'sourceCase': (value) => `source=${value}`,
+  'status': (value) => `status_condition=${value.conditions}`,
+  'source': (value) => `source=${value}`,
   'author': (value) => `created_by=${value}`,
   'reporter': (value) => `reporter=${value}`,
   'impacted': (value) => `impacted=${value}`,
   'assignee': (value) => value.unassigned ? `assignee=${value.list},${null}` : `assignee=${value.list}`,
   'contactGroup': (value) => value.unassigned ? `group=${value.list},${null}` : `group=${value.list}`,
-  'priorityCase': (value) => `priority=${value}`,
-  'closeReasonGroupsCase': (value) => `close_reason=${value.conditions}`,
+  'priority': (value) => `priority=${value}`,
+  closeReasonGroups: (value) => `close_reason=${value.conditions}`,
   'rating': (value) => {
     const arr = [];
     if(value.from) arr.push(`rating.from=${value.from}`);

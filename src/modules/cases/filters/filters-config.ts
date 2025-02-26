@@ -58,15 +58,15 @@ export const filtersConfig: FiltersConfig = {
     valueField: CreatedAtToFilter,
     previewField: CreatedAtToFilterPreview,
   },
-  statusCase: {
+  status: {
     valueField: CaseStatusFilter,
     previewField: CaseStatusFilterPreview,
   },
-  sourceCase: {
+  source: {
     valueField: CaseSourceFilter,
     previewField: CaseSourceFilterPreview,
   },
-  serviceCase: {
+  service: {
     valueField: CaseServiceFilter,
     previewField: CaseServiceFilterPreview,
   },
@@ -90,11 +90,11 @@ export const filtersConfig: FiltersConfig = {
     valueField: ContactGroupFilter,
     previewField: ContactGroupFilterPreview,
   },
-  priorityCase: {
+  priority: {
     valueField: CasePriorityFilter,
     previewField: CasePriorityFilterPreview,
   },
-  closeReasonGroupsCase: {
+  closeReasonGroups: {
     valueField: CloseReasonGroupsCaseFilter,
     previewField: CloseReasonGroupsCaseFilterPreview,
   },
