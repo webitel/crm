@@ -192,17 +192,13 @@ function resetAssignee(value) {
 }
 
 watch(
-  serviceId,
-  (newServiceId, oldServiceId) => {
-    if (oldServiceId || isNew.value) {
-      setItemProp({
-        path: 'group',
-        value: serviceGroup?.value,
-      });
-      setItemProp({
-        path: 'assignee',
-        value: serviceAssignee?.value,
-      });
+  [serviceId, serviceGroup, serviceAssignee],
+  //empty space before newGroup needed to ignore newId value witch is not used
+  ([ , newGroup, newAssignee], [oldId]) => {
+    // this if statement needed so when we enter old case we don't reset assignee and group
+    if (oldId || isNew.value) {
+      setItemProp({ path: 'group', value: newGroup });
+      setItemProp({ path: 'assignee', value: newAssignee });
     }
   },
   { deep: true },
