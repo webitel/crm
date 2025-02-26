@@ -4,6 +4,7 @@ import { CasesRelationType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
+import { SearchMode } from '../../../modules/cases/filters/SearchMode.js';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
@@ -279,6 +280,12 @@ export default {
     slaRecalculationPopup: {
       title: 'Перерахунок SLA',
       message: 'Після зміни сервісу SLA звернення буде перераховано.',
+    },
+  },
+  filters: {
+    search: {
+      [SearchMode.Search]: 'Звичайний пошук',
+      [SearchMode.Fts]: 'Повнотекстовий пошук',
     },
   },
 };
