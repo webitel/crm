@@ -1,7 +1,7 @@
 <template>
   <dynamic-filter-panel-wrapper>
     <template #filters>
-<!--      WTF? -- https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 -->
+      <!--      WTF? -- https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 -->
       <dynamic-filter-preview
         v-if="!hasCreatedAtFromFilter"
         :filter="defaultCreatedAtFromFilterDataPreview"
@@ -19,10 +19,12 @@
         v-for="filter of appliedFilters"
         :key="filter.name"
         :filter="filter"
+        disable-click-away
         @delete:filter="deleteAppliedFilter($event.name)"
       >
         <template #form="{ hide }">
           <dynamic-filter-config-form
+            :options="getAppliedFiltersOptions(filter)"
             :filter="filter"
             @submit="
               (data) => setFilterWrapperAction(data, updateAppliedFilter, hide)
@@ -173,6 +175,14 @@ const unappliedFilters: Ref<Array<{ name: string; value: FilterName }>> =
         value: key,
       }));
   });
+
+const getAppliedFiltersOptions = (filter: IFilter) => {
+  const filterData = {
+    name: t(`webitelUI.filters.${filter.name}`),
+    value: filter.name,
+  };
+  return [...unappliedFilters.value, filterData];
+};
 
 const resetFilters = () => {
   filtersManager.value.reset();
