@@ -9,6 +9,8 @@ import { useStore } from 'vuex';
 
 const { locale } = useI18n();
 
+window.usei = useI18n();
+
 const store = useStore();
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
