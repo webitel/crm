@@ -3,20 +3,21 @@
     :model-value="searchValue"
     :search-mode="searchMode"
     :show-text-search-icon="showTextSearchIcon"
-    :search-mode-options="SearchMode"
+    :search-mode-options="filteredSearchOptions"
     @handle-search="handleSearch"
     @update:search-mode="searchMode = $event"
   />
 </template>
 
 <script lang="ts" setup>
+import { configurations } from '@webitel/ui-sdk/src/api/clients/index.js';
 import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch, WatchHandle } from 'vue';
+import { EngineSystemSettingName } from 'webitel-sdk';
 
 import { useCasesStore } from '../../stores/cases';
-import { SearchModeType } from '../enums/SearchMode';
-import { SearchMode } from '../SearchMode';
+import { SearchMode, SearchModeType } from '../SearchMode';
 
 const tableStore = useCasesStore();
 
@@ -26,11 +27,16 @@ const { hasFilter, addFilter, updateFilter, deleteFilter } = tableStore;
 
 const searchMode = ref<SearchModeType>(SearchMode.Search);
 const searchValue = ref('');
+const isFTSEnabled = ref(false);
 
 const showTextSearchIcon = computed(() => {
   const textSearchModes = [SearchMode.Fts];
 
   return textSearchModes.includes(searchMode.value);
+});
+
+const filteredSearchOptions = computed(() => {
+  return isFTSEnabled.value ? SearchMode : { Search: SearchMode.Search };
 });
 
 let unwatchSearchMode: WatchHandle;
@@ -81,6 +87,20 @@ const handleSearch = (val: string) => {
     addFilter(filter);
   }
 };
+
+const loadV = async () => {
+  const configurationsData = await configurations.getList({
+    name: [EngineSystemSettingName.IsFulltextSearchEnabled],
+  });
+
+  const regex = configurationsData.items.find(
+    ({ name }) => name === EngineSystemSettingName.IsFulltextSearchEnabled,
+  )?.value;
+
+  isFTSEnabled.value = regex;
+};
+
+loadV();
 </script>
 
 <style lang="scss" scoped></style>

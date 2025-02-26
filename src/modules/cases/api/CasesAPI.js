@@ -1,6 +1,4 @@
-import {
-  generatePermissionsApi,
-} from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
+import { generatePermissionsApi } from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
@@ -18,6 +16,8 @@ import applyTransform, {
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 import { CasesApiFactory } from 'webitel-sdk';
+
+import ftsServiceAPI from './FTSServiceAPI.js';
 import { stringifyCaseFilters } from './stringifyCaseFilters.js';
 
 const instance = getDefaultInstance();
@@ -76,11 +76,17 @@ const getCasesList = async (params) => {
     'filters',
   ];
 
-  let ftsIds = null;
+  let ftsIds;
   const { fts } = params;
   if (fts) {
     try {
-      const { items } = await ftsApi();
+      const { items } = await ftsServiceAPI.getList({
+        page: params.page,
+        size: params.size,
+        fts: params.fts,
+        sort: params.sort,
+        object_name: ['cases', 'case_comments'],
+      });
       ftsIds = items.map(({ id }) => id);
     } catch {
       // skip error, load cases without fts
