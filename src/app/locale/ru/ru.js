@@ -237,7 +237,6 @@ export default {
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
     assignToMe: 'Взять на себя',
-    emptyCases: 'Тут еще нет {e}',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
@@ -246,6 +245,7 @@ export default {
       comments: 'Комментарии',
       edited: 'Редактировано',
       yourCommentHere: 'Ваш комментарий здесь',
+      emptyText: 'Тут еще нет комментариев',
     },
     attachments: {
       attachments: 'Вложения',
@@ -253,6 +253,8 @@ export default {
       links: 'Ссылки',
       url: 'URL',
       linkText: 'Текст ссылки',
+      emptyFilesText: 'Тут еще нет вложений',
+      emptyLinksText: 'Тут еще нет ссылок',
     },
     relatedCases: {
       relatedCases: 'Связанные обращения',

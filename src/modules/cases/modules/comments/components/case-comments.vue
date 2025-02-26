@@ -42,7 +42,7 @@
 
       <wt-empty
         v-show="showEmpty"
-        :text="emptyTableText"
+        :text="emptyText"
       />
 
       <wt-loader v-show="isLoading" />
@@ -155,11 +155,11 @@ const {
 } = useDeleteConfirmationPopup();
 
 const { showEmpty } = useTableEmpty({ dataList, isLoading });
-const emptyTableText = computed(() =>
-  t('cases.emptyCases', {
-    e: t('cases.comments.comments').toLowerCase(),
-  }),
-);
+
+const emptyText = computed(() => {
+  return t('cases.comments.emptyText');
+});
+
 
 const editableSelectedComments = computed(
   () => !!selected.value.every((comment) => comment.canEdit),

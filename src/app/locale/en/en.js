@@ -237,7 +237,6 @@ export default {
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
     assignToMe: 'Assign to me',
-    emptyCases: 'There are no {e} yet',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
@@ -246,6 +245,7 @@ export default {
       comments: 'Comments',
       edited: 'Edited',
       yourCommentHere: 'Your comment here',
+      emptyText: 'There are no comments yet',
     },
     attachments: {
       attachments: 'Attachments',
@@ -253,6 +253,8 @@ export default {
       links: 'Links',
       url: 'URL',
       linkText: 'Link text',
+      emptyFilesText: 'There are no attachments yet',
+      emptyLinksText: 'There are no links yet',
     },
     relatedCases: {
       relatedCases: 'Related cases',
