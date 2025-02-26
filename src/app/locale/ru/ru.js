@@ -269,5 +269,9 @@ export default {
         [CasesRelationType.RELATESTO]: 'относится к',
       },
     },
+    slaRecalculationPopup: {
+      title: 'Перерасчет SLA',
+      message: 'После изменения сервиса SLA обращения будет пересчитан.',
+    },
   },
 };
