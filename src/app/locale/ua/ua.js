@@ -243,7 +243,6 @@ export default {
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
     assignToMe: 'Взяти на себе',
-    emptyCases: 'Тут ще немає {e}',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
@@ -252,6 +251,7 @@ export default {
       comments: 'Коментарі',
       edited: 'Редаговано',
       yourCommentHere: 'Ваш коментар тут',
+      emptyText: 'Тут ще немає коментарів',
     },
     attachments: {
       attachments: 'Вкладення',
@@ -259,6 +259,8 @@ export default {
       links: 'Посилання',
       url: 'URL',
       linkText: 'Текст посилання',
+      emptyFilesText: 'Тут ще немає вкладень',
+      emptyLinksText: 'Тут ще немає посилань',
     },
     relatedCases: {
       relatedCases: 'Звʼязані звернення',
