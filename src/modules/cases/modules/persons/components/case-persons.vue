@@ -207,7 +207,7 @@ watch(
 watch(
   () => itemInstance.value.group,
   (newValue) => {
-    const isDynamicGroup = newValue.type === WebitelContactsGroupType.DYNAMIC;
+    const isDynamicGroup = newValue?.type === WebitelContactsGroupType.DYNAMIC;
 
     if (isDynamicGroup) {
       resetAssignee();
