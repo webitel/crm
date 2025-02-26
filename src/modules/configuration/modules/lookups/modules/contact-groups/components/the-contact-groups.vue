@@ -58,6 +58,8 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
+            :primary-action-text="primaryActionTextEmpty"
+            :disabled-primary-action="!hasCreateAccess"
           />
 
           <wt-loader v-show="isLoading" />
@@ -130,6 +132,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -209,6 +212,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 const isCreateGroupPopup = ref(false);

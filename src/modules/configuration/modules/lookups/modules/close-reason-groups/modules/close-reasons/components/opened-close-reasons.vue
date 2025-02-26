@@ -41,6 +41,8 @@
         v-show="showEmpty"
         :image="imageEmpty"
         :text="textEmpty"
+        :primary-action-text="primaryActionTextEmpty"
+        :disabled-primary-action="!hasCreateAccess"
       />
 
       <wt-loader v-show="isLoading" />
@@ -86,6 +88,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -166,6 +169,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 subscribe({

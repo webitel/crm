@@ -30,6 +30,8 @@
         v-show="showEmpty"
         :image="imageEmpty"
         :text="textEmpty"
+        :primary-action-text="primaryActionTextEmpty"
+        :disabled-primary-action="!hasCreateAccess"
       />
 
       <div v-if="dataList.length && !isLoading">
@@ -77,6 +79,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -158,6 +161,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 let sortableInstance = null;
