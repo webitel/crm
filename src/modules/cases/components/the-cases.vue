@@ -12,9 +12,7 @@
       </wt-page-header>
     </template>
     <template #actions-panel>
-      <cases-filters
-        @hide="showActionsPanel = false"
-      />
+      <cases-filters @hide="showActionsPanel = false" />
     </template>
     <template #main>
       <delete-confirmation-popup
@@ -36,8 +34,8 @@
             :include="[
               IconAction.ADD,
               IconAction.REFRESH,
-               IconAction.FILTERS,
-               IconAction.COLUMNS,
+              IconAction.FILTERS,
+              IconAction.COLUMNS,
               IconAction.DELETE,
             ]"
             :disabled:delete="!hasDeleteAccess || !selected.length"
@@ -48,9 +46,7 @@
             @click:filters="showActionsPanel = !showActionsPanel"
           >
             <template #filters="{ action, onClick }">
-              <wt-badge
-                :hidden="!anyFiltersOnFiltersPanel"
-              >
+              <wt-badge :hidden="!anyFiltersOnFiltersPanel">
                 <wt-icon-action
                   :action="action"
                   @click="onClick"
@@ -58,25 +54,25 @@
               </wt-badge>
             </template>
             <template #columns>
-            <wt-table-column-select
-              :headers="headers"
-              @change="updateShownHeaders"
-            />
-          </template>
+              <wt-table-column-select
+                :headers="headers"
+                @change="updateShownHeaders"
+              />
+            </template>
           </wt-action-bar>
         </header>
         <wt-loader v-show="isLoading" />
 
         <wt-empty
-        v-if="showEmpty"
-        :image="emptyImage"
-        :headline="emptyHeadline"
-        :title="emptyTitle"
-        :text="emptyText"
-        :primary-action-text="emptyPrimaryActionText"
-        :disabled-primary-action="!hasCreateAccess"
-        @click:primary="add"
-      />
+          v-if="showEmpty"
+          :image="emptyImage"
+          :headline="emptyHeadline"
+          :title="emptyTitle"
+          :text="emptyText"
+          :primary-action-text="emptyPrimaryActionText"
+          :disabled-primary-action="!hasCreateAccess"
+          @click:primary="add"
+        />
 
         <div
           v-show="!isLoading && dataList?.length"
@@ -120,12 +116,12 @@
               </wt-item-link>
             </template>
             <template #priority="{ item }">
-              <span
+              <color-component-wrapper
                 :class="{ 'case-priority': !!item.priority?.color }"
-                :style="{ color: item.priority?.color }"
+                :color="item.priority?.color"
               >
                 {{ item.priority?.name }}
-              </span>
+              </color-component-wrapper>
             </template>
             <template #statusCondition="{ item }">
               {{ item.statusCondition?.name }}
@@ -254,8 +250,18 @@ const { close } = useClose('the-start-page');
 
 const tableStore = useCasesStore();
 
-const { dataList, selected, error, isLoading, page, size, next, headers, shownHeaders, filtersManager } =
-  storeToRefs(tableStore);
+const {
+  dataList,
+  selected,
+  error,
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  shownHeaders,
+  filtersManager,
+} = storeToRefs(tableStore);
 
 const {
   initialize,
@@ -293,12 +299,12 @@ const {
 const showActionsPanel = ref(true);
 
 /*
-* show "toggle filters panel" badge if any filters are applied...
-* */
+ * show "toggle filters panel" badge if any filters are applied...
+ * */
 const anyFiltersOnFiltersPanel = computed(() => {
   /*
-  * ...excluding search filters, which shown in other panel
-  * */
+   * ...excluding search filters, which shown in other panel
+   * */
   return filtersManager.value.getAllKeys().some((filterName) => {
     return !Object.values(SearchMode).some((mode) => mode === filterName);
   });
