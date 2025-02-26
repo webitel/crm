@@ -34,8 +34,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 const props = defineProps({
   shown: {
     type: Boolean,
@@ -44,6 +42,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['save', 'close']);
+
+const { t } = useI18n();
 
 function save() {
   emit('save');
