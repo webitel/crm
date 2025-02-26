@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { WtEmpty } from '@webitel/ui-sdk/src/components';
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';

@@ -17,6 +17,7 @@
 
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH]"
+        :disabled:add="!hasCreateAccess"
         @click:add="router.push({ ...route, params: { conditionId: 'new' } })"
         @click:refresh="loadData"
       >
@@ -51,14 +52,19 @@
             {{ item.assignee.name }}
           </template>
           <template #actions="{ item }">
-            <wt-icon-btn icon="move" />
+            <wt-icon-btn
+              icon="move"
+              :disabled="!hasUpdateAccess"
+            />
             <wt-icon-action
+              :disabled="!hasUpdateAccess"
               action="edit"
               @click="
                 router.push({ ...route, params: { conditionId: item.id } })
               "
             />
             <wt-icon-action
+              :disabled="!hasDeleteAccess"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -79,7 +85,7 @@
 </template>
 
 <script setup>
-import { WtEmpty } from '@webitel/ui-sdk/src/components';
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -93,6 +99,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConditionsAPI from '../api/conditions.js';
 import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 
@@ -119,6 +126,11 @@ const namespace = `${parentCardNamespace}/conditions`;
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const {
   namespace: tableNamespace,
@@ -212,6 +224,8 @@ function initSortable(wrapper) {
 }
 
 function callSortable() {
+  if (!hasUpdateAccess.value) return;
+
   setTimeout(() => {
     const wrapper = document.querySelector('.wt-table__body');
     if (wrapper) {
