@@ -1,3 +1,6 @@
+import { startOfToday } from 'date-fns';
+import deepmerge from 'deepmerge';
+
 const filterTransformersMap = {
   'createdAtFrom': (value) => `created_at.from=${value}`,
   'createdAtTo': (value) => `created_at.to=${value}`,
@@ -27,8 +30,8 @@ const filterTransformersMap = {
   },
   'resolutionTime': (value) => {
     const arr = [];
-    if(value.from) arr.push(`planned_resolved_at.from=${value.from}`);
-    if(value.to) arr.push(`planned_resolved_at.to=${value.to}`);
+    if(value.from) arr.push(`planned_resolve_at.from=${value.from}`);
+    if(value.to) arr.push(`planned_resolve_at.to=${value.to}`);
     return arr;
   },
   'actualReactionTime': (value) => {
@@ -49,10 +52,15 @@ const filterTransformersMap = {
 export const stringifyCaseFilters = (params) => {
   const result = [];
 
-  for (const param in params) {
-    const value = params[param];
+  const defaults = {
+    createdAtFrom: startOfToday().getTime(), /* https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
+  };
 
-    const transformer = filterTransformersMap[param];
+  const mergedParams = deepmerge.all([defaults, params]);
+
+  for (const [key, value] of Object.entries(mergedParams)) {
+
+    const transformer = filterTransformersMap[key];
     if (transformer) {
       const transformedValue = transformer(value);
       if (transformedValue) {
