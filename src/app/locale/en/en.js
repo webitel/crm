@@ -4,6 +4,7 @@ import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 import { CasesRelationType } from 'webitel-sdk';
 
+import { SearchMode } from '../../../modules/cases/filters/SearchMode.js';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
@@ -272,6 +273,12 @@ export default {
     slaRecalculationPopup: {
       title: 'SLA recalculation',
       message: 'After changing the service, the SLA of the Case will be recalculated.',
+    },
+  },
+  filters: {
+    search: {
+      [SearchMode.Search]: 'Regular search',
+      [SearchMode.Fts]: 'Full text search',
     },
   },
 };

@@ -194,7 +194,7 @@ function resetAssignee(value) {
 watch(
   [serviceId, serviceGroup, serviceAssignee],
   //empty space before newGroup needed to ignore newId value witch is not used
-  ([ , newGroup, newAssignee], [oldId]) => {
+  ([, newGroup, newAssignee], [oldId]) => {
     // this if statement needed so when we enter old case we don't reset assignee and group
     if (oldId || isNew.value) {
       setItemProp({ path: 'group', value: newGroup });
@@ -205,10 +205,9 @@ watch(
 );
 
 watch(
-  serviceGroup,
+  () => itemInstance.value.group,
   (newValue) => {
-    const isDynamicGroup =
-      newValue.type === WebitelContactsGroupType.DYNAMIC;
+    const isDynamicGroup = newValue.type === WebitelContactsGroupType.DYNAMIC;
 
     if (isDynamicGroup) {
       resetAssignee();

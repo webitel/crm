@@ -25,7 +25,7 @@
             />
           </template>
 
-            {{ t('validation.required') }}
+          {{ t('validation.required') }}
         </wt-tooltip>
       </span>
       <span
@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -69,6 +70,10 @@ const {
   resetState,
   setItemProp,
 } = useCardStore(namespace);
+
+const { isNew } = useCardComponent({
+  itemInstance,
+});
 
 const { t } = useI18n();
 const store = useStore();
@@ -158,9 +163,13 @@ const pendingServiceData = ref(null);
 function onServicePopupSave(serviceCatalogData) {
   pendingServiceData.value = serviceCatalogData;
   isServicePopup.value = false;
-  isSlaRecalculationPopup.value = true;
-}
 
+  if (isNew.value) {
+    addServiceToStore(serviceCatalogData);
+  } else {
+    isSlaRecalculationPopup.value = true;
+  }
+}
 async function onSlaRecalculationSave() {
   if (!pendingServiceData.value) return;
 
@@ -183,7 +192,8 @@ watch(
       service: serviceResponse.value,
       catalog: catalogResponse,
     });
-  }, { immediate: true },
+  },
+  { immediate: true },
 );
 
 onUnmounted(() => {
