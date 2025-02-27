@@ -35,6 +35,10 @@ const props = defineProps({
 });
 
 const showText = computed(() => {
+  if (!props.value) {
+    return '';
+  }
+
   const value = props.value[props.field.value];
 
   if (props.field.kind === FieldType.Calendar) {

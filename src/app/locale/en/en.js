@@ -256,6 +256,9 @@ export default {
       emptyFilesText: 'There are no attachments yet',
       emptyLinksText: 'There are no links yet',
     },
+    details: {
+      details: 'Details',
+    },
     relatedCases: {
       relatedCases: 'Related cases',
       emptyText: 'There are no related cases yet',

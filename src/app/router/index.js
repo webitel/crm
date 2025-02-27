@@ -7,6 +7,7 @@ import OpenedCase from '../../modules/cases/components/opened-case.vue';
 import TheCases from '../../modules/cases/components/the-cases.vue';
 import CaseAttachments from '../../modules/cases/modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../../modules/cases/modules/case-info/components/case-info.vue';
+import CaseDetails from '../../modules/cases/modules/details/component/case-details.vue';
 import CaseResult from '../../modules/cases/modules/result/components/case-result.vue';
 import CaseTimeline from '../../modules/cases/modules/timeline/components/case-timeline.vue';
 import TheConfiguration from '../../modules/configuration/components/the-configuration.vue';
@@ -131,6 +132,11 @@ const routes = [
             path: 'timeline',
             name: `${CrmSections.CASES}-timeline`,
             component: CaseTimeline,
+          },
+          {
+            path: 'details',
+            name: `${CrmSections.CASES}-details`,
+            component: CaseDetails,
           },
           {
             path: 'permissions/:permissionId?',
