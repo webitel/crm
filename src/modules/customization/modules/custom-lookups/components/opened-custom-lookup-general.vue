@@ -36,11 +36,12 @@
         @input="setItemProp({ path: 'about', value: $event })"
       />
 
-      <wt-switcher
-        :label="t('customization.customLookups.controlPermissions')"
-        :value="itemInstance.administered"
-        @change="setItemProp({ path: 'administered', value: $event })"
-      />
+      <!--      TODO Hidden before backend will be ready for this-->
+      <!--      <wt-switcher-->
+      <!--        :label="t('customization.customLookups.controlPermissions')"-->
+      <!--        :value="itemInstance.administered"-->
+      <!--        @change="setItemProp({ path: 'administered', value: $event })"-->
+      <!--      />-->
     </div>
   </section>
 </template>
