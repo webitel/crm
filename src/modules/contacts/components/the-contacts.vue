@@ -76,12 +76,20 @@
           </template>
 
           <template #user="{ item }">
-            {{ item.user?.name }}
+            <wt-icon
+              v-if="item.user"
+              icon="webitel-logo"
+            />
+          </template>
+
+          <template #about="{ item }">
+            {{ item.about }}
           </template>
 
           <template #managers="{ item }">
             {{ item.managers[0]?.user.name }}
           </template>
+
           <template #labels="{ item }">
             <div
               v-if="item.labels"
