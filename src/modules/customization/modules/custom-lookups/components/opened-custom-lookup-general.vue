@@ -32,15 +32,16 @@
 
       <wt-textarea
         :label="t('vocabulary.description')"
-        :value="itemInstance.description"
-        @input="setItemProp({ path: 'description', value: $event })"
+        :value="itemInstance.about"
+        @input="setItemProp({ path: 'about', value: $event })"
       />
 
-      <wt-switcher
-        :label="t('customization.customLookups.controlPermissions')"
-        :value="itemInstance.administered"
-        @change="setItemProp({ path: 'administered', value: $event })"
-      />
+      <!--      TODO Hidden before backend will be ready for this-->
+      <!--      <wt-switcher-->
+      <!--        :label="t('customization.customLookups.controlPermissions')"-->
+      <!--        :value="itemInstance.administered"-->
+      <!--        @change="setItemProp({ path: 'administered', value: $event })"-->
+      <!--      />-->
     </div>
   </section>
 </template>

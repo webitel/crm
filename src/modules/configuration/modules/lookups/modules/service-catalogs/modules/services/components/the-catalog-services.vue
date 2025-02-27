@@ -51,6 +51,9 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
+            :primary-action-text="primaryActionTextEmpty"
+            :disabled-primary-action="!hasCreateAccess"
+            @click:primary="addNewService"
           />
 
           <wt-loader v-show="isLoading" />
@@ -104,7 +107,7 @@
               <template #state="{ item, index }">
                 <wt-switcher
                   :value="item.state"
-                  :disabled="!hasUpdateAccess"
+                  :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
                   @change="
                     patchProperty({ index, prop: 'state', value: $event })
                   "
@@ -140,6 +143,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -159,6 +163,7 @@ import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
 import CatalogsAPI from '../../../api/service-catalogs.js';
+import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 import filters from '../modules/filters/store/filters.js';
@@ -172,7 +177,9 @@ const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -219,7 +226,7 @@ subscribe({
 
 const path = computed(() => {
   const routes = [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     {
@@ -276,7 +283,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-  primaryActionText,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, filters, error, isLoading });
 
 const addNewService = () => {
@@ -327,6 +334,10 @@ const loadServices = async () => {
   setRootForServices();
   await restoreFilters();
 };
+
+const disableStateSwitcher = computed(() => (item) => {
+  return checkDisableState(catalog.value, item);
+});
 
 onUnmounted(() => {
   flushSubscribers();

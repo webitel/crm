@@ -2,6 +2,7 @@
   <wt-dual-panel
     :actions-panel="false"
     class="opened-case"
+    v-if="!isLoading"
   >
     <template #header>
       <wt-page-header
@@ -40,8 +41,8 @@
     </template>
     <template #main>
       <opened-case-tabs
-        :v="v$"
         :namespace="namespace"
+        :v="v$"
       />
     </template>
   </wt-dual-panel>
@@ -55,7 +56,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, provide, ref, watch } from 'vue';
+import { computed, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -63,6 +64,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 
 const namespace = 'cases';
 
@@ -88,27 +90,41 @@ const {
   updateItem,
   setId,
   resetState,
+  setItemProp,
 } = useCardStore(namespace);
 
 const v$ = useVuelidate(
   computed(() => ({
     itemInstance: {
       subject: { required },
-      sla: { required },
-      priority: { required },
-      status: { required },
-      // close: { required }, // TODO
+      // sla: { required }, /* sla is required, but cannot be changed in the ui */
+      priority: {
+        required,
+      } /* priority is required, but set automatically by default and can't be cleared in the ui */,
+      source: { required },
+      reporter: {
+        required: (v) => {
+          return !isEmpty(v);
+        },
+      },
+      // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
+      service: { required },
+      // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
+      // close: { required }, /* close is required if status is final, but should be entered before status=final is changed */
     },
   })),
   { itemInstance },
   { $autoDirty: true },
 );
 
-provide('v$', v$);
+provide(
+  'v$',
+  computed(() => v$),
+);
 
 v$.value.$touch();
 
-const { isNew, disabledSave, save, initialize } = useCardComponent({
+const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
   id,
   itemInstance,
   loadItem,
@@ -117,7 +133,7 @@ const { isNew, disabledSave, save, initialize } = useCardComponent({
   setId,
   resetState,
 
-  invalid: v$.value.$invalid,
+  invalid: computed(() => v$.value.$invalid),
 });
 
 initialize();
@@ -128,7 +144,7 @@ const path = computed(() => {
   const baseUrl = '/cases';
 
   return [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     {
       name: t('cases.case', 2),
       route: baseUrl,
@@ -175,15 +191,22 @@ async function assignCaseToMe() {
     return;
   }
 
-  try {
-    await casesAPI.patch({
-      changes: {
-        assignee: { id: userContact.value.id, name: userContact.value.name },
-      },
-      etag: itemInstance.value.etag,
+  if (editMode.value) {
+    await setItemProp({
+      path: 'assignee',
+      value: { id: userContact.value.id, name: userContact.value.name },
     });
-  } finally {
-    await loadItem();
+  } else {
+    try {
+      await casesAPI.patch({
+        changes: {
+          assignee: { id: userContact.value.id, name: userContact.value.name },
+        },
+        etag: itemInstance.value.etag,
+      });
+    } finally {
+      await loadItem();
+    }
   }
 }
 
@@ -195,9 +218,12 @@ const saveCase = async () => {
   await save();
   await toggleEditMode(false);
 };
+
+onUnmounted(() => {
+  toggleEditMode(false);
+});
 </script>
 
-<style lang="scss" scoped></style>
 <style lang="scss" scoped>
 .opened-case {
   &__actions-wrapper {

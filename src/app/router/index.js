@@ -18,6 +18,9 @@ import OpenedContactGroup from '../../modules/configuration/modules/lookups/modu
 import OpenedContactGroupGeneral from '../../modules/configuration/modules/lookups/modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../../modules/configuration/modules/lookups/modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroupsConditions from '../../modules/configuration/modules/lookups/modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import OpenedCustomLookupRecord from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/opened-custom-lookup-record.vue';
+import OpenedCustomLookupRecordsColumns from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/opened-custom-lookup-records-columns.vue';
+import TheCustomLookup from '../../modules/configuration/modules/lookups/modules/custom-lookup/components/the-custom-lookup.vue';
 import OpenedPriority from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority.vue';
 import OpenedPriorityGeneral from '../../modules/configuration/modules/lookups/modules/priorities/components/opened-priority-general.vue';
 import ThePriorities from '../../modules/configuration/modules/lookups/modules/priorities/components/the-priorities.vue';
@@ -48,6 +51,7 @@ import OpenedCustomLookup from '../../modules/customization/modules/custom-looku
 import OpenedCustomLookupColumns from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-columns.vue';
 import OpenedCustomLookupGeneral from '../../modules/customization/modules/custom-lookups/components/opened-custom-lookup-general.vue';
 import TheCustomLookups from '../../modules/customization/modules/custom-lookups/components/the-custom-lookups.vue';
+import TheDictionaryExtensions from '../../modules/customization/modules/wt-type-extension/components/the-wt-type-extension.vue';
 import TheStartPage from '../../modules/start-page/components/the-start-page.vue';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
@@ -122,7 +126,8 @@ const routes = [
             path: 'attachments',
             name: `${CrmSections.CASES}-attachments`,
             component: CaseAttachments,
-          },     {
+          },
+          {
             path: 'timeline',
             name: `${CrmSections.CASES}-timeline`,
             component: CaseTimeline,
@@ -140,55 +145,6 @@ const routes = [
         component: TheContacts,
         beforeEnter: checkRouteAccess,
         // redirect: { name: `the-start-page` },
-      },
-      {
-        path: 'contacts/:id',
-        name: `${CrmSections.CONTACTS}-card`,
-        component: OpenedContact,
-        beforeEnter: checkRouteAccess,
-        redirect: { name: `${CrmSections.CONTACTS}-timeline` },
-        children: [
-          {
-            path: 'timeline',
-            name: `${CrmSections.CONTACTS}-timeline`,
-            component: ContactTimeline,
-          },
-          {
-            path: 'communications',
-            redirect: {
-              name: `${CrmSections.CONTACTS}-communications-phones`,
-            },
-            name: `${CrmSections.CONTACTS}-communications`,
-            component: ContactCommunications,
-            children: [
-              {
-                path: 'phones/:commId?',
-                name: `${CrmSections.CONTACTS}-communications-phones`,
-                component: ContactCommunications,
-              },
-              {
-                path: 'messaging/:commId?',
-                name: `${CrmSections.CONTACTS}-communications-messaging`,
-                component: ContactCommunications,
-              },
-              {
-                path: 'emails/:commId?',
-                name: `${CrmSections.CONTACTS}-communications-emails`,
-                component: ContactCommunications,
-              },
-            ],
-          },
-          {
-            path: 'variables/:variableId?',
-            name: `${CrmSections.CONTACTS}-variables`,
-            component: ContactVariables,
-          },
-          {
-            path: 'permissions/:permissionId?',
-            name: `${CrmSections.CONTACTS}-permissions`,
-            component: ContactPermissions,
-          },
-        ],
       },
       {
         path: 'contacts/:id',
@@ -486,6 +442,24 @@ const routes = [
               },
             ],
           },
+          {
+            path: ':repo',
+            name: 'custom-lookup',
+            component: TheCustomLookup,
+          },
+          {
+            path: ':repo/:id',
+            name: 'custom-lookup-record',
+            component: OpenedCustomLookupRecord,
+            redirect: { name: 'custom-lookup-record-columns' },
+            children: [
+              {
+                path: 'columns',
+                name: 'custom-lookup-record-columns',
+                component: OpenedCustomLookupRecordsColumns,
+              },
+            ],
+          },
         ],
       },
       {
@@ -515,6 +489,11 @@ const routes = [
                 component: OpenedCustomLookupColumns,
               },
             ],
+          },
+          {
+            path: 'types-extensions/:id',
+            name: 'types-extensions',
+            component: TheDictionaryExtensions,
           },
         ],
       },

@@ -9,12 +9,13 @@
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
-          {{ t('cases.attachments.attachments') }}
+          {{ t('cases.attachments.files') }}
         </h3>
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
-          :disabled:delete="!editMode || !selected.length"
+          :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           :disabled:download="!dataList.length"
+          :disabled:add="!hasCreateAccess"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
           @click:delete="
@@ -26,6 +27,11 @@
         >
         </wt-action-bar>
       </header>
+
+      <wt-empty
+        v-show="showEmpty"
+        :text="emptyText"
+      />
 
       <wt-loader v-show="isLoading" />
 
@@ -73,7 +79,7 @@
               "
             />
             <wt-icon-action
-              :disabled="!editMode"
+              :disabled="!editMode || !hasDeleteAccess"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -90,16 +96,21 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
-import { inject, onUnmounted, ref } from 'vue';
+import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import downloadFile from '../../../../../../../app/utils/downloadFile.js';
 import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
 import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
@@ -119,23 +130,25 @@ const props = defineProps({
 const store = useStore();
 
 const { t } = useI18n();
+
+const { hasCreateAccess, hasDeleteAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
+
 const {
   namespace,
   dataList,
   selected,
   isLoading,
   headers,
-  isNext,
-  error,
   loadData,
   deleteData,
-  sort,
   setSelected,
   onFilterEvent,
 } = useTableStore(props.namespace);
 
 const {
-  namespace: filtersNamespace,
   restoreFilters,
   subscribe,
   flushSubscribers,
@@ -148,6 +161,12 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
+
+const { showEmpty } = useTableEmpty({ dataList, isLoading });
+
+const emptyText = computed(() => {
+  return t('cases.attachments.emptyFilesText');
+});
 
 subscribe({
   event: '*',
@@ -169,11 +188,7 @@ async function handleSelectedFilesDownload() {
     ? selected.value
     : dataList.value;
 
-  try {
-    await downloadFilesInZip({ filesToDownload, apiUrl, token });
-  } catch (error) {
-    throw error;
-  }
+  await downloadFilesInZip({ filesToDownload, apiUrl, token });
 }
 
 const fileInput = ref(null);
@@ -195,8 +210,6 @@ async function uploadFile(uploadedFile) {
   try {
     const cliInstance = await client.getCliInstance();
     await cliInstance.storeFile(props.itemId, [uploadedFile], null, 'case');
-  } catch (err) {
-    throw err;
   } finally {
     await loadData();
   }

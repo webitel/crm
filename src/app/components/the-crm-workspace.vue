@@ -40,6 +40,7 @@ import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/W
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { WtNavigationBar } from '@webitel/ui-sdk/components';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 
 const release = process.env.npm_package_version;
@@ -101,8 +102,22 @@ const nav = computed(() => {
     name: t(`WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CONTACTS}`),
     route: '/contacts',
   };
-  const nav = [contacts];
-  return nav.filter((nav) => checkAccess.value({ name: nav.value }));
+  const cases = {
+    value: CrmSections.CASES,
+    name: t(`WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CASES}`),
+    route: '/cases',
+  };
+  const configuration = {
+    value: 'configuration',
+    name: t('startPage.configuration.name'),
+    route: '/configuration',
+  };
+  const nav = [contacts, cases];
+  const accessibleNav = nav.filter((nav) => checkAccess.value({ name: nav.value }));
+  return [
+    ...accessibleNav,
+    configuration,
+  ];
 });
 
 function settings() {
@@ -117,17 +132,6 @@ function logout() {
 async function logoutUser() {
   return logout();
 }
-
-function setLanguage() {
-  const lang = localStorage.getItem('lang');
-  const { locale } = useI18n();
-  if (lang) locale.value = lang;
-}
-
-onMounted(() => {
-  setLanguage();
-});
-
 </script>
 
 <style lang="scss" scoped>

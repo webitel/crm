@@ -1,1 +1,1 @@
-export const namespace = 'cases';
+export const CasesNamespace = 'cases';

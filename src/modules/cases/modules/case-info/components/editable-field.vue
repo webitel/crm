@@ -20,13 +20,13 @@
           {{ label }}
         </wt-label>
       </div>
-      <div class="editable-field__value">
+      <div class="editable-field__value-wrapper">
         <wt-icon
           v-if="icon && !horizontalView"
           :color="color"
           :icon="icon"
         />
-        <span v-if="!link">
+        <span v-if="!link" class="editable-field__value">
           {{ valueWithDefault }}
         </span>
         <template v-else>
@@ -35,11 +35,11 @@
             class="editable-field__link"
             target="_blank"
           >
-            {{ value }}
+            {{ value.name }}
           </wt-item-link>
           <wt-icon
+            v-if="link && value.name"
             class="editable-field__link-icon"
-            v-if="link && value"
             icon="link"
             size="sm"
           />
@@ -95,15 +95,19 @@ const props = defineProps({
   },
 });
 
-const valueWithDefault = computed(() => {
-  return props.horizontalView ? props.value : props.value || '-';
-});
-
 const emit = defineEmits(['update:value']);
 
 const updateValue = (newValue) => {
   emit('update:value', newValue);
 };
+
+const valueWithDefault = computed(() => {
+  if (typeof props.value === 'object' && props.value !== null) {
+    return props.value.name ?? '-';
+  }
+
+  return props.horizontalView ? props.value : props.value || '-';
+});
 </script>
 
 <style lang="scss" scoped>
@@ -126,17 +130,17 @@ const updateValue = (newValue) => {
     gap: var(--spacing-2xs);
   }
 
-  &__value span {
+  &__value {
     @extend %typo-body-1
   }
 
-  &__value {
+  &__value-wrapper {
     display: flex;
     align-items: center;
     gap: var(--spacing-2xs);
   }
 
-  &__label-wrapper, &__value {
+  &__label-wrapper, &__value-wrapper {
     padding: var(--spacing-xs);
   }
 
@@ -146,16 +150,17 @@ const updateValue = (newValue) => {
       justify-content: space-between;
     }
 
-    .editable-field__label-wrapper, .editable-field__value {
+    .editable-field__label-wrapper, .editable-field__value-wrapper {
       text-align: end;
       padding: 0;
     }
 
-    .editable-field__value span {
+    .editable-field__value {
       @extend %typo-subtitle-1;
     }
 
     .editable-field__label-wrapper .wt-label {
+      text-align: start;
       //TODO: remove bold after proper typography implementation
       font-weight: bold;
       @extend %typo-body-1;

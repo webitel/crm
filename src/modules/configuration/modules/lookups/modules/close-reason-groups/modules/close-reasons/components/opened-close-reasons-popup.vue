@@ -65,7 +65,9 @@ const emit = defineEmits(['load-data']);
 
 const route = useRoute();
 const { t } = useI18n();
-const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
+  useUpdateAccessAsAllMutableChecksSource: true,
+});
 
 const {
   namespace: cardNamespace,

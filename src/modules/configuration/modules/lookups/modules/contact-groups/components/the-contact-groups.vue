@@ -58,6 +58,9 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
+            :primary-action-text="primaryActionTextEmpty"
+            :disabled-primary-action="!hasCreateAccess"
+            @click:primary="addGroup"
           />
 
           <wt-loader v-show="isLoading" />
@@ -91,7 +94,14 @@
                 <wt-switcher
                   :disabled="!hasUpdateAccess"
                   :value="item.enabled"
-                  @change="patchProperty({ item, index, prop: 'enabled', value: $event})"
+                  @change="
+                    patchProperty({
+                      item,
+                      index,
+                      prop: 'enabled',
+                      value: $event,
+                    })
+                  "
                 />
               </template>
 
@@ -123,6 +133,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -202,12 +213,13 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 const isCreateGroupPopup = ref(false);
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.contactGroups.contactGroups', 2) },

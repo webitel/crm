@@ -75,7 +75,7 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
@@ -98,21 +98,23 @@ const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-const prioritiesColorsOptions = computed(() => Object.values(PrioritiesColors).map((type) => {
-  return {
-    id: type,
-    name: type,
-  };
-}));
+const prioritiesColorsOptions = computed(() =>
+  Object.values(PrioritiesColors).map((type) => {
+    return {
+      id: type,
+      name: type,
+    };
+  }),
+);
 
 function setDefaultColorOption() {
   if (itemInstance.value?.color) {
-    return
+    return;
   }
 
   setItemProp({ path: 'color', value: prioritiesColorsOptions.value[0].id });
 }
-setDefaultColorOption()
+setDefaultColorOption();
 </script>
 
 <style lang="scss" scoped>
@@ -121,6 +123,10 @@ setDefaultColorOption()
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
+
+    .case-priority-color-component {
+      display: flex;
+    }
   }
 
   &__color-name {

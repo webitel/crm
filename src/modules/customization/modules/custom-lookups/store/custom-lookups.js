@@ -14,20 +14,20 @@ const defaultFields = [
   {
     id: 'name',
     kind: 'string',
-    name: 'Name',
+    name: 'customization.customLookups.field.name',
     required: true,
   },
   {
     default: '$(nextval)',
     id: 'id',
-    name: 'Id',
+    name: 'customization.customLookups.field.id',
     kind: 'int64',
     readonly: true,
     required: true,
   },
   {
     id: 'created_at',
-    name: 'Created on',
+    name: 'customization.customLookups.field.createdAt',
     kind: 'datetime',
     datetime: {
       part: 'full',
@@ -38,19 +38,17 @@ const defaultFields = [
   },
   {
     id: 'created_by',
-    name: 'Created by',
+    name: 'customization.customLookups.field.createdBy',
     kind: 'lookup',
     lookup: {
-      id: 'id',
-      name: 'name',
-      type: 'users',
+      path: 'users',
     },
     default: '$(user)',
     readonly: true,
   },
   {
     id: 'updated_at',
-    name: 'Modified on',
+    name: 'customization.customLookups.field.modifiedAt',
     kind: 'datetime',
     datetime: {
       part: 'full',
@@ -61,18 +59,13 @@ const defaultFields = [
   },
   {
     id: 'updated_by',
-    name: 'Modified by',
+    name: 'customization.customLookups.field.modifiedBy',
     kind: 'lookup',
     lookup: {
-      type: 'users',
+      path: 'users',
     },
     always: '$(user)',
     readonly: true,
-  },
-  {
-    id: 'customDate',
-    name: 'Custom Date on',
-    kind: 'datetime',
   },
   {
     id: 'description',
@@ -86,7 +79,7 @@ const resetCardState = {
   itemInstance: {
     name: '',
     repo: '',
-    description: '',
+    about: '',
     administered: false,
     primary: 'id',
     display: 'name',

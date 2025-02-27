@@ -28,6 +28,12 @@
                 params: { id: 'new' },
               })
             "
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteMany(selected),
+              })
+            "
           >
             <template #search-bar>
               <filter-search
@@ -73,8 +79,8 @@
                   {{ item.name }}
                 </wt-item-link>
               </template>
-              <template #description="{ item }">
-                {{ item.description }}
+              <template #about="{ item }">
+                {{ item.about }}
               </template>
               <template #createdAt="{ item }">
                 {{ prettifyDate(item.createdAt) }}
@@ -182,7 +188,7 @@ onUnmounted(() => {
 });
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('customization.customization'), route: '/customization' },
   { name: t('customization.customLookups.customLookups') },
@@ -196,6 +202,13 @@ function edit(item) {
     params: { id: item.repo },
   });
 }
+
+// This method for delete many lookups, one by one, because if we send many delete lookups requests at once, backend will return error
+const deleteMany = async (items) => {
+  for (const item of items) {
+    await deleteData(item);
+  }
+};
 
 const {
   showEmpty,

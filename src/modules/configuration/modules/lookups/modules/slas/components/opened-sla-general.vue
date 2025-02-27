@@ -58,6 +58,7 @@
           :value="itemInstance.validFrom"
           :disabled="disableUserInput"
           mode="datetime"
+          clearable
           @input="setItemProp({ path: 'validFrom', value: +$event })"
         />
 
@@ -66,6 +67,7 @@
           :value="itemInstance.validTo"
           :disabled="disableUserInput"
           mode="datetime"
+          clearable
           @input="setItemProp({ path: 'validTo', value: +$event })"
         />
       </div>

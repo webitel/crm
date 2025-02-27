@@ -101,7 +101,7 @@ const getCatalog = async ({ itemId: id }) => {
   };
 
   try {
-    const response = await catalogsService.locateCatalog(id, fieldsToSend);
+    const response = await catalogsService.locateCatalog(id, fieldsToSend, servicesFieldsToSend);
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);

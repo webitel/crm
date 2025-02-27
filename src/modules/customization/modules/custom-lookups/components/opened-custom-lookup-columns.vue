@@ -2,12 +2,12 @@
   <section class="table-section opened-custom-lookup-columns">
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
-        {{ t('customization.customLookups.columns') }}
+        {{ title || t('customization.customLookups.columns') }}
       </h3>
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!selected.length"
-        @click:refresh="loadItem"
+        @click:refresh="refreshItem"
         @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
@@ -30,7 +30,11 @@
       :callback="deleteCallback"
       :delete-count="deleteCount"
       @close="closeDelete"
-    />
+    >
+      <template #deleteMessage>
+        {{ t('customization.customLookups.confirmDeleteColumn') }}
+      </template>
+    </delete-confirmation-popup>
 
     <div class="table-section__table-wrapper">
       <wt-empty
@@ -50,7 +54,10 @@
           @update:selected="setSelected"
         >
           <template #title="{ item }">
-            {{ item[itemInstance.display] }}
+            {{ t(item?.name ?? 'reusable.title') }}
+          </template>
+          <template #type="{ item }">
+            {{ t(`customization.customLookups.fieldType.${item.kind}`) }}
           </template>
           <template #actions="{ item }">
             <template v-if="!isSystemField(item)">
@@ -116,6 +123,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  // eslint-disable-next-line vue/require-default-prop
+  title: {
+    type: String,
+  },
   isNew: {
     type: Boolean,
     required: true,
@@ -144,9 +155,7 @@ const fields = computed(() => {
   if (search.value) {
     return sortFields(
       itemInstance.value?.fields.filter((field) => {
-        return field[itemInstance.value.display]
-          .toLowerCase()
-          .includes(search.value?.toLowerCase());
+        return field.name?.toLowerCase().includes(search.value?.toLowerCase());
       }),
     );
   }
@@ -155,6 +164,15 @@ const fields = computed(() => {
 });
 
 const isLoading = ref(!itemInstance.value?.repo);
+
+const refreshItem = async () => {
+  try {
+    isLoading.value = true;
+    await loadItem();
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const search = ref('');
 
@@ -207,9 +225,7 @@ const getFieldsForSortable = () => {
   return !search.value
     ? itemInstance.value.fields
     : itemInstance.value.fields.filter((field) => {
-        return field[itemInstance.value.display]
-          .toLowerCase()
-          .includes(search.value?.toLowerCase());
+        return field.name.toLowerCase().includes(search.value?.toLowerCase());
       });
 };
 
@@ -226,9 +242,17 @@ const initSortable = (wrapper) => {
       // change value to true for hide table and trigger re-render table with new positions items
       isLoading.value = true;
       // Swap items in the array
-      if (oldIndex === newIndex) return; // No need to swap if indexes are the same
+      if (oldIndex === newIndex) {
+        setTimeout(() => {
+          isLoading.value = false;
+        }, 100);
+        return;
+      } // No need to swap if indexes are the same
 
-      const changePositionArray = getFieldsForSortable();
+      // We need sort array before change position
+      const changePositionArray = deepCopy(getFieldsForSortable()).sort(
+        (a, b) => a.position - b.position,
+      );
 
       const movedItem = changePositionArray[newIndex];
       const movedItemPosition = movedItem.position;
@@ -284,7 +308,9 @@ const deleteField = (field) => {
 };
 
 const deleteSelected = (selectedFields) => {
-  selectedFields.filter((field) => !field.readonly).forEach(deleteField);
+  selectedFields
+    .filter((field) => !field.readonly && field.id !== 'name')
+    .forEach(deleteField);
 
   selected.value = [];
 };

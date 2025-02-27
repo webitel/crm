@@ -12,6 +12,7 @@ import { useI18n } from 'vue-i18n';
 
 import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
 import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
+import CustomLookupsApi from '../../customization/modules/custom-lookups/api/custom-lookups.js';
 
 const { t } = useI18n();
 
@@ -65,6 +66,12 @@ const nav = reactive([
     value: 'customization',
     name: computed(() => t('customization.customization')),
     subNav: [
+      // Hidden before release, implement after backend fill finish with cases
+      // {
+      //   value: 'type-extension-contact',
+      //   name: computed(() => t('customization.extensions.contacts')),
+      //   route: 'customization/types-extensions/contacts',
+      // },
       {
         value: CrmSections.CUSTOM_LOOKUPS,
         name: computed(() => t('customization.customLookups.customLookups')),
@@ -73,6 +80,26 @@ const nav = reactive([
     ],
   },
 ]);
+
+const loadCustomLookups = async () => {
+  try {
+    const { items } = await CustomLookupsApi.getList({
+      size: -1,
+    });
+
+    const formatedNav = items.map((item) => ({
+      value: item.id,
+      name: item.name,
+      route: `lookups/${item.repo}`,
+    }));
+
+    nav[0].subNav.push(...formatedNav);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+loadCustomLookups();
 </script>
 
 <style lang="scss" scoped></style>

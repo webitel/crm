@@ -24,10 +24,9 @@
 
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-        :disabled:delete="!selected.length"
-        @click:add="
-          router.push({ ...route, params: { statusConditionId: 'new' } })
-        "
+        :disabled:add="!hasCreateAccess"
+        :disabled:delete="!hasDeleteAccess || !selected.length"
+        @click:add="add"
         @click:refresh="loadData"
         @click:delete="
           askDeleteConfirmation({
@@ -50,6 +49,9 @@
         v-show="showEmpty"
         :image="imageEmpty"
         :text="textEmpty"
+        :primary-action-text="primaryActionTextEmpty"
+        :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
       <wt-loader v-show="isLoading" />
@@ -73,6 +75,7 @@
 
           <template #initial="{ item, index }">
             <wt-switcher
+              :disabled="!hasUpdateAccess"
               :value="item.initial"
               @change="changeInitialStatus({ item, index, value: $event })"
             />
@@ -80,6 +83,7 @@
 
           <template #final="{ item, index }">
             <wt-switcher
+              :disabled="!hasUpdateAccess"
               :value="item.final"
               @change="changeFinalStatus({ item, index, value: $event })"
             />
@@ -88,6 +92,7 @@
           <template #actions="{ item }">
             <wt-icon-action
               action="edit"
+              :disabled="!hasUpdateAccess"
               @click="
                 router.push({
                   ...route,
@@ -98,6 +103,7 @@
 
             <wt-icon-action
               action="delete"
+              :disabled="!hasDeleteAccess"
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
@@ -118,6 +124,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -132,6 +139,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import StatusConditionsAPI from '../api/status-conditions.js';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
@@ -151,6 +159,11 @@ const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 const store = useStore();
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const isStatusWarningPopupOpened = ref(false);
 const parentId = computed(
@@ -204,6 +217,10 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+const add = () => {
+  return router.push({ ...route, params: { statusConditionId: 'new' } });
+};
+
 async function deleteCallbackWrapper() {
   try {
     await deleteCallback.value();
@@ -224,6 +241,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 async function setWarningPopupState(value) {
@@ -236,6 +254,9 @@ async function setWarningPopupState(value) {
 
 async function changeInitialStatus({ item, index, value }) {
   try {
+    dataList.value.forEach((el) => {
+      el.initial = false;
+    });
     dataList.value[index].initial = value;
     await StatusConditionsAPI.patch({
       id: item.id,

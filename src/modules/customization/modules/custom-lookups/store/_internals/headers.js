@@ -9,10 +9,10 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'description',
+    value: 'about',
     locale: 'vocabulary.description',
     show: true,
-    field: 'description',
+    field: 'about',
     sort: SortSymbols.NONE,
   },
   {

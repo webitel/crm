@@ -19,9 +19,7 @@ const props = defineProps({
   },
 });
 const {
-  namespace: cardNamespace,
   itemInstance,
-  setItemProp,
   id,
 } = useCardStore(props.namespace);
 

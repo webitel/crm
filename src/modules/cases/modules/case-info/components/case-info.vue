@@ -10,6 +10,8 @@
       <template #default="props">
         <wt-input
           v-bind="props"
+          :v="v$.value.itemInstance.subject"
+          :disabled="disableUserInput"
           @input="props.updateValue($event)"
         />
       </template>
@@ -25,6 +27,7 @@
       <template #default="props">
         <wt-textarea
           v-bind="props"
+          :disabled="disableUserInput"
           @input="props.updateValue($event)"
         />
       </template>
@@ -36,13 +39,16 @@
         :icon="itemInstance.source?.type"
         :edit-mode="editMode"
         :label="t('cases.source')"
-        :value="itemInstance.source?.name"
+        :value="itemInstance.source"
         required
         @update:value="setItemProp({ path: 'source', value: $event })"
       >
         <template #default="props">
           <wt-select
             v-bind="props"
+            :v="v$.value.itemInstance.source"
+            :clearable="false"
+            :disabled="disableUserInput"
             :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"
           />
@@ -58,6 +64,7 @@
         <template #default="props">
           <wt-input
             v-bind="props"
+            :disabled="disableUserInput"
             @input="props.updateValue($event)"
           />
         </template>
@@ -65,30 +72,31 @@
     </div>
 
     <related-cases
-      v-if="!isNew"
-      :edit-mode="editMode"
-      :item-id="id"
+      v-if="id"
+      :parent-id="id"
     />
 
     <case-comments
-      v-if="!isNew"
-      :item-id="id"
-      :namespace="commentsNamespace"
+      v-if="hasCaseCommentsReadAccess && id"
+      :parent-id="id"
     />
   </div>
 </template>
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { WtObject } from '@webitel/ui-sdk/src/enums/index';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
-import CaseComments from '../modules/comments/components/case-comments.vue';
-import RelatedCases from '../modules/related-cases/components/related-cases.vue';
+import CaseComments from '../../comments/components/case-comments.vue';
+import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
-const { t } = useI18n();
+const editMode = inject('editMode');
+const v$ = inject('v$');
 
 const props = defineProps({
   namespace: {
@@ -96,8 +104,15 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 const {
-  namespace: cardNamespace,
+  hasReadAccess: hasCaseCommentsReadAccess,
+} = useUserAccessControl({ resource: WtObject.CaseComment });
+
+const {
   itemInstance,
   setItemProp,
   id,
@@ -107,12 +122,6 @@ const { isNew } = useCardComponent({
   id,
   itemInstance,
 });
-
-const commentsNamespace = `${cardNamespace}/comments`;
-const relatedCasesNamespace = `${cardNamespace}/relatedCases`;
-provide('relatedCasesNamespace', relatedCasesNamespace);
-
-const editMode = inject('editMode');
 </script>
 
 <style lang="scss" scoped></style>

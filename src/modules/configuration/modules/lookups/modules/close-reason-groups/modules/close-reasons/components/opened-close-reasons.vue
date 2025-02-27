@@ -19,7 +19,7 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:delete="!hasDeleteAccess || !selected.length"
         :disabled:add="!hasCreateAccess"
-        @click:add="router.push({ ...route, params: { closeReasonsId: 'new' } })"
+        @click:add="add"
         @click:refresh="loadData"
         @click:delete="askDeleteConfirmation({
                   deleted: selected,
@@ -41,6 +41,9 @@
         v-show="showEmpty"
         :image="imageEmpty"
         :text="textEmpty"
+        :primary-action-text="primaryActionTextEmpty"
+        :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
       <wt-loader v-show="isLoading" />
@@ -86,6 +89,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -113,7 +117,9 @@ const props = defineProps({
 });
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+  useUserAccessControl({
+    useUpdateAccessAsAllMutableChecksSource: true,
+  });
 
 const {
   namespace: parentCardNamespace,
@@ -164,6 +170,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 subscribe({
@@ -176,6 +183,10 @@ restoreFilters();
 onUnmounted(() => {
   flushSubscribers();
 });
+
+const add = () => {
+  return router.push({ ...route, params: { closeReasonsId: 'new' } });
+};
 
 </script>
 
