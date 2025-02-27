@@ -4,6 +4,7 @@ import { CasesRelationType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
+import { SearchMode } from '../../../modules/cases/filters/SearchMode.js';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
@@ -190,6 +191,8 @@ export default {
       columns: 'Колонки',
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
+      confirmDeleteColumn:
+        'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
       controlPermissions: 'Контролювати права доступу',
       field: {
         id: 'Ід',
@@ -236,12 +239,11 @@ export default {
     result: 'Результат',
     rating: 'Оцінка',
     persons: 'Особи',
-    selectAService: 'Виберіть сервіс',
+    selectAService: 'Вибрати сервіс',
     deadlines: 'Терміни',
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
-    assignToMe: 'Призначити на мене',
-    emptyCases: 'Тут ще немає {e}',
+    assignToMe: 'Взяти на себе',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
@@ -250,18 +252,23 @@ export default {
       comments: 'Коментарі',
       edited: 'Редаговано',
       yourCommentHere: 'Ваш коментар тут',
+      emptyText: 'Тут ще немає коментарів',
     },
     attachments: {
-      attachments: 'Додатки',
+      attachments: 'Вкладення',
+      files: 'Файли',
       links: 'Посилання',
       url: 'URL',
       linkText: 'Текст посилання',
+      emptyFilesText: 'Тут ще немає вкладень',
+      emptyLinksText: 'Тут ще немає посилань',
     },
     details: {
       details: 'Details',
     },
     relatedCases: {
       relatedCases: 'Звʼязані звернення',
+      emptyText: 'Тут ще немає звʼязаних звернень',
       searchCasesPlaceholder: 'Шукати звернення',
       relationType: {
         [CasesRelationType.DUPLICATES]: 'дублює',
@@ -274,6 +281,16 @@ export default {
         [CasesRelationType.ISPARENTOF]: 'батьківське для',
         [CasesRelationType.RELATESTO]: 'стосується',
       },
+    },
+    slaRecalculationPopup: {
+      title: 'Перерахунок SLA',
+      message: 'Після зміни сервісу SLA звернення буде перераховано.',
+    },
+  },
+  filters: {
+    search: {
+      [SearchMode.Search]: 'Звичайний пошук',
+      [SearchMode.Fts]: 'Повнотекстовий пошук',
     },
   },
 };

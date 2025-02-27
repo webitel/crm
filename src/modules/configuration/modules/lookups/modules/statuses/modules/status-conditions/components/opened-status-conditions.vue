@@ -26,9 +26,7 @@
         :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
         :disabled:add="!hasCreateAccess"
         :disabled:delete="!hasDeleteAccess || !selected.length"
-        @click:add="
-          router.push({ ...route, params: { statusConditionId: 'new' } })
-        "
+        @click:add="add"
         @click:refresh="loadData"
         @click:delete="
           askDeleteConfirmation({
@@ -51,6 +49,9 @@
         v-show="showEmpty"
         :image="imageEmpty"
         :text="textEmpty"
+        :primary-action-text="primaryActionTextEmpty"
+        :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
       />
 
       <wt-loader v-show="isLoading" />
@@ -123,6 +124,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -215,6 +217,10 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+const add = () => {
+  return router.push({ ...route, params: { statusConditionId: 'new' } });
+};
+
 async function deleteCallbackWrapper() {
   try {
     await deleteCallback.value();
@@ -235,6 +241,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
 
 async function setWarningPopupState(value) {
@@ -247,6 +254,9 @@ async function setWarningPopupState(value) {
 
 async function changeInitialStatus({ item, index, value }) {
   try {
+    dataList.value.forEach((el) => {
+      el.initial = false;
+    });
     dataList.value[index].initial = value;
     await StatusConditionsAPI.patch({
       id: item.id,

@@ -51,6 +51,9 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
+            :primary-action-text="primaryActionTextEmpty"
+            :disabled-primary-action="!hasCreateAccess"
+            @click:primary="addNewCatalog"
           />
 
           <wt-loader v-show="isLoading" />
@@ -178,6 +181,7 @@
 </template>
 
 <script setup>
+import { WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -206,7 +210,7 @@ const { t } = useI18n();
 const router = useRouter();
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.serviceCatalogs.serviceCatalogs', 2) },
@@ -266,6 +270,7 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, filters, error, isLoading });
 
 const addNewCatalog = () => {

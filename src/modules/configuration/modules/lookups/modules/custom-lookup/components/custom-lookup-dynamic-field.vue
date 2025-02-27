@@ -29,7 +29,7 @@
     :label="label"
     :value="value"
     :v="validation"
-    :search-method="loadLookupList(field.lookup?.type)"
+    :search-method="loadLookupList(field.lookup)"
     track-by="name"
     clearable
     :required="isRequired"
@@ -40,7 +40,7 @@
     :label="label"
     :value="value"
     :v="validation"
-    :search-method="loadLookupList(field.lookup?.type)"
+    :search-method="loadLookupList(field.lookup)"
     track-by="name"
     clearable
     multiple
@@ -50,10 +50,10 @@
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
-    :value="value"
+    :value="value * convertedTime"
     mode="datetime"
     :required="isRequired"
-    @input="setValue(+$event)"
+    @input="setValue(+$event / convertedTime)"
   />
 </template>
 
@@ -86,6 +86,9 @@ const props = defineProps({
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const { t } = useI18n();
+
+// Number for convert time from seconds to milliseconds, when send to backend and display on frontend
+const convertedTime = 1000;
 
 const v$ = useVuelidate(
   computed(() => {
@@ -164,9 +167,11 @@ const setValue = (value) => {
   });
 };
 
-const loadLookupList = (type) => () => {
-  return CustomLookupApi.getLookup({ type });
-};
+const loadLookupList =
+  ({ path, display, primary }) =>
+    () => {
+      return CustomLookupApi.getLookup({ path, display, primary });
+    };
 
 const selectElement = (value) => {
   setValue({

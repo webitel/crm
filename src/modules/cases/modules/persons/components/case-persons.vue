@@ -26,10 +26,12 @@
       >
         <template #default="props">
           <wt-select
-            clearable
-            :search-method="ContactsAPI.getLookup"
-            class="case-persons__select"
             v-bind="props"
+            :search-method="ContactsAPI.getLookup"
+            :disabled="disableUserInput"
+            :v="v$.value.itemInstance.reporter"
+            :clearable="false"
+            class="case-persons__select"
             @input="props.updateValue($event)"
           />
         </template>
@@ -49,10 +51,11 @@
       >
         <template #default="props">
           <wt-select
-            clearable
+            v-bind="props"
+            :clearable="false"
+            :disabled="disableUserInput"
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
-            v-bind="props"
             @input="props.updateValue($event)"
           />
         </template>
@@ -80,19 +83,19 @@
           <wt-select
             clearable
             :search-method="ContactsAPI.getLookup"
+            :disabled="disableUserInput || isAssignMeDisabled"
             class="case-persons__select"
             v-bind="props"
             @input="props.updateValue($event)"
+            @reset="resetAssignee"
           />
         </template>
       </editable-field>
 
-      <!-- TODO: add Assign to me btn -->
-      <!-- TODO: also replace editable-field usage with computed and v-for for computed if it will have benefits  -->
-
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.group')"
+        :disabled="disableUserInput"
         :value="itemInstance.group"
         color="success"
         icon="group"
@@ -101,6 +104,7 @@
       >
         <template #default="props">
           <wt-select
+            :disabled="disableUserInput"
             clearable
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
@@ -117,10 +121,13 @@
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, inject, watch } from 'vue';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
+import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import ContactsAPI from '../../../../contacts/api/ContactsAPI.js';
 import EditableField from '../../case-info/components/editable-field.vue';
@@ -129,6 +136,10 @@ const store = useStore();
 const { t } = useI18n();
 
 const namespace = inject('namespace');
+const editMode = inject('editMode');
+const v$ = inject('v$');
+
+const { disableUserInput } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -140,24 +151,14 @@ const { isNew } = useCardComponent({
   itemInstance,
 });
 
-function handleReporterInput(value) {
-  setItemProp({
-    path: 'reporter',
-    value: value,
-  });
-
-  if (!itemInstance.value.impacted) {
-    setItemProp({
-      path: 'impacted',
-      value: value,
-    });
-  }
-}
-
-// TODO: replace STATIC type with type from TypeContactGroups.enum.js
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({ ...params, type: 'STATIC' });
+  return ContactGroupsAPI.getLookup({
+    ...params,
+    type: WebitelContactsGroupType.STATIC,
+  });
 }
+
+const userinfo = computed(() => store.state.userinfo);
 
 const serviceGroup = computed(
   () => store.getters[`${cardNamespace}/service/GROUP`],
@@ -170,19 +171,49 @@ const serviceId = computed(
   () => store.getters[`${cardNamespace}/service/SERVICE_ID`],
 );
 
-const userinfo = computed(() => store.state.userinfo);
+function handleReporterInput(value) {
+  setItemProp({
+    path: 'reporter',
+    value: value,
+  });
 
-const editMode = inject('editMode');
+  if (isEmpty(itemInstance.value.impacted)) {
+    setItemProp({
+      path: 'impacted',
+      value: value,
+    });
+  }
+}
+
+const isAssignMeDisabled = ref(false);
+
+function resetAssignee(value) {
+  setItemProp({ path: 'assignee', value });
+}
 
 watch(
-  serviceId,
-  (newServiceId, oldServiceId) => {
-    if (!!oldServiceId || (!oldServiceId && isNew.value)) {
-      setItemProp({
-        path: 'group',
-        value: { id: serviceGroup.value.id, name: serviceGroup.value.name },
-      });
-      setItemProp({ path: 'assignee', value: serviceAssignee.value });
+  [serviceId, serviceGroup, serviceAssignee],
+  //empty space before newGroup needed to ignore newId value witch is not used
+  ([, newGroup, newAssignee], [oldId]) => {
+    // this if statement needed so when we enter old case we don't reset assignee and group
+    if (oldId || isNew.value) {
+      setItemProp({ path: 'group', value: newGroup });
+      setItemProp({ path: 'assignee', value: newAssignee });
+    }
+  },
+  { deep: true },
+);
+
+watch(
+  () => itemInstance.value.group,
+  (newValue) => {
+    const isDynamicGroup = newValue?.type === WebitelContactsGroupType.DYNAMIC;
+
+    if (isDynamicGroup) {
+      resetAssignee();
+      isAssignMeDisabled.value = true;
+    } else {
+      isAssignMeDisabled.value = false;
     }
   },
   { deep: true },

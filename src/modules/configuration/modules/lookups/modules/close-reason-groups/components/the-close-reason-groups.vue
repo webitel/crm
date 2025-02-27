@@ -21,7 +21,7 @@
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
-            @click:add="router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' }})"
+            @click:add="add"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
               deleted: selected,
@@ -51,6 +51,9 @@
             v-show="showEmpty"
             :image="imageEmpty"
             :text="textEmpty"
+            :primary-action-text="primaryActionTextEmpty"
+            :disabled-primary-action="!hasCreateAccess"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -102,6 +105,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -178,7 +182,7 @@ onUnmounted(() => {
 });
 
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
   { name: t('lookups.lookups'), route: '/configuration' },
   { name: t('lookups.closeReasonGroups.closeReasonGroups', 2) },
@@ -190,7 +194,12 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({ dataList, error, isLoading });
+
+const add = () => {
+  return router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' }})
+};
 
 function edit(item) {
   return router.push({

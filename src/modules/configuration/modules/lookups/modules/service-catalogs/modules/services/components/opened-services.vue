@@ -23,7 +23,12 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :access="/*is used by permissions tab*/ {
+              read: true,
+              edit: !disableUserInput,
+              delete: !disableUserInput,
+              add: !disableUserInput,
+            }"
           />
         </router-view>
         <input
@@ -109,7 +114,7 @@ const loadCatalog = async () => {
 
 const path = computed(() => {
   const routes = [
-    { name: t('crm') },
+    { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     {
@@ -131,7 +136,9 @@ const path = computed(() => {
 
   if (route.params.rootId === route.params.catalogId) {
     routes.push({
-      name: isNew.value ? t('reusable.new') : pathName.value,
+      name: isNew.value
+        ? t('reusable.new')
+        : prettifyBreadcrumbName(pathName.value),
     });
 
     return routes;
@@ -144,7 +151,7 @@ const path = computed(() => {
   }
 
   routes.push({
-    name: rootService.value?.name,
+    name: prettifyBreadcrumbName(rootService.value?.name),
     route: {
       name: `${CrmSections.SERVICE_CATALOGS}-services`,
       params: { catalogId: catalogId.value, rootId: rootId.value },
@@ -152,7 +159,9 @@ const path = computed(() => {
   });
 
   routes.push({
-    name: isNew.value ? t('reusable.new') : pathName.value,
+    name: isNew.value
+      ? t('reusable.new')
+      : prettifyBreadcrumbName(pathName.value),
   });
 
   return routes;

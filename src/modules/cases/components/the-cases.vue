@@ -1,5 +1,8 @@
 <template>
-  <wt-page-wrapper class="cases table-page">
+  <wt-page-wrapper
+    class="cases table-page"
+    :actions-panel="showActionsPanel"
+  >
     <template #header>
       <wt-page-header
         :secondary-action="close"
@@ -7,6 +10,9 @@
       >
         <wt-headline-nav :path="path" />
       </wt-page-header>
+    </template>
+    <template #actions-panel>
+      <cases-filters @hide="showActionsPanel = false" />
     </template>
     <template #main>
       <delete-confirmation-popup
@@ -21,12 +27,15 @@
           <h3 class="table-title__title">
             {{ $t('cases.case', 2) }}
           </h3>
+
+          <dynamic-filter-search-wrapper class="cases__search-filter" />
+
           <wt-action-bar
             :include="[
               IconAction.ADD,
               IconAction.REFRESH,
-              /* IconAction.FILTERS, */
-              /* IconAction.COLUMNS, */
+              IconAction.FILTERS,
+              IconAction.COLUMNS,
               IconAction.DELETE,
             ]"
             :disabled:delete="!hasDeleteAccess || !selected.length"
@@ -34,20 +43,44 @@
             @click:add="add"
             @click:refresh="loadDataList"
             @click:delete="deleteSelectedItems"
+            @click:filters="showActionsPanel = !showActionsPanel"
           >
-            <!--            <template #search-bar>-->
-            <!--              <wt-search-bar />-->
-            <!--            </template>-->
+            <template #filters="{ action, onClick }">
+              <wt-badge :hidden="!anyFiltersOnFiltersPanel">
+                <wt-icon-action
+                  :action="action"
+                  @click="onClick"
+                />
+              </wt-badge>
+            </template>
+            <template #columns>
+              <wt-table-column-select
+                :headers="headers"
+                @change="updateShownHeaders"
+              />
+            </template>
           </wt-action-bar>
         </header>
         <wt-loader v-show="isLoading" />
+
+        <wt-empty
+          v-if="showEmpty"
+          :image="emptyImage"
+          :headline="emptyHeadline"
+          :title="emptyTitle"
+          :text="emptyText"
+          :primary-action-text="emptyPrimaryActionText"
+          :disabled-primary-action="!hasCreateAccess"
+          @click:primary="add"
+        />
+
         <div
           v-show="!isLoading && dataList?.length"
           class="table-section__table-wrapper"
         >
           <wt-table
             :data="dataList"
-            :headers="headers"
+            :headers="shownHeaders"
             :selected="selected"
             sortable
             @sort="updateSort"
@@ -83,12 +116,12 @@
               </wt-item-link>
             </template>
             <template #priority="{ item }">
-              <span
+              <color-component-wrapper
                 :class="{ 'case-priority': !!item.priority?.color }"
-                :style="{ color: item.priority?.color }"
+                :color="item.priority?.color"
               >
                 {{ item.priority?.name }}
-              </span>
+              </color-component-wrapper>
             </template>
             <template #statusCondition="{ item }">
               {{ item.statusCondition?.name }}
@@ -182,19 +215,24 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import CasesFilters from '../filters/cases-filters.vue';
+import DynamicFilterSearchWrapper from '../filters/components/dynamic-filter-search-wrapper.vue';
+import { SearchMode } from '../filters/SearchMode';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 
@@ -202,7 +240,6 @@ const baseNamespace = 'cases';
 
 const { t } = useI18n();
 const router = useRouter();
-const route = useRoute();
 
 const store = useStore();
 
@@ -213,8 +250,18 @@ const { close } = useClose('the-start-page');
 
 const tableStore = useCasesStore();
 
-const { dataList, selected, isLoading, page, size, next, headers } =
-  storeToRefs(tableStore);
+const {
+  dataList,
+  selected,
+  error,
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  shownHeaders,
+  filtersManager,
+} = storeToRefs(tableStore);
 
 const {
   initialize,
@@ -224,6 +271,7 @@ const {
   updateSize,
   updateSort,
   deleteEls,
+  updateShownHeaders,
 } = tableStore;
 
 const {
@@ -234,11 +282,38 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+const {
+  showEmpty,
+  image: emptyImage,
+  headline: emptyHeadline,
+  title: emptyTitle,
+  text: emptyText,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList,
+  error,
+  filters: computed(() => filtersManager.value.getAllValues()),
+  isLoading,
+});
+
+const showActionsPanel = ref(true);
+
+/*
+ * show "toggle filters panel" badge if any filters are applied...
+ * */
+const anyFiltersOnFiltersPanel = computed(() => {
+  /*
+   * ...excluding search filters, which shown in other panel
+   * */
+  return filtersManager.value.getAllKeys().some((filterName) => {
+    return !Object.values(SearchMode).some((mode) => mode === filterName);
+  });
+});
+
 const path = computed(() => [
-  { name: t('crm') },
+  { name: t('crm'), route: '/start-page' },
   {
     name: t('cases.case', 2),
-    route: '/',
   },
 ]);
 
@@ -264,7 +339,7 @@ function edit(item) {
 function deleteSelectedItems() {
   return askDeleteConfirmation({
     deleted: selected.value,
-    callback: () => deleteData([...selected.value]),
+    callback: () => deleteEls([...selected.value]),
   });
 }
 
@@ -272,14 +347,24 @@ initialize();
 </script>
 
 <style lang="scss" scoped>
-.cases__link-content {
-  display: flex;
-  gap: var(--spacing-xs);
-}
+.cases {
+  .table-title {
+    grid-gap: var(--spacing-xs);
+  }
 
-//TODO: typo-body-1 bold
-.case-priority {
-  @extend %typo-body-1;
-  font-weight: bold;
+  &__link-content {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  &__search-filter {
+    margin-left: auto;
+  }
+
+  //TODO: typo-body-1 bold
+  .case-priority {
+    @extend %typo-body-1;
+    font-weight: bold;
+  }
 }
 </style>

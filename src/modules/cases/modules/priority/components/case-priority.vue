@@ -10,7 +10,9 @@
         <template #default="props">
           <wt-select
             v-bind="props"
-            clearable
+            :clearable="false"
+            :disabled="disableUserInput"
+            :v="v$.value.itemInstance.priority"
             :placeholder="t('cases.priority')"
             :search-method="PrioritiesAPI.getLookup"
             class="case-priority__select"
@@ -24,9 +26,10 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { inject, watch } from 'vue';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
@@ -36,6 +39,10 @@ const { t } = useI18n();
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
+const v$ = inject('v$');
+
+const { disableUserInput } = useUserAccessControl();
+
 const {
   itemInstance,
   setItemProp,
@@ -45,17 +52,14 @@ const { isNew } = useCardComponent({
   itemInstance,
 });
 
-
 async function setDefaultPriority() {
-  const defaultPriority = await PrioritiesAPI.getLookup({}).items[0];
-  setItemProp({ path: 'priority', value: defaultPriority });
+  const defaultPriority = (await PrioritiesAPI.getLookup({})).items[0];
+  await setItemProp({ path: 'priority', value: defaultPriority });
 }
 
-watch(isNew, (value) => {
-  if (value) {
-    setDefaultPriority();
-  }
-}, { immediate: true });
+if (isNew.value) {
+  setDefaultPriority();
+}
 </script>
 
 <style lang="scss" scoped>

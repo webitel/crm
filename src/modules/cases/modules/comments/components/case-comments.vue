@@ -13,16 +13,16 @@
           {{ t('cases.comments.comments') }}
         </h3>
         <wt-action-bar
-          :disabled:add="formState.isAdding || formState.editingComment"
-          :disabled:delete="!selected.length || !editableSelectedComments"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
+          :disabled:delete="!hasDeleteAccess || !selected.length || !editableSelectedComments"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingComment"
           @click:delete="
-              askDeleteConfirmation({
-                deleted: selected,
-                callback: () => deleteData(selected),
-              })
-            "
+            askDeleteConfirmation({
+              deleted: selected,
+              callback: () => deleteEls(selected),
+            })
+          "
         >
         </wt-action-bar>
       </header>
@@ -42,7 +42,7 @@
 
       <wt-empty
         v-show="showEmpty"
-        :text="emptyTableText"
+        :text="emptyText"
       />
 
       <wt-loader v-show="isLoading" />
@@ -52,94 +52,99 @@
       >
         <wt-table
           :data="dataList"
-          :headers="headers"
+          :headers="shownHeaders"
           :selected="selected"
           headless
           sortable
-          @sort="sort"
-          @update:selected="setSelected"
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #content="{ item }">
-            <case-comment-item :comment="item" />
+            <case-comment-row
+              :comment="item"
+            />
           </template>
           <template #actions="{ item }">
             <wt-icon-action
               v-if="item.canEdit"
-              :disabled="formState.isAdding"
+              :disabled="!hasUpdateAccess || formState.isAdding"
               action="edit"
               @click="startEditingComment(item)"
             />
             <wt-icon-action
               v-if="item.canEdit"
+              :disabled="!hasDeleteAccess"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
             />
           </template>
         </wt-table>
 
-        <filter-pagination
-          :is-next="isNext"
-          :namespace="filtersNamespace"
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
         />
       </div>
     </section>
   </div>
 </template>
 
-<script setup>
-import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
+<script lang="ts" setup>
+import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
-import { computed, onUnmounted, reactive } from 'vue';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
-import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
-import CommentsAPI from '../api/CommentsAPI.js';
-import CaseCommentItem from './case-comment-item.vue';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import TableTopRowBar from '../../../components/table-top-row-bar.vue';
+import CommentsAPI from '../api/CommentsAPI';
+import CaseCommentRow from './case-comment-row.vue';
+import {useCaseCommentsStore} from "../stores/comments";
+import {storeToRefs} from "pinia";
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  itemId: {
+  parentId: {
     type: String,
     required: true,
   },
 });
 
-const store = useStore();
 const { t } = useI18n();
-const {
-  namespace,
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(props.namespace);
+
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+  useUserAccessControl(WtObject.CaseComment);
+
+const tableStore = useCaseCommentsStore();
+
+const { dataList, selected, isLoading, page, size, next, shownHeaders } =
+  storeToRefs(tableStore);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+} = tableStore;
+
+updateSize(5);
+initialize({
+  parentId: props.parentId,
+});
 
 const {
   isVisible: isConfirmationPopup,
@@ -150,24 +155,14 @@ const {
 } = useDeleteConfirmationPopup();
 
 const { showEmpty } = useTableEmpty({ dataList, isLoading });
-const emptyTableText = computed(() =>
-  t('cases.emptyCases', {
-    e: t('cases.comments.comments').toLowerCase(),
-  }),
-);
 
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
+const emptyText = computed(() => {
+  return t('cases.comments.emptyText');
 });
 
-restoreFilters();
-onUnmounted(() => {
-  flushSubscribers();
-});
 
-const editableSelectedComments = computed(() =>
-  !!selected.value.every((comment) => comment.canEdit),
+const editableSelectedComments = computed(
+  () => !!selected.value.every((comment) => comment.canEdit),
 );
 
 const formState = reactive({
@@ -199,23 +194,19 @@ function updateCommentText(value) {
 }
 
 async function submitComment() {
-  try {
-    if (formState.editingComment) {
-      await CommentsAPI.patch({
-        commentId: formState.editingComment.etag,
-        changes: { text: formState.commentText },
-      });
-    } else {
-      await CommentsAPI.add({
-        parentId: props.itemId,
-        input: { text: formState.commentText },
-      });
-    }
-    await loadData();
-    resetForm();
-  } catch (error) {
-    throw error;
+  if (formState.editingComment) {
+    await CommentsAPI.patch({
+      commentId: formState.editingComment.etag,
+      changes: { text: formState.commentText },
+    });
+  } else {
+    await CommentsAPI.add({
+      parentId: props.parentId,
+      input: { text: formState.commentText },
+    });
   }
+  await loadDataList();
+  resetForm();
 }
 </script>
 

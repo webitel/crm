@@ -9,9 +9,10 @@
       >
         <template #default="props">
           <wt-select
+            v-bind="props"
             :key="closeReasonId"
             clearable
-            v-bind="props"
+            :disabled="disableUserInput"
             :search-method="searchCloseReasons"
             @input="props.updateValue($event)"
           />
@@ -27,6 +28,7 @@
         <template #default="props">
           <wt-input
             v-bind="props"
+            :disabled="disableUserInput"
             @input="props.updateValue($event)"
           />
         </template>
@@ -46,17 +48,12 @@
 </template>
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
-import { computed, inject, ref, watch } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import EditableField from '../../case-info/components/editable-field.vue';
 import CloseReasonsAPI from '../api/CloseReasonsAPI.js';
-
-const { t } = useI18n();
-
-const store = useStore();
-const route = useRoute();
 
 const props = defineProps({
   namespace: {
@@ -64,6 +61,14 @@ const props = defineProps({
     required: true,
   },
 });
+
+const editMode = inject('editMode');
+
+const { t } = useI18n();
+const store = useStore();
+
+const { disableUserInput } = useUserAccessControl();
+
 const {
   namespace: cardNamespace,
   itemInstance,
@@ -79,7 +84,6 @@ async function searchCloseReasons(params) {
   return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
 }
 
-const editMode = inject('editMode');
 </script>
 <style lang="scss" scoped>
 </style>

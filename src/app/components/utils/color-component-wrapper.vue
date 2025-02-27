@@ -1,12 +1,15 @@
 <template>
-  <component
-    v-bind="attrs"
-    :is="component"
-    :class="[
-      `case-priority-color-component-${color}`,
-    ]"
+  <div
     class="case-priority-color-component"
-  />
+    :class="[`case-priority-color-component-${color}`]"
+  >
+    <slot>
+      <component
+        v-bind="attrs"
+        :is="component"
+      />
+    </slot>
+  </div>
 </template>
 
 <script setup>
@@ -19,20 +22,22 @@ const props = defineProps({
   component: {
     type: String,
     required: true,
-    default: 'wt-indicator'
+    default: 'wt-indicator',
   },
   /**
    * @values 'red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal', 'green', 'light-green', 'lime', 'yellow', 'amber', 'orange', 'deep-orange',
    */
   color: {
     type: String,
-    default: 'red'
+    default: 'red',
   },
 });
 
 const attrs = useAttrs();
 
-const colorVariable = computed(() => `var(--case-priority-color-${props.color})`);
+const colorVariable = computed(
+  () => `var(--case-priority-color-${props.color})`,
+);
 </script>
 
 <style lang="scss">
@@ -41,11 +46,13 @@ const colorVariable = computed(() => `var(--case-priority-color-${props.color})`
 
 <style scoped lang="scss">
 .case-priority-color-component {
+  color: v-bind(colorVariable);
+
   :deep(.wt-indicator__indicator) {
     background: v-bind(colorVariable);
   }
 
-  &.wt-icon {
+  .wt-icon {
     :deep(.wt-icon__icon) {
       fill: v-bind(colorVariable);
     }

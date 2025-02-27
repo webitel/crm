@@ -4,6 +4,7 @@ import { CasesRelationType } from 'webitel-sdk';
 import { CasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
+import { SearchMode } from '../../../modules/cases/filters/SearchMode.js';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
@@ -183,6 +184,8 @@ export default {
       columns: 'Колонки',
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',
+      confirmDeleteColumn:
+        'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
       controlPermissions: 'Контролировать права доступа',
       field: {
         id: 'Ид',
@@ -229,12 +232,11 @@ export default {
     result: 'Результат',
     rating: 'Оценка',
     persons: 'Персоны',
-    selectAService: 'Выберите сервис',
+    selectAService: 'Выбрать сервис',
     deadlines: 'Сроки',
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
-    assignToMe: 'Назначить на меня',
-    emptyCases: 'Тут еще нет {e}',
+    assignToMe: 'Взять на себя',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
@@ -243,18 +245,23 @@ export default {
       comments: 'Комментарии',
       edited: 'Редактировано',
       yourCommentHere: 'Ваш комментарий здесь',
+      emptyText: 'Тут еще нет комментариев',
     },
     attachments: {
       attachments: 'Вложения',
+      files: 'Файлы',
       links: 'Ссылки',
       url: 'URL',
       linkText: 'Текст ссылки',
+      emptyFilesText: 'Тут еще нет вложений',
+      emptyLinksText: 'Тут еще нет ссылок',
     },
     details: {
       details: 'Детали',
     },
     relatedCases: {
       relatedCases: 'Связанные обращения',
+      emptyText: 'Тут еще нет связанных обращений',
       searchCasesPlaceholder: 'Найти обращение',
       relationType: {
         [CasesRelationType.DUPLICATES]: 'дублирует',
@@ -267,6 +274,16 @@ export default {
         [CasesRelationType.ISPARENTOF]: 'родительское для',
         [CasesRelationType.RELATESTO]: 'относится к',
       },
+    },
+    slaRecalculationPopup: {
+      title: 'Перерасчет SLA',
+      message: 'После изменения сервиса SLA обращения будет пересчитан.',
+    },
+  },
+  filters: {
+    search: {
+      [SearchMode.Search]: 'Обычный поиск',
+      [SearchMode.Fts]: 'Полнотекстовый поиск',
     },
   },
 };
