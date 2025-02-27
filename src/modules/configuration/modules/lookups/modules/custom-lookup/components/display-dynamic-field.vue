@@ -1,5 +1,11 @@
 <template>
-  <template v-if="field.kind === FieldType.Select">
+  <wt-item-link
+    v-if="field.value === 'name'"
+    :link="{ name: 'custom-lookup-record', params: { id: value.id } }"
+  >
+    {{ showText }}
+  </wt-item-link>
+  <template v-else-if="field.kind === FieldType.Select">
     {{ displayText(value[field.value]?.name) }}
   </template>
   <display-chip-items
@@ -16,6 +22,7 @@
 </template>
 
 <script setup>
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed } from 'vue';
 
 import { displayText } from '../../../../../../../app/utils/displayText.js';
