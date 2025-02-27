@@ -51,6 +51,7 @@
     v-else-if="field.kind === FieldType.Calendar"
     :label="t(field.name)"
     :value="itemInstance[field.id] * convertedTime"
+    :v="v$.itemInstance[field.id]"
     mode="datetime"
     :required="field.required"
     @input="setItemProp({ path: field.id, value: +$event / convertedTime })"
@@ -114,6 +115,13 @@ const loadLookupList =
   };
 
 const selectElement = (value) => {
+  if (Object.values(value).length === 0) {
+    return setItemProp({
+      path: props.field.id,
+      value: null,
+    });
+  }
+
   setItemProp({
     path: props.field.id,
     value: {
