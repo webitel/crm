@@ -20,6 +20,7 @@
         :secondary-text="$t('reusable.delete')"
       >
         <wt-headline-nav :path="path" />
+
         <template #actions>
           <filter-search
             :namespace="filtersNamespace"
@@ -29,6 +30,7 @@
         </template>
       </wt-page-header>
     </template>
+
     <template #main>
       <wt-loader v-show="isLoading" />
 
@@ -64,6 +66,7 @@
                 size="sm"
                 :username="item.name"
               />
+
               <wt-item-link
                 :link="{
                   name: `${CrmSections.CONTACTS}-card`,
@@ -80,6 +83,35 @@
               v-if="item.user"
               icon="webitel-logo"
             />
+          </template>
+
+          <template #groups="{ item }">
+            <div
+              v-if="item.groups?.length"
+              class="contacts-groups"
+            >
+              <p>
+                {{ item.groups[0].name }}
+              </p>
+
+              <wt-tooltip
+                v-if="item.groups.length > 1"
+                :triggers="['click']"
+              >
+                <template #activator>
+                  <wt-chip> +{{ item.groups.length - 1 }} </wt-chip>
+                </template>
+
+                <div class="contacts-groups__wrapper">
+                  <p
+                    v-for="(group, idx) of item.groups.slice(1)"
+                    :key="idx"
+                  >
+                    {{ group.name }}
+                  </p>
+                </div>
+              </wt-tooltip>
+            </div>
           </template>
 
           <template #about="{ item }">
@@ -103,12 +135,14 @@
               </wt-chip>
             </div>
           </template>
+
           <template #actions="{ item }">
             <wt-icon-action
               :disabled="!item.access.edit"
               action="edit"
               @click="edit(item)"
             />
+
             <wt-icon-action
               :disabled="!item.access.delete"
               action="delete"
@@ -121,6 +155,7 @@
             />
           </template>
         </wt-table>
+
         <filter-pagination
           :namespace="filtersNamespace"
           :is-next="isNext"
@@ -298,6 +333,19 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
+.contacts {
+  &-groups {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  &-labels-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2xs);
+  }
+}
+
 .username-wrapper {
   display: flex;
   align-items: center;
@@ -306,11 +354,5 @@ function deleteSelectedItems() {
   .wt-avatar {
     flex: 0 0 var(--wt-avatar-size--size-sm);
   }
-}
-
-.contacts-labels-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-2xs);
 }
 </style>
