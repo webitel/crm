@@ -144,15 +144,22 @@ function close() {
 async function save() {
   let newContact = '';
   try {
-    console.log(draft.value, ' draft.value');
-    throw Error('err');
     isSaving.value = false;
     if (props.id) {
       await ContactsAPI.update({
         itemInstance: { ...draft.value, id: props.id },
       });
     } else {
-      newContact = await ContactsAPI.add({ itemInstance: draft.value });
+      newContact = await ContactsAPI.add({
+        itemInstance: {
+          ...draft.value,
+          groups: draft.value.groups.map((el) => {
+            return {
+              group: el,
+            };
+          }),
+        },
+      });
     }
     emit('saved', props.id || newContact.id);
     close();
