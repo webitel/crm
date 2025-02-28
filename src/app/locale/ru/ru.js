@@ -240,6 +240,10 @@ export default {
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
     assignToMe: 'Взять на себя',
+    company: 'Компания',
+    department: 'Отдел',
+    position: 'Должность',
+    location: 'Местоположение',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
