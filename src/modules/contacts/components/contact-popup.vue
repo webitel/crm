@@ -153,11 +153,6 @@ async function save() {
       newContact = await ContactsAPI.add({
         itemInstance: {
           ...draft.value,
-          groups: draft.value.groups.map((el) => {
-            return {
-              group: el,
-            };
-          }),
         },
       });
     }
