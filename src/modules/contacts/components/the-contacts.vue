@@ -87,11 +87,11 @@
 
           <template #groups="{ item }">
             <div
-              v-if="item.groups?.length"
+              v-if="item.groups"
               class="contacts-groups"
             >
               <p>
-                {{ item.groups[0].name }}
+                {{ item.groups[0]?.name }}
               </p>
 
               <wt-tooltip
