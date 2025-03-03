@@ -6,27 +6,20 @@ import { createApp } from 'vue';
 import App from './app.vue';
 import { createUserAccessControl } from './app/composables/useUserAccessControl';
 import i18n from './app/locale/i18n';
-import WebitelUi from './app/plugins/webitel-ui';
+import { webitelUiOptions, webitelUiPlugin } from './app/plugins/webitel-ui';
 import router from './app/router';
 import store from './app/store';
 import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
-const setTokenFromUrl = () => {
+const setTokenFromUrl = (): void => {
   try {
-    const queryMap = window.location.search
-      .slice(1)
-      .split('&')
-      .reduce((obj, query) => {
-        const [key, value] = query.split('=');
-        obj[key] = value;
-        return obj;
-      }, {});
-
-    if (queryMap.accessToken) {
-      localStorage.setItem('access-token', queryMap.accessToken);
+    const params = new URLSearchParams(window.location.search);
+    const accessToken = params.get('accessToken');
+    if (accessToken) {
+      localStorage.setItem('access-token', accessToken);
     }
   } catch (err) {
-    console.error('Error restoring token from url', err);
+    console.error('Error restoring token from URL', err);
   }
 };
 
@@ -42,7 +35,7 @@ const initApp = async () => {
     .use(store)
     .use(i18n)
     .use(pinia)
-    .use(...WebitelUi);
+    .use(webitelUiPlugin, webitelUiOptions);
 
   const { initialize, routeAccessGuard } = useUserinfoStore();
   try {
