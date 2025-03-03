@@ -14,6 +14,9 @@ export default {
   contacts: {
     contact: 'Contact | Contacts',
     manager: 'Owner | Owners',
+    group: ({ linked }) => {
+      return linked('cases.group');
+    },
     destination: 'Destination',
     collapseAll: 'Collapse all',
     communications: {

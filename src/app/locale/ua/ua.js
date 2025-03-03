@@ -14,6 +14,9 @@ export default {
   contacts: {
     contact: 'Контакт | Контакти',
     manager: 'Власник | Власники',
+    group: ({ linked }) => {
+      return linked('cases.group');
+    },
     destination: 'Призначення',
     collapseAll: 'Згорнути все',
     communications: {
