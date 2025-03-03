@@ -2,7 +2,7 @@
   <case-result-popup
     :namespace="namespace"
     :shown="isResultPopup"
-    @close="isResultPopup = false"
+    @close="onPopupClose"
     @save="saveResult"
   />
   <div class="case-status">
@@ -27,6 +27,7 @@
             :text="option.name"
           />
         </template>
+
         <template #option="{ option }">
           <wt-indicator
             :color="getIndicatorColor(option)"
@@ -44,8 +45,8 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CasesAPI from '../../../api/CasesAPI.js';
 import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
 import CaseResultPopup from './case-result-popup.vue';
@@ -83,6 +84,7 @@ const { isNew } = useCardComponent({
 });
 
 const isResultPopup = ref(false);
+const prevStatusCondition = ref(itemInstance.value.statusCondition);
 
 const saveResult = async ({ reason, result }) => {
   await setItemProp({
@@ -93,6 +95,31 @@ const saveResult = async ({ reason, result }) => {
     path: 'close.closeResult',
     value: result,
   });
+
+  if (!editMode.value) {
+    await patchStatusCondition(itemInstance.value.statusCondition);
+
+    await CasesAPI.patch({
+      changes: {
+        close: {
+          closeReason: reason,
+          closeResult: result,
+        },
+      },
+      etag: itemInstance.value.etag,
+    });
+
+    //NOTE: needed to get new etag so new patch will work correctly
+    await loadItem();
+  }
+};
+
+const onPopupClose = () => {
+  isResultPopup.value = false;
+
+  if (!editMode.value) {
+    itemInstance.value.statusCondition = prevStatusCondition.value;
+  }
 };
 
 const getIndicatorColor = (option) => {
@@ -103,7 +130,9 @@ const getIndicatorColor = (option) => {
 
 const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
 
-const serviceId = computed(() => store.getters[`${cardNamespace}/service/SERVICE_ID`]);
+const serviceId = computed(
+  () => store.getters[`${cardNamespace}/service/SERVICE_ID`],
+);
 
 const fetchStatusConditions = async (params) => {
   if (!status?.value?.id) {
@@ -143,14 +172,22 @@ async function patchStatusCondition(condition) {
 }
 
 async function handleSelect(value) {
-  if (value.final) isResultPopup.value = true;
+  if (value.final) {
+    itemInstance.value.statusCondition = value;
+    isResultPopup.value = true;
+    return;
+  }
 
   await patchStatusCondition(value);
+  prevStatusCondition.value = value;
 }
 
 async function updateStatusCondition(isValidationRequired = true) {
+  if (!status?.value?.id) {
+    return;
+  }
 
-  if (isValidationRequired && (!status?.value?.id || itemInstance.value.statusCondition.id)) return;
+  if (isValidationRequired && itemInstance.value.statusCondition.id) return;
 
   const { items } = await StatusConditionsAPI.getList({
     statusId: status.value.id,
@@ -167,10 +204,13 @@ watch(() => status?.value?.id, updateStatusCondition, {
   deep: true,
 });
 
-watch(() => serviceId?.value, (newValue, oldValue) => {
-  if (newValue === oldValue) return;
-  updateStatusCondition(false);
-});
+watch(
+  () => serviceId?.value,
+  (newValue, oldValue) => {
+    if (newValue === oldValue) return;
+    updateStatusCondition(false);
+  },
+);
 </script>
 
 <style lang="scss" scoped>
