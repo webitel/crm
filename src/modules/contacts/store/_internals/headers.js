@@ -14,6 +14,7 @@ export default [
     show: true,
     field: 'user',
     sort: SortSymbols.NONE,
+    width: '100px',
   },
   {
     value: 'groups',
@@ -21,6 +22,7 @@ export default [
     show: true,
     field: 'groups',
     sort: SortSymbols.NONE,
+    width: '170px',
   },
   {
     value: 'labels',

@@ -1,6 +1,6 @@
 {
   "name": "crm",
-  "version": "24.10.0",
+  "version": "25.02.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -24,7 +24,7 @@
     "date-fns": "^4.1.0",
     "deepmerge": "^4.3.1",
     "@vueuse/core": "^11.0.3",
-    "@webitel/ui-sdk": "^24.12.165",
+    "@webitel/ui-sdk": "^25.04.1",
     "axios": "^1.7.7",
     "clipboard-copy": "^4.0.1",
     "deep-equal": "^2.2.1",
