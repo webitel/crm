@@ -22,9 +22,7 @@
       />
     </template>
     <template #actions>
-      <wt-button
-        @click="save"
-      >
+      <wt-button @click="save">
         {{ t('reusable.ok') }}
       </wt-button>
       <wt-button
@@ -38,9 +36,7 @@
 </template>
 
 <script setup>
-import {
-  useCardStore
-} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -58,10 +54,7 @@ const props = defineProps({
   },
 });
 
-
-const {
-  namespace: cardNamespace,
-} = useCardStore(props.namespace);
+const { namespace: cardNamespace } = useCardStore(props.namespace);
 
 const store = useStore();
 
@@ -72,13 +65,18 @@ const draft = reactive({
   result: null,
 });
 
-const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
+const closeReasonId = computed(
+  () => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
+);
 
 async function searchCloseReasons(params) {
-  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
+  return await CloseReasonsAPI.getLookup({
+    closeReasonGroupId: closeReasonId.value,
+    ...params,
+  });
 }
 
-const emit = defineEmits(['save', 'close']);
+const emit = defineEmits(['save', 'close', 'update:show']);
 
 function save() {
   const finalStatusData = {
@@ -86,7 +84,7 @@ function save() {
     result: draft.result,
   };
   emit('save', finalStatusData);
-  close();
+  emit('update:show', false);
 }
 
 function close() {
@@ -94,6 +92,4 @@ function close() {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
