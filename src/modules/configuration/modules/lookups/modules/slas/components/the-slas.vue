@@ -32,6 +32,7 @@
               <filter-search
                 :namespace="filtersNamespace"
                 name="search"
+                @search="getSearchValue"
               />
             </template>
           </wt-action-bar>
@@ -122,7 +123,7 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, onUnmounted } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -199,14 +200,20 @@ function edit(item) {
     name: `${CrmSections.SLAS}-card`,
     params: { id: item.id },
   });
-}
+};
+
+const filters = ref({});
+
+const getSearchValue = ({ value }) => {
+  filters.value = value ? { search: value } : {};
+};
 
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters, error, isLoading });
 </script>
 
 <style lang="scss" scoped>
