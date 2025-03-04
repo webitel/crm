@@ -78,7 +78,7 @@ const getCatalogsList = async (params) => {
       sort,
       id,
       q,
-      true,
+      undefined,
       '100', // Implemented depth 100 for load all subservices in one request
       servicesFieldsToSend,
       has_subservices,
