@@ -231,7 +231,7 @@ export default {
     resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Фактическое время реакции',
     actualResolutionTime: 'Фактическое время решения',
-    reason: '@:lookups.closeReasonGroups.reason',
+    reason: 'Причина закрытия',
     result: 'Результат',
     rating: 'Оценка',
     persons: 'Персоны',
