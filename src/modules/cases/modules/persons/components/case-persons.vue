@@ -155,6 +155,7 @@ function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
     type: WebitelContactsGroupType.STATIC,
+    enabled: true,
   });
 }
 
