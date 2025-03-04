@@ -4,6 +4,7 @@
     :shown="isResultPopup"
     @close="onPopupClose"
     @save="saveResult"
+    @update:show="isResultPopup = $event"
   />
   <div class="case-status">
     <span class="case-status__title">{{ t('cases.status') }}</span>
@@ -172,10 +173,14 @@ async function patchStatusCondition(condition) {
 }
 
 async function handleSelect(value) {
-  if (value.final) {
+  if (value.final && !editMode.value) {
     itemInstance.value.statusCondition = value;
     isResultPopup.value = true;
     return;
+  }
+
+  if (value.final) {
+    isResultPopup.value = true;
   }
 
   await patchStatusCondition(value);
