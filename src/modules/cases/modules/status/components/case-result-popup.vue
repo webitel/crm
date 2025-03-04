@@ -31,20 +31,21 @@
         color="secondary"
         @click="close"
       >
-        {{ t('reusable.close') }}
+        {{ t('reusable.cancel') }}
       </wt-button>
     </template>
   </wt-popup>
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
-import { useStore } from 'vuex';
 import {
   useCardStore
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { computed, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
+
+import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
 
 const props = defineProps({
   shown: {
