@@ -41,7 +41,7 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
-import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths.enum';
+import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 
 const release = process.env.npm_package_version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
