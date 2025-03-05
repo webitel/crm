@@ -166,7 +166,6 @@ import CatalogsAPI from '../../../api/service-catalogs.js';
 import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
-import filters from '../modules/filters/store/filters.js';
 
 const route = useRoute();
 const store = useStore();
@@ -214,6 +213,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -284,7 +284,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const addNewService = () => {
   router.push({
