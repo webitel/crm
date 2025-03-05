@@ -99,6 +99,7 @@ const loadCatalogs = async () => {
       search: search.value,
       fields: ['id', 'name', 'closeReasonGroup', 'status', 'service'],
       hasSubservices: true,
+      state: true,
     });
 
     catalogData.value = deepCopy(items);

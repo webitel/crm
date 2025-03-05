@@ -60,7 +60,7 @@ const getCatalogsList = async (params) => {
     'hasSubservices',
   ];
 
-  const { page, size, fields, sort, id, q, has_subservices } = applyTransform(
+  const { page, size, fields, sort, id, q, state, has_subservices } = applyTransform(
     params,
     [
       merge(getDefaultGetParams()),
@@ -78,7 +78,7 @@ const getCatalogsList = async (params) => {
       sort,
       id,
       q,
-      true,
+      state,
       undefined,
       servicesFieldsToSend,
       has_subservices,
