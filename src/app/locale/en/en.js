@@ -231,7 +231,7 @@ export default {
     resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Actual reaction time',
     actualResolutionTime: 'Actual resolution time',
-    reason: 'Closure reason',
+    closureReason: 'Closure reason',
     result: 'Result',
     rating: 'Rating',
     persons: 'Persons',
