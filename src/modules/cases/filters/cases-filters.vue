@@ -113,7 +113,7 @@ import type {
   FilterName,
   IFilter,
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
-import { startOfToday } from 'date-fns';
+import { startOfMonth } from 'date-fns';
 import { storeToRefs } from 'pinia';
 import { computed, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -138,10 +138,11 @@ const {
 } = tableStore;
 
 /* WTF? -- https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
+/* https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
 const defaultCreatedAtFromFilterDataPreview = computed(() => ({
   name: 'createdAtFrom',
-  value: startOfToday().getTime(),
-  label: t('webitelUI.filters.predefinedLabels.createdAt.startOfToday'),
+  value: startOfMonth(new Date()).getTime(),
+  label: t('webitelUI.filters.predefinedLabels.createdAt.startOfMonth'),
 }));
 
 const hasCreatedAtFromFilter = computed(() => {

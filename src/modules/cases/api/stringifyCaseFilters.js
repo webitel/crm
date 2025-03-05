@@ -1,4 +1,4 @@
-import { startOfToday } from 'date-fns';
+import { startOfMonth } from 'date-fns';
 import deepmerge from 'deepmerge';
 
 const filterTransformersMap = {
@@ -53,7 +53,9 @@ export const stringifyCaseFilters = (params) => {
   const result = [];
 
   const defaults = {
-    createdAtFrom: startOfToday().getTime(), /* https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
+    /* https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
+    /*https://webitel.atlassian.net/browse/WTEL-6446*/
+    createdAtFrom: startOfMonth(new Date()).getTime(),
   };
 
   const mergedParams = deepmerge.all([defaults, params]);
