@@ -173,6 +173,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -210,7 +211,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
   return router.push({
