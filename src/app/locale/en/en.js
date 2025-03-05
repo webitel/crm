@@ -240,6 +240,10 @@ export default {
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
     assignToMe: 'Assign to me',
+    company: 'Company',
+    department: 'Department',
+    position: 'Position',
+    location: 'Location',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
@@ -277,7 +281,8 @@ export default {
     },
     slaRecalculationPopup: {
       title: 'SLA recalculation',
-      message: 'After changing the service, the SLA of the Case will be recalculated.',
+      message:
+        'After changing the service, the SLA of the Case will be recalculated.',
     },
   },
   filters: {

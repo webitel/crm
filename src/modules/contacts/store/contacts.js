@@ -19,6 +19,7 @@ const cardState = {
     name: '',
     timezones: [],
     managers: [],
+    groups: [],
     labels: [],
     about: '',
   },
