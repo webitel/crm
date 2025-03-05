@@ -232,7 +232,7 @@ function resetForm() {
 }
 
 const isNeedToRevert = (item) => {
-  return item.relatedCase.id === props.itemId;
+  return item.relatedCase.id === props.parentId;
 };
 
 function getRevertedCase(item) {
