@@ -1,5 +1,6 @@
 <template>
   <wt-popup
+    class="case-result-popup"
     :shown="shown"
     @close="close"
   >
@@ -7,19 +8,22 @@
       {{ t('cases.caseResult') }}
     </template>
     <template #main>
-      <wt-select
-        :label="t('cases.reason')"
-        :search-method="searchCloseReasons"
-        :value="draft.reason"
-        required
-        @input="draft.reason = $event"
-      />
+      <div class="case-result-popup__main">
+        <wt-select
+          :label="t('cases.reason')"
+          :search-method="searchCloseReasons"
+          :value="draft.reason"
+          required
+          @input="draft.reason = $event"
+        />
 
-      <wt-textarea
-        :label="t('cases.result')"
-        :value="draft.result"
-        @input="draft.result = $event"
-      />
+        <wt-textarea
+          class="case-result-popup__textarea"
+          :label="t('cases.result')"
+          :value="draft.result"
+          @input="draft.result = $event"
+        />
+      </div>
     </template>
     <template #actions>
       <wt-button @click="save">
@@ -92,4 +96,13 @@ function close() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.case-result-popup {
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    height: 400px;
+  }
+}
+</style>
