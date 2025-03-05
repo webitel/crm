@@ -96,7 +96,7 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import Sortable, { Swap } from 'sortablejs';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -172,14 +172,12 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const searchFilterValue = computed(() => filtersValue.value.search ? { search: filtersValue.value.search } : {});
-
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: searchFilterValue, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
   return router.push({ ...route, params: { conditionId: 'new' } });

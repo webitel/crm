@@ -191,14 +191,12 @@ const path = computed(() => [
 
 const { close } = useClose('configuration');
 
-const searchFilterValue = computed(() => filtersValue.value.search ? { search: filtersValue.value.search } : {});
-
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: searchFilterValue, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
   return router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' }})
