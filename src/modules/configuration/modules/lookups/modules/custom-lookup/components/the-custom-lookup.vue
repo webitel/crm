@@ -119,7 +119,7 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -196,6 +196,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -225,11 +226,17 @@ const path = computed(() => [
 
 const { close } = useClose('configuration');
 
+const searchFilterValue = ref({});
+
+watch(() => filtersValue.value.search, (value) =>
+    searchFilterValue.value = value ? { search: value } : {},
+  { deep: true });
+
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: searchFilterValue, error, isLoading });
 
 const edit = (item) => {
   router.push({

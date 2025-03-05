@@ -192,13 +192,12 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
-import { computed, onUnmounted } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../app/utils/displayText.js';
-import filters from '../../slas/modules/filters/store/filters.js';
 import CatalogsAPI from '../api/service-catalogs.js';
 import ServicesAPI from '../modules/services/api/services.js';
 import { checkDisableState } from '../utils/checkDisableState.js';
@@ -250,6 +249,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -266,12 +266,18 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
+const searchFilterValue = ref({});
+
+watch(() => filtersValue.value.search, (value) =>
+    searchFilterValue.value = value ? { search: value } : {},
+  { deep: true });
+
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, filters: searchFilterValue, error, isLoading });
 
 const addNewCatalog = () => {
   router.push({

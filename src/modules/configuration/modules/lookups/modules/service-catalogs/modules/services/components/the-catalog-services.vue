@@ -166,7 +166,6 @@ import CatalogsAPI from '../../../api/service-catalogs.js';
 import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
-import filters from '../modules/filters/store/filters.js';
 
 const route = useRoute();
 const store = useStore();
@@ -214,6 +213,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -279,12 +279,18 @@ function edit(item) {
   });
 }
 
+const searchFilterValue = ref({});
+
+watch(() => filtersValue.value.search, (value) =>
+    searchFilterValue.value = value ? { search: value } : {},
+  { deep: true });
+
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, filters: searchFilterValue, error, isLoading });
 
 const addNewService = () => {
   router.push({

@@ -150,6 +150,8 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
+
   subscribe,
   flushSubscribers,
   resetFilters,
@@ -170,12 +172,18 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+const searchFilterValue = ref({});
+
+watch(() => filtersValue.value.search, (value) =>
+    searchFilterValue.value = value ? { search: value } : {},
+  { deep: true });
+
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: searchFilterValue, error, isLoading });
 
 const add = () => {
   return router.push({ ...route, params: { conditionId: 'new' } });
