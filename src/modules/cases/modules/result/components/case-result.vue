@@ -3,7 +3,7 @@
     <div class="opened-card-input-grid">
       <editable-field
         :edit-mode="editMode"
-        :label="t('cases.reason')"
+        :label="t('cases.closureReason')"
         :value="itemInstance?.close?.closeReason"
         @update:value="setItemProp({ path: 'close.closeReason', value: $event })"
       >

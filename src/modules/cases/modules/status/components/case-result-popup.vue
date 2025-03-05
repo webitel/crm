@@ -10,7 +10,7 @@
     <template #main>
       <div class="case-result-popup__main">
         <wt-select
-          :label="t('cases.reason')"
+          :label="t('cases.closureReason')"
           :search-method="searchCloseReasons"
           :value="draft.reason"
           required
