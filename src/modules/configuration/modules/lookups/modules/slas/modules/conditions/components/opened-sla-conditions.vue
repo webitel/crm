@@ -135,7 +135,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -212,11 +212,7 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const searchFilterValue = ref({});
-
-watch(() => filtersValue.value.search, (value) =>
-    searchFilterValue.value = value ? { search: value } : {},
-  { deep: true });
+const searchFilterValue = computed(() => filtersValue.value.search ? { search: filtersValue.value.search } : {});
 
 const {
   showEmpty,

@@ -192,7 +192,7 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -266,11 +266,7 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
-const searchFilterValue = ref({});
-
-watch(() => filtersValue.value.search, (value) =>
-    searchFilterValue.value = value ? { search: value } : {},
-  { deep: true });
+const searchFilterValue = computed(() => filtersValue.value.search ? { search: filtersValue.value.search } : {});
 
 const {
   showEmpty,

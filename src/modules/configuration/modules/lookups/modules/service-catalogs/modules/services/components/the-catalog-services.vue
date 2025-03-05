@@ -279,11 +279,7 @@ function edit(item) {
   });
 }
 
-const searchFilterValue = ref({});
-
-watch(() => filtersValue.value.search, (value) =>
-    searchFilterValue.value = value ? { search: value } : {},
-  { deep: true });
+const searchFilterValue = computed(() => filtersValue.value.search ? { search: filtersValue.value.search } : {});
 
 const {
   showEmpty,
