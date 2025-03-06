@@ -7,11 +7,10 @@
           :current-app="currentApp"
           :nav="nav"
           :dark-mode="darkMode"
+          :logo-route="StartPageRoutePaths.TheStartPage"
         />
         <a :href="startPageHref">
-          <wt-logo
-            :dark-mode="darkMode"
-          />
+          <wt-logo :dark-mode="darkMode" />
         </a>
         <wt-dark-mode-switcher />
         <wt-app-navigator
@@ -34,20 +33,20 @@
 </template>
 
 <script setup>
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { computed, inject, onMounted } from 'vue';
-import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/WebitelApplications.enum';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { WtNavigationBar } from '@webitel/ui-sdk/components';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/WebitelApplications.enum';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
+import { computed, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
+
+import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 
 const release = process.env.npm_package_version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
 
 const store = useStore();
-const router = useRouter();
 
 const userinfo = computed(() => store.state.userinfo);
 const currentApp = userinfo.value.thisApp;
@@ -99,12 +98,16 @@ const apps = computed(() => {
 const nav = computed(() => {
   const contacts = {
     value: CrmSections.CONTACTS,
-    name: t(`WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CONTACTS}`),
+    name: t(
+      `WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CONTACTS}`,
+    ),
     route: '/contacts',
   };
   const cases = {
     value: CrmSections.CASES,
-    name: t(`WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CASES}`),
+    name: t(
+      `WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CASES}`,
+    ),
     route: '/cases',
   };
   const configuration = {
@@ -113,11 +116,10 @@ const nav = computed(() => {
     route: '/configuration',
   };
   const nav = [contacts, cases];
-  const accessibleNav = nav.filter((nav) => checkAccess.value({ name: nav.value }));
-  return [
-    ...accessibleNav,
-    configuration,
-  ];
+  const accessibleNav = nav.filter((nav) =>
+    checkAccess.value({ name: nav.value }),
+  );
+  return [...accessibleNav, configuration];
 });
 
 function settings() {
