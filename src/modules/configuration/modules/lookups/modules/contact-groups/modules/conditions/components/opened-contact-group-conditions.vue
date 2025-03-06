@@ -24,8 +24,6 @@
       </wt-action-bar>
     </header>
 
-    <wt-loader v-show="isLoading" />
-
     <div class="table-section__table-wrapper">
       <wt-empty
         v-show="showEmpty"
@@ -35,6 +33,8 @@
         :disabled-primary-action="!hasCreateAccess"
         @click:primary="add"
       />
+
+      <wt-loader v-show="isLoading" />
 
       <div v-if="dataList.length && !isLoading">
         <wt-table
