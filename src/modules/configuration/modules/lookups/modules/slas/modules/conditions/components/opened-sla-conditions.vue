@@ -187,6 +187,7 @@ const {
   namespace: filtersNamespace,
   restoreFilters,
   filtersValue,
+  resetFilters,
 
   subscribe,
   flushSubscribers,
@@ -201,6 +202,7 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
+  resetFilters();
 });
 
 const {
