@@ -198,7 +198,6 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../app/utils/displayText.js';
-import filters from '../../slas/modules/filters/store/filters.js';
 import CatalogsAPI from '../api/service-catalogs.js';
 import ServicesAPI from '../modules/services/api/services.js';
 import { checkDisableState } from '../utils/checkDisableState.js';
@@ -250,6 +249,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -271,7 +271,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const addNewCatalog = () => {
   router.push({

@@ -141,7 +141,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js'
-import filters from '../modules/filters/store/filters.js';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
@@ -187,6 +186,8 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
+  resetFilters,
 
   subscribe,
   flushSubscribers,
@@ -201,6 +202,7 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
+  resetFilters();
 });
 
 const {
@@ -217,7 +219,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
   return router.push({ ...route, params: { conditionId: 'new' } });

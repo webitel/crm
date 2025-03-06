@@ -9,6 +9,7 @@
       {{ props.id ? t('reusable.edit') : t('reusable.new') }}
       {{ t('contacts.contact', 1).toLowerCase() }}
     </template>
+
     <template #main>
       <form class="contact-popup-form">
         <wt-input
@@ -19,18 +20,29 @@
           prevent-trim
           @input="draft.name = $event"
         />
+
+        <wt-select
+          :value="draft.groups"
+          :label="t('cases.group')"
+          :search-method="loadStaticContactGroupsList"
+          multiple
+          @input="draft.groups = $event"
+        />
+
         <wt-select
           :value="draft.timezones[0]?.timezone"
           :label="t('date.timezone', 1)"
           :search-method="TimezonesAPI.getLookup"
           @input="draft.timezones[0] = { timezone: $event }"
         />
+
         <wt-select
           :value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
           @input="draft.managers[0] = { user: $event }"
         />
+
         <wt-tags-input
           :value="draft.labels"
           :label="t('vocabulary.labels', 1)"
@@ -40,6 +52,7 @@
           taggable
           @input="draft.labels = $event"
         />
+
         <wt-textarea
           :value="draft.about"
           :label="t('vocabulary.description')"
@@ -47,6 +60,7 @@
         />
       </form>
     </template>
+
     <template #actions>
       <wt-button
         :disabled="v$.$invalid"
@@ -55,6 +69,7 @@
       >
         {{ t('reusable.save') }}
       </wt-button>
+
       <wt-button
         color="secondary"
         @click="close"
@@ -71,6 +86,9 @@ import { required } from '@vuelidate/validators';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { WebitelContactsGroupType } from 'webitel-sdk';
+
+import ContactGroupsAPI from '../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import ContactsAPI from '../api/ContactsAPI';
 import LabelsAPI from '../api/LabelsAPI';
 import TimezonesAPI from '../api/TimezonesAPI';
@@ -98,17 +116,22 @@ const generateNewDraft = () => ({
   timezones: [],
   managers: [],
   labels: [],
+  groups: [],
   about: '',
   createdBy: '',
 });
 
 const draft = ref(generateNewDraft());
 
-const v$ = useVuelidate(computed(() => ({
-  draft: {
-    name: { required },
-  },
-})), { draft }, { $autoDirty: true });
+const v$ = useVuelidate(
+  computed(() => ({
+    draft: {
+      name: { required },
+    },
+  })),
+  { draft },
+  { $autoDirty: true },
+);
 
 v$.value.$touch();
 
@@ -123,9 +146,15 @@ async function save() {
   try {
     isSaving.value = false;
     if (props.id) {
-      await ContactsAPI.update({ itemInstance: { ...draft.value, id: props.id } });
+      await ContactsAPI.update({
+        itemInstance: { ...draft.value, id: props.id },
+      });
     } else {
-      newContact = await ContactsAPI.add({ itemInstance: draft.value });
+      newContact = await ContactsAPI.add({
+        itemInstance: {
+          ...draft.value,
+        },
+      });
     }
     emit('saved', props.id || newContact.id);
     close();
@@ -147,22 +176,32 @@ async function loadItem(id = props.id) {
   draft.value = await ContactsAPI.get({ itemId: id });
 }
 
-watch(() => props.shown, (value) => {
-  if(value) {
-    if (props.id) loadItem(props.id);
-    else {
-      draft.value = generateNewDraft();
-      setDefaultManager();
+function loadStaticContactGroupsList(params) {
+  return ContactGroupsAPI.getLookup({
+    ...params,
+    type: WebitelContactsGroupType.STATIC,
+  });
+}
+
+watch(
+  () => props.shown,
+  (value) => {
+    if (value) {
+      if (props.id) loadItem(props.id);
+      else {
+        draft.value = generateNewDraft();
+        setDefaultManager();
+      }
     }
-  }
-});
+  },
+);
 </script>
 
 <style lang="scss" scoped>
 .contact-popup-form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  grid-row-gap: var(--spacing-sm);
 
   :deep(.multiselect__content-wrapper) {
     max-height: 240px !important; // override default vue-multiselect styles, applied as attribute

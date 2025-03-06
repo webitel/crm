@@ -8,9 +8,7 @@
       <template #activator>
         <wt-tooltip>
           <template #activator>
-            <wt-icon-btn
-              icon="options"
-            />
+            <wt-icon-btn icon="options" />
           </template>
           {{ t('vocabulary.options', 2) }}
         </wt-tooltip>
@@ -32,9 +30,14 @@
       :username="name"
     />
 
-    <p class="opened-contact-general-name">
+    <div class="opened-contact-general-name">
+      <wt-icon
+        v-if="managers.length"
+        icon="webitel-logo"
+      />
+
       {{ name }}
-    </p>
+    </div>
 
     <wt-divider />
 
@@ -84,9 +87,11 @@
       v-if="labels.length"
       class="opened-contact-general-item"
     >
-      <div class="opened-contact-general-item__value opened-contact-general-item__value--labels">
+      <div
+        class="opened-contact-general-item__value opened-contact-general-item__value--labels"
+      >
         <wt-chip
-          v-for="({ label, id }) of labels"
+          v-for="{ label, id } of labels"
           :key="id"
         >
           {{ label }}
@@ -105,7 +110,7 @@ const access = inject('access');
 const props = defineProps({
   name: {
     type: String,
-    default: ''
+    default: '',
   },
   timezones: {
     type: Array,
@@ -125,10 +130,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits([
-  'edit',
-  'delete',
-]);
+const emit = defineEmits(['edit', 'delete']);
 
 const { t } = useI18n();
 
@@ -145,10 +147,7 @@ const actionOptions = computed(() => {
     handler: () => emit('delete'),
     disabled: !access.value.hasRbacDeleteAccess,
   };
-  return [
-    editAction,
-    deleteAction,
-  ];
+  return [editAction, deleteAction];
 });
 </script>
 
@@ -177,6 +176,9 @@ const actionOptions = computed(() => {
 }
 
 .opened-contact-general-name {
+  display: flex;
+  align-items: center;
+  grid-gap: var(--spacing-xs);
   @extend %typo-subtitle-1;
 }
 

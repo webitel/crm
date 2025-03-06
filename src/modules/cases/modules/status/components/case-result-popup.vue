@@ -1,5 +1,6 @@
 <template>
   <wt-popup
+    class="case-result-popup"
     :shown="shown"
     @close="close"
   >
@@ -7,44 +8,44 @@
       {{ t('cases.caseResult') }}
     </template>
     <template #main>
-      <wt-select
-        :label="t('cases.reason')"
-        :search-method="searchCloseReasons"
-        :value="draft.reason"
-        required
-        @input="draft.reason = $event"
-      />
+      <div class="case-result-popup__main">
+        <wt-select
+          :label="t('cases.closureReason')"
+          :search-method="searchCloseReasons"
+          :value="draft.reason"
+          required
+          @input="draft.reason = $event"
+        />
 
-      <wt-textarea
-        :label="t('cases.result')"
-        :value="draft.result"
-        @input="draft.result = $event"
-      />
+        <wt-textarea
+          class="case-result-popup__textarea"
+          :label="t('cases.result')"
+          :value="draft.result"
+          @input="draft.result = $event"
+        />
+      </div>
     </template>
     <template #actions>
-      <wt-button
-        @click="save"
-      >
+      <wt-button @click="save">
         {{ t('reusable.ok') }}
       </wt-button>
       <wt-button
         color="secondary"
         @click="close"
       >
-        {{ t('reusable.close') }}
+        {{ t('reusable.cancel') }}
       </wt-button>
     </template>
   </wt-popup>
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
 import { useStore } from 'vuex';
-import {
-  useCardStore
-} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+
+import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
 
 const props = defineProps({
   shown: {
@@ -57,10 +58,7 @@ const props = defineProps({
   },
 });
 
-
-const {
-  namespace: cardNamespace,
-} = useCardStore(props.namespace);
+const { namespace: cardNamespace } = useCardStore(props.namespace);
 
 const store = useStore();
 
@@ -71,13 +69,18 @@ const draft = reactive({
   result: null,
 });
 
-const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
+const closeReasonId = computed(
+  () => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
+);
 
 async function searchCloseReasons(params) {
-  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
+  return await CloseReasonsAPI.getLookup({
+    closeReasonGroupId: closeReasonId.value,
+    ...params,
+  });
 }
 
-const emit = defineEmits(['save', 'close']);
+const emit = defineEmits(['save', 'close', 'update:show']);
 
 function save() {
   const finalStatusData = {
@@ -85,7 +88,7 @@ function save() {
     result: draft.result,
   };
   emit('save', finalStatusData);
-  close();
+  emit('update:show', false);
 }
 
 function close() {
@@ -94,5 +97,12 @@ function close() {
 </script>
 
 <style lang="scss" scoped>
-
+.case-result-popup {
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    height: 400px;
+  }
+}
 </style>

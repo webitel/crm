@@ -24,8 +24,6 @@
       </wt-action-bar>
     </header>
 
-    <wt-loader v-show="isLoading" />
-
     <div class="table-section__table-wrapper">
       <wt-empty
         v-show="showEmpty"
@@ -35,6 +33,8 @@
         :disabled-primary-action="!hasCreateAccess"
         @click:primary="add"
       />
+
+      <wt-loader v-show="isLoading" />
 
       <div v-if="dataList.length && !isLoading">
         <wt-table
@@ -96,7 +96,7 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import Sortable, { Swap } from 'sortablejs';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -150,6 +150,8 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
+
   subscribe,
   flushSubscribers,
   resetFilters,
@@ -175,7 +177,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
   return router.push({ ...route, params: { conditionId: 'new' } });

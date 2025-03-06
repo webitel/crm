@@ -130,7 +130,7 @@ import {
   useTableEmpty
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import {computed, onUnmounted} from 'vue';
+import { computed, onUnmounted } from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRouter} from 'vue-router';
 
@@ -223,7 +223,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 </script>
 
 <style lang="scss" scoped>

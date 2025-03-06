@@ -5,8 +5,8 @@
   >
     <template #header>
       <contact-popup
-        :shown="isContactPopup"
         :id="editedContactId"
+        :shown="isContactPopup"
         :namespace="baseNamespace"
         @close="closeContactPopup"
         @saved="saved"
@@ -20,6 +20,7 @@
         :secondary-text="$t('reusable.delete')"
       >
         <wt-headline-nav :path="path" />
+
         <template #actions>
           <filter-search
             :namespace="filtersNamespace"
@@ -29,6 +30,7 @@
         </template>
       </wt-page-header>
     </template>
+
     <template #main>
       <wt-loader v-show="isLoading" />
 
@@ -64,45 +66,96 @@
                 size="sm"
                 :username="item.name"
               />
+
               <wt-item-link
-                :link="{ name: `${CrmSections.CONTACTS}-card`, params: { id: item.id } }"
+                :link="{
+                  name: `${CrmSections.CONTACTS}-card`,
+                  params: { id: item.id },
+                }"
               >
                 {{ item.name }}
               </wt-item-link>
             </div>
           </template>
+
+          <template #user="{ item }">
+            <wt-icon
+              v-if="item.user"
+              icon="webitel-logo"
+            />
+          </template>
+
+          <template #groups="{ item }">
+            <div
+              v-if="item.groups"
+              class="contacts-groups"
+            >
+              <p>
+                {{ item.groups[0]?.name }}
+              </p>
+
+              <wt-tooltip
+                v-if="item.groups.length > 1"
+                :triggers="['click']"
+              >
+                <template #activator>
+                  <wt-chip> +{{ item.groups.length - 1 }} </wt-chip>
+                </template>
+
+                <div class="contacts-groups__wrapper">
+                  <p
+                    v-for="(group, idx) of item.groups.slice(1)"
+                    :key="idx"
+                  >
+                    {{ group.name }}
+                  </p>
+                </div>
+              </wt-tooltip>
+            </div>
+          </template>
+
+          <template #about="{ item }">
+            {{ item.about }}
+          </template>
+
           <template #managers="{ item }">
             {{ item.managers[0]?.user.name }}
           </template>
+
           <template #labels="{ item }">
             <div
               v-if="item.labels"
               class="contacts-labels-wrapper"
             >
               <wt-chip
-                v-for="({ label, id }) of item.labels"
+                v-for="{ label, id } of item.labels"
                 :key="id"
               >
                 {{ label }}
               </wt-chip>
             </div>
           </template>
+
           <template #actions="{ item }">
             <wt-icon-action
               :disabled="!item.access.edit"
               action="edit"
               @click="edit(item)"
             />
+
             <wt-icon-action
               :disabled="!item.access.delete"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
+
         <filter-pagination
           :namespace="filtersNamespace"
           :is-next="isNext"
@@ -113,26 +166,24 @@
 </template>
 
 <script setup>
+import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
+import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
-import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+
 import dummyDark from '../../../app/assets/dummy-dark.svg';
 import dummyLight from '../../../app/assets/dummy-light.svg';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import ContactPopup from './contact-popup.vue';
 
 const baseNamespace = 'contacts';
@@ -142,10 +193,7 @@ const router = useRouter();
 
 const store = useStore();
 
-const {
-  hasCreateAccess,
-  hasDeleteAccess,
-} = useAccessControl('contacts');
+const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -191,7 +239,6 @@ restoreFilters();
 onUnmounted(() => {
   flushSubscribers();
 });
-
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -252,9 +299,9 @@ const dummy = computed(() => {
   };
 });
 
-const deletableSelectedItems = computed(() => (
-  selected.value.filter((item) => item.access.delete)
-));
+const deletableSelectedItems = computed(() =>
+  selected.value.filter((item) => item.access.delete),
+);
 
 function create() {
   isContactPopup.value = true;
@@ -286,6 +333,19 @@ function deleteSelectedItems() {
 </script>
 
 <style lang="scss" scoped>
+.contacts {
+  &-groups {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  &-labels-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2xs);
+  }
+}
+
 .username-wrapper {
   display: flex;
   align-items: center;
@@ -294,11 +354,5 @@ function deleteSelectedItems() {
   .wt-avatar {
     flex: 0 0 var(--wt-avatar-size--size-sm);
   }
-}
-
-.contacts-labels-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-2xs);
 }
 </style>
