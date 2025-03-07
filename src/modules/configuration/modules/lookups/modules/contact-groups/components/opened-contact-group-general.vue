@@ -45,8 +45,10 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { WebitelContactsGroupType } from 'webitel-sdk';
+import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import ContactGroupsAPI from '../api/contactGroups.js';
@@ -63,6 +65,7 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const route = useRoute();
 
 const {
   disableUserInput,
@@ -73,6 +76,10 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
 }
+
+onMounted(() => {
+  setItemProp({ path: 'type', value: route.query.type.toUpperCase() })
+});
 </script>
 
 <style lang="scss" scoped>
