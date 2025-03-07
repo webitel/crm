@@ -82,7 +82,9 @@ function loadStaticContactGroupsList(params) {
 }
 
 function setContactGroupType() {
-  setItemProp({ path: 'type', value: route.query.type.toUpperCase() });
+  if(route.query.type) {
+    setItemProp({ path: 'type', value: route.query.type.toUpperCase() });
+  }
 }
 
 onMounted(() => setContactGroupType());
