@@ -36,7 +36,9 @@
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
         :value="itemInstance.defaultGroup"
+        :v="v.itemInstance.defaultGroup"
         :disabled="disableUserInput"
+        required
         @input="setItemProp({ path: 'defaultGroup', value: $event })"
       />
     </div>
@@ -67,14 +69,16 @@ const props = defineProps({
 const { t } = useI18n();
 const route = useRoute();
 
-const {
-  disableUserInput,
-} = useUserAccessControl();
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
+  return ContactGroupsAPI.getLookup({
+    ...params,
+    type: WebitelContactsGroupType.STATIC,
+    enabled: true,
+  });
 }
 
 function setContactGroupType() {
