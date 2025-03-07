@@ -77,9 +77,11 @@ function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
 }
 
-onMounted(() => {
-  setItemProp({ path: 'type', value: route.query.type.toUpperCase() })
-});
+function setContactGroupType() {
+  setItemProp({ path: 'type', value: route.query.type.toUpperCase() });
+}
+
+onMounted(() => setContactGroupType());
 </script>
 
 <style lang="scss" scoped>
