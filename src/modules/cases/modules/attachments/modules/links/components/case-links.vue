@@ -13,7 +13,7 @@
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
-          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink || !editMode"
           :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
@@ -60,6 +60,7 @@
           :data="dataList"
           :headers="headers"
           :selected="selected"
+          :selectable="editMode"
           headless
           @update:selected="setSelected"
         >
