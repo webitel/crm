@@ -30,7 +30,6 @@
             :search-method="ContactsAPI.getLookup"
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.reporter"
-            :clearable="false"
             class="case-persons__select"
             @input="props.updateValue($event)"
           />
@@ -52,7 +51,6 @@
         <template #default="props">
           <wt-select
             v-bind="props"
-            :clearable="false"
             :disabled="disableUserInput"
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
@@ -81,7 +79,6 @@
       >
         <template #default="props">
           <wt-select
-            clearable
             :search-method="ContactsAPI.getLookup"
             :disabled="disableUserInput || isAssignMeDisabled"
             class="case-persons__select"
@@ -105,7 +102,6 @@
         <template #default="props">
           <wt-select
             :disabled="disableUserInput"
-            clearable
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"
