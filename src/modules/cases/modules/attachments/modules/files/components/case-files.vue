@@ -15,7 +15,7 @@
           :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
           :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           :disabled:download="!dataList.length"
-          :disabled:add="!hasCreateAccess"
+          :disabled:add="!hasCreateAccess || !editMode"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
           @click:delete="

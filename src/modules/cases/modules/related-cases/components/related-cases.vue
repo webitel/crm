@@ -15,7 +15,7 @@
 
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DELETE]"
-          :disabled:add="!hasCreateAccess"
+          :disabled:add="!hasCreateAccess || !editMode"
           :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           @click:add="startAddingRelatedCase"
           @click:delete="
@@ -79,6 +79,7 @@
           :data="dataList"
           :headers="shownHeaders"
           :selected="selected"
+          :selectable="editMode"
           headless
           sortable
           @sort="updateSort"
