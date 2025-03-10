@@ -9,9 +9,10 @@
           :dark-mode="darkMode"
           :logo-route="StartPageRoutePaths.TheStartPage"
         />
-        <a :href="startPageHref">
-          <wt-logo :dark-mode="darkMode" />
-        </a>
+        <wt-logo
+          :dark-mode="darkMode"
+          :logo-href="startPageHref"
+         />
         <wt-dark-mode-switcher />
         <wt-app-navigator
           :apps="apps"
