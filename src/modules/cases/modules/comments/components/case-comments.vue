@@ -14,15 +14,8 @@
         </h3>
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
-          :disabled:delete="!hasDeleteAccess || !selected.length || !editableSelectedComments"
-          :include="[IconAction.ADD, IconAction.DELETE]"
+          :include="[IconAction.ADD]"
           @click:add="startAddingComment"
-          @click:delete="
-            askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteEls(selected),
-            })
-          "
         >
         </wt-action-bar>
       </header>
@@ -55,6 +48,7 @@
           :headers="shownHeaders"
           :selected="selected"
           headless
+          :selectable="false"
           sortable
           @sort="updateSort"
           @update:selected="updateSelected"
@@ -104,15 +98,15 @@ import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {storeToRefs} from "pinia";
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
-import CaseCommentRow from './case-comment-row.vue';
 import {useCaseCommentsStore} from "../stores/comments";
-import {storeToRefs} from "pinia";
+import CaseCommentRow from './case-comment-row.vue';
 
 const props = defineProps({
   parentId: {
@@ -159,11 +153,6 @@ const { showEmpty } = useTableEmpty({ dataList, isLoading });
 const emptyText = computed(() => {
   return t('cases.comments.emptyText');
 });
-
-
-const editableSelectedComments = computed(
-  () => !!selected.value.every((comment) => comment.canEdit),
-);
 
 const formState = reactive({
   isAdding: false,
