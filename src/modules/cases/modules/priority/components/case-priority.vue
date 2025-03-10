@@ -10,7 +10,6 @@
         <template #default="props">
           <wt-select
             v-bind="props"
-            :clearable="false"
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.priority"
             :placeholder="t('cases.priority')"
