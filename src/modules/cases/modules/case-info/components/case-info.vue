@@ -47,7 +47,6 @@
           <wt-select
             v-bind="props"
             :v="v$.value.itemInstance.source"
-            :clearable="false"
             :disabled="disableUserInput"
             :search-method="SourcesAPI.getLookup"
             @input="props.updateValue($event)"
