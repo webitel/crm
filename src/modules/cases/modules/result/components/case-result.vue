@@ -11,7 +11,6 @@
           <wt-select
             v-bind="props"
             :key="closeReasonId"
-            clearable
             :disabled="disableUserInput"
             :search-method="searchCloseReasons"
             @input="props.updateValue($event)"

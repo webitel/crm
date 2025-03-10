@@ -14,7 +14,6 @@
       <wt-select
         :key="status?.id"
         :disabled="disableUserInput"
-        :clearable="false"
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
