@@ -49,7 +49,7 @@ function findServiceById(services, id) {
   if (!Array.isArray(services)) return null;
   for (const service of services) {
     if (service.id === id) {
-      return svc;
+      return service;
     }
     if (service.service && Array.isArray(service.service)) {
       const found = findServiceById(service.service, id);
