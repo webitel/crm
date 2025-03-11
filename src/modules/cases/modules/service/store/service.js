@@ -65,56 +65,56 @@ function getParentService(catalog, currentService) {
   return findServiceById(get(catalog, 'service', []), parentId);
 }
 
-
 // Resolves a property from the service hierarchy.
 //
-// 1. SLA:
-//    - Climb up the chain until we find a non-empty SLA.
-//    - If none found, use catalog’s SLA if present.
+//   SLA:
+// - If current service has non-empty SLA => return it.
+//   - Otherwise climb up until we find a non-empty SLA or run out of parents.
+// - If no SLA found, fallback to catalog.sla if present.
 //
-// 2. Group & Assignee (Single-level inheritance):
-//   - If current (lowest) service has a non-empty group or assignee,
-//      we return exactly the current service’s property (locking both in place).
-//    - If both are empty, we look ONLY at the immediate parent’s property:
-//      - If the parent has a non-empty property, return it;
-//      - Otherwise, return null (we do not keep climbing).
+//   Group & Assignee:
+// - If current service has either group or assignee => lock those in place
+// (i.e., return exactly currentService[propertyPath], even if empty).
+// - Otherwise climb up the chain until we find a non-empty property or run out of parents.
+// - If no parent has it, return null.
+//
 function resolvePropertyFromHierarchy(state, propertyPath) {
-  const currentService = state.service;
-  if (!currentService) return null;
+  let current = state.service;
+  if (!current) return null;
 
   if (propertyPath === 'sla') {
-    let svc = currentService;
-    while (svc) {
-      const slaValue = get(svc, 'sla');
+    while (current) {
+      const slaValue = get(current, 'sla');
       if (hasValidValue(slaValue)) {
         return slaValue;
       }
-      svc = getParentService(state.catalog, svc);
+      current = getParentService(state.catalog, current);
     }
-
+    // No SLA found in the chain => fallback to catalog.sla
     const catalogSla = get(state.catalog, 'sla');
     return hasValidValue(catalogSla) ? catalogSla : null;
   }
 
   if (propertyPath === 'group' || propertyPath === 'assignee') {
-    const currentGroup = get(currentService, 'group');
-    const currentAssignee = get(currentService, 'assignee');
+    const currentGroup = get(state.service, 'group');
+    const currentAssignee = get(state.service, 'assignee');
 
-    // If either is non-empty on the current service, lock them both in place
+    // If the subservice defines either group or assignee, lock them both as-is
     if (hasValidValue(currentGroup) || hasValidValue(currentAssignee)) {
-      // Return whichever property is asked for (could be empty)
-      return get(currentService, propertyPath) || null;
+      return get(state.service, propertyPath) || null;
     }
 
-    // Both group & assignee are empty => check only the immediate parent
-    const parent = getParentService(state.catalog, currentService);
-    if (!parent) return null; // No parent => can't inherit
-
-    // Check the parent's property
-    const parentValue = get(parent, propertyPath);
-    return hasValidValue(parentValue) ? parentValue : null;
+    // Both group & assignee are empty => search up the entire chain
+    while (current) {
+      const parentValue = get(current, propertyPath);
+      if (hasValidValue(parentValue)) {
+        return parentValue;
+      }
+      current = getParentService(state.catalog, current);
+    }
+    return null;
   }
 
-  // If some other property is requested, default to null
+  // If some unexpected property is requested, return null
   return null;
 }
