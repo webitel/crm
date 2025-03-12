@@ -167,6 +167,7 @@ const valueWithDefault = computed(() => {
     }
 
     .editable-field__link {
+      @extend %typo-subtitle-1;
       color: var(--link-color);
     }
 
