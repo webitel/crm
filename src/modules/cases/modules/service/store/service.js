@@ -41,42 +41,80 @@ const service = createBaseStoreModule({
 
 export default service;
 
-// Checks if a value is non-empty (exists and has at least one key).
 function hasValidValue(value) {
-  return value && Object.keys(value).length > 0;
+  return value && typeof value === 'object' && Object.keys(value).length > 0;
 }
 
- // Walks up the service hierarchy to find the first non-empty property
- // For SLA: if no service in the hierarchy defines it, fall back to the catalog SLA
- // For Group/Assignee: if either is set on the current service, do not override
+function findServiceById(services, id) {
+  if (!Array.isArray(services)) return null;
+  for (const service of services) {
+    if (service.id === id) {
+      return service;
+    }
+    if (service.service && Array.isArray(service.service)) {
+      const found = findServiceById(service.service, id);
+      if (found) return found;
+    }
+  }
+  return null;
+}
 
+function getParentService(catalog, currentService) {
+  const parentId = currentService?.rootId;
+  if (!parentId) return null;
+  return findServiceById(get(catalog, 'service', []), parentId);
+}
+
+// Resolves a property from the service hierarchy.
+//
+//   SLA:
+// - If current service has non-empty SLA => return it.
+//   - Otherwise climb up until we find a non-empty SLA or run out of parents.
+// - If no SLA found, fallback to catalog.sla if present.
+//
+//   Group & Assignee:
+// - If current service has either group or assignee => lock those in place
+// (i.e., return exactly currentService[propertyPath], even if empty).
+// - Otherwise climb up the chain until we find a non-empty property or run out of parents.
+// - If no parent has it, return null.
+//
 function resolvePropertyFromHierarchy(state, propertyPath) {
   let current = state.service;
   if (!current) return null;
 
-  // For group and assignee, if either is already defined on the subservice, do not inherit.
-  if (propertyPath === 'group' || propertyPath === 'assignee') {
-    if (hasValidValue(get(current, 'group')) || hasValidValue(get(current, 'assignee'))) {
-      return get(current, propertyPath) || null;
-    }
-  }
-
-  // Traverse up the hierarchy using the service's rootId to locate the parent
-  while (current) {
-    const value = get(current, propertyPath, {});
-    if (hasValidValue(value)) {
-      return value;
-    }
-    current = state.catalog?.service?.find(item => item.id === current.rootId);
-  }
-
-  // For SLA, if no valid service value is found, fall back to the catalog SLA
   if (propertyPath === 'sla') {
-    const catalogSla = get(state, 'catalog.sla', {});
-    if (hasValidValue(catalogSla)) {
-      return catalogSla;
+    while (current) {
+      const slaValue = get(current, 'sla');
+      if (hasValidValue(slaValue)) {
+        return slaValue;
+      }
+      current = getParentService(state.catalog, current);
     }
+    // No SLA found in the chain => fallback to catalog.sla
+    const catalogSla = get(state.catalog, 'sla');
+    return hasValidValue(catalogSla) ? catalogSla : null;
   }
 
+  if (propertyPath === 'group' || propertyPath === 'assignee') {
+    const currentGroup = get(state.service, 'group');
+    const currentAssignee = get(state.service, 'assignee');
+
+    // If the subservice defines either group or assignee, lock them both as-is
+    if (hasValidValue(currentGroup) || hasValidValue(currentAssignee)) {
+      return get(state.service, propertyPath) || null;
+    }
+
+    // Both group & assignee are empty => search up the entire chain
+    while (current) {
+      const parentValue = get(current, propertyPath);
+      if (hasValidValue(parentValue)) {
+        return parentValue;
+      }
+      current = getParentService(state.catalog, current);
+    }
+    return null;
+  }
+
+  // If some unexpected property is requested, return null
   return null;
 }
