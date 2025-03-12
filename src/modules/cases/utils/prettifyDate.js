@@ -8,7 +8,11 @@ export default function prettifyDate(timestamp) {
     minute: '2-digit',
   });
 
-  const datePart = date.toLocaleDateString('en-GB').replace(/\//g, '.');
+  const datePart = date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+  }).replace(/\//g, '.');
 
   return `${time} ${datePart}`;
 }
