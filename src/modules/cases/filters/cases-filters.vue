@@ -9,7 +9,7 @@
       >
         <template #info>
           <component
-            :is="filtersConfig['createdAtFrom'].previewField"
+            :is="FilterOptionToPreviewComponentMap[FilterOption.CreatedAtFrom]"
             :value="defaultCreatedAtFromFilterDataPreview.value"
           />
         </template>
@@ -40,7 +40,7 @@
               }"
             >
               <component
-                :is="getFilterFieldComponent(filterName, 'valueField')"
+                :is="FilterOptionToValueComponentMap[filterName]"
                 :key="filterName"
                 :model-value="filterValue"
                 @update:model-value="onValueChange"
@@ -52,7 +52,7 @@
 
         <template #info>
           <component
-            :is="getFilterFieldComponent(filter.name, 'previewField')"
+            :is="FilterOptionToPreviewComponentMap[filter.name]"
             :value="filter.value"
           >
           </component>
@@ -75,7 +75,7 @@
               }"
             >
               <component
-                :is="getFilterFieldComponent(filterName, 'valueField')"
+                :is="FilterOptionToValueComponentMap[filterName]"
                 :key="filterName"
                 :model-value="filterValue"
                 @update:model-value="onValueChange"
@@ -88,7 +88,16 @@
     </template>
 
     <template #actions>
-      <!--        TODO: <save-preset-action />-->
+      <apply-preset-action
+        :namespace="CasesNamespace"
+        :use-presets-store="createFilterPresetsStore(CasesNamespace)"
+        @apply="applyPreset"
+      />
+
+      <save-preset-action
+        :namespace="CasesNamespace"
+        :filters-manager="filtersManager"
+      />
 
       <wt-icon-action
         action="clear"
@@ -104,10 +113,17 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  ApplyPresetAction,
+  createFilterPresetsStore,
+  SavePresetAction,
+} from '@webitel/ui-sdk/src/modules/Filters/v2/filter-presets/index';
 import DynamicFilterConfigForm from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/config/dynamic-filter-config-form.vue';
 import DynamicFilterAddAction from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-add-action.vue';
 import DynamicFilterPanelWrapper from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-panel-wrapper.vue';
+import {FilterOptionToPreviewComponentMap, FilterOptionToValueComponentMap } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/filter-options/index';
 import DynamicFilterPreview from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/preview/dynamic-filter-preview.vue';
+import {FilterOption} from "@webitel/ui-sdk/src/modules/Filters/v2/filters/enums/FilterOption.ts";
 import type {
   FilterInitParams,
   FilterName,
@@ -118,8 +134,9 @@ import { storeToRefs } from 'pinia';
 import { computed, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { CasesNamespace } from '../namespace';
 import { useCasesStore } from '../stores/cases';
-import { filtersConfig } from './filters-config';
+import { filtersOptions } from './filters-options';
 import { SearchMode } from './SearchMode';
 
 const emit = defineEmits<{
@@ -129,7 +146,6 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const tableStore = useCasesStore();
 const { filtersManager } = storeToRefs(tableStore);
-window.fmanager = filtersManager;
 
 const {
   addFilter: applyFilter,
@@ -140,7 +156,7 @@ const {
 /* WTF? -- https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
 /* https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
 const defaultCreatedAtFromFilterDataPreview = computed(() => ({
-  name: 'createdAtFrom',
+  name: FilterOption.CreatedAtFrom,
   value: startOfMonth(new Date()).getTime(),
   label: t('webitelUI.filters.predefinedLabels.createdAt.startOfMonth'),
 }));
@@ -169,7 +185,7 @@ const unappliedFilters: Ref<Array<{ name: string; value: FilterName }>> =
       filtersManager.value.getFiltersList().map((item) => item.name),
     );
 
-    return Object.keys(filtersConfig)
+    return filtersOptions
       .filter((key) => !excludeNames.has(key))
       .map((key) => ({
         name: t(`webitelUI.filters.${key}`),
@@ -189,11 +205,8 @@ const resetFilters = () => {
   filtersManager.value.reset();
 };
 
-const getFilterFieldComponent = (
-  filterName: FilterName,
-  filterField: 'valueField' | 'previewField',
-) => {
-  const filter = filtersConfig[filterName];
-  return !filter ? '' : filter[filterField] || '';
+const applyPreset = (snapshot) => {
+  filtersManager.value.reset();
+  filtersManager.value.fromString(snapshot);
 };
 </script>
