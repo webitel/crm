@@ -26,13 +26,13 @@
   />
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import CustomLookupsApi from '../api/custom-lookups';
+import ObjectsApi from '../api/objects.js';
 import { FieldType } from '../enums/FieldType.enum';
 
 const props = defineProps({
@@ -113,7 +113,7 @@ const selectObject = (value) => {
   };
 };
 const loadLookupList = (params) => {
-  return CustomLookupsApi.getLookup(params);
+  return ObjectsApi.getLookup(params);
 };
 </script>
 
