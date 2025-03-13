@@ -32,7 +32,7 @@ import { required } from '@vuelidate/validators';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import ObjectsApi from '../api/objects.js';
+import ObjectsApi from '../api/objects';
 import { FieldType } from '../enums/FieldType.enum';
 
 const props = defineProps({
