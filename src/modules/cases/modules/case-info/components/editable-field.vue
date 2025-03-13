@@ -35,10 +35,10 @@
             class="editable-field__link"
             target="_blank"
           >
-            {{ value.name }}
+            {{ value?.name }}
           </wt-item-link>
           <wt-icon
-            v-if="link && value.name"
+            v-if="link && value?.name"
             class="editable-field__link-icon"
             icon="link"
             size="sm"
@@ -103,7 +103,7 @@ const updateValue = (newValue) => {
 
 const valueWithDefault = computed(() => {
   if (typeof props.value === 'object' && props.value !== null) {
-    return props.value.name ?? '-';
+    return props.value?.name ?? '-';
   }
 
   return props.horizontalView ? props.value : props.value || '-';
