@@ -118,7 +118,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
-import { computed, inject, ref, watch } from 'vue';
+import { computed, inject, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { WebitelContactsGroupType } from 'webitel-sdk';
@@ -190,10 +190,9 @@ function resetAssignee(value) {
 
 watch(
   [serviceId, serviceGroup, serviceAssignee],
-  //empty space before newGroup needed to ignore newId value witch is not used
-  ([, newGroup, newAssignee], [oldId]) => {
-    // this if statement needed so when we enter old case we don't reset assignee and group
-    if (oldId || isNew.value) {
+  ([newServiceId, newGroup, newAssignee], [oldServiceId]) => {
+    // e.g. only do the ‘update group/assignee’ logic if the service changed
+    if ((oldServiceId && newServiceId !== oldServiceId) || isNew.value) {
       setItemProp({ path: 'group', value: newGroup });
       setItemProp({ path: 'assignee', value: newAssignee });
     }
@@ -263,3 +262,4 @@ watch(
   }
 }
 </style>
+
