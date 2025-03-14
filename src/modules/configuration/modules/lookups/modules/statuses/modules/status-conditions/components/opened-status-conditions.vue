@@ -190,6 +190,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   resetFilters,
   subscribe,
@@ -242,7 +243,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 async function setWarningPopupState(value) {
   isStatusWarningPopupOpened.value = value;
