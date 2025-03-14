@@ -118,7 +118,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
-import { computed, inject, nextTick, ref, watch } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { WebitelContactsGroupType } from 'webitel-sdk';
@@ -262,4 +262,3 @@ watch(
   }
 }
 </style>
-
