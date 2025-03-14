@@ -1,20 +1,6 @@
 <template>
   <dynamic-filter-panel-wrapper>
     <template #filters>
-      <!--      WTF? -- https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 -->
-      <dynamic-filter-preview
-        v-if="!hasCreatedAtFromFilter"
-        :filter="defaultCreatedAtFromFilterDataPreview"
-        dummy
-      >
-        <template #info>
-          <component
-            :is="filtersConfig['createdAtFrom'].previewField"
-            :value="defaultCreatedAtFromFilterDataPreview.value"
-          />
-        </template>
-      </dynamic-filter-preview>
-
       <dynamic-filter-preview
         v-for="filter of appliedFilters"
         :key="filter.name"
@@ -113,7 +99,6 @@ import type {
   FilterName,
   IFilter,
 } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/types/Filter.d.ts';
-import { startOfToday } from 'date-fns';
 import { storeToRefs } from 'pinia';
 import { computed, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -136,17 +121,6 @@ const {
   updateFilter: updateAppliedFilter,
   deleteFilter: deleteAppliedFilter,
 } = tableStore;
-
-/* WTF? -- https://webitel.atlassian.net/browse/WTEL-6308?focusedCommentId=657415 */
-const defaultCreatedAtFromFilterDataPreview = computed(() => ({
-  name: 'createdAtFrom',
-  value: startOfToday().getTime(),
-  label: t('webitelUI.filters.predefinedLabels.createdAt.startOfToday'),
-}));
-
-const hasCreatedAtFromFilter = computed(() => {
-  return !!filtersManager.value.getAllValues().createdAtFrom;
-});
 
 function setFilterWrapperAction(
   data: FilterInitParams,
