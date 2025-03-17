@@ -1,7 +1,5 @@
 <template>
-  <section
-    class="timeline-container"
-  >
+  <section class="timeline-container">
     <header class="timeline-header">
       <slot name="header" />
     </header>
@@ -14,11 +12,11 @@
   </section>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .timeline-container {
   display: flex;
   flex-direction: column;

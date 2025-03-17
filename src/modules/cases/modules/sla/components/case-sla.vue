@@ -97,6 +97,8 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .case-sla {
   width: 100%;
 

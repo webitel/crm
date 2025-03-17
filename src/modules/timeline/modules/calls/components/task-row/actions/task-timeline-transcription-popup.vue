@@ -40,7 +40,7 @@
 
 <script setup>
 import { saveAs } from 'file-saver';
-import { computed,onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import CallTranscriptAPI from './api/callTranscript.js';
@@ -84,13 +84,17 @@ const headers = computed(() => {
 });
 
 const phraseData = computed(() => {
-  return phrases.value.map(({
-                              startSec, endSec, phrase, channel,
-                            }) => ({
+  return phrases.value.map(({ startSec, endSec, phrase, channel }) => ({
     time: `${startSec} - ${endSec}`,
     channel: channel
-      ? (activeTranscript.value.to?.name || activeTranscript.value.to?.number || activeTranscript.value.to?.destination || 1)
-      : (activeTranscript.value.from?.name || activeTranscript.value.from?.number || activeTranscript.value.from?.destination || 0),
+      ? activeTranscript.value.to?.name ||
+        activeTranscript.value.to?.number ||
+        activeTranscript.value.to?.destination ||
+        1
+      : activeTranscript.value.from?.name ||
+        activeTranscript.value.from?.number ||
+        activeTranscript.value.from?.destination ||
+        0,
     phrase,
   }));
 });
@@ -105,21 +109,29 @@ const transcriptData = computed(() => {
 });
 
 function downloadTxt(phrases) {
-  const text = phrases.map(({ phrase, channel, time }) => (
-    `${time} [${channel != null ? channel : 'author'}] ${phrase || ''}`
-  )).join('\n');
+  const text = phrases
+    .map(
+      ({ phrase, channel, time }) =>
+        `${time} [${channel != null ? channel : 'author'}] ${phrase || ''}`,
+    )
+    .join('\n');
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  return saveAs(blob, `Transcript ${activeTranscript.value?.id} ${props.createdAt}`);
+  return saveAs(
+    blob,
+    `Transcript ${activeTranscript.value?.id} ${props.createdAt}`,
+  );
 }
 
 async function loadCallTranscript() {
   try {
     isLoading.value = true;
-    phrases.value = await CallTranscriptAPI.get({ id: activeTranscript.value?.id });
+    phrases.value = await CallTranscriptAPI.get({
+      id: activeTranscript.value?.id,
+    });
   } finally {
     isLoading.value = false;
   }
-};
+}
 
 function initTranscript() {
   activeTranscript.value = transcriptData.value[0];
@@ -127,14 +139,18 @@ function initTranscript() {
 
 onMounted(() => initTranscript());
 
-watch(() => activeTranscript.value, (value) => {
-  if (value) return loadCallTranscript();
-  return phrases.value = [];
-});
-
+watch(
+  () => activeTranscript.value,
+  (value) => {
+    if (value) return loadCallTranscript();
+    return (phrases.value = []);
+  },
+);
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .task-timeline-transcription-popup {
   &__options {
     display: flex;

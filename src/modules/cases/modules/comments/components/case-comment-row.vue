@@ -1,12 +1,10 @@
 <template>
   <article class="case-comment-row">
-    <wt-icon
-    icon="comment"
-    />
+    <wt-icon icon="comment" />
     <section class="case-comment-info">
       <header class="case-comment-header">
         <p class="case-comment-author">
-          {{comment.createdBy?.name }}
+          {{ comment.createdBy?.name }}
         </p>
         <p>
           {{ prettifyDate(comment.createdAt) }}
@@ -39,6 +37,8 @@ const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .case-comment-row {
   display: flex;
   gap: var(--spacing-xs);
@@ -57,6 +57,6 @@ const { t } = useI18n();
 
 .case-comment-author {
   @extend %typo-body-1;
-  font-weight: bold;  // rm and refactor extended typo to typo-body bold when it's ready
+  font-weight: bold; // rm and refactor extended typo to typo-body bold when it's ready
 }
 </style>

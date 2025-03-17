@@ -26,7 +26,10 @@
           :color="color"
           :icon="icon"
         />
-        <span v-if="!link" class="editable-field__value">
+        <span
+          v-if="!link"
+          class="editable-field__value"
+        >
           {{ valueWithDefault }}
         </span>
         <template v-else>
@@ -111,6 +114,8 @@ const valueWithDefault = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .editable-field {
   display: flex;
   flex-direction: column;
@@ -121,7 +126,7 @@ const valueWithDefault = computed(() => {
   }
 
   &__label-wrapper .wt-label {
-    @extend %typo-heading-4
+    @extend %typo-heading-4;
   }
 
   &__label-wrapper {
@@ -131,7 +136,7 @@ const valueWithDefault = computed(() => {
   }
 
   &__value {
-    @extend %typo-body-1
+    @extend %typo-body-1;
   }
 
   &__value-wrapper {
@@ -140,7 +145,8 @@ const valueWithDefault = computed(() => {
     gap: var(--spacing-2xs);
   }
 
-  &__label-wrapper, &__value-wrapper {
+  &__label-wrapper,
+  &__value-wrapper {
     padding: var(--spacing-xs);
   }
 
@@ -150,7 +156,8 @@ const valueWithDefault = computed(() => {
       justify-content: space-between;
     }
 
-    .editable-field__label-wrapper, .editable-field__value-wrapper {
+    .editable-field__label-wrapper,
+    .editable-field__value-wrapper {
       text-align: end;
       padding: 0;
     }

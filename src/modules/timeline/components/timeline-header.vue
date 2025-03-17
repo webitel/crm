@@ -57,16 +57,18 @@ const dateTo = ref(Date.now());
 const timelineInterval = computed(() => {
   const formatDate = (date) => {
     const fullDate = new Date(+date);
-    return capitalize(d(fullDate, 'timelineInterval', locale.value === 'ua' ? 'uk' : undefined));
-  }
+    return capitalize(
+      d(fullDate, 'timelineInterval', locale.value === 'ua' ? 'uk' : undefined),
+    );
+  };
 
   const from = +dateFrom.value;
   const to = +dateTo.value;
 
   return `${formatDate(from)} - ${formatDate(to)}`;
-})
+});
 
-function collapseAll () {
+function collapseAll() {
   return eventBus.$emit('timeline/rows/collapse-all');
 }
 
@@ -90,6 +92,8 @@ loadCounters();
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .timeline-header {
   display: flex;
   justify-content: space-between;
