@@ -48,7 +48,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, requiredIf } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -92,11 +92,15 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);
 
+const isDynamicGroup = computed(
+  () => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC,
+);
+
 const v$ = useVuelidate(
   computed(() => ({
     itemInstance: {
       name: { required },
-      defaultGroup: { required },
+      defaultGroup: { required: requiredIf(isDynamicGroup) },
     },
   })),
   { itemInstance },
@@ -104,9 +108,6 @@ const v$ = useVuelidate(
 );
 v$.value.$touch();
 
-const isDynamicGroup = computed(
-  () => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC,
-);
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );
