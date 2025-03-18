@@ -177,7 +177,7 @@
             <template #closeResult="{ item }">
               {{ item.closeResult }}
             </template>
-            <template #rate="{ item }">
+            <template #rating="{ item }">
               {{ item.rating }}
             </template>
             <template #actions="{ item }">
