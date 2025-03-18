@@ -62,6 +62,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import get from 'lodash/get';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -137,7 +138,7 @@ v$.value.$touch();
 
 const value = computed(() => {
   if (props.pathToField) {
-    return itemInstance.value[props.pathToField][props.field.id];
+    return get(itemInstance.value, `${props.pathToField}.${props.field.id}`);
   }
 
   return itemInstance.value[props.field.id];
