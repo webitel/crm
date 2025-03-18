@@ -152,6 +152,8 @@ const actionOptions = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .wt-avatar {
   flex-shrink: 0;
 }

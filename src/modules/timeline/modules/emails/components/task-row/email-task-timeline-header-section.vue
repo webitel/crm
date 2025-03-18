@@ -11,16 +11,16 @@
         :triggers="['click']"
       >
         <template #activator>
-          <wt-chip>
-            +{{ hiddenParticipants.length }}
-          </wt-chip>
+          <wt-chip> +{{ hiddenParticipants.length }} </wt-chip>
         </template>
 
         <div class="email-task-timeline-header-section__wrapper">
           <p
             v-for="(name, idx) of hiddenParticipants"
             :key="idx"
-          >{{ name }}</p>
+          >
+            {{ name }}
+          </p>
         </div>
       </wt-tooltip>
     </slot>
@@ -43,6 +43,8 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .email-task-timeline-header-section {
   display: flex;
   align-items: center;

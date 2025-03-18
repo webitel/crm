@@ -2,13 +2,19 @@
   <div class="day-timeline-row-counters">
     <div class="day-timeline-row-counters__wrapper">
       <span>
-        {{ `${t(`timeline.eventType.${TimelineEventType.Call}`, 2)}: (${props.callsCount})` }}
+        {{
+          `${t(`timeline.eventType.${TimelineEventType.Call}`, 2)}: (${props.callsCount})`
+        }}
       </span>
       <span>
-        {{ `${t(`timeline.eventType.${TimelineEventType.Chat}`, 2)}: (${props.chatsCount})` }}
+        {{
+          `${t(`timeline.eventType.${TimelineEventType.Chat}`, 2)}: (${props.chatsCount})`
+        }}
       </span>
       <span>
-        {{ `${t(`timeline.eventType.${TimelineEventType.Email}`, 2)}: (${props.emailsCount})` }}
+        {{
+          `${t(`timeline.eventType.${TimelineEventType.Email}`, 2)}: (${props.emailsCount})`
+        }}
       </span>
     </div>
   </div>
@@ -38,6 +44,8 @@ const { t } = useI18n();
 </script>
 
 <style scoped lang="scss">
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 $colWidth: 80px;
 
 .day-timeline-row-counters {

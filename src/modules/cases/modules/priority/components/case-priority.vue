@@ -5,7 +5,7 @@
       <editable-field
         :edit-mode="editMode"
         :value="itemInstance.priority"
-        @update:value="setItemProp({ path: 'priority', value: $event });"
+        @update:value="setItemProp({ path: 'priority', value: $event })"
       >
         <template #default="props">
           <wt-select
@@ -24,17 +24,16 @@
 </template>
 
 <script setup>
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const { t } = useI18n();
-
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
@@ -42,10 +41,7 @@ const v$ = inject('v$');
 
 const { disableUserInput } = useUserAccessControl();
 
-const {
-  itemInstance,
-  setItemProp,
-} = useCardStore(namespace);
+const { itemInstance, setItemProp } = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
   itemInstance,
@@ -62,6 +58,8 @@ if (isNew.value) {
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .case-priority {
   width: 100%;
 
@@ -70,7 +68,8 @@ if (isNew.value) {
     @extend %typo-heading-4;
   }
 
-  &__select, &__title {
+  &__select,
+  &__title {
     padding: var(--spacing-xs);
   }
 }

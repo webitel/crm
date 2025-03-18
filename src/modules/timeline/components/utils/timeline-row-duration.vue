@@ -1,7 +1,11 @@
 <template>
   <div class="timeline-row-duration">
     <p class="timeline-row-duration__title">
-      {{ isTotalDuration ? t('timeline.totalDuration') : t('vocabulary.duration') }}:
+      {{
+        isTotalDuration
+          ? t('timeline.totalDuration')
+          : t('vocabulary.duration')
+      }}:
     </p>
     <span class="timeline-row-duration__value">
       {{ convertedDuration }}
@@ -31,6 +35,8 @@ const convertedDuration = computed(() => convertDuration(props.duration));
 </script>
 
 <style scoped lang="scss">
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .timeline-row-duration {
   display: flex;
   gap: var(--spacing-sm);

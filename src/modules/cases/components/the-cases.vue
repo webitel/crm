@@ -347,6 +347,8 @@ initialize();
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .cases {
   .table-title {
     grid-gap: var(--spacing-xs);

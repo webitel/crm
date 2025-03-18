@@ -204,6 +204,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .case-service {
   display: flex;
   flex-direction: column;

@@ -217,6 +217,8 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .case-persons {
   width: 100%;
 
