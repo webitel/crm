@@ -67,7 +67,6 @@ function transformSourceType(data) {
 }
 
 const getCasesList = async (params) => {
-  console.log(params.fields);
   const fieldsToSend = [
     'page',
     'size',

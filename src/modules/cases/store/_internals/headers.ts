@@ -148,7 +148,7 @@ export const headers: WtTableHeader[] = [
     sort: SortSymbols.NONE,
   },
   {
-    value: 'rate',
+    value: 'rating',
     locale: 'cases.rating',
     show: true,
     field: 'rating',
