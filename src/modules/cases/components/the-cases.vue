@@ -166,19 +166,19 @@
               {{ prettifyDate(item.plannedResolveAt) }}
             </template>
             <template #actualReactionTime="{ item }">
-              {{ prettifyDate(item.timing?.reactedAt) }}
+              {{ prettifyDate(item.reactedAt) }}
             </template>
             <template #actualResolutionTime="{ item }">
-              {{ prettifyDate(item.timing?.resolvedAt) }}
+              {{ prettifyDate(item.resolvedAt) }}
             </template>
             <template #closeReason="{ item }">
-              {{ item.close?.closeReason?.name }}
+              {{ item.closeReason?.name }}
             </template>
             <template #closeResult="{ item }">
-              {{ item.close?.closeResult }}
+              {{ item.closeResult }}
             </template>
             <template #rate="{ item }">
-              {{ item.rate?.rating }}
+              {{ item.rating }}
             </template>
             <template #actions="{ item }">
               <wt-icon-action

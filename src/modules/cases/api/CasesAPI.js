@@ -41,7 +41,8 @@ const fieldsToSend = [
   'priority',
   'source',
   'status',
-  'close',
+  'close_reason',
+  'close_result',
   'sla_condition',
   'sla',
   'service',
@@ -66,6 +67,7 @@ function transformSourceType(data) {
 }
 
 const getCasesList = async (params) => {
+  console.log(params.fields);
   const fieldsToSend = [
     'page',
     'size',
@@ -150,9 +152,12 @@ const getCase = async ({ itemId: id }) => {
     'priority',
     'source',
     'status',
-    'close',
-    'rate',
-    'timing',
+    'close_reason',
+    'close_result',
+    'rating',
+    'rating_comment',
+    'reacted_at',
+    'resolved_at',
     'sla_condition',
     'difference_in_reaction',
     'sla',
@@ -210,7 +215,7 @@ const addCase = async ({ itemInstance }) => {
 };
 
 const patchCase = async ({ changes, etag }) => {
-  const fieldsToSend = ['status_condition', 'status', 'assignee', 'close'];
+  const fieldsToSend = ['status_condition', 'status', 'assignee', 'close_reason', 'close_result'];
   const body = applyTransform(changes, [
     camelToSnake(),
     sanitize(fieldsToSend),
