@@ -1,18 +1,19 @@
 <template>
   <div class="email-point-timeline-subject">
-
     <wt-divider />
 
     <div>
       <p
         v-if="subject"
         class="email-point-timeline-subject__title"
-      >{{ t('timeline.emails.subject') }}:
+      >
+        {{ t('timeline.emails.subject') }}:
         <span>{{ props.subject }}</span>
       </p>
       <p
         v-if="content && opened"
-        v-html="content"></p>
+        v-html="content"
+      ></p>
     </div>
   </div>
 </template>
@@ -47,6 +48,8 @@ const content = computed(() => {
 </script>
 
 <style scoped lang="scss">
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .email-point-timeline-subject {
   display: flex;
   gap: var(--spacing-xs);

@@ -1,4 +1,5 @@
 import './app/assets/icons/sprite';
+import './app/css/main.scss';
 
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';

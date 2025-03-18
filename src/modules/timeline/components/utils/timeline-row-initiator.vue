@@ -4,9 +4,7 @@
       v-if="type === TimelineInitiatorType.BOT"
       class="timeline-row-initiator__wrapper"
     >
-      <wt-icon
-        icon="bot"
-      />
+      <wt-icon icon="bot" />
 
       {{ text }}
     </div>
@@ -50,6 +48,8 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .timeline-row-initiator {
   @extend %typo-subtitle-1;
   display: flex;

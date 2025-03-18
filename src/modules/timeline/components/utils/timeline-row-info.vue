@@ -21,9 +21,9 @@
 </template>
 
 <script setup>
+import capitalize from 'lodash/capitalize';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import capitalize from 'lodash/capitalize';
 
 const props = defineProps({
   timestamp: {
@@ -41,12 +41,16 @@ const timestampTime = computed(() => {
 
 const timestampWeekDay = computed(() => {
   const date = new Date(+props.timestamp);
-  return capitalize(d(date, 'timelineWeekday', locale.value === 'ua' ? 'uk' : undefined));
+  return capitalize(
+    d(date, 'timelineWeekday', locale.value === 'ua' ? 'uk' : undefined),
+  );
 });
 
 const timestampMonth = computed(() => {
   const date = new Date(+props.timestamp);
-  return capitalize(d(date, 'timelineMonth', locale.value === 'ua' ? 'uk' : undefined));
+  return capitalize(
+    d(date, 'timelineMonth', locale.value === 'ua' ? 'uk' : undefined),
+  );
 });
 
 const timesScope = computed(() => {
@@ -60,6 +64,8 @@ const timesScope = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .timeline-row-info-title,
 .timeline-row-info-subtitle {
   @extend %typo-subtitle-2;

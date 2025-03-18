@@ -40,12 +40,12 @@ const { t } = useI18n();
 
 const namespace = inject('namespace');
 
-const {
-  itemInstance,
-} = useCardStore(namespace);
+const { itemInstance } = useCardStore(namespace);
 </script>
 
 <style lang="scss" scoped>
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .case-deadline-list {
   width: 100%;
 
