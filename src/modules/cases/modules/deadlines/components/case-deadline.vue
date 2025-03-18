@@ -1,6 +1,6 @@
 <template>
   <div class="case-deadline">
-    <wt-label>{{ label }}</wt-label>
+    <span>{{ title }}</span>
     <div class="case-deadline__item-content">
       <div
         v-if="time"
@@ -25,7 +25,7 @@ import convertDurationWithDays
 import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
-  label: {
+  title: {
     type: String,
     required: true,
   },

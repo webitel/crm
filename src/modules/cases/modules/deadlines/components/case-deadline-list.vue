@@ -4,27 +4,27 @@
     <div class="case-deadline-list__wrapper">
       <case-deadline
         :time="itemInstance?.createdAt"
-        :label="t('reusable.createdAt')"
+        :title="t('reusable.createdAt')"
       />
       <case-deadline
         :time-difference="itemInstance?.differenceInReaction"
         :time="itemInstance?.plannedReactionAt"
-        :label="t('cases.reactionTime')"
+        :title="t('cases.reactionTime')"
       />
       <case-deadline
         :time="itemInstance?.reactedAt"
-        :label="t('cases.actualReactionTime')"
+        :title="t('cases.actualReactionTime')"
       />
 
       <case-deadline
         :time-difference="itemInstance.differenceInResolve"
         :time="itemInstance?.plannedResolveAt"
-        :label="t('cases.resolutionTime')"
+        :title="t('cases.resolutionTime')"
       />
 
       <case-deadline
         :time="itemInstance.resolvedAt"
-        :label="t('cases.actualResolutionTime')"
+        :title="t('cases.actualResolutionTime')"
       />
     </div>
   </div>
