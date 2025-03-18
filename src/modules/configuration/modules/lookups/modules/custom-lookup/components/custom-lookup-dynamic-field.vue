@@ -168,11 +168,11 @@ const setValue = (value) => {
   });
 };
 
-const loadLookupList =
-  ({ path, display, primary }) =>
-    () => {
-      return CustomLookupApi.getLookup({ path, display, primary });
-    };
+const loadLookupList = ({ path, display, primary }) => {
+  return () => {
+    return CustomLookupApi.getLookup({ path, display, primary });
+  };
+};
 
 const selectElement = (value) => {
   if (Object.values(value).length === 0) {

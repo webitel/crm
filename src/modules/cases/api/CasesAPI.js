@@ -171,11 +171,12 @@ const getCase = async ({ itemId: id }) => {
     'links',
     'status_condition',
     'created_by',
+    'custom',
   ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);
     return applyTransform(response.data, [
-      snakeToCamel(),
+      snakeToCamel(['custom']),
       checkCustomFields,
       transformSourceType,
     ]);

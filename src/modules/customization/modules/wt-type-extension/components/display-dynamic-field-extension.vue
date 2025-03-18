@@ -1,20 +1,15 @@
 <template>
-  <wt-item-link
-    v-if="field.value === 'name'"
-    :link="{ name: 'custom-lookup-record', params: { id: value.id } }"
-  >
-    {{ showText }}
-  </wt-item-link>
-  <template v-else-if="field.kind === FieldType.Select">
-    {{ displayText(value[field.value]?.name) }}
+  <template v-if="field.kind === FieldType.Select">
+    {{ displayText(value?.name) }}
   </template>
   <display-chip-items
     v-else-if="field.kind === FieldType.Multiselect"
-    :items="value[field.value]"
+    :items="value"
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
-    :value="value[field.value]"
+    :label="label"
+    :value="value"
   ></wt-switcher>
   <template v-else>
     {{ showText }}
@@ -24,10 +19,10 @@
 <script setup>
 import { computed } from 'vue';
 
-import { displayText } from '../../../../../../../app/utils/displayText.js';
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum.js';
-import prettifyCustomLookupDate from '../../../../../../customization/modules/custom-lookups/utils/prettifyDate.js';
-import DisplayChipItems from '../../service-catalogs/components/display-chip-items.vue';
+import { displayText } from '../../../../../app/utils/displayText.js';
+import DisplayChipItems from '../../../../configuration/modules/lookups/modules/service-catalogs/components/display-chip-items.vue';
+import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
+import prettifyCustomLookupDate from '../../custom-lookups/utils/prettifyDate.js';
 
 const props = defineProps({
   field: {
@@ -36,6 +31,10 @@ const props = defineProps({
   },
   value: {
     type: Object,
+    required: true,
+  },
+  label: {
+    type: String,
     required: true,
   },
 });

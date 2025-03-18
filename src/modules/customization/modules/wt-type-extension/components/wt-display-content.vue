@@ -7,12 +7,13 @@
       {{ label }}
     </span>
 
-    <display-dynamic-field
+    <display-dynamic-field-extension
       v-if="value"
       :value="value"
       :field="field"
+      :label="label"
     />
-    <span v-else> - </span>
+    <span v-else> {{ EMPTY_SYMBOL }} </span>
   </div>
 </template>
 
@@ -20,8 +21,9 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import DisplayDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/display-dynamic-field.vue';
+import { EMPTY_SYMBOL } from '../../../../../app/utils/displayText.js';
 import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
+import DisplayDynamicFieldExtension from './display-dynamic-field-extension.vue';
 
 const props = defineProps({
   value: {

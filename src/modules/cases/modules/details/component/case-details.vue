@@ -46,7 +46,7 @@ const props = defineProps({
 const { itemInstance } = useCardStore(props.namespace);
 
 const { fields, getFields } = useExtensionFields({
-  type: 'contacts',
+  type: 'cases',
 });
 
 getFields();
