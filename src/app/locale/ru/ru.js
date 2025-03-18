@@ -14,6 +14,9 @@ export default {
   contacts: {
     contact: 'Контакт | Контакты',
     manager: 'Владелец | Владельцы',
+    group: ({ linked }) => {
+      return linked('cases.group');
+    },
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
     communications: {
@@ -100,7 +103,7 @@ export default {
     },
     configuration: {
       name: 'Конфигурация',
-      text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
+      text: 'В этом разделе вы можете настроить процесс работы с Обращениями.',
     },
   },
   lookups: {
@@ -228,7 +231,7 @@ export default {
     resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Фактическое время реакции',
     actualResolutionTime: 'Фактическое время решения',
-    reason: '@:lookups.closeReasonGroups.reason',
+    closureReason: 'Причина закрытия',
     result: 'Результат',
     rating: 'Оценка',
     persons: 'Персоны',
@@ -237,6 +240,10 @@ export default {
     ratingComment: 'Комментарий к оценке',
     caseResult: 'Результат обращения',
     assignToMe: 'Взять на себя',
+    company: 'Компания',
+    department: 'Отдел',
+    position: 'Должность',
+    location: 'Местоположение',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',

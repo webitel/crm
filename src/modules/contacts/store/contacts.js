@@ -1,11 +1,9 @@
-import CardStoreModule
-  from '@webitel/ui-sdk/src/modules/CardStoreModule/store/CardStoreModule';
-import TableStoreModule
-  from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
-import ApiStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
-import BaseStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+import {
+  createApiStoreModule,
+  createBaseStoreModule,
+  createCardStoreModule,
+  createTableStoreModule,
+} from '@webitel/ui-sdk/store';
 
 import ContactsAPI from '../api/ContactsAPI';
 import emails from '../modules/emails/store/emails';
@@ -21,28 +19,50 @@ const cardState = {
     name: '',
     timezones: [],
     managers: [],
+    groups: [],
     labels: [],
     about: '',
   },
 };
 
 const tableGetters = {
-  REQUIRED_FIELDS: () => ['mode'],
+  // REQUIRED_FIELDS: () => ['mode'],
 };
 
-const api = new ApiStoreModule()
-  .generateAPIActions(ContactsAPI)
-  .getModule();
+const api = createApiStoreModule({
+  state: {
+    api: ContactsAPI,
+  },
+});
 
-const table = new TableStoreModule({ headers })
-  .setChildModules({ api, filters })
-  .getModule({ getters: tableGetters });
+const table = createTableStoreModule({
+  state: { headers },
+  getters: tableGetters,
+  modules: {
+    filters,
+    api,
+  },
+});
 
-const card = new CardStoreModule()
-  .setChildModules({ api, emails, phones, messaging, variables, permissions })
-  .getModule({ state: cardState });
+const card = createCardStoreModule({
+  state: {
+    _resettable: cardState,
+    itemInstance: cardState.itemInstance,
+  },
+  modules: {
+    api,
+    emails,
+    phones,
+    messaging,
+    variables,
+    permissions,
+  },
+});
 
-const contacts = new BaseStoreModule()
-  .setChildModules({ table, card })
-  .getModule();
+const contacts = createBaseStoreModule({
+  modules: {
+    table,
+    card,
+  },
+});
 export default contacts;

@@ -165,6 +165,7 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
 
   subscribe,
   flushSubscribers,
@@ -199,14 +200,14 @@ function edit(item) {
     name: `${CrmSections.SLAS}-card`,
     params: { id: item.id },
   });
-}
+};
 
 const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 </script>
 
 <style lang="scss" scoped>

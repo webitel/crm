@@ -36,7 +36,9 @@
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
         :value="itemInstance.defaultGroup"
+        :v="v.itemInstance.defaultGroup"
         :disabled="disableUserInput"
+        required
         @input="setItemProp({ path: 'defaultGroup', value: $event })"
       />
     </div>
@@ -45,8 +47,10 @@
 
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { WebitelContactsGroupType } from 'webitel-sdk';
+import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import ContactGroupsAPI from '../api/contactGroups.js';
@@ -63,16 +67,27 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const route = useRoute();
 
-const {
-  disableUserInput,
-} = useUserAccessControl();
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({ ...params, type: WebitelContactsGroupType.STATIC, enabled: true });
+  return ContactGroupsAPI.getLookup({
+    ...params,
+    type: WebitelContactsGroupType.STATIC,
+    enabled: true,
+  });
 }
+
+function setContactGroupType() {
+  if(route.query.type) {
+    setItemProp({ path: 'type', value: route.query.type.toUpperCase() });
+  }
+}
+
+onMounted(() => setContactGroupType());
 </script>
 
 <style lang="scss" scoped>

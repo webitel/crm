@@ -14,6 +14,9 @@ export default {
   contacts: {
     contact: 'Contact | Contacts',
     manager: 'Owner | Owners',
+    group: ({ linked }) => {
+      return linked('cases.group');
+    },
     destination: 'Destination',
     collapseAll: 'Collapse all',
     communications: {
@@ -228,7 +231,7 @@ export default {
     resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Actual reaction time',
     actualResolutionTime: 'Actual resolution time',
-    reason: '@:lookups.closeReasonGroups.reason',
+    closureReason: 'Closure reason',
     result: 'Result',
     rating: 'Rating',
     persons: 'Persons',
@@ -237,6 +240,10 @@ export default {
     ratingComment: 'Rating comment',
     caseResult: 'Case result',
     assignToMe: 'Assign to me',
+    company: 'Company',
+    department: 'Department',
+    position: 'Position',
+    location: 'Location',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',
@@ -277,7 +284,8 @@ export default {
     },
     slaRecalculationPopup: {
       title: 'SLA recalculation',
-      message: 'After changing the service, the SLA of the Case will be recalculated.',
+      message:
+        'After changing the service, the SLA of the Case will be recalculated.',
     },
   },
   filters: {

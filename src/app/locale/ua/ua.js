@@ -14,6 +14,9 @@ export default {
   contacts: {
     contact: 'Контакт | Контакти',
     manager: 'Власник | Власники',
+    group: ({ linked }) => {
+      return linked('cases.group');
+    },
     destination: 'Призначення',
     collapseAll: 'Згорнути все',
     communications: {
@@ -100,7 +103,7 @@ export default {
     },
     configuration: {
       name: 'Конфігурація',
-      text: 'Тут ви можете переглядати Звернення, зареєстровані у системі.',
+      text: 'У цьому розділі ви можете налаштувати процес роботи зі Зверненнями.',
     },
   },
   lookups: {
@@ -235,7 +238,7 @@ export default {
     resolutionTime: '@:lookups.slas.resolutionTime',
     actualReactionTime: 'Фактичний час реакції',
     actualResolutionTime: 'Фактичний час вирішення',
-    reason: '@:lookups.closeReasonGroups.reason',
+    closureReason: 'Причина закриття',
     result: 'Результат',
     rating: 'Оцінка',
     persons: 'Особи',
@@ -244,6 +247,10 @@ export default {
     ratingComment: 'Коментар до оцінки',
     caseResult: 'Результат звернення',
     assignToMe: 'Взяти на себе',
+    company: 'Компанія',
+    department: 'Відділ',
+    position: 'Посада',
+    location: 'Розташування',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',

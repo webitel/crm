@@ -152,6 +152,8 @@ const {
 const {
   namespace: filtersNamespace,
   restoreFilters,
+  filtersValue,
+  resetFilters,
 
   subscribe,
   flushSubscribers,
@@ -171,7 +173,7 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 subscribe({
   event: '*',
@@ -182,6 +184,7 @@ restoreFilters();
 
 onUnmounted(() => {
   flushSubscribers();
+  resetFilters();
 });
 
 const add = () => {

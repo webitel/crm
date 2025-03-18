@@ -135,7 +135,7 @@ export const headers: WtTableHeader[] = [
   },
   {
     value: 'closeReason',
-    locale: 'cases.reason',
+    locale: 'cases.closureReason',
     show: true,
     field: 'close',
     sort: SortSymbols.NONE,

@@ -135,15 +135,17 @@ const getCustomLookupRecordsLookup = async ({
   ]);
   try {
     const response = await instance.get(url);
-    const { data, next } = applyTransform(response.data, [
+    const { data, items, next } = applyTransform(response.data, [
       snakeToCamel(),
       merge(getDefaultGetListResponse()),
     ]);
 
     return {
+      // Some endpoints return data, some return items so we need to check for both of them
       items:
-        applyTransform(data, [transformItemsForSelect({ display, primary })]) ??
-        [],
+        applyTransform(data || items, [
+          transformItemsForSelect({ display, primary }),
+        ]) ?? [],
       next,
     };
   } catch (err) {

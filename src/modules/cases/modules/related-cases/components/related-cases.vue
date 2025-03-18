@@ -15,7 +15,7 @@
 
         <wt-action-bar
           :include="[IconAction.ADD, IconAction.DELETE]"
-          :disabled:add="!hasCreateAccess"
+          :disabled:add="!hasCreateAccess || !editMode"
           :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           @click:add="startAddingRelatedCase"
           @click:delete="
@@ -48,7 +48,7 @@
           :value="defaultState.relatedCase"
           :disabled="!hasCreateAccess"
           :clearable="false"
-          :search-method="CasesAPI.getLookup"
+          :search-method="onRelatedCasesSearch"
           :placeholder="t('cases.relatedCases.searchCasesPlaceholder')"
           class="case-select"
           option-label="name"
@@ -79,6 +79,7 @@
           :data="dataList"
           :headers="shownHeaders"
           :selected="selected"
+          :selectable="editMode"
           headless
           sortable
           @sort="updateSort"
@@ -144,8 +145,8 @@ import { useUserAccessControl } from '../../../../../app/composables/useUserAcce
 import CasesAPI from '../../../api/CasesAPI';
 import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import { RelatedCasesAPI } from '../api/RelatedCasesAPI';
-import RelatedCaseItem from './related-case-item.vue';
 import { useCaseRelatedCasesStore } from '../stores/relatedCases';
+import RelatedCaseItem from './related-case-item.vue';
 
 const props = defineProps({
   parentId: {
@@ -164,7 +165,8 @@ const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 
 const tableStore = useCaseRelatedCasesStore();
 
-const { dataList, error, selected, isLoading, shownHeaders } = storeToRefs(tableStore);
+const { dataList, error, selected, isLoading, shownHeaders } =
+  storeToRefs(tableStore);
 
 const {
   initialize,
@@ -188,9 +190,7 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-  showEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+const { showEmpty } = useTableEmpty({ dataList, error, isLoading });
 
 const emptyText = computed(() => {
   return t('cases.relatedCases.emptyText');
@@ -213,6 +213,13 @@ const relatedTypesOptions = computed(() => {
   return types.filter((el) => el.id !== 'RELATION_TYPE_UNSPECIFIED');
 });
 
+const onRelatedCasesSearch = async (params) => {
+  return CasesAPI.getLookup({
+    ...params,
+    createdAtFrom: 0,
+  });
+};
+
 function startAddingRelatedCase() {
   defaultState.createMode = true;
   defaultState.editingComment = null;
@@ -226,7 +233,7 @@ function resetForm() {
 }
 
 const isNeedToRevert = (item) => {
-  return item.relatedCase.id === props.itemId;
+  return item.relatedCase.id === props.parentId;
 };
 
 function getRevertedCase(item) {

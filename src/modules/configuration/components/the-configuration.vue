@@ -24,16 +24,6 @@ const nav = reactive([
     name: computed(() => t('lookups.lookups')),
     subNav: [
       {
-        value: CrmSections.SOURCES,
-        name: computed(() => t('lookups.sources.sources', 2)),
-        route: 'lookups/sources',
-      },
-      {
-        value: CrmSections.SLAS,
-        name: computed(() => t('lookups.slas.slas', 2)),
-        route: 'lookups/slas',
-      },
-      {
         value: CrmSections.CONTACT_GROUPS,
         name: computed(() => t('lookups.contactGroups.contactGroups', 2)),
         route: 'lookups/contact-groups',
@@ -51,14 +41,24 @@ const nav = reactive([
         route: 'lookups/close-reason-groups',
       },
       {
-        value: CrmSections.SERVICE_CATALOGS,
-        name: computed(() => t('lookups.serviceCatalogs.serviceCatalogs', 2)),
-        route: 'lookups/service-catalogs',
-      },
-      {
         value: CrmSections.STATUSES,
         name: computed(() => t(`lookups.statuses.statuses`, 2)),
         route: 'lookups/statuses',
+      },
+      {
+        value: CrmSections.SOURCES,
+        name: computed(() => t('lookups.sources.sources', 2)),
+        route: 'lookups/sources',
+      },
+      {
+        value: CrmSections.SLAS,
+        name: computed(() => t('lookups.slas.slas', 2)),
+        route: 'lookups/slas',
+      },
+      {
+        value: CrmSections.SERVICE_CATALOGS,
+        name: computed(() => t('lookups.serviceCatalogs.serviceCatalogs', 2)),
+        route: 'lookups/service-catalogs',
       },
     ],
   },

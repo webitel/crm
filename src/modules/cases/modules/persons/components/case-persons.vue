@@ -30,7 +30,6 @@
             :search-method="ContactsAPI.getLookup"
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.reporter"
-            :clearable="false"
             class="case-persons__select"
             @input="props.updateValue($event)"
           />
@@ -52,7 +51,6 @@
         <template #default="props">
           <wt-select
             v-bind="props"
-            :clearable="false"
             :disabled="disableUserInput"
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
@@ -81,7 +79,6 @@
       >
         <template #default="props">
           <wt-select
-            clearable
             :search-method="ContactsAPI.getLookup"
             :disabled="disableUserInput || isAssignMeDisabled"
             class="case-persons__select"
@@ -105,7 +102,6 @@
         <template #default="props">
           <wt-select
             :disabled="disableUserInput"
-            clearable
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"
@@ -155,6 +151,7 @@ function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
     type: WebitelContactsGroupType.STATIC,
+    enabled: true,
   });
 }
 
@@ -193,10 +190,9 @@ function resetAssignee(value) {
 
 watch(
   [serviceId, serviceGroup, serviceAssignee],
-  //empty space before newGroup needed to ignore newId value witch is not used
-  ([, newGroup, newAssignee], [oldId]) => {
+  ([newServiceId, newGroup, newAssignee], [oldServiceId]) => {
     // this if statement needed so when we enter old case we don't reset assignee and group
-    if (oldId || isNew.value) {
+    if ((oldServiceId && newServiceId !== oldServiceId) || isNew.value) {
       setItemProp({ path: 'group', value: newGroup });
       setItemProp({ path: 'assignee', value: newAssignee });
     }

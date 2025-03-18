@@ -51,6 +51,7 @@
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
     :value="value * convertedTime"
+    :v="v$.itemInstance[field.id]"
     mode="datetime"
     :required="isRequired"
     @input="setValue(+$event / convertedTime)"
@@ -174,6 +175,10 @@ const loadLookupList =
     };
 
 const selectElement = (value) => {
+  if (Object.values(value).length === 0) {
+    return setValue(null);
+  }
+
   setValue({
     id: value.id,
     name: value.name,

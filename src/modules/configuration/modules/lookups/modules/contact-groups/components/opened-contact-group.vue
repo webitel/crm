@@ -1,7 +1,5 @@
 <template>
-  <wt-page-wrapper
-    :actions-panel="!!currentTab.filters"
-  >
+  <wt-page-wrapper :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -41,7 +39,8 @@
         <input
           hidden
           type="submit"
-        > <!--  submit form on Enter  -->
+        />
+        <!--  submit form on Enter  -->
       </form>
     </template>
   </wt-page-wrapper>
@@ -49,7 +48,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, requiredIf } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -68,9 +67,7 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 
-const {
-  hasSaveActionAccess,
-} = useUserAccessControl();
+const { hasSaveActionAccess } = useUserAccessControl();
 
 const {
   namespace: cardNamespace,
@@ -95,34 +92,44 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-  },
-})), { itemInstance }, { $autoDirty: true });
+const isDynamicGroup = computed(
+  () => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC,
+);
+
+const v$ = useVuelidate(
+  computed(() => ({
+    itemInstance: {
+      name: { required },
+      defaultGroup: { required: requiredIf(isDynamicGroup) },
+    },
+  })),
+  { itemInstance },
+  { $autoDirty: true },
+);
 v$.value.$touch();
 
-const isDynamicGroup = computed(() => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC);
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const disabledSave = computed(
+  () => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
     pathName: `${CrmSections.CONTACT_GROUPS}-general`,
-};
+  };
 
   const conditions = {
     text: t('lookups.slas.conditions', 2),
     value: 'conditions',
     pathName: `${CrmSections.CONTACT_GROUPS}-conditions`,
-};
+  };
 
   const permissions = {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
     pathName: `${CrmSections.CONTACT_GROUPS}-permissions`,
-};
+  };
 
   const tabs = [general];
 
@@ -135,12 +142,14 @@ const tabs = computed(() => {
 const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
-
   return [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.contactGroups.contactGroups', 2), route: '/lookups/contact-groups' },
+    {
+      name: t('lookups.contactGroups.contactGroups', 2),
+      route: '/lookups/contact-groups',
+    },
     { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
@@ -154,7 +163,7 @@ const redirectToEdit = () => {
 
 const save = async () => {
   if (isNew.value) {
-    if(isDynamicGroup.value) {
+    if (isDynamicGroup.value) {
       const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);
       await setId(id);
       await loadItem();
@@ -162,15 +171,18 @@ const save = async () => {
       await addItem();
     }
   } else {
-    if(isDynamicGroup.value) {
-      await dynamicContactGroupsAPI.update({itemInstance: itemInstance.value, itemId: id.value});
+    if (isDynamicGroup.value) {
+      await dynamicContactGroupsAPI.update({
+        itemInstance: itemInstance.value,
+        itemId: id.value,
+      });
       await loadItem();
     } else {
       await updateItem();
     }
   }
 
-  if(id?.value) {
+  if (id?.value) {
     await redirectToEdit();
   }
 };

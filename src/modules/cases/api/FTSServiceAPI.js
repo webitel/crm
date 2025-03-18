@@ -11,12 +11,12 @@ import applyTransform, {
   sanitize,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { FTSServiceApi } from 'webitel-sdk';
+import { FTSServiceApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const ftsService = new FTSServiceApi(configuration, '', instance);
+const ftsService = new FTSServiceApiFactory(configuration, '', instance);
 
 const getSearchList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'object_name'];

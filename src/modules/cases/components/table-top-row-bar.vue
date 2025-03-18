@@ -1,5 +1,8 @@
 <template>
-  <form class="table-top-row-bar">
+  <form
+    class="table-top-row-bar"
+    @submit.prevent="submit"
+  >
     <slot />
     <wt-rounded-action
       icon="tick"
