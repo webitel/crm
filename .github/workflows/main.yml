@@ -1,24 +1,24 @@
 name: crm ci/cd
 
 on:
-  workflow_dispatch:
-#  push:
-#    branches: [ master ]
+  #  workflow_dispatch:
+  push:
+    branches: [ master ]
 
-jobs:
-  env:
-    build_artifact_name: build_dist
-    deb_artifact_name: deb_package
-    deb_artifact_filename: ${{ env.deb_artifact_name }}.deb
+env:
+  build_artifact_name: build_dist
+  deb_artifact_name: deb_package
+  deb_artifact_filename: ${{ env.deb_artifact_name }}.deb
 
-    build_artifact_retention_days: 14
-    deb_artifact_retention_days: 3
+  build_artifact_retention_days: 14
+  deb_artifact_retention_days: 3
 
 #    app_host: ${{ secrets.app_host }}
 #    app_host_username: ${{ secrets.app_host_username }}
 #    app_host_password: ${{ secrets.app_host_password }}
 #    app_host_port: ${{ secrets.app_host_port }}
 
+jobs:
   install_deps:
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +43,7 @@ jobs:
 
 
   test:
-    needs: [install_deps]
+    needs: [ install_deps ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
 
 
   build:
-    needs: [install_deps]
+    needs: [ install_deps ]
     runs-on: ubuntu-latest
     outputs:
       release_version: |  # example: v25.02.0-gh-122
@@ -98,7 +98,7 @@ jobs:
 
 
   deb:
-    needs: [build]
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -129,7 +129,7 @@ jobs:
 
 
   gh_release:
-    needs: [build, deb]
+    needs: [ build, deb ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -156,10 +156,10 @@ jobs:
           fail_on_unmatched_files: true
           files: |
             ${{ env.deb_artifact_filename }}
-            
+  
 
   publish_release:
-    needs: [gh_release]
+    needs: [ gh_release ]
     permissions:
       pages: write # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
