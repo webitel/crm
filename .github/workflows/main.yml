@@ -3,7 +3,7 @@ name: crm ci/cd
 env:
   build_artifact_name: build_dist
   deb_artifact_name: deb_package
-  deb_artifact_filename: '${{ env.deb_artifact_name }}.deb'
+  deb_artifact_filename: 'deb_package.deb'
 
   build_artifact_retention_days: 14
   deb_artifact_retention_days: 3
