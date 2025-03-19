@@ -176,28 +176,23 @@ jobs:
 #    needs: [publish_release]
     runs-on: ubuntu-latest
     env:
-        pptp_server: ${{ secrets.PPTP_SERVER }}
-        pptp_username: ${{ secrets.PPTP_USERNAME }}
-        pptp_password: ${{ secrets.PPTP_PASSWORD }}
+#        pptp_server: ${{ secrets.PPTP_SERVER }}
+#        pptp_username: ${{ secrets.PPTP_USERNAME }}
+#        pptp_password: ${{ secrets.PPTP_PASSWORD }}
 
         app_host: ${{ secrets.APP_HOST }}
         app_host_username: ${{ secrets.APP_HOST_USERNAME }}
         app_host_password: ${{ secrets.APP_HOST_PASSWORD }}
+        app_host_passphrase: ${{ secrets.APP_HOST_PASSPHRASE }}
         app_host_port: ${{ secrets.APP_HOST_PORT }}
     steps:
-      - name: Connect to PPTP VPN
-        uses: mizumotok/pptp-action@4c92b057281e64bfd33486c0f5f6d13ecb978931
-        with:
-          server: ${{ env.pptp_server }}
-          username: ${{ env.pptp_username }}
-          password: ${{ env.pptp_password }}
-
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ env.app_host }}
           username:  ${{ env.app_host_username }}
-          password: ${{ env.app_host_password }}
+          # password: ${{ env.app_host_password }}
+          passphrase: ${{ env.app_host_passphrase }}
           port: ${{ env.app_host_port }}
           script: echo "Hello, World!"
 
