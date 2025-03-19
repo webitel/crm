@@ -1,11 +1,10 @@
 name: crm ci/cd
 
 on:
-  workflow_dispatch:
-#  push:
-#    branches: [ master ]
+#  workflow_dispatch:
+  push:
+    branches: [ master ]
 
-jobs:
   env:
     build_artifact_name: build_dist
     deb_artifact_name: deb_package
@@ -19,6 +18,7 @@ jobs:
 #    app_host_password: ${{ secrets.app_host_password }}
 #    app_host_port: ${{ secrets.app_host_port }}
 
+jobs:
   install_deps:
     runs-on: ubuntu-latest
     steps:
