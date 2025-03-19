@@ -48,8 +48,9 @@
       <p class="opened-contact-general-item__title">
         {{ t('contacts.group') }}
       </p>
+
       <p class="opened-contact-general-item__value">
-        {{ groups.map((el) => el.name).join(', ') }}
+        {{ groupsList }}
       </p>
     </div>
 
@@ -171,6 +172,8 @@ const actionOptions = computed(() => {
   };
   return [editAction, deleteAction];
 });
+
+const groupsList = computed(() => props.groups.map((el) => el.name).join(', '));
 </script>
 
 <style lang="scss" scoped>
