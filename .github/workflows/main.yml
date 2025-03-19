@@ -192,7 +192,7 @@ jobs:
           host: ${{ env.app_host }}
           username:  ${{ env.app_host_username }}
           # password: ${{ env.app_host_password }}
-          passphrase: ${{ env.app_host_passphrase }}
+          key: ${{ env.app_host_passphrase }}
           port: ${{ env.app_host_port }}
           script: echo "Hello, World!"
 
