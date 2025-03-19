@@ -20,10 +20,8 @@ const resetCardState = {
     name: '',
     assignee: {},
     author: {},
-    close: {
-      closeReason: {},
-      closeResult: '',
-    },
+    closeReason: {},
+    closeResult: '',
     closeReasonGroup: {},
     comments: {},
     contactInfo: '',
@@ -36,10 +34,8 @@ const resetCardState = {
     plannedReactionAt: '',
     plannedResolutionAt: '',
     priority: {},
-    rate: {
-      rating: '',
-      ratingComment: '',
-    },
+    rating: '',
+    ratingComment: '',
     reporter: {},
     service: {},
     sla: {},
@@ -48,7 +44,8 @@ const resetCardState = {
     status: {},
     statusCondition: {},
     subject: '',
-    timing: {},
+    reactedAt: '',
+    resolvedAt: '',
   },
 };
 

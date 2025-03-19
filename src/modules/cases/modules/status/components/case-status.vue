@@ -88,11 +88,11 @@ const prevStatusCondition = ref(itemInstance.value.statusCondition);
 
 const saveResult = async ({ reason, result }) => {
   await setItemProp({
-    path: 'close.closeReason',
+    path: 'closeReason',
     value: reason,
   });
   await setItemProp({
-    path: 'close.closeResult',
+    path: 'closeResult',
     value: result,
   });
 
@@ -101,10 +101,8 @@ const saveResult = async ({ reason, result }) => {
 
     await CasesAPI.patch({
       changes: {
-        close: {
-          closeReason: reason,
-          closeResult: result,
-        },
+        closeReason: reason,
+        closeResult: result,
       },
       etag: itemInstance.value.etag,
     });
