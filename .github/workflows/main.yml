@@ -12,11 +12,6 @@ on:
   push:
     branches: [ master ]
 
-#    app_host: ${{ secrets.app_host }}
-#    app_host_username: ${{ secrets.app_host_username }}
-#    app_host_password: ${{ secrets.app_host_password }}
-#    app_host_port: ${{ secrets.app_host_port }}
-
 jobs:
   install_deps:
     runs-on: ubuntu-latest
@@ -177,24 +172,33 @@ jobs:
           artifact_name: ${{ env.deb_artifact_name }}
 
 
-#  upgrade_package:
-#    needs: [publish_release]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Connect to PPTP VPN
-#        uses: mizumotok/pptp-action@v1
-#        with:
-#          server: ${{ env.pptp_server }}
-#          username: ${{ env.pptp_username }}
-#          password: ${{ env.pptp_password }}
-#
-#      - name: executing remote ssh commands using password
-#        uses: appleboy/ssh-action@v1
-#        with:
-#          host: ${{ env.app_host }}
-#          username:  ${{ env.app_host_username }}
-#          password: ${{ env.app_host_password }}
-#          port: ${{ env.app_host_port }}
-#          script: apt-get install webitel-crm
+  upgrade_package:
+    needs: [publish_release]
+    runs-on: ubuntu-latest
+    env:
+        pptp_server: ${{ secrets.PPTP_SERVER }}
+        pptp_username: ${{ secrets.PPTP_USERNAME }}
+        pptp_password: ${{ secrets.PPTP_PASSWORD }}
+
+        app_host: ${{ secrets.APP_HOST }}
+        app_host_username: ${{ secrets.APP_HOST_USERNAME }}
+        app_host_password: ${{ secrets.APP_HOST_PASSWORD }}
+        app_host_port: ${{ secrets.APP_HOST_PORT }}
+    steps:
+      - name: Connect to PPTP VPN
+        uses: mizumotok/pptp-action@v1
+        with:
+          server: ${{ env.pptp_server }}
+          username: ${{ env.pptp_username }}
+          password: ${{ env.pptp_password }}
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.app_host }}
+          username:  ${{ env.app_host_username }}
+          password: ${{ env.app_host_password }}
+          port: ${{ env.app_host_port }}
+          script: echo "Hello, World!"
 
 
