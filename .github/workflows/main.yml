@@ -163,7 +163,7 @@ jobs:
     steps:
       - name: setup Github Pages
         id: setup_pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v4
 
       - name: deploy to Github Pages
         id: deploy_pages
@@ -173,7 +173,7 @@ jobs:
 
 
   upgrade_package:
-    needs: [publish_release]
+#    needs: [publish_release]
     runs-on: ubuntu-latest
     env:
         pptp_server: ${{ secrets.PPTP_SERVER }}
