@@ -63,7 +63,7 @@
           <template #name="{ item }">
             <div class="username-wrapper">
               <wt-avatar
-                size="sm"
+                size="xs"
                 :username="item.name"
               />
 
@@ -348,11 +348,11 @@ function deleteSelectedItems() {
 
 .username-wrapper {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-xs);
 
   .wt-avatar {
-    flex: 0 0 var(--wt-avatar-size--size-sm);
+    flex: 0 0 var(--wt-avatar-size--size-xs);
   }
 }
 </style>
