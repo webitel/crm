@@ -1,20 +1,199 @@
-name: CRM CI
+name: crm ci/cd
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+#  push:
+#    branches: [ master ]
 
 jobs:
-  test:
+  env:
+    build_artifact_name: build_dist
+    deb_artifact_name: deb_package
+    deb_artifact_filename: ${{ env.deb_artifact_name }}.deb
+
+    build_artifact_retention_days: 14
+    deb_artifact_retention_days: 3
+
+#    app_host: ${{ secrets.app_host }}
+#    app_host_username: ${{ secrets.app_host_username }}
+#    app_host_password: ${{ secrets.app_host_password }}
+#    app_host_port: ${{ secrets.app_host_port }}
+
+  install_deps:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache_node_modules
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          check-latest: true
+
+      - name: Install dependencies
+        if: steps.cache_node_modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+
+  test:
+    needs: [install_deps]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          check-latest: true
+
+      - run: npm run test:unit
+
+
+  build:
+    needs: [install_deps]
+    runs-on: ubuntu-latest
+    outputs:
+      release_version: |  # example: v25.02.0-gh-122
+        v${{ steps.package-version.outputs.current-version }}-gh-${{ github.run_number }}
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-    - run: npm ci
-    - run: npm run test:unit
+      - uses: actions/checkout@v4
+
+      - name: Get package.json version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          check-latest: true
+
+      - run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        retention-days: ${{ env.build_artifact_retention_days }}
+        with:
+          name: ${{ env.build_artifact_name }}
+          path: dist
+
+
+  deb:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Build Artifact
+        id: download_build
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.build_artifact_name }}
+          path: dist
+
+      - name: Build Deb Package
+        id: make-deb
+        uses: jiro4989/build-deb-action@v4
+        with:
+          maintainer: 'Webitel <cloud@webitel.com>'
+          package: 'webitel-crm-gh'
+          package_root: ${{ steps.download_build.outputs.download-path}}/dist
+          version: ${{ needs.build.outputs.release_version }}
+          desc: 'Webitel CRM Module'
+
+      - name: Upload Deb Artifact
+        uses: actions/upload-artifact@v4
+        retention-days: ${{ env.deb_artifact_retention_days }}
+        with:
+          name: ${{ env.deb_artifact_name }}
+          path: ${{ steps.make-deb.outputs.file_name }}
+
+
+  gh_release:
+    needs: [build, deb]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      tag_name: ${{ needs.build.outputs.release_version }}
+    outputs:
+      release_tag: ${{ env.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Deb Artifact
+        id: download_deb
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.deb_artifact_name }}
+
+      - name: Create Github Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.tag_name }}
+          name: @webitel/crm/${{ env.tag_name }}
+          body: Release goes here!
+          fail_on_unmatched_files: true
+          files: |
+            ${{ env.deb_artifact_filename }}
+            
+
+  publish_release:
+    needs: [gh_release]
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup Github Pages
+        id: setup_pages
+        uses: actions/configure-pages@v5
+
+      - name: deploy to Github Pages
+        id: deploy_pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.build_artifact_name }}
+
+
+#  upgrade_package:
+#    needs: [publish_release]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Connect to PPTP VPN
+#        uses: mizumotok/pptp-action@v1
+#        with:
+#          server: ${{ env.pptp_server }}
+#          username: ${{ env.pptp_username }}
+#          password: ${{ env.pptp_password }}
+#
+#      - name: executing remote ssh commands using password
+#        uses: appleboy/ssh-action@v1
+#        with:
+#          host: ${{ env.app_host }}
+#          username:  ${{ env.app_host_username }}
+#          password: ${{ env.app_host_password }}
+#          port: ${{ env.app_host_port }}
+#          script: apt-get install webitel-crm
+
+
