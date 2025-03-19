@@ -186,7 +186,7 @@ jobs:
         app_host_port: ${{ secrets.APP_HOST_PORT }}
     steps:
       - name: Connect to PPTP VPN
-        uses: mizumotok/pptp-action@v1
+        uses: mizumotok/pptp-action@4c92b057281e64bfd33486c0f5f6d13ecb978931
         with:
           server: ${{ env.pptp_server }}
           username: ${{ env.pptp_username }}
