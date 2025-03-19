@@ -4,7 +4,7 @@
     <div class="case-deadline-list__wrapper">
       <case-deadline
         :time="itemInstance?.createdAt"
-        :label="t('reusable.createdAt')"
+        :title="t('reusable.createdAt')"
       />
       <case-deadline
         :time-difference="itemInstance?.differenceInReaction"
