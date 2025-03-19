@@ -20,7 +20,7 @@
           :dark-mode="darkMode"
         />
         <wt-header-actions
-          :build-info="{ release, build }"
+          :build-info="{ release, build, timestamp }"
           :user="userinfo"
           @logout="logoutUser"
           @settings="settings"
@@ -46,6 +46,7 @@ import StartPageRoutePaths from '../../modules/start-page/router/internals/start
 
 const release = process.env.npm_package_version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
+const timestamp = import.meta.env.VITE_BUILD_TIMESTAMP;
 
 const store = useStore();
 
