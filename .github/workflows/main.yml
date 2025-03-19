@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_version: |  # example: v25.02.0-gh-122
-        v${{ steps.package-version.outputs.current-version }}-gh-${{ github.run_number }}
+        'v${{ steps.package-version.outputs.current-version }}-gh-${{ github.run_number }}'
 
     steps:
       - uses: actions/checkout@v4
@@ -151,7 +151,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.tag_name }}
-          name: @webitel/crm/${{ env.tag_name }}
+          name: '@webitel/crm/${{ env.tag_name }}'
           body: Release goes here!
           fail_on_unmatched_files: true
           files: |
