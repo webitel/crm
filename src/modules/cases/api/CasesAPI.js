@@ -159,6 +159,7 @@ const getCase = async ({ itemId: id }) => {
     'resolved_at',
     'sla_condition',
     'difference_in_reaction',
+    'difference_in_resolve',
     'sla',
     'service',
     'comments',
