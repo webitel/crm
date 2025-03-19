@@ -22,6 +22,7 @@ const cardState = {
     groups: [],
     labels: [],
     about: '',
+    user: null,
   },
 };
 

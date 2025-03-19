@@ -32,7 +32,7 @@
 
     <div class="opened-contact-general-name">
       <wt-icon
-        v-if="managers.length"
+        v-if="user"
         icon="webitel-logo"
       />
 
@@ -40,6 +40,21 @@
     </div>
 
     <wt-divider />
+
+    <div
+      v-if="groups.length"
+      class="opened-contact-general-item"
+    >
+      <p class="opened-contact-general-item__title">
+        {{ t('contacts.group') }}
+      </p>
+
+      <p class="opened-contact-general-item__value">
+        {{ groupsList }}
+      </p>
+    </div>
+
+    <wt-divider v-if="groups.length" />
 
     <div
       v-if="timezones.length"
@@ -128,6 +143,14 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  groups: {
+    type: Array,
+    default: () => [],
+  },
+  user: {
+    type: Object,
+    default: null,
+  },
 });
 
 const emit = defineEmits(['edit', 'delete']);
@@ -149,6 +172,8 @@ const actionOptions = computed(() => {
   };
   return [editAction, deleteAction];
 });
+
+const groupsList = computed(() => props.groups.map((el) => el.name).join(', '));
 </script>
 
 <style lang="scss" scoped>
