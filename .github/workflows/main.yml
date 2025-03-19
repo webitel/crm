@@ -3,7 +3,7 @@ name: crm ci/cd
 env:
   build_artifact_name: build_dist
   deb_artifact_name: deb_package
-  deb_artifact_filename: 'deb_package.deb'
+  deb_artifact_filename: deb_package.deb
 
   build_artifact_retention_days: 14
   deb_artifact_retention_days: 3
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_version: |  # example: v25.02.0-gh-122
-        'v${{ steps.package-version.outputs.current-version }}-gh-${{ github.run_number }}'
+        v${{ steps.package-version.outputs.current-version }}-gh-${{ github.run_number }}
 
     steps:
       - uses: actions/checkout@v4
