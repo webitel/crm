@@ -3,10 +3,9 @@ name: crm ci/cd
 env:
   build_artifact_name: build_dist
   deb_artifact_name: deb_package
-  deb_artifact_filename: deb_package.deb
 
-  build_artifact_retention_days: 14
-  deb_artifact_retention_days: 3
+#  build_artifact_retention_days: 14
+#  deb_artifact_retention_days: 3
 
 on:
   #  workflow_dispatch:
@@ -100,6 +99,8 @@ jobs:
   deb:
     needs: [ build ]
     runs-on: ubuntu-latest
+    outputs:
+      file_name: ${{ steps.make-deb.outputs.file_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -116,7 +117,7 @@ jobs:
         with:
           maintainer: 'Webitel <cloud@webitel.com>'
           package: 'webitel-crm-gh'
-          package_root: ${{ steps.download_build.outputs.download-path}}/dist
+          package_root: dist
           version: ${{ needs.build.outputs.release_version }}
           desc: 'Webitel CRM Module'
 
@@ -155,7 +156,7 @@ jobs:
           body: Release goes here!
           fail_on_unmatched_files: true
           files: |
-            ${{ env.deb_artifact_filename }}
+            ${{ needs.deb.outputs.file_name }}
   
 
   publish_release:
