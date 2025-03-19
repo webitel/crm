@@ -117,11 +117,19 @@ jobs:
           desc: 'Webitel CRM Module'
 
       - name: Upload Deb Artifact
-        uses: actions/upload-artifact@v4
+#        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
 #        retention-days: ${{ env.deb_artifact_retention_days }}
         with:
           name: ${{ env.deb_artifact_name }}
           path: ${{ steps.make-deb.outputs.file_name }}
+
+
+#      - name: Upload static files as artifact
+#        id: deployment
+#        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+#        with:
+#          path: build_outputs_folder/
 
 
   gh_release:
