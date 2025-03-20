@@ -66,12 +66,11 @@ const nav = reactive([
     value: 'customization',
     name: computed(() => t('customization.customization')),
     subNav: [
-      // Hidden before release, implement after backend fill finish with cases
-      // {
-      //   value: 'type-extension-contact',
-      //   name: computed(() => t('customization.extensions.contacts')),
-      //   route: 'customization/types-extensions/contacts',
-      // },
+      {
+        value: 'type-extension-cases',
+        name: computed(() => t('customization.extensions.cases')),
+        route: 'customization/types-extensions/cases',
+      },
       {
         value: CrmSections.CUSTOM_LOOKUPS,
         name: computed(() => t('customization.customLookups.customLookups')),

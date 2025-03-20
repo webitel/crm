@@ -48,6 +48,7 @@ const fieldsToSend = [
   'service',
   'status_condition',
   'close_reason_group',
+  'custom',
 ];
 
 function transformSourceType(data) {
@@ -65,6 +66,14 @@ function transformSourceType(data) {
   }
   return data;
 }
+
+const checkCustomFields = (data) => {
+  if (!data.custom) {
+    data.custom = {};
+  }
+
+  return data;
+};
 
 const getCasesList = async (params) => {
   const fieldsToSend = [
@@ -167,10 +176,15 @@ const getCase = async ({ itemId: id }) => {
     'links',
     'status_condition',
     'created_by',
+    'custom',
   ];
   try {
     const response = await casesService.locateCase(id, fieldsToSend);
-    return applyTransform(response.data, [snakeToCamel(), transformSourceType]);
+    return applyTransform(response.data, [
+      snakeToCamel(['custom']),
+      checkCustomFields,
+      transformSourceType,
+    ]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }

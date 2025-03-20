@@ -207,6 +207,7 @@ export default {
     },
     extensions: {
       contacts: ({ linked }) => linked('contacts.contact'),
+      cases: ({ linked }) => linked('cases.case'),
     },
   },
   cases: {
@@ -258,6 +259,9 @@ export default {
       linkText: 'Link text',
       emptyFilesText: 'There are no attachments yet',
       emptyLinksText: 'There are no links yet',
+    },
+    details: {
+      details: 'Details',
     },
     relatedCases: {
       relatedCases: 'Related cases',
