@@ -48,6 +48,44 @@ const getExtension = async ({ itemId: itemRepo }) => {
 
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
+    return {
+      id: itemRepo,
+      fields: [],
+      isNew: true,
+    };
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const addExtension = async ({ itemInstance, itemId: id }) => {
+  const repo = id;
+
+  const sortFields = (item) => {
+    const unSortableFields = item.fields.filter((field) => !field.position);
+
+    const fields = deepCopy(item.fields)
+      .filter((field) => field.position)
+      .sort((a, b) => {
+        return a.position - b.position;
+      });
+
+    fields.splice(1, 0, ...unSortableFields);
+
+    return {
+      ...item,
+      fields,
+    };
+  };
+
+  const item = applyTransform(itemInstance, [
+    sortFields,
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await typeExtensionsService.createType(repo, item);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
+  } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
@@ -86,6 +124,7 @@ const updateExtension = async ({ itemInstance, itemId: id }) => {
 };
 
 const WtTypeExtensionApi = {
+  add: addExtension,
   get: getExtension,
   update: updateExtension,
 };

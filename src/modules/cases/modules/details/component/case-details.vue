@@ -32,7 +32,6 @@ import { inject } from 'vue';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
-import { useExtensionFields } from '../../../../customization/modules/wt-type-extension/composable/useExtensionFields.js';
 
 const editMode = inject('editMode');
 
@@ -41,15 +40,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  fields: {
+    type: Object,
+    required: true,
+  },
 });
 
 const { itemInstance } = useCardStore(props.namespace);
-
-const { fields, getFields } = useExtensionFields({
-  type: 'cases',
-});
-
-getFields();
 </script>
 
 <style scoped lang="scss"></style>

@@ -11,6 +11,9 @@
     :label="label"
     :value="value"
   ></wt-switcher>
+  <template v-else-if="field.kind === FieldType.Number">
+    {{ value }}
+  </template>
   <template v-else>
     {{ showText }}
   </template>
