@@ -63,6 +63,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
+import set from 'lodash/set';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -121,10 +122,13 @@ const v$ = useVuelidate(
 
     if (props.field.required) {
       if (props.pathToField) {
-        rules.itemInstance[props.pathToField][props.field.id].required =
-          required;
+        set(
+          rules,
+          `itemInstance.${props.pathToField}.${props.field.id}.required`,
+          required,
+        );
       } else {
-        rules.itemInstance[props.field.id].required = required;
+        set(rules, `itemInstance.${props.field.id}.required`, required);
       }
     }
 
