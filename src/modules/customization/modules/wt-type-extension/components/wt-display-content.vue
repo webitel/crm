@@ -48,6 +48,8 @@ const label = computed(() => {
 </script>
 
 <style scoped lang="scss">
+@use '@webitel/ui-sdk/src/css/main' as *;
+
 .wt-display-content {
   display: flex;
   flex-direction: column;
