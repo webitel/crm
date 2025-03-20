@@ -263,6 +263,9 @@ export default {
       emptyFilesText: 'Тут еще нет вложений',
       emptyLinksText: 'Тут еще нет ссылок',
     },
+    details: {
+      details: 'Детали',
+    },
     relatedCases: {
       relatedCases: 'Связанные обращения',
       emptyText: 'Тут еще нет связанных обращений',

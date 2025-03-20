@@ -13,6 +13,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+import get from 'lodash/get';
 import { DictionariesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -66,7 +67,6 @@ const getCustomLookupRecord = async ({ itemId: id, repo }) => {
 };
 
 const addCustomLookupRecord = async ({ itemInstance, fieldsToSend, repo }) => {
-  console.log('fieldsToSend', fieldsToSend);
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
@@ -111,7 +111,7 @@ const transformItemsForSelect =
   (items) => {
     return items.map((item) => ({
       id: item[primary],
-      name: item[display],
+      name: get(item, display.split('.')),
     }));
   };
 
@@ -136,7 +136,6 @@ const getCustomLookupRecordsLookup = async ({
   try {
     const response = await instance.get(url);
     const { data, items, next } = applyTransform(response.data, [
-      snakeToCamel(),
       merge(getDefaultGetListResponse()),
     ]);
 

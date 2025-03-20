@@ -6,6 +6,7 @@ import OpenedCase from '../components/opened-case.vue';
 import TheCases from '../components/the-cases.vue';
 import CaseAttachments from '../modules/attachments/components/case-attachments.vue';
 import CaseInfo from '../modules/case-info/components/case-info.vue';
+import CaseDetails from '../modules/details/component/case-details.vue';
 import CaseResult from '../modules/result/components/case-result.vue';
 import CaseTimeline from '../modules/timeline/components/case-timeline.vue';
 
@@ -43,6 +44,11 @@ const casesRoutes: RouteRecordRaw[] = [
         path: 'attachments',
         name: `${CrmSections.Cases}-attachments`,
         component: CaseAttachments,
+      },
+      {
+        path: 'details',
+        name: `${CrmSections.Cases}-details`,
+        component: CaseDetails,
       },
       {
         path: 'timeline',
