@@ -91,7 +91,7 @@
 
       <editable-field
         :edit-mode="editMode"
-        :label="t('cases.group')"
+        :label="t('cases.groupPerformers')"
         :disabled="disableUserInput"
         :value="itemInstance.group"
         color="success"

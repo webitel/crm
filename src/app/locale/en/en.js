@@ -14,9 +14,6 @@ export default {
   contacts: {
     contact: 'Contact | Contacts',
     manager: 'Owner | Owners',
-    group: ({ linked }) => {
-      return linked('cases.group');
-    },
     destination: 'Destination',
     collapseAll: 'Collapse all',
     communications: {
@@ -220,7 +217,6 @@ export default {
     status: 'Status',
     source: 'Source',
     author: 'Author',
-    group: 'Group',
     service: '@:lookups.service.service',
     assignee: '@:lookups.contactGroups.assignee',
     reporter: 'Reporter',
