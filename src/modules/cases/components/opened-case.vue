@@ -117,8 +117,8 @@ const v$ = useVuelidate(
       // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
       service: { required },
       // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
-      closeReason: { requiredIfFinal }, /* close is required if status is final, but should be entered before status=final is changed */
-      closeResult: { requiredIfFinal }, /* close is required if status is final, but should be entered before status=final is changed */
+      closeReason: { requiredIfFinal }, /* closeReason is required if status is final, if status is !final this must be empty field */
+      closeResult: { requiredIfFinal }, /* closeResult is required if status is final, if status is !final this must be empty field  */
     },
   })),
   { itemInstance },
