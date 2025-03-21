@@ -77,7 +77,6 @@ const transformCustomFields = (data) => {
 const checkCustomFields = (data) => {
   if (!Object.keys(data.custom).length) {
     delete data.custom;
-    return data;
   }
 
   return data;
