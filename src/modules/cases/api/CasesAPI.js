@@ -67,9 +67,17 @@ function transformSourceType(data) {
   return data;
 }
 
-const checkCustomFields = (data) => {
+const transformCustomFields = (data) => {
   if (!data.custom) {
     data.custom = {};
+  }
+
+  return data;
+};
+
+const checkCustomFields = (data) => {
+  if (!Object.keys(data.custom).length) {
+    delete data.custom;
   }
 
   return data;
@@ -182,7 +190,7 @@ const getCase = async ({ itemId: id }) => {
     const response = await casesService.locateCase(id, fieldsToSend);
     return applyTransform(response.data, [
       snakeToCamel(['custom']),
-      checkCustomFields,
+      transformCustomFields,
       transformSourceType,
     ]);
   } catch (err) {
@@ -205,6 +213,7 @@ const updateCase = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
     camelToSnake(),
     sanitize(fieldsToSend),
+    checkCustomFields,
   ]);
 
   try {

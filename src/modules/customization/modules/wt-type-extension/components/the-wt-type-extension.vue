@@ -19,7 +19,7 @@
         <opened-custom-lookup-columns
           :is-new="isNew"
           :v="v$"
-          :title="$t(`customization.extensions.${itemInstance.repo}`)"
+          :title="$t(`customization.extensions.${repo}`)"
           :namespace="cardNamespace"
         />
       </form>
@@ -34,11 +34,16 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 import OpenedCustomLookupColumns from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
 
 const namespace = 'customization/wtTypeExtension';
+
 const { t } = useI18n();
+const route = useRoute();
+
+const repo = computed(() => route.params.id);
 
 const {
   namespace: cardNamespace,
@@ -61,7 +66,7 @@ const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
 v$.value.$touch();
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+  () => v$.value?.$invalid || !itemInstance.value?._dirty,
 );
 
 const path = computed(() => {
@@ -72,9 +77,7 @@ const path = computed(() => {
       route: '/customization',
     },
     {
-      name:
-        itemInstance.value.repo &&
-        t(`customization.extensions.${itemInstance.value.repo}`),
+      name: repo.value && t(`customization.extensions.${repo.value}`),
     },
   ];
 });
