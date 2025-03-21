@@ -27,11 +27,15 @@
 </template>
 
 <script setup lang="ts">
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
-import { inject } from 'vue';
+import { inject, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+
+const router = useRouter();
 
 const editMode = inject('editMode');
 
@@ -45,8 +49,16 @@ const props = defineProps({
     required: true,
   },
 });
-
 const { itemInstance } = useCardStore(props.namespace);
+
+onMounted(() => {
+  if (!props.fields.length) {
+    console.log('fields are empty');
+    router.push({
+      name: `${CrmSections.CASES}-case-info`,
+    });
+  }
+});
 </script>
 
 <style scoped lang="scss"></style>

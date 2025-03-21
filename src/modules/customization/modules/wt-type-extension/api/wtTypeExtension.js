@@ -93,6 +93,18 @@ const addExtension = async ({ itemInstance, itemId: id }) => {
 const updateExtension = async ({ itemInstance, itemId: id }) => {
   const repo = id;
 
+  if (itemInstance.isNew) {
+    return addExtension({ itemInstance, itemId: id });
+  }
+
+  if (itemInstance.fields.length === 0 && !itemInstance.isNew) {
+    return deleteExtension({ itemId: id });
+  }
+
+  if (itemInstance.fields.length === 0 && itemInstance.isNew) {
+    return itemInstance;
+  }
+
   const sortFields = (item) => {
     const unSortableFields = item.fields.filter((field) => !field.position);
 
@@ -123,10 +135,19 @@ const updateExtension = async ({ itemInstance, itemId: id }) => {
   }
 };
 
+const deleteExtension = async ({ itemId: id }) => {
+  try {
+    await typeExtensionsService.deleteType(id);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const WtTypeExtensionApi = {
   add: addExtension,
   get: getExtension,
   update: updateExtension,
+  delete: deleteExtension,
 };
 
 export default WtTypeExtensionApi;

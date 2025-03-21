@@ -2,7 +2,7 @@
   <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
-        :primary-action="saveExtension"
+        :primary-action="save"
         :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
@@ -83,14 +83,6 @@ const path = computed(() => {
 });
 
 initialize();
-
-const saveExtension = async () => {
-  try {
-    await save();
-  } catch (error) {
-    console.log('error', error);
-  }
-};
 </script>
 
 <style lang="scss" scoped></style>
