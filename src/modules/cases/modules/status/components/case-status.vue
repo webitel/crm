@@ -114,10 +114,7 @@ const saveResult = async ({ reason, result }) => {
 
 const onPopupClose = () => {
   isResultPopup.value = false;
-
-  if (!editMode.value) {
-    itemInstance.value.statusCondition = prevStatusCondition.value;
-  }
+  itemInstance.value.statusCondition = prevStatusCondition.value;
 };
 
 const getIndicatorColor = (option) => {
@@ -145,39 +142,46 @@ const fetchStatusConditions = async (params) => {
 };
 
 async function patchStatusCondition(condition) {
-  await setItemProp({
-    path: 'statusCondition',
-    value: condition,
-  });
-
-  await setItemProp({
-    path: 'status',
-    value: status.value,
-  });
+  await updateLocalProperties(condition);
 
   if (!isNew.value && !editMode.value) {
-    await CasesAPI.patch({
-      changes: {
-        statusCondition: condition,
-        status: status.value,
-      },
-      etag: itemInstance.value.etag,
-    });
-
-    //NOTE: needed to get new etag so new patch will work correctly
+    await patchRemoteChanges(condition);
     await loadItem();
   }
 }
 
+async function updateLocalProperties(condition) {
+  await setItemProp({ path: 'statusCondition', value: condition });
+  await setItemProp({ path: 'status', value: status.value });
+
+  if (editMode.value && !condition.final) {
+    await setItemProp({ path: 'closeReason', value: {} });
+    await setItemProp({ path: 'closeResult', value: '' });
+  }
+}
+
+async function patchRemoteChanges(condition) {
+  const changes = {
+    statusCondition: condition,
+    status: status.value,
+  };
+
+  if (!condition.final) {
+    changes.closeReason = {};
+    changes.closeResult = '';
+  }
+
+  await CasesAPI.patch({
+    changes,
+    etag: itemInstance.value.etag,
+  });
+}
+
 async function handleSelect(value) {
-  if (value.final && !editMode.value) {
+  if (value.final) {
     itemInstance.value.statusCondition = value;
     isResultPopup.value = true;
     return;
-  }
-
-  if (value.final) {
-    isResultPopup.value = true;
   }
 
   await patchStatusCondition(value);
