@@ -8,8 +8,9 @@ import applyTransform, {
   sanitize,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import deepCopy from 'deep-copy';
 import { ExtensionsApiFactory } from 'webitel-sdk';
+
+import sortFields from '../utils/sortDynamicField';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
@@ -60,23 +61,6 @@ const getExtension = async ({ itemId: itemRepo }) => {
 const addExtension = async ({ itemInstance, itemId: id }) => {
   const repo = id;
 
-  const sortFields = (item) => {
-    const unSortableFields = item.fields.filter((field) => !field.position);
-
-    const fields = deepCopy(item.fields)
-      .filter((field) => field.position)
-      .sort((a, b) => {
-        return a.position - b.position;
-      });
-
-    fields.splice(1, 0, ...unSortableFields);
-
-    return {
-      ...item,
-      fields,
-    };
-  };
-
   const item = applyTransform(itemInstance, [
     sortFields,
     camelToSnake(),
@@ -93,34 +77,15 @@ const addExtension = async ({ itemInstance, itemId: id }) => {
 const updateExtension = async ({ itemInstance, itemId: id }) => {
   const repo = id;
 
-  if (itemInstance.isNew) {
+  if (!itemInstance.fields.length && itemInstance.isNew) {
+    return itemInstance;
+  } else if (itemInstance.isNew) {
     return addExtension({ itemInstance, itemId: id });
   }
 
-  if (itemInstance.fields.length === 0 && !itemInstance.isNew) {
+  if (!itemInstance.fields.length && !itemInstance.isNew) {
     return deleteExtension({ itemId: id });
   }
-
-  if (itemInstance.fields.length === 0 && itemInstance.isNew) {
-    return itemInstance;
-  }
-
-  const sortFields = (item) => {
-    const unSortableFields = item.fields.filter((field) => !field.position);
-
-    const fields = deepCopy(item.fields)
-      .filter((field) => field.position)
-      .sort((a, b) => {
-        return a.position - b.position;
-      });
-
-    fields.splice(1, 0, ...unSortableFields);
-
-    return {
-      ...item,
-      fields,
-    };
-  };
 
   const item = applyTransform(itemInstance, [
     sortFields,

@@ -53,7 +53,6 @@ const { itemInstance } = useCardStore(props.namespace);
 
 onMounted(() => {
   if (!props.fields.length) {
-    console.log('fields are empty');
     router.push({
       name: `${CrmSections.CASES}-case-info`,
     });
