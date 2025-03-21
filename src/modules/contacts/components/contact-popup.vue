@@ -23,7 +23,7 @@
 
         <wt-select
           :value="draft.groups"
-          :label="t('cases.group')"
+          :label="t('cases.groupPerformers')"
           :search-method="loadStaticContactGroupsList"
           multiple
           @input="draft.groups = $event"

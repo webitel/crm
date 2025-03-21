@@ -17,7 +17,7 @@ export default [
   },
   {
     value: 'groups',
-    locale: 'contacts.group',
+    locale: 'reusable.group',
     show: true,
     field: 'groups',
     width: '170px',

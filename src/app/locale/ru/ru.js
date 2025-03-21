@@ -14,9 +14,6 @@ export default {
   contacts: {
     contact: 'Контакт | Контакты',
     manager: 'Владелец | Владельцы',
-    group: ({ linked }) => {
-      return linked('cases.group');
-    },
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
     communications: {
@@ -220,7 +217,6 @@ export default {
     status: 'Статус',
     source: 'Источник',
     author: 'Автор',
-    group: 'Группа исполнителей',
     service: '@:lookups.service.service',
     assignee: '@:lookups.contactGroups.assignee',
     reporter: 'Инициатор',
