@@ -41,10 +41,7 @@
 
     <wt-divider />
 
-    <div
-      v-if="groups.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('contacts.group') }}
       </p>
@@ -54,26 +51,23 @@
       </p>
     </div>
 
-    <wt-divider v-if="groups.length" />
+    <wt-divider />
 
-    <div
-      v-if="timezones.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('date.timezone', 1) }}
       </p>
-      <p class="opened-contact-general-item__value">
+      <p
+        v-if="timezones.length"
+        class="opened-contact-general-item__value"
+      >
         {{ timezones[0].timezone.name }}
       </p>
     </div>
 
-    <wt-divider v-if="timezones.length" />
+    <wt-divider />
 
-    <div
-      v-if="managers.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('contacts.manager', 1) }}
       </p>
@@ -82,12 +76,9 @@
       </p>
     </div>
 
-    <wt-divider v-if="managers.length" />
+    <wt-divider />
 
-    <div
-      v-if="about"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('vocabulary.description') }}
       </p>
@@ -96,12 +87,9 @@
       </p>
     </div>
 
-    <wt-divider v-if="about" />
+    <wt-divider />
 
-    <div
-      v-if="labels.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <div
         class="opened-contact-general-item__value opened-contact-general-item__value--labels"
       >
