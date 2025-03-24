@@ -101,6 +101,9 @@ provide(
   })),
 );
 
+const isReadOnly = computed(() => true);
+provide('isReadOnly', isReadOnly);
+
 const isContactPopup = ref(false);
 
 const isLoading = ref(true);

@@ -27,12 +27,12 @@
         @sort="sort"
       >
         <template #icon="{ item }">
-          <wt-icon
-            :icon="iconType[item.protocol]"
-          />
+          <wt-icon :icon="iconType[item.protocol]" />
         </template>
         <template #protocol="{ item }">
-          {{ t(`contacts.communications.messaging.messengers.${item.protocol}`) }}
+          {{
+            t(`contacts.communications.messaging.messengers.${item.protocol}`)
+          }}
         </template>
         <template #app="{ item }">
           {{ item.app.name }}
@@ -42,12 +42,14 @@
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="!access.hasRbacEditAccess || isReadOnly"
             action="delete"
-            @click="askDeleteConfirmation({
-              deleted: item,
-              callback: () => deleteData(item),
-            })"
+            @click="
+              askDeleteConfirmation({
+                deleted: item,
+                callback: () => deleteData(item),
+              })
+            "
           />
         </template>
       </wt-table>
@@ -57,20 +59,19 @@
 
 <script setup>
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { computed, inject, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import dummyDark from '../assets/messaging-dummy-dark.svg';
 import dummyLight from '../assets/messaging-dummy-light.svg';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
   namespace: {
@@ -95,11 +96,8 @@ const {
   onFilterEvent,
 } = useTableStore(props.namespace);
 
-const {
-  subscribe,
-  flushSubscribers,
-  restoreFilters,
-} = useTableFilters(namespace);
+const { subscribe, flushSubscribers, restoreFilters } =
+  useTableFilters(namespace);
 
 subscribe({
   event: '*',
