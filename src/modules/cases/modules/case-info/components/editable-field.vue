@@ -12,6 +12,7 @@
         class="editable-field__label-wrapper"
       >
         <wt-icon
+          class="editable-field__label-icon"
           v-if="icon && horizontalView"
           :color="color"
           :icon="icon"
@@ -152,17 +153,28 @@ const valueWithDefault = computed(() => {
 
   &.editable-horizontal-field {
     .editable-field__content {
+      gap: var(--spacing-2xs);
       flex-direction: row;
       justify-content: space-between;
     }
 
     .editable-field__label-wrapper,
     .editable-field__value-wrapper {
-      text-align: end;
+      flex: 1;
       padding: 0;
+      align-items: flex-start;
+    }
+
+    .editable-field__label-wrapper {
+      justify-content: start;
+    }
+
+    .editable-field__value-wrapper {
+      justify-content: end;
     }
 
     .editable-field__value {
+      word-break: break-all;
       @extend %typo-subtitle-1;
     }
 
@@ -174,11 +186,13 @@ const valueWithDefault = computed(() => {
     }
 
     .editable-field__link {
+      word-break: break-all;
       @extend %typo-subtitle-1;
       color: var(--link-color);
     }
 
-    .editable-field__link-icon {
+    .editable-field__link-icon,
+    .editable-field__label-icon {
       flex-shrink: 0;
     }
   }
