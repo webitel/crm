@@ -21,10 +21,12 @@
         :disabled:add="!hasCreateAccess"
         @click:add="add"
         @click:refresh="loadData"
-        @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+        @click:delete="
+          askDeleteConfirmation({
+            deleted: selected,
+            callback: () => deleteData(selected),
+          })
+        "
       >
         <template #search-bar>
           <filter-search
@@ -35,10 +37,7 @@
       </wt-action-bar>
     </header>
 
-    <div
-      class="table-section__table-wrapper"
-    >
-
+    <div class="table-section__table-wrapper">
       <wt-empty
         v-show="showEmpty"
         :image="imageEmpty"
@@ -73,14 +72,12 @@
                 :triggers="['click']"
               >
                 <template #activator>
-                  <wt-chip>
-                    +{{ item.priorities?.length - 1 }}
-                  </wt-chip>
+                  <wt-chip> +{{ item.priorities?.length - 1 }} </wt-chip>
                 </template>
 
                 <ul>
                   <li
-                    v-for="({ id, name }) of item.priorities?.slice(1)"
+                    v-for="{ id, name } of item.priorities?.slice(1)"
                     :key="id"
                   >
                     <p>{{ name }}</p>
@@ -99,15 +96,19 @@
             <wt-icon-action
               :disabled="!hasUpdateAccess"
               action="edit"
-              @click="router.push({ ...route, params: { conditionId: item.id } })"
+              @click="
+                router.push({ ...route, params: { conditionId: item.id } })
+              "
             />
             <wt-icon-action
               :disabled="!hasDeleteAccess"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })
+              "
             />
           </template>
         </wt-table>
@@ -123,24 +124,22 @@
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch
-  from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
+import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { storeToRefs } from 'pinia';
 import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js'
+import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
+import { useSLAConditionsStore } from '../stores/conditions.ts';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
@@ -155,16 +154,40 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
     useUpdateAccessAsAllMutableChecksSource: true,
   });
 
-const {
-  namespace: parentCardNamespace,
-  id: parentId,
-} = useCardStore(props.namespace);
+const { namespace: parentCardNamespace, id: parentId } = useCardStore(
+  props.namespace,
+);
 
 const namespace = `${parentCardNamespace}/conditions`;
 
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+
+const tableStore = useSLAConditionsStore(namespace);
+
+// const {
+//   dataList,
+//   selected,
+//   error,
+//   isLoading,
+//   page,
+//   size,
+//   next,
+//   headers,
+//   filtersManager,
+// } = storeToRefs(tableStore);
+//
+// const {
+//   initialize,
+//   loadDataList,
+//   updateSelected,
+//   updatePage,
+//   updateSize,
+//   updateSort,
+//   deleteEls,
+//   updateShownHeaders,
+// } = tableStore;
 
 const {
   namespace: tableNamespace,
