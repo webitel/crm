@@ -8,7 +8,10 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <div class="opened-contact-header-wrapper">
+          <wt-headline-nav :path="path" />
+          <div id="opened-contact-actions" />
+        </div>
       </wt-page-header>
     </template>
     <template #main>
@@ -157,5 +160,12 @@ onUnmounted(() => resetState());
   .opened-contact-tabs {
     flex: 1 1 auto;
   }
+}
+
+.opened-contact-header-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
 }
 </style>

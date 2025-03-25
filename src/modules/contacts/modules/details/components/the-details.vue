@@ -1,10 +1,14 @@
 <template>
-  <div>
+  <teleport
+    v-if="hasEditAccess"
+    to="#opened-contact-actions"
+  >
     <wt-button @click="saveDetails">{{ t('reusable.save') }}</wt-button>
-  </div>
+  </teleport>
   <div class="opened-card">
     <div class="opened-card-form">
       <div
+        v-if="hasEditAccess"
         class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w100"
       >
         <custom-lookup-dynamic-field
@@ -15,6 +19,17 @@
           path-to-field="custom"
         />
       </div>
+      <div
+        v-else
+        class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50"
+      >
+        <wt-display-content
+          v-for="field in fields"
+          :key="field.id"
+          :field="field"
+          :value="get(itemInstance, `custom.${field.id}`)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -22,11 +37,15 @@
 <script setup lang="ts">
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
-import { onMounted } from 'vue';
+import get from 'lodash/get';
+import { computed, inject, onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
+import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+
+const access = inject('access');
 
 const props = defineProps({
   namespace: {
@@ -38,6 +57,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const hasEditAccess = computed(() => !access.value?.hasRbacEditAccess);
 
 const router = useRouter();
 const { t } = useI18n();
