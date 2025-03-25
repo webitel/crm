@@ -20,18 +20,20 @@
         :disabled:delete="!hasDeleteAccess || !selected.length"
         :disabled:add="!hasCreateAccess"
         @click:add="add"
-        @click:refresh="loadData"
+        @click:refresh="loadDataList"
         @click:delete="
           askDeleteConfirmation({
             deleted: selected,
-            callback: () => deleteData(selected),
+            callback: () => deleteEls(selected),
           })
         "
       >
         <template #search-bar>
-          <filter-search
-            :namespace="filtersNamespace"
-            name="search"
+          <dynamic-filter-search
+            :model-value="searchValue"
+            :search-mode-options="filteredSearchOptions"
+            @handle-search="handleSearch"
+            @update:search-mode="searchMode = $event"
           />
         </template>
       </wt-action-bar>
@@ -55,8 +57,8 @@
           :headers="headers"
           :selected="selected"
           sortable
-          @sort="sort"
-          @update:selected="setSelected"
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             {{ item.name }}
@@ -106,39 +108,45 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteData(item),
+                  callback: () => deleteEls(item),
                 })
               "
             />
           </template>
         </wt-table>
       </div>
-      <filter-pagination
-        :namespace="filtersNamespace"
-        :next="isNext"
+      <wt-pagination
+        :next="next"
+        :prev="page > 1"
+        :size="size"
+        debounce
+        @change="updateSize"
+        @next="updatePage(page + 1)"
+        @prev="updatePage(page - 1)"
       />
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
-import { onUnmounted } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
+import {
+  SearchMode,
+  SearchModeType,
+} from '../../../../../../../../cases/filters/SearchMode.js';
 import { useSLAConditionsStore } from '../stores/conditions.ts';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
@@ -158,75 +166,63 @@ const { namespace: parentCardNamespace, id: parentId } = useCardStore(
   props.namespace,
 );
 
-const namespace = `${parentCardNamespace}/conditions`;
+const conditionsNamespace = `${parentCardNamespace}/conditions`;
 
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
-const tableStore = useSLAConditionsStore(namespace);
-
-// const {
-//   dataList,
-//   selected,
-//   error,
-//   isLoading,
-//   page,
-//   size,
-//   next,
-//   headers,
-//   filtersManager,
-// } = storeToRefs(tableStore);
-//
-// const {
-//   initialize,
-//   loadDataList,
-//   updateSelected,
-//   updatePage,
-//   updateSize,
-//   updateSort,
-//   deleteEls,
-//   updateShownHeaders,
-// } = tableStore;
+const tableStore = useSLAConditionsStore(conditionsNamespace);
 
 const {
-  namespace: tableNamespace,
-
   dataList,
   selected,
-  isLoading,
-  headers,
-  isNext,
   error,
-
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(namespace);
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
-  resetFilters,
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+  hasFilter,
+  addFilter,
+  updateFilter,
+  deleteFilter,
+} = tableStore;
 
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(tableNamespace);
+const searchMode = ref<SearchModeType>(SearchMode.Search);
+const searchValue = ref('');
 
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
+const filteredSearchOptions = computed(() => {
+  return { Search: SearchMode.Search };
 });
 
-restoreFilters();
+const handleSearch = (val: string) => {
+  const filter = {
+    name: searchMode.value,
+    value: val,
+  };
 
-onUnmounted(() => {
-  flushSubscribers();
-  resetFilters();
-});
+  if (hasFilter(searchMode.value)) {
+    if (val) {
+      updateFilter(filter);
+    } else {
+      deleteFilter(searchMode.value);
+    }
+  } else {
+    addFilter(filter);
+  }
+};
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -242,11 +238,20 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+} = useTableEmpty({
+  dataList,
+  filters: computed(() => filtersManager.value.getAllValues()),
+  error,
+  isLoading,
+});
 
 const add = () => {
   return router.push({ ...route, params: { conditionId: 'new' } });
 };
+
+initialize({
+  parentId: parentId.value,
+});
 </script>
 
 <style lang="scss" scoped>
