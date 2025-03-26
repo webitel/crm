@@ -7,7 +7,7 @@
       <contact-popup
         :id="editedContactId"
         :shown="isContactPopup"
-        :namespace="baseNamespace"
+        :namespace="ContactsNamespace"
         @close="closeContactPopup"
         @saved="saved"
       />
@@ -22,10 +22,12 @@
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <filter-search
-            :namespace="filtersNamespace"
-            :search-mode-opts="searchModeOpts"
-            multisearch
+          <dynamic-filter-search
+            :model-value="searchValue"
+            :search-mode="searchMode"
+            :search-mode-options="searchModeOpts"
+            @handle-search="handleSearch"
+            @update:search-mode="searchMode = $event"
           />
         </template>
       </wt-page-header>
@@ -57,8 +59,8 @@
           :headers="headers"
           :selected="selected"
           sortable
-          @sort="sort"
-          @update:selected="setSelected"
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             <div class="username-wrapper">
@@ -149,23 +151,28 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteData(item),
+                  callback: () => deleteEls(item),
                 })
               "
             />
           </template>
         </wt-table>
 
-        <filter-pagination
-          :namespace="filtersNamespace"
-          :is-next="isNext"
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
         />
       </div>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -177,16 +184,19 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
+import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import DynamicFilterSearch from '../../../../../../sdk/webitel-ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
 import dummyDark from '../../../app/assets/dummy-dark.svg';
 import dummyLight from '../../../app/assets/dummy-light.svg';
+import { SearchMode, SearchModeType } from '../../cases/filters/SearchMode.js';
+import { ContactsNamespace } from '../namespace';
+import { useContactsStore } from '../stores/contacts';
 import ContactPopup from './contact-popup.vue';
-
-const baseNamespace = 'contacts';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -204,41 +214,69 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-  namespace,
+const searchMode = ref<SearchModeType>(SearchMode.Search);
+const searchValue = ref('');
 
+const tableStore = useContactsStore();
+
+const {
   dataList,
   selected,
-  isLoading,
-  headers,
-  isNext,
   error,
-
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(baseNamespace);
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  shownHeaders,
+  filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+} = tableStore;
 
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
+// const {
+//   namespace,
+//
+//   dataList,
+//   selected,
+//   isLoading,
+//   headers,
+//   isNext,
+//   error,
+//
+//   loadData,
+//   deleteData,
+//   sort,
+//   setSelected,
+//   onFilterEvent,
+// } = useTableStore(baseNamespace);
 
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-  flushSubscribers();
-});
+// const {
+//   namespace: filtersNamespace,
+//   restoreFilters,
+//
+//   subscribe,
+//   flushSubscribers,
+// } = useTableFilters(namespace);
+//
+// subscribe({
+//   event: '*',
+//   callback: onFilterEvent,
+// });
+//
+// restoreFilters();
+//
+// onUnmounted(() => {
+//   flushSubscribers();
+// });
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -327,7 +365,7 @@ function closeContactPopup() {
 function deleteSelectedItems() {
   return askDeleteConfirmation({
     deleted: deletableSelectedItems.value,
-    callback: () => deleteData([...deletableSelectedItems.value]),
+    callback: () => deleteEls([...deletableSelectedItems.value]),
   });
 }
 </script>
