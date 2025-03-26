@@ -9,6 +9,9 @@
         hide-primary
       >
         <wt-headline-nav :path="path" />
+        <template #actions>
+          <div id="page-header-actions" />
+        </template>
       </wt-page-header>
     </template>
     <template #main>

@@ -20,7 +20,7 @@
         v-for="field in fields"
         :key="field.id"
         :field="field"
-        :value="itemInstance.custom[field.id]"
+        :value="get(itemInstance, `custom.${field.id}`)"
       />
     </div>
   </template>
@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import get from 'lodash/get';
 import { inject, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
