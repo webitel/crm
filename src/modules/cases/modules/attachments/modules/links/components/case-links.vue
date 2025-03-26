@@ -29,7 +29,7 @@
 
       <table-top-row-bar
         v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
-        :is-submit-disabled="isSubmitDisabled"
+        :is-submit-disabled="isUrlInvalid"
         @reset="resetForm"
         @submit="submitLink"
       >
@@ -201,7 +201,7 @@ const v$ = useVuelidate(rules, formState);
 
 v$.value.$touch();
 
-const isSubmitDisabled = computed(() => v$.value.linkUrl.$invalid);
+const isUrlInvalid = computed(() => v$.value.linkUrl.$invalid);
 
 function startAddingLink() {
   formState.isAdding = true;
