@@ -7,7 +7,7 @@ import {
 
 import ConditionsAPI from '../api/conditions.js';
 import filters from '../modules/filters/store/filters.js';
-import headers from './_internals/headers.js';
+import { headers } from './_internals/headers.ts';
 
 const resetCardState = {
   itemId: '',
