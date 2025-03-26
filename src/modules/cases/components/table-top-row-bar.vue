@@ -5,6 +5,7 @@
   >
     <slot />
     <wt-rounded-action
+      :disabled="props.isSubmitDisabled"
       icon="tick"
       @click="submit"
     />
@@ -17,6 +18,13 @@
 
 <script setup>
 import { defineEmits } from 'vue';
+
+const props = defineProps({
+  isSubmitDisabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const emit = defineEmits(['submit', 'reset']);
 
@@ -32,7 +40,7 @@ function reset() {
 <style lang="scss" scoped>
 .table-top-row-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-xs);
 
   .wt-rounded-action {

@@ -29,12 +29,14 @@
 
       <table-top-row-bar
         v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
+        :is-submit-disabled="isSubmitDisabled"
         @reset="resetForm"
         @submit="submitLink"
       >
         <wt-input
           :placeholder="t('cases.attachments.url')"
           :value="formState.linkUrl"
+          :v="v$.linkUrl"
           class="link-form__input"
           @input="updateLinkUrl"
         />
@@ -108,13 +110,13 @@
 </template>
 
 <script setup>
+import { useVuelidate } from '@vuelidate/core';
+import { required, url } from '@vuelidate/validators';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -190,6 +192,16 @@ const formState = reactive({
   linkText: '',
   linkUrl: '',
 });
+
+const rules = computed(() => ({
+  linkUrl: { required, url },
+}));
+
+const v$ = useVuelidate(rules, formState);
+
+v$.value.$touch();
+
+const isSubmitDisabled = computed(() => v$.value.linkUrl.$invalid);
 
 function startAddingLink() {
   formState.isAdding = true;
