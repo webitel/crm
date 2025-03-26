@@ -1,6 +1,8 @@
 <template>
   <div class="case-deadline">
-    <span>{{ title }}</span>
+    <div class="case-deadline__item-title">
+      <span>{{ title }}</span>
+    </div>
     <div class="case-deadline__item-content">
       <div
         v-if="time"
@@ -10,9 +12,10 @@
       </div>
       <span
         v-if="timeDifference"
+        class="case-deadline__time-difference"
         :class="{
           'case-deadline__time-difference_positive': Number(timeDifference) > 0,
-          'case-deadline__time-difference_negative': Number(timeDifference) < 0
+          'case-deadline__time-difference_negative': Number(timeDifference) < 0,
         }"
       >{{ convertDurationWithDays(Number(timeDifference), true) }}</span>
     </div>
@@ -20,8 +23,7 @@
 </template>
 
 <script setup>
-import convertDurationWithDays
-  from '../../../../../app/scripts/convertDurationWithDays.js';
+import convertDurationWithDays from '../../../../../app/scripts/convertDurationWithDays.js';
 import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
@@ -42,9 +44,14 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .case-deadline {
+  gap: var(--spacing-xs);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+
+  &__item-title {
+    flex: 1;
+  }
 
   &__value-wrapper {
     display: flex;
@@ -53,12 +60,15 @@ const props = defineProps({
   }
 
   &__item-content {
+    flex: 1;
     display: flex;
     align-items: end;
     flex-direction: column;
   }
 
   &__time-difference {
+    text-align: end;
+
     &_positive {
       color: var(--success-color);
     }

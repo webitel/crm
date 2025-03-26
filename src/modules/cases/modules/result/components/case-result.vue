@@ -11,7 +11,8 @@
           <wt-select
             v-bind="props"
             :key="closeReasonId"
-            :disabled="disableUserInput"
+            :disabled="disableUserInput || !itemInstance.statusCondition.final"
+            :v="v$.value.itemInstance.closeReason"
             :search-method="searchCloseReasons"
             @input="props.updateValue($event)"
           />
@@ -27,7 +28,8 @@
         <template #default="props">
           <wt-input
             v-bind="props"
-            :disabled="disableUserInput"
+            :v="v$.value.itemInstance.closeResult"
+            :disabled="disableUserInput || !itemInstance.statusCondition.final"
             @input="props.updateValue($event)"
           />
         </template>
@@ -62,6 +64,7 @@ const props = defineProps({
 });
 
 const editMode = inject('editMode');
+const v$ = inject('v$');
 
 const { t } = useI18n();
 const store = useStore();

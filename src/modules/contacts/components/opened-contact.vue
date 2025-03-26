@@ -12,10 +12,10 @@
       </wt-page-header>
     </template>
     <template #main>
-      <wt-loader v-if="isLoading " />
+      <wt-loader v-if="isLoading" />
       <div
         v-else
-        style="display: contents;"
+        style="display: contents"
       >
         <contact-popup
           :id="id"
@@ -35,17 +35,19 @@
             :name="itemInstance.name"
             :timezones="itemInstance.timezones ? itemInstance.timezones : []"
             :managers="itemInstance.managers ? itemInstance.managers : []"
+            :groups="itemInstance.groups"
+            :user="itemInstance.user"
             :about="itemInstance.about"
             :labels="itemInstance.labels ? itemInstance.labels : []"
             @edit="isContactPopup = true"
-            @delete="askDeleteConfirmation({
-              deleted: [itemInstance],
-              callback: () => deleteContact(itemInstance),
-            })"
+            @delete="
+              askDeleteConfirmation({
+                deleted: [itemInstance],
+                callback: () => deleteContact(itemInstance),
+              })
+            "
           />
-          <opened-contact-tabs
-            :namespace="namespace"
-          />
+          <opened-contact-tabs :namespace="namespace" />
         </div>
       </div>
     </template>
@@ -53,16 +55,14 @@
 </template>
 
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
@@ -93,10 +93,13 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-provide('access', computed(() => ({
-  hasRbacEditAccess: itemInstance.value?.access?.edit,
-  hasRbacDeleteAccess: itemInstance.value?.access?.delete,
-})));
+provide(
+  'access',
+  computed(() => ({
+    hasRbacEditAccess: itemInstance.value?.access?.edit,
+    hasRbacDeleteAccess: itemInstance.value?.access?.delete,
+  })),
+);
 
 const isContactPopup = ref(false);
 
@@ -138,7 +141,6 @@ async function deleteContact(item) {
 
 onMounted(() => initializeCard());
 onUnmounted(() => resetState());
-
 </script>
 
 <style lang="scss" scoped>

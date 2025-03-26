@@ -7,12 +7,13 @@
     />
     <router-view
       :namespace="cardNamespace"
-      :access="/*is used by permissions tab*/{
+      :access="/*is used by permissions tab*/ {
         read: true,
-         edit: !disableUserInput && editMode,
-          delete: !disableUserInput && editMode,
-           add: !disableUserInput && editMode,
-            }"
+        edit: !disableUserInput && editMode,
+        delete: !disableUserInput && editMode,
+        add: !disableUserInput && editMode,
+      }"
+      :fields="customFields"
       class="opened-card-tabs__tab"
     />
   </article>
@@ -26,6 +27,7 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields.js';
 
 const props = defineProps({
   namespace: {
@@ -39,10 +41,13 @@ const editMode = inject('editMode');
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
-const {
-  namespace: cardNamespace,
-  id,
-} = useCardStore(props.namespace);
+const { namespace: cardNamespace, id } = useCardStore(props.namespace);
+
+const { fields: customFields, getFields } = useExtensionFields({
+  type: 'cases',
+});
+
+getFields();
 
 const tabs = computed(() => {
   const tabs = [
@@ -69,13 +74,23 @@ const tabs = computed(() => {
     pathName: `${CrmSections.CASES}-attachments`,
   };
 
+  if (id.value) tabs.push(attachments);
+
+  if (customFields.value.length) {
+    tabs.push({
+      text: t('cases.details.details'),
+      value: 'details',
+      pathName: `${CrmSections.CASES}-details`,
+    });
+  }
+
   const permissions = {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
     pathName: `${CrmSections.CASES}-permissions`,
   };
 
-  if (id.value) tabs.push(attachments, permissions);
+  if (id.value) tabs.push(permissions);
 
   return tabs;
 });

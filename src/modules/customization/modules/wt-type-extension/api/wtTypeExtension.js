@@ -8,8 +8,9 @@ import applyTransform, {
   sanitize,
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import deepCopy from 'deep-copy';
 import { ExtensionsApiFactory } from 'webitel-sdk';
+
+import sortFields from '../utils/sortDynamicField';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
@@ -48,6 +49,27 @@ const getExtension = async ({ itemId: itemRepo }) => {
 
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
+    return {
+      id: itemRepo,
+      fields: [],
+      isNew: true,
+    };
+    throw applyTransform(err, [notify]);
+  }
+};
+
+const addExtension = async ({ itemInstance, itemId: id }) => {
+  const repo = id;
+
+  const item = applyTransform(itemInstance, [
+    sortFields,
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
+  try {
+    const response = await typeExtensionsService.createType(repo, item);
+    return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
+  } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
@@ -55,22 +77,15 @@ const getExtension = async ({ itemId: itemRepo }) => {
 const updateExtension = async ({ itemInstance, itemId: id }) => {
   const repo = id;
 
-  const sortFields = (item) => {
-    const unSortableFields = item.fields.filter((field) => !field.position);
+  if (!itemInstance.fields.length && itemInstance.isNew) {
+    return itemInstance;
+  } else if (itemInstance.isNew) {
+    return addExtension({ itemInstance, itemId: id });
+  }
 
-    const fields = deepCopy(item.fields)
-      .filter((field) => field.position)
-      .sort((a, b) => {
-        return a.position - b.position;
-      });
-
-    fields.splice(1, 0, ...unSortableFields);
-
-    return {
-      ...item,
-      fields,
-    };
-  };
+  if (!itemInstance.fields.length && !itemInstance.isNew) {
+    return deleteExtension({ itemId: id });
+  }
 
   const item = applyTransform(itemInstance, [
     sortFields,
@@ -85,9 +100,19 @@ const updateExtension = async ({ itemInstance, itemId: id }) => {
   }
 };
 
+const deleteExtension = async ({ itemId: id }) => {
+  try {
+    await typeExtensionsService.deleteType(id);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const WtTypeExtensionApi = {
+  add: addExtension,
   get: getExtension,
   update: updateExtension,
+  delete: deleteExtension,
 };
 
 export default WtTypeExtensionApi;

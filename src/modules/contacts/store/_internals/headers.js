@@ -13,15 +13,13 @@ export default [
     locale: ['objects.user', 1],
     show: true,
     field: 'user',
-    sort: SortSymbols.NONE,
     width: '100px',
   },
   {
     value: 'groups',
-    locale: 'contacts.group',
+    locale: 'reusable.group',
     show: true,
     field: 'groups',
-    sort: SortSymbols.NONE,
     width: '170px',
   },
   {

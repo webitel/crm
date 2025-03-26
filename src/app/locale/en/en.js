@@ -14,9 +14,6 @@ export default {
   contacts: {
     contact: 'Contact | Contacts',
     manager: 'Owner | Owners',
-    group: ({ linked }) => {
-      return linked('cases.group');
-    },
     destination: 'Destination',
     collapseAll: 'Collapse all',
     communications: {
@@ -210,6 +207,7 @@ export default {
     },
     extensions: {
       contacts: ({ linked }) => linked('contacts.contact'),
+      cases: ({ linked }) => linked('cases.case'),
     },
   },
   cases: {
@@ -220,7 +218,6 @@ export default {
     status: 'Status',
     source: 'Source',
     author: 'Author',
-    group: 'Group',
     service: '@:lookups.service.service',
     assignee: '@:lookups.contactGroups.assignee',
     reporter: 'Reporter',
@@ -262,6 +259,9 @@ export default {
       linkText: 'Link text',
       emptyFilesText: 'There are no attachments yet',
       emptyLinksText: 'There are no links yet',
+    },
+    details: {
+      details: 'Details',
     },
     relatedCases: {
       relatedCases: 'Related cases',

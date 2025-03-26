@@ -32,7 +32,7 @@
 
     <div class="opened-contact-general-name">
       <wt-icon
-        v-if="managers.length"
+        v-if="user"
         icon="webitel-logo"
       />
 
@@ -41,24 +41,33 @@
 
     <wt-divider />
 
-    <div
-      v-if="timezones.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
+      <p class="opened-contact-general-item__title">
+        {{ t('contacts.group') }}
+      </p>
+
+      <p class="opened-contact-general-item__value">
+        {{ groupsList }}
+      </p>
+    </div>
+
+    <wt-divider />
+
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('date.timezone', 1) }}
       </p>
-      <p class="opened-contact-general-item__value">
+      <p
+        v-if="timezones.length"
+        class="opened-contact-general-item__value"
+      >
         {{ timezones[0].timezone.name }}
       </p>
     </div>
 
-    <wt-divider v-if="timezones.length" />
+    <wt-divider />
 
-    <div
-      v-if="managers.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('contacts.manager', 1) }}
       </p>
@@ -67,12 +76,9 @@
       </p>
     </div>
 
-    <wt-divider v-if="managers.length" />
+    <wt-divider />
 
-    <div
-      v-if="about"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
         {{ t('vocabulary.description') }}
       </p>
@@ -81,12 +87,9 @@
       </p>
     </div>
 
-    <wt-divider v-if="about" />
+    <wt-divider />
 
-    <div
-      v-if="labels.length"
-      class="opened-contact-general-item"
-    >
+    <div class="opened-contact-general-item">
       <div
         class="opened-contact-general-item__value opened-contact-general-item__value--labels"
       >
@@ -128,6 +131,14 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  groups: {
+    type: Array,
+    default: () => [],
+  },
+  user: {
+    type: Object,
+    default: null,
+  },
 });
 
 const emit = defineEmits(['edit', 'delete']);
@@ -149,6 +160,8 @@ const actionOptions = computed(() => {
   };
   return [editAction, deleteAction];
 });
+
+const groupsList = computed(() => props.groups.map((el) => el.name).join(', '));
 </script>
 
 <style lang="scss" scoped>
