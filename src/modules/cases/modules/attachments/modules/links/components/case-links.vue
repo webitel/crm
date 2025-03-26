@@ -29,7 +29,7 @@
 
       <table-top-row-bar
         v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
-        :is-submit-disabled="isUrlInvalid"
+        :disabled-add-action="isUrlInvalid"
         @reset="resetForm"
         @submit="submitLink"
       >

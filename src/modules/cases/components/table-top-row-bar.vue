@@ -5,7 +5,7 @@
   >
     <slot />
     <wt-rounded-action
-      :disabled="props.isSubmitDisabled"
+      :disabled="props.disabledAddAction"
       icon="tick"
       @click="submit"
     />
@@ -20,7 +20,7 @@
 import { defineEmits } from 'vue';
 
 const props = defineProps({
-  isSubmitDisabled: {
+  disabledAddAction: {
     type: Boolean,
     default: false,
   },
