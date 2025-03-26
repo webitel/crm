@@ -1,7 +1,7 @@
 <template>
   <teleport
     v-if="hasEditAccess"
-    to="#opened-contact-actions"
+    to="#page-header-actions"
   >
     <wt-button @click="saveDetails">{{ t('reusable.save') }}</wt-button>
   </teleport>
@@ -58,7 +58,7 @@ const props = defineProps({
   },
 });
 
-const hasEditAccess = computed(() => !access.value?.hasRbacEditAccess);
+const hasEditAccess = computed(() => access.value?.hasRbacEditAccess);
 
 const router = useRouter();
 const { t } = useI18n();
