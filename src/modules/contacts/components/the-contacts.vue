@@ -36,6 +36,17 @@
     <template #main>
       <wt-loader v-show="isLoading" />
 
+      <wt-empty
+        v-if="showEmpty"
+        :image="emptyImage"
+        :headline="emptyHeadline"
+        :title="emptyTitle"
+        :text="emptyText"
+        :primary-action-text="emptyPrimaryActionText"
+        :disabled-primary-action="!hasCreateAccess"
+        @click:primary="add"
+      />
+
       <wt-dummy
         v-if="!isLoading && !dataList.length"
         :dark-mode="darkMode"
