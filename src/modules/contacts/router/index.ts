@@ -9,6 +9,7 @@ import ContactDetails from '../modules/details/components/the-details.vue';
 import ContactPermissions from '../modules/permissions/components/the-permissions.vue';
 import ContactTimeline from '../modules/timeline/components/contact-timeline.vue';
 import ContactVariables from '../modules/variables/components/the-variables.vue';
+import ContactCases from '../modules/cases/components/the-contact-cases.vue';
 
 const contactsRoutes: RouteRecordRaw[] = [
   {
@@ -29,6 +30,11 @@ const contactsRoutes: RouteRecordRaw[] = [
         path: 'timeline',
         name: `${CrmSections.Contacts}-timeline`,
         component: ContactTimeline,
+      },
+      {
+        path: 'cases',
+        name: `${CrmSections.Contacts}-cases`,
+        component: ContactCases,
       },
       {
         path: 'communications',
