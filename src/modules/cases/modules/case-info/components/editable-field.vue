@@ -12,8 +12,8 @@
         class="editable-field__label-wrapper"
       >
         <wt-icon
-          class="editable-field__label-icon"
           v-if="icon && horizontalView"
+          class="editable-field__label-icon"
           :color="color"
           :icon="icon"
         />

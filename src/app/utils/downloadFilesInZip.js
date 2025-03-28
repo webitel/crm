@@ -1,7 +1,11 @@
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
-export default async function downloadFilesInZip({ filesToDownload, apiUrl, token }) {
+export default async function downloadFilesInZip({
+  filesToDownload,
+  apiUrl,
+  token,
+}) {
   if (!filesToDownload?.length) return;
 
   const zip = new JSZip();

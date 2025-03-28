@@ -79,6 +79,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { computed, inject, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+
 import VariablePopup from './variable-popup.vue';
 
 const access = inject('access');

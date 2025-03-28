@@ -14,4 +14,3 @@ export default [
     field: 'created_by',
   },
 ];
-

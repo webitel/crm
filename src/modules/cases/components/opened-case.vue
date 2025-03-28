@@ -1,8 +1,8 @@
 <template>
   <wt-dual-panel
+    v-if="!isLoading"
     :actions-panel="false"
     class="opened-case"
-    v-if="!isLoading"
   >
     <template #header>
       <wt-page-header
@@ -56,6 +56,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -64,7 +65,6 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
-import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 
 const namespace = 'cases';
 

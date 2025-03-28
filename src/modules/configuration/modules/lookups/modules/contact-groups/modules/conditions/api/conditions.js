@@ -12,33 +12,27 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-import i18n from '../../../../../../../../../app/locale/i18n.js';
 import { DynamicConditionsApiFactory } from 'webitel-sdk';
 
-const { t} = i18n.global;
+import i18n from '../../../../../../../../../app/locale/i18n.js';
+
+const { t } = i18n.global;
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const dynamicGroupConditionsService = new DynamicConditionsApiFactory(configuration, '', instance);
+const dynamicGroupConditionsService = new DynamicConditionsApiFactory(
+  configuration,
+  '',
+  instance,
+);
 
-const fieldsToSend = [
-  'assignee',
-  'expression',
-  'group',
-];
+const fieldsToSend = ['assignee', 'expression', 'group'];
 
 const getConditionsList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const {
-    page,
-    size,
-    fields,
-    sort,
-    id,
-    q,
-  } = applyTransform(rest, [
+  const { page, size, fields, sort, id, q } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
@@ -73,7 +67,10 @@ const getCondition = async ({ itemId: id }) => {
   };
 
   try {
-    const response = await dynamicGroupConditionsService.locateCondition(id, fieldsToSend);
+    const response = await dynamicGroupConditionsService.locateCondition(
+      id,
+      fieldsToSend,
+    );
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -87,14 +84,22 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
   ]);
 
   try {
-    const response = await dynamicGroupConditionsService.updateCondition(id, item);
+    const response = await dynamicGroupConditionsService.updateCondition(
+      id,
+      item,
+    );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [
-      notify(({ callback }) => callback({
-        type: 'error',
-        text: err.response.data.code === 409 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
-      })),
+      notify(({ callback }) =>
+        callback({
+          type: 'error',
+          text:
+            err.response.data.code === 409
+              ? t('lookups.closeReasonGroups.sameConditionError')
+              : err.response?.data?.detail,
+        }),
+      ),
     ]);
   }
 };
@@ -106,26 +111,34 @@ const addCondition = async ({ itemInstance, parentId }) => {
   ]);
 
   try {
-    const response = await dynamicGroupConditionsService.createCondition(parentId, item);
+    const response = await dynamicGroupConditionsService.createCondition(
+      parentId,
+      item,
+    );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [
-      notify(({ callback }) => callback({
-        type: 'error',
-        text: err.response.data.code === 409 ? t('lookups.closeReasonGroups.sameConditionError') : err.response?.data?.detail,
-      })),
+      notify(({ callback }) =>
+        callback({
+          type: 'error',
+          text:
+            err.response.data.code === 409
+              ? t('lookups.closeReasonGroups.sameConditionError')
+              : err.response?.data?.detail,
+        }),
+      ),
     ]);
   }
 };
 
 const patchCondition = async ({ parentId, changes }) => {
-
-  const item = applyTransform(changes, [
-    camelToSnake(),
-  ]);
+  const item = applyTransform(changes, [camelToSnake()]);
 
   try {
-    const response = await dynamicGroupConditionsService.updateCondition2(parentId, item);
+    const response = await dynamicGroupConditionsService.updateCondition2(
+      parentId,
+      item,
+    );
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

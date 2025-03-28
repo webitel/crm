@@ -58,6 +58,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { EngineCommunicationChannels } from 'webitel-sdk';
+
 import CommunicationTypesAPI from '../api/CommunicationTypesAPI';
 
 const props = defineProps({

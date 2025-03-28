@@ -12,7 +12,7 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index';
-import type { ApiModule } from "@webitel/ui-sdk/src/api/types/ApiModule";
+import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule';
 import { CaseCommentsApiFactory, CasesCaseComment } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
@@ -21,15 +21,18 @@ const configuration = getDefaultOpenAPIConfig();
 const commentsService = CaseCommentsApiFactory(configuration, '', instance);
 
 const getCommentsList = async ({ parentId, ...rest }) => {
-  const { page, size, q, ids, sort, /*fields,*/ options } = applyTransform(rest, [
-    merge(getDefaultGetParams()),
-    starToSearch('search'),
-    (params) => ({
-      ...params,
-      q: params.search,
-    }),
-    camelToSnake(),
-  ]);
+  const { page, size, q, ids, sort, /*fields,*/ options } = applyTransform(
+    rest,
+    [
+      merge(getDefaultGetParams()),
+      starToSearch('search'),
+      (params) => ({
+        ...params,
+        q: params.search,
+      }),
+      camelToSnake(),
+    ],
+  );
   try {
     const response = await commentsService.listComments(
       parentId,
@@ -38,7 +41,16 @@ const getCommentsList = async ({ parentId, ...rest }) => {
       q,
       ids,
       sort,
-      ['id', 'etag', 'text', 'created_at', 'updated_at', 'created_by', 'author', 'can_edit'],
+      [
+        'id',
+        'etag',
+        'text',
+        'created_at',
+        'updated_at',
+        'created_by',
+        'author',
+        'can_edit',
+      ],
       options,
     );
 

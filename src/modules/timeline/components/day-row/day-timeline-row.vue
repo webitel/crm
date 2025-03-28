@@ -45,11 +45,12 @@
 
 <script setup>
 import { computed } from 'vue';
+
 import TimelinePinType from '../../enums/TimelinePinType.enum.js';
 import TaskTimelineRow from '../task-row/task-timeline-row.vue';
 import TimelinePin from '../utils/timeline-pin.vue';
-import TimelineRowInfo from '../utils/timeline-row-info.vue';
 import TimelineRow from '../utils/timeline-row.vue';
+import TimelineRowInfo from '../utils/timeline-row-info.vue';
 import DayTimelineRowCounters from './day-timeline-row-counters.vue';
 
 const props = defineProps({

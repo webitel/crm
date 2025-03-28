@@ -7,19 +7,20 @@
 </template>
 
 <script setup>
+import WtStartPage from '@webitel/ui-sdk/src/components/on-demand/wt-start-page/components/wt-start-page.vue';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import WtStartPage from '@webitel/ui-sdk/src/components/on-demand/wt-start-page/components/wt-start-page.vue';
-import LogoLight from '../assets/crm-logo-light.svg';
-import LogoDark from '../assets/crm-logo-dark.svg';
-import ConfigurationImgLight from '../assets/configuration-section-img-light.svg';
-import ConfigurationImgDark from '../assets/configuration-section-img-dark.svg';
-import ContactsImgLight from '../assets/contacts-section-img-light.svg';
-import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
-import CasesLight from '../assets/cases-section-light.svg';
+
 import CasesDark from '../assets/cases-section-dark.svg';
+import CasesLight from '../assets/cases-section-light.svg';
+import ConfigurationImgDark from '../assets/configuration-section-img-dark.svg';
+import ConfigurationImgLight from '../assets/configuration-section-img-light.svg';
+import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
+import ContactsImgLight from '../assets/contacts-section-img-light.svg';
+import LogoDark from '../assets/crm-logo-dark.svg';
+import LogoLight from '../assets/crm-logo-light.svg';
 
 const { t } = useI18n();
 const store = useStore();

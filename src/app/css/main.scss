@@ -5,10 +5,10 @@ body {
   @extend %typo-body-1;
   @extend %wt-scrollbar;
   display: flex;
+  background: var(--wt-page-wrapper-background-color);
   min-width: 100%;
   min-height: 100%;
   color: var(--text-main-color);
-  background: var(--wt-page-wrapper-background-color);
 }
 
 #app {
@@ -17,14 +17,14 @@ body {
 }
 
 .table-wrapper {
-  flex-grow: 1;
   display: flex;
-  padding-top: var(--spacing-xs);
+  flex-grow: 1;
   flex-direction: column;
   gap: var(--spacing-xs);
-  max-height: 100%;
-  min-height: 0;
+  padding-top: var(--spacing-xs);
   min-width: 0;
+  min-height: 0;
+  max-height: 100%;
 
   .wt-table {
     flex-grow: 1;
@@ -53,28 +53,33 @@ ul {
 }
 
 iframe {
-  border: none;
   outline: none;
+  border: none;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
   margin: 0;
 }
 
 a {
-  text-decoration: none;
   color: #000;
+  text-decoration: none;
 }
-
 
 .wt-page-wrapper {
   width: 100%;
 
   &__main {
-    flex-grow: 1;
     display: flex;
-    max-height: 100%;
+    flex-grow: 1;
     min-height: 0;
+    max-height: 100%;
   }
 
   .main-container {

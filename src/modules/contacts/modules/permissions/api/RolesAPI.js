@@ -4,10 +4,16 @@ import {
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
-  merge, notify, snakeToCamel,
-  starToSearch, log, sanitize,
-  generateUrl, mergeEach,
+  generateUrl,
+  log,
+  merge,
+  mergeEach,
+  notify,
+  sanitize,
+  snakeToCamel,
+  starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
+
 import instance from '../../../../../app/api/instance';
 
 const baseUrl = '/roles';
@@ -34,9 +40,7 @@ const getList = async (params) => {
       next,
     };
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 

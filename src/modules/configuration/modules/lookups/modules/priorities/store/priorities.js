@@ -4,9 +4,10 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import PrioritiesAPI from '../api/priorities.js';
-import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import headers from './_internals/headers';
 
 const resetCardState = {
   itemId: '',
@@ -32,7 +33,10 @@ const table = createTableStoreModule({
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState, itemInstance: resetCardState.itemInstance },
+  state: {
+    _resettable: resetCardState,
+    itemInstance: resetCardState.itemInstance,
+  },
   modules: {
     api,
   },

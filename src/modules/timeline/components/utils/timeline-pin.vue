@@ -31,6 +31,7 @@
 
 <script setup>
 import { computed } from 'vue';
+
 import TimelinePinType from '../../enums/TimelinePinType.enum.js';
 import TimelineFlowLine from './timeline-flow-line.vue';
 import TimelineRoundedAction from './timeline-rounded-action.vue';

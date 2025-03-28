@@ -26,11 +26,11 @@
 </template>
 
 <script setup>
+import TimelinePin from '../../../../components/utils/timeline-pin.vue';
+import TimelineRow from '../../../../components/utils/timeline-row.vue';
+import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelinePin from '../../../../components/utils/timeline-pin.vue';
-import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
-import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 
 const props = defineProps({

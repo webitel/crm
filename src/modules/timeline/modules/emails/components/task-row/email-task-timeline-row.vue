@@ -36,11 +36,12 @@
 </template>
 <script setup>
 import { computed, toRefs } from 'vue';
+
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
-import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
+import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
 import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';

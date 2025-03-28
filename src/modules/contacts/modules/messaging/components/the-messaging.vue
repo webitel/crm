@@ -67,6 +67,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { computed, inject, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import dummyDark from '../assets/messaging-dummy-dark.svg';
 import dummyLight from '../assets/messaging-dummy-light.svg';
 
