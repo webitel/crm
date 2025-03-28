@@ -13,6 +13,7 @@ import permissions from '../modules/permissions/store/permissions';
 import phones from '../modules/phones/store/phones';
 import variables from '../modules/variables/store/variables';
 import headers from './_internals/headers';
+import cases from '../modules/cases/store/cases';
 
 const cardState = {
   itemInstance: {
@@ -57,6 +58,7 @@ const card = createCardStoreModule({
     messaging,
     variables,
     permissions,
+    cases,
   },
 });
 

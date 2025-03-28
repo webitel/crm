@@ -46,6 +46,11 @@ const tabs = computed(() => {
       pathName: `${CrmSections.CONTACTS}-timeline`,
     },
     {
+      text: t('cases.case', 2),
+      value: 'cases',
+      pathName: `${CrmSections.CONTACTS}-cases`,
+    },
+    {
       text: t('contacts.communications.communications', 2),
       value: 'communications',
       pathName: `${CrmSections.CONTACTS}-communications`,

@@ -152,6 +152,7 @@ onUnmounted(() => resetState());
   display: flex;
   gap: var(--spacing-sm);
   min-height: 0;
+  max-width: 100%;
 
   .opened-contact-general {
     flex: 0 0 250px;
