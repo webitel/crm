@@ -12,7 +12,7 @@ import applyTransform, {
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index';
 import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule.d.ts';
-import { CasesRelatedCase,RelatedCasesApiFactory } from 'webitel-sdk';
+import { CasesRelatedCase, RelatedCasesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
