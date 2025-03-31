@@ -1,5 +1,4 @@
-import BaseStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+import BaseStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 
 export default class TimelineTaskPointsModule extends BaseStoreModule {
   apiModule = null;

@@ -18,12 +18,3 @@ const PrioritiesColors = Object.freeze({
 });
 
 export default PrioritiesColors;
-
-
-
-
-
-
-
-
-

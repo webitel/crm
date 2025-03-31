@@ -1,12 +1,10 @@
-import TableStoreModule
-  from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
-import ApiStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
-import BaseStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+import TableStoreModule from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
+import ApiStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
+import BaseStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+
 import VariablesAPI from '../api/VariablesAPI';
-import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import headers from './_internals/headers';
 
 const getters = {
   PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
@@ -42,18 +40,14 @@ const actions = {
       await context.dispatch('LOAD_DATA_LIST');
     }
   },
-}
+};
 
-const api = new ApiStoreModule()
-  .generateAPIActions(VariablesAPI)
-  .getModule();
+const api = new ApiStoreModule().generateAPIActions(VariablesAPI).getModule();
 
 const table = new TableStoreModule({ headers })
   .setChildModules({ api, filters })
   .getModule({ getters, actions });
 
-const variables = new BaseStoreModule()
-  .setChildModules({ table })
-  .getModule();
+const variables = new BaseStoreModule().setChildModules({ table }).getModule();
 
 export default variables;

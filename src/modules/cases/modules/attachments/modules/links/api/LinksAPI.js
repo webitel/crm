@@ -20,16 +20,9 @@ const configuration = getDefaultOpenAPIConfig();
 
 const linksService = new CaseLinksApiFactory(configuration, '', instance);
 
-const getLinksList = async ({
-  parentId,
-  ...rest
-}) => {
+const getLinksList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['etag', 'page', 'size', 'q'];
-  const {
-    page,
-    size,
-    q,
-  } = applyTransform(rest, [
+  const { page, size, q } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({
@@ -40,17 +33,9 @@ const getLinksList = async ({
     camelToSnake(),
   ]);
   try {
-    const response = await linksService.listLinks(
-      parentId,
-      page,
-      size,
-      q,
-    );
+    const response = await linksService.listLinks(parentId, page, size, q);
 
-    const {
-      items,
-      next,
-    } = applyTransform(response.data, [
+    const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
     ]);
     return {
@@ -62,30 +47,25 @@ const getLinksList = async ({
   }
 };
 
-const addLink = async ({
-  parentId,
-  input,
-}) => {
+const addLink = async ({ parentId, input }) => {
   const fieldsToSend = ['name', 'url'];
-  const {
-    url,
-    name,
-  } = input;
+  const { url, name } = input;
 
   try {
-
-    const response = await linksService.createLink(parentId, fieldsToSend, null, url, name);
+    const response = await linksService.createLink(
+      parentId,
+      fieldsToSend,
+      null,
+      url,
+      name,
+    );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
-const patchLink = async ({
-  parentId,
-  linkId,
-  changes,
-}) => {
+const patchLink = async ({ parentId, linkId, changes }) => {
   const fieldsToSend = ['name', 'url'];
   const body = applyTransform(changes, [
     sanitize(fieldsToSend),
@@ -94,27 +74,18 @@ const patchLink = async ({
 
   try {
     const response = await linksService.updateLink(parentId, linkId, body);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
-const deleteLink = async ({
-  parentId,
-  etag,
-}) => {
+const deleteLink = async ({ parentId, etag }) => {
   try {
     const response = await linksService.deleteLink(parentId, etag);
     return applyTransform(response.data, []);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 

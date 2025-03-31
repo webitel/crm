@@ -49,8 +49,8 @@
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 import { useRoute } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import ContactGroupsAPI from '../api/contactGroups.js';

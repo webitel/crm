@@ -5,15 +5,12 @@ import applyTransform, {
   snakeToCamel,
 } from '@webitel/ui-sdk/src/api/transformers/index';
 import deepCopy from 'deep-copy';
-import {
-  CaseTimelineApiFactory,
-  TimelineApiFactory,
-} from 'webitel-sdk';
+import { CaseTimelineApiFactory, TimelineApiFactory } from 'webitel-sdk';
 
 import getDefaultGetListResponse from '../../../app/api/defaults/getDefaultGetListResponse';
 import instance from '../../../app/api/instance';
 import configuration from '../../../app/api/openAPIConfig';
-import { TimelineEventType } from "../enums/TimelineEventType";
+import { TimelineEventType } from '../enums/TimelineEventType';
 import { TimelineMode } from '../enums/TimelineMode';
 
 const listHandler = (items) => {
@@ -107,6 +104,6 @@ const ApiModeMap = {
 };
 
 export default {
-  getList: ({ mode, ...rest}) => ApiModeMap[mode].getList(rest),
+  getList: ({ mode, ...rest }) => ApiModeMap[mode].getList(rest),
   getCounters: ({ mode, ...rest }) => ApiModeMap[mode].getCounters(rest),
 };

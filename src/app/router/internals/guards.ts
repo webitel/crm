@@ -1,6 +1,6 @@
 import { type RouteLocationNormalized } from 'vue-router';
 
-import store from '../../store'
+import store from '../../store';
 
 export const checkAppAccess = () => {
   const hasReadAccess = store.getters['userinfo/CHECK_APP_ACCESS'](

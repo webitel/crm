@@ -41,6 +41,7 @@
 
 <script setup>
 import { inject, onMounted, onUnmounted, ref, useSlots } from 'vue';
+
 import TimelineRowDropdownTransition from './timeline-row-dropdown-transition.vue';
 
 const props = defineProps({

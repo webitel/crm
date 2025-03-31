@@ -4,9 +4,10 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import ServicesAPI from '../api/services.js';
-import headers from './_internals/headers';
 import filters from '../modules/filters/store/filters';
+import headers from './_internals/headers';
 
 const resetTableState = {
   dataList: [],
@@ -50,7 +51,8 @@ const card = createCardStoreModule({
     itemInstance: resetCardState.itemInstance,
     _resettable: resetCardState,
     rootId: null,
-    catalogId: null },
+    catalogId: null,
+  },
   modules: {
     api,
   },

@@ -23,14 +23,15 @@
 </template>
 
 <script setup>
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+
 import TheEmails from '../modules/emails/components/the-emails.vue';
-import ThePhones from '../modules/phones/components/the-phones.vue';
 import TheMessaging from '../modules/messaging/components/the-messaging.vue';
+import ThePhones from '../modules/phones/components/the-phones.vue';
 
 const access = inject('access');
 

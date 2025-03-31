@@ -88,15 +88,16 @@
 </template>
 
 <script setup>
-import { computed, inject, onUnmounted, ref } from 'vue';
+import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
+import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import GranteePopup from './permissions-tab-grantee-popup.vue';
+
 import AccessMode from '../enums/AccessMode.enum';
+import GranteePopup from './permissions-tab-grantee-popup.vue';
 
 const access = inject('access');
 

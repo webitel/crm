@@ -42,9 +42,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
 import purify from 'dompurify';
 import linkifyHtml from 'linkify-html';
+import { computed, ref } from 'vue';
+
 import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';

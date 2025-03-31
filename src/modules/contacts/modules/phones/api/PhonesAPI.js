@@ -9,8 +9,8 @@ import applyTransform, {
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
 import { PhonesApiFactory } from 'webitel-sdk';
-import getDefaultGetListResponse
-  from '../../../../../app/api/defaults/getDefaultGetListResponse';
+
+import getDefaultGetListResponse from '../../../../../app/api/defaults/getDefaultGetListResponse';
 import instance from '../../../../../app/api/instance';
 import configuration from '../../../../../app/api/openAPIConfig';
 
@@ -21,16 +21,16 @@ const getList = async (params) => {
     primary: false,
   };
 
-  const fieldsToSend = ['parentId', 'page', 'size', 'q', 'sort', 'fields', 'id'];
-  const {
-    parentId,
-    page,
-    size,
-    q,
-    sort,
-    fields,
-    id,
-  } = applyTransform(params, [
+  const fieldsToSend = [
+    'parentId',
+    'page',
+    'size',
+    'q',
+    'sort',
+    'fields',
+    'id',
+  ];
+  const { parentId, page, size, q, sort, fields, id } = applyTransform(params, [
     sanitize(fieldsToSend),
     merge(getDefaultGetParams()),
     starToSearch('q'),
@@ -51,33 +51,21 @@ const getList = async (params) => {
       merge(getDefaultGetListResponse()),
     ]);
     return {
-      items: applyTransform(data, [
-        mergeEach(defaultObject),
-      ]),
+      items: applyTransform(data, [mergeEach(defaultObject)]),
       next,
     };
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
 const get = async ({ itemId, parentId }) => {
   const fields = ['number', 'primary', 'etag', 'type'];
   try {
-    const response = await service.locatePhone(
-      parentId,
-      itemId,
-      fields,
-      );
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    const response = await service.locatePhone(parentId, itemId, fields);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -90,13 +78,9 @@ const add = async ({ parentId, itemInstance }) => {
   ]);
   try {
     const response = await service.mergePhones(parentId, [item]);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 const update = async ({ itemInstance, etag, parentId }) => {
@@ -106,13 +90,9 @@ const update = async ({ itemInstance, etag, parentId }) => {
   ]);
   try {
     const response = await service.updatePhone(parentId, etag, item);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -123,25 +103,18 @@ const patch = async ({ parentId, changes, etag }) => {
   ]);
   try {
     const response = await service.updatePhone(parentId, etag, body);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
 const deleteItem = async ({ id, etag, parentId }) => {
   try {
     const response = await service.deletePhone(parentId, etag);
-    return applyTransform(response.data, [
-    ]);
+    return applyTransform(response.data, []);
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 

@@ -89,6 +89,7 @@ import { computed, inject, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+
 import CommunicationPopup from '../../../components/opened-contact-communication-popup.vue';
 import dummyDark from '../assets/email-dummy-dark.svg';
 import dummyLight from '../assets/email-dummy-light.svg';

@@ -4,10 +4,11 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import SlasAPI from '../api/slas.js';
-import headers from './_internals/headers';
-import filters from '../modules/filters/store/filters';
 import conditions from '../modules/conditions/store/conditions';
+import filters from '../modules/filters/store/filters';
+import headers from './_internals/headers';
 
 const resetCardState = {
   itemId: '',
