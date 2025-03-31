@@ -1,4 +1,4 @@
-import { FilterOption } from "@webitel/ui-sdk/src/modules/Filters/v2/filters/enums/FilterOption";
+import { FilterOption } from '@webitel/ui-sdk/src/modules/Filters/v2/filters/enums/FilterOption';
 
 export const filtersOptions: FilterOption[] = [
   FilterOption.CreatedAtFrom,

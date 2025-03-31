@@ -32,10 +32,11 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+
+import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';
 import EmailTaskTimelineHeader from '../task-row/email-task-timeline-header.vue';
 import EmailPointTimelineRowContent from './email-point-timeline-row-content.vue';
 import EmailPointTimelineRowFilesContainer from './email-point-timeline-row-files-container.vue';
-import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';
 
 const props = defineProps({
   task: {

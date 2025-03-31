@@ -18,7 +18,6 @@ import configuration from '../../../../../app/api/openAPIConfig';
 const variablesService = new VariablesApiFactory(configuration, '', instance);
 
 const getList = async (params) => {
-
   const fieldsToSend = [
     'parentId',
     'page',
@@ -28,15 +27,7 @@ const getList = async (params) => {
     'fields',
     'id',
   ];
-  const {
-    parentId,
-    page,
-    size,
-    q,
-    sort,
-    fields,
-    id,
-  } = applyTransform(params, [
+  const { parentId, page, size, q, sort, fields, id } = applyTransform(params, [
     sanitize(fieldsToSend),
     merge(getDefaultGetParams()),
     starToSearch('q'),
@@ -60,9 +51,7 @@ const getList = async (params) => {
       next,
     };
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -78,14 +67,10 @@ const get = async ({ parentId, itemId }) => {
       fields,
       [itemId],
     );
-    const { data } = applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    const { data } = applyTransform(response.data, [snakeToCamel()]);
     return data[0];
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -98,14 +83,9 @@ const add = async ({ parentId, itemInstance }) => {
   ]);
   try {
     const response = await variablesService.mergeVariables(parentId, [item]);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -116,14 +96,9 @@ const update = async ({ itemInstance, etag: id, parentId }) => {
   ]);
   try {
     const response = await variablesService.updateVariable(parentId, id, item);
-    return applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [
-
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -132,10 +107,7 @@ const deleteItem = async ({ etag, parentId }) => {
     const response = await variablesService.deleteVariable(parentId, etag);
     return applyTransform(response.data, []);
   } catch (err) {
-    throw applyTransform(err, [
-
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 

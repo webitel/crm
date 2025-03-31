@@ -52,6 +52,7 @@ import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreMod
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import EditableField from '../../case-info/components/editable-field.vue';
 import CloseReasonsAPI from '../api/CloseReasonsAPI.js';

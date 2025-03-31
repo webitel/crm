@@ -16,6 +16,7 @@
 
 <script setup>
 import { inject } from 'vue';
+
 import { useTaskPoints } from '../../../../composables/useTaskPoints.js';
 import ChatEndedPointTimelineRow from './chat-ended-point-timeline-row.vue';
 import ChatPointTimelineRow from './chat-point-timeline-row.vue';

@@ -17,19 +17,16 @@ import { CloseReasonsApiFactory } from 'webitel-sdk';
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const closeReasonsService = new CloseReasonsApiFactory(configuration, '', instance);
+const closeReasonsService = new CloseReasonsApiFactory(
+  configuration,
+  '',
+  instance,
+);
 
-const getCloseReasonsList = async ({closeReasonGroupId, ...params}) => {
+const getCloseReasonsList = async ({ closeReasonGroupId, ...params }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const {
-    page,
-    size,
-    fields,
-    sort,
-    id,
-    q,
-  } = applyTransform(params, [
+  const { page, size, fields, sort, id, q } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
@@ -57,7 +54,7 @@ const getCloseReasonsList = async ({closeReasonGroupId, ...params}) => {
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-}
+};
 
 const getCloseReasonsLookup = (params) => {
   return getCloseReasonsList({

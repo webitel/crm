@@ -1,7 +1,5 @@
-import FiltersStoreModule
-  from '@webitel/ui-sdk/src/modules/Filters/store/FiltersStoreModule';
-import ContactsSearchMode
-  from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
+import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
+import FiltersStoreModule from '@webitel/ui-sdk/src/modules/Filters/store/FiltersStoreModule';
 
 const filtersList = [
   {
@@ -34,8 +32,6 @@ const filtersList = [
   },
 ];
 
-const filters = new FiltersStoreModule()
-.addFilter(filtersList)
-.getModule();
+const filters = new FiltersStoreModule().addFilter(filtersList).getModule();
 
 export default filters;

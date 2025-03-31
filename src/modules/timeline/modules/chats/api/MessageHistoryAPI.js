@@ -20,18 +20,12 @@ const getList = (getMessages) => async (params) => {
 
   try {
     const response = await getMessages(params);
-    const { peers, messages } = applyTransform(response.data, [
-      snakeToCamel(),
-    ]);
+    const { peers, messages } = applyTransform(response.data, [snakeToCamel()]);
     return {
-      items: applyTransform({ peers, messages }, [
-        mergeMessageData,
-      ]).reverse(),
+      items: applyTransform({ peers, messages }, [mergeMessageData]).reverse(),
     };
   } catch (err) {
-    throw applyTransform(err, [
-      notify,
-    ]);
+    throw applyTransform(err, [notify]);
   }
 };
 
@@ -45,14 +39,19 @@ const getContactMessages = (params) => {
 };
 
 const getCaseMessages = (params) => {
-  const url = applyTransform({ /*...params*/ }, [
-    camelToSnake(),
+  const url = applyTransform(
+    {
+      /*...params*/
+    },
+    [
+      camelToSnake(),
 
-    /* equals to CatalogApiFactory.getHistory
-     * https://swagger.webitel.com/#/Catalog/Catalog_GetHistory
-     *  */
-    generateUrl(`cases/${params.parentId}/chat/${params.taskId}/messages`),
-  ]);
+      /* equals to CatalogApiFactory.getHistory
+       * https://swagger.webitel.com/#/Catalog/Catalog_GetHistory
+       *  */
+      generateUrl(`cases/${params.parentId}/chat/${params.taskId}/messages`),
+    ],
+  );
 
   return instance.get(url);
 };
@@ -63,10 +62,9 @@ const ModeApiMap = {
   },
   [TimelineMode.Case]: {
     getList: getList(getCaseMessages),
-  }
+  },
 };
 
 export default {
   getList: ({ mode, ...rest }) => ModeApiMap[mode].getList(rest),
-
 };

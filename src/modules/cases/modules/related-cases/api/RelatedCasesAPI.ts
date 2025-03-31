@@ -11,17 +11,13 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index';
-import { RelatedCasesApiFactory, CasesRelatedCase } from 'webitel-sdk';
-import type { ApiModule } from "@webitel/ui-sdk/src/api/types/ApiModule.d.ts";
+import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule.d.ts';
+import { CasesRelatedCase, RelatedCasesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const relatedCasesService = RelatedCasesApiFactory(
-  configuration,
-  '',
-  instance,
-);
+const relatedCasesService = RelatedCasesApiFactory(configuration, '', instance);
 
 const getRelatedCasesList = async ({ parentId, ...rest }) => {
   const { page, size, q, ids, sort, fields, options } = applyTransform(rest, [
@@ -47,9 +43,10 @@ const getRelatedCasesList = async ({ parentId, ...rest }) => {
       options,
     );
 
-    const { items, next } = applyTransform({ ...response.data, items: response.data?.data || [] }, [
-      merge(getDefaultGetListResponse()),
-    ]);
+    const { items, next } = applyTransform(
+      { ...response.data, items: response.data?.data || [] },
+      [merge(getDefaultGetListResponse())],
+    );
 
     return {
       items: applyTransform(items, [snakeToCamel()]),

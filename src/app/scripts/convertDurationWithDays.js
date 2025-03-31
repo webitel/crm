@@ -3,8 +3,8 @@ function convertDurationWithDays(duration, timerFormatting = false) {
 
   // Convert milliseconds to seconds because if timerFormatting is true, duration is in milliseconds
   const totalSeconds = timerFormatting
-      ? Math.abs(Number(duration)) / 1000
-      : Math.abs(Number(duration));
+    ? Math.abs(Number(duration)) / 1000
+    : Math.abs(Number(duration));
 
   const isNegative = duration < 0;
 

@@ -1,4 +1,4 @@
-export const serviceCatalogData  = {
+export const serviceCatalogData = {
   catalog: {
     id: 'catalog1',
     name: 'Main Catalogqwe',

@@ -1,4 +1,5 @@
 import { createI18n } from 'vue-i18n';
+
 import datetimeFormats from './datetimeFormats.js';
 import en from './en/en.js';
 import kz from './kz/kz.js';

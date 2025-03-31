@@ -23,14 +23,7 @@ const statusesService = new StatusesApiFactory(configuration, '', instance);
 const getStatusesList = async (params) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
 
-  const {
-    page,
-    size,
-    fields,
-    sort,
-    id,
-    q,
-  } = applyTransform(params, [
+  const { page, size, fields, sort, id, q } = applyTransform(params, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
@@ -57,7 +50,7 @@ const getStatusesList = async (params) => {
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-}
+};
 
 const getStatus = async ({ statusId: id }) => {
   try {
@@ -66,14 +59,14 @@ const getStatus = async ({ statusId: id }) => {
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-}
+};
 
 const getStatusesLookup = (params) => {
   return getStatusesList({
     ...params,
     fields: params.fields || ['id', 'name'],
   });
-}
+};
 
 const StatusesAPI = {
   getList: getStatusesList,

@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
-import store from '../../../../../../app/store';
+
 import router from '../../../../../../app/router';
+import store from '../../../../../../app/store';
 import TheMessaging from '../the-messaging.vue';
 
 describe('TheEmails', () => {

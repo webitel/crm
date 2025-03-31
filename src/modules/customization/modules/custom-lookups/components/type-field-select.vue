@@ -23,12 +23,20 @@
     track-by="name"
     :clearable="false"
     @input="selectObject($event)"
-  />
+  >
+    <template #option="{ option }">
+      {{ getOptionLocale(option) }}
+    </template>
+    <template #singleLabel="{ option }">
+      {{ getOptionLocale(option) }}
+    </template>
+  </wt-select>
 </template>
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { snakeToCamel } from '@webitel/ui-sdk/scripts';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -46,7 +54,7 @@ const props = defineProps({
   },
 });
 
-const { t } = useI18n();
+const { t, te } = useI18n();
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -114,6 +122,23 @@ const selectObject = (value) => {
 };
 const loadLookupList = (params) => {
   return ObjectsApi.getLookup(params);
+};
+
+const getOptionLocale = (option) => {
+  if (!option) return '';
+
+  const objectCode = snakeToCamel(option.repo);
+
+  // From backend got repo with 's' at the end of the word which means plural, so need to remove it to get the singular form translation
+  const singleObjectCode = objectCode.endsWith('s') ? objectCode.slice(0, -1) : objectCode;
+
+  const hasTranslationInSameKeyByObject = te(`objects.${singleObjectCode}.${singleObjectCode}`);
+
+  if (hasTranslationInSameKeyByObject) {
+    return t(`objects.${singleObjectCode}.${singleObjectCode}`);
+  }
+
+  return te(`objects.${singleObjectCode}`) ? t(`objects.${singleObjectCode}`) : option.name;
 };
 </script>
 

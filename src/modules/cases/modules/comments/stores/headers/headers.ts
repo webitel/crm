@@ -8,4 +8,3 @@ export const headers = [
     field: 'text',
   },
 ];
-

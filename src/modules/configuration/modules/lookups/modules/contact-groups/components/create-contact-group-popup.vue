@@ -11,12 +11,12 @@
 </template>
 
 <script setup>
-import { ref, computed, useAttrs } from 'vue';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { computed, ref, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 
 const props = defineProps({
   namespace: {
