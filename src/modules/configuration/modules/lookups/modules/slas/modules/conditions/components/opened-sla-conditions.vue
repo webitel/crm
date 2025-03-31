@@ -1,8 +1,8 @@
 <template>
   <section class="table-page opened-sla-conditions">
     <condition-popup
-      :namespace="namespace"
-      @load-data="loadData"
+      :namespace="conditionsNamespace"
+      @load-data="loadDataList"
     />
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
@@ -33,7 +33,6 @@
             :model-value="searchValue"
             :search-mode-options="filteredSearchOptions"
             @handle-search="handleSearch"
-            @update:search-mode="searchMode = $event"
           />
         </template>
       </wt-action-bar>
@@ -147,7 +146,7 @@ import {
   SearchMode,
   SearchModeType,
 } from '../../../../../../../../cases/filters/SearchMode.js';
-import { useSLAConditionsStore } from '../stores/conditions.ts';
+import { useSLAConditionsStore } from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
@@ -172,7 +171,7 @@ const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
-const tableStore = useSLAConditionsStore(conditionsNamespace);
+const tableStore = useSLAConditionsStore();
 
 const {
   dataList,
