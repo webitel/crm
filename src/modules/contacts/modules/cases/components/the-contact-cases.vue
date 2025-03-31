@@ -1,5 +1,11 @@
 <template>
   <div class="contact-cases">
+    <header v-if="showActionsPanel">
+      <cases-filters
+        :namespace="ContactCasesNamespace"
+        :table-store="tableStore"
+        @hide="showActionsPanel = false" />
+    </header>
     <header class="contact-cases-header">
       <h3 class="contact-cases-header__title">
         {{ $t('cases.case', 2) }}
@@ -14,9 +20,10 @@
               IconAction.COLUMNS,
             ]"
         @click:refresh="loadDataList"
+        @click:filters="showActionsPanel = !showActionsPanel"
       >
         <template #filters="{ action, onClick }">
-          <wt-badge>
+          <wt-badge :hidden="!anyFiltersOnFiltersPanel">
             <wt-icon-action
               :action="action"
               @click="onClick"
@@ -43,8 +50,8 @@
     />
 
     <div
-      class="table-wrapper"
       v-show="!isLoading && dataList?.length"
+      class="table-wrapper"
     >
       <wt-table
         :data="dataList"
@@ -164,17 +171,20 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
-import { useCasesStore } from '../stores/cases.ts';
-import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import CasesFilters from '../../../../cases/filters/cases-filters.vue';
 import DynamicFilterSearchWrapper from '../../../../cases/filters/components/dynamic-filter-search-wrapper.vue';
+import { SearchMode } from '../../../../cases/filters/SearchMode';
+import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import { ContactCasesNamespace } from '../namespace';
+import { useCasesStore } from '../stores/cases';
 
 const store = useStore();
 
@@ -214,11 +224,24 @@ const {
   isLoading,
 });
 
+const showActionsPanel = ref(true);
 const parentId = computed(() => store.state.contacts.card.itemId);
 
 initialize({ parentId: parentId.value });
 
 const contactCase = (id: string) => `${import.meta.env.VITE_CRM_URL}/cases/${id}`;
+
+/*
+ * show "toggle filters panel" badge if any filters are applied...
+ * */
+const anyFiltersOnFiltersPanel = computed(() => {
+  /*
+   * ...excluding search filters, which shown in other panel
+   * */
+  return filtersManager.value.getAllKeys().some((filterName) => {
+    return !Object.values(SearchMode).some((mode) => mode === filterName);
+  });
+});
 </script>
 
 <style lang="scss" scoped>

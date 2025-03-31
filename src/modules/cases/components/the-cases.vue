@@ -12,7 +12,10 @@
       </wt-page-header>
     </template>
     <template #actions-panel>
-      <cases-filters @hide="showActionsPanel = false" />
+      <cases-filters
+        :namespace="CasesNamespace"
+        :table-store="tableStore"
+        @hide="showActionsPanel = false" />
     </template>
     <template #main>
       <delete-confirmation-popup
@@ -233,6 +236,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import CasesFilters from '../filters/cases-filters.vue';
 import DynamicFilterSearchWrapper from '../filters/components/dynamic-filter-search-wrapper.vue';
 import { SearchMode } from '../filters/SearchMode';
+import { CasesNamespace } from '../namespace.js';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 

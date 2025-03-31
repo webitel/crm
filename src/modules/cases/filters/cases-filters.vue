@@ -76,13 +76,13 @@
 
     <template #actions>
       <apply-preset-action
-        :namespace="CasesNamespace"
-        :use-presets-store="createFilterPresetsStore(CasesNamespace)"
+        :namespace="namespace"
+        :use-presets-store="createFilterPresetsStore(namespace)"
         @apply="applyPreset"
       />
 
       <save-preset-action
-        :namespace="CasesNamespace"
+        :namespace="namespace"
         :filters-manager="filtersManager"
       />
 
@@ -119,24 +119,27 @@ import { storeToRefs } from 'pinia';
 import { computed, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { CasesNamespace } from '../namespace';
-import { useCasesStore } from '../stores/cases';
 import { filtersOptions } from './filters-options';
 import { SearchMode } from './SearchMode';
+
+const props = defineProps<{
+  tableStore: object;
+  namespace: string;
+}>();
 
 const emit = defineEmits<{
   hide: [];
 }>();
 
 const { t } = useI18n();
-const tableStore = useCasesStore();
-const { filtersManager } = storeToRefs(tableStore);
+
+const { filtersManager } = storeToRefs(props.tableStore);
 
 const {
   addFilter: applyFilter,
   updateFilter: updateAppliedFilter,
   deleteFilter: deleteAppliedFilter,
-} = tableStore;
+} = props.tableStore;
 
 function setFilterWrapperAction(
   data: FilterInitParams,
