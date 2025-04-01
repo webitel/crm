@@ -2,7 +2,7 @@
   <div class="contact-cases">
     <header v-if="showActionsPanel">
       <cases-filters
-        :namespace="ContactCasesNamespace"
+        :namespace="contactCasesNamespace"
         :table-store="tableStore"
         @hide="showActionsPanel = false" />
     </header>
@@ -183,12 +183,19 @@ import CasesFilters from '../../../../cases/filters/cases-filters.vue';
 import DynamicFilterSearchWrapper from '../../../../cases/filters/components/dynamic-filter-search-wrapper.vue';
 import { SearchMode } from '../../../../cases/filters/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
-import { ContactCasesNamespace } from '../namespace';
 import { useCasesStore } from '../stores/cases';
+
+const props = defineProps({
+  namespace: {
+    type: String,
+    required: true,
+  },
+});
 
 const store = useStore();
 
-const tableStore = useCasesStore();
+const contactCasesNamespace = `${props.namespace}/cases`;
+const tableStore = useCasesStore(contactCasesNamespace)();
 
 const {
   dataList,

@@ -236,7 +236,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import CasesFilters from '../filters/cases-filters.vue';
 import DynamicFilterSearchWrapper from '../filters/components/dynamic-filter-search-wrapper.vue';
 import { SearchMode } from '../filters/SearchMode';
-import { CasesNamespace } from '../namespace.js';
+import { CasesNamespace } from '../namespace';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 

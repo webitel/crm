@@ -65,21 +65,15 @@ const getContactCasesList = async (params) => {
     (params) => ({
       ...params,
       q: params.search,
+      filters: stringifyCaseFilters(params),
     }),
     sanitize(fieldsToSend),
     camelToSnake(),
     generateUrl(`contacts/${params.parentId}/cases`),
   ]);
 
-  const filters = stringifyCaseFilters(params)
-    .map((item) => {
-      const [key, value] = item.split('=');
-      return `filters=${key}=${value}`;
-    })
-    .join('&');
-
   try {
-    const response = await instance.get(`${url}&${filters}`);
+    const response = await instance.get(url);
 
     const { items, next } = applyTransform(response.data, [
       merge(getDefaultGetListResponse()),
