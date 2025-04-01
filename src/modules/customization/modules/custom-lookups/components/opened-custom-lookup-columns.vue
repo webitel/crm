@@ -38,14 +38,18 @@
 
     <div class="table-section__table-wrapper">
       <wt-empty
-        v-show="showEmpty"
+        v-if="showEmpty"
         :image="imageEmpty"
+        :headline="emptyHeadline"
+        :title="emptyTitle"
         :text="textEmpty"
+        :primary-action-text="emptyPrimaryActionText"
+        @click:primary="showAddFieldPopup = true"
       />
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="fields.length && !isLoading">
+      <div v-if="!showEmpty && !isLoading">
         <wt-table
           :data="fields"
           :headers="headers"
@@ -102,6 +106,7 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/components';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
@@ -339,7 +344,20 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList: fields, error, isLoading });
+  headline: emptyHeadline,
+  title: emptyTitle,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList: fields, error, isLoading, filters: computed(() => {
+    if (search.value) {
+      return {
+        search: itemInstance.value?.fields,
+      };
+    }
+
+    return {};
+  }),
+});
 
 const showAddFieldPopup = ref(false);
 
