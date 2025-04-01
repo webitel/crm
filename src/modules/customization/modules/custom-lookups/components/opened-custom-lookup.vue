@@ -1,5 +1,7 @@
 <template>
-  <wt-page-wrapper :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper
+    class="table-page"
+    :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
         :hide-primary="!hasSaveActionAccess"

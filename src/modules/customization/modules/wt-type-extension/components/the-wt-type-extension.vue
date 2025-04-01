@@ -1,5 +1,8 @@
 <template>
-  <wt-page-wrapper :actions-panel="false">
+  <wt-page-wrapper
+    class="table-page"
+    :actions-panel="false"
+  >
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -36,7 +39,8 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
-import OpenedCustomLookupColumns from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
+import OpenedCustomLookupColumns
+  from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
 
 const namespace = 'customization/wtTypeExtension';
 
