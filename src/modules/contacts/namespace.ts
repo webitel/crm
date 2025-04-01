@@ -1,1 +1,1 @@
-export const ContactsNamespace = 'cases';
+export const ContactsNamespace = 'contacts';
