@@ -127,8 +127,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-
-const baseNamespace = 'configuration/lookups/slas';
+import { SLANamespace } from '../namespace.js';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -160,7 +159,7 @@ const {
   sort,
   setSelected,
   onFilterEvent,
-} = useTableStore(baseNamespace);
+} = useTableStore(SLANamespace);
 
 const {
   namespace: filtersNamespace,

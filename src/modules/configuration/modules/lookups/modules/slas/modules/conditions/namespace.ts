@@ -1,1 +1,3 @@
-export const SLAConditionsNamespace = 'sla/conditions';
+import { SLANamespace } from '../../namespace';
+
+export const SLAConditionsNamespace = `${SLANamespace}/conditions`;
