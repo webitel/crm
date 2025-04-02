@@ -2,6 +2,7 @@
   <wt-dual-panel
     v-if="!isLoading"
     :actions-panel="false"
+    :class="{'opened-case_hide-header': isReadOnly}"
     class="opened-case"
   >
     <template #header>
@@ -36,9 +37,11 @@
         </template>
       </wt-page-header>
     </template>
+
     <template #side-panel>
       <opened-case-general />
     </template>
+
     <template #main>
       <opened-case-tabs
         :namespace="namespace"
@@ -74,9 +77,11 @@ const { t } = useI18n();
 const editMode = computed(() => {
   return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
 });
+const isReadOnly = computed(() => true);
 
 provide('namespace', namespace);
 provide('editMode', editMode);
+provide('isReadOnly', isReadOnly);
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
@@ -237,6 +242,12 @@ onUnmounted(() => {
   &__actions-wrapper {
     display: flex;
     gap: var(--spacing-sm);
+  }
+
+  &_hide-header {
+    :deep(.wt-dual-panel__header) {
+      display: none;
+    }
   }
 }
 </style>

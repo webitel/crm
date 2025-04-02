@@ -1,7 +1,8 @@
 <template>
   <wt-page-wrapper
-    class="opened-contact"
     :actions-panel="false"
+    :class="{'opened-contact_hide-header': isReadOnly}"
+    class="opened-contact"
   >
     <template #header>
       <wt-page-header
@@ -150,18 +151,26 @@ onUnmounted(() => resetState());
 </script>
 
 <style lang="scss" scoped>
-.opened-contact-content {
-  flex-grow: 1;
-  display: flex;
-  gap: var(--spacing-sm);
-  min-height: 0;
-  max-width: 100%;
+.opened-contact {
+  &_hide-header {
+    :deep(.wt-page-wrapper__header) {
+      display: none;
+    }
+  }
 
-  .opened-contact-general {
+  &-content {
+    flex-grow: 1;
+    display: flex;
+    gap: var(--spacing-sm);
+    min-height: 0;
+    max-width: 100%;
+  }
+
+  &-general {
     flex: 0 0 250px;
   }
 
-  .opened-contact-tabs {
+  &-tabs {
     flex: 1 1 auto;
   }
 }
