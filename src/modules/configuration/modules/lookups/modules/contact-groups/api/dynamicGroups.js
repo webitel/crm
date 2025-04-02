@@ -1,5 +1,6 @@
 import {
-  getDefaultInstance, getDefaultOpenAPIConfig,
+  getDefaultInstance,
+  getDefaultOpenAPIConfig,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
   camelToSnake,
@@ -12,9 +13,19 @@ import { DynamicGroupsApiFactory } from 'webitel-sdk';
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const dynamicContactGroupsService = new DynamicGroupsApiFactory(configuration, '', instance);
+const dynamicContactGroupsService = new DynamicGroupsApiFactory(
+  configuration,
+  '',
+  instance,
+);
 
-const fieldsToSend = ['name', 'description', 'enabled', 'type', 'default_group'];
+const fieldsToSend = [
+  'name',
+  'description',
+  'enabled',
+  'type',
+  'default_group',
+];
 
 const addDynamicContactGroup = async (itemInstance) => {
   const item = applyTransform(itemInstance, [
@@ -24,19 +35,23 @@ const addDynamicContactGroup = async (itemInstance) => {
 
   try {
     const response = await dynamicContactGroupsService.createDynamicGroup(item);
-    return applyTransform(response.data, [
-      snakeToCamel()
-    ]);
+    return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
 };
 
 const updateDynamicContactGroup = async ({ itemInstance, itemId: id }) => {
-  const item = applyTransform(itemInstance, [camelToSnake(), sanitize(fieldsToSend)]);
+  const item = applyTransform(itemInstance, [
+    camelToSnake(),
+    sanitize(fieldsToSend),
+  ]);
 
   try {
-    const response = await dynamicContactGroupsService.updateDynamicGroup(id, item);
+    const response = await dynamicContactGroupsService.updateDynamicGroup(
+      id,
+      item,
+    );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -46,6 +61,6 @@ const updateDynamicContactGroup = async ({ itemInstance, itemId: id }) => {
 const dynamicContactGroupsAPI = {
   add: addDynamicContactGroup,
   update: updateDynamicContactGroup,
-}
+};
 
 export default dynamicContactGroupsAPI;

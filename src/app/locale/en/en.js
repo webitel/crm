@@ -47,6 +47,7 @@ export default {
         },
       },
     },
+    details: 'Details',
     attributes: 'Attribute | Attributes',
   },
   timeline: {

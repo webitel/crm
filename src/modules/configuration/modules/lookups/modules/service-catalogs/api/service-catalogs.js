@@ -61,16 +61,14 @@ const getCatalogsList = async (params) => {
     'hasSubservices',
   ];
 
-  const { page, size, fields, sort, id, q, state, has_subservices } = applyTransform(
-    params,
-    [
+  const { page, size, fields, sort, id, q, state, has_subservices } =
+    applyTransform(params, [
       merge(getDefaultGetParams()),
       starToSearch('search'),
       (params) => ({ ...params, q: params.search }),
       sanitize(fieldsToSend),
       camelToSnake(),
-    ],
-  );
+    ]);
   try {
     const response = await catalogsService.listCatalogs(
       page,

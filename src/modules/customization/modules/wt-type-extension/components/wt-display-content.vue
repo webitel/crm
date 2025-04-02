@@ -8,7 +8,7 @@
     </span>
 
     <display-dynamic-field-extension
-      v-if="value"
+      v-if="value || field.kind === FieldType.Boolean"
       :value="value"
       :field="field"
       :label="label"

@@ -17,7 +17,11 @@ import { SLAConditionsApiFactory } from 'webitel-sdk';
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const slaConditionsService = new SLAConditionsApiFactory(configuration, '', instance);
+const slaConditionsService = new SLAConditionsApiFactory(
+  configuration,
+  '',
+  instance,
+);
 
 const fieldsToSend = [
   'name',
@@ -28,7 +32,16 @@ const fieldsToSend = [
 ];
 
 const getConditionsList = async ({ parentId, ...rest }) => {
-  const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id', 'slaConditionId', 'priorityId'];
+  const fieldsToSend = [
+    'page',
+    'size',
+    'q',
+    'sort',
+    'fields',
+    'id',
+    'slaConditionId',
+    'priorityId',
+  ];
 
   const {
     page,
@@ -77,7 +90,11 @@ const getCondition = async ({ parentId, itemId: id }) => {
   };
 
   try {
-    const response = await slaConditionsService.locateSLACondition(parentId, id, fieldsToSend);
+    const response = await slaConditionsService.locateSLACondition(
+      parentId,
+      id,
+      fieldsToSend,
+    );
     return applyTransform(response.data, [snakeToCamel(), itemResponseHandler]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -91,7 +108,11 @@ const updateCondition = async ({ itemInstance, itemId: id }) => {
   ]);
 
   try {
-    const response = await slaConditionsService.updateSLACondition(itemInstance.slaId, id, item);
+    const response = await slaConditionsService.updateSLACondition(
+      itemInstance.slaId,
+      id,
+      item,
+    );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -105,7 +126,10 @@ const addCondition = async ({ itemInstance, parentId }) => {
   ]);
 
   try {
-    const response = await slaConditionsService.createSLACondition(parentId, item);
+    const response = await slaConditionsService.createSLACondition(
+      parentId,
+      item,
+    );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
     throw applyTransform(err, [notify]);
@@ -114,7 +138,10 @@ const addCondition = async ({ itemInstance, parentId }) => {
 
 const deleteCondition = async ({ id, parentId }) => {
   try {
-    const response = await slaConditionsService.deleteSLACondition(parentId, id);
+    const response = await slaConditionsService.deleteSLACondition(
+      parentId,
+      id,
+    );
     return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);

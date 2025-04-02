@@ -1,9 +1,10 @@
 import {
   createApiStoreModule,
   createBaseStoreModule,
-  createTableStoreModule,
   createCardStoreModule,
+  createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+
 import CloseReasonsAPI from '../api/closeReasons.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
@@ -14,7 +15,8 @@ const resetCardState = {
 };
 
 const getters = {
-  PARENT_ID: (s, g, rootState) => rootState.configuration.lookups.closeReasonGroups.card.itemId,
+  PARENT_ID: (s, g, rootState) =>
+    rootState.configuration.lookups.closeReasonGroups.card.itemId,
 };
 
 const actions = {
@@ -24,7 +26,7 @@ const actions = {
   UPDATE_ITEM: async (context) => {
     await context.dispatch('api/UPD_ITEM', { context });
   },
-}
+};
 
 const api = createApiStoreModule({
   state: {

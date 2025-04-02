@@ -22,5 +22,4 @@ export default [
     field: 'calendar',
     sort: SortSymbols.NONE,
   },
-
 ];

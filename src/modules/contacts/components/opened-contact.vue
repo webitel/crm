@@ -9,6 +9,9 @@
         hide-primary
       >
         <wt-headline-nav :path="path" />
+        <template #actions>
+          <div id="page-header-actions" />
+        </template>
       </wt-page-header>
     </template>
     <template #main>
@@ -152,6 +155,7 @@ onUnmounted(() => resetState());
   display: flex;
   gap: var(--spacing-sm);
   min-height: 0;
+  max-width: 100%;
 
   .opened-contact-general {
     flex: 0 0 250px;

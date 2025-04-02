@@ -20,7 +20,6 @@ const TimelinePinType = Object.freeze({
   CHAT_TRANSFER: 'CHAT_TRANSFER',
   CHAT_END: 'CHAT_END',
 
-
   // call-related pins
   CALL_INBOUND: 'CALL_INBOUND',
   CALL_OUTBOUND: 'CALL_OUTBOUND',

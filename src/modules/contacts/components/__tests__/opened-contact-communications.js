@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
+
 import OpenedContactCommunications from '../opened-contact-communications.vue';
 
 describe('OpenedContactCommunications', () => {

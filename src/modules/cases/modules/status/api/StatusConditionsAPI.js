@@ -12,24 +12,20 @@ import applyTransform, {
   snakeToCamel,
   starToSearch,
 } from '@webitel/ui-sdk/src/api/transformers/index.js';
-
 import { StatusConditionsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const statusConditionsService = new StatusConditionsApiFactory(configuration, '', instance);
+const statusConditionsService = new StatusConditionsApiFactory(
+  configuration,
+  '',
+  instance,
+);
 
 const getStatusConditionsList = async ({ statusId, ...rest }) => {
   const fieldsToSend = ['page', 'size', 'q', 'sort', 'fields', 'id'];
-  const {
-    page,
-    size,
-    fields,
-    sort,
-    id,
-    q,
-  } = applyTransform(rest, [
+  const { page, size, fields, sort, id, q } = applyTransform(rest, [
     merge(getDefaultGetParams()),
     starToSearch('search'),
     (rest) => ({ ...rest, q: rest.search }),
@@ -57,7 +53,7 @@ const getStatusConditionsList = async ({ statusId, ...rest }) => {
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-}
+};
 
 //TODO: change fields after all apis is implemented
 const getStatusConditionsLookup = ({ statusId, ...rest }) => {

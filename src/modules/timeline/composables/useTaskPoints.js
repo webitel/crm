@@ -2,7 +2,6 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 export const useTaskPoints = ({ taskId, namespace }) => {
-
   const store = useStore();
 
   const points = computed(() => {

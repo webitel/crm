@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, provide, computed} from "vue";
+import {computed,onMounted, provide} from "vue";
 import {useI18n} from "vue-i18n";
 import { useStore } from 'vuex';
 

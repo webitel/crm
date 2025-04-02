@@ -1,6 +1,6 @@
 .contact-communication-tab {
-  flex-grow: 1;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   gap: var(--spacing-sm);
 
@@ -12,8 +12,8 @@
 
   .set-primary-btn {
     opacity: 0;
-    pointer-events: none;
     transition: var(--transition);
+    pointer-events: none;
   }
 
   .wt-table__tr:hover .set-primary-btn {

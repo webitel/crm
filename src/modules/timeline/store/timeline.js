@@ -1,7 +1,5 @@
-import ApiStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
-import BaseStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+import ApiStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
+import BaseStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
 import set from 'lodash/set.js';
 
 import TimelineAPI from '../api/TimelineAPI';
@@ -57,14 +55,17 @@ const actions = {
         page: context.state.page,
       },
     });
-    context.commit('SET', { path: 'dataList', value: [...context.state.dataList, ...items] });
+    context.commit('SET', {
+      path: 'dataList',
+      value: [...context.state.dataList, ...items],
+    });
     context.commit('SET', { path: 'next', value: next });
   },
   RESET_STATE: (context) => {
     context.commit('SET', { path: 'dataList', value: [] });
     context.commit('SET', { path: 'page', value: 1 });
     context.commit('SET', { path: 'next', value: false });
-  }
+  },
 };
 
 const mutations = {
@@ -73,12 +74,9 @@ const mutations = {
   },
 };
 
-const api = new ApiStoreModule()
-.generateAPIActions(TimelineAPI)
-.getModule();
+const api = new ApiStoreModule().generateAPIActions(TimelineAPI).getModule();
 
-const timeline = new BaseStoreModule()
-.getModule( {
+const timeline = new BaseStoreModule().getModule({
   state,
   getters,
   actions,

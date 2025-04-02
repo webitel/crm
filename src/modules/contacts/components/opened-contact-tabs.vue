@@ -8,6 +8,7 @@
     <router-view
       class="opened-contact-tab"
       :namespace="namespace"
+      :fields="customFields"
     />
   </article>
 </template>
@@ -18,7 +19,9 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
-const props = defineProps({
+import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+
+defineProps({
   namespace: {
     type: String,
     required: true,
@@ -29,31 +32,57 @@ const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 
-const tabs = computed(() => [
-  {
-    text: t('timeline.timeline'),
-    value: 'timeline',
-    pathName: `${CrmSections.CONTACTS}-timeline`,
-  },
-  {
-    text: t('contacts.communications.communications', 2),
-    value: 'communications',
-    pathName: `${CrmSections.CONTACTS}-communications`,
-  },
-  {
-    text: t('contacts.attributes', 2),
-    value: 'variables',
-    pathName: `${CrmSections.CONTACTS}-variables`,
-  },
-  {
+const { fields: customFields, getFields } = useExtensionFields({
+  type: 'contacts',
+});
+
+getFields();
+
+const tabs = computed(() => {
+  const tabList = [
+    {
+      text: t('timeline.timeline'),
+      value: 'timeline',
+      pathName: `${CrmSections.CONTACTS}-timeline`,
+    },
+    {
+      text: t('cases.case', 2),
+      value: 'cases',
+      pathName: `${CrmSections.CONTACTS}-cases`,
+    },
+    {
+      text: t('contacts.communications.communications', 2),
+      value: 'communications',
+      pathName: `${CrmSections.CONTACTS}-communications`,
+    },
+    {
+      text: t('contacts.attributes', 2),
+      value: 'variables',
+      pathName: `${CrmSections.CONTACTS}-variables`,
+    },
+  ];
+
+  if (customFields.value.length) {
+    tabList.push({
+      text: t('contacts.details'),
+      value: 'details',
+      pathName: `${CrmSections.CONTACTS}-details`,
+    });
+  }
+
+  tabList.push({
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
     pathName: `${CrmSections.CONTACTS}-permissions`,
-  },
-]);
+  });
+
+  return tabList;
+});
 
 const currentTab = computed(() => {
-  return tabs.value.find(({ pathName }) => route?.matched?.find(({name}) => name === pathName));
+  return tabs.value.find(({ pathName }) =>
+    route?.matched?.find(({ name }) => name === pathName),
+  );
 });
 
 function changeTab(tab) {

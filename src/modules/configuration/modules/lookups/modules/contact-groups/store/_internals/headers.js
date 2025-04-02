@@ -29,5 +29,4 @@ export default [
     field: 'enabled',
     sort: SortSymbols.NONE,
   },
-
 ];

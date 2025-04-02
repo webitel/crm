@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
+
 import OpenedContactGeneral from '../opened-contact-general.vue';
 
 describe('OpenedContactGeneral', () => {

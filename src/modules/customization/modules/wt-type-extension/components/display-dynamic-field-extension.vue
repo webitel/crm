@@ -47,7 +47,7 @@ const showText = computed(() => {
     return '';
   }
 
-  const value = props.value[props.field.value];
+  const value = props.value;
 
   if (props.field.kind === FieldType.Calendar) {
     return displayText(prettifyCustomLookupDate(value));

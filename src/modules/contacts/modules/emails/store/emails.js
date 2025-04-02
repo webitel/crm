@@ -1,9 +1,7 @@
-import TableStoreModule
-  from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
-import ApiStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
-import BaseStoreModule
-  from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+import TableStoreModule from '@webitel/ui-sdk/src/modules/TableStoreModule/store/TableStoreModule';
+import ApiStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/ApiStoreModule';
+import BaseStoreModule from '@webitel/ui-sdk/src/store/BaseStoreModules/BaseStoreModule';
+
 import EmailsAPI from '../api/EmailsAPI';
 import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';
@@ -20,7 +18,11 @@ const actions = {
     */
     try {
       const changes = { primary: true };
-      await context.dispatch('api/PATCH_ITEM', { context, etag: item.etag, changes });
+      await context.dispatch('api/PATCH_ITEM', {
+        context,
+        etag: item.etag,
+        changes,
+      });
     } finally {
       await context.dispatch('LOAD_DATA_LIST');
     }
@@ -55,16 +57,12 @@ const actions = {
   },
 };
 
-const api = new ApiStoreModule()
-.generateAPIActions(EmailsAPI)
-.getModule();
+const api = new ApiStoreModule().generateAPIActions(EmailsAPI).getModule();
 
 const table = new TableStoreModule({ headers })
-.setChildModules({ api, filters })
-.getModule({ getters, actions });
+  .setChildModules({ api, filters })
+  .getModule({ getters, actions });
 
-const emails = new BaseStoreModule()
-.setChildModules({ table })
-.getModule();
+const emails = new BaseStoreModule().setChildModules({ table }).getModule();
 
 export default emails;
