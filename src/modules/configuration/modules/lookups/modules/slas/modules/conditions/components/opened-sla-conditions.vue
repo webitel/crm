@@ -1,7 +1,7 @@
 <template>
   <section class="table-page opened-sla-conditions">
     <condition-popup
-      :namespace="conditionsNamespace"
+      :namespace="SLAConditionsCardNamespace"
       @load-data="loadDataList"
     />
     <delete-confirmation-popup
@@ -146,6 +146,7 @@ import {
   SearchMode,
   SearchModeType,
 } from '../../../../../../../../cases/filters/SearchMode.js';
+import {SLAConditionsCardNamespace} from "../namespace";
 import { useSLAConditionsStore } from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
@@ -161,11 +162,9 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
     useUpdateAccessAsAllMutableChecksSource: true,
   });
 
-const { namespace: parentCardNamespace, id: parentId } = useCardStore(
+const { id: parentId } = useCardStore(
   props.namespace,
 );
-
-const conditionsNamespace = `${parentCardNamespace}/conditions`;
 
 const router = useRouter();
 const route = useRoute();
