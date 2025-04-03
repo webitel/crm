@@ -7,7 +7,7 @@
       <contact-popup
         :id="editedContactId"
         :shown="isContactPopup"
-        :namespace="baseNamespace"
+        :namespace="ContactsNamespace"
         @close="closeContactPopup"
         @saved="saved"
       />
@@ -22,10 +22,13 @@
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <filter-search
-            :namespace="filtersNamespace"
-            :search-mode-opts="searchModeOpts"
+          <dynamic-filter-search
+            :model-value="searchValue"
+            :search-mode="searchMode"
+            :search-mode-options="searchModeOpts"
             multisearch
+            @handle-search="handleSearch"
+            @update:search-mode="searchMode = $event"
           />
         </template>
       </wt-page-header>
@@ -34,11 +37,15 @@
     <template #main>
       <wt-loader v-show="isLoading" />
 
-      <wt-dummy
-        v-if="!isLoading && !dataList.length"
-        :dark-mode="darkMode"
-        :src="dummy.src"
-        :text="dummy.text"
+      <wt-empty
+        v-if="showEmpty"
+        :image="emptyImage"
+        :headline="emptyHeadline"
+        :title="emptyTitle"
+        :text="emptyText"
+        :primary-action-text="emptyPrimaryActionText"
+        :disabled-primary-action="!hasCreateAccess"
+        @click:primary="create"
       />
 
       <delete-confirmation-popup
@@ -57,8 +64,8 @@
           :headers="headers"
           :selected="selected"
           sortable
-          @sort="sort"
-          @update:selected="setSelected"
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             <div class="username-wrapper">
@@ -149,49 +156,48 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteData(item),
+                  callback: () => deleteEls(item),
                 })
               "
             />
           </template>
         </wt-table>
 
-        <filter-pagination
-          :namespace="filtersNamespace"
-          :is-next="isNext"
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
         />
       </div>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import {useTableEmpty} from "@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty";
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
-import { computed, onUnmounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import {computed, ref, watch, WatchHandle} from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 
-import dummyDark from '../../../app/assets/dummy-dark.svg';
-import dummyLight from '../../../app/assets/dummy-light.svg';
+import DynamicFilterSearch from '../../../../../../sdk/webitel-ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
+import { SearchModeType } from '../../cases/filters/SearchMode.js';
+import { ContactsNamespace } from '../namespace';
+import { useContactsStore } from '../stores/contacts';
 import ContactPopup from './contact-popup.vue';
-
-const baseNamespace = 'contacts';
 
 const { t } = useI18n();
 const router = useRouter();
-
-const store = useStore();
 
 const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
 
@@ -204,41 +210,52 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-  namespace,
+const tableStore = useContactsStore();
 
+const {
   dataList,
   selected,
-  isLoading,
-  headers,
-  isNext,
   error,
-
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(baseNamespace);
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  filtersManager,
+  isFiltersRestoring,
+} = storeToRefs(tableStore);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
+  initialize,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+  hasFilter,
+  addFilter,
+  updateFilter,
+  deleteFilter
+} = tableStore;
 
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
+const searchValue = ref('');
 
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
-});
+const handleSearch = (val: string) => {
+  const filter = {
+    name: searchMode.value,
+    value: val,
+  };
 
-restoreFilters();
-
-onUnmounted(() => {
-  flushSubscribers();
-});
+  if (hasFilter(searchMode.value)) {
+    if (val) {
+      updateFilter(filter);
+    } else {
+      deleteFilter(searchMode.value);
+    }
+  } else {
+    addFilter(filter);
+  }
+};
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -247,8 +264,6 @@ const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
   { name: t('contacts.contact', 2) },
 ]);
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-const dummyPic = computed(() => (darkMode.value ? dummyDark : dummyLight));
 
 const searchModeOpts = computed(() => [
   {
@@ -274,29 +289,52 @@ const searchModeOpts = computed(() => [
     text: t('contacts.destination'),
   },
 ]);
+const searchMode = ref<SearchModeType>(searchModeOpts.value[0].value);
 
-// we need to check if there's any filters which actually filter data before showing "no data" dummy
+let unwatchSearchMode: WatchHandle;
 
-// [WTEL-3776]
-// display different images when no contacts have been created yet (default img)
-// and when the filter didn't produce results
-const dummy = computed(() => {
-  if (dataList.value.length) return false;
-  const filters = store.getters[`${filtersNamespace}/_STATE_FILTER_NAMES`];
-  const defaultFilters = ['page', 'size', 'sort', 'fields'];
-  const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
-    if (defaultFilters.includes(filter)) return dynamic;
-    return {
-      ...dynamic,
-      [filter]: filters[filter],
-    };
-  }, {});
-  const isEmptyFilters = isEmpty(dynamicFilters);
+watch(
+  isFiltersRestoring,
+  (next) => {
+    if (next) return;
 
-  return {
-    src: isEmptyFilters ? '' : dummyPic.value,
-    text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
-  };
+    for (const mode of searchModeOpts.value) {
+      if (hasFilter(mode.value)) {
+        searchMode.value = mode.value;
+        searchValue.value = filtersManager.value.filters.get(mode.value).value;
+
+        break;
+      }
+    }
+
+    /**
+     * start watching for searchMode change
+     * only after initial searchMode restoration
+     */
+    if (unwatchSearchMode) {
+      unwatchSearchMode();
+    }
+
+    unwatchSearchMode = watch(searchMode, (_, prev) => {
+      deleteFilter(prev);
+      searchValue.value = '';
+    });
+  },
+  { immediate: true },
+);
+
+const {
+  showEmpty,
+  image: emptyImage,
+  headline: emptyHeadline,
+  title: emptyTitle,
+  text: emptyText,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList,
+  error,
+  filters: computed(() => filtersManager.value.getAllValues()),
+  isLoading,
 });
 
 const deletableSelectedItems = computed(() =>
@@ -327,9 +365,11 @@ function closeContactPopup() {
 function deleteSelectedItems() {
   return askDeleteConfirmation({
     deleted: deletableSelectedItems.value,
-    callback: () => deleteData([...deletableSelectedItems.value]),
+    callback: () => deleteEls([...deletableSelectedItems.value]),
   });
 }
+
+initialize();
 </script>
 
 <style lang="scss" scoped>
