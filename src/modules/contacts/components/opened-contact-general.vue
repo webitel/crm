@@ -43,7 +43,7 @@
 
     <div class="opened-contact-general-item">
       <p class="opened-contact-general-item__title">
-        {{ t('contacts.group') }}
+        {{ t('reusable.group') }}
       </p>
 
       <p class="opened-contact-general-item__value">
