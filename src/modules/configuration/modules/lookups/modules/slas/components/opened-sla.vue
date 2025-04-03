@@ -16,7 +16,7 @@
     <template #actions-panel>
       <component
         :is="currentTab.filters"
-        :namespace="namespace"
+        :namespace="SLANamespace"
       />
     </template>
 
@@ -60,8 +60,8 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { SLANamespace } from '../namespace.js';
 
-const namespace = 'configuration/lookups/slas';
 const { t } = useI18n();
 const route = useRoute();
 
@@ -72,7 +72,7 @@ const {
   id,
   itemInstance,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(SLANamespace);
 
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {

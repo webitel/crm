@@ -1,6 +1,7 @@
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+import type { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtTable';
 
-export default [
+export const headers: WtTableHeader[] = [
   {
     value: 'name',
     locale: 'reusable.name',
