@@ -73,7 +73,7 @@
                 :triggers="['click']"
               >
                 <template #activator>
-                  <wt-chip> +{{ item.priorities?.length - 1 }} </wt-chip>
+                  <wt-chip> +{{ item.priorities?.length - 1 }}</wt-chip>
                 </template>
 
                 <ul>
@@ -128,26 +128,29 @@
 </template>
 
 <script setup lang="ts">
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
+import {WtEmpty} from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import {useTableEmpty} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {useCardStore} from '@webitel/ui-sdk/store';
+import {storeToRefs} from 'pinia';
+import {computed, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {useRoute, useRouter} from 'vue-router';
 
-import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import {useUserAccessControl} from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
 import {
   SearchMode,
   SearchModeType,
 } from '../../../../../../../../cases/filters/SearchMode.js';
 import {SLAConditionsCardNamespace} from "../namespace";
-import { useSLAConditionsStore } from '../stores/conditions';
+import {useSLAConditionsStore} from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
@@ -157,18 +160,18 @@ const props = defineProps({
   },
 });
 
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+const {hasCreateAccess, hasUpdateAccess, hasDeleteAccess} =
   useUserAccessControl({
     useUpdateAccessAsAllMutableChecksSource: true,
   });
 
-const { id: parentId } = useCardStore(
+const {id: parentId} = useCardStore(
   props.namespace,
 );
 
 const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
+const {t} = useI18n();
 
 const tableStore = useSLAConditionsStore();
 
@@ -202,7 +205,10 @@ const searchMode = ref<SearchModeType>(SearchMode.Search);
 const searchValue = ref('');
 
 const filteredSearchOptions = computed(() => {
-  return { Search: SearchMode.Search };
+  return [{
+    value: SearchMode.Search,
+    text: t(`filters.search.${SearchMode.Search}`),
+  }]
 });
 
 const handleSearch = (val: string) => {
@@ -244,7 +250,7 @@ const {
 });
 
 const add = () => {
-  return router.push({ ...route, params: { conditionId: 'new' } });
+  return router.push({...route, params: {conditionId: 'new'}});
 };
 
 initialize({
