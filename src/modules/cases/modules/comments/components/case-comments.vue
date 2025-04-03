@@ -60,13 +60,13 @@
           </template>
           <template #actions="{ item }">
             <wt-icon-action
-              v-if="item.canEdit"
+              v-if="item.canEdit && !isReadOnly"
               :disabled="!hasUpdateAccess || formState.isAdding"
               action="edit"
               @click="startEditingComment(item)"
             />
             <wt-icon-action
-              v-if="item.canEdit"
+              v-if="item.canEdit && !isReadOnly"
               :disabled="!hasDeleteAccess"
               action="delete"
               @click="
@@ -99,7 +99,7 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import {storeToRefs} from "pinia";
-import { computed, reactive } from 'vue';
+import {computed, inject, reactive} from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -115,6 +115,7 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
