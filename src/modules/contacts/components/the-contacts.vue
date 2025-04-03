@@ -191,7 +191,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import DynamicFilterSearch from '../../../../../../sdk/webitel-ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
-import { SearchMode, SearchModeType } from '../../cases/filters/SearchMode.js';
+import { SearchModeType } from '../../cases/filters/SearchMode.js';
 import { ContactsNamespace } from '../namespace';
 import { useContactsStore } from '../stores/contacts';
 import ContactPopup from './contact-popup.vue';
