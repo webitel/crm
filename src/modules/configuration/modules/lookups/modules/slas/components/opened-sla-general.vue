@@ -38,7 +38,7 @@
           :value="itemInstance.reactionTime"
           :v="v.itemInstance.reactionTime"
           :disabled="disableUserInput"
-          format="dd:hh:mm"
+          format="hh:mm"
           required
           @input="setItemProp({ path: 'reactionTime', value: +$event })"
         />
@@ -48,7 +48,7 @@
           :value="itemInstance.resolutionTime"
           :v="v.itemInstance.resolutionTime"
           :disabled="disableUserInput"
-          format="dd:hh:mm"
+          format="hh:mm"
           required
           @input="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
