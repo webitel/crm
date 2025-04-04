@@ -60,6 +60,7 @@ const getCustomLookupsList = async (params) => {
       undefined,
       undefined,
       undefined,
+      undefined,
       size,
       page,
       sort,
