@@ -55,7 +55,14 @@
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
+            :headline="emptyHeadline"
+            :title="emptyTitle"
             :text="textEmpty"
+            :primary-action-text="emptyPrimaryActionText"
+            @click:primary="router.push({
+              name: 'custom-lookup-record',
+              params: { id: 'new' },
+            })"
           />
 
           <wt-loader v-show="isLoading" />
@@ -109,22 +116,36 @@
 </template>
 
 <script setup>
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import {
+  useAccessControl,
+} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import {
+  useTableFilters,
+} from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty,
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {
+  useTableStore,
+} from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
+import CustomLookupsApi
+  from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
 
 const baseNamespace = 'configuration/lookups/customLookup';
@@ -230,7 +251,15 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+  headline: emptyHeadline,
+  title: emptyTitle,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList,
+  error,
+  filters: filtersValue,
+  isLoading,
+});
 
 const edit = (item) => {
   router.push({
