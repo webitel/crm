@@ -63,7 +63,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
+import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -72,6 +72,7 @@ import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
 
 const baseNamespace = 'contacts';
+const isReadOnly = inject('isReadOnly');
 
 const router = useRouter();
 const route = useRoute();
@@ -88,15 +89,6 @@ const {
   deleteItem,
 } = useCardStore(baseNamespace);
 
-const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-
-  askDeleteConfirmation,
-  closeDelete,
-} = useDeleteConfirmationPopup();
-
 provide(
   'access',
   computed(() => ({
@@ -105,8 +97,14 @@ provide(
   })),
 );
 
-const isReadOnly = computed(() => true);
-provide('isReadOnly', isReadOnly);
+const {
+  isVisible: isDeleteConfirmationPopup,
+  deleteCount,
+  deleteCallback,
+
+  askDeleteConfirmation,
+  closeDelete,
+} = useDeleteConfirmationPopup();
 
 const isContactPopup = ref(false);
 

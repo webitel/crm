@@ -9,9 +9,9 @@
       :namespace="cardNamespace"
       :access="/*is used by permissions tab*/ {
         read: true,
-        edit: !disableUserInput && editMode,
-        delete: !disableUserInput && editMode,
-        add: !disableUserInput && editMode,
+        edit: !disableUserInput && editMode && !isReadOnly,
+        delete: !disableUserInput && editMode && !isReadOnly,
+        add: !disableUserInput && editMode && !isReadOnly,
       }"
       :fields="customFields"
       class="opened-card-tabs__tab"
@@ -36,6 +36,7 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const editMode = inject('editMode');
 
 const { t } = useI18n();
