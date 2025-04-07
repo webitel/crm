@@ -9,10 +9,13 @@
     "lint:fix": "eslint --fix ./src && prettier --write --check ./src",
     "lint:fix-staged": "npx lint-staged",
     "tsc": "vue-tsc -p tsconfig.json",
-    "link:webitel-ui": "npm link @webitel/ui-sdk --save=false --bin-links=false",
     "utils:i": "npm i",
     "prepare": "husky"
   },
+  "workspaces": [
+    "../webitel-ui-sdk",
+    "../webitel-ui-sdk/packages/ui-datalist"
+  ],
   "type": "module",
   "dependencies": {
     "@vue/compat": "^3.5.1",
@@ -20,6 +23,7 @@
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^11.0.3",
     "@webitel/ui-sdk": "^25.4.54",
+    "@webitel/ui-datalist": "^1.0.6",
     "axios": "^1.7.7",
     "clipboard-copy": "^4.0.1",
     "date-fns": "^4.1.0",
