@@ -176,8 +176,13 @@ const setValue = (value) => {
 };
 
 const loadLookupList = ({ path, display, primary }) => {
-  return () => {
-    return CustomLookupApi.getLookup({ path, display, primary });
+  return (params) => {
+    return CustomLookupApi.getLookup({
+      ...params,
+      path,
+      display,
+      primary,
+    });
   };
 };
 
