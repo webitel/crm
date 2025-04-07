@@ -22,12 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:refresh="loadData"
-            @click:add="
-              router.push({
-                name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                params: { id: 'new' },
-              })
-            "
+            @click:add="add"
             @click:delete="
               askDeleteConfirmation({
                 deleted: selected,
@@ -59,10 +54,7 @@
             :title="emptyTitle"
             :text="textEmpty"
             :primary-action-text="emptyPrimaryActionText"
-            @click:primary="router.push({
-              name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-              params: { id: 'new' },
-            })"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -243,6 +235,13 @@ const {
   filters: filtersValue,
   isLoading,
 });
+
+const add = () => {
+  router.push({
+    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+    params: { id: 'new' },
+  });
+};
 </script>
 
 <style lang="scss" scoped></style>
