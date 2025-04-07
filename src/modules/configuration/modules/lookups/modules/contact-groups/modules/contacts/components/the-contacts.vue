@@ -47,6 +47,21 @@
 <!--       TODO       -->
             </template>
 
+            <template #user="{ item }">
+              <wt-icon
+                v-if="item.user"
+                icon="webitel-logo"
+              />
+            </template>
+
+            <template #about="{ item }">
+              {{ item.about }}
+            </template>
+
+            <template #managers="{ item }">
+              {{ item.managers[0]?.user.name }}
+            </template>
+
             <template #actions="{ item }">
               <wt-icon-action
                 :disabled="!hasDeleteAccess"

@@ -90,6 +90,10 @@
                 {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
               </template>
 
+              <template #contactsSize="{ item }">
+                {{ item.contactsSize || '-' }}
+              </template>
+
               <template #state="{ item, index }">
                 <wt-switcher
                   :disabled="!hasUpdateAccess"
