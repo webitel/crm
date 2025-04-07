@@ -217,6 +217,7 @@ export default {
     },
     extensions: {
       contacts: ({ linked }) => linked('contacts.contact'),
+      cases: ({ linked }) => linked('cases.case'),
     },
   },
   cases: {
