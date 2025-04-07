@@ -22,7 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:refresh="loadData"
-            @click:add="addNew"
+            @click:add="add"
             @click:delete="
               askDeleteConfirmation({
                 deleted: selected,
@@ -54,7 +54,7 @@
             :title="emptyTitle"
             :text="textEmpty"
             :primary-action-text="emptyPrimaryActionText"
-            @click:primary="addNew"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -253,7 +253,7 @@ const {
   isLoading,
 });
 
-const addNew = () => {
+const add = () => {
   router.push({
     name: 'custom-lookup-record',
     params: { id: 'new' },
