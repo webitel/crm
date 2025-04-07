@@ -6,6 +6,7 @@ import {
 } from '@webitel/ui-sdk/store';
 
 import ContactsAPI from '../api/ContactsAPI';
+import cases from '../modules/cases/store/cases';
 import emails from '../modules/emails/store/emails';
 import filters from '../modules/filters/store/filters';
 import messaging from '../modules/messaging/store/messaging';
@@ -13,7 +14,6 @@ import permissions from '../modules/permissions/store/permissions';
 import phones from '../modules/phones/store/phones';
 import variables from '../modules/variables/store/variables';
 import headers from './_internals/headers';
-import cases from '../modules/cases/store/cases';
 
 const cardState = {
   itemInstance: {
