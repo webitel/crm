@@ -43,8 +43,8 @@
     />
 
     <div
-      class="table-wrapper"
       v-show="!isLoading && dataList?.length"
+      class="table-wrapper"
     >
       <wt-table
         :data="dataList"
@@ -164,17 +164,20 @@
 </template>
 
 <script lang="ts" setup>
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
+import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
+import {
+  useTableEmpty,
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
-import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
-import { useCasesStore } from '../stores/cases.ts';
+import DynamicFilterSearchWrapper
+  from '../../../../cases/filters/components/dynamic-filter-search-wrapper.vue';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
-import DynamicFilterSearchWrapper from '../../../../cases/filters/components/dynamic-filter-search-wrapper.vue';
+import { useCasesStore } from '../stores/cases.ts';
 
 const store = useStore();
 
