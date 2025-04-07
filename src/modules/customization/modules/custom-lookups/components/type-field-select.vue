@@ -127,7 +127,7 @@ const loadLookupList = (params) => {
 const getOptionLocale = (option) => {
   if (!option) return '';
 
-  const objectCode = snakeToCamel(option.repo);
+  const objectCode = snakeToCamel(option.repo || option.path);
 
   // From backend got repo with 's' at the end of the word which means plural, so need to remove it to get the singular form translation
   const singleObjectCode = objectCode.endsWith('s') ? objectCode.slice(0, -1) : objectCode;
