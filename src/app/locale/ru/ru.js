@@ -16,6 +16,8 @@ export default {
     manager: 'Владелец | Владельцы',
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
+    allContacts: ({ linked }) =>
+      `${linked('reusable.all')} ${linked(`contacts.contact`, 2).toLowerCase()}`,
     communications: {
       communications: 'Средство связи | Средства связи',
       channel: 'Канал',
