@@ -42,8 +42,10 @@ import { computed, inject, onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
-import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+import CustomLookupDynamicField
+  from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
+import WtDisplayContent
+  from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 
 const access = inject('access');
 
@@ -72,11 +74,14 @@ const saveDetails = () => {
 };
 
 onMounted(() => {
-  if (!props.fields.length) {
-    router.push({
-      name: `${CrmSections.CONTACTS}-timeline`,
-    });
-  }
+  // Need wait for loaded custom fields for check redirect
+  setTimeout(() => {
+    if (!props.fields.length) {
+      router.push({
+        name: `${CrmSections.CONTACTS}-timeline`,
+      });
+    }
+  }, 500);
 });
 </script>
 
