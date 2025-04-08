@@ -14,12 +14,14 @@ import { configurations } from '@webitel/ui-sdk/src/api/clients/index.js';
 import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch, WatchHandle } from 'vue';
+import {useI18n} from "vue-i18n";
 import { EngineSystemSettingName } from 'webitel-sdk';
 
 import { useCasesStore } from '../../stores/cases';
 import { SearchMode, SearchModeType } from '../SearchMode';
 
 const tableStore = useCasesStore();
+const { t } = useI18n();
 
 const { filtersManager, isFiltersRestoring } = storeToRefs(tableStore);
 
@@ -36,7 +38,14 @@ const showTextSearchIcon = computed(() => {
 });
 
 const filteredSearchOptions = computed(() => {
-  return isFTSEnabled.value ? SearchMode : { Search: SearchMode.Search };
+  const options = isFTSEnabled.value ? SearchMode : { Search: SearchMode.Search };
+
+  return Object.values(options).map((mode) => {
+    return {
+      value: mode,
+      text: t(`filters.search.${mode}`),
+    };
+  })
 });
 
 let unwatchSearchMode: WatchHandle;

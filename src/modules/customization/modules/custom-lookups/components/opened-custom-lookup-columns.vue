@@ -5,9 +5,8 @@
         {{ title || t('customization.customLookups.columns') }}
       </h3>
       <wt-action-bar
-        :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+        :include="[IconAction.ADD, IconAction.DELETE]"
         :disabled:delete="!selected.length"
-        @click:refresh="refreshItem"
         @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
@@ -38,14 +37,18 @@
 
     <div class="table-section__table-wrapper">
       <wt-empty
-        v-show="showEmpty"
+        v-if="showEmpty"
         :image="imageEmpty"
+        :headline="emptyHeadline"
+        :title="emptyTitle"
         :text="textEmpty"
+        :primary-action-text="emptyPrimaryActionText"
+        @click:primary="showAddFieldPopup = true"
       />
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="fields.length && !isLoading">
+      <div v-if="!showEmpty && !isLoading">
         <wt-table
           :data="fields"
           :headers="headers"
@@ -102,10 +105,16 @@
 </template>
 
 <script setup>
+import { WtEmpty } from '@webitel/ui-sdk/components';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import {
+  useTableEmpty,
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import deepCopy from 'deep-copy';
 import Sortable, { Swap } from 'sortablejs';
@@ -211,7 +220,7 @@ const sortableConfig = {
 
     return !allowDraggable; // Prevent draggable if the element has not draggable button
   },
-  onMove: function (evt) {
+  onMove: function(evt) {
     const preventSwap =
       evt.related.getElementsByClassName('sortable-btn')?.length;
 
@@ -225,8 +234,8 @@ const getFieldsForSortable = () => {
   return !search.value
     ? itemInstance.value.fields
     : itemInstance.value.fields.filter((field) => {
-        return field.name.toLowerCase().includes(search.value?.toLowerCase());
-      });
+      return field.name.toLowerCase().includes(search.value?.toLowerCase());
+    });
 };
 
 const initSortable = (wrapper) => {
@@ -339,7 +348,20 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList: fields, error, isLoading });
+  headline: emptyHeadline,
+  title: emptyTitle,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList: fields, error, isLoading, filters: computed(() => {
+    if (search.value) {
+      return {
+        search: itemInstance.value?.fields,
+      };
+    }
+
+    return {};
+  }),
+});
 
 const showAddFieldPopup = ref(false);
 
@@ -347,8 +369,8 @@ const addNewField = (field) => {
   const filtered = itemInstance.value.fields.filter((field) => field.position);
 
   const lastField = filtered.sort((a, b) => a.position - b.position)[
-    filtered.length - 1
-  ];
+  filtered.length - 1
+    ];
 
   const createField = {
     ...field,

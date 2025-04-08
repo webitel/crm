@@ -1,8 +1,8 @@
 <template>
   <section class="table-page opened-sla-conditions">
     <condition-popup
-      :namespace="namespace"
-      @load-data="loadData"
+      :namespace="SLAConditionsCardNamespace"
+      @load-data="loadDataList"
     />
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
@@ -20,25 +20,25 @@
         :disabled:delete="!hasDeleteAccess || !selected.length"
         :disabled:add="!hasCreateAccess"
         @click:add="add"
-        @click:refresh="loadData"
-        @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+        @click:refresh="loadDataList"
+        @click:delete="
+          askDeleteConfirmation({
+            deleted: selected,
+            callback: () => deleteEls(selected),
+          })
+        "
       >
         <template #search-bar>
-          <filter-search
-            :namespace="filtersNamespace"
-            name="search"
+          <dynamic-filter-search
+            :model-value="searchValue"
+            :search-mode-options="filteredSearchOptions"
+            @handle-search="handleSearch"
           />
         </template>
       </wt-action-bar>
     </header>
 
-    <div
-      class="table-section__table-wrapper"
-    >
-
+    <div class="table-section__table-wrapper">
       <wt-empty
         v-show="showEmpty"
         :image="imageEmpty"
@@ -56,8 +56,8 @@
           :headers="headers"
           :selected="selected"
           sortable
-          @sort="sort"
-          @update:selected="setSelected"
+          @sort="updateSort"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             {{ item.name }}
@@ -73,14 +73,12 @@
                 :triggers="['click']"
               >
                 <template #activator>
-                  <wt-chip>
-                    +{{ item.priorities?.length - 1 }}
-                  </wt-chip>
+                  <wt-chip> +{{ item.priorities?.length - 1 }}</wt-chip>
                 </template>
 
                 <ul>
                   <li
-                    v-for="({ id, name }) of item.priorities?.slice(1)"
+                    v-for="{ id, name } of item.priorities?.slice(1)"
                     :key="id"
                   >
                     <p>{{ name }}</p>
@@ -99,48 +97,60 @@
             <wt-icon-action
               :disabled="!hasUpdateAccess"
               action="edit"
-              @click="router.push({ ...route, params: { conditionId: item.id } })"
+              @click="
+                router.push({ ...route, params: { conditionId: item.id } })
+              "
             />
             <wt-icon-action
               :disabled="!hasDeleteAccess"
               action="delete"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
             />
           </template>
         </wt-table>
       </div>
-      <filter-pagination
-        :namespace="filtersNamespace"
-        :next="isNext"
+      <wt-pagination
+        :next="next"
+        :prev="page > 1"
+        :size="size"
+        debounce
+        @change="updateSize"
+        @next="updatePage(page + 1)"
+        @prev="updatePage(page - 1)"
       />
     </div>
   </section>
 </template>
 
-<script setup>
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
+<script setup lang="ts">
+import {WtEmpty} from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
-  useDeleteConfirmationPopup,
+  useDeleteConfirmationPopup
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch
-  from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { onUnmounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
+import {useTableEmpty} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {useCardStore} from '@webitel/ui-sdk/store';
+import {storeToRefs} from 'pinia';
+import {computed, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {useRoute, useRouter} from 'vue-router';
 
-import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js'
+import {useUserAccessControl} from '../../../../../../../../../app/composables/useUserAccessControl';
+import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
+import {
+  SearchMode,
+  SearchModeType,
+} from '../../../../../../../../cases/filters/SearchMode.js';
+import {SLAConditionsCardNamespace} from "../namespace";
+import {useSLAConditionsStore} from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
@@ -150,60 +160,73 @@ const props = defineProps({
   },
 });
 
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+const {hasCreateAccess, hasUpdateAccess, hasDeleteAccess} =
   useUserAccessControl({
     useUpdateAccessAsAllMutableChecksSource: true,
   });
 
-const {
-  namespace: parentCardNamespace,
-  id: parentId,
-} = useCardStore(props.namespace);
-
-const namespace = `${parentCardNamespace}/conditions`;
+const {id: parentId} = useCardStore(
+  props.namespace,
+);
 
 const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
+const {t} = useI18n();
+
+const tableStore = useSLAConditionsStore();
 
 const {
-  namespace: tableNamespace,
-
   dataList,
   selected,
-  isLoading,
-  headers,
-  isNext,
   error,
-
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(namespace);
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
-  resetFilters,
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+  hasFilter,
+  addFilter,
+  updateFilter,
+  deleteFilter,
+} = tableStore;
 
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(tableNamespace);
+const searchMode = ref<SearchModeType>(SearchMode.Search);
+const searchValue = ref('');
 
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
+const filteredSearchOptions = computed(() => {
+  return [{
+    value: SearchMode.Search,
+    text: t(`filters.search.${SearchMode.Search}`),
+  }]
 });
 
-restoreFilters();
+const handleSearch = (val: string) => {
+  const filter = {
+    name: searchMode.value,
+    value: val,
+  };
 
-onUnmounted(() => {
-  flushSubscribers();
-  resetFilters();
-});
+  if (hasFilter(searchMode.value)) {
+    if (val) {
+      updateFilter(filter);
+    } else {
+      deleteFilter(searchMode.value);
+    }
+  } else {
+    addFilter(filter);
+  }
+};
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -219,11 +242,20 @@ const {
   image: imageEmpty,
   text: textEmpty,
   primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+} = useTableEmpty({
+  dataList,
+  filters: computed(() => filtersManager.value.getAllValues()),
+  error,
+  isLoading,
+});
 
 const add = () => {
-  return router.push({ ...route, params: { conditionId: 'new' } });
+  return router.push({...route, params: {conditionId: 'new'}});
 };
+
+initialize({
+  parentId: parentId.value,
+});
 </script>
 
 <style lang="scss" scoped>

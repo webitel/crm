@@ -22,12 +22,7 @@
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!selected.length"
             @click:refresh="loadData"
-            @click:add="
-              router.push({
-                name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                params: { id: 'new' },
-              })
-            "
+            @click:add="add"
             @click:delete="
               askDeleteConfirmation({
                 deleted: selected,
@@ -55,7 +50,11 @@
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
+            :headline="emptyHeadline"
+            :title="emptyTitle"
             :text="textEmpty"
+            :primary-action-text="emptyPrimaryActionText"
+            @click:primary="add"
           />
 
           <wt-loader v-show="isLoading" />
@@ -118,17 +117,29 @@
 </template>
 
 <script setup>
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import {
+  useAccessControl,
+} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import {
+  useTableFilters,
+} from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty,
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {
+  useTableStore,
+} from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -170,6 +181,7 @@ const {
 
 const {
   namespace: filtersNamespace,
+  filtersValue,
   restoreFilters,
 
   subscribe,
@@ -214,7 +226,22 @@ const {
   showEmpty,
   image: imageEmpty,
   text: textEmpty,
-} = useTableEmpty({ dataList, error, isLoading });
+  headline: emptyHeadline,
+  title: emptyTitle,
+  primaryActionText: emptyPrimaryActionText,
+} = useTableEmpty({
+  dataList,
+  error,
+  filters: filtersValue,
+  isLoading,
+});
+
+const add = () => {
+  router.push({
+    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+    params: { id: 'new' },
+  });
+};
 </script>
 
 <style lang="scss" scoped></style>
