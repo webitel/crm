@@ -1,4 +1,4 @@
-import { createTableStore } from '@webitel/ui-sdk/src/modules/Filters/v2/table/createTableStore.store.ts';
+import { createTableStore } from '@webitel/ui-datalist';
 
 import { CasesNamespace } from '../../../../cases/namespace';
 import ContactCasesAPI from '../api/ContactCasesAPI.js';

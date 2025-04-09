@@ -30,7 +30,7 @@
     :value="value"
     :v="validation"
     :search-method="loadLookupList(field.lookup)"
-    track-by="name"
+    track-by="id"
     clearable
     :required="isRequired"
     @input="selectElement"
@@ -41,7 +41,7 @@
     :value="value"
     :v="validation"
     :search-method="loadLookupList(field.lookup)"
-    track-by="name"
+    track-by="id"
     clearable
     multiple
     :required="isRequired"
@@ -67,7 +67,9 @@ import set from 'lodash/set';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
+import {
+  FieldType,
+} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
 import CustomLookupApi from '../api/custom-lookups.js';
 
 const props = defineProps({
@@ -174,8 +176,13 @@ const setValue = (value) => {
 };
 
 const loadLookupList = ({ path, display, primary }) => {
-  return () => {
-    return CustomLookupApi.getLookup({ path, display, primary });
+  return (params) => {
+    return CustomLookupApi.getLookup({
+      ...params,
+      path,
+      display,
+      primary,
+    });
   };
 };
 

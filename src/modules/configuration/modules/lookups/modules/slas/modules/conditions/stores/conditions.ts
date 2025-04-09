@@ -1,4 +1,4 @@
-import { createTableStore } from '@webitel/ui-sdk/src/modules/Filters/v2/table/createTableStore.store.ts';
+import { createTableStore } from '@webitel/ui-datalist';
 
 import ConditionsAPI from '../api/conditions';
 import { SLAConditionsNamespace } from '../namespace';

@@ -30,9 +30,11 @@
       >
         <template #search-bar>
           <dynamic-filter-search
-            :model-value="searchValue"
-            :search-mode-options="filteredSearchOptions"
-            @handle-search="handleSearch"
+            :filters-manager="filtersManager"
+            :is-filters-restoring="isFiltersRestoring"
+            @filter:add="addFilter"
+            @filter:update="updateFilter"
+            @filter:delete="deleteFilter"
           />
         </template>
       </wt-action-bar>
@@ -73,7 +75,7 @@
                 :triggers="['click']"
               >
                 <template #activator>
-                  <wt-chip> +{{ item.priorities?.length - 1 }} </wt-chip>
+                  <wt-chip> +{{ item.priorities?.length - 1 }}</wt-chip>
                 </template>
 
                 <ul>
@@ -128,26 +130,29 @@
 </template>
 
 <script setup lang="ts">
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
+import {WtEmpty} from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import {useTableEmpty} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {useCardStore} from '@webitel/ui-sdk/store';
+import {storeToRefs} from 'pinia';
+import {computed, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
+import {useRoute, useRouter} from 'vue-router';
 
-import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import {useUserAccessControl} from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
 import {
   SearchMode,
   SearchModeType,
-} from '../../../../../../../../cases/filters/SearchMode.js';
+} from '../../../../../../../../cases/enums/SearchMode';
 import {SLAConditionsCardNamespace} from "../namespace";
-import { useSLAConditionsStore } from '../stores/conditions';
+import {useSLAConditionsStore} from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
 const props = defineProps({
@@ -157,18 +162,18 @@ const props = defineProps({
   },
 });
 
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+const {hasCreateAccess, hasUpdateAccess, hasDeleteAccess} =
   useUserAccessControl({
     useUpdateAccessAsAllMutableChecksSource: true,
   });
 
-const { id: parentId } = useCardStore(
+const {id: parentId} = useCardStore(
   props.namespace,
 );
 
 const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
+const {t} = useI18n();
 
 const tableStore = useSLAConditionsStore();
 
@@ -182,6 +187,7 @@ const {
   next,
   headers,
   filtersManager,
+  isFiltersRestoring,
 } = storeToRefs(tableStore);
 
 const {
@@ -192,35 +198,10 @@ const {
   updateSize,
   updateSort,
   deleteEls,
-  hasFilter,
   addFilter,
   updateFilter,
   deleteFilter,
 } = tableStore;
-
-const searchMode = ref<SearchModeType>(SearchMode.Search);
-const searchValue = ref('');
-
-const filteredSearchOptions = computed(() => {
-  return { Search: SearchMode.Search };
-});
-
-const handleSearch = (val: string) => {
-  const filter = {
-    name: searchMode.value,
-    value: val,
-  };
-
-  if (hasFilter(searchMode.value)) {
-    if (val) {
-      updateFilter(filter);
-    } else {
-      deleteFilter(searchMode.value);
-    }
-  } else {
-    addFilter(filter);
-  }
-};
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -244,7 +225,7 @@ const {
 });
 
 const add = () => {
-  return router.push({ ...route, params: { conditionId: 'new' } });
+  return router.push({...route, params: {conditionId: 'new'}});
 };
 
 initialize({

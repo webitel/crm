@@ -1,6 +1,23 @@
+import { normalizeToTimestamp } from '@webitel/ui-sdk/scripts';
+import { startOfToday } from 'date-fns';
+
 const filterTransformersMap = {
-  createdAtFrom: (value) => `created_at.from=${value}`,
-  createdAtTo: (value) => `created_at.to=${value}`,
+  createdAt: (createdAt) => {
+    if (typeof createdAt === 'string') {
+      return {
+        from: normalizeToTimestamp(createdAt, { round: 'start' }),
+        to: normalizeToTimestamp(createdAt, { round: 'end' }),
+      };
+    }
+
+    if (!createdAt) {
+      return {
+        from: normalizeToTimestamp(startOfToday().getTime()),
+      };
+    }
+
+    return createdAt;
+  },
   status: (value) => `status_condition=${value.conditions}`,
   source: (value) => `source=${value}`,
   author: (value) => `created_by=${value}`,
