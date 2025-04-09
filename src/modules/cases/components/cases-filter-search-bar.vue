@@ -21,12 +21,18 @@ import { EngineSystemSettingName } from 'webitel-sdk';
 import { SearchMode } from '../enums/SearchMode';
 import { useCasesStore } from '../stores/cases';
 
-const tableStore = useCasesStore();
+const props = defineProps({
+  tableStore: {
+    type: Object,
+    default: () => useCasesStore(),
+  },
+});
+
 const { t } = useI18n();
 
-const { filtersManager, isFiltersRestoring } = storeToRefs(tableStore);
+const { filtersManager, isFiltersRestoring } = storeToRefs(props.tableStore);
 
-const { addFilter, updateFilter, deleteFilter } = tableStore;
+const { addFilter, updateFilter, deleteFilter } = props.tableStore;
 
 const isFTSEnabled = ref();
 const isFTSConfigLoaded = ref(false);
