@@ -60,7 +60,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
-import { computed, onUnmounted, provide, ref, watch } from 'vue';
+import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -77,11 +77,10 @@ const { t } = useI18n();
 const editMode = computed(() => {
   return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
 });
-const isReadOnly = computed(() => true);
 
+const isReadOnly = inject('isReadOnly');
 provide('namespace', namespace);
 provide('editMode', editMode);
-provide('isReadOnly', isReadOnly);
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 

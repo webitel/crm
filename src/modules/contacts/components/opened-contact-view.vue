@@ -3,12 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import {computed, provide} from "vue";
+import { provide } from 'vue';
 
-import OpenedContact from "./opened-contact.vue";
+import OpenedContact from './opened-contact.vue';
 
-const isReadOnly = computed(() => true);
-provide('isReadOnly', isReadOnly);
+provide('isReadOnly', true);
 </script>
 
 
