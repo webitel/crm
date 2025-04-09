@@ -30,9 +30,11 @@
       >
         <template #search-bar>
           <dynamic-filter-search
-            :model-value="searchValue"
-            :search-mode-options="filteredSearchOptions"
-            @handle-search="handleSearch"
+            :filters-manager="filtersManager"
+            :is-filters-restoring="isFiltersRestoring"
+            @filter:add="addFilter"
+            @filter:update="updateFilter"
+            @filter:delete="deleteFilter"
           />
         </template>
       </wt-action-bar>
@@ -128,6 +130,7 @@
 </template>
 
 <script setup lang="ts">
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import {WtEmpty} from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
@@ -135,7 +138,6 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import DynamicFilterSearch from '@webitel/ui-sdk/src/modules/Filters/v2/filters/components/dynamic-filter-search.vue';
 import {useTableEmpty} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import {useCardStore} from '@webitel/ui-sdk/store';
 import {storeToRefs} from 'pinia';
@@ -148,7 +150,7 @@ import ConvertDurationWithDays from '../../../../../../../../../app/scripts/conv
 import {
   SearchMode,
   SearchModeType,
-} from '../../../../../../../../cases/filters/SearchMode.js';
+} from '../../../../../../../../cases/enums/SearchMode';
 import {SLAConditionsCardNamespace} from "../namespace";
 import {useSLAConditionsStore} from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';
@@ -185,6 +187,7 @@ const {
   next,
   headers,
   filtersManager,
+  isFiltersRestoring,
 } = storeToRefs(tableStore);
 
 const {
@@ -195,38 +198,10 @@ const {
   updateSize,
   updateSort,
   deleteEls,
-  hasFilter,
   addFilter,
   updateFilter,
   deleteFilter,
 } = tableStore;
-
-const searchMode = ref<SearchModeType>(SearchMode.Search);
-const searchValue = ref('');
-
-const filteredSearchOptions = computed(() => {
-  return [{
-    value: SearchMode.Search,
-    text: t(`filters.search.${SearchMode.Search}`),
-  }]
-});
-
-const handleSearch = (val: string) => {
-  const filter = {
-    name: searchMode.value,
-    value: val,
-  };
-
-  if (hasFilter(searchMode.value)) {
-    if (val) {
-      updateFilter(filter);
-    } else {
-      deleteFilter(searchMode.value);
-    }
-  } else {
-    addFilter(filter);
-  }
-};
 
 const {
   isVisible: isDeleteConfirmationPopup,
