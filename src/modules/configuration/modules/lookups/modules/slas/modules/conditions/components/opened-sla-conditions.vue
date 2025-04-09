@@ -148,7 +148,7 @@ import ConvertDurationWithDays from '../../../../../../../../../app/scripts/conv
 import {
   SearchMode,
   SearchModeType,
-} from '../../../../../../../../cases/filters/SearchMode.js';
+} from '../../../../../../../../cases/enums/SearchMode';
 import {SLAConditionsCardNamespace} from "../namespace";
 import {useSLAConditionsStore} from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';

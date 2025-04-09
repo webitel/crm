@@ -17,10 +17,10 @@
 import {TableFiltersPanelComponent as TableFiltersPanel} from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 
+import { filtersOptions } from '../configs/filtersOptions';
 import { CasesNamespace as namespace } from '../namespace';
 import { useCasesStore } from '../stores/cases';
 import { useCaseFilterPresetsStore } from '../stores/useCaseFilterPresetsStore';
-import { filtersOptions } from './filters-options';
 
 const emit = defineEmits<{
   hide: [];
