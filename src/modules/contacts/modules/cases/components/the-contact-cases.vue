@@ -5,7 +5,7 @@
         {{ $t('cases.case', 2) }}
       </h3>
 
-      <dynamic-filter-search-wrapper class="contact-cases__search-filter" />
+      <cases-filter-search-bar class="contact-cases__search-filter" />
 
       <wt-action-bar
         :include="[
@@ -174,8 +174,8 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
-import DynamicFilterSearchWrapper
-  from '../../../../cases/filters/components/dynamic-filter-search-wrapper.vue';
+import CasesFilterSearchBar
+  from '../../../../cases/components/cases-filter-search-bar.vue';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 import { useCasesStore } from '../stores/cases.ts';
 
