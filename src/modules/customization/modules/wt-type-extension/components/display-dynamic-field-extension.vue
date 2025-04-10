@@ -9,6 +9,7 @@
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
     :label="label"
+    disabled
     :value="value"
   ></wt-switcher>
   <template v-else-if="field.kind === FieldType.Number">
@@ -23,7 +24,8 @@
 import { computed } from 'vue';
 
 import { displayText } from '../../../../../app/utils/displayText.js';
-import DisplayChipItems from '../../../../configuration/modules/lookups/modules/service-catalogs/components/display-chip-items.vue';
+import DisplayChipItems
+  from '../../../../configuration/modules/lookups/modules/service-catalogs/components/display-chip-items.vue';
 import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
 import prettifyCustomLookupDate from '../../custom-lookups/utils/prettifyDate.js';
 

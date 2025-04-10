@@ -28,13 +28,17 @@
 
 <script setup lang="ts">
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import {
+  useCardStore,
+} from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import get from 'lodash/get';
-import { inject, onMounted } from 'vue';
+import { inject, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
-import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+import CustomLookupDynamicField
+  from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
+import WtDisplayContent
+  from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 
 const router = useRouter();
 
@@ -52,7 +56,7 @@ const props = defineProps({
 });
 const { itemInstance } = useCardStore(props.namespace);
 
-onMounted(() => {
+watch(() => props.fields, () => {
   if (!props.fields.length) {
     router.push({
       name: `${CrmSections.CASES}-case-info`,
