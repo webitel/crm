@@ -38,7 +38,7 @@
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import get from 'lodash/get';
-import { computed, inject, onMounted, provide } from 'vue';
+import { computed, inject, onMounted, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -73,15 +73,12 @@ const saveDetails = () => {
   });
 };
 
-onMounted(() => {
-  // Need wait for loaded custom fields for check redirect
-  setTimeout(() => {
-    if (!props.fields.length) {
-      router.push({
-        name: `${CrmSections.CONTACTS}-timeline`,
-      });
-    }
-  }, 500);
+watch(() => props.fields, () => {
+  if (!props.fields.length) {
+    router.push({
+      name: `${CrmSections.CONTACTS}-timeline`,
+    });
+  }
 });
 </script>
 

@@ -32,7 +32,7 @@ import {
   useCardStore,
 } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import get from 'lodash/get';
-import { inject, onMounted } from 'vue';
+import { inject, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField
@@ -56,15 +56,12 @@ const props = defineProps({
 });
 const { itemInstance } = useCardStore(props.namespace);
 
-onMounted(() => {
-  // Need wait for loaded custom fields for check redirect
-  setTimeout(() => {
-    if (!props.fields.length) {
-      router.push({
-        name: `${CrmSections.CASES}-case-info`,
-      });
-    }
-  }, 500);
+watch(() => props.fields, () => {
+  if (!props.fields.length) {
+    router.push({
+      name: `${CrmSections.CASES}-case-info`,
+    });
+  }
 });
 </script>
 
