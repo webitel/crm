@@ -24,12 +24,13 @@
     :clearable="false"
     @input="selectObject($event)"
   >
-    <template #option="{ option }">
-      {{ getOptionLocale(option) }}
-    </template>
-    <template #singleLabel="{ option }">
-      {{ getOptionLocale(option) }}
-    </template>
+    <!--    We need comment this part of template https://webitel.atlassian.net/browse/WTEL-6697-->
+    <!--    <template #option="{ option }">-->
+    <!--      {{ getOptionLocale(option) }}-->
+    <!--    </template>-->
+    <!--    <template #singleLabel="{ option }">-->
+    <!--      {{ getOptionLocale(option) }}-->
+    <!--    </template>-->
   </wt-select>
 </template>
 
@@ -141,5 +142,3 @@ const getOptionLocale = (option) => {
   return te(`objects.${singleObjectCode}`) ? t(`objects.${singleObjectCode}`) : option.name;
 };
 </script>
-
-<style scoped lang="scss"></style>
