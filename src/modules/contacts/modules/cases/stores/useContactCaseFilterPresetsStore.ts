@@ -1,4 +1,6 @@
 import { createFilterPresetsStore } from '@webitel/ui-datalist/presets';
 
-export const useContactCaseFilterPresetsStore = (namespace) =>
+import { ContactCasesNamespace as namespace } from '../namespace.js';
+
+export const useContactCaseFilterPresetsStore =
   createFilterPresetsStore(namespace);

@@ -27,6 +27,11 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps({
+
+  /* Сomponent can accept props. By default, it works with store for the Сases table,
+   * since the component is written primarily for it.
+   * But you can throw the props of the required page and use the component on this page */
+
   namespace: {
     type: String,
     default: CasesNamespace,

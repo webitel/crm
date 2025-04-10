@@ -15,13 +15,17 @@ import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui
 import { configurations } from '@webitel/ui-sdk/api/clients/index.js';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 import { EngineSystemSettingName } from 'webitel-sdk';
 
 import { SearchMode } from '../enums/SearchMode';
 import { useCasesStore } from '../stores/cases';
 
 const props = defineProps({
+  /* Сomponent can accept prop tableStore. By default, it works with store for the Сases table,
+  * since the component is written primarily for it.
+  * But you can throw the tableStore of the required page and use the component on this page */
+
   tableStore: {
     type: Object,
     default: () => useCasesStore(),

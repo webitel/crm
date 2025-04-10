@@ -1,10 +1,14 @@
 <template>
   <div class="contact-cases">
     <header v-if="showActionsPanel">
+
+<!--      Сomponent <cases-filters-panel> written for the Cases page is used, the necessary data is pretended to be props
+(data for Cases page is hardcoded inside the component as default)-->
+
       <cases-filters-panel
-        :namespace="contactCasesNamespace"
+        :namespace="ContactCasesNamespace"
         :table-store="tableStore"
-        :presets-store="presetsStore"
+        :presets-store="useContactCaseFilterPresetsStore"
         @hide="showActionsPanel = false"
       />
     </header>
@@ -12,6 +16,9 @@
       <h3 class="contact-cases-header__title">
         {{ $t('cases.case', 2) }}
       </h3>
+
+      <!--      Сomponent <cases-filter-search-bar> written for the Cases page is used, the necessary data is pretended to be props
+(data for Cases page is hardcoded inside the component as default)-->
 
       <cases-filter-search-bar
         :table-store="tableStore"
@@ -190,22 +197,13 @@ import CasesFilterSearchBar
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import { ContactCasesNamespace } from '../namespace';
 import { useContactCasesStore } from '../stores/cases';
 import { useContactCaseFilterPresetsStore } from '../stores/useContactCaseFilterPresetsStore';
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-});
-
 const store = useStore();
 
-const contactCasesNamespace = `${props.namespace}/cases`;
-
-const tableStore = useContactCasesStore(contactCasesNamespace)();
-const presetsStore = useContactCaseFilterPresetsStore(contactCasesNamespace)();
+const tableStore = useContactCasesStore();
 
 const showActionsPanel = ref(true);
 
