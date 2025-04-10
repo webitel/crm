@@ -3,7 +3,8 @@ import {
   getDefaultGetParams,
 } from '@webitel/ui-sdk/src/api/defaults/index.js';
 import applyTransform, {
-  camelToSnake, generateUrl,
+  camelToSnake,
+  generateUrl,
   merge,
   notify,
   sanitize,
@@ -13,6 +14,7 @@ import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
 
 import instance from '../../../../../app/api/instance.js';
 import ftsServiceAPI from '../../../../cases/api/FTSServiceAPI.js';
+import { stringifyCaseFilters } from '../../../../cases/api/stringifyCaseFilters.js';
 
 function transformSourceType(data) {
   if (Array.isArray(data)) {
@@ -58,14 +60,18 @@ const getContactCasesList = async (params) => {
     }
   }
 
-  const url = applyTransform({ ...params, ids: params.ids || ftsIds },
-    [
+  const url = applyTransform({ ...params, ids: params.ids || ftsIds }, [
     merge(getDefaultGetParams()),
-    (params) => ({ ...params, q: params.search }),
+    (params) => ({
+      ...params,
+      q: params.search,
+      filters: stringifyCaseFilters(params),
+    }),
     sanitize(fieldsToSend),
     camelToSnake(),
     generateUrl(`contacts/${params.parentId}/cases`),
   ]);
+
   try {
     const response = await instance.get(url);
 
@@ -83,6 +89,6 @@ const getContactCasesList = async (params) => {
 
 const ContactCasesAPI = {
   getList: getContactCasesList,
-}
+};
 
 export default ContactCasesAPI;

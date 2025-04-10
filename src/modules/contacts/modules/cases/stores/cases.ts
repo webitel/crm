@@ -1,10 +1,10 @@
 import { createTableStore } from '@webitel/ui-datalist';
 
-import { CasesNamespace } from '../../../../cases/namespace';
-import ContactCasesAPI from '../api/ContactCasesAPI.js';
+import ContactCasesAPI from '../api/ContactCasesAPI';
+import { ContactCasesNamespace } from '../namespace';
 import { headers } from '../store/_internals/headers';
 
-export const useCasesStore = createTableStore(CasesNamespace, {
+export const useContactCasesStore = createTableStore(ContactCasesNamespace, {
   apiModule: ContactCasesAPI,
   headers,
 });
