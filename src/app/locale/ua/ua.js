@@ -49,7 +49,7 @@ export default {
         },
       },
     },
-    details: 'Details',
+    details: 'Деталі',
     attributes: 'Атрибут | Атрибути',
   },
   timeline: {
@@ -271,7 +271,7 @@ export default {
       emptyLinksText: 'Тут ще немає посилань',
     },
     details: {
-      details: 'Details',
+      details: 'Деталі',
     },
     relatedCases: {
       relatedCases: 'Звʼязані звернення',
