@@ -15,18 +15,30 @@ import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui
 import { configurations } from '@webitel/ui-sdk/api/clients/index.js';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 import { EngineSystemSettingName } from 'webitel-sdk';
 
 import { SearchMode } from '../enums/SearchMode';
 import { useCasesStore } from '../stores/cases';
 
-const tableStore = useCasesStore();
+const props = defineProps({
+
+  /* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
+
+ * Description why data is thrown props and have a default value */
+
+
+  tableStore: {
+    type: Object,
+    default: () => useCasesStore(),
+  },
+});
+
 const { t } = useI18n();
 
-const { filtersManager, isFiltersRestoring } = storeToRefs(tableStore);
+const { filtersManager, isFiltersRestoring } = storeToRefs(props.tableStore);
 
-const { addFilter, updateFilter, deleteFilter } = tableStore;
+const { addFilter, updateFilter, deleteFilter } = props.tableStore;
 
 const isFTSEnabled = ref();
 const isFTSConfigLoaded = ref(false);
