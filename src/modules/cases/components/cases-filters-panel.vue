@@ -28,9 +28,9 @@ const emit = defineEmits<{
 
 const props = defineProps({
 
-  /* Сomponent can accept props. By default, it works with store for the Сases table,
-   * since the component is written primarily for it.
-   * But you can throw the props of the required page and use the component on this page */
+  /* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
+
+   * Description why data is thrown props and have a default value */
 
   namespace: {
     type: String,

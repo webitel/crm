@@ -22,9 +22,11 @@ import { SearchMode } from '../enums/SearchMode';
 import { useCasesStore } from '../stores/cases';
 
 const props = defineProps({
-  /* Сomponent can accept prop tableStore. By default, it works with store for the Сases table,
-  * since the component is written primarily for it.
-  * But you can throw the tableStore of the required page and use the component on this page */
+
+  /* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
+
+ * Description why data is thrown props and have a default value */
+
 
   tableStore: {
     type: Object,

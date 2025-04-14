@@ -2,9 +2,6 @@
   <div class="contact-cases">
     <header v-if="showActionsPanel">
 
-<!--      Сomponent <cases-filters-panel> written for the Cases page is used, the necessary data is pretended to be props
-(data for Cases page is hardcoded inside the component as default)-->
-
       <cases-filters-panel
         :namespace="ContactCasesNamespace"
         :table-store="tableStore"
@@ -16,9 +13,6 @@
       <h3 class="contact-cases-header__title">
         {{ $t('cases.case', 2) }}
       </h3>
-
-      <!--      Сomponent <cases-filter-search-bar> written for the Cases page is used, the necessary data is pretended to be props
-(data for Cases page is hardcoded inside the component as default)-->
 
       <cases-filter-search-bar
         :table-store="tableStore"
