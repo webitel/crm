@@ -211,7 +211,7 @@ const updateCase = async ({ itemInstance }) => {
   const { etag } = itemInstance;
 
   const item = applyTransform(itemInstance, [
-    camelToSnake(),
+    camelToSnake(['custom']),
     sanitize(fieldsToSend),
     checkCustomFields,
   ]);
@@ -226,7 +226,7 @@ const updateCase = async ({ itemInstance }) => {
 
 const addCase = async ({ itemInstance }) => {
   const item = applyTransform(itemInstance, [
-    camelToSnake(),
+    camelToSnake(['custom']),
     sanitize(fieldsToSend),
   ]);
   try {

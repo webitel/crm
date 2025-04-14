@@ -58,13 +58,18 @@ import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import {
+  useCardStore,
+} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import {
+  useExtensionFields,
+} from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
@@ -78,9 +83,16 @@ const editMode = computed(() => {
   return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
 });
 
+const { fields: customFields, getFields } = useExtensionFields({
+  type: 'cases',
+});
+
+getFields();
+
 const isReadOnly = inject('isReadOnly');
 provide('namespace', namespace);
 provide('editMode', editMode);
+provide('customFields', customFields);
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
@@ -105,26 +117,40 @@ function requiredIfFinal(value, state, siblings) {
 }
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      subject: { required },
-      // sla: { required }, /* sla is required, but cannot be changed in the ui */
-      priority: {
-        required,
-      } /* priority is required, but set automatically by default and can't be cleared in the ui */,
-      source: { required },
-      reporter: {
-        required: (v) => {
-          return !isEmpty(v);
+  computed(() => {
+    // reduce custom fields for set validation rules
+    const custom = customFields.value.reduce((acc, field) => {
+      if (field.required) {
+        acc[field.id] = {
+          required,
+        };
+      }
+
+      return acc;
+    }, {});
+
+    return {
+      itemInstance: {
+        subject: { required },
+        // sla: { required }, /* sla is required, but cannot be changed in the ui */
+        priority: {
+          required,
+        } /* priority is required, but set automatically by default and can't be cleared in the ui */,
+        source: { required },
+        reporter: {
+          required: (v) => {
+            return !isEmpty(v);
+          },
         },
+        custom,
+        // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
+        service: { required },
+        // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
+        closeReason: { requiredIfFinal }, /* closeReason is required if status is final, if status is !final this must be empty field */
+        closeResult: { requiredIfFinal }, /* closeResult is required if status is final, if status is !final this must be empty field  */
       },
-      // impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
-      service: { required },
-      // statusCondition: { required }, /* status is required, but set automatically after user selects a service */
-      closeReason: { requiredIfFinal }, /* closeReason is required if status is final, if status is !final this must be empty field */
-      closeResult: { requiredIfFinal }, /* closeResult is required if status is final, if status is !final this must be empty field  */
-    },
-  })),
+    };
+  }),
   { itemInstance },
   { $autoDirty: true },
 );

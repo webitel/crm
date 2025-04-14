@@ -27,7 +27,6 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields.js';
 
 const props = defineProps({
   namespace: {
@@ -38,17 +37,12 @@ const props = defineProps({
 
 const isReadOnly = inject('isReadOnly');
 const editMode = inject('editMode');
+const customFields = inject('customFields');
 
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
 const { namespace: cardNamespace, id } = useCardStore(props.namespace);
-
-const { fields: customFields, getFields } = useExtensionFields({
-  type: 'cases',
-});
-
-getFields();
 
 const tabs = computed(() => {
   const tabs = [
@@ -98,5 +92,3 @@ const tabs = computed(() => {
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 </script>
-
-<style lang="scss" scoped></style>
