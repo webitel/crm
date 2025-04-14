@@ -10,6 +10,7 @@ import OpenedContactGroup from '../modules/contact-groups/components/opened-cont
 import OpenedContactGroupGeneral from '../modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../modules/contact-groups/components/the-contact-groups.vue';
 import OpenedContactGroupsConditions from '../modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
+import OpenedContactGroupsContacts from '../modules/contact-groups/modules/contacts/components/opened-contact-group-contacts.vue';
 import OpenedCustomLookupRecord from '../modules/custom-lookup/components/opened-custom-lookup-record.vue';
 import OpenedCustomLookupRecordsColumns from '../modules/custom-lookup/components/opened-custom-lookup-records-columns.vue';
 import TheCustomLookup from '../modules/custom-lookup/components/the-custom-lookup.vue';
@@ -211,6 +212,11 @@ const lookupsRoutes: RouteRecordRaw[] = [
             path: 'conditions/:conditionId?',
             name: `${CrmSections.ContactGroups}-conditions`,
             component: OpenedContactGroupsConditions,
+          },
+          {
+            path: 'contacts/:contactId?',
+            name: `${CrmSections.ContactGroups}-contacts`,
+            component: OpenedContactGroupsContacts,
           },
           {
             path: 'permissions/:permissionId?',
