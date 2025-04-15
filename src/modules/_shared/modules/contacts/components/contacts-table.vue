@@ -1,145 +1,158 @@
 <template>
-  <div>
-    <wt-loader v-show="isLoading" />
+  <section class="table-section">
+    <header class="table-title">
+      <h3 class="table-title__title">
+        {{ props.title }}
+      </h3>
 
-    <wt-empty
-      v-if="showEmpty"
-      v-bind="emptyProps"
-      @click:primary="emptyProps.primaryAction"
-    />
+      <slot name="action-bar" />
+    </header>
 
     <div
-      v-show="!isLoading && dataList.length"
-      class="table-wrapper"
-    >
-      <wt-table
-        :data="dataList"
-        :headers="headers"
-        :selected="selected"
-        sortable
-        @sort="updateSort"
-        @update:selected="updateSelected"
-      >
-        <template #name="{ item }">
-          <div class="username-wrapper">
-            <wt-avatar
-              size="xs"
-              :username="item.name"
-            />
+      class="table-section__table-wrapper">
+      <wt-loader v-show="isLoading" />
 
-            <wt-item-link
-              :link="{
+      <wt-empty
+        v-if="!emptyProps.showEmpty"
+        v-bind="emptyProps"
+        @click:primary="emptyProps.primaryAction"
+      />
+
+      <div
+        v-show="!isLoading && dataList.length"
+        class="table-wrapper"
+      >
+        <wt-table
+          :data="dataList"
+          :headers="headers"
+          :selected="selected"
+          sortable
+          @sort="updateSort"
+          @update:selected="updateSelected"
+        >
+          <template #name="{ item }">
+            <div class="username-wrapper">
+              <wt-avatar
+                size="xs"
+                :username="item.name"
+              />
+
+              <wt-item-link
+                :link="{
                   name: `${CrmSections.CONTACTS}-card`,
                   params: { id: item.id },
                 }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </div>
+          </template>
+
+          <template #user="{ item }">
+            <wt-icon
+              v-if="item.user"
+              icon="webitel-logo"
+            />
+          </template>
+
+          <template #groups="{ item }">
+            <div
+              v-if="item.groups"
+              class="contacts-groups"
             >
-              {{ item.name }}
-            </wt-item-link>
-          </div>
-        </template>
+              <p>
+                {{ item.groups[0]?.name }}
+              </p>
 
-        <template #user="{ item }">
-          <wt-icon
-            v-if="item.user"
-            icon="webitel-logo"
-          />
-        </template>
+              <wt-tooltip
+                v-if="item.groups.length > 1"
+                :triggers="['click']"
+              >
+                <template #activator>
+                  <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
+                </template>
 
-        <template #groups="{ item }">
-          <div
-            v-if="item.groups"
-            class="contacts-groups"
-          >
-            <p>
-              {{ item.groups[0]?.name }}
-            </p>
+                <div class="contacts-groups__wrapper">
+                  <p
+                    v-for="(group, idx) of item.groups.slice(1)"
+                    :key="idx"
+                  >
+                    {{ group.name }}
+                  </p>
+                </div>
+              </wt-tooltip>
+            </div>
+          </template>
 
-            <wt-tooltip
-              v-if="item.groups.length > 1"
-              :triggers="['click']"
+          <template #about="{ item }">
+            {{ item.about }}
+          </template>
+
+          <template #managers="{ item }">
+            {{ item.managers[0]?.user.name }}
+          </template>
+
+          <template #labels="{ item }">
+            <div
+              v-if="item.labels"
+              class="contacts-labels-wrapper"
             >
-              <template #activator>
-                <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
-              </template>
+              <wt-chip
+                v-for="{ label, id } of item.labels"
+                :key="id"
+              >
+                {{ label }}
+              </wt-chip>
+            </div>
+          </template>
 
-              <div class="contacts-groups__wrapper">
-                <p
-                  v-for="(group, idx) of item.groups.slice(1)"
-                  :key="idx"
-                >
-                  {{ group.name }}
-                </p>
-              </div>
-            </wt-tooltip>
-          </div>
-        </template>
+          <template #actions="{ item }">
+            <slot name="actions" :item="item" />
+            <!--          <wt-icon-action-->
+            <!--            :disabled="!item.access.edit"-->
+            <!--            action="edit"-->
+            <!--            @click="edit(item)"-->
+            <!--          />-->
 
-        <template #about="{ item }">
-          {{ item.about }}
-        </template>
+            <!--          <wt-icon-action-->
+            <!--            :disabled="!item.access.delete"-->
+            <!--            action="delete"-->
+            <!--            @click="-->
+            <!--                askDeleteConfirmation({-->
+            <!--                  deleted: [item],-->
+            <!--                  callback: () => deleteData(item),-->
+            <!--                })-->
+            <!--              "-->
+            <!--          />-->
+          </template>
+        </wt-table>
 
-        <template #managers="{ item }">
-          {{ item.managers[0]?.user.name }}
-        </template>
-
-        <template #labels="{ item }">
-          <div
-            v-if="item.labels"
-            class="contacts-labels-wrapper"
-          >
-            <wt-chip
-              v-for="{ label, id } of item.labels"
-              :key="id"
-            >
-              {{ label }}
-            </wt-chip>
-          </div>
-        </template>
-
-        <template #actions="{ item }">
-          <slot name="actions" :item="item" />
-          <!--          <wt-icon-action-->
-          <!--            :disabled="!item.access.edit"-->
-          <!--            action="edit"-->
-          <!--            @click="edit(item)"-->
-          <!--          />-->
-
-          <!--          <wt-icon-action-->
-          <!--            :disabled="!item.access.delete"-->
-          <!--            action="delete"-->
-          <!--            @click="-->
-          <!--                askDeleteConfirmation({-->
-          <!--                  deleted: [item],-->
-          <!--                  callback: () => deleteData(item),-->
-          <!--                })-->
-          <!--              "-->
-          <!--          />-->
-        </template>
-      </wt-table>
-
-      <wt-pagination
-        :next="next"
-        :prev="page > 1"
-        :size="size"
-        debounce
-        @change="updateSize"
-        @next="updatePage(page + 1)"
-        @prev="updatePage(page - 1)"
-      />
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
+        />
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
+import { createTableStore } from '@webitel/ui-datalist';
 import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum';
+import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import deepmerge from 'deepmerge';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
-import { useContactsStore } from '../stores/contacts';
-
 interface Props {
+  title: string
+  useContactsStore: ReturnType<createTableStore>
   emptyProps?: {
     primaryActionText?: string | boolean;
     disabledPrimaryAction?: boolean
@@ -149,7 +162,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const tableStore = useContactsStore();
+const tableStore = props.useContactsStore();
 
 const {
   dataList,
@@ -168,7 +181,6 @@ const {
   updatePage,
   updateSize,
   updateSort,
-  addFilter,
 } = tableStore;
 
 const defaultEmptyProps = useTableEmpty({
@@ -177,11 +189,16 @@ const defaultEmptyProps = useTableEmpty({
   filters: computed(() => filtersManager.value.getAllValues()),
   isLoading,
 });
+console.log(defaultEmptyProps, ' defaultEmptyProps');
 
 const emptyProps = computed(() => {
+  if (!props.emptyProps) {
+    return defaultEmptyProps;
+  }
+
   return deepmerge.all([
-    ...defaultEmptyProps,
-    ...props.emptyProps,
+    defaultEmptyProps,
+    props.emptyProps,
   ]);
 });
 </script>

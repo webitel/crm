@@ -7,39 +7,33 @@
       @close="closeDelete"
     />
 
-    <header class="table-title">
-      <h3 class="table-title__title">
-        {{ t('contacts.allContacts') }}
-      </h3>
-
-      <wt-action-bar
-        :disabled:add="!hasCreateAccess"
-        :disabled:delete="!hasDeleteAccess"
-        :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-        @click:add="() => {}"
-        @click:delete="
+    <contacts-table :title="t('contacts.allContacts')" :use-contacts-store="useContactsGroupContactsStore">
+      <template #action-bar>
+        <wt-action-bar
+          :disabled:add="!hasCreateAccess"
+          :disabled:delete="!hasDeleteAccess"
+          :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+          @click:add="() => {}"
+          @click:delete="
           askDeleteConfirmation({
             deleted: selected,
             callback: () => deleteEls(selected),
           })
         "
-      >
+        >
 
-        <template #search-bar>
-          <dynamic-filter-search
-            v-if="isFTSConfigLoaded"
-            :filters-manager="filtersManager"
-            :is-filters-restoring="isFiltersRestoring"
-            :search-mode-options="searchModeOptions"
-            @filter:add="addFilter"
-            @filter:update="updateFilter"
-            @filter:delete="deleteFilter"
-          />
-        </template>
-      </wt-action-bar>
-    </header>
+          <template #search-bar>
+            <dynamic-filter-search
+              :filters-manager="filtersManager"
+              :is-filters-restoring="isFiltersRestoring"
+              @filter:add="addFilter"
+              @filter:update="updateFilter"
+              @filter:delete="deleteFilter"
+            />
+          </template>
+        </wt-action-bar>
+      </template>
 
-    <contacts-table>
       <template #actions="{ item }">
         <wt-icon-action
           :disabled="!item.access.delete"
@@ -56,7 +50,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import ContactsAPI from '@webitel/ui-sdk/api/clients/сontacts/contacts';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { useAccessControl } from '@webitel/ui-sdk/composables/useAccessControl/useAccessControl';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
@@ -66,10 +60,11 @@ import {
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
-import { useContactsStore } from '../../../../../../../../_shared/modules/contacts/stores/contacts';
+import { useContactsGroupContactsStore } from '../stores/contacts';
 
 const props = defineProps<{
   namespace: string,
@@ -91,18 +86,12 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const tableStore = useContactsStore();
+const tableStore = useContactsGroupContactsStore();
 
 const {
-  dataList,
   selected,
-  isLoading,
-  headers,
-  page,
-  size,
-  next,
-  error,
   filtersManager,
+  isFiltersRestoring,
 } = storeToRefs(tableStore);
 
 const {
@@ -113,14 +102,17 @@ const {
   initialize,
 } = tableStore;
 
-initialize();
+watch(() => itemInstance.value?.id, (val) => {
+  if (!val) {
+    return;
+  }
 
-async function loadContacts(params) {
-  return await ContactsAPI.getLookup({
-    ...params,
-    groupId: itemInstance.value.group?.id,
+  initialize({
+    parentId: val,
   });
-}
+}, {
+  immediate: true,
+});
 </script>
 
 <style lang="scss" scoped>
