@@ -7,7 +7,7 @@ import {
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
+} from '@webitel/ui-sdk/src/api/defaults/index';
 import applyTransform, {
   camelToSnake,
   merge,
@@ -29,6 +29,10 @@ const formatAccessMode = (item) => ({
     delete: item.mode.includes('d'),
   },
 });
+
+const getGroupsFromResponse = (item) => {
+  return item.groups ? [...item.groups.data.map((el) => el.group)] : [];
+};
 
 const getList = async ({ parentId, ...params }) => {
   const fieldsToSend = [
@@ -129,8 +133,8 @@ const getList = async ({ parentId, ...params }) => {
       id,
       qin,
       mode,
-      [parentId],
       not_id_group,
+      [parentId],
     );
 
     const { items, next } = applyTransform(
@@ -148,10 +152,6 @@ const getList = async ({ parentId, ...params }) => {
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
-};
-
-const getGroupsFromResponse = (item) => {
-  return item.groups ? [...item.groups.data.map((el) => el.group)] : [];
 };
 
 const ContactGroupContactsAPI = {

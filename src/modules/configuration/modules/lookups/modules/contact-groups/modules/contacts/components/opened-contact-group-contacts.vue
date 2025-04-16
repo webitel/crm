@@ -7,7 +7,7 @@
       @close="closeDelete"
     />
 
-    <contacts-table :title="t('contacts.allContacts')" :use-contacts-store="useContactsGroupContactsStore">
+    <contacts-table :header="t('contacts.allContacts')" :use-table-store="useContactsGroupContactsStore">
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"

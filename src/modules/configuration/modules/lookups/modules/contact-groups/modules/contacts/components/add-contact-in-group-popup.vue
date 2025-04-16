@@ -35,6 +35,7 @@
           required
           @input="setGroups"
         />
+
         <wt-select
           :disabled="!itemInstance.group"
           :value="itemInstance.assignee"
@@ -89,7 +90,6 @@ const route = useRoute();
 const { t } = useI18n();
 
 const {
-  namespace: cardNamespace,
   itemInstance,
   resetState,
   addItem,

@@ -7,7 +7,7 @@
       <contact-popup
         :id="editedContactId"
         :shown="isContactPopup"
-        :namespace="baseNamespace"
+        :namespace="ContactsNamespace"
         @close="closeContactPopup"
         @saved="saved"
       />
@@ -35,7 +35,7 @@
         @close="closeDelete"
       />
 
-      <contacts-table :title="t('contacts.contact', 2)" :use-contacts-store="useContactsStore">
+      <contacts-table :header="t('contacts.contact', 2)" :use-table-store="useContactsStore">
         <template #action-bar>
           <wt-action-bar
             :disabled:add="!hasCreateAccess"
@@ -93,10 +93,9 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
-import { useContactsStore } from '../../_shared/modules/contacts/stores/contacts';
+import { ContactsNamespace } from '../namespace';
+import { useContactsStore } from '../stores/contacts';
 import ContactPopup from './contact-popup.vue';
-
-const baseNamespace = 'contacts';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -193,26 +192,5 @@ initialize()
 </script>
 
 <style lang="scss" scoped>
-.contacts {
-  &-groups {
-    display: flex;
-    gap: var(--spacing-xs);
-  }
 
-  &-labels-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-2xs);
-  }
-}
-
-.username-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-xs);
-
-  .wt-avatar {
-    flex: 0 0 var(--wt-avatar-size--size-xs);
-  }
-}
 </style>

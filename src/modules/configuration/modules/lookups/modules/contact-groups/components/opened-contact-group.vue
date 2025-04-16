@@ -95,6 +95,9 @@ const { close } = useClose(CrmSections.CONTACT_GROUPS);
 const isDynamicGroup = computed(
   () => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC,
 );
+const isStaticGroup = computed(
+  () => itemInstance.value.type === WebitelContactsGroupType.STATIC,
+);
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -137,9 +140,10 @@ const tabs = computed(() => {
     pathName: `${CrmSections.CONTACT_GROUPS}-permissions`,
   };
 
-  const tabs = [general, contacts];
+  const tabs = [general];
 
   if (isDynamicGroup.value && id.value) tabs.push(conditions);
+  if (isStaticGroup.value && id.value) tabs.push(contacts);
   if (id.value) tabs.push(permissions);
 
   return tabs;

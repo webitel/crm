@@ -18,6 +18,8 @@ export default {
     collapseAll: 'Згорнути все',
     allContacts: ({ linked }) =>
       `${linked('reusable.all')} ${linked(`contacts.contact`, 2).toLowerCase()}`,
+    addContacts: ({ linked }) =>
+      `${linked('reusable.add')} ${linked(`vocabulary.contact`, 2).toLowerCase()}`,
     communications: {
       communications: "Засіб зв'язку | Засоби зв'язку",
       channel: 'Канал',

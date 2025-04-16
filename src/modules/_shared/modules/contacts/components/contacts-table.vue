@@ -2,7 +2,7 @@
   <section class="table-section">
     <header class="table-title">
       <h3 class="table-title__title">
-        {{ props.title }}
+        {{ props.header }}
       </h3>
 
       <slot name="action-bar" />
@@ -151,9 +151,9 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
 interface Props {
-  title: string
-  useContactsStore: ReturnType<createTableStore>
-  emptyProps?: {
+  header: string
+  useTableStore: ReturnType<createTableStore>
+  emptyData?: {
     primaryActionText?: string | boolean;
     disabledPrimaryAction?: boolean
     primaryAction?: () => void
@@ -162,7 +162,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const tableStore = props.useContactsStore();
+const tableStore = props.useTableStore();
 
 const {
   dataList,
@@ -192,17 +192,38 @@ const defaultEmptyProps = useTableEmpty({
 console.log(defaultEmptyProps, ' defaultEmptyProps');
 
 const emptyProps = computed(() => {
-  if (!props.emptyProps) {
+  if (!props.emptyData) {
     return defaultEmptyProps;
   }
 
   return deepmerge.all([
     defaultEmptyProps,
-    props.emptyProps,
+    props.emptyData,
   ]);
 });
 </script>
 
 <style scoped lang="scss">
+.contacts {
+  &-groups {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
 
+  &-labels-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2xs);
+  }
+}
+
+.username-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+
+  .wt-avatar {
+    flex: 0 0 var(--wt-avatar-size--size-xs);
+  }
+}
 </style>
