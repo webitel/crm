@@ -1,6 +1,6 @@
 <template>
   <wt-page-wrapper
-    :actions-panel="false"
+    :actions-panel="showActionsPanel"
     class="contacts"
   >
     <template #header>
@@ -22,24 +22,28 @@
         <wt-headline-nav :path="path" />
 
         <template #actions>
-          <filter-search
-            :namespace="filtersNamespace"
-            :search-mode-opts="searchModeOpts"
-            multisearch
-          />
+<!--          <filter-search-->
+<!--            :namespace="filtersNamespace"-->
+<!--            :search-mode-opts="searchModeOpts"-->
+<!--            multisearch-->
+<!--          />-->
         </template>
       </wt-page-header>
+    </template>
+
+    <template #actions-panel>
+      <contacts-filters-panel @hide="showActionsPanel = false" />
     </template>
 
     <template #main>
       <wt-loader v-show="isLoading" />
 
-      <wt-dummy
-        v-if="!isLoading && !dataList.length"
-        :dark-mode="darkMode"
-        :src="dummy.src"
-        :text="dummy.text"
-      />
+<!--      <wt-dummy-->
+<!--        v-if="!isLoading && !dataList.length"-->
+<!--        :dark-mode="darkMode"-->
+<!--        :src="dummy.src"-->
+<!--        :text="dummy.text"-->
+<!--      />-->
 
       <delete-confirmation-popup
         :shown="isDeleteConfirmationPopup"
@@ -156,10 +160,10 @@
           </template>
         </wt-table>
 
-        <filter-pagination
-          :namespace="filtersNamespace"
-          :is-next="isNext"
-        />
+<!--        <filter-pagination-->
+<!--          :namespace="filtersNamespace"-->
+<!--          :is-next="isNext"-->
+<!--        />-->
       </div>
     </template>
   </wt-page-wrapper>
@@ -177,6 +181,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import isEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
+import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -184,7 +189,11 @@ import { useStore } from 'vuex';
 
 import dummyDark from '../../../app/assets/dummy-dark.svg';
 import dummyLight from '../../../app/assets/dummy-light.svg';
+import { useContactsStore } from '../stores/contacts.js';
 import ContactPopup from './contact-popup.vue';
+import ContactsFiltersPanel from './contacts-filters-panel.vue';
+//
+// const tableStore = useContactsStore();
 
 const baseNamespace = 'contacts';
 
@@ -195,6 +204,34 @@ const store = useStore();
 
 const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
 
+const tableStore = useContactsStore();
+
+const {
+  dataList,
+  selected,
+  error,
+  isLoading,
+  page,
+  size,
+  next,
+  headers,
+  shownHeaders,
+  filtersManager,
+} = storeToRefs(tableStore);
+
+const {
+  initialize,
+  loadDataList,
+  updateSelected,
+  updatePage,
+  updateSize,
+  updateSort,
+  deleteEls,
+  updateShownHeaders,
+} = tableStore;
+
+initialize();
+
 const {
   isVisible: isDeleteConfirmationPopup,
   deleteCount,
@@ -204,41 +241,43 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-  namespace,
+// const {
+//   namespace,
+//
+//   dataList,
+//   selected,
+//   isLoading,
+//   headers,
+//   isNext,
+//   error,
+//
+//   loadData,
+//   deleteData,
+//   sort,
+//   setSelected,
+//   onFilterEvent,
+// } = useTableStore(baseNamespace);
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+const showActionsPanel = ref(true);
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-} = useTableStore(baseNamespace);
-
-const {
-  namespace: filtersNamespace,
-  restoreFilters,
-
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(namespace);
-
-subscribe({
-  event: '*',
-  callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-  flushSubscribers();
-});
+// const {
+//   namespace: filtersNamespace,
+//   restoreFilters,
+//
+//   subscribe,
+//   flushSubscribers,
+// } = useTableFilters(namespace);
+//
+// subscribe({
+//   event: '*',
+//   callback: onFilterEvent,
+// });
+//
+// restoreFilters();
+//
+// onUnmounted(() => {
+//   flushSubscribers();
+// });
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -280,24 +319,24 @@ const searchModeOpts = computed(() => [
 // [WTEL-3776]
 // display different images when no contacts have been created yet (default img)
 // and when the filter didn't produce results
-const dummy = computed(() => {
-  if (dataList.value.length) return false;
-  const filters = store.getters[`${filtersNamespace}/_STATE_FILTER_NAMES`];
-  const defaultFilters = ['page', 'size', 'sort', 'fields'];
-  const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
-    if (defaultFilters.includes(filter)) return dynamic;
-    return {
-      ...dynamic,
-      [filter]: filters[filter],
-    };
-  }, {});
-  const isEmptyFilters = isEmpty(dynamicFilters);
-
-  return {
-    src: isEmptyFilters ? '' : dummyPic.value,
-    text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
-  };
-});
+// const dummy = computed(() => {
+//   if (dataList.value.length) return false;
+//   const filters = store.getters[`${filtersNamespace}/_STATE_FILTER_NAMES`];
+//   const defaultFilters = ['page', 'size', 'sort', 'fields'];
+//   const dynamicFilters = Object.keys(filters).reduce((dynamic, filter) => {
+//     if (defaultFilters.includes(filter)) return dynamic;
+//     return {
+//       ...dynamic,
+//       [filter]: filters[filter],
+//     };
+//   }, {});
+//   const isEmptyFilters = isEmpty(dynamicFilters);
+//
+//   return {
+//     src: isEmptyFilters ? '' : dummyPic.value,
+//     text: isEmptyFilters ? '' : t('vocabulary.emptyResultSearch'),
+//   };
+// });
 
 const deletableSelectedItems = computed(() =>
   selected.value.filter((item) => item.access.delete),
