@@ -38,27 +38,32 @@ const { fields: customFields, getFields } = useExtensionFields({
 
 getFields();
 
+const currentCardRoute = computed(() => {
+  if (typeof route.name !== 'string') return CrmSections.CONTACTS;
+  return route.name.includes('contact_view') ? 'contact_view' : CrmSections.CONTACTS;
+});
+
 const tabs = computed(() => {
   const tabList = [
     {
       text: t('timeline.timeline'),
       value: 'timeline',
-      pathName: `${CrmSections.CONTACTS}-timeline`,
+      pathName: `${currentCardRoute.value}-timeline`,
     },
     {
       text: t('cases.case', 2),
       value: 'cases',
-      pathName: `${CrmSections.CONTACTS}-cases`,
+      pathName: `${currentCardRoute.value}-cases`,
     },
     {
       text: t('contacts.communications.communications', 2),
       value: 'communications',
-      pathName: `${CrmSections.CONTACTS}-communications`,
+      pathName: `${currentCardRoute.value}-communications`,
     },
     {
       text: t('contacts.attributes', 2),
       value: 'variables',
-      pathName: `${CrmSections.CONTACTS}-variables`,
+      pathName: `${currentCardRoute.value}-variables`,
     },
   ];
 
@@ -66,14 +71,14 @@ const tabs = computed(() => {
     tabList.push({
       text: t('contacts.details'),
       value: 'details',
-      pathName: `${CrmSections.CONTACTS}-details`,
+      pathName: `${currentCardRoute.value}-details`,
     });
   }
 
   tabList.push({
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
-    pathName: `${CrmSections.CONTACTS}-permissions`,
+    pathName: `${currentCardRoute.value}-permissions`,
   });
 
   return tabList;
@@ -82,10 +87,15 @@ const tabs = computed(() => {
 const currentTab = computed(() => {
   return tabs.value.find(({ pathName }) =>
     route?.matched?.find(({ name }) => name === pathName),
-  );
+  )
 });
 
 function changeTab(tab) {
+  // console.log(route);
+  // if (routeName.includes('contact_view')) {
+  //   return router.push({ name: `contact_view-${tab.value}` });
+  // }
+
   return router.push({ name: tab.pathName });
 }
 </script>

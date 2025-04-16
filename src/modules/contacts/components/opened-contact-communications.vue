@@ -51,6 +51,11 @@ const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 
+const currentCardRoute = computed(() => {
+  if (typeof route.name !== 'string') return CrmSections.CONTACTS;
+  return route.name.includes('contact_view') ? 'contact_view' : CrmSections.CONTACTS;
+});
+
 const tabs = computed(() => [
   {
     value: 'phones',
@@ -59,7 +64,7 @@ const tabs = computed(() => [
     namespace: phonesNamespace,
     icon: 'call',
     channel: 'number', // must be same as comm popup channel
-    pathName: `${CrmSections.CONTACTS}-communications-phones`,
+    pathName: `${currentCardRoute.value}-communications-phones`,
   },
   {
     value: 'messaging',
@@ -68,7 +73,7 @@ const tabs = computed(() => [
     namespace: messagingNamespace,
     icon: 'chat',
     channel: 'messaging', // must be same as comm popup channel
-    pathName: `${CrmSections.CONTACTS}-communications-messaging`,
+    pathName: `${currentCardRoute.value}-communications-messaging`,
   },
   {
     value: 'emails',
@@ -77,7 +82,7 @@ const tabs = computed(() => [
     namespace: emailsNamespace,
     icon: 'email',
     channel: 'email', // must be same as comm popup channel
-    pathName: `${CrmSections.CONTACTS}-communications-emails`,
+    pathName: `${currentCardRoute.value}-communications-emails`,
   },
 ]);
 
