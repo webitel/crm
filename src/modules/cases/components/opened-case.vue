@@ -174,6 +174,18 @@ initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
+const breadcrumbSubject = ref(itemInstance.value.subject);
+
+const setBreadcrumbSubject =(name: string) => {
+  breadcrumbSubject.value = name;
+}
+
+watch(() => itemInstance.value.subject, (newVal) => {
+  if (!editMode.value) {
+    setBreadcrumbSubject(newVal);
+  }
+});
+
 const path = computed(() => {
   const baseUrl = '/cases';
 
@@ -185,7 +197,7 @@ const path = computed(() => {
     },
     {
       name: id.value
-        ? `${itemInstance.value?.name} ${itemInstance.value?.subject}`
+        ? `${itemInstance.value?.name} ${breadcrumbSubject.value}`
         : t('reusable.new'),
     },
   ];
@@ -250,6 +262,7 @@ const toggleEditMode = (value) => {
 
 const saveCase = async () => {
   await save();
+  setBreadcrumbSubject(itemInstance.value.subject)
   await toggleEditMode(false);
 };
 
