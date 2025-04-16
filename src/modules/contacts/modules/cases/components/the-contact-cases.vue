@@ -1,11 +1,22 @@
 <template>
   <div class="contact-cases">
+    <header v-if="showActionsPanel">
+
+      <cases-filters-panel
+        :namespace="ContactCasesNamespace"
+        :table-store="tableStore"
+        :presets-store="useContactCaseFilterPresetsStore"
+        @hide="showActionsPanel = false"
+      />
+    </header>
     <header class="contact-cases-header">
       <h3 class="contact-cases-header__title">
         {{ $t('cases.case', 2) }}
       </h3>
 
-      <cases-filter-search-bar class="contact-cases__search-filter" />
+      <cases-filter-search-bar
+        :table-store="tableStore"
+        class="contact-cases__search-filter" />
 
       <wt-action-bar
         :include="[
@@ -14,9 +25,10 @@
               IconAction.COLUMNS,
             ]"
         @click:refresh="loadDataList"
+        @click:filters="showActionsPanel = !showActionsPanel"
       >
         <template #filters="{ action, onClick }">
-          <wt-badge>
+          <wt-badge :hidden="!anyFiltersOnFiltersPanel">
             <wt-icon-action
               :action="action"
               @click="onClick"
@@ -170,18 +182,24 @@ import {
   useTableEmpty,
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesFilterSearchBar
   from '../../../../cases/components/cases-filter-search-bar.vue';
+import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
+import { SearchMode } from '../../../../cases/enums/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
-import { useCasesStore } from '../stores/cases.ts';
+import { ContactCasesNamespace } from '../namespace';
+import { useContactCasesStore } from '../stores/cases';
+import { useContactCaseFilterPresetsStore } from '../stores/useContactCaseFilterPresetsStore';
 
 const store = useStore();
 
-const tableStore = useCasesStore();
+const tableStore = useContactCasesStore();
+
+const showActionsPanel = ref(true);
 
 const {
   dataList,
@@ -222,6 +240,20 @@ const parentId = computed(() => store.state.contacts.card.itemId);
 initialize({ parentId: parentId.value });
 
 const contactCase = (id: string) => `${import.meta.env.VITE_CRM_URL}/cases/${id}`;
+
+/*
+ * show "toggle filters panel" badge if any filters are applied...
+ * */
+
+const anyFiltersOnFiltersPanel = computed(() => {
+  /*
+   * ...excluding search filters, which shown in other panel
+   * */
+  return filtersManager.value.getAllKeys().some((filterName) => {
+    return !Object.values(SearchMode).some((mode) => mode === filterName);
+  });
+});
+
 </script>
 
 <style lang="scss" scoped>
