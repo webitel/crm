@@ -189,7 +189,6 @@ const defaultEmptyProps = useTableEmpty({
   filters: computed(() => filtersManager.value.getAllValues()),
   isLoading,
 });
-console.log(defaultEmptyProps, ' defaultEmptyProps');
 
 const emptyProps = computed(() => {
   if (!props.emptyData) {
