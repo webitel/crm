@@ -91,11 +91,6 @@ const currentTab = computed(() => {
 });
 
 function changeTab(tab) {
-  // console.log(route);
-  // if (routeName.includes('contact_view')) {
-  //   return router.push({ name: `contact_view-${tab.value}` });
-  // }
-
   return router.push({ name: tab.pathName });
 }
 </script>

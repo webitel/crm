@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 
 import casesRoutes from '../../modules/cases/router';
+import caseViewRoute from '../../modules/cases/router/case-view';
 import configurationRoutes from '../../modules/configuration/router';
 import contactsRoutes from '../../modules/contacts/router';
 import contactViewRoute from '../../modules/contacts/router/contact-view';
@@ -30,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
       ...configurationRoutes,
       ...customizationRoutes,
       contactViewRoute,
+      caseViewRoute,
     ],
   },
   {

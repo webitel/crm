@@ -25,6 +25,7 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 
@@ -40,33 +41,39 @@ const editMode = inject('editMode');
 const customFields = inject('customFields');
 
 const { t } = useI18n();
+const route = useRoute();
 
 const { disableUserInput } = useUserAccessControl();
 const { namespace: cardNamespace, id } = useCardStore(props.namespace);
+
+const currentCardRoute = computed(() => {
+  if (typeof route.name !== 'string') return CrmSections.CASES;
+  return route.name.includes('case_view') ? 'case_view' : CrmSections.CASES;
+});
 
 const tabs = computed(() => {
   const tabs = [
     {
       text: t('cases.caseInfo.caseInfo'),
       value: 'case-info',
-      pathName: `${CrmSections.CASES}-case-info`,
+      pathName: `${currentCardRoute.value}-case-info`,
     },
     {
       text: t('cases.result'),
       value: 'result',
-      pathName: `${CrmSections.CASES}-result`,
+      pathName: `${currentCardRoute.value}-result`,
     },
     {
       text: t('timeline.timeline'),
       value: 'timeline',
-      pathName: `${CrmSections.CASES}-timeline`,
+      pathName: `${currentCardRoute.value}-timeline`,
     },
   ];
 
   const attachments = {
     text: t('cases.attachments.attachments'),
     value: 'attachments',
-    pathName: `${CrmSections.CASES}-attachments`,
+    pathName: `${currentCardRoute.value}-attachments`,
   };
 
   if (id.value) tabs.push(attachments);
@@ -75,14 +82,14 @@ const tabs = computed(() => {
     tabs.push({
       text: t('cases.details.details'),
       value: 'details',
-      pathName: `${CrmSections.CASES}-details`,
+      pathName: `${currentCardRoute.value}-details`,
     });
   }
 
   const permissions = {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
-    pathName: `${CrmSections.CASES}-permissions`,
+    pathName: `${currentCardRoute.value}-permissions`,
   };
 
   if (id.value) tabs.push(permissions);
