@@ -58,6 +58,8 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCachedItemInstanceName }
+  from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -174,17 +176,7 @@ initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
-const breadcrumbSubject = ref(itemInstance.value.subject);
-
-const setBreadcrumbSubject =(name: string) => {
-  breadcrumbSubject.value = name;
-}
-
-watch(() => itemInstance.value.subject, (newVal) => {
-  if (!editMode.value) {
-    setBreadcrumbSubject(newVal);
-  }
-});
+const { name: breadcrumbSubject } = useCachedItemInstanceName(itemInstance, {namePath: 'subject'});
 
 const path = computed(() => {
   const baseUrl = '/cases';
@@ -262,7 +254,6 @@ const toggleEditMode = (value) => {
 
 const saveCase = async () => {
   await save();
-  setBreadcrumbSubject(itemInstance.value.subject)
   await toggleEditMode(false);
 };
 
