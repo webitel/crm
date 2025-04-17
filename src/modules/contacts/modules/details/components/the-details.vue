@@ -3,7 +3,7 @@
     v-if="hasEditAccess"
     to="#page-header-actions"
   >
-    <wt-button @click="saveDetails">{{ t('reusable.save') }}</wt-button>
+    <wt-button :disabled="disabledSave" @click="saveDetails">{{ t('reusable.save') }}</wt-button>
   </teleport>
   <div class="opened-card">
     <div class="opened-card-form">
@@ -35,10 +35,11 @@
 </template>
 
 <script setup lang="ts">
+import { useVuelidate } from '@vuelidate/core';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import get from 'lodash/get';
-import { computed, inject, onMounted, provide, watch } from 'vue';
+import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -66,6 +67,14 @@ const router = useRouter();
 const { t } = useI18n();
 
 const { itemInstance, updateItem } = useCardStore(props.namespace);
+
+const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
+
+v$.value.$touch();
+
+const disabledSave = computed(
+  () => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 const saveDetails = () => {
   updateItem({
