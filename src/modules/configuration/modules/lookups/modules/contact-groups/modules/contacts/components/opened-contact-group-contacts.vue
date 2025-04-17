@@ -1,5 +1,7 @@
 <template>
   <section class="table-page">
+    <add-contact-in-group-popup :shown="isAddContactInGroupPopup" namespace="" />
+
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
       :callback="deleteCallback"
@@ -13,7 +15,7 @@
           :disabled:add="!hasCreateAccess"
           :disabled:delete="!hasDeleteAccess"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="() => {}"
+          @click:add="isAddContactInGroupPopup = true"
           @click:delete="
           askDeleteConfirmation({
             deleted: selected,
@@ -60,11 +62,12 @@ import {
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import { useContactsGroupContactsStore } from '../stores/contacts';
+import AddContactInGroupPopup from './add-contact-in-group-popup';
 
 const props = defineProps<{
   namespace: string,
@@ -72,6 +75,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
+const isAddContactInGroupPopup = ref(false)
 
 const { itemInstance } = useCardStore(
   props.namespace,

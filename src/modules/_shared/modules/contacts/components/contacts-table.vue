@@ -145,7 +145,7 @@
 import { createTableStore } from '@webitel/ui-datalist';
 import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';

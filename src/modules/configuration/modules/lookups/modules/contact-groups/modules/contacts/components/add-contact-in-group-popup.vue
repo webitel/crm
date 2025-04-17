@@ -15,35 +15,35 @@
     <template #main>
       <div class="add-contacts-popup__wrapper">
         <div class="add-contacts-popup__filters">
-          <wt-input
-            :value="itemInstance.expression"
-            :label="t('lookups.slas.conditions', 1)"
-            :v="v$.itemInstance.expression"
-            required
-            @input="setItemProp({ path: 'expression', value: $event })"
+<!--          <dynamic-filter-search-->
+<!--            :filters-manager="filtersManager"-->
+<!--            :is-filters-restoring="isFiltersRestoring"-->
+<!--          />-->
+
+          <has-option-filter-value-field
+            :model-value="filters.user"
+            :label="t('webitelUI.filters.user')"
+            @update:model-value="filters.user = $event"
           />
 
+          <wt-select
+            :close-on-select="false"
+            :search-method="ContactGroupsAPI.getLookup"
+            :value="filters.group"
+            :label="t('webitelUI.filters.group')"
+            multiple
+            use-value-from-options-by-prop="id"
+            @input="filters.group = $event"
+          />
+
+          <wt-action-bar
+            :include="[IconAction.CLEAR]"
+            @click:add="() => {}"
+          />
         </div>
+
+<!--        <contacts-table></contacts-table>-->
       </div>
-
-      <form class="add-contacts-popup__wrapper">
-        <wt-select
-          :value="itemInstance.group"
-          :v="v$.itemInstance.group"
-          :label="t('lookups.contactGroups.contactGroups', 1)"
-          :search-method="loadStaticContactGroupsList"
-          required
-          @input="setGroups"
-        />
-
-        <wt-select
-          :disabled="!itemInstance.group"
-          :value="itemInstance.assignee"
-          :label="t('lookups.contactGroups.assignee')"
-          :options="contactList"
-          @input="setItemProp({ path: 'assignee', value: $event })"
-        />
-      </form>
     </template>
 
     <template #actions>
@@ -67,17 +67,21 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
+import HasOptionFilterValueField from '@webitel/ui-datalist/src/filters/components/filter-options/_shared/has-options/has-option-filter-value-field.vue';
+import UsersAPI from '@webitel/ui-sdk/api/clients/users/users';
+import { IconAction } from '@webitel/ui-sdk/enums';
+import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
-import ContactGroupsAPI from '../../../api/contactGroups.js';
+import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table';
+import ContactGroupsAPI from '../../../api/contactGroups';
 
 const props = defineProps({
   namespace: {
@@ -100,17 +104,12 @@ const {
   id,
 } = useCardStore(props.namespace);
 
-const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      expression: { required },
-      group: { required },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true },
-);
-v$.value.$touch();
+const filters = ref({
+  search: '',
+  user: null,
+  group: null,
+  label: null,
+})
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
