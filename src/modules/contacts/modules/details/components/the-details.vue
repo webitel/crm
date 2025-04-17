@@ -68,7 +68,6 @@ const { t } = useI18n();
 
 const { itemInstance, updateItem } = useCardStore(props.namespace);
 
-// This case need to get validation from child fields
 const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
 
 v$.value.$touch();
