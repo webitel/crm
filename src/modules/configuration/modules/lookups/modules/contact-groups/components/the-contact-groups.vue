@@ -91,7 +91,7 @@
               </template>
 
               <template #contactsSize="{ item }">
-                {{ item.type === WebitelContactsGroupType.STATIC ? item.contactsSize : '-' }}
+                {{ item.contactsSize }}
               </template>
 
               <template #state="{ item, index }">
