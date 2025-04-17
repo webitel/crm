@@ -46,7 +46,7 @@
           @close="closeDelete"
         />
 
-        <div class="table-section__table-wrapper">
+        <div class="table-section__table-wrapper the-service-catalogs__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -58,7 +58,7 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
+          <div v-if="dataList.length && !isLoading" class="the-service-catalogs__table">
             <wt-tree-table
               :headers="headers"
               :data="dataList"
@@ -140,13 +140,13 @@
                 {{ displayText(item.code) }}
               </template>
               <template #teams="{ item }">
-                <template v-if="!isRootElement(item)"> - </template>
+                <template v-if="!isRootElement(item)"> -</template>
                 <template v-else>
                   <display-chip-items :items="item.teams" />
                 </template>
               </template>
               <template #skills="{ item }">
-                <template v-if="!isRootElement(item)"> - </template>
+                <template v-if="!isRootElement(item)"> -</template>
                 <template v-else>
                   <display-chip-items :items="item.skills" />
                 </template>
@@ -185,13 +185,22 @@ import { WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
+import {
+  useTableFilters,
+} from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import {
+  useTableEmpty,
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import {
+  useTableStore,
+} from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -338,6 +347,7 @@ const changeState = async (item) => {
 </script>
 
 <style scoped lang="scss">
+
 .the-service-catalogs {
   &__service-assignee {
     color: var(--text-link-color) !important;
@@ -347,6 +357,15 @@ const changeState = async (item) => {
   &__service-description {
     max-width: 300px;
     text-wrap: wrap;
+  }
+
+  &__table-wrapper {
+    max-height: 100%;
+  }
+
+  &__table {
+    flex: 1;
+    overflow-y: auto;
   }
 }
 </style>
