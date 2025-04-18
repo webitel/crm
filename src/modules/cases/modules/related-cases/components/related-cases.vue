@@ -14,6 +14,7 @@
         </h3>
 
         <wt-action-bar
+          v-if="!isReadOnly"
           :include="[IconAction.ADD, IconAction.DELETE]"
           :disabled:add="!hasCreateAccess || !editMode"
           :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
@@ -114,6 +115,7 @@
 
           <template #actions="{ item }">
             <wt-icon-action
+              v-if="!isReadOnly"
               :disabled="!hasDeleteAccess || !editMode"
               action="delete"
               @click="
@@ -155,6 +157,7 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const editMode = inject('editMode');
 
 const { t } = useI18n();

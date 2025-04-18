@@ -13,6 +13,7 @@
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
+          v-if="!isReadOnly"
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink || !editMode"
           :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.DELETE]"
@@ -88,11 +89,13 @@
 
           <template #actions="{ item }">
             <wt-icon-action
+              v-if="!isReadOnly"
               :disabled="!editMode || !hasUpdateAccess || formState.isAdding"
               action="edit"
               @click="startEditingLink(item)"
             />
             <wt-icon-action
+              v-if="!isReadOnly"
               :disabled="!editMode || !hasDeleteAccess"
               action="delete"
               @click="
@@ -136,6 +139,7 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const editMode = inject('editMode');
 
 const { t } = useI18n();

@@ -12,7 +12,7 @@
           {{ t('cases.attachments.files') }}
         </h3>
         <wt-action-bar
-          :include="[IconAction.ADD, IconAction.DOWNLOAD, IconAction.DELETE]"
+          :include="filteredActions"
           :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           :disabled:download="!dataList.length"
           :disabled:add="!hasCreateAccess || !editMode"
@@ -79,6 +79,7 @@
               "
             />
             <wt-icon-action
+              v-if="!isReadOnly"
               :disabled="!editMode || !hasDeleteAccess"
               action="delete"
               @click="
@@ -127,6 +128,7 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const store = useStore();
 
 const { t } = useI18n();
@@ -167,6 +169,9 @@ const { showEmpty } = useTableEmpty({ dataList, isLoading });
 const emptyText = computed(() => {
   return t('cases.attachments.emptyFilesText');
 });
+const filteredActions = computed(() => {
+  return [IconAction.DOWNLOAD, ...(isReadOnly ? [] : [IconAction.ADD, IconAction.DELETE])]
+})
 
 subscribe({
   event: '*',
