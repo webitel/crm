@@ -63,12 +63,14 @@ const contactsChildrenRoutes: RouteRecordRaw[] = [
   },
 ];
 
-const contactViewRoute: RouteRecordRaw = {
-  path: 'contact_view/:id',
-  name: 'contact_view',
-  component: OpenedContactView,
-  redirect: { name: `${CONTACT_VIEW_NAME}-timeline` },
-  children: contactsChildrenRoutes,
-};
+const contactViewRoute: RouteRecordRaw[] = [
+  {
+    path: `${CONTACT_VIEW_NAME}/:id`,
+    name: CONTACT_VIEW_NAME,
+    component: OpenedContactView,
+    redirect: { name: `${CONTACT_VIEW_NAME}-timeline` },
+    children: contactsChildrenRoutes,
+  },
+];
 
 export default contactViewRoute;

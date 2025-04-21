@@ -170,7 +170,11 @@ const emptyText = computed(() => {
   return t('cases.attachments.emptyFilesText');
 });
 const filteredActions = computed(() => {
-  return [IconAction.DOWNLOAD, ...(isReadOnly ? [] : [IconAction.ADD, IconAction.DELETE])]
+  const actions = [IconAction.DOWNLOAD];
+  if (!isReadOnly) {
+    actions.push(IconAction.ADD, IconAction.DELETE);
+  }
+  return actions;
 })
 
 subscribe({

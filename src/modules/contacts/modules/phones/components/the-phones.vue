@@ -15,7 +15,7 @@
 
     <header class="contact-communication-tab-header">
       <wt-icon-action
-        :disabled="!access.hasRbacEditAccess || isReadOnly"
+        :disabled="isActionDisabled"
         action="add"
         @click="addCommunication"
       />
@@ -48,7 +48,7 @@
           />
           <wt-icon-btn
             v-else
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isActionDisabled"
             class="set-primary-btn"
             icon="tick"
             @click="setAsPrimary({ item, index })"
@@ -59,12 +59,12 @@
         </template>
         <template #actions="{ item, index }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isActionDisabled"
             action="edit"
             @click="editCommunication(item)"
           />
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isActionDisabled"
             action="delete"
             @click="
               askDeleteConfirmation({
@@ -95,6 +95,8 @@ import dummyLight from '../assets/phone-dummy-light.svg';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
+
+const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
 
 const props = defineProps({
   namespace: {

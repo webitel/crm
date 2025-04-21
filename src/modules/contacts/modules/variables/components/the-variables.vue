@@ -6,7 +6,7 @@
         @close="closeItemPopup"
       />
       <wt-icon-action
-        :disabled="!access.hasRbacEditAccess || isReadOnly"
+        :disabled="isActionDisabled"
         action="add"
         @click="addItem"
       />
@@ -45,12 +45,12 @@
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isActionDisabled"
             action="edit"
             @click="editItem(item)"
           />
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isActionDisabled"
             action="delete"
             @click="
               askDeleteConfirmation({
@@ -75,7 +75,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, inject, onUnmounted, ref } from 'vue';
+import { computed, inject, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -83,6 +83,8 @@ import VariablePopup from './variable-popup.vue';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
+
+const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
 
 const props = defineProps({
   namespace: {

@@ -30,8 +30,8 @@ const routes: Array<RouteRecordRaw> = [
       ...contactsRoutes,
       ...configurationRoutes,
       ...customizationRoutes,
-      contactViewRoute,
-      caseViewRoute,
+      ...contactViewRoute,
+      ...caseViewRoute,
     ],
   },
   {

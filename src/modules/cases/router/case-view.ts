@@ -44,16 +44,18 @@ const casesChildrenRoutes: RouteRecordRaw[] = [
   },
 ];
 
-const caseViewRoute: RouteRecordRaw = {
-  path: 'case_view/:id',
-  name: `${CASE_VIEW_NAME}-card-view`,
-  component: OpenedCaseWrapper,
-  redirect: { name: `${CASE_VIEW_NAME}-case-info` },
-  meta: {
-    WtObject: WtObject.Case,
-    UiSection: CrmSections.Cases,
+const caseViewRoute: RouteRecordRaw[] = [
+  {
+    path: `${CASE_VIEW_NAME}/:id`,
+    name: CASE_VIEW_NAME,
+    component: OpenedCaseWrapper,
+    redirect: { name: `${CASE_VIEW_NAME}-case-info` },
+    meta: {
+      WtObject: WtObject.Case,
+      UiSection: CrmSections.Cases,
+    },
+    children: casesChildrenRoutes,
   },
-  children: casesChildrenRoutes,
-};
+];
 
 export default caseViewRoute;

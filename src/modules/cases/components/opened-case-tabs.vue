@@ -9,7 +9,7 @@
       :namespace="cardNamespace"
       :access="/*is used by permissions tab*/ {
         read: true,
-        edit: !disableUserInput && editMode && !isReadOnly,
+        edit: canEdit,
         delete: !disableUserInput && editMode && !isReadOnly,
         add: !disableUserInput && editMode && !isReadOnly,
       }"
@@ -46,6 +46,7 @@ const route = useRoute();
 const { disableUserInput } = useUserAccessControl();
 const { namespace: cardNamespace, id } = useCardStore(props.namespace);
 
+const canEdit = computed(() => !disableUserInput.value && editMode.value && !isReadOnly.value)
 const currentCardRoute = computed(() => {
   if (typeof route.name !== 'string') return CrmSections.CASES;
   return route.name.includes('case_view') ? 'case_view' : CrmSections.CASES;

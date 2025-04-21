@@ -6,7 +6,7 @@
         @close="closeItemPopup"
       />
       <wt-icon-action
-        :disabled="!access.hasRbacEditAccess || isReadOnly"
+        :disabled="isActionDisabled"
         action="add"
         @click="addItem"
       />
@@ -76,7 +76,7 @@
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isActionDisabled"
             action="delete"
             @click="
               changeReadAccessMode({ item, mode: { id: AccessMode.FORBIDDEN } })
@@ -106,6 +106,8 @@ import GranteePopup from './permissions-tab-grantee-popup.vue';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
+
+const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
 
 const props = defineProps({
   namespace: {
