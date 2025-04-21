@@ -38,7 +38,6 @@ const getServicesList = async ({ rootId, ...rest }) => {
 
   const { page, size, fields, sort, id, q } = applyTransform(rest, [
     merge(getDefaultGetParams()),
-    starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),

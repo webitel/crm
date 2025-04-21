@@ -58,6 +58,8 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCachedItemInstanceName }
+  from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -174,6 +176,8 @@ initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
+const { name: breadcrumbSubject } = useCachedItemInstanceName(itemInstance, {namePath: 'subject'});
+
 const path = computed(() => {
   const baseUrl = '/cases';
 
@@ -185,7 +189,7 @@ const path = computed(() => {
     },
     {
       name: id.value
-        ? `${itemInstance.value?.name} ${itemInstance.value?.subject}`
+        ? `${itemInstance.value?.name} ${breadcrumbSubject.value}`
         : t('reusable.new'),
     },
   ];
