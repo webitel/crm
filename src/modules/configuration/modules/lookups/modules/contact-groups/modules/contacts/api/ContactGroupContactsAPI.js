@@ -154,9 +154,19 @@ const getList = async ({ parentId, ...params }) => {
   }
 };
 
+const deleteContact = async ({ id }) => {
+  try {
+    const response = await contactService.deleteContact(id);
+    return applyTransform(response.data, []);
+  } catch (err) {
+    throw applyTransform(err, [notify]);
+  }
+};
+
 const ContactGroupContactsAPI = {
   ...contacts,
   getList,
+  delete: deleteContact,
 };
 
 export default ContactGroupContactsAPI;

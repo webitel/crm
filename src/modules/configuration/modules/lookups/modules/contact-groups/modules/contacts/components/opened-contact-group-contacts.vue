@@ -1,6 +1,11 @@
 <template>
   <section class="table-page">
-    <add-contact-in-group-popup :shown="isAddContactInGroupPopup" namespace="" />
+    <add-contact-in-group-popup
+      :namespace="namespace"
+      :shown="isAddContactInGroupPopup"
+      @close="isAddContactInGroupPopup = false"
+      @load-data="loadDataList"
+    />
 
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
@@ -9,13 +14,14 @@
       @close="closeDelete"
     />
 
-    <contacts-table :header="t('contacts.allContacts')" :use-table-store="useContactsGroupContactsStore">
+    <contacts-table :header="t('contacts.allContacts', 2)" :use-table-store="useContactsGroupContactsStore">
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
           :disabled:delete="!hasDeleteAccess"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
           @click:add="isAddContactInGroupPopup = true"
+          @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
             deleted: selected,
@@ -67,7 +73,7 @@ import { useI18n } from 'vue-i18n';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import { useContactsGroupContactsStore } from '../stores/contacts';
-import AddContactInGroupPopup from './add-contact-in-group-popup';
+import AddContactInGroupPopup from './add-contact-in-group-popup.vue';
 
 const props = defineProps<{
   namespace: string,
@@ -75,11 +81,11 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
-const isAddContactInGroupPopup = ref(false)
-
 const { itemInstance } = useCardStore(
   props.namespace,
 );
+
+const isAddContactInGroupPopup = ref(false);
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -104,6 +110,7 @@ const {
   deleteFilter,
   deleteEls,
   initialize,
+  loadDataList,
 } = tableStore;
 
 watch(() => itemInstance.value?.id, (val) => {
