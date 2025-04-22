@@ -2,7 +2,7 @@
   <wt-dual-panel
     v-if="!isLoading"
     :actions-panel="false"
-    :class="{'opened-case_hide-header': isReadOnly}"
+    :hide-header="isReadOnly"
     class="opened-case"
   >
     <template #header>
@@ -55,14 +55,14 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
+import { useCachedItemInstanceName }
+  from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { useCachedItemInstanceName }
-  from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -271,12 +271,6 @@ onUnmounted(() => {
   &__actions-wrapper {
     display: flex;
     gap: var(--spacing-sm);
-  }
-
-  &_hide-header {
-    :deep(.wt-dual-panel__header) {
-      display: none;
-    }
   }
 }
 </style>

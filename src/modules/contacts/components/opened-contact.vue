@@ -1,7 +1,7 @@
 <template>
   <wt-page-wrapper
     :actions-panel="false"
-    :class="{'opened-contact_hide-header': isReadOnly}"
+    :hide-header="isReadOnly"
     class="opened-contact"
   >
     <template #header>
@@ -150,12 +150,6 @@ onUnmounted(() => resetState());
 
 <style lang="scss" scoped>
 .opened-contact {
-  &_hide-header {
-    :deep(.wt-page-wrapper__header) {
-      display: none;
-    }
-  }
-
   &-content {
     flex-grow: 1;
     display: flex;

@@ -37,10 +37,11 @@ const { fields: customFields, getFields } = useExtensionFields({
 });
 
 getFields();
-
+const CONTACT_VIEW_NAME = 'contact_view';
 const currentCardRoute = computed(() => {
-  if (typeof route.name !== 'string') return CrmSections.CONTACTS;
-  return route.name.includes('contact_view') ? 'contact_view' : CrmSections.CONTACTS;
+  return typeof route.name === 'string' && route.name.includes(CONTACT_VIEW_NAME) ?
+    CONTACT_VIEW_NAME :
+    CrmSections.CONTACTS;
 });
 
 const tabs = computed(() => {
@@ -87,7 +88,7 @@ const tabs = computed(() => {
 const currentTab = computed(() => {
   return tabs.value.find(({ pathName }) =>
     route?.matched?.find(({ name }) => name === pathName),
-  )
+  );
 });
 
 function changeTab(tab) {

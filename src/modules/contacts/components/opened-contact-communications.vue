@@ -51,9 +51,11 @@ const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 
+const CONTACT_VIEW_NAME = 'contact_view'
 const currentCardRoute = computed(() => {
-  if (typeof route.name !== 'string') return CrmSections.CONTACTS;
-  return route.name.includes('contact_view') ? 'contact_view' : CrmSections.CONTACTS;
+  return typeof route.name === 'string' && route.name.includes(CONTACT_VIEW_NAME) ?
+    CONTACT_VIEW_NAME :
+    CrmSections.CONTACTS;
 });
 
 const tabs = computed(() => [
