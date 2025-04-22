@@ -68,18 +68,22 @@ const filterTransformersMap = {
     return arr;
   },
   hasAttachment: (value) => `attachments=${value}`,
+  others: (value, key) => {
+    return `${key}=${value}`;
+  },
 };
 
-export const stringifyCaseFilters = (params) => {
+export const stringifyCaseFilters = (filters) => {
   const result = [];
 
-  for (const [key, value] of Object.entries(params)) {
-    const transformer = filterTransformersMap[key];
-    if (transformer) {
-      const transformedValue = transformer(value);
-      if (transformedValue) {
-        result.push(...transformedValue);
-      }
+  for (const [key, value] of Object.entries(filters)) {
+    const transformer =
+      filterTransformersMap[key] || filterTransformersMap.others;
+
+    const strValue = transformer(value, key);
+
+    if (value != null && strValue) {
+      result.push(strValue);
     }
   }
   return result;
