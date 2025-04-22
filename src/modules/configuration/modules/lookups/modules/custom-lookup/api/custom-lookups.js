@@ -128,6 +128,7 @@ const getCustomLookupRecordsLookup = async ({
 
   const url = applyTransform(params, [
     merge(getDefaultGetParams()),
+    starToSearch('search'),
     (params) => ({ ...params, q: params.search }),
     sanitize(fieldsToSend),
     camelToSnake(),
