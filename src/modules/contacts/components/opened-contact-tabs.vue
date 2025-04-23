@@ -37,28 +37,34 @@ const { fields: customFields, getFields } = useExtensionFields({
 });
 
 getFields();
+const CONTACT_VIEW_NAME = 'contact_view';
+const currentCardRoute = computed(() => {
+  return typeof route.name === 'string' && route.name.includes(CONTACT_VIEW_NAME) ?
+    CONTACT_VIEW_NAME :
+    CrmSections.CONTACTS;
+});
 
 const tabs = computed(() => {
   const tabList = [
     {
       text: t('timeline.timeline'),
       value: 'timeline',
-      pathName: `${CrmSections.CONTACTS}-timeline`,
+      pathName: `${currentCardRoute.value}-timeline`,
     },
     {
       text: t('cases.case', 2),
       value: 'cases',
-      pathName: `${CrmSections.CONTACTS}-cases`,
+      pathName: `${currentCardRoute.value}-cases`,
     },
     {
       text: t('contacts.communications.communications', 2),
       value: 'communications',
-      pathName: `${CrmSections.CONTACTS}-communications`,
+      pathName: `${currentCardRoute.value}-communications`,
     },
     {
       text: t('contacts.attributes', 2),
       value: 'variables',
-      pathName: `${CrmSections.CONTACTS}-variables`,
+      pathName: `${currentCardRoute.value}-variables`,
     },
   ];
 
@@ -66,14 +72,14 @@ const tabs = computed(() => {
     tabList.push({
       text: t('contacts.details'),
       value: 'details',
-      pathName: `${CrmSections.CONTACTS}-details`,
+      pathName: `${currentCardRoute.value}-details`,
     });
   }
 
   tabList.push({
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
-    pathName: `${CrmSections.CONTACTS}-permissions`,
+    pathName: `${currentCardRoute.value}-permissions`,
   });
 
   return tabList;

@@ -35,7 +35,7 @@
         @close="closeDelete"
       />
 
-      <contacts-table :header="t('contacts.contact', 2)" :use-table-store="useContactsStore">
+      <contacts-table :header="t('contacts.contact', 2)" :table-store="tableStore">
         <template #action-bar>
           <wt-action-bar
             :disabled:add="!hasCreateAccess"

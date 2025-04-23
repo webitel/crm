@@ -14,7 +14,7 @@
       @close="closeDelete"
     />
 
-    <contacts-table :header="t('contacts.allContacts', 2)" :use-table-store="useContactsGroupContactsStore">
+    <contacts-table :header="t('contacts.allContacts', 2)" :table-store="tableStore">
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"

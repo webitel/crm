@@ -95,9 +95,6 @@ const { close } = useClose(CrmSections.CONTACT_GROUPS);
 const isDynamicGroup = computed(
   () => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC,
 );
-const isStaticGroup = computed(
-  () => itemInstance.value.type === WebitelContactsGroupType.STATIC,
-);
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -142,9 +139,10 @@ const tabs = computed(() => {
 
   const tabs = [general];
 
-  if (isDynamicGroup.value && id.value) tabs.push(conditions);
-  if (isStaticGroup.value && id.value) tabs.push(contacts);
-  if (id.value) tabs.push(permissions);
+  if (id.value) {
+    tabs.push(permissions);
+    tabs.push(isDynamicGroup.value ? conditions : contacts);
+  }
 
   return tabs;
 });

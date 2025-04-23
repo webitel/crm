@@ -108,22 +108,6 @@
 
           <template #actions="{ item }">
             <slot name="actions" :item="item" />
-            <!--          <wt-icon-action-->
-            <!--            :disabled="!item.access.edit"-->
-            <!--            action="edit"-->
-            <!--            @click="edit(item)"-->
-            <!--          />-->
-
-            <!--          <wt-icon-action-->
-            <!--            :disabled="!item.access.delete"-->
-            <!--            action="delete"-->
-            <!--            @click="-->
-            <!--                askDeleteConfirmation({-->
-            <!--                  deleted: [item],-->
-            <!--                  callback: () => deleteData(item),-->
-            <!--                })-->
-            <!--              "-->
-            <!--          />-->
           </template>
         </wt-table>
 
@@ -152,7 +136,7 @@ import { computed } from 'vue';
 
 interface Props {
   header: string
-  useTableStore: ReturnType<createTableStore>
+  tableStore: ReturnType<createTableStore>
   emptyData?: {
     primaryActionText?: string | boolean;
     disabledPrimaryAction?: boolean
@@ -161,8 +145,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const tableStore = props.useTableStore();
 
 const {
   dataList,
@@ -174,14 +156,14 @@ const {
   next,
   error,
   filtersManager,
-} = storeToRefs(tableStore);
+} = storeToRefs(props.tableStore);
 
 const {
   updateSelected,
   updatePage,
   updateSize,
   updateSort,
-} = tableStore;
+} = props.tableStore;
 
 const defaultEmptyProps = useTableEmpty({
   dataList,
