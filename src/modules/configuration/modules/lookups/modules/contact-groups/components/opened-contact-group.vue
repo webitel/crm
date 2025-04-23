@@ -119,6 +119,12 @@ const tabs = computed(() => {
     pathName: `${CrmSections.CONTACT_GROUPS}-general`,
   };
 
+  const contacts = {
+    text: t(`vocabulary.contact`, 2),
+    value: 'contacts',
+    pathName: `${CrmSections.CONTACT_GROUPS}-contacts`,
+  };
+
   const conditions = {
     text: t('lookups.slas.conditions', 2),
     value: 'conditions',
@@ -133,8 +139,10 @@ const tabs = computed(() => {
 
   const tabs = [general];
 
-  if (isDynamicGroup.value && id.value) tabs.push(conditions);
-  if (id.value) tabs.push(permissions);
+  if (id.value) {
+    tabs.push(permissions);
+    tabs.push(isDynamicGroup.value ? conditions : contacts);
+  }
 
   return tabs;
 });

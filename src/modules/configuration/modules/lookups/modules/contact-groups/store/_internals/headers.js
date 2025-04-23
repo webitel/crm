@@ -23,6 +23,13 @@ export default [
     sort: SortSymbols.NONE,
   },
   {
+    value: 'contactsSize',
+    locale: ['vocabulary.contact', 2],
+    show: true,
+    field: 'contacts_size',
+    sort: SortSymbols.NONE,
+  },
+  {
     value: 'state',
     locale: 'reusable.state',
     show: true,
