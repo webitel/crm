@@ -2,6 +2,7 @@
   <wt-dual-panel
     v-if="!isLoading"
     :actions-panel="false"
+    :hide-header="isReadOnly"
     class="opened-case"
   >
     <template #header>
@@ -36,9 +37,11 @@
         </template>
       </wt-page-header>
     </template>
+
     <template #side-panel>
       <opened-case-general />
     </template>
+
     <template #main>
       <opened-case-tabs
         :namespace="namespace"
@@ -52,16 +55,16 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
+import { useCachedItemInstanceName }
+  from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { useCachedItemInstanceName }
-  from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
-import { computed, onUnmounted, provide, ref, watch } from 'vue';
+import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -88,6 +91,7 @@ const { fields: customFields, getFields } = useExtensionFields({
 
 getFields();
 
+const isReadOnly = inject('isReadOnly');
 provide('namespace', namespace);
 provide('editMode', editMode);
 provide('customFields', customFields);
