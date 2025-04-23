@@ -1,9 +1,11 @@
 <template>
   <table-filters-panel
+    v-if="!isLoadingExtensionFields"
     :filters-manager="filtersManager"
     :filter-options="filtersOptions"
     :preset-namespace="namespace"
     :use-presets-store="presetsStore"
+    :filterable-extension-fields="extensionFields"
     @filter:add="addFilter"
     @filter:update="updateFilter"
     @filter:delete="deleteFilter"
@@ -17,6 +19,7 @@
 import {TableFiltersPanelComponent as TableFiltersPanel} from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 
+import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { filtersOptions } from '../configs/filtersOptions';
 import { CasesNamespace } from '../namespace';
 import { useCasesStore } from '../stores/cases';
@@ -53,6 +56,16 @@ const {
   updateFilter,
   deleteFilter,
 } = props.tableStore;
+
+const {
+  fields: extensionFields,
+  isLoading: isLoadingExtensionFields,
+  getFields,
+} = useExtensionFields({
+  type: 'cases',
+});
+
+getFields();
 
 const resetFilters = () => {
   filtersManager.value.reset();
