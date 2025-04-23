@@ -13,6 +13,7 @@
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar
+          v-if="!isReadOnly"
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink || !editMode"
           :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.DELETE]"
@@ -87,21 +88,25 @@
           </template>
 
           <template #actions="{ item }">
-            <wt-icon-action
-              :disabled="!editMode || !hasUpdateAccess || formState.isAdding"
-              action="edit"
-              @click="startEditingLink(item)"
-            />
-            <wt-icon-action
-              :disabled="!editMode || !hasDeleteAccess"
-              action="delete"
-              @click="
+            <div
+              v-if="!isReadOnly"
+            >
+              <wt-icon-action
+                :disabled="!editMode || !hasUpdateAccess || formState.isAdding"
+                action="edit"
+                @click="startEditingLink(item)"
+              />
+              <wt-icon-action
+                :disabled="!editMode || !hasDeleteAccess"
+                action="delete"
+                @click="
                 askDeleteConfirmation({
                   deleted: [item],
                   callback: () => deleteData(item),
                 })
               "
-            />
+              />
+            </div>
           </template>
         </wt-table>
       </div>
@@ -113,8 +118,11 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required, url } from '@vuelidate/validators';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
@@ -136,6 +144,7 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const editMode = inject('editMode');
 
 const { t } = useI18n();
