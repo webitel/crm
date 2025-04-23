@@ -25,7 +25,7 @@
           @click:delete="
           askDeleteConfirmation({
             deleted: selected,
-            callback: () => deleteEls(selected),
+            callback: () => deleteEls(selected.map(e => e.id)),
           })
         "
         >
@@ -49,7 +49,7 @@
           @click="
             askDeleteConfirmation({
               deleted: [item],
-              callback: () => deleteEls(item),
+              callback: () => deleteEls([item.id]),
             })
           "
         />
@@ -66,6 +66,7 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
@@ -108,10 +109,14 @@ const {
   addFilter,
   updateFilter,
   deleteFilter,
-  deleteEls,
   initialize,
   loadDataList,
 } = tableStore;
+
+const deleteEls = async (ids: string[]) => {
+  await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
+  await loadDataList()
+}
 
 watch(() => itemInstance.value?.id, (val) => {
   if (!val) {

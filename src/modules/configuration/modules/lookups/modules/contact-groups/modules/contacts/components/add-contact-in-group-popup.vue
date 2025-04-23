@@ -4,7 +4,7 @@
     class="add-contacts-popup"
     min-width="768"
     width="1440"
-    @close="cancel"
+    @close="close"
   >
     <template #title>
       {{
