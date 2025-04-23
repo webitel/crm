@@ -111,19 +111,17 @@ const getCasesList = async (params) => {
     }
   }
 
-  const { page, size, q, ids, sort, fields, options } = applyTransform(
-    { ...params, ids: params.ids || ftsIds },
-    [
+  const { page, size, q, ids, sort, fields, options, ...filters } =
+    applyTransform({ ...params, ids: params.ids || ftsIds }, [
       merge(getDefaultGetParams()),
       // starToSearch('search'),
       (params) => ({
         ...params,
         q: params.search,
       }),
-      sanitize(fieldsToSend),
-      camelToSnake(),
-    ],
-  );
+      // camelToSnake(),
+    ]);
+
   try {
     const response = await casesService.searchCases(
       page,
@@ -132,7 +130,7 @@ const getCasesList = async (params) => {
       ids,
       sort,
       fields,
-      stringifyCaseFilters(params),
+      stringifyCaseFilters(filters),
       options,
     );
 
