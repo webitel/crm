@@ -59,23 +59,23 @@
             />
           </template>
           <template #actions="{ item }">
-            <wt-icon-action
-              v-if="item.canEdit"
-              :disabled="!hasUpdateAccess || formState.isAdding"
-              action="edit"
-              @click="startEditingComment(item)"
-            />
-            <wt-icon-action
-              v-if="item.canEdit"
-              :disabled="!hasDeleteAccess"
-              action="delete"
-              @click="
-                askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteEls(item),
-                })
-              "
-            />
+            <div v-if="showActions(item)">
+              <wt-icon-action
+                :disabled="!hasUpdateAccess || formState.isAdding"
+                action="edit"
+                @click="startEditingComment(item)"
+              />
+              <wt-icon-action
+                :disabled="!hasDeleteAccess"
+                action="delete"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteEls(item),
+                  })
+                "
+              />
+            </div>
           </template>
         </wt-table>
 
@@ -95,17 +95,20 @@
 
 <script lang="ts" setup>
 import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import {storeToRefs} from "pinia";
-import { computed, reactive } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
-import {useCaseCommentsStore} from "../stores/comments";
+import { useCaseCommentsStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
 
 const props = defineProps({
@@ -115,10 +118,13 @@ const props = defineProps({
   },
 });
 
+const isReadOnly = inject('isReadOnly');
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
   useUserAccessControl(WtObject.CaseComment);
+
+const showActions = (item) => item.canEdit && !isReadOnly.value;
 
 const tableStore = useCaseCommentsStore();
 

@@ -6,7 +6,7 @@
         @close="closeItemPopup"
       />
       <wt-icon-action
-        :disabled="!access.hasRbacEditAccess"
+        :disabled="isActionDisabled"
         action="add"
         @click="addItem"
       />
@@ -45,17 +45,19 @@
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="isActionDisabled"
             action="edit"
             @click="editItem(item)"
           />
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="isActionDisabled"
             action="delete"
-            @click="askDeleteConfirmation({
-              deleted: [item],
-              callback: () => deleteData(item),
-            })"
+            @click="
+              askDeleteConfirmation({
+                deleted: [item],
+                callback: () => deleteData(item),
+              })
+            "
           />
         </template>
       </wt-table>
@@ -68,21 +70,21 @@
 </template>
 
 <script setup>
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, inject, onUnmounted, ref } from 'vue';
+import { computed, inject, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import VariablePopup from './variable-popup.vue';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
+
+const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
 
 const props = defineProps({
   namespace: {
@@ -137,12 +139,16 @@ const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 async function save(item) {
   if (item.id) {
-    await store.dispatch(`${variablesNamespace}/table/UPDATE_VARIABLE`, { etag: item.etag, itemInstance: { ...item } });
+    await store.dispatch(`${variablesNamespace}/table/UPDATE_VARIABLE`, {
+      etag: item.etag,
+      itemInstance: { ...item },
+    });
   } else {
-    await store.dispatch(`${variablesNamespace}/table/ADD_VARIABLE`, { itemInstance: { ...item } });
+    await store.dispatch(`${variablesNamespace}/table/ADD_VARIABLE`, {
+      itemInstance: { ...item },
+    });
   }
 }
-
 
 function addItem() {
   return router.push({

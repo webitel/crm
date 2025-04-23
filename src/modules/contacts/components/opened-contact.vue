@@ -1,7 +1,8 @@
 <template>
   <wt-page-wrapper
-    class="opened-contact"
     :actions-panel="false"
+    :hide-header="isReadOnly"
+    class="opened-contact"
   >
     <template #header>
       <wt-page-header
@@ -62,7 +63,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
+import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -71,6 +72,7 @@ import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
 
 const baseNamespace = 'contacts';
+const isReadOnly = inject('isReadOnly');
 
 const router = useRouter();
 const route = useRoute();
@@ -87,6 +89,14 @@ const {
   deleteItem,
 } = useCardStore(baseNamespace);
 
+provide(
+  'access',
+  computed(() => ({
+    hasRbacEditAccess: itemInstance.value?.access?.edit,
+    hasRbacDeleteAccess: itemInstance.value?.access?.delete,
+  })),
+);
+
 const {
   isVisible: isDeleteConfirmationPopup,
   deleteCount,
@@ -95,14 +105,6 @@ const {
   askDeleteConfirmation,
   closeDelete,
 } = useDeleteConfirmationPopup();
-
-provide(
-  'access',
-  computed(() => ({
-    hasRbacEditAccess: itemInstance.value?.access?.edit,
-    hasRbacDeleteAccess: itemInstance.value?.access?.delete,
-  })),
-);
 
 const isContactPopup = ref(false);
 
@@ -147,18 +149,20 @@ onUnmounted(() => resetState());
 </script>
 
 <style lang="scss" scoped>
-.opened-contact-content {
-  flex-grow: 1;
-  display: flex;
-  gap: var(--spacing-sm);
-  min-height: 0;
-  max-width: 100%;
+.opened-contact {
+  &-content {
+    flex-grow: 1;
+    display: flex;
+    gap: var(--spacing-sm);
+    min-height: 0;
+    max-width: 100%;
+  }
 
-  .opened-contact-general {
+  &-general {
     flex: 0 0 250px;
   }
 
-  .opened-contact-tabs {
+  &-tabs {
     flex: 1 1 auto;
   }
 }
