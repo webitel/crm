@@ -2,8 +2,8 @@
   <section class="table-page">
     <add-contact-in-group-popup
       :namespace="namespace"
-      :shown="isAddContactInGroupPopup"
-      @close="isAddContactInGroupPopup = false"
+      :shown="isShowPopup"
+      @close="isShowPopup = false"
       @load-data="loadDataList"
     />
 
@@ -20,7 +20,7 @@
           :disabled:add="!hasCreateAccess"
           :disabled:delete="!hasDeleteAccess"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="isAddContactInGroupPopup = true"
+          @click:add="isShowPopup = true"
           @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
@@ -86,7 +86,7 @@ const { itemInstance } = useCardStore(
   props.namespace,
 );
 
-const isAddContactInGroupPopup = ref(false);
+const isShowPopup = ref(false);
 
 const {
   isVisible: isDeleteConfirmationPopup,
