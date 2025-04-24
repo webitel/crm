@@ -31,8 +31,9 @@
       <span
         v-if="servicePath"
         class="case-service__path"
-        >{{ servicePath }}</span
       >
+        {{ servicePath }}
+      </span>
     </div>
     <wt-button
       v-if="editMode"
@@ -48,7 +49,9 @@
 
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import {
+  useCardStore,
+} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -170,6 +173,7 @@ function onServicePopupSave(serviceCatalogData) {
     isSlaRecalculationPopup.value = true;
   }
 }
+
 async function onSlaRecalculationSave() {
   if (!pendingServiceData.value) return;
 
@@ -199,7 +203,6 @@ watch(
 onUnmounted(() => {
   setServiceToStore(null);
   setCatalogToStore(null);
-  resetState();
 });
 </script>
 

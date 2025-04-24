@@ -3,20 +3,23 @@ import { startOfToday } from 'date-fns';
 
 const filterTransformersMap = {
   createdAt: (createdAt) => {
-    if (typeof createdAt === 'string') {
-      return {
-        from: normalizeToTimestamp(createdAt, { round: 'start' }),
-        to: normalizeToTimestamp(createdAt, { round: 'end' }),
-      };
-    }
-
+    const arr = [];
     if (!createdAt) {
-      return {
-        from: normalizeToTimestamp(startOfToday().getTime()),
-      };
+      arr.push(
+        `created_at.from=${normalizeToTimestamp(startOfToday().getTime())}`,
+      );
+    } else {
+      if (typeof createdAt === 'string') {
+        arr.push(
+          `created_at.from=${normalizeToTimestamp(createdAt, { round: 'start' })}`,
+          `created_at.to=${normalizeToTimestamp(createdAt, { round: 'end' })}`,
+        );
+      } else {
+        if (createdAt.from) arr.push(`created_at.from=${createdAt.from}`);
+        if (createdAt.to) arr.push(`created_at.to=${createdAt.to}`);
+      }
     }
-
-    return createdAt;
+    return arr;
   },
   status: (value) => `status_condition=${value.conditions}`,
   source: (value) => `source=${value}`,
@@ -65,18 +68,22 @@ const filterTransformersMap = {
     return arr;
   },
   hasAttachment: (value) => `attachments=${value}`,
+  others: (value, key) => {
+    return `${key}=${value}`;
+  },
 };
 
-export const stringifyCaseFilters = (params) => {
+export const stringifyCaseFilters = (filters) => {
   const result = [];
 
-  for (const [key, value] of Object.entries(params)) {
-    const transformer = filterTransformersMap[key];
-    if (transformer) {
-      const transformedValue = transformer(value);
-      if (transformedValue) {
-        result.push(transformedValue);
-      }
+  for (const [key, value] of Object.entries(filters)) {
+    const transformer =
+      filterTransformersMap[key] || filterTransformersMap.others;
+
+    const strValue = transformer(value, key);
+
+    if (value != null && strValue) {
+      result.push(strValue);
     }
   }
   return result;

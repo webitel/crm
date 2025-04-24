@@ -90,6 +90,10 @@
                 {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
               </template>
 
+              <template #contactsSize="{ item }">
+                {{ item.contactsSize }}
+              </template>
+
               <template #state="{ item, index }">
                 <wt-switcher
                   :disabled="!hasUpdateAccess"
@@ -150,6 +154,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreM
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';

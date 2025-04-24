@@ -16,6 +16,10 @@ export default {
     manager: 'Owner | Owners',
     destination: 'Destination',
     collapseAll: 'Collapse all',
+    allContacts: ({ linked }) =>
+      `${linked('reusable.all')} ${linked(`vocabulary.contact`).toLowerCase()}`,
+    addContacts: ({ linked }) =>
+      `${linked('reusable.add')} ${linked(`vocabulary.contact`).toLowerCase()}`,
     communications: {
       communications: 'Communication option | Communication options',
       channel: 'Channel',

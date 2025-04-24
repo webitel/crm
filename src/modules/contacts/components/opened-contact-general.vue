@@ -1,6 +1,7 @@
 <template>
   <article class="opened-contact-general">
     <wt-context-menu
+      v-if="!isReadOnly"
       class="opened-contact-general-options"
       :options="actionOptions"
       @click="$event.option.handler()"
@@ -72,7 +73,7 @@
         {{ t('contacts.manager', 1) }}
       </p>
       <p class="opened-contact-general-item__value">
-        {{ managers[0].user.name }}
+        {{ managers[0]?.user.name }}
       </p>
     </div>
 
@@ -109,6 +110,7 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
   name: {

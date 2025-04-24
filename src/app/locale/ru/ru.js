@@ -16,6 +16,10 @@ export default {
     manager: 'Владелец | Владельцы',
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
+    allContacts: ({ linked }) =>
+      `${linked('reusable.all')} ${linked(`contacts.contact`).toLowerCase()}`,
+    addContacts: ({ linked }) =>
+      `${linked('reusable.add')} ${linked(`contacts.contact`).toLowerCase()}`,
     communications: {
       communications: 'Средство связи | Средства связи',
       channel: 'Канал',

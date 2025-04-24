@@ -15,7 +15,7 @@
 
     <header class="contact-communication-tab-header">
       <wt-icon-action
-        :disabled="!access.hasRbacEditAccess"
+        :disabled="isActionDisabled"
         action="add"
         @click="addCommunication"
       />
@@ -48,7 +48,7 @@
           />
           <wt-icon-btn
             v-else
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="isActionDisabled"
             class="set-primary-btn"
             icon="tick"
             @click="setAsPrimary({ item, index })"
@@ -59,17 +59,19 @@
         </template>
         <template #actions="{ item, index }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="isActionDisabled"
             action="edit"
             @click="editCommunication(item)"
           />
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="isActionDisabled"
             action="delete"
-            @click="askDeleteConfirmation({
-              deleted: item,
-              callback: () => deleteData(item),
-            })"
+            @click="
+              askDeleteConfirmation({
+                deleted: item,
+                callback: () => deleteData(item),
+              })
+            "
           />
         </template>
       </wt-table>
@@ -78,11 +80,8 @@
 </template>
 
 <script setup>
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { computed, inject, onUnmounted } from 'vue';
@@ -95,6 +94,9 @@ import dummyDark from '../assets/phone-dummy-dark.svg';
 import dummyLight from '../assets/phone-dummy-light.svg';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
+
+const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
 
 const props = defineProps({
   namespace: {
@@ -122,11 +124,8 @@ const {
   onFilterEvent,
 } = useTableStore(props.namespace);
 
-const {
-  subscribe,
-  flushSubscribers,
-  restoreFilters,
-} = useTableFilters(namespace);
+const { subscribe, flushSubscribers, restoreFilters } =
+  useTableFilters(namespace);
 
 subscribe({
   event: '*',
@@ -178,7 +177,6 @@ function closeCommunicationPopup() {
     params,
   });
 }
-
 </script>
 
 <style lang="scss" scoped>

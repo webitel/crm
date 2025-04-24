@@ -280,6 +280,10 @@ const anyFiltersOnFiltersPanel = computed(() => {
     margin-left: auto;
   }
 
+  &__link {
+    color: var(--text-main-color);
+  }
+
   &__link-content {
     display: flex;
     gap: var(--spacing-xs);

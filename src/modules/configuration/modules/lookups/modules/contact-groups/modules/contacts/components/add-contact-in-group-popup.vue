@@ -1,0 +1,365 @@
+<template>
+  <wt-popup
+    v-bind="$attrs"
+    class="add-contacts-popup"
+    min-width="768"
+    width="1440"
+    @close="close"
+  >
+    <template #title>
+      {{
+        t('contacts.addContacts', 2)
+      }}
+    </template>
+
+    <template #main>
+      <div class="add-contacts-popup__filters">
+        <wt-search-bar
+          :value="filters.search"
+          debounce
+          @enter="handleFilterChange"
+          @input="filters.search = $event"
+          @search="handleFilterChange"
+        />
+
+        <!--TODO USER SELECT-->
+
+        <wt-select
+          :close-on-select="false"
+          :search-method="LabelsAPI.getList"
+          :value="filters.labels"
+          :placeholder="t('vocabulary.labels', 1)"
+          option-label="label"
+          multiple
+          track-by="label"
+          use-value-from-options-by-prop="label"
+          @input="handleLabelSelect"
+        />
+
+        <wt-select
+          :close-on-select="false"
+          :search-method="ContactGroupsAPI.getLookup"
+          :value="filters.groups"
+          :placeholder="t('reusable.group')"
+          multiple
+          use-value-from-options-by-prop="id"
+          @input="handleGroupSelect"
+        />
+
+        <wt-icon-btn
+          icon="clear"
+          @click="resetFilters"
+        />
+      </div>
+
+      <div
+        ref="infiniteScrollWrap"
+        class="scroll-wrap"
+      >
+        <wt-table
+          :data="dataList"
+          :headers="headers"
+          :selected="selectedContactList"
+          sortable
+          @sort="sort"
+          @update:selected="updateSelected"
+        >
+          <template #name="{ item }">
+            <div class="username-wrapper">
+              <wt-avatar
+                size="xs"
+                :username="item.name"
+              />
+
+              <!--                <wt-item-link-->
+              <!--                  :link="{-->
+              <!--                  name: `${CrmSections.CONTACTS}-card`,-->
+              <!--                  params: { id: item.id },-->
+              <!--                }"-->
+              <!--                >-->
+              {{ item.name }}
+              <!--                </wt-item-link>-->
+            </div>
+          </template>
+
+          <template #user="{ item }">
+            <wt-icon
+              v-if="item.user"
+              icon="webitel-logo"
+            />
+          </template>
+
+          <template #groups="{ item }">
+            <div
+              v-if="item.groups"
+              class="contacts-groups"
+            >
+              <p>
+                {{ item.groups[0]?.name }}
+              </p>
+
+              <wt-tooltip
+                v-if="item.groups.length > 1"
+                :triggers="['click']"
+              >
+                <template #activator>
+                  <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
+                </template>
+
+                <div class="contacts-groups__wrapper">
+                  <p
+                    v-for="(group, idx) of item.groups.slice(1)"
+                    :key="idx"
+                  >
+                    {{ group.name }}
+                  </p>
+                </div>
+              </wt-tooltip>
+            </div>
+          </template>
+
+          <template #labels="{ item }">
+            <div
+              v-if="item.labels"
+              class="contacts-labels-wrapper"
+            >
+              <wt-chip
+                v-for="{ label, id } of item.labels"
+                :key="id"
+              >
+                {{ label }}
+              </wt-chip>
+            </div>
+          </template>
+        </wt-table>
+      </div>
+    </template>
+
+    <template #actions>
+      <wt-button
+        :disabled="disabledSave"
+        @click="save"
+      >
+        {{ t('reusable.add') }}
+      </wt-button>
+
+      <wt-button
+        color="secondary"
+        @click="close"
+      >
+        {{ t('reusable.close') }}
+      </wt-button>
+    </template>
+  </wt-popup>
+</template>
+
+<script lang="ts" setup>
+import { useInfiniteScroll } from '@vueuse/core';
+import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts';
+import { SortSymbols, sortToQueryAdapter } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+import { useCardStore } from '@webitel/ui-sdk/store';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import LabelsAPI from '../../../../../../../../_shared/modules/contacts/api/LabelsAPI';
+import ContactGroupsAPI from '../../../api/contactGroups';
+
+const props = defineProps<{
+  namespace: string
+}>();
+const emit = defineEmits(['load-data', 'close']);
+
+const { itemInstance } = useCardStore(
+  props.namespace,
+);
+
+const { t } = useI18n();
+
+const getFilters = () => ({
+  search: '',
+  user: null,
+  groups: [],
+  labels: [],
+  sort: '',
+});
+
+const filters = ref(getFilters());
+const headers = [
+  {
+    value: 'name',
+    locale: 'reusable.name',
+    show: true,
+    field: 'name',
+    sort: SortSymbols.NONE,
+  },
+  {
+    value: 'user',
+    locale: ['objects.user', 1],
+    show: true,
+    field: 'user',
+    // width: '100px',
+    sort: SortSymbols.NONE,
+  },
+  {
+    value: 'labels',
+    locale: ['vocabulary.labels', 1],
+    show: true,
+    field: 'labels',
+    sort: SortSymbols.NONE,
+  },
+  {
+    value: 'groups',
+    locale: 'reusable.group',
+    show: true,
+    field: 'groups',
+    // width: '170px',
+    sort: SortSymbols.NONE,
+  },
+];
+const dataList = ref([]);
+const selectedContactList = ref([]);
+const page = ref(0);
+const isNext = ref(false);
+
+const infiniteScrollWrap = ref(null);
+
+const disabledSave = computed(() => !selectedContactList.value.length);
+
+function updateSelected(val) {
+  selectedContactList.value = val;
+}
+
+function setDataList(items) {
+  if (page.value === 1) dataList.value = items;
+  else dataList.value.push(...items);
+}
+
+async function loadDataList() {
+  const size = 20;
+  const params = {
+    size,
+    ...filters.value,
+    fields: headers.map(({ field }) => field),
+    labels: filters.value.labels,
+    groupId: filters.value.groups,
+    user: filters.value.user,
+    page: page.value,
+  };
+
+  const { items, next } = await ContactsAPI.getLookup(params);
+  const _items = items.map((i) => ({ ...i, _isSelected: false }));
+  setDataList(_items);
+  isNext.value = next;
+}
+
+function handleLabelSelect(value) {
+  filters.value.labels = value;
+  return handleFilterChange();
+}
+
+function handleGroupSelect(value) {
+  filters.value.groups = value;
+  return handleFilterChange();
+}
+
+function handleUserSelect(value) {
+  filters.value.user = value;
+  return handleFilterChange();
+}
+
+function handleFilterChange() {
+  page.value = 1;
+  return loadDataList();
+}
+
+function sort(header, nextSortOrder) {
+  filters.value.sort = nextSortOrder
+    ? `${sortToQueryAdapter(nextSortOrder)}${header.field}`
+    : nextSortOrder;
+  handleFilterChange();
+
+  headers.forEach((oldHeader) => {
+    if (oldHeader.sort !== undefined) {
+
+      oldHeader.sort = oldHeader.field === header.field ? nextSortOrder : SortSymbols.NONE;
+    }
+  });
+}
+
+const save = async () => {
+  await ContactGroupsAPI.addContactsToGroup({
+    id: itemInstance.value?.id,
+    contactIds: selectedContactList.value.map(({ id }) => id),
+  });
+  close();
+  emit('load-data');
+  await resetFilters()
+};
+
+function close() {
+  emit('close');
+}
+
+function resetFilters() {
+  filters.value = getFilters();
+  selectedContactList.value = []
+  return handleFilterChange();
+}
+
+useInfiniteScroll(infiniteScrollWrap, () => {
+  page.value += 1;
+  loadDataList();
+});
+</script>
+
+<style lang="scss" scoped>
+.add-contacts-popup {
+  &.wt-popup {
+    .wt-popup__main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scroll-wrap {
+      overflow: auto;
+      flex-grow: 1;
+      min-height: 0;
+    }
+  }
+
+  &__filters {
+    display: grid;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    grid-template-columns: repeat(4, 1fr) var(--spacing-md);
+    gap: var(--spacing-xs);
+  }
+
+  .scroll-wrap {
+    height: 65vh;
+  }
+
+  .contacts {
+    &-groups {
+      display: flex;
+      gap: var(--spacing-xs);
+    }
+
+    &-labels-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-2xs);
+    }
+  }
+
+  .username-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+
+    .wt-avatar {
+      flex: 0 0 var(--wt-avatar-size--size-xs);
+    }
+  }
+}
+</style>

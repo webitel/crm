@@ -6,7 +6,7 @@
         @close="closeItemPopup"
       />
       <wt-icon-action
-        :disabled="!access.hasRbacEditAccess"
+        :disabled="isActionDisabled"
         action="add"
         @click="addItem"
       />
@@ -45,6 +45,7 @@
             :value="item.access.r"
             :options="accessOptions"
             :clearable="false"
+            :disabled="isReadOnly"
             @input="changeReadAccessMode({ item, mode: $event })"
           />
           <span v-else>{{ item.access.r.name }}</span>
@@ -56,6 +57,7 @@
             :value="item.access.w"
             :options="accessOptions"
             :clearable="false"
+            :disabled="isReadOnly"
             @input="changeUpdateAccessMode({ item, mode: $event })"
           />
           <span v-else>{{ item.access.w.name }}</span>
@@ -67,15 +69,18 @@
             :value="item.access.d"
             :options="accessOptions"
             :clearable="false"
+            :disabled="isReadOnly"
             @input="changeDeleteAccessMode({ item, mode: $event })"
           />
           <span v-else>{{ item.access.d.name }}</span>
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess"
+            :disabled="isActionDisabled"
             action="delete"
-            @click="changeReadAccessMode({ item, mode: { id: AccessMode.FORBIDDEN }})"
+            @click="
+              changeReadAccessMode({ item, mode: { id: AccessMode.FORBIDDEN } })
+            "
           />
         </template>
       </wt-table>
@@ -100,6 +105,9 @@ import AccessMode from '../enums/AccessMode.enum';
 import GranteePopup from './permissions-tab-grantee-popup.vue';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
+
+const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
 
 const props = defineProps({
   namespace: {
@@ -173,8 +181,6 @@ function changeUpdateAccessMode(payload) {
 function changeDeleteAccessMode(payload) {
   return store.dispatch(`${namespace}/CHANGE_DELETE_ACCESS_MODE`, payload);
 }
-
-
 
 function addItem() {
   return router.push({
