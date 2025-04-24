@@ -73,7 +73,7 @@
         {{ t('contacts.manager', 1) }}
       </p>
       <p class="opened-contact-general-item__value">
-        {{ managers[0].user.name }}
+        {{ managers[0]?.user.name }}
       </p>
     </div>
 
