@@ -89,10 +89,17 @@ function save() {
   };
   emit('save', finalStatusData);
   emit('update:show', false);
+  clearDraft()
+}
+
+function clearDraft() {
+  draft.reason = null
+  draft.result = null
 }
 
 function close() {
   emit('close');
+  clearDraft()
 }
 </script>
 
