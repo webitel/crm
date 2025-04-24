@@ -12,7 +12,7 @@
         :title="t('cases.reactionTime')"
       />
       <case-deadline
-        :time="itemInstance?.reactedAt"
+        :time="itemInstance?.reactedAt || itemInstance?.createdAt"
         :title="t('cases.actualReactionTime')"
       />
 
@@ -23,7 +23,7 @@
       />
 
       <case-deadline
-        :time="itemInstance.resolvedAt"
+        :time="itemInstance.resolvedAt || itemInstance?.createdAt"
         :title="t('cases.actualResolutionTime')"
       />
     </div>
