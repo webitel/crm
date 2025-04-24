@@ -1,5 +1,12 @@
 <template>
   <section class="table-page">
+    <add-contact-in-group-popup
+      :namespace="namespace"
+      :shown="isShowPopup"
+      @close="isShowPopup = false"
+      @load-data="loadDataList"
+    />
+
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
       :callback="deleteCallback"
@@ -7,17 +14,18 @@
       @close="closeDelete"
     />
 
-    <contacts-table :header="t('contacts.allContacts')" :table-store="tableStore">
+    <contacts-table :header="t('contacts.allContacts', 2)" :table-store="tableStore">
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
           :disabled:delete="!hasDeleteAccess"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="() => {}"
+          @click:add="isShowPopup = true"
+          @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
             deleted: selected,
-            callback: () => deleteEls(selected),
+            callback: () => deleteEls(selected.map(e => e.id)),
           })
         "
         >
@@ -41,7 +49,7 @@
           @click="
             askDeleteConfirmation({
               deleted: [item],
-              callback: () => deleteEls(item),
+              callback: () => deleteEls([item.id]),
             })
           "
         />
@@ -58,13 +66,15 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import { useContactsGroupContactsStore } from '../stores/contacts';
+import AddContactInGroupPopup from './add-contact-in-group-popup.vue';
 
 const props = defineProps<{
   namespace: string,
@@ -72,10 +82,11 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
-
 const { itemInstance } = useCardStore(
   props.namespace,
 );
+
+const isShowPopup = ref(false);
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -98,9 +109,14 @@ const {
   addFilter,
   updateFilter,
   deleteFilter,
-  deleteEls,
   initialize,
+  loadDataList,
 } = tableStore;
+
+const deleteEls = async (ids: string[]) => {
+  await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
+  await loadDataList()
+}
 
 watch(() => itemInstance.value?.id, (val) => {
   if (!val) {

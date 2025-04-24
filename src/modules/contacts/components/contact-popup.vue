@@ -88,9 +88,9 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
+import LabelsAPI from '../../_shared/modules/contacts/api/LabelsAPI';
 import ContactGroupsAPI from '../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
 import ContactsAPI from '../api/ContactsAPI';
-import LabelsAPI from '../api/LabelsAPI';
 import TimezonesAPI from '../api/TimezonesAPI';
 import UsersAPI from '../api/UsersAPI';
 
