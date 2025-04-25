@@ -44,7 +44,7 @@ const props = defineProps({
 });
 
 const showTimeDifference = computed(() => {
-  return typeof props.timeDifference === 'string' || typeof props.timeDifference === 'number';
+  return ['string', 'number'].includes(typeof props.timeDifference);
 });
 
 const numberTimeDifference = computed(() => {
