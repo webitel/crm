@@ -46,7 +46,7 @@ function createGroup() {
   router.push({
     name: `${CrmSections.CONTACT_GROUPS}-card`,
     params: { id: 'new' },
-    query: { type: selected.value.title.toLowerCase() }});
+    query: { type: selected.value.value.toLowerCase() }});
   setItemProp({ path: 'type', value: selected.value.value });
 }
 

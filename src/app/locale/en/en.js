@@ -17,9 +17,9 @@ export default {
     destination: 'Destination',
     collapseAll: 'Collapse all',
     allContacts: ({ linked }) =>
-      `${linked('reusable.all')} ${linked(`vocabulary.contact`, 2).toLowerCase()}`,
+      `${linked('reusable.all')} ${linked(`vocabulary.contact`).toLowerCase()}`,
     addContacts: ({ linked }) =>
-      `${linked('reusable.add')} ${linked(`vocabulary.contact`, 2).toLowerCase()}`,
+      `${linked('reusable.add')} ${linked(`vocabulary.contact`).toLowerCase()}`,
     communications: {
       communications: 'Communication option | Communication options',
       channel: 'Channel',

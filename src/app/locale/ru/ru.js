@@ -17,9 +17,9 @@ export default {
     destination: 'Назначение',
     collapseAll: 'Свернуть все',
     allContacts: ({ linked }) =>
-      `${linked('reusable.all')} ${linked(`contacts.contact`, 2).toLowerCase()}`,
+      `${linked('reusable.all')} ${linked(`contacts.contact`).toLowerCase()}`,
     addContacts: ({ linked }) =>
-      `${linked('reusable.add')} ${linked(`vocabulary.contact`, 2).toLowerCase()}`,
+      `${linked('reusable.add')} ${linked(`contacts.contact`).toLowerCase()}`,
     communications: {
       communications: 'Средство связи | Средства связи',
       channel: 'Канал',
