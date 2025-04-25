@@ -113,9 +113,6 @@ const changeType = (value) => {
     props.value.list = null;
     props.value.lookup = null;
   }
-
-  props.value.default = value === FieldType.Boolean ? 'false' : null;
-
   props.value.kind = value;
 };
 const selectObject = (value) => {

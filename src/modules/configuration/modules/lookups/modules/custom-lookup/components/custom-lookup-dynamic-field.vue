@@ -19,7 +19,7 @@
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
     :label="label"
-    :value="!!value"
+    :value="value"
     :v="validation"
     :required="isRequired"
     @change="setValue($event)"
