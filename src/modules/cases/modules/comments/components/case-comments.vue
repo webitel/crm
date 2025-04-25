@@ -124,7 +124,7 @@ const { t } = useI18n();
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
   useUserAccessControl(WtObject.CaseComment);
 
-const showActions = (item) => item.canEdit && !isReadOnly.value;
+const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
