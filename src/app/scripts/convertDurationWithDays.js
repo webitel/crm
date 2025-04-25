@@ -1,5 +1,5 @@
 function convertDurationWithDays(duration, timerFormatting = false) {
-  if (!duration) return timerFormatting ? '' : '00:00:00';
+  if (!duration && !timerFormatting) return '00:00:00';
 
   // Convert milliseconds to seconds because if timerFormatting is true, duration is in milliseconds
   const totalSeconds = timerFormatting
