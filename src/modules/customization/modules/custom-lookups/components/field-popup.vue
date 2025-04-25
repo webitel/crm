@@ -96,6 +96,7 @@ const draft = {
   required: false,
   lookup: null,
   list: null,
+  default: null,
 };
 const { t } = useI18n();
 
@@ -133,7 +134,7 @@ const save = () => {
   const savedFiled = deepCopy(value.value);
 
   Object.keys(savedFiled).forEach((key) => {
-    if (!savedFiled[key]) {
+    if (!savedFiled[key] && key !== 'default') {
       delete savedFiled[key];
     }
   });
