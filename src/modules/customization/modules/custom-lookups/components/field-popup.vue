@@ -42,6 +42,7 @@
           :value="value"
         />
 
+        <!--        TODO hide switcher https://webitel.atlassian.net/browse/WTEL-6774-->
         <!--        <wt-switcher-->
         <!--          :value="value.required"-->
         <!--          :label="$t('reusable.required')"-->
