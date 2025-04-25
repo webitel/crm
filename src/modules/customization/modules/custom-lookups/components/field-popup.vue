@@ -42,11 +42,11 @@
           :value="value"
         />
 
-        <wt-switcher
-          :value="value.required"
-          :label="$t('reusable.required')"
-          @change="value.required = $event"
-        ></wt-switcher>
+        <!--        <wt-switcher-->
+        <!--          :value="value.required"-->
+        <!--          :label="$t('reusable.required')"-->
+        <!--          @change="value.required = $event"-->
+        <!--        ></wt-switcher>-->
       </div>
     </template>
     <template #actions>
