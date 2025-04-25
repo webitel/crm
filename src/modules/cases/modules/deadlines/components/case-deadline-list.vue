@@ -7,23 +7,23 @@
         :title="t('reusable.createdAt')"
       />
       <case-deadline
-        :time-difference="itemInstance?.differenceInReaction"
         :time="itemInstance?.plannedReactionAt"
         :title="t('cases.reactionTime')"
       />
       <case-deadline
-        :time="itemInstance?.reactedAt || itemInstance?.createdAt"
+        :time-difference="itemInstance?.reactedAt ? itemInstance?.differenceInReaction : null"
+        :time="itemInstance?.reactedAt"
         :title="t('cases.actualReactionTime')"
       />
 
       <case-deadline
-        :time-difference="itemInstance.differenceInResolve"
         :time="itemInstance?.plannedResolveAt"
         :title="t('cases.resolutionTime')"
       />
 
       <case-deadline
-        :time="itemInstance.resolvedAt || itemInstance?.createdAt"
+        :time-difference="itemInstance?.resolvedAt ? itemInstance.differenceInResolve : null"
+        :time="itemInstance.resolvedAt"
         :title="t('cases.actualResolutionTime')"
       />
     </div>
