@@ -2,7 +2,7 @@
   <wt-popup
     class="case-result-popup"
     :shown="shown"
-    @close="close"
+    @close="cancel"
   >
     <template #header>
       {{ t('cases.caseResult') }}
@@ -13,6 +13,7 @@
           :label="t('cases.closureReason')"
           :search-method="searchCloseReasons"
           :value="draft.reason"
+          :v="v$.draft.reason"
           required
           @input="draft.reason = $event"
         />
@@ -26,12 +27,15 @@
       </div>
     </template>
     <template #actions>
-      <wt-button @click="save">
+      <wt-button
+        :disabled="v$.$invalid"
+        @click="save"
+      >
         {{ t('reusable.ok') }}
       </wt-button>
       <wt-button
         color="secondary"
-        @click="close"
+        @click="cancel"
       >
         {{ t('reusable.cancel') }}
       </wt-button>
@@ -39,13 +43,20 @@
   </wt-popup>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { computed, reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
+
+const createDraftData = () => ({
+  reason: null,
+  result: null,
+});
 
 const props = defineProps({
   shown: {
@@ -58,16 +69,32 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits<{
+  'save': [{ result: ReturnType<createDraftData>, reason?: string}],
+  'cancel': [],
+}>();
+
 const { namespace: cardNamespace } = useCardStore(props.namespace);
 
 const store = useStore();
 
 const { t } = useI18n();
 
-const draft = reactive({
-  reason: null,
-  result: null,
+const draft = reactive(createDraftData());
+
+watch(() => props.shown, () => {
+  Object.assign(draft, createDraftData());
 });
+
+const v$ = useVuelidate(computed(() => {
+  return {
+    draft: {
+      reason: { required },
+    },
+  };
+}), { draft }, { $autoDirty: true });
+
+v$.value.$touch();
 
 const closeReasonId = computed(
   () => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
@@ -80,7 +107,9 @@ async function searchCloseReasons(params) {
   });
 }
 
-const emit = defineEmits(['save', 'close', 'update:show']);
+function cancel() {
+  emit('cancel');
+}
 
 function save() {
   const finalStatusData = {
@@ -88,11 +117,6 @@ function save() {
     result: draft.result,
   };
   emit('save', finalStatusData);
-  emit('update:show', false);
-}
-
-function close() {
-  emit('close');
 }
 </script>
 

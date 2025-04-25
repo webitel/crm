@@ -2,9 +2,8 @@
   <case-result-popup
     :namespace="namespace"
     :shown="isResultPopup"
-    @close="onPopupClose"
-    @save="saveResult"
-    @update:show="isResultPopup = $event"
+    @save="confirmChangingStatusToFinal"
+    @cancel="cancelChangingStatusToFinal"
   />
   <div class="case-status">
     <span class="case-status__title">{{ t('cases.status') }}</span>
@@ -86,7 +85,20 @@ const { isNew } = useCardComponent({
 const isResultPopup = ref(false);
 const prevStatusCondition = ref(itemInstance.value.statusCondition);
 
-const saveResult = async ({ reason, result }) => {
+const openCaseResultPopup = () => {
+  isResultPopup.value = true;
+};
+
+const closeCaseResultPopup = () => {
+  isResultPopup.value = false;
+};
+
+const startChangingStatusToFinal = (statusCondition) => {
+  itemInstance.value.statusCondition = statusCondition;
+  openCaseResultPopup();
+};
+
+const confirmChangingStatusToFinal = async ({ reason, result }) => {
   await setItemProp({
     path: 'closeReason',
     value: reason,
@@ -110,10 +122,12 @@ const saveResult = async ({ reason, result }) => {
     //NOTE: needed to get new etag so new patch will work correctly
     await loadItem();
   }
+
+  closeCaseResultPopup();
 };
 
-const onPopupClose = () => {
-  isResultPopup.value = false;
+const cancelChangingStatusToFinal = () => {
+  closeCaseResultPopup();
   itemInstance.value.statusCondition = prevStatusCondition.value;
 };
 
@@ -177,15 +191,13 @@ async function patchRemoteChanges(condition) {
   });
 }
 
-async function handleSelect(value) {
-  if (value.final) {
-    itemInstance.value.statusCondition = value;
-    isResultPopup.value = true;
-    return;
+async function handleSelect(statusCondition) {
+  if (statusCondition.final) {
+    startChangingStatusToFinal(statusCondition);
+  } else {
+    await patchStatusCondition(statusCondition);
+    prevStatusCondition.value = statusCondition;
   }
-
-  await patchStatusCondition(value);
-  prevStatusCondition.value = value;
 }
 
 async function updateStatusCondition(isValidationRequired = true) {
