@@ -1,6 +1,6 @@
 <template>
   <teleport
-    v-if="hasEditAccess"
+    v-if="hasEditAccess && !isReadOnly"
     to="#page-header-actions"
   >
     <wt-button :disabled="disabledSave" @click="saveDetails">{{ t('reusable.save') }}</wt-button>
@@ -49,6 +49,7 @@ import WtDisplayContent
   from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
   namespace: {
