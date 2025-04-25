@@ -39,7 +39,7 @@ const props = defineProps({
   },
   timeDifference: {
     type: String,
-    default: undefined,
+    default: null,
   },
 });
 

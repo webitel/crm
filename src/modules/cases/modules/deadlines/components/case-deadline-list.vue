@@ -11,7 +11,7 @@
         :title="t('cases.reactionTime')"
       />
       <case-deadline
-        :time-difference="itemInstance?.reactedAt ? itemInstance?.differenceInReaction || 0 : null"
+        :time-difference="itemInstance?.reactedAt ? (itemInstance?.differenceInReaction || 0) : null"
         :time="itemInstance?.reactedAt"
         :title="t('cases.actualReactionTime')"
       />
@@ -22,7 +22,7 @@
       />
 
       <case-deadline
-        :time-difference="itemInstance?.resolvedAt ? itemInstance.differenceInResolve || 0 : null"
+        :time-difference="itemInstance?.resolvedAt ? (itemInstance.differenceInResolve || 0) : null"
         :time="itemInstance.resolvedAt"
         :title="t('cases.actualResolutionTime')"
       />
