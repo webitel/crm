@@ -92,7 +92,7 @@ const v$ = useVuelidate(computed(() => {
       reason: { required },
     },
   };
-}), { draft }, { $autoDirty: true });
+}), { draft }, { $autoDirty: true, $stopPropagation: true });
 
 v$.value.$touch();
 
