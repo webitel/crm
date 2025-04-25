@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { isEmpty } from '@webitel/ui-sdk/scripts';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, inject, ref, watch } from 'vue';
@@ -191,12 +192,16 @@ async function patchRemoteChanges(condition) {
   });
 }
 
-async function handleSelect(statusCondition) {
-  if (statusCondition.final) {
-    startChangingStatusToFinal(statusCondition);
+async function handleSelect(selectedStatusCondition) {
+  if (selectedStatusCondition.final) {
+    startChangingStatusToFinal(selectedStatusCondition);
+  } else if /* at reset */(isEmpty(selectedStatusCondition)) {
+    const { items } = await fetchStatusConditions();
+    const initialStatusCondition = items.find(({ initial }) => initial);
+    handleSelect(initialStatusCondition);
   } else {
-    await patchStatusCondition(statusCondition);
-    prevStatusCondition.value = statusCondition;
+    await patchStatusCondition(selectedStatusCondition);
+    prevStatusCondition.value = selectedStatusCondition;
   }
 }
 
