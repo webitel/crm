@@ -2,8 +2,7 @@
   <wt-popup
     v-bind="$attrs"
     class="add-contacts-popup"
-    min-width="768"
-    width="1440"
+    size="lg"
     @close="close"
   >
     <template #title>
@@ -22,7 +21,15 @@
           @search="handleFilterChange"
         />
 
-        <!--TODO USER SELECT-->
+        <wt-select
+          :clearable="false"
+          :options="BooleanOptions"
+          :value="filters.user"
+          :placeholder="t('objects.user')"
+          track-by="value"
+          use-value-from-options-by-prop="value"
+          @input="handleUserSelect"
+        />
 
         <wt-select
           :close-on-select="false"
@@ -174,6 +181,17 @@ const { itemInstance } = useCardStore(
 );
 
 const { t } = useI18n();
+
+const BooleanOptions: Array<FilterEnumOption> = [
+  {
+    locale: 'vocabulary.yes',
+    value: 'true',
+  },
+  {
+    locale: 'vocabulary.no',
+    value: 'false',
+  },
+]
 
 const getFilters = () => ({
   search: '',
