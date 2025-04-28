@@ -1,6 +1,6 @@
 <template>
   <teleport
-    v-if="hasEditAccess"
+    v-if="hasEditAccess && !isReadOnly"
     to="#page-header-actions"
   >
     <wt-button :disabled="disabledSave" @click="saveDetails">{{ t('reusable.save') }}</wt-button>
