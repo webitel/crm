@@ -83,7 +83,9 @@ export const stringifyCaseFilters = (filters) => {
     const strValue = transformer(value, key);
 
     if (value != null && strValue) {
-      result.push(strValue);
+      if (Array.isArray(strValue)) {
+        result.push(...strValue);
+      } else result.push(strValue);
     }
   }
   return result;

@@ -60,12 +60,20 @@ const getContactCasesList = async (params) => {
     }
   }
 
+  // @author @Lera24
+  // [WTEL-6766](https://webitel.atlassian.net/browse/WTEL-6766)
+  // Filter params and return only filters except for technical fields (example page, size and other)
+
+  const filters = Object.fromEntries(
+    Object.entries(params).filter(([key]) => !fieldsToSend.includes(key)),
+  );
+
   const url = applyTransform({ ...params, ids: params.ids || ftsIds }, [
     merge(getDefaultGetParams()),
     (params) => ({
       ...params,
       q: params.search,
-      filters: stringifyCaseFilters(params),
+      filters: stringifyCaseFilters(filters),
     }),
     sanitize(fieldsToSend),
     camelToSnake(),
