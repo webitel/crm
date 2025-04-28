@@ -1,6 +1,6 @@
 <template>
   <wt-page-wrapper
-    :actions-panel="false"
+    :actions-panel="showActionsPanel"
     class="contacts"
   >
     <template #header>
@@ -25,6 +25,10 @@
           <!-- TODO -->
         </template>
       </wt-page-header>
+    </template>
+
+    <template #actions-panel>
+      <contacts-filters-panel @hide="showActionsPanel = false" />
     </template>
 
     <template #main>
@@ -96,11 +100,14 @@ import ContactsTable from '../../_shared/modules/contacts/components/contacts-ta
 import { ContactsNamespace } from '../namespace';
 import { useContactsStore } from '../stores/contacts';
 import ContactPopup from './contact-popup.vue';
+import ContactsFiltersPanel from './contacts-filters-panel.vue';
 
 const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
+
+const showActionsPanel = ref(true);
 
 const {
   isVisible: isDeleteConfirmationPopup,
