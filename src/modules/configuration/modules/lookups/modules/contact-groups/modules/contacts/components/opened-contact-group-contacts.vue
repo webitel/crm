@@ -132,5 +132,7 @@ watch(() => itemInstance.value?.id, (val) => {
 </script>
 
 <style lang="scss" scoped>
-
+.table-section {
+  height: 100%;
+}
 </style>
