@@ -36,6 +36,7 @@
         <template v-else>
           <wt-item-link
             :link="link"
+            :disabled="props.disableLink"
             class="editable-field__link"
             target="_blank"
           >
@@ -96,6 +97,10 @@ const props = defineProps({
   link: {
     type: Object,
     default: null,
+  },
+  disableLink: {
+    type: Boolean,
+    default: false,
   },
 });
 
