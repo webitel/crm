@@ -11,18 +11,20 @@
         <span>{{ prettifyDate(time) }}</span>
       </div>
       <span
-        v-if="timeDifference"
+        v-if="showTimeDifference"
         class="case-deadline__time-difference"
         :class="{
-          'case-deadline__time-difference_positive': Number(timeDifference) > 0,
-          'case-deadline__time-difference_negative': Number(timeDifference) < 0,
+          'case-deadline__time-difference_positive': numberTimeDifference >= 0,
+          'case-deadline__time-difference_negative': numberTimeDifference < 0,
         }"
-      >{{ convertDurationWithDays(Number(timeDifference), true) }}</span>
+      >{{ convertDurationWithDays(numberTimeDifference, true) }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 import convertDurationWithDays from '../../../../../app/scripts/convertDurationWithDays.js';
 import prettifyDate from '../../../utils/prettifyDate.js';
 
@@ -37,8 +39,16 @@ const props = defineProps({
   },
   timeDifference: {
     type: String,
-    default: '',
+    default: null,
   },
+});
+
+const showTimeDifference = computed(() => {
+  return ['string', 'number'].includes(typeof props.timeDifference);
+});
+
+const numberTimeDifference = computed(() => {
+  return Number(props.timeDifference);
 });
 </script>
 

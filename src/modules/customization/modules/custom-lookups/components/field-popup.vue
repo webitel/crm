@@ -42,11 +42,12 @@
           :value="value"
         />
 
-        <wt-switcher
-          :value="value.required"
-          :label="$t('reusable.required')"
-          @change="value.required = $event"
-        ></wt-switcher>
+        <!--        TODO hide switcher https://webitel.atlassian.net/browse/WTEL-6774-->
+        <!--        <wt-switcher-->
+        <!--          :value="value.required"-->
+        <!--          :label="$t('reusable.required')"-->
+        <!--          @change="value.required = $event"-->
+        <!--        ></wt-switcher>-->
       </div>
     </template>
     <template #actions>
@@ -95,6 +96,7 @@ const draft = {
   required: false,
   lookup: null,
   list: null,
+  default: null,
 };
 const { t } = useI18n();
 
@@ -132,7 +134,7 @@ const save = () => {
   const savedFiled = deepCopy(value.value);
 
   Object.keys(savedFiled).forEach((key) => {
-    if (!savedFiled[key]) {
+    if (!savedFiled[key] && key !== 'default') {
       delete savedFiled[key];
     }
   });

@@ -23,6 +23,9 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
+import {
+  FieldType,
+} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum.js';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
 
 const props = defineProps({
@@ -38,7 +41,7 @@ const { t } = useI18n();
 
 const fields = computed(() =>
   store.getters[`${props.namespace}/LOOKUP_FIELDS`]?.filter(
-    (field) => !field.hidden && !field.default && !field.always,
+    (field) => !field.hidden && (!field.default || field.kind === FieldType.Boolean) && !field.always,
   ),
 );
 </script>
