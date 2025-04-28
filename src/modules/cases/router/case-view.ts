@@ -53,7 +53,7 @@ const caseViewRoute: RouteRecordRaw[] = [
     meta: {
       WtObject: WtObject.Case,
       UiSection: CrmSections.Cases,
-      hideHeaderElements: true,
+      hideHeader: true,
     },
     children: casesChildrenRoutes,
   },

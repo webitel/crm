@@ -70,7 +70,7 @@ const contactViewRoute: RouteRecordRaw[] = [
     component: OpenedContactView,
     redirect: { name: `${CONTACT_VIEW_NAME}-timeline` },
     children: contactsChildrenRoutes,
-    meta: { hideHeaderElements: true },
+    meta: { hideHeader: true },
   },
 ];
 

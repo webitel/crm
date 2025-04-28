@@ -1,20 +1,18 @@
 <template>
   <main class="object-wrap">
     <section class="object">
-      <wt-app-header>
+      <wt-app-header v-if="!shouldHideHeader">
         <wt-notifications-bar />
-        <template v-if="!shouldHideHeaderElements">
-          <wt-navigation-bar
-            :current-app="currentApp"
-            :nav="nav"
-            :dark-mode="darkMode"
-            :logo-route="StartPageRoutePaths.TheStartPage"
-          />
-          <wt-logo
-            :dark-mode="darkMode"
-            :logo-href="startPageHref"
-          />
-        </template>
+        <wt-navigation-bar
+          :current-app="currentApp"
+          :nav="nav"
+          :dark-mode="darkMode"
+          :logo-route="StartPageRoutePaths.TheStartPage"
+        />
+        <wt-logo
+          :dark-mode="darkMode"
+          :logo-href="startPageHref"
+        />
         <wt-dark-mode-switcher />
         <wt-app-navigator
           :apps="apps"
@@ -59,7 +57,7 @@ const currentApp = userinfo.value.thisApp;
 
 const checkAccess = computed(() => store.getters['userinfo/CHECK_APP_ACCESS']);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-const shouldHideHeaderElements  = computed(() => !!route.meta.hideHeaderElements);
+const shouldHideHeader  = computed(() => !!route.meta.hideHeader);
 
 const { t } = useI18n();
 
