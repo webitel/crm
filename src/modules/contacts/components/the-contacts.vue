@@ -12,19 +12,7 @@
         @saved="saved"
       />
 
-      <wt-page-header
-        :primary-action="create"
-        :primary-disabled="!hasCreateAccess"
-        :secondary-action="deleteSelectedItems"
-        :secondary-disabled="!hasDeleteAccess || !deletableSelectedItems.length"
-        :secondary-text="$t('reusable.delete')"
-      >
-        <wt-headline-nav :path="path" />
-
-        <template #actions>
-          <!-- TODO -->
-        </template>
-      </wt-page-header>
+      <wt-headline-nav :path="path" />
     </template>
 
     <template #actions-panel>
@@ -32,64 +20,74 @@
     </template>
 
     <template #main>
-      <delete-confirmation-popup
-        :shown="isDeleteConfirmationPopup"
-        :callback="deleteCallback"
-        :delete-count="deleteCount"
-        @close="closeDelete"
-      />
+      <section class="table-page">
+        <delete-confirmation-popup
+          :shown="isDeleteConfirmationPopup"
+          :callback="deleteCallback"
+          :delete-count="deleteCount"
+          @close="closeDelete"
+        />
 
-      <contacts-table :header="t('contacts.contact', 2)" :table-store="tableStore">
-        <template #action-bar>
-          <wt-action-bar
-            :disabled:add="!hasCreateAccess"
-            :disabled:delete="!hasDeleteAccess"
-            :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-            @click:add="() => {}"
-            @click:delete="
-              askDeleteConfirmation({
-                deleted: selected,
-                callback: () => deleteEls(selected),
-              })
-            "
-          >
+        <contacts-table :header="t('contacts.contact', 2)" :table-store="tableStore">
+          <template #action-bar>
+            <wt-action-bar
+              :disabled:add="!hasCreateAccess"
+              :disabled:delete="!hasDeleteAccess || !deletableSelectedItems.length"
+              :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.DELETE]"
+              @click:add="create"
+              @click:filters="showActionsPanel = !showActionsPanel"
+              @click:refresh="loadDataList"
+              @click:delete="deleteSelectedItems"
+            >
 
-            <template #search-bar>
-              <!-- TODO -->
-            </template>
-          </wt-action-bar>
-        </template>
+              <template #search-bar>
+                <dynamic-filter-search
+                  :filters-manager="filtersManager"
+                  :is-filters-restoring="isFiltersRestoring"
+                  :search-mode-options="searchModeOpts"
+                  @filter:add="addFilter"
+                  @filter:update="updateFilter"
+                  @filter:delete="deleteFilter"
+                />
+              </template>
+            </wt-action-bar>
+          </template>
 
-        <template #actions="{ item }">
-          <wt-icon-action
-            :disabled="!item.access.edit"
-            action="edit"
-            @click="edit(item)"
-          />
+          <template #actions="{ item }">
+            <wt-icon-action
+              :disabled="!item.access.edit"
+              action="edit"
+              @click="edit(item)"
+            />
 
-          <wt-icon-action
-            :disabled="!item.access.delete"
-            action="delete"
-            @click="
-            askDeleteConfirmation({
-              deleted: [item],
-              callback: () => deleteEls(item),
-            })
-          "
-          />
-        </template>
-      </contacts-table>
+            <wt-icon-action
+              :disabled="!item.access.delete"
+              action="delete"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
+            />
+          </template>
+        </contacts-table>
+      </section>
     </template>
   </wt-page-wrapper>
 </template>
 
 <script setup>
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import ContactsSearchMode from '@webitel/ui-sdk/src/api/clients/сontacts/enums/ContactsSearchMode.js';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
@@ -123,11 +121,17 @@ const tableStore = useContactsStore();
 const {
   selected,
   deleteData,
+  filtersManager,
+  isFiltersRestoring,
 } = storeToRefs(tableStore);
 
 const {
   initialize,
   deleteEls,
+  loadDataList,
+  addFilter,
+  updateFilter,
+  deleteFilter,
 } = tableStore;
 
 const isContactPopup = ref(false);
@@ -191,13 +195,15 @@ function closeContactPopup() {
 function deleteSelectedItems() {
   return askDeleteConfirmation({
     deleted: deletableSelectedItems.value,
-    callback: () => deleteData([...deletableSelectedItems.value]),
+    callback: () => deleteEls([...deletableSelectedItems.value]),
   });
 }
 
-initialize()
+initialize();
 </script>
 
 <style lang="scss" scoped>
-
+.table-page {
+  width: 100%;
+}
 </style>
