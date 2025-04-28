@@ -93,6 +93,7 @@
                   name: `${CrmSections.CASES}-card`,
                   params: { id: getRevertedCase(item).id },
                 }"
+              :disabled="isReadOnly"
               target="_blank"
             >
               <div class="related-cases__item-wrapper">
@@ -117,6 +118,7 @@
                   name: `${CrmSections.CASES}-card`,
                   params: { id: getRevertedCase(item).id },
                 }"
+              :disabled="isReadOnly"
               target="_blank"
             >
               {{ getRevertedCase(item).subject }}
