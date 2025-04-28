@@ -5,7 +5,7 @@
     :v="validation"
     :label="label"
     :required="isRequired"
-    :disabled="props.disableFields"
+    :disabled="props.disable"
     @input="setValue($event)"
   />
   <wt-input
@@ -15,7 +15,7 @@
     :label="label"
     type="number"
     :required="isRequired"
-    :disabled="props.disableFields"
+    :disabled="props.disable"
     @input="setValue($event)"
   />
   <wt-switcher
@@ -24,7 +24,7 @@
     :value="!!value"
     :v="validation"
     :required="isRequired"
-    :disabled="props.disableFields"
+    :disabled="props.disable"
     @change="setValue($event)"
   />
   <wt-select
@@ -36,7 +36,7 @@
     track-by="id"
     clearable
     :required="isRequired"
-    :disabled="props.disableFields"
+    :disabled="props.disable"
     @input="selectElement"
   />
   <wt-select
@@ -49,7 +49,7 @@
     clearable
     multiple
     :required="isRequired"
-    :disabled="props.disableFields"
+    :disabled="props.disable"
     @input="selectElements"
   />
   <wt-datepicker
@@ -59,7 +59,7 @@
     :v="v$.itemInstance[field.id]"
     mode="datetime"
     :required="isRequired"
-    :disabled="props.disableFields"
+    :disabled="props.disable"
     @input="setValue(+$event / convertedTime)"
   />
 </template>
@@ -92,7 +92,7 @@ const props = defineProps({
   pathToField: {
     type: String,
   },
-  disableFields: {
+  disable: {
     type: Boolean,
     default: false,
   },
