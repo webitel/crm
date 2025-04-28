@@ -54,6 +54,7 @@
         />
 
         <wt-icon-btn
+          :disabled="!hasFilters"
           icon="clear"
           @click="resetFilters"
         />
@@ -182,7 +183,7 @@ const { itemInstance } = useCardStore(
 
 const { t } = useI18n();
 
-const BooleanOptions: Array<FilterEnumOption> = [
+const BooleanOptions = [
   {
     locale: 'vocabulary.yes',
     value: 'true',
@@ -230,7 +231,6 @@ const headers = [
     locale: 'reusable.group',
     show: true,
     field: 'groups',
-    // width: '170px',
     sort: SortSymbols.NONE,
   },
 ];
@@ -241,6 +241,14 @@ const isNext = ref(false);
 
 const infiniteScrollWrap = ref(null);
 
+const hasFilters = computed(() => {
+  return Object.values(filters.value).some((filter) => {
+    if (Array.isArray(filter)) {
+      return filter.length > 0;
+    }
+    return filter !== null && filter !== '';
+  });
+});
 const disabledSave = computed(() => !selectedContactList.value.length);
 
 function updateSelected(val) {
@@ -259,7 +267,7 @@ async function loadDataList() {
     ...filters.value,
     fields: headers.map(({ field }) => field),
     labels: filters.value.labels,
-    groupId: filters.value.groups,
+    group: filters.value.groups,
     user: filters.value.user,
     page: page.value,
   };
