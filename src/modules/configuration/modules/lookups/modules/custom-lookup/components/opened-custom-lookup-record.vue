@@ -53,7 +53,9 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
+import {
+  useAccessControl,
+} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
@@ -63,7 +65,8 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import router from '../../../../../../../app/router/index.js';
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
+import CustomLookupsApi
+  from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 
 const store = useStore();
 
@@ -165,7 +168,7 @@ const loadDictionary = async () => {
           return acc;
         }
 
-        acc[field.id] = '';
+        acc[field.id] = null;
         return acc;
       }, {}),
     });
