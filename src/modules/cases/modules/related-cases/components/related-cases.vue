@@ -86,23 +86,41 @@
           @sort="updateSort"
           @update:selected="updateSelected"
         >
-          <template #name="{ item }">
-            <div class="related-cases__item-wrapper">
-              <color-component-wrapper
-                :color="getRevertedCase(item).color"
-                component="wt-icon"
-                icon="cases"
-                size="md"
-              />
 
-              <span>
+          <template #name="{ item }">
+            <wt-item-link
+              :link="{
+                  name: `${CrmSections.CASES}-card`,
+                  params: { id: getRevertedCase(item).id },
+                }"
+              target="_blank"
+            >
+              <div class="related-cases__item-wrapper">
+                <color-component-wrapper
+                  :color="getRevertedCase(item).color"
+                  component="wt-icon"
+                  icon="cases"
+                  size="md"
+                />
+
+                <span>
                 {{ getRevertedCase(item).name }}
               </span>
-            </div>
+              </div>
+            </wt-item-link>
+
           </template>
 
           <template #subject="{ item }">
-            {{ getRevertedCase(item).subject }}
+            <wt-item-link
+              :link="{
+                  name: `${CrmSections.CASES}-card`,
+                  params: { id: getRevertedCase(item).id },
+                }"
+              target="_blank"
+            >
+              {{ getRevertedCase(item).subject }}
+            </wt-item-link>
           </template>
 
           <template #relationType="{ item }">
@@ -133,10 +151,16 @@
 </template>
 
 <script setup>
+import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum.js';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
-import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import DeleteConfirmationPopup
+  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import {
+  useDeleteConfirmationPopup,
+} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import {
+  useTableEmpty,
+} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
