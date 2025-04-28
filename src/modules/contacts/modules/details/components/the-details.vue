@@ -16,6 +16,7 @@
           :key="field.id"
           :field="field"
           :namespace="namespace"
+          :disable-fields="isReadOnly"
           path-to-field="custom"
         />
       </div>
@@ -49,6 +50,7 @@ import WtDisplayContent
   from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 
 const access = inject('access');
+const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
   namespace: {
@@ -73,7 +75,7 @@ const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
 v$.value.$touch();
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+  () => v$.value?.$invalid || !itemInstance.value._dirty || isReadOnly,
 );
 
 const saveDetails = () => {
