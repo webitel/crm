@@ -16,6 +16,7 @@
           :key="field.id"
           :field="field"
           :namespace="namespace"
+          :disable="isReadOnly"
           path-to-field="custom"
         />
       </div>
@@ -74,7 +75,7 @@ const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
 v$.value.$touch();
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+  () => v$.value?.$invalid || !itemInstance.value._dirty || isReadOnly,
 );
 
 const saveDetails = () => {
