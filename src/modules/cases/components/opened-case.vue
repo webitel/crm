@@ -180,7 +180,7 @@ initialize();
 
 const { close } = useClose(CrmSections.CASES);
 
-const { name: breadcrumbSubject } = useCachedItemInstanceName(itemInstance, {namePath: 'subject'});
+const { name: breadcrumbSubject } = useCachedItemInstanceName(itemInstance, { namePath: 'subject' });
 
 const path = computed(() => {
   const baseUrl = '/cases';
