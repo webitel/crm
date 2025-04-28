@@ -3,16 +3,18 @@
     <section class="object">
       <wt-app-header>
         <wt-notifications-bar />
-        <wt-navigation-bar
-          :current-app="currentApp"
-          :nav="nav"
-          :dark-mode="darkMode"
-          :logo-route="StartPageRoutePaths.TheStartPage"
-        />
-        <wt-logo
-          :dark-mode="darkMode"
-          :logo-href="startPageHref"
-         />
+        <template v-if="!isReadOnlyPage">
+          <wt-navigation-bar
+            :current-app="currentApp"
+            :nav="nav"
+            :dark-mode="darkMode"
+            :logo-route="StartPageRoutePaths.TheStartPage"
+          />
+          <wt-logo
+            :dark-mode="darkMode"
+            :logo-href="startPageHref"
+          />
+        </template>
         <wt-dark-mode-switcher />
         <wt-app-navigator
           :apps="apps"
@@ -40,10 +42,12 @@ import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/W
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 
+const route = useRoute()
 const release = process.env.npm_package_version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
 const timestamp = import.meta.env.VITE_BUILD_TIMESTAMP;
@@ -55,6 +59,7 @@ const currentApp = userinfo.value.thisApp;
 
 const checkAccess = computed(() => store.getters['userinfo/CHECK_APP_ACCESS']);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
+const isReadOnlyPage = computed(() => route.meta.readOnly);
 
 const { t } = useI18n();
 
