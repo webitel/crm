@@ -17,6 +17,7 @@
           name: `${CrmSections.CONTACTS}-card`,
           params: { id: itemInstance.reporter?.id },
         }"
+        :disable-link="isReadOnly"
         :value="itemInstance.reporter"
         color="info"
         icon="reporter"
@@ -43,6 +44,7 @@
           name: `${CrmSections.CONTACTS}-card`,
           params: { id: itemInstance.impacted?.id },
         }"
+        :disable-link="isReadOnly"
         :value="itemInstance.impacted"
         icon="impacted"
         horizontal-view
@@ -66,6 +68,7 @@
           name: `${CrmSections.CONTACTS}-card`,
           params: { id: itemInstance.assignee?.id },
         }"
+        :disable-link="isReadOnly"
         :value="itemInstance.assignee"
         color="success"
         icon="assignee"
@@ -133,6 +136,7 @@ const { t } = useI18n();
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
+const isReadOnly = inject('isReadOnly');
 const v$ = inject('v$');
 
 const { disableUserInput } = useUserAccessControl();
