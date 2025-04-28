@@ -3,7 +3,7 @@
     <section class="object">
       <wt-app-header>
         <wt-notifications-bar />
-        <template v-if="!isReadOnlyPage">
+        <template v-if="!shouldHideHeaderElements">
           <wt-navigation-bar
             :current-app="currentApp"
             :nav="nav"
@@ -59,7 +59,7 @@ const currentApp = userinfo.value.thisApp;
 
 const checkAccess = computed(() => store.getters['userinfo/CHECK_APP_ACCESS']);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-const isReadOnlyPage = computed(() => route.meta.readOnly);
+const shouldHideHeaderElements  = computed(() => !!route.meta.hideHeaderElements);
 
 const { t } = useI18n();
 
