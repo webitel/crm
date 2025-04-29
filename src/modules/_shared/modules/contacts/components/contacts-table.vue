@@ -172,6 +172,16 @@ const defaultEmptyProps = useTableEmpty({
   isLoading,
 });
 
+/**
+ * @author Oleksandr Palonnyi
+ *
+ * [WTEL-6801](https://webitel.atlassian.net/browse/WTEL-6801)
+ *
+ * the unwrapProps method is used to unwrap the data passed by useTableEmpty,
+ * because if you use ‘return defaultEmptyProps’,
+ * then vue will not be able to unwrap all the necessary props itself through v-bind=“emptyProps”
+ * and the component will not work correctly
+ */
 function unwrapProps(obj) {
   return Object.fromEntries(
     Object.entries(obj).map(([key, val]) => [key, isRef(val) ? val.value : val])
