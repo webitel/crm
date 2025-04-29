@@ -2,8 +2,7 @@
   <wt-popup
     v-bind="$attrs"
     class="add-contacts-popup"
-    min-width="768"
-    width="1440"
+    size="lg"
     @close="close"
   >
     <template #title>
@@ -15,24 +14,31 @@
     <template #main>
       <div class="add-contacts-popup__filters">
         <wt-search-bar
-          :value="filters.search"
+          :value="filters.name"
           debounce
           @enter="handleFilterChange"
-          @input="filters.search = $event"
+          @input="filters.name = $event"
           @search="handleFilterChange"
         />
 
-        <!--TODO USER SELECT-->
+        <wt-select
+          :clearable="false"
+          :options="BooleanOptions"
+          :value="filters.user"
+          :placeholder="t('objects.user')"
+          track-by="value"
+          use-value-from-options-by-prop="value"
+          @input="handleUserSelect"
+        />
 
         <wt-select
           :close-on-select="false"
           :search-method="LabelsAPI.getList"
-          :value="filters.labels"
+          :value="filters.contactLabel"
           :placeholder="t('vocabulary.labels', 1)"
           option-label="label"
           multiple
           track-by="label"
-          use-value-from-options-by-prop="label"
           @input="handleLabelSelect"
         />
 
@@ -47,6 +53,7 @@
         />
 
         <wt-icon-btn
+          :disabled="!hasFilters"
           icon="clear"
           @click="resetFilters"
         />
@@ -175,11 +182,22 @@ const { itemInstance } = useCardStore(
 
 const { t } = useI18n();
 
+const BooleanOptions = [
+  {
+    locale: 'vocabulary.yes',
+    value: 'true',
+  },
+  {
+    locale: 'vocabulary.no',
+    value: 'false',
+  },
+]
+
 const getFilters = () => ({
-  search: '',
+  name: '',
   user: null,
   groups: [],
-  labels: [],
+  contactLabel: [],
   sort: '',
 });
 
@@ -212,7 +230,6 @@ const headers = [
     locale: 'reusable.group',
     show: true,
     field: 'groups',
-    // width: '170px',
     sort: SortSymbols.NONE,
   },
 ];
@@ -223,6 +240,14 @@ const isNext = ref(false);
 
 const infiniteScrollWrap = ref(null);
 
+const hasFilters = computed(() => {
+  return Object.values(filters.value).some((filter) => {
+    if (Array.isArray(filter)) {
+      return filter.length > 0;
+    }
+    return filter !== null && filter !== '';
+  });
+});
 const disabledSave = computed(() => !selectedContactList.value.length);
 
 function updateSelected(val) {
@@ -240,8 +265,8 @@ async function loadDataList() {
     size,
     ...filters.value,
     fields: headers.map(({ field }) => field),
-    labels: filters.value.labels,
-    groupId: filters.value.groups,
+    contactLabel: filters.value.contactLabel,
+    group: filters.value.groups,
     user: filters.value.user,
     page: page.value,
   };
@@ -253,7 +278,7 @@ async function loadDataList() {
 }
 
 function handleLabelSelect(value) {
-  filters.value.labels = value;
+  filters.value.contactLabel = value;
   return handleFilterChange();
 }
 
@@ -291,13 +316,13 @@ const save = async () => {
     id: itemInstance.value?.id,
     contactIds: selectedContactList.value.map(({ id }) => id),
   });
-  close();
+  await close();
   emit('load-data');
-  await resetFilters()
 };
 
-function close() {
+async function close() {
   emit('close');
+  await resetFilters()
 }
 
 function resetFilters() {
