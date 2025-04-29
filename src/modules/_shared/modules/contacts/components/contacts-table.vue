@@ -13,8 +13,10 @@
       <wt-loader v-show="isLoading" />
 
       <wt-empty
-        v-if="!emptyProps.showEmpty"
-        v-bind="emptyProps"
+        v-if="emptyProps.showEmpty.value"
+        :text="emptyProps.text.value"
+        :image="emptyProps.image.value"
+        :primary-action-text="emptyProps.primaryActionText.value"
         @click:primary="emptyProps.primaryAction"
       />
 

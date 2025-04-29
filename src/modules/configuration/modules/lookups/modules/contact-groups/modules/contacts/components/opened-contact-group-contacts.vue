@@ -18,7 +18,7 @@
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
-          :disabled:delete="!hasDeleteAccess"
+          :disabled:delete="!hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
           @click:add="isShowPopup = true"
           @click:refresh="loadDataList"

@@ -317,13 +317,13 @@ const save = async () => {
     id: itemInstance.value?.id,
     contactIds: selectedContactList.value.map(({ id }) => id),
   });
-  close();
+  await close();
   emit('load-data');
-  await resetFilters()
 };
 
-function close() {
+async function close() {
   emit('close');
+  await resetFilters()
 }
 
 function resetFilters() {
