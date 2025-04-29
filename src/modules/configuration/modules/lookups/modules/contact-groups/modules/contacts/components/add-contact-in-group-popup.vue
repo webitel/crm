@@ -14,10 +14,10 @@
     <template #main>
       <div class="add-contacts-popup__filters">
         <wt-search-bar
-          :value="filters.search"
+          :value="filters.name"
           debounce
           @enter="handleFilterChange"
-          @input="filters.search = $event"
+          @input="filters.name = $event"
           @search="handleFilterChange"
         />
 
@@ -34,12 +34,11 @@
         <wt-select
           :close-on-select="false"
           :search-method="LabelsAPI.getList"
-          :value="filters.labels"
+          :value="filters.contactLabel"
           :placeholder="t('vocabulary.labels', 1)"
           option-label="label"
           multiple
           track-by="label"
-          use-value-from-options-by-prop="label"
           @input="handleLabelSelect"
         />
 
@@ -195,10 +194,10 @@ const BooleanOptions = [
 ]
 
 const getFilters = () => ({
-  search: '',
+  name: '',
   user: null,
   groups: [],
-  labels: [],
+  contactLabel: [],
   sort: '',
 });
 
@@ -266,7 +265,7 @@ async function loadDataList() {
     size,
     ...filters.value,
     fields: headers.map(({ field }) => field),
-    labels: filters.value.labels,
+    contactLabel: filters.value.contactLabel,
     group: filters.value.groups,
     user: filters.value.user,
     page: page.value,
@@ -279,7 +278,7 @@ async function loadDataList() {
 }
 
 function handleLabelSelect(value) {
-  filters.value.labels = value;
+  filters.value.contactLabel = value;
   return handleFilterChange();
 }
 
