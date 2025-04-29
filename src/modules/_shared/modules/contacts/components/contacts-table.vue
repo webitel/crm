@@ -13,10 +13,8 @@
       <wt-loader v-show="isLoading" />
 
       <wt-empty
-        v-if="emptyProps.showEmpty.value"
-        :text="emptyProps.text.value"
-        :image="emptyProps.image.value"
-        :primary-action-text="emptyProps.primaryActionText.value"
+        v-if="emptyProps.showEmpty"
+        v-bind="emptyProps"
         @click:primary="emptyProps.primaryAction"
       />
 
@@ -134,7 +132,7 @@ import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, isRef } from 'vue';
 
 interface Props {
   header: string
@@ -174,13 +172,19 @@ const defaultEmptyProps = useTableEmpty({
   isLoading,
 });
 
+function unwrapProps(obj) {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, val]) => [key, isRef(val) ? val.value : val])
+  );
+}
+
 const emptyProps = computed(() => {
   if (!props.emptyData) {
-    return defaultEmptyProps;
+    return unwrapProps(defaultEmptyProps)
   }
 
   return deepmerge.all([
-    defaultEmptyProps,
+    unwrapProps(defaultEmptyProps),
     props.emptyData,
   ]);
 });

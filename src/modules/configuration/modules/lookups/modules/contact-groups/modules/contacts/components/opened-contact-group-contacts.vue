@@ -14,7 +14,11 @@
       @close="closeDelete"
     />
 
-    <contacts-table :header="t('contacts.allContacts', 2)" :table-store="tableStore">
+    <contacts-table
+      :header="t('contacts.allContacts', 2)"
+      :table-store="tableStore"
+      :empty-data="{ primaryAction: () => isShowPopup = true }"
+    >
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
