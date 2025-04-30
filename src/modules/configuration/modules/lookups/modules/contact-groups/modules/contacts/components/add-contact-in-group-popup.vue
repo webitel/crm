@@ -22,7 +22,6 @@
         />
 
         <wt-select
-          :clearable="false"
           :options="BooleanOptions"
           :value="filters.user"
           :placeholder="t('objects.user')"
@@ -355,13 +354,13 @@ useInfiniteScroll(infiniteScrollWrap, () => {
   &__filters {
     display: grid;
     align-items: center;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     grid-template-columns: repeat(4, 1fr) var(--spacing-md);
     gap: var(--spacing-xs);
   }
 
   .scroll-wrap {
-    height: 65vh;
+    height: 440px;
   }
 
   .contacts {
