@@ -38,7 +38,7 @@
 
             <template #add-contact>
               <wt-icon-action
-                :disabled="!isAddContactsIconEnabled"
+                :disabled="!selectedStaticGroups.length"
                 action="add-contact"
                 @click="isShowAddContactInGroupPopup = true"
               />
@@ -242,10 +242,8 @@ const {
 
 const isCreateGroupPopup = ref(false);
 const isShowAddContactInGroupPopup = ref(false);
-const isAddContactsIconEnabled = computed(() => selected.value.find((el) => el.type ===
-  WebitelContactsGroupType.STATIC));
-const staticGroupIds = computed(() => selected.value.filter((el) => el.type === WebitelContactsGroupType.STATIC)
-.map((el) => el.id));
+const selectedStaticGroups = computed(() => selected.value.filter((el) => el.type === WebitelContactsGroupType.STATIC));
+const staticGroupIds = computed(() => selectedStaticGroups.value.map((el) => el.id));
 
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
