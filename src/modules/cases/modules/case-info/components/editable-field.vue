@@ -143,6 +143,7 @@ const valueWithDefault = computed(() => {
 
   &__value {
     @extend %typo-body-1;
+    white-space: pre-line;
   }
 
   &__value-wrapper {
