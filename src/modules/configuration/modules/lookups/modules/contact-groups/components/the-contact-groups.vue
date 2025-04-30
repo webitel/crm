@@ -17,8 +17,9 @@
           <h3 class="table-title__title">
             {{ t('lookups.contactGroups.contactGroups', 2) }}
           </h3>
+
           <wt-action-bar
-            :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
+            :include="[IconAction.ADD, IconAction.ADD_CONTACT, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             @click:add="addGroup"
@@ -32,6 +33,14 @@
               <filter-search
                 :namespace="filtersNamespace"
                 name="search"
+              />
+            </template>
+
+            <template #add-contact>
+              <wt-icon-action
+                :disabled="!isAddContactsIconEnabled"
+                action="add-contact"
+                @click="isShowAddContactInGroupPopup = true"
               />
             </template>
           </wt-action-bar>
@@ -48,6 +57,14 @@
           :shown="isCreateGroupPopup"
           :namespace="baseNamespace"
           @close="closeCreateGroupPopup"
+        />
+
+        <add-contact-in-group-popup
+          :group-ids="staticGroupIds"
+          :namespace="namespace"
+          :shown="isShowAddContactInGroupPopup"
+          @close="isShowAddContactInGroupPopup = false"
+          @load-data="loadData"
         />
 
         <div
@@ -157,6 +174,7 @@ import { useRouter } from 'vue-router';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import AddContactInGroupPopup from '../modules/contacts/components/add-contact-in-group-popup.vue';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
 const baseNamespace = 'configuration/lookups/contactGroups';
@@ -223,6 +241,11 @@ const {
 } = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const isCreateGroupPopup = ref(false);
+const isShowAddContactInGroupPopup = ref(false);
+const isAddContactsIconEnabled = computed(() => selected.value.find((el) => el.type ===
+  WebitelContactsGroupType.STATIC));
+const staticGroupIds = computed(() => selected.value.filter((el) => el.type === WebitelContactsGroupType.STATIC)
+.map((el) => el.id));
 
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
