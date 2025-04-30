@@ -12,6 +12,7 @@
             v-bind="props"
             :key="closeReasonId"
             :disabled="disableUserInput || !itemInstance.statusCondition.final"
+            required
             :v="v$.value.itemInstance.closeReason"
             :search-method="searchCloseReasons"
             @input="props.updateValue($event)"
@@ -28,6 +29,7 @@
         <template #default="props">
           <wt-input
             v-bind="props"
+            required
             :v="v$.value.itemInstance.closeResult"
             :disabled="disableUserInput || !itemInstance.statusCondition.final"
             @input="props.updateValue($event)"

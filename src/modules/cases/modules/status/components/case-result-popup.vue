@@ -12,15 +12,17 @@
         <wt-select
           :label="t('cases.closureReason')"
           :search-method="searchCloseReasons"
-          :value="draft.reason"
-          :v="v$.draft.reason"
           required
+          :v="v$.draft.reason"
+          :value="draft.reason"
           @input="draft.reason = $event"
         />
 
         <wt-textarea
           class="case-result-popup__textarea"
           :label="t('cases.result')"
+          required
+          :v="v$.draft.result"
           :value="draft.result"
           @input="draft.result = $event"
         />
@@ -90,6 +92,7 @@ const v$ = useVuelidate(computed(() => {
   return {
     draft: {
       reason: { required },
+      result: { required },
     },
   };
 }), { draft }, { $autoDirty: true, $stopPropagation: true });
