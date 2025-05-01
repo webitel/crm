@@ -163,7 +163,7 @@
 import { useInfiniteScroll } from '@vueuse/core';
 import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts';
 import { SortSymbols, sortToQueryAdapter } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LabelsAPI from '../../../../../../../../_shared/modules/contacts/api/LabelsAPI';
@@ -231,6 +231,7 @@ const dataList = ref([]);
 const selectedContactList = ref([]);
 const page = ref(0);
 const isNext = ref(false);
+const isLoading = ref(false);
 
 const infiniteScrollWrap = ref(null);
 
@@ -269,6 +270,12 @@ async function loadDataList() {
   const _items = items.map((i) => ({ ...i, _isSelected: false }));
   setDataList(_items);
   isNext.value = next;
+}
+
+async function callLoadDataList() {
+  isLoading.value = true;
+  await loadDataList();
+  isLoading.value = false;
 }
 
 function handleLabelSelect(value) {
@@ -327,9 +334,20 @@ function resetFilters() {
   return handleFilterChange();
 }
 
-useInfiniteScroll(infiniteScrollWrap, () => {
-  page.value += 1;
-  loadDataList();
+useInfiniteScroll(infiniteScrollWrap,
+  async () => {
+    if (isLoading.value || !isNext.value) return;
+    page.value += 1;
+    await callLoadDataList();
+  },
+  {
+    distance: 100,
+  }
+);
+
+onMounted(async () => {
+  page.value = 1;
+  await callLoadDataList();
 });
 </script>
 
