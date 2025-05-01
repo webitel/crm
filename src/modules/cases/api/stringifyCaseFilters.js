@@ -1,5 +1,9 @@
-import { normalizeToTimestamp } from '@webitel/ui-sdk/scripts';
+import {
+  isRelativeDatetimeValue,
+  normalizeToTimestamp,
+} from '@webitel/ui-sdk/scripts';
 import { startOfToday } from 'date-fns';
+import isObject from 'lodash/isObject';
 
 const filterTransformersMap = {
   createdAt: (createdAt) => {
@@ -69,7 +73,30 @@ const filterTransformersMap = {
   },
   hasAttachment: (value) => `attachments=${value}`,
   others: (value, key) => {
-    return `${key}=${value}`;
+    const makeArrWithStringValuesFromObjectValue = (value, key) => {
+      return Object.entries(value).reduce((strValue, [propKey, propValue]) => {
+        return [...strValue, `${key}.${propKey}=${propValue}`];
+      }, []);
+    };
+
+    /* then value is magic datetime string */
+    if (isRelativeDatetimeValue(value)) {
+      const extensionDatetimeFieldMultiplier = 1000;
+
+      const normalizedValue = {
+        from:
+          normalizeToTimestamp(value, { round: 'start' }) /
+          extensionDatetimeFieldMultiplier,
+        to:
+          normalizeToTimestamp(value, { round: 'end' }) /
+          extensionDatetimeFieldMultiplier,
+      };
+      return makeArrWithStringValuesFromObjectValue(normalizedValue, key);
+    }
+
+    if (!isObject(value) || Array.isArray(value)) return `${key}=${value}`;
+
+    return makeArrWithStringValuesFromObjectValue(value, key);
   },
 };
 
