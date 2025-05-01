@@ -44,7 +44,7 @@
             {{ value?.name }}
           </wt-item-link>
           <wt-icon
-            v-if="link && value?.name"
+            v-if="link && value?.name && !props.disableLink"
             class="editable-field__link-icon"
             icon="link"
             size="sm"
@@ -198,7 +198,6 @@ const valueWithDefault = computed(() => {
       color: var(--link-color);
 
       &_disabled {
-        font-weight: bold;
         color: var(--text-main-color);
       }
     }
