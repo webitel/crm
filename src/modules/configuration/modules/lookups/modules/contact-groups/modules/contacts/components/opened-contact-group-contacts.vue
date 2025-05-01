@@ -1,7 +1,7 @@
 <template>
   <section class="table-page">
     <add-contact-in-group-popup
-      :namespace="namespace"
+      :group-ids="[itemInstance?.id]"
       :shown="isShowPopup"
       @close="isShowPopup = false"
       @load-data="loadDataList"

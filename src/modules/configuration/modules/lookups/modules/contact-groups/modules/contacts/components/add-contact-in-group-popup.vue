@@ -163,7 +163,6 @@
 import { useInfiniteScroll } from '@vueuse/core';
 import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts';
 import { SortSymbols, sortToQueryAdapter } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -171,13 +170,9 @@ import LabelsAPI from '../../../../../../../../_shared/modules/contacts/api/Labe
 import ContactGroupsAPI from '../../../api/contactGroups';
 
 const props = defineProps<{
-  namespace: string
+  groupIds: string[]
 }>();
 const emit = defineEmits(['load-data', 'close']);
-
-const { itemInstance } = useCardStore(
-  props.namespace,
-);
 
 const { t } = useI18n();
 
@@ -311,10 +306,12 @@ function sort(header, nextSortOrder) {
 }
 
 const save = async () => {
-  await ContactGroupsAPI.addContactsToGroup({
-    id: itemInstance.value?.id,
-    contactIds: selectedContactList.value.map(({ id }) => id),
-  });
+  for (const id of props.groupIds) {
+    await ContactGroupsAPI.addContactsToGroup({
+      id: id,
+      contactIds: selectedContactList.value.map(({ id }) => id),
+    });
+  }
   await close();
   emit('load-data');
 };
