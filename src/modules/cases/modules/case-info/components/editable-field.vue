@@ -44,7 +44,7 @@
             {{ value?.name }}
           </wt-item-link>
           <wt-icon
-            v-if="link && value?.name && !props.disableLink"
+            v-if="showLinkIcon"
             class="editable-field__link-icon"
             icon="link"
             size="sm"
@@ -118,6 +118,8 @@ const valueWithDefault = computed(() => {
 
   return props.horizontalView ? props.value : props.value || '-';
 });
+
+const showLinkIcon = computed(() => props.link && props.value?.name && !props.disableLink)
 </script>
 
 <style lang="scss" scoped>
