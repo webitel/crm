@@ -37,6 +37,7 @@
           <wt-item-link
             :link="link"
             :disabled="props.disableLink"
+            :class="{ 'editable-field__link_disabled': props.disableLink }"
             class="editable-field__link"
             target="_blank"
           >
@@ -195,6 +196,11 @@ const valueWithDefault = computed(() => {
       word-break: break-all;
       @extend %typo-subtitle-1;
       color: var(--link-color);
+
+      &_disabled {
+        font-weight: bold;
+        color: var(--text-main-color);
+      }
     }
 
     .editable-field__link-icon,
