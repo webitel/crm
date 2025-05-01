@@ -286,7 +286,7 @@ export default {
     },
     slaRecalculationPopup: {
       title: 'Перерасчет SLA',
-      message: 'После изменения сервиса SLA обращения будет пересчитан.',
+      message: 'После изменения сервиса и сохранения обращения SLA будет пересчитан.',
     },
   },
   filters: {

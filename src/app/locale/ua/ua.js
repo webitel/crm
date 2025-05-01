@@ -293,7 +293,7 @@ export default {
     },
     slaRecalculationPopup: {
       title: 'Перерахунок SLA',
-      message: 'Після зміни сервісу SLA звернення буде перераховано.',
+      message: 'Після зміни сервісу та збереження звернення SLA буде перераховано.',
     },
   },
   filters: {
