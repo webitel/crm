@@ -287,7 +287,7 @@ export default {
     slaRecalculationPopup: {
       title: 'SLA recalculation',
       message:
-        'After changing the service, the SLA of the Case will be recalculated.',
+        'After changing the service and saving, the SLA of the Case will be recalculated.',
     },
   },
   filters: {
