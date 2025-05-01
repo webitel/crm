@@ -140,8 +140,8 @@ const tabs = computed(() => {
   const tabs = [general];
 
   if (id.value) {
-    tabs.push(permissions);
     tabs.push(isDynamicGroup.value ? conditions : contacts);
+    tabs.push(permissions);
   }
 
   return tabs;

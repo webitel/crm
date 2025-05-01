@@ -13,7 +13,7 @@
       <wt-loader v-show="isLoading" />
 
       <wt-empty
-        v-if="!emptyProps.showEmpty"
+        v-if="emptyProps.showEmpty"
         v-bind="emptyProps"
         @click:primary="emptyProps.primaryAction"
       />
@@ -132,7 +132,7 @@ import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, isRef } from 'vue';
 
 interface Props {
   header: string
@@ -172,13 +172,29 @@ const defaultEmptyProps = useTableEmpty({
   isLoading,
 });
 
+/**
+ * @author Oleksandr Palonnyi
+ *
+ * [WTEL-6801](https://webitel.atlassian.net/browse/WTEL-6801)
+ *
+ * the unwrapProps method is used to unwrap the data passed by useTableEmpty,
+ * because if you use ‘return defaultEmptyProps’,
+ * then vue will not be able to unwrap all the necessary props itself through v-bind=“emptyProps”
+ * and the component will not work correctly
+ */
+function unwrapProps(obj) {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, val]) => [key, isRef(val) ? val.value : val])
+  );
+}
+
 const emptyProps = computed(() => {
   if (!props.emptyData) {
-    return defaultEmptyProps;
+    return unwrapProps(defaultEmptyProps)
   }
 
   return deepmerge.all([
-    defaultEmptyProps,
+    unwrapProps(defaultEmptyProps),
     props.emptyData,
   ]);
 });
