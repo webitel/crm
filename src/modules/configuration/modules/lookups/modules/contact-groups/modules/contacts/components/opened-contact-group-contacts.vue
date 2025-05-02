@@ -1,7 +1,7 @@
 <template>
   <section class="table-page">
     <add-contact-in-group-popup
-      :namespace="namespace"
+      :group-ids="[itemInstance?.id]"
       :shown="isShowPopup"
       @close="isShowPopup = false"
       @load-data="loadDataList"
@@ -14,11 +14,15 @@
       @close="closeDelete"
     />
 
-    <contacts-table :header="t('contacts.allContacts', 2)" :table-store="tableStore">
+    <contacts-table
+      :header="t('contacts.allContacts', 2)"
+      :table-store="tableStore"
+      :empty-data="{ primaryAction: () => isShowPopup = true }"
+    >
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
-          :disabled:delete="!hasDeleteAccess"
+          :disabled:delete="!hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
           @click:add="isShowPopup = true"
           @click:refresh="loadDataList"
@@ -132,5 +136,7 @@ watch(() => itemInstance.value?.id, (val) => {
 </script>
 
 <style lang="scss" scoped>
-
+.table-section {
+  height: 100%;
+}
 </style>

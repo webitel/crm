@@ -2,8 +2,7 @@
   <wt-popup
     v-bind="$attrs"
     class="add-contacts-popup"
-    min-width="768"
-    width="1440"
+    size="lg"
     @close="close"
   >
     <template #title>
@@ -15,24 +14,30 @@
     <template #main>
       <div class="add-contacts-popup__filters">
         <wt-search-bar
-          :value="filters.search"
+          :value="filters.name"
           debounce
           @enter="handleFilterChange"
-          @input="filters.search = $event"
+          @input="filters.name = $event"
           @search="handleFilterChange"
         />
 
-        <!--TODO USER SELECT-->
+        <wt-select
+          :options="BooleanOptions"
+          :value="filters.user"
+          :placeholder="t('objects.user')"
+          track-by="value"
+          use-value-from-options-by-prop="value"
+          @input="handleUserSelect"
+        />
 
         <wt-select
           :close-on-select="false"
           :search-method="LabelsAPI.getList"
-          :value="filters.labels"
+          :value="filters.contactLabel"
           :placeholder="t('vocabulary.labels', 1)"
           option-label="label"
           multiple
           track-by="label"
-          use-value-from-options-by-prop="label"
           @input="handleLabelSelect"
         />
 
@@ -47,6 +52,7 @@
         />
 
         <wt-icon-btn
+          :disabled="!hasFilters"
           icon="clear"
           @click="resetFilters"
         />
@@ -157,29 +163,35 @@
 import { useInfiniteScroll } from '@vueuse/core';
 import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts';
 import { SortSymbols, sortToQueryAdapter } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LabelsAPI from '../../../../../../../../_shared/modules/contacts/api/LabelsAPI';
 import ContactGroupsAPI from '../../../api/contactGroups';
 
 const props = defineProps<{
-  namespace: string
+  groupIds: string[]
 }>();
 const emit = defineEmits(['load-data', 'close']);
 
-const { itemInstance } = useCardStore(
-  props.namespace,
-);
-
 const { t } = useI18n();
 
+const BooleanOptions = [
+  {
+    locale: 'vocabulary.yes',
+    value: 'true',
+  },
+  {
+    locale: 'vocabulary.no',
+    value: 'false',
+  },
+]
+
 const getFilters = () => ({
-  search: '',
+  name: '',
   user: null,
   groups: [],
-  labels: [],
+  contactLabel: [],
   sort: '',
 });
 
@@ -212,7 +224,6 @@ const headers = [
     locale: 'reusable.group',
     show: true,
     field: 'groups',
-    // width: '170px',
     sort: SortSymbols.NONE,
   },
 ];
@@ -220,9 +231,18 @@ const dataList = ref([]);
 const selectedContactList = ref([]);
 const page = ref(0);
 const isNext = ref(false);
+const isLoading = ref(false);
 
 const infiniteScrollWrap = ref(null);
 
+const hasFilters = computed(() => {
+  return Object.values(filters.value).some((filter) => {
+    if (Array.isArray(filter)) {
+      return filter.length > 0;
+    }
+    return filter !== null && filter !== '';
+  });
+});
 const disabledSave = computed(() => !selectedContactList.value.length);
 
 function updateSelected(val) {
@@ -240,8 +260,8 @@ async function loadDataList() {
     size,
     ...filters.value,
     fields: headers.map(({ field }) => field),
-    labels: filters.value.labels,
-    groupId: filters.value.groups,
+    contactLabel: filters.value.contactLabel,
+    group: filters.value.groups,
     user: filters.value.user,
     page: page.value,
   };
@@ -252,8 +272,14 @@ async function loadDataList() {
   isNext.value = next;
 }
 
+async function callLoadDataList() {
+  isLoading.value = true;
+  await loadDataList();
+  isLoading.value = false;
+}
+
 function handleLabelSelect(value) {
-  filters.value.labels = value;
+  filters.value.contactLabel = value;
   return handleFilterChange();
 }
 
@@ -287,17 +313,19 @@ function sort(header, nextSortOrder) {
 }
 
 const save = async () => {
-  await ContactGroupsAPI.addContactsToGroup({
-    id: itemInstance.value?.id,
-    contactIds: selectedContactList.value.map(({ id }) => id),
-  });
-  close();
+  for (const id of props.groupIds) {
+    await ContactGroupsAPI.addContactsToGroup({
+      id: id,
+      contactIds: selectedContactList.value.map(({ id }) => id),
+    });
+  }
+  await close();
   emit('load-data');
-  await resetFilters()
 };
 
-function close() {
+async function close() {
   emit('close');
+  await resetFilters()
 }
 
 function resetFilters() {
@@ -306,9 +334,20 @@ function resetFilters() {
   return handleFilterChange();
 }
 
-useInfiniteScroll(infiniteScrollWrap, () => {
-  page.value += 1;
-  loadDataList();
+useInfiniteScroll(infiniteScrollWrap,
+  async () => {
+    if (isLoading.value || !isNext.value) return;
+    page.value += 1;
+    await callLoadDataList();
+  },
+  {
+    distance: 100,
+  }
+);
+
+onMounted(async () => {
+  page.value = 1;
+  await callLoadDataList();
 });
 </script>
 
@@ -330,13 +369,13 @@ useInfiniteScroll(infiniteScrollWrap, () => {
   &__filters {
     display: grid;
     align-items: center;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     grid-template-columns: repeat(4, 1fr) var(--spacing-md);
     gap: var(--spacing-xs);
   }
 
   .scroll-wrap {
-    height: 65vh;
+    height: 440px;
   }
 
   .contacts {

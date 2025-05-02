@@ -37,13 +37,14 @@
           <wt-item-link
             :link="link"
             :disabled="props.disableLink"
+            :class="{ 'editable-field__link_disabled': props.disableLink }"
             class="editable-field__link"
             target="_blank"
           >
             {{ value?.name }}
           </wt-item-link>
           <wt-icon
-            v-if="link && value?.name"
+            v-if="showLinkIcon"
             class="editable-field__link-icon"
             icon="link"
             size="sm"
@@ -117,6 +118,8 @@ const valueWithDefault = computed(() => {
 
   return props.horizontalView ? props.value : props.value || '-';
 });
+
+const showLinkIcon = computed(() => props.link && props.value?.name && !props.disableLink)
 </script>
 
 <style lang="scss" scoped>
@@ -195,6 +198,10 @@ const valueWithDefault = computed(() => {
       word-break: break-all;
       @extend %typo-subtitle-1;
       color: var(--link-color);
+
+      &_disabled {
+        color: var(--text-main-color);
+      }
     }
 
     .editable-field__link-icon,

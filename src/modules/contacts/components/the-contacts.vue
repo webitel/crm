@@ -205,5 +205,9 @@ initialize();
 <style lang="scss" scoped>
 .table-page {
   width: 100%;
+
+  .table-section {
+    height: 100%;
+  }
 }
 </style>
