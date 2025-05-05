@@ -79,18 +79,45 @@ const filterTransformersMap = {
       }, []);
     };
 
+    /* extension datetime fields timestamp is in s, not ms
+     (shorter, less precise, 8 digits instead of 11)  */
+    const extensionDatetimeFieldMultiplier = 1000;
+
     /* then value is magic datetime string */
     if (isRelativeDatetimeValue(value)) {
-      const extensionDatetimeFieldMultiplier = 1000;
-
       const normalizedValue = {
-        from:
+        from: Math.floor(
           normalizeToTimestamp(value, { round: 'start' }) /
-          extensionDatetimeFieldMultiplier,
-        to:
+            extensionDatetimeFieldMultiplier,
+        ),
+        to: Math.ceil(
           normalizeToTimestamp(value, { round: 'end' }) /
-          extensionDatetimeFieldMultiplier,
+            extensionDatetimeFieldMultiplier,
+        ),
       };
+      return makeArrWithStringValuesFromObjectValue(normalizedValue, key);
+    }
+
+    /**
+     * @author @dlohvinov
+     * if..., then assume its a datetime and it should be divided
+     * by extensionDatetimeFieldMultiplier
+     */
+    if (value?.from || value?.to) {
+      const normalizedValue = {};
+
+      if (value.from) {
+        normalizedValue.from = Math.floor(
+          normalizeToTimestamp(value.from) / extensionDatetimeFieldMultiplier,
+        );
+      }
+
+      if (value.to) {
+        normalizedValue.to = Math.ceil(
+          normalizeToTimestamp(value.to) / extensionDatetimeFieldMultiplier,
+        );
+      }
+
       return makeArrWithStringValuesFromObjectValue(normalizedValue, key);
     }
 
