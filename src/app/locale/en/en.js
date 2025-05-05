@@ -246,6 +246,7 @@ export default {
     department: 'Department',
     position: 'Position',
     location: 'Location',
+    serviceValidation: 'Please, select a service first',
     caseInfo: {
       caseInfo: 'Case info',
       contactInfo: 'Contact info',

@@ -253,6 +253,7 @@ export default {
     department: 'Відділ',
     position: 'Посада',
     location: 'Розташування',
+    serviceValidation: 'Будь ласка, виберіть спочатку сервіс',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
@@ -293,7 +294,8 @@ export default {
     },
     slaRecalculationPopup: {
       title: 'Перерахунок SLA',
-      message: 'Після зміни сервісу та збереження звернення SLA буде перераховано.',
+      message:
+        'Після зміни сервісу та збереження звернення SLA буде перераховано.',
     },
   },
   filters: {
