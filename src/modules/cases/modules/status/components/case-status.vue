@@ -222,17 +222,17 @@ async function updateStatusCondition(isValidationRequired = true) {
   }
 }
 
-watch(() => status?.value?.id, updateStatusCondition, {
-  immediate: true,
-  deep: true,
-});
-
 watch(
-  () => serviceId?.value,
-  (newValue, oldValue) => {
-    if (newValue === oldValue) return;
-    updateStatusCondition(false);
+  () => status.value?.id,
+  async (newStatusId, oldStatusId) => {
+    if (!newStatusId) return;
+
+    // NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a stat usCondition.id, on any subsequent status‐change we force the reset
+    const validationRequired = oldStatusId === undefined;
+
+    await updateStatusCondition(validationRequired);
   },
+  { immediate: true },
 );
 </script>
 
