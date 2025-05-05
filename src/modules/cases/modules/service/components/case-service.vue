@@ -25,7 +25,7 @@
             />
           </template>
 
-          {{ t('validation.required') }}
+          {{ t('cases.serviceValidation') }}
         </wt-tooltip>
       </span>
       <span
