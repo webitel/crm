@@ -1,5 +1,9 @@
-import { normalizeToTimestamp } from '@webitel/ui-sdk/scripts';
+import {
+  isRelativeDatetimeValue,
+  normalizeToTimestamp,
+} from '@webitel/ui-sdk/scripts';
 import { startOfToday } from 'date-fns';
+import isObject from 'lodash/isObject';
 
 const filterTransformersMap = {
   createdAt: (createdAt) => {
@@ -69,7 +73,57 @@ const filterTransformersMap = {
   },
   hasAttachment: (value) => `attachments=${value}`,
   others: (value, key) => {
-    return `${key}=${value}`;
+    const makeArrWithStringValuesFromObjectValue = (value, key) => {
+      return Object.entries(value).reduce((strValue, [propKey, propValue]) => {
+        return [...strValue, `${key}.${propKey}=${propValue}`];
+      }, []);
+    };
+
+    /* extension datetime fields timestamp is in s, not ms
+     (shorter, less precise, 8 digits instead of 11)  */
+    const extensionDatetimeFieldMultiplier = 1000;
+
+    /* then value is magic datetime string */
+    if (isRelativeDatetimeValue(value)) {
+      const normalizedValue = {
+        from: Math.floor(
+          normalizeToTimestamp(value, { round: 'start' }) /
+            extensionDatetimeFieldMultiplier,
+        ),
+        to: Math.ceil(
+          normalizeToTimestamp(value, { round: 'end' }) /
+            extensionDatetimeFieldMultiplier,
+        ),
+      };
+      return makeArrWithStringValuesFromObjectValue(normalizedValue, key);
+    }
+
+    /**
+     * @author @dlohvinov
+     * if..., then assume its a datetime and it should be divided
+     * by extensionDatetimeFieldMultiplier
+     */
+    if (value?.from || value?.to) {
+      const normalizedValue = {};
+
+      if (value.from) {
+        normalizedValue.from = Math.floor(
+          normalizeToTimestamp(value.from) / extensionDatetimeFieldMultiplier,
+        );
+      }
+
+      if (value.to) {
+        normalizedValue.to = Math.ceil(
+          normalizeToTimestamp(value.to) / extensionDatetimeFieldMultiplier,
+        );
+      }
+
+      return makeArrWithStringValuesFromObjectValue(normalizedValue, key);
+    }
+
+    if (!isObject(value) || Array.isArray(value)) return `${key}=${value}`;
+
+    return makeArrWithStringValuesFromObjectValue(value, key);
   },
 };
 
