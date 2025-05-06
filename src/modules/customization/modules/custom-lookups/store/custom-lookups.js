@@ -69,7 +69,7 @@ const defaultFields = [
   },
   {
     id: 'description',
-    name: 'Description',
+    name: 'vocabulary.description',
     kind: 'string',
   },
 ];

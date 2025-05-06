@@ -200,7 +200,7 @@ export default {
         'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
       controlPermissions: 'Контролювати права доступу',
       field: {
-        id: 'Ід',
+        id: 'ID',
         name: ({ linked }) => linked('reusable.name'),
         createdAt: ({ linked }) => linked('reusable.createdAt'),
         createdBy: ({ linked }) => linked('reusable.createdBy'),
