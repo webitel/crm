@@ -115,6 +115,7 @@ import {
 import {
   useTableEmpty,
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import WtTable from '@webitel/ui-sdk/src/components/wt-table/wt-table.vue';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import deepCopy from 'deep-copy';
 import Sortable, { Swap } from 'sortablejs';
@@ -147,17 +148,16 @@ const { t } = useI18n();
 const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 
 const sortFields = (fields) => {
-  const unSortableFields = fields?.filter((field) => !field.position);
+  const unSortableFields = deepCopy(fields)?.filter((field) => !field.position);
 
-  const copyFields = deepCopy(fields)
-    .filter((field) => field.position)
-    .sort((a, b) => {
-      return a.position - b.position;
-    });
+  fields
+  .filter((field) => field.position)
+  .sort((a, b) => {
+    return a.position - b.position;
+  })
+  .splice(1, 0, ...unSortableFields);
 
-  copyFields.splice(1, 0, ...unSortableFields);
-
-  return copyFields;
+  return fields;
 };
 
 const fields = computed(() => {
