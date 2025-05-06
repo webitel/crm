@@ -193,7 +193,7 @@ export default {
         'After deleting the column and saving, all the entered data in the corresponding field will be deleted as well.',
       controlPermissions: 'Control permissions',
       field: {
-        id: 'Id',
+        id: 'ID',
         name: ({ linked }) => linked('reusable.name'),
         createdAt: ({ linked }) => linked('reusable.createdAt'),
         createdBy: ({ linked }) => linked('reusable.createdBy'),

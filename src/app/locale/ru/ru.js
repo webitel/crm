@@ -193,7 +193,7 @@ export default {
         'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
       controlPermissions: 'Контролировать права доступа',
       field: {
-        id: 'Ид',
+        id: 'ID',
         name: ({ linked }) => linked('reusable.name'),
         createdAt: ({ linked }) => linked('reusable.createdAt'),
         createdBy: ({ linked }) => linked('reusable.createdBy'),
