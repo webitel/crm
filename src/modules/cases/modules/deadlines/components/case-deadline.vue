@@ -8,7 +8,7 @@
         v-if="time"
         class="case-deadline__value-wrapper"
       >
-        <span>{{ prettifyDate(time) }}</span>
+        <span>{{ prettifyDate(time, 'UTC') }}</span>
       </div>
       <span
         v-if="showTimeDifference"
