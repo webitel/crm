@@ -138,12 +138,13 @@ async function loadStaticContactGroupsList(params) {
 async function loadContacts(params) {
   return await ContactsAPI.getLookup({
     ...params,
-    groupId: itemInstance.value.group?.id,
+    group: itemInstance.value.group?.id,
   });
 }
 
 async function setGroups(value) {
   await setItemProp({ path: 'group', value });
+  contactList.value = [];
 
   if (!IsEmpty(itemInstance.value.assignee)) {
     await setItemProp({ path: 'assignee', value: '' });
