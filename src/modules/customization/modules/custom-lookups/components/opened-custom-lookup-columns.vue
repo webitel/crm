@@ -148,7 +148,7 @@ const { t } = useI18n();
 const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 
 const sortFields = (fields) => {
-  const unSortableFields = deepCopy(fields)?.filter((field) => !field.position);
+  const unSortableFields = fields.filter((field) => !field.position);
 
   fields
   .filter((field) => field.position)
