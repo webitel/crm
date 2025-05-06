@@ -17,7 +17,7 @@
       <span class="case-service__title">
         {{ t('cases.service') }}
 
-        <wt-tooltip v-if="!servicePath">
+        <wt-tooltip>
           <template #activator>
             <wt-icon
               icon="attention"
