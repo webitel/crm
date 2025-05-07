@@ -7,21 +7,25 @@
         :title="t('reusable.createdAt')"
       />
       <case-deadline
+        :time-zone="'UTC'"
         :time="itemInstance?.plannedReactionAt"
         :title="t('cases.reactionTime')"
       />
       <case-deadline
+        :time-zone="'UTC'"
         :time-difference="itemInstance?.reactedAt ? (itemInstance?.differenceInReaction || 0) : null"
         :time="itemInstance?.reactedAt"
         :title="t('cases.actualReactionTime')"
       />
 
       <case-deadline
+        :time-zone="'UTC'"
         :time="itemInstance?.plannedResolveAt"
         :title="t('cases.resolutionTime')"
       />
 
       <case-deadline
+        :time-zone="'UTC'"
         :time-difference="itemInstance?.resolvedAt ? (itemInstance.differenceInResolve || 0) : null"
         :time="itemInstance.resolvedAt"
         :title="t('cases.actualResolutionTime')"
