@@ -187,7 +187,6 @@ const search = ref('');
 
 const selected = ref([]);
 const setSelected = (selectedElements) => {
-  console.log('setSelected');
   selected.value = selectedElements;
 };
 
