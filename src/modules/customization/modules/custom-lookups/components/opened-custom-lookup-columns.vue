@@ -260,7 +260,7 @@ const initSortable = (wrapper) => {
       } // No need to swap if indexes are the same
 
       // We need sort array before change position
-      const changePositionArray = deepCopy(getFieldsForSortable()).sort(
+      const changePositionArray = getFieldsForSortable().toSorted(
         (a, b) => a.position - b.position,
       );
 
