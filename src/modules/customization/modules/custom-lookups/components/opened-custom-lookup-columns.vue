@@ -106,6 +106,7 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import WtTable from '@webitel/ui-sdk/src/components/wt-table/wt-table.vue';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -115,7 +116,6 @@ import {
 import {
   useTableEmpty,
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import WtTable from '@webitel/ui-sdk/src/components/wt-table/wt-table.vue';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import deepCopy from 'deep-copy';
 import Sortable, { Swap } from 'sortablejs';
@@ -150,14 +150,15 @@ const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 const sortFields = (fields) => {
   const unSortableFields = fields?.filter((field) => !field.position);
 
-  fields
+  const sortedFields = fields
   .filter((field) => field.position)
-  .sort((a, b) => {
+  .toSorted((a, b) => {
     return a.position - b.position;
-  })
-  .splice(1, 0, ...unSortableFields);
+  });
 
-  return fields;
+  sortedFields.unshift(...unSortableFields);
+
+  return sortedFields;
 };
 
 const fields = computed(() => {
