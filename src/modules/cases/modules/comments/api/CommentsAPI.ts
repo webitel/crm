@@ -50,6 +50,7 @@ const getCommentsList = async ({ parentId, ...rest }) => {
         'created_by',
         'author',
         'can_edit',
+        'edited',
       ],
       options,
     );
