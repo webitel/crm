@@ -392,6 +392,12 @@ watch(
     deep: true,
   },
 );
+watch(
+  () => itemInstance.value,
+  () => {
+    setSelected([]);
+  },
+);
 
 // IMPORTANT that watch trigger for isLoading, because we need to wait until all data will be loaded and then call sortable
 watch(
