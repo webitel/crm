@@ -202,8 +202,16 @@ const formState = reactive({
   linkUrl: '',
 });
 
+function requiredIfIsAdding(value, state, siblings) {
+  if (!formState.isAdding) {
+    return true;
+  }
+
+  return required.$validator(value, state, siblings);
+}
+
 const rules = computed(() => ({
-  linkUrl: { required, url },
+  linkUrl: { requiredIfIsAdding, url },
 }));
 
 const v$ = useVuelidate(rules, formState);
