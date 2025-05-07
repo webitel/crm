@@ -106,6 +106,7 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import WtTable from '@webitel/ui-sdk/src/components/wt-table/wt-table.vue';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -149,15 +150,15 @@ const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 const sortFields = (fields) => {
   const unSortableFields = fields?.filter((field) => !field.position);
 
-  const copyFields = deepCopy(fields)
-    .filter((field) => field.position)
-    .sort((a, b) => {
-      return a.position - b.position;
-    });
+  const sortedFields = fields
+  .filter((field) => field.position)
+  .toSorted((a, b) => {
+    return a.position - b.position;
+  });
 
-  copyFields.splice(1, 0, ...unSortableFields);
+  sortedFields.unshift(...unSortableFields);
 
-  return copyFields;
+  return sortedFields;
 };
 
 const fields = computed(() => {
@@ -390,6 +391,12 @@ watch(
   },
   {
     deep: true,
+  },
+);
+watch(
+  () => itemInstance.value,
+  () => {
+    setSelected([]);
   },
 );
 
