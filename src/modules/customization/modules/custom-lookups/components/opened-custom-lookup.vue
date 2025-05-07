@@ -1,6 +1,5 @@
 <template>
   <wt-page-wrapper
-    class="table-page"
     :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
