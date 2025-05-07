@@ -8,7 +8,7 @@
         v-if="time"
         class="case-deadline__value-wrapper"
       >
-        <span>{{ prettifyDate(time) }}</span>
+        <span>{{ prettifyDate(time, props.timeZone) }}</span>
       </div>
       <span
         v-if="showTimeDifference"
@@ -41,6 +41,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  timeZone: {
+    type: String,
+    default: undefined,
+  }
 });
 
 const showTimeDifference = computed(() => {
