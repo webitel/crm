@@ -101,7 +101,7 @@ const v$ = useVuelidate(
     },
   })),
   { itemInstance },
-  { $autoDirty: true },
+  { $autoDirty: true, $stopPropagation: true },
 );
 
 v$.value.$touch();
