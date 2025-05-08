@@ -120,7 +120,7 @@ const v$ = useVuelidate(computed(() => ({
     reactionTime: { required, minValue: minValue(1) },
     resolutionTime: { required, minValue: minValue(1) },
   },
-})), { itemInstance }, { $autoDirty: true });
+})), { itemInstance }, { $autoDirty: true, $stopPropagation: true });
 
 v$.value.$touch();
 
