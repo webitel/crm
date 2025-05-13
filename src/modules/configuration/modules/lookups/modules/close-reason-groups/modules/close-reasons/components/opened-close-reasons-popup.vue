@@ -88,7 +88,7 @@ const v$ = useVuelidate(computed(() => ({
   itemInstance: {
     name: { required },
   },
-})), { itemInstance }, { $autoDirty: true });
+})), { itemInstance }, { $autoDirty: true, $stopPropagation: true });
 
 v$.value.$touch();
 
