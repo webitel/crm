@@ -1,4 +1,3 @@
-import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import { type RouteRecordRaw } from 'vue-router';
 
@@ -51,8 +50,6 @@ const caseViewRoute: RouteRecordRaw[] = [
     component: OpenedCaseWrapper,
     redirect: { name: `${CASE_VIEW_NAME}-case-info` },
     meta: {
-      WtObject: WtObject.Case,
-      UiSection: CrmSections.Cases,
       hideHeader: true,
     },
     children: casesChildrenRoutes,
