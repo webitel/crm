@@ -30,9 +30,14 @@ const routes: Array<RouteRecordRaw> = [
       ...contactsRoutes,
       ...configurationRoutes,
       ...customizationRoutes,
-      ...contactViewRoute,
-      ...caseViewRoute,
     ],
+  },
+  {
+    path: '/view',
+    name: 'crm-view',
+    redirect: { name: 'the-start-page' },
+    component: TheCrmWorkspace,
+    children: [...contactViewRoute, ...caseViewRoute],
   },
   {
     path: '/access-denied',
