@@ -35,10 +35,10 @@
           }}
         </template>
         <template #app="{ item }">
-          {{ item.app.name }}
+          {{ item.app?.name }}
         </template>
         <template #user="{ item }">
-          {{ item.user.name }}
+          {{ item.user?.name }}
         </template>
         <template #actions="{ item }">
           <wt-icon-action
@@ -130,6 +130,7 @@ const iconType = {
   [ChatGatewayProvider.WEBCHAT]: 'messenger-web-chat',
   [ChatGatewayProvider.INFOBIP]: 'messenger-infobip',
   [ChatGatewayProvider.CUSTOM]: 'custom-chat-gateway',
+  [ChatGatewayProvider.PROTOCOL]: 'protocol',
 };
 </script>
 
