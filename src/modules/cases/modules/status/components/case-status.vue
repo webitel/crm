@@ -12,7 +12,7 @@
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-select
         :key="status?.id"
-        :disabled="disableUserInput"
+        :disabled="disableStatusSelect"
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
@@ -53,12 +53,15 @@ import CaseResultPopup from './case-result-popup.vue';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
+const isReadOnly = inject('isReadOnly');
 const v$ = inject('v$');
 
 const { t } = useI18n();
 const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
+
+const disableStatusSelect = computed(() => disableUserInput.value && !isReadOnly)
 
 const {
   namespace: cardNamespace,
@@ -139,10 +142,6 @@ const getIndicatorColor = (option) => {
 };
 
 const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
-
-const serviceId = computed(
-  () => store.getters[`${cardNamespace}/service/SERVICE_ID`],
-);
 
 const fetchStatusConditions = async (params) => {
   if (!status?.value?.id) {

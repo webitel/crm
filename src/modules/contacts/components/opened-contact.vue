@@ -130,6 +130,19 @@ async function initializeCard() {
     const { id: itemId } = route.params;
     await setId(itemId);
     await loadItem();
+
+    /**
+     * @author Oleksandr Palonnyi
+     *
+     * [WTEL-6929](https://webitel.atlassian.net/browse/WTEL-6929)
+     *
+     * we need to set parentId as itemInstance.id because in readOnly mode we have etag instead of id in route params
+     * and the rest of request do not work with etag
+     *
+     * */
+    if (isReadOnly) {
+      await setId(itemInstance.value?.id);
+    }
   } finally {
     setTimeout(() => {
       isLoading.value = false;
