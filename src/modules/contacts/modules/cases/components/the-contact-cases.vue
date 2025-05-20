@@ -70,6 +70,7 @@
           <a
             target="_blank"
             :href="contactCase(item.id)"
+            :class="{ 'contact-cases__link_disabled' : isReadOnly }"
             class="contact-cases__link"
           >
             <div class="contact-cases__link-content">
@@ -88,6 +89,7 @@
           <a
             target="_blank"
             :href="contactCase(item.id)"
+            :class="{ 'contact-cases__link_disabled' : isReadOnly }"
             class="contact-cases__link"
           >
             {{ item.subject }}
@@ -182,7 +184,7 @@ import {
   useTableEmpty,
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
@@ -195,6 +197,7 @@ import { ContactCasesNamespace } from '../namespace';
 import { useContactCasesStore } from '../stores/cases';
 import { useContactCaseFilterPresetsStore } from '../stores/useContactCaseFilterPresetsStore';
 
+const isReadOnly = inject('isReadOnly');
 const store = useStore();
 
 const tableStore = useContactCasesStore();
@@ -282,6 +285,11 @@ const anyFiltersOnFiltersPanel = computed(() => {
 
   &__link {
     color: var(--text-main-color);
+
+    &_disabled {
+      pointer-events: none;
+      color: var(--text-main-color);
+    }
   }
 
   &__link-content {
