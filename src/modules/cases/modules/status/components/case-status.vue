@@ -61,7 +61,7 @@ const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
 
-const disableStatusSelect = computed(() => disableUserInput.value && !isReadOnly)
+const disableStatusSelect = computed(() => disableUserInput.value || isReadOnly)
 
 const {
   namespace: cardNamespace,
