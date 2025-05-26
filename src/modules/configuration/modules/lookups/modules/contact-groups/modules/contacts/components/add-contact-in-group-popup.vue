@@ -12,50 +12,57 @@
     </template>
 
     <template #main>
+      <table-filters-panel
+        :filters-manager="filtersManager"
+        :filter-options="filterOptions"
+        @filter:add="(payload) => filtersManager.addFilter(payload)"
+        @filter:update="(payload) => filtersManager.updateFilter(payload)"
+        @filter:delete="(payload) => filtersManager.deleteFilter(payload)"
+      />
       <div class="add-contacts-popup__filters">
-        <wt-search-bar
-          :value="filters.name"
-          debounce
-          @enter="handleFilterChange"
-          @input="filters.name = $event"
-          @search="handleFilterChange"
-        />
+<!--        <wt-search-bar-->
+<!--          :value="filters.name"-->
+<!--          debounce-->
+<!--          @enter="handleFilterChange"-->
+<!--          @input="filters.name = $event"-->
+<!--          @search="handleFilterChange"-->
+<!--        />-->
 
-        <wt-select
-          :options="BooleanOptions"
-          :value="filters.user"
-          :placeholder="t('objects.user')"
-          track-by="value"
-          use-value-from-options-by-prop="value"
-          @input="handleUserSelect"
-        />
+<!--        <wt-select-->
+<!--          :options="BooleanOptions"-->
+<!--          :value="filters.user"-->
+<!--          :placeholder="t('objects.user')"-->
+<!--          track-by="value"-->
+<!--          use-value-from-options-by-prop="value"-->
+<!--          @input="handleUserSelect"-->
+<!--        />-->
 
-        <wt-select
-          :close-on-select="false"
-          :search-method="LabelsAPI.getList"
-          :value="filters.contactLabel"
-          :placeholder="t('vocabulary.labels', 1)"
-          option-label="label"
-          multiple
-          track-by="label"
-          @input="handleLabelSelect"
-        />
+<!--        <wt-select-->
+<!--          :close-on-select="false"-->
+<!--          :search-method="LabelsAPI.getList"-->
+<!--          :value="filters.contactLabel"-->
+<!--          :placeholder="t('vocabulary.labels', 1)"-->
+<!--          option-label="label"-->
+<!--          multiple-->
+<!--          track-by="label"-->
+<!--          @input="handleLabelSelect"-->
+<!--        />-->
 
-        <wt-select
-          :close-on-select="false"
-          :search-method="ContactGroupsAPI.getLookup"
-          :value="filters.groups"
-          :placeholder="t('reusable.group')"
-          multiple
-          use-value-from-options-by-prop="id"
-          @input="handleGroupSelect"
-        />
+<!--        <wt-select-->
+<!--          :close-on-select="false"-->
+<!--          :search-method="ContactGroupsAPI.getLookup"-->
+<!--          :value="filters.groups"-->
+<!--          :placeholder="t('reusable.group')"-->
+<!--          multiple-->
+<!--          use-value-from-options-by-prop="id"-->
+<!--          @input="handleGroupSelect"-->
+<!--        />-->
 
-        <wt-icon-btn
-          :disabled="!hasFilters"
-          icon="clear"
-          @click="resetFilters"
-        />
+<!--        <wt-icon-btn-->
+<!--          :disabled="!hasFilters"-->
+<!--          icon="clear"-->
+<!--          @click="resetFilters"-->
+<!--        />-->
       </div>
 
       <div
@@ -161,18 +168,32 @@
 
 <script lang="ts" setup>
 import { useInfiniteScroll } from '@vueuse/core';
+import { createFilterConfig,createFiltersManager, TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts';
 import { SortSymbols, sortToQueryAdapter } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LabelsAPI from '../../../../../../../../_shared/modules/contacts/api/LabelsAPI';
+// import { filtersOptions } from '../../../../../../../../cases/configs/filtersOptions';
 import ContactGroupsAPI from '../../../api/contactGroups';
 
 const props = defineProps<{
   groupIds: string[]
 }>();
 const emit = defineEmits(['load-data', 'close']);
+
+const filtersManager = ref(createFiltersManager());
+const filterOptions = [
+  createFilterConfig({
+    name: 'hasUser',
+    staticView: true,
+  }),
+];
+
+watch(filtersManager, (value) => {
+  console.info('value changed', value);
+}, { deep: true });
 
 const { t } = useI18n();
 
