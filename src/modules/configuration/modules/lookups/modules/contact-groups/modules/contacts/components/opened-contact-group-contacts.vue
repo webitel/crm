@@ -2,6 +2,7 @@
   <section class="table-page">
     <add-contacts-in-group-popup
       :group-ids="[itemInstance?.id]"
+      @load-data="loadDataList"
     />
 
     <delete-confirmation-popup
