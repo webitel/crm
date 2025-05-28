@@ -8,11 +8,17 @@ export const filtersOptions: FilterConfigDefinition[] = [
   createFilterConfig({
     name: FilterOption.ContactGroup,
     hideUnassigned: true,
+    noValidation: true,
+    hideLabel: true,
   }),
-  FilterOption.ContactOwner,
-  FilterOption.ContactLabel,
   createFilterConfig({
     name: FilterOption.HasUser,
-    notDeletable: true,
+    noValidation: true,
+    hideLabel: true,
+  }),
+  createFilterConfig({
+    name: FilterOption.ContactLabel,
+    noValidation: true,
+    hideLabel: true,
   }),
 ];
