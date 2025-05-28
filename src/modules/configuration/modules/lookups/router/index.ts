@@ -9,6 +9,7 @@ import OpenedCloseReasons from '../modules/close-reason-groups/modules/close-rea
 import OpenedContactGroup from '../modules/contact-groups/components/opened-contact-group.vue';
 import OpenedContactGroupGeneral from '../modules/contact-groups/components/opened-contact-group-general.vue';
 import TheContactGroups from '../modules/contact-groups/components/the-contact-groups.vue';
+import AddContactsInGroup from '../modules/contact-groups/modules/add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 import OpenedContactGroupsConditions from '../modules/contact-groups/modules/conditions/components/opened-contact-group-conditions.vue';
 import OpenedContactGroupsContacts from '../modules/contact-groups/modules/contacts/components/opened-contact-group-contacts.vue';
 import OpenedCustomLookupRecord from '../modules/custom-lookup/components/opened-custom-lookup-record.vue';
@@ -217,6 +218,13 @@ const lookupsRoutes: RouteRecordRaw[] = [
             path: 'contacts/:contactId?',
             name: `${CrmSections.ContactGroups}-contacts`,
             component: OpenedContactGroupsContacts,
+            children: [
+              {
+                path: 'add-contacts-in-group',
+                name: `${CrmSections.ContactGroups}-contacts-list`,
+                component: AddContactsInGroup,
+              },
+            ],
           },
           {
             path: 'permissions/:permissionId?',

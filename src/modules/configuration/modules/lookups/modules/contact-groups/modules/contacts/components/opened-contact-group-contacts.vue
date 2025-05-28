@@ -1,10 +1,7 @@
 <template>
   <section class="table-page">
-    <add-contact-in-group-popup
+    <add-contacts-in-group-popup
       :group-ids="[itemInstance?.id]"
-      :shown="isShowPopup"
-      @close="isShowPopup = false"
-      @load-data="loadDataList"
     />
 
     <delete-confirmation-popup
@@ -17,14 +14,14 @@
     <contacts-table
       :header="t('contacts.allContacts', 2)"
       :table-store="tableStore"
-      :empty-data="{ primaryAction: () => isShowPopup = true }"
+      :empty-data="{ primaryAction: () => addContactInGroup }"
     >
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
           :disabled:delete="!hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="isShowPopup = true"
+          @click:add="addContactInGroup"
           @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
@@ -71,14 +68,16 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
+import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
+import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 import { useContactsGroupContactsStore } from '../stores/contacts';
-import AddContactInGroupPopup from './add-contact-in-group-popup.vue';
 
 const props = defineProps<{
   namespace: string,
@@ -90,7 +89,7 @@ const { itemInstance } = useCardStore(
   props.namespace,
 );
 
-const isShowPopup = ref(false);
+const router = useRouter();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -120,6 +119,12 @@ const {
 const deleteEls = async (ids: string[]) => {
   await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
   await loadDataList()
+}
+
+const addContactInGroup = () => {
+  return router.push({
+    name: `${CrmSections.CONTACT_GROUPS}-contacts-list`,
+  });
 }
 
 watch(() => itemInstance.value?.id, (val) => {
