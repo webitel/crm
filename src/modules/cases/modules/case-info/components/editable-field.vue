@@ -34,15 +34,17 @@
           {{ valueWithDefault }}
         </span>
         <template v-else>
-          <wt-item-link
-            :link="link"
-            :disabled="props.disableLink"
-            :class="{ 'editable-field__link_disabled': props.disableLink }"
-            class="editable-field__link"
-            target="_blank"
-          >
-            {{ value?.name }}
-          </wt-item-link>
+          <div @click="onLinkAction">
+            <wt-item-link
+              :link="link"
+              :disabled="props.disableLink"
+              :class="{ 'editable-field__link_disabled': props.disableLink }"
+              class="editable-field__link"
+              target="_blank"
+            >
+              {{ value?.name }}
+            </wt-item-link>
+          </div>
           <wt-icon
             v-if="showLinkIcon"
             class="editable-field__link-icon"
@@ -105,7 +107,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:value']);
+const emit = defineEmits(['update:value', 'on-link-action']);
 
 const updateValue = (newValue) => {
   emit('update:value', newValue);
@@ -120,6 +122,23 @@ const valueWithDefault = computed(() => {
 });
 
 const showLinkIcon = computed(() => props.link && props.value?.name && !props.disableLink)
+
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * Added this function to rewrite default behaviour of wt-action-link,
+ * because of case-persons has logic to redirect to contact card in read-only mode with etag,
+ * that get with API by clicking on the link.
+ * */
+const onLinkAction = (e) => {
+  if (props.disableLink) {
+    return;
+  }
+
+  e.preventDefault()
+  e.stopPropagation();
+  emit('on-link-action');
+}
 </script>
 
 <style lang="scss" scoped>
