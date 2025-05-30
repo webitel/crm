@@ -35,7 +35,7 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
@@ -46,6 +46,11 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useCaseSourcesFormStore } from '../stores/caseSources';
+
+const formStore = useCaseSourcesFormStore();
+
+const {} = store
 
 const namespace = 'configuration/lookups/sources';
 const { t } = useI18n();
