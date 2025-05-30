@@ -130,7 +130,7 @@ const iconType = {
   [ChatGatewayProvider.WEBCHAT]: 'messenger-web-chat',
   [ChatGatewayProvider.INFOBIP]: 'messenger-infobip',
   [ChatGatewayProvider.CUSTOM]: 'custom-chat-gateway',
-  [ChatGatewayProvider.PROTOCOL]: 'protocol',
+  [ChatGatewayProvider.PORTAL]: 'portal',
 };
 </script>
 
