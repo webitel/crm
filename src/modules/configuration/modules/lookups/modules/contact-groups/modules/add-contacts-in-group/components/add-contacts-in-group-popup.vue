@@ -13,83 +13,85 @@
     </template>
 
     <template #main>
-      <div class="add-contacts-in-group-popup__filters">
-        <add-contact-in-group-search-bar />
-        <add-contacts-in-group-filters-panel />
-      </div>
+      <div class="add-contacts-in-group-popup__content">
+        <div class="add-contacts-in-group-popup__filters">
+          <add-contact-in-group-search-bar />
+          <add-contacts-in-group-filters-panel />
+        </div>
 
-      <div
-        ref="infiniteScrollWrap"
-        class="add-contacts-in-group-popup__scroll-wrapper"
-      >
-        <wt-table
-          :data="dataList"
-          :headers="headers"
-          :selected="selected"
-          sortable
-          @sort="updateSort"
-          @update:selected="updateSelected"
+        <div
+          ref="infiniteScrollWrap"
+          class="add-contacts-in-group-popup__scroll-wrapper"
         >
-          <template #name="{ item }">
-            <div class="add-contacts-in-group-popup__username-wrapper">
-              <wt-avatar
-                size="xs"
-                :username="item.name"
+          <wt-table
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="updateSort"
+            @update:selected="updateSelected"
+          >
+            <template #name="{ item }">
+              <div class="add-contacts-in-group-popup__username-wrapper">
+                <wt-avatar
+                  size="xs"
+                  :username="item.name"
+                />
+                {{ item.name }}
+              </div>
+            </template>
+
+            <template #user="{ item }">
+              <wt-icon
+                v-if="item.user"
+                icon="webitel-logo"
               />
-              {{ item.name }}
-            </div>
-          </template>
+            </template>
 
-          <template #user="{ item }">
-            <wt-icon
-              v-if="item.user"
-              icon="webitel-logo"
-            />
-          </template>
-
-          <template #groups="{ item }">
-            <div
-              v-if="item.groups"
-              class="contacts-groups"
-            >
-              <p>
-                {{ item.groups[0]?.name }}
-              </p>
-
-              <wt-tooltip
-                v-if="item.groups.length > 1"
-                :triggers="['click']"
+            <template #groups="{ item }">
+              <div
+                v-if="item.groups"
+                class="contacts-groups"
               >
-                <template #activator>
-                  <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
-                </template>
+                <p>
+                  {{ item.groups[0]?.name }}
+                </p>
 
-                <div class="add-contacts-in-group-popup__group-wrapper">
-                  <p
-                    v-for="(group, idx) of item.groups.slice(1)"
-                    :key="idx"
-                  >
-                    {{ group.name }}
-                  </p>
-                </div>
-              </wt-tooltip>
-            </div>
-          </template>
+                <wt-tooltip
+                  v-if="item.groups.length > 1"
+                  :triggers="['click']"
+                >
+                  <template #activator>
+                    <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
+                  </template>
 
-          <template #labels="{ item }">
-            <div
-              v-if="item.labels"
-              class="add-contacts-in-group-popup__labels-wrapper"
-            >
-              <wt-chip
-                v-for="{ label, id } of item.labels"
-                :key="id"
+                  <div class="add-contacts-in-group-popup__group-wrapper">
+                    <p
+                      v-for="(group, idx) of item.groups.slice(1)"
+                      :key="idx"
+                    >
+                      {{ group.name }}
+                    </p>
+                  </div>
+                </wt-tooltip>
+              </div>
+            </template>
+
+            <template #labels="{ item }">
+              <div
+                v-if="item.labels"
+                class="add-contacts-in-group-popup__labels-wrapper"
               >
-                {{ label }}
-              </wt-chip>
-            </div>
-          </template>
-        </wt-table>
+                <wt-chip
+                  v-for="{ label, id } of item.labels"
+                  :key="id"
+                >
+                  {{ label }}
+                </wt-chip>
+              </div>
+            </template>
+          </wt-table>
+        </div>
       </div>
     </template>
 
@@ -112,10 +114,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useInfiniteScroll } from '@vueuse/core';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { storeToRefs } from 'pinia';
-import { computed,onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -137,17 +140,24 @@ const {
   dataList,
   selected,
   headers,
+  isLoading,
+  next,
+  page,
 } = storeToRefs(tableStore);
 
 const {
   initialize,
   updateSort,
   updateSelected,
+  infiniteLoadDataList,
 } = tableStore;
 
 onMounted(() => {
   initialize();
 });
+
+const route = useRoute();
+const infiniteScrollWrap = ref(null);
 
 const save = async () => {
   for (const id of props.groupIds) {
@@ -161,16 +171,23 @@ const save = async () => {
 };
 
 const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-contacts`);
-const route = useRoute();
 
 const closePopup = () => {
   close();
-  if(selected.value.length) updateSelected([])
+  if (selected.value.length) updateSelected([]);
 };
 
 const isContactListInPath = computed(() => {
   return route.path.includes('add-contacts-in-group');
 });
+
+useInfiniteScroll(infiniteScrollWrap,
+  async () => {
+    if (isLoading.value || !next.value) return;
+    await infiniteLoadDataList();
+  },
+  { distance: 100 },
+);
 
 </script>
 
@@ -184,13 +201,19 @@ const isContactListInPath = computed(() => {
     overflow: auto;
   }
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
   &__filters,
   &__group-wrapper {
     display: flex;
     gap: var(--spacing-xs);
   }
 
-  &__labels-wrapper{
+  &__labels-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-2xs);
