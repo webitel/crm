@@ -13,17 +13,14 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.reporter')"
-        :link="{
-          name: `${CrmSections.CONTACTS}-card`,
-          params: { id: itemInstance.reporter?.id },
-        }"
-        :disable-link="isReadOnly"
+        :link="getContactLinkPreview(itemInstance.reporter?.id)"
         :value="itemInstance.reporter"
         color="info"
         icon="reporter"
         horizontal-view
         required
         @update:value="handleReporterInput"
+        @on-link-action="getContactLink(itemInstance.reporter?.id)"
       >
         <template #default="props">
           <wt-select
@@ -40,15 +37,12 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.impacted')"
-        :link="{
-          name: `${CrmSections.CONTACTS}-card`,
-          params: { id: itemInstance.impacted?.id },
-        }"
-        :disable-link="isReadOnly"
         :value="itemInstance.impacted"
+        :link="getContactLinkPreview(itemInstance.impacted?.id)"
         icon="impacted"
         horizontal-view
         @update:value="setItemProp({ path: 'impacted', value: $event })"
+        @on-link-action="getContactLink(itemInstance.impacted?.id)"
       >
         <template #default="props">
           <wt-select
@@ -64,11 +58,7 @@
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.assignee')"
-        :link="{
-          name: `${CrmSections.CONTACTS}-card`,
-          params: { id: itemInstance.assignee?.id },
-        }"
-        :disable-link="isReadOnly"
+        :link="getContactLinkPreview(itemInstance.assignee?.id)"
         :value="itemInstance.assignee"
         color="success"
         icon="assignee"
@@ -79,6 +69,7 @@
             value: { id: $event.id, name: $event.name },
           })
         "
+        @on-link-action="getContactLink(itemInstance.assignee?.id)"
       >
         <template #default="props">
           <wt-select
@@ -123,6 +114,7 @@ import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/compos
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
@@ -133,6 +125,7 @@ import EditableField from '../../case-info/components/editable-field.vue';
 
 const store = useStore();
 const { t } = useI18n();
+const router = useRouter()
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
@@ -218,6 +211,41 @@ watch(
   },
   { deep: true },
 );
+
+const CONTACT_VIEW_NAME = 'contact_view';
+const linkData = (name, id) => {
+  return {
+    name,
+    params: { id },
+  }
+}
+
+const getContactLinkPreview = (id) => {
+  if (!isReadOnly) {
+    return linkData(`${CrmSections.CONTACTS}-card`, id)
+  }
+
+  return linkData(CONTACT_VIEW_NAME, ':etag')
+}
+
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * This function opens a new tab with the contact link. This is made to handle read-only mode
+ * in which we must pass etag instead of id, and etag we can get only from the API while clicking on link.
+ * */
+const getContactLink = async (id) => {
+  if (!isReadOnly) {
+    const url = router.resolve(linkData(`${CrmSections.CONTACTS}-card`, id)).href
+    window.open(url, '_blank', 'noopener')
+    return
+  }
+
+  const { etag } = await ContactsAPI.get({ itemId: id })
+  const url = router.resolve(linkData(CONTACT_VIEW_NAME, etag)).href
+
+  window.open(url, '_blank', 'noopener')
+}
 </script>
 
 <style lang="scss" scoped>
