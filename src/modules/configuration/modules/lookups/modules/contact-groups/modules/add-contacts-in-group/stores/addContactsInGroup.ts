@@ -9,6 +9,6 @@ export const useAddContactsInGroupStore = createTableStore(
   {
     apiModule: ContactsAPI,
     headers,
-    enableInfiniteScroll: true,
+    isAppendDataList: true,
   },
 );

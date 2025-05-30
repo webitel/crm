@@ -149,7 +149,7 @@ const {
   initialize,
   updateSort,
   updateSelected,
-  infiniteLoadDataList,
+  appendToDataList,
 } = tableStore;
 
 onMounted(() => {
@@ -184,7 +184,7 @@ const isContactListInPath = computed(() => {
 useInfiniteScroll(infiniteScrollWrap,
   async () => {
     if (isLoading.value || !next.value) return;
-    await infiniteLoadDataList();
+    await appendToDataList();
   },
   { distance: 100 },
 );
