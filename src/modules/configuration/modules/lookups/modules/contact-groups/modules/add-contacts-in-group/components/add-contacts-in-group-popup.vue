@@ -123,7 +123,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import ContactGroupsAPI from '../../../api/contactGroups';
-import { useAddContactsInGroupStore } from '../stores/addContactsinGroup';
+import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
 

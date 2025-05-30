@@ -14,7 +14,7 @@ import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
-import { useAddContactsInGroupStore } from '../stores/addContactsinGroup';
+import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 
 const tableStore = useAddContactsInGroupStore();
 const { filtersManager, isFiltersRestoring } = storeToRefs(tableStore);

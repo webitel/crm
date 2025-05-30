@@ -15,7 +15,7 @@ import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-dat
 import { storeToRefs } from 'pinia';
 
 import { filtersOptions } from '../configs/filtersOptions';
-import { useAddContactsInGroupStore } from '../stores/addContactsinGroup';
+import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 
 const tableStore = useAddContactsInGroupStore();
 const { filtersManager } = storeToRefs(tableStore);
