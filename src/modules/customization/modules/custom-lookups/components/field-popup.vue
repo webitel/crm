@@ -97,7 +97,7 @@ const draft = {
   lookup: null,
   list: null,
   default: null,
-  $touch: false,
+  _dirty: false,
 };
 const { t } = useI18n();
 
