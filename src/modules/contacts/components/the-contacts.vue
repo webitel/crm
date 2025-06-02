@@ -28,7 +28,11 @@
           @close="closeDelete"
         />
 
-        <contacts-table :header="t('contacts.contact', 2)" :table-store="tableStore">
+        <contacts-table
+          :header="t('contacts.contact', 2)"
+          :table-store="tableStore"
+          :empty-data="{ primaryAction: create }"
+        >
           <template #action-bar>
             <wt-action-bar
               :disabled:add="!hasCreateAccess"
@@ -120,7 +124,6 @@ const tableStore = useContactsStore();
 
 const {
   selected,
-  deleteData,
   filtersManager,
   isFiltersRestoring,
 } = storeToRefs(tableStore);
