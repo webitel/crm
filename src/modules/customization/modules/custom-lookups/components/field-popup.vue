@@ -13,7 +13,7 @@
       }}
     </template>
     <template #main>
-      <div class="field-popup-wrapper" @input="changeTouchForm(true)">
+      <div class="field-popup-wrapper" @input="changeDirty(true)">
         <wt-input
           :label="$t('reusable.title')"
           :value="value.name"
@@ -129,11 +129,11 @@ const v$ = useVuelidate(
 
 v$.value.$touch();
 
-const changeTouchForm = (touch) => {
-  value.value.$touch = touch;
+const changeDirty = (dirty) => {
+  value.value._dirty = dirty;
 };
 
-const disabledSave = computed(() => v$.value?.$invalid || !value.value.$touch);
+const disabledSave = computed(() => v$.value?.$invalid || !value.value._dirty);
 
 const save = () => {
   const savedFiled = deepCopy(value.value);
@@ -145,7 +145,7 @@ const save = () => {
   });
 
   emit('save', savedFiled);
-  changeTouchForm(false);
+  changeDirty(false);
   close();
 
   if (!props.field) {
