@@ -3,6 +3,7 @@
     :shown="shown"
     class="field-popup"
     overflow
+    size="sm"
     @close="close"
   >
     <template #header>
@@ -137,6 +138,7 @@ const disabledSave = computed(() => v$.value?.$invalid || !value.value._dirty);
 
 const save = () => {
   const savedFiled = deepCopy(value.value);
+  delete savedFiled._dirty;
 
   Object.keys(savedFiled).forEach((key) => {
     if (!savedFiled[key] && key !== 'default') {
