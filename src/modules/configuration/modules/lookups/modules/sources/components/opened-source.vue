@@ -14,17 +14,21 @@
     </template>
 
     <template #main>
+      {{ itemInstance }}
+      <wt-loader
+        v-if="debouncedIsLoading"
+      />
       <form
         class="main-container"
         @submit.prevent="save"
       >
         <router-view v-slot="{ Component }">
-          <component
-            :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
-          />
+<!--          <component-->
+<!--            :is="Component"-->
+<!--            :v="v$"-->
+<!--            :namespace="cardNamespace"-->
+<!--            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"-->
+<!--          />-->
         </router-view>
         <input
           hidden
@@ -36,63 +40,78 @@
 </template>
 
 <script lang="ts" setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { computed } from 'vue';
+import { useFormComponent, useItemCardSaveText, useValidation } from '@webitel/ui-datalist/form';
+import { CrmSections } from '@webitel/ui-sdk/enums';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { storeToRefs } from 'pinia';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesFormStore } from '../stores/caseSources';
 
-const formStore = useCaseSourcesFormStore();
-
-const {} = store
-
-const namespace = 'configuration/lookups/sources';
 const { t } = useI18n();
+const route = useRoute();
 
-const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
-} = useCardStore(namespace);
-
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-    type: { required },
-  },
-})), { itemInstance }, { $autoDirty: true });
-
-v$.value.$touch();
-
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-});
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { close } = useClose(CrmSections.SOURCES);
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const { id: routeId } = route.params;
+
+const formStore = useCaseSourcesFormStore();
+
+const {
+  itemId,
+  itemInstance,
+  validationSchema,
+  isLoading,
+  // isSaving, // todo: use me
+  // error, // todo: use me
+} = storeToRefs(formStore);
+
+const {
+  initialize,
+  saveItem,
+  $reset: resetStore,
+} = formStore;
+
+onUnmounted(resetStore);
+
+initialize({
+  itemId: routeId as string,
+});
+
+const {
+  disabledSave,
+  isEdited,
+  checkIfInvalid,
+} = useValidation({ validationSchema });
+
+const {
+  debouncedIsLoading,
+  save,
+} = useFormComponent({
+  isLoading,
+  saveItem,
+  checkIfInvalid,
+});
+
+const { saveText } = useItemCardSaveText({
+  isNew: computed(() => !itemId.value),
+  isEdited: computed(() => isEdited.value),
+});
 
 const path = computed(() => {
-
   return [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },
-    { name: isNew.value ? t('reusable.new') : pathName.value },
+    // { name: t('lookups.sources.sources', 2, route: '/lookups/sources' },
+    // { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
 
-initialize();
+const { close } = useClose(CrmSections.Sources);
 </script>
 
 <style lang="scss" scoped>
