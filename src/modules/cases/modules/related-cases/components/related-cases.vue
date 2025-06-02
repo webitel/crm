@@ -147,6 +147,15 @@
             />
           </template>
         </wt-table>
+        <div
+          v-if="next"
+          class="table-section-footer"
+        >
+          <a
+            class="table-section-footer__link"
+            @click="appendToDataList"
+          >{{ t('reusable.more') }}</a>
+        </div>
       </div>
     </section>
   </div>
@@ -194,7 +203,7 @@ const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 
 const tableStore = useCaseRelatedCasesStore();
 
-const { dataList, error, selected, isLoading, shownHeaders } =
+const { dataList, error, selected, isLoading, shownHeaders, next } =
   storeToRefs(tableStore);
 
 const {
@@ -204,9 +213,10 @@ const {
   updateSize,
   updateSort,
   deleteEls,
+  appendToDataList,
 } = tableStore;
 
-updateSize(1000);
+updateSize(5);
 initialize({
   parentId: props.parentId,
 });
@@ -349,6 +359,15 @@ async function submitCase() {
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
+  }
+}
+
+.table-section-footer {
+  margin: auto;
+
+  &__link {
+    color: var(--link-color);
+    cursor: pointer;
   }
 }
 </style>

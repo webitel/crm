@@ -10,5 +10,6 @@ export const useCaseRelatedCasesStore = createTableStore(
     apiModule: RelatedCasesAPI,
     headers,
     disablePersistence: true,
+    isAppendDataList: true,
   },
 );
