@@ -13,7 +13,7 @@
       }}
     </template>
     <template #main>
-      <div class="field-popup-wrapper">
+      <div class="field-popup-wrapper" @input="changeDirty(true)">
         <wt-input
           :label="$t('reusable.title')"
           :value="value.name"
@@ -97,6 +97,7 @@ const draft = {
   lookup: null,
   list: null,
   default: null,
+  _dirty: false,
 };
 const { t } = useI18n();
 
@@ -128,7 +129,11 @@ const v$ = useVuelidate(
 
 v$.value.$touch();
 
-const disabledSave = computed(() => v$.value?.$invalid);
+const changeDirty = (dirty) => {
+  value.value._dirty = dirty;
+};
+
+const disabledSave = computed(() => v$.value?.$invalid || !value.value._dirty);
 
 const save = () => {
   const savedFiled = deepCopy(value.value);
@@ -140,6 +145,7 @@ const save = () => {
   });
 
   emit('save', savedFiled);
+  changeDirty(false);
   close();
 
   if (!props.field) {
