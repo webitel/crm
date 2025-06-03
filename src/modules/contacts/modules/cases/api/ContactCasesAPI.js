@@ -67,18 +67,24 @@ const getContactCasesList = async (params) => {
   const filters = Object.fromEntries(
     Object.entries(params).filter(([key]) => !fieldsToSend.includes(key)),
   );
-
-  const url = applyTransform({ ...params, ids: params.ids || ftsIds }, [
-    merge(getDefaultGetParams()),
-    (params) => ({
+  const url = applyTransform(
+    {
       ...params,
-      q: params.search,
-      filters: stringifyCaseFilters(filters),
-    }),
-    sanitize(fieldsToSend),
-    camelToSnake(),
-    generateUrl(`contacts/${params.parentId}/cases`),
-  ]);
+      ids: params.ids || ftsIds,
+      fields: [...params.fields, 'etag'],
+    },
+    [
+      merge(getDefaultGetParams()),
+      (params) => ({
+        ...params,
+        q: params.search,
+        filters: stringifyCaseFilters(filters),
+      }),
+      sanitize(fieldsToSend),
+      camelToSnake(),
+      generateUrl(`contacts/${params.parentId}/cases`),
+    ],
+  );
 
   try {
     const response = await instance.get(url);
