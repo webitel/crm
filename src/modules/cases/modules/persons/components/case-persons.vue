@@ -213,7 +213,7 @@ watch(
 );
 
 const CONTACT_VIEW_NAME = 'contact_view';
-const buildRouteLink = (name, id) => {
+const createRouteLinkParams = (name, id) => {
   return {
     name,
     params: { id },
@@ -222,14 +222,16 @@ const buildRouteLink = (name, id) => {
 
 const getContactLinkPreview = (id) => {
   if (!isReadOnly) {
-    return buildRouteLink(`${CrmSections.CONTACTS}-card`, id);
+    return createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id);
   }
 
-  return buildRouteLink(CONTACT_VIEW_NAME, ':etag');
+  return createRouteLinkParams(CONTACT_VIEW_NAME, ':etag');
 };
 
 /**
  * @author @Oleksandr Palonnyi
+ *
+ * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
  *
  * This function opens a new tab with the contact link. This is made to handle read-only mode
  * in which we must pass etag instead of id, and etag we can get only from the API while clicking on link.
@@ -238,10 +240,10 @@ const getContactLink = async (id) => {
   let url;
 
   if (!isReadOnly) {
-    url = router.resolve(buildRouteLink(`${CrmSections.CONTACTS}-card`, id)).href;
+    url = router.resolve(createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id)).href;
   } else {
     const { etag } = await ContactsAPI.get({ itemId: id });
-    url = router.resolve(buildRouteLink(CONTACT_VIEW_NAME, etag)).href;
+    url = router.resolve(createRouteLinkParams(CONTACT_VIEW_NAME, etag)).href;
   }
 
   window.open(url, '_blank', 'noopener');

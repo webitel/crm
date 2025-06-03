@@ -126,6 +126,8 @@ const showLinkIcon = computed(() => props.link && props.value?.name && !props.di
 /**
  * @author @Oleksandr Palonnyi
  *
+ * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
+ *
  * Added this function to rewrite default behaviour of wt-action-link,
  * because of case-persons has logic to redirect to contact card in read-only mode with etag,
  * that get with API by clicking on the link.
