@@ -18,5 +18,5 @@ export default function prettifyDate(timestamp, timeZone = undefined) {
     })
     .replace(/\//g, '.');
 
-  return `${time} ${datePart}`;
+  return `${datePart} ${time}`;
 }
