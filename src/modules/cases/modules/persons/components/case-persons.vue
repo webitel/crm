@@ -125,7 +125,7 @@ import EditableField from '../../case-info/components/editable-field.vue';
 
 const store = useStore();
 const { t } = useI18n();
-const router = useRouter()
+const router = useRouter();
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
@@ -213,20 +213,20 @@ watch(
 );
 
 const CONTACT_VIEW_NAME = 'contact_view';
-const linkData = (name, id) => {
+const buildRouteLink = (name, id) => {
   return {
     name,
     params: { id },
-  }
-}
+  };
+};
 
 const getContactLinkPreview = (id) => {
   if (!isReadOnly) {
-    return linkData(`${CrmSections.CONTACTS}-card`, id)
+    return buildRouteLink(`${CrmSections.CONTACTS}-card`, id);
   }
 
-  return linkData(CONTACT_VIEW_NAME, ':etag')
-}
+  return buildRouteLink(CONTACT_VIEW_NAME, ':etag');
+};
 
 /**
  * @author @Oleksandr Palonnyi
@@ -235,17 +235,17 @@ const getContactLinkPreview = (id) => {
  * in which we must pass etag instead of id, and etag we can get only from the API while clicking on link.
  * */
 const getContactLink = async (id) => {
+  let url;
+
   if (!isReadOnly) {
-    const url = router.resolve(linkData(`${CrmSections.CONTACTS}-card`, id)).href
-    window.open(url, '_blank', 'noopener')
-    return
+    url = router.resolve(buildRouteLink(`${CrmSections.CONTACTS}-card`, id)).href;
+  } else {
+    const { etag } = await ContactsAPI.get({ itemId: id });
+    url = router.resolve(buildRouteLink(CONTACT_VIEW_NAME, etag)).href;
   }
 
-  const { etag } = await ContactsAPI.get({ itemId: id })
-  const url = router.resolve(linkData(CONTACT_VIEW_NAME, etag)).href
-
-  window.open(url, '_blank', 'noopener')
-}
+  window.open(url, '_blank', 'noopener');
+};
 </script>
 
 <style lang="scss" scoped>

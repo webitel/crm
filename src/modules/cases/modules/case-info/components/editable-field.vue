@@ -34,7 +34,7 @@
           {{ valueWithDefault }}
         </span>
         <template v-else>
-          <div @click="onLinkAction">
+          <div @click.prevent.stop="onLinkAction">
             <wt-item-link
               :link="link"
               :disabled="props.disableLink"
@@ -130,14 +130,8 @@ const showLinkIcon = computed(() => props.link && props.value?.name && !props.di
  * because of case-persons has logic to redirect to contact card in read-only mode with etag,
  * that get with API by clicking on the link.
  * */
-const onLinkAction = (e) => {
-  if (props.disableLink) {
-    return;
-  }
-
-  e.preventDefault()
-  e.stopPropagation();
-  emit('on-link-action');
+const onLinkAction = () => {
+  return !props.disableLink && emit()
 }
 </script>
 
