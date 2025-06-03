@@ -20,7 +20,7 @@
         horizontal-view
         required
         @update:value="handleReporterInput"
-        @on-link-action="getContactLink(itemInstance.reporter?.id)"
+        @open-link="getContactLink(itemInstance.reporter?.id)"
       >
         <template #default="props">
           <wt-select
@@ -42,7 +42,7 @@
         icon="impacted"
         horizontal-view
         @update:value="setItemProp({ path: 'impacted', value: $event })"
-        @on-link-action="getContactLink(itemInstance.impacted?.id)"
+        @open-link="getContactLink(itemInstance.impacted?.id)"
       >
         <template #default="props">
           <wt-select
@@ -69,7 +69,7 @@
             value: { id: $event.id, name: $event.name },
           })
         "
-        @on-link-action="getContactLink(itemInstance.assignee?.id)"
+        @open-link="getContactLink(itemInstance.assignee?.id)"
       >
         <template #default="props">
           <wt-select
