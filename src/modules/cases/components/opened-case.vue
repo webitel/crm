@@ -39,7 +39,7 @@
     </template>
 
     <template #side-panel>
-      <opened-case-general />
+      <opened-case-general :is-new="isNew"/>
     </template>
 
     <template #main>

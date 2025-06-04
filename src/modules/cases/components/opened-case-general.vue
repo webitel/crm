@@ -1,6 +1,7 @@
 <template>
   <article class="opened-case-general">
     <case-status />
+    <case-number v-if="!isNew"/>
     <case-priority />
     <case-service />
     <case-deadlines />
@@ -16,6 +17,14 @@ import CasePriority from '../modules/priority/components/case-priority.vue';
 import CaseService from '../modules/service/components/case-service.vue';
 import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
+import CaseNumber from '../modules/case-number/components/case-number.vue';
+
+const props = defineProps({
+  isNew: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 </script>
 <style lang="scss" scoped>
