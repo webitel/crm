@@ -254,6 +254,7 @@ export default {
     position: 'Посада',
     location: 'Розташування',
     serviceValidation: 'Будь ласка, виберіть спочатку сервіс',
+    caseNumber: 'Номер звернення',
     caseInfo: {
       caseInfo: 'Інформація',
       contactInfo: 'Контактна інформація',
