@@ -247,6 +247,7 @@ export default {
     position: 'Должность',
     location: 'Местоположение',
     serviceValidation: 'Пожалуйста, выберите сначала сервис',
+    caseNumber: 'Номер обращения',
     caseInfo: {
       caseInfo: 'Информация',
       contactInfo: 'Контактная информация',
