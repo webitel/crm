@@ -23,12 +23,10 @@
         @submit.prevent="save"
       >
         <router-view v-slot="{ Component }">
-<!--          <component-->
-<!--            :is="Component"-->
-<!--            :v="v$"-->
-<!--            :namespace="cardNamespace"-->
-<!--            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"-->
-<!--          />-->
+          <component
+            :is="Component"
+            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+          />
         </router-view>
         <input
           hidden
@@ -68,6 +66,8 @@ const {
   // isSaving, // todo: use me
   // error, // todo: use me
 } = storeToRefs(formStore);
+
+window.vSchema = validationSchema;
 
 const {
   initialize,
