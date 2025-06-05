@@ -71,7 +71,7 @@ const getContactCasesList = async (params) => {
     {
       ...params,
       ids: params.ids || ftsIds,
-      fields: [...params.fields, 'etag'],
+      fields: [...params.fields, 'etag', 'id'],
     },
     [
       merge(getDefaultGetParams()),

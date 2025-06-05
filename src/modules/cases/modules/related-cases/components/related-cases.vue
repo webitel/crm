@@ -89,11 +89,7 @@
 
           <template #name="{ item }">
             <wt-item-link
-              :link="{
-                  name: `${CrmSections.CASES}-card`,
-                  params: { id: getRevertedCase(item).id },
-                }"
-              :disabled="isReadOnly"
+              :link="getCaseLink(item)"
               target="_blank"
             >
               <div class="related-cases__item-wrapper">
@@ -114,11 +110,7 @@
 
           <template #subject="{ item }">
             <wt-item-link
-              :link="{
-                  name: `${CrmSections.CASES}-card`,
-                  params: { id: getRevertedCase(item).id },
-                }"
-              :disabled="isReadOnly"
+              :link="getCaseLink(item)"
               target="_blank"
             >
               {{ getRevertedCase(item).subject }}
@@ -277,6 +269,22 @@ const isNeedToRevert = (item) => {
 
 function getRevertedCase(item) {
   return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
+}
+
+const CASE_VIEW_NAME = 'case_view';
+const createRouteLinkParams = (name, id) => {
+  return {
+    name,
+    params: { id },
+  };
+};
+
+function getCaseLink(item) {
+  const revertedCase = getRevertedCase(item)
+  if (isReadOnly) {
+    return createRouteLinkParams(CASE_VIEW_NAME, revertedCase.etag);
+  }
+  return createRouteLinkParams(`${CrmSections.CASES}-card`, revertedCase.id);
 }
 
 // [https://webitel.atlassian.net/browse/WTEL-5492?focusedCommentId=655118]
