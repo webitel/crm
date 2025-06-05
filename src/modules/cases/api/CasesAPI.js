@@ -149,6 +149,7 @@ const getCasesList = async (params) => {
 const getCase = async ({ itemId: id }) => {
   const fieldsToSend = [
     'etag',
+    'id',
     'name',
     'subject',
     'description',
