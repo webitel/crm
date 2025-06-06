@@ -22,7 +22,7 @@
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => deleteEls(selected),
+              callback: () => deleteRelatedCases(selected),
             })
           "
         />
@@ -133,7 +133,7 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteEls(item),
+                  callback: () => deleteRelatedCases(item),
                 })
               "
             />
@@ -206,6 +206,7 @@ const {
   updateSort,
   deleteEls,
   appendToDataList,
+  updatePage,
 } = tableStore;
 
 updateSize(5);
@@ -309,24 +310,39 @@ function getRevertedCaseRelation(item) {
   return inverseRelation(item.relationType);
 }
 
-async function submitCase() {
-  await RelatedCasesAPI.add({
-    parentId: props.parentId,
-    input: {
-      relatedCase: {
-        id: defaultState.relatedCase.id,
-        name: defaultState.relatedCase.name,
-      },
-      relationType: defaultState.relationType,
-    },
-  });
+const reloadDataList = async () => {
+  updatePage(1);
   await loadDataList();
-  resetForm();
 }
+
+async function submitCase() {
+  try {
+    await RelatedCasesAPI.add({
+      parentId: props.parentId,
+      input: {
+        relatedCase: {
+          id: defaultState.relatedCase.id,
+          name: defaultState.relatedCase.name,
+        },
+        relationType: defaultState.relationType,
+      },
+    });
+    await reloadDataList();
+    resetForm();
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+const deleteRelatedCases = async (item) => {
+  await deleteEls(item, { skipReload: true});
+  await reloadDataList();
+};
 </script>
 
 <style lang="scss" scoped>
-.related-cases {
+.related-cases {appendToDataList
   .type-select {
     flex: 1;
   }
