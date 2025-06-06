@@ -9,7 +9,8 @@
       <wt-input
         v-model="modelValue.name"
         :label="t('reusable.name')"
-        :v="null/*v.itemInstance.name*/"
+        :v="validationSchemaFields.name"
+        :regle-validation="validationSchemaFields.name"
         :disabled="disableUserInput"
         required
       />
@@ -39,6 +40,7 @@ import { WebitelCasesSourceType } from '@webitel/api-services/gen/models';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { WtInput } from '@webitel/ui-sdk/components';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesFormStore } from '../stores/caseSources';
@@ -62,6 +64,10 @@ const {
 
 const modelValue = computed(() => {
   return validationSchema.value.r$.$value;
+});
+
+const validationSchemaFields = computed(() => {
+  return validationSchema.value.r$.$fields;
 });
 
 const { t } = useI18n();

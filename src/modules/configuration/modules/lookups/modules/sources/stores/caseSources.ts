@@ -1,7 +1,6 @@
 import { createTableStore } from '@webitel/ui-datalist';
 import { createFormStore } from '@webitel/ui-datalist/form';
-import { z as zod } from 'zod';
-import zodUaLocales from 'zod/locales/ua';
+import { z as zod } from 'zod/v4';
 import { createSourceBody as formValidationSchema } from '@webitel/api-services/gen';
 import {
   createApiStoreModule,
@@ -9,7 +8,7 @@ import {
   createCardStoreModule,
 } from '@webitel/ui-sdk/store'; // card compat
 
-zod.config(zodUaLocales());
+zod.config(zod.locales.ua());
 
 import CaseSourcesAPI from '../api/caseSources';
 import { headers } from './_internals/headers';
