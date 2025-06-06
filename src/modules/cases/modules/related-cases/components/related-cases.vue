@@ -342,7 +342,7 @@ const deleteRelatedCases = async (item) => {
 </script>
 
 <style lang="scss" scoped>
-.related-cases {appendToDataList
+.related-cases {
   .type-select {
     flex: 1;
   }
