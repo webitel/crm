@@ -13,6 +13,7 @@ const state = {
 
   dataList: [],
   page: 1,
+  size: 15,
   next: false,
   isLoading: false,
 };
@@ -30,6 +31,7 @@ const actions = {
     try {
       context.commit('SET', { path: 'isLoading', value: true });
       context.commit('SET', { path: 'page', value: 1 });
+      context.commit('SET', { path: 'size', value: 15 });
       const { items, next } = await context.dispatch('api/GET_LIST', {
         mode,
         context,
@@ -47,6 +49,7 @@ const actions = {
     const mode = context.getters.MODE;
 
     context.commit('SET', { path: 'page', value: context.state.page + 1 });
+    context.commit('SET', { path: 'size', value: 10 });
     const { items, next } = await context.dispatch('api/GET_LIST', {
       mode,
       context,
@@ -64,6 +67,7 @@ const actions = {
   RESET_STATE: (context) => {
     context.commit('SET', { path: 'dataList', value: [] });
     context.commit('SET', { path: 'page', value: 1 });
+    context.commit('SET', { path: 'size', value: 15 });
     context.commit('SET', { path: 'next', value: false });
   },
 };
