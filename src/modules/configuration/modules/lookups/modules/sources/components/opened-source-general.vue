@@ -9,7 +9,6 @@
       <wt-input
         v-model="modelValue.name"
         :label="t('reusable.name')"
-        :v="validationSchemaFields.name"
         :regle-validation="validationSchemaFields.name"
         :disabled="disableUserInput"
         required
@@ -43,7 +42,7 @@ import { useI18n } from 'vue-i18n';
 import { WtInput } from '@webitel/ui-sdk/components';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseSourcesFormStore } from '../stores/caseSources';
+import { useCaseSourcesFormStore } from '../stores';
 
 // const props = defineProps({
 //   namespace: {

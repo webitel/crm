@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useFormComponent, useItemCardSaveText, useValidation } from '@webitel/ui-datalist/form';
+import { useCardComponent, useItemCardSaveText, useValidation } from '../../../../../../../../../webitel-ui-sdk/packages/ui-datalist/src/modules/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
@@ -47,7 +47,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseSourcesFormStore } from '../stores/caseSources';
+import { useCaseSourcesFormStore } from '../stores';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -90,7 +90,7 @@ const {
 const {
   debouncedIsLoading,
   save,
-} = useFormComponent({
+} = useCardComponent({
   isLoading,
   saveItem,
   checkIfInvalid,
