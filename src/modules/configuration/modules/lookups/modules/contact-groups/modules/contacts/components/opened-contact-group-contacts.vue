@@ -1,7 +1,7 @@
 <template>
   <section class="table-page">
     <add-contacts-in-group-popup
-      :group-ids="groupIds"
+      :group-ids="[itemInstance?.id]"
       @load-data="loadDataList"
     />
 
@@ -116,8 +116,6 @@ const {
   initialize,
   loadDataList,
 } = tableStore;
-
-const groupIds = computed(() => [itemInstance.value?.id, ...selected.value.map((el) => el.id)])
 
 const deleteEls = async (ids: string[]) => {
   await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })

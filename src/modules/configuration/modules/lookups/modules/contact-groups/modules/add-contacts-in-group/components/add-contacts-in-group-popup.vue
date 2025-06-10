@@ -160,15 +160,17 @@ const route = useRoute();
 const infiniteScrollWrap = ref(null);
 
 const save = async () => {
-  await ContactGroupsAPI.addContactsToGroup({
-    ids: props.groupIds,
+  await ContactGroupsAPI.addContactsToGroups({
+    groupIds: props.groupIds,
     contactIds: selected.value.map(({ id }) => id),
   });
   closePopup();
   emit('load-data');
 };
 
-const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-contacts`);
+function close() {
+  emit('close');
+}
 
 const closePopup = () => {
   close();

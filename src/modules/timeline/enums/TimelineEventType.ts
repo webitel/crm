@@ -1,11 +1,11 @@
 import {
-  CasesCaseTimelineEventType,
+  WebitelCasesCaseTimelineEventType,
   WebitelContactsTimelineEventType,
 } from 'webitel-sdk';
 
 export const TimelineEventType = {
   ...WebitelContactsTimelineEventType,
-  ...CasesCaseTimelineEventType,
+  ...WebitelCasesCaseTimelineEventType,
 } as const;
 
 export type TimelineEventType =
