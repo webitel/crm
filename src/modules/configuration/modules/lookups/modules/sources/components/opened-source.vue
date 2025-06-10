@@ -14,7 +14,6 @@
     </template>
 
     <template #main>
-      {{ itemInstance }}
       <wt-loader
         v-if="debouncedIsLoading"
       />
@@ -38,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useCardComponent, useItemCardSaveText, useValidation } from '../../../../../../../../../webitel-ui-sdk/packages/ui-datalist/src/modules/card';
+import { useCardComponent, useItemCardSaveText, useValidation } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
@@ -47,7 +46,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseSourcesFormStore } from '../stores';
+import { useCaseSourcesCardStore } from '../stores';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -56,18 +55,16 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const { id: routeId } = route.params;
 
-const formStore = useCaseSourcesFormStore();
+const formStore = useCaseSourcesCardStore();
 
 const {
-  itemId,
-  itemInstance,
-  validationSchema,
+  // itemId,
+  // originalItemInstance,
+  // validationSchema,
   isLoading,
   // isSaving, // todo: use me
   // error, // todo: use me
 } = storeToRefs(formStore);
-
-window.vSchema = validationSchema;
 
 const {
   initialize,
@@ -90,15 +87,17 @@ const {
 const {
   debouncedIsLoading,
   save,
+  isNew
 } = useCardComponent({
+  itemId,
   isLoading,
   saveItem,
   checkIfInvalid,
 });
 
 const { saveText } = useItemCardSaveText({
-  isNew: computed(() => !itemId.value),
-  isEdited: computed(() => isEdited.value),
+  isNew,
+  isEdited,
 });
 
 const path = computed(() => {
@@ -106,8 +105,8 @@ const path = computed(() => {
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    // { name: t('lookups.sources.sources', 2, route: '/lookups/sources' },
-    // { name: isNew.value ? t('reusable.new') : pathName.value },
+    { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },
+    { name: isNew.value ? t('reusable.new') : originalItemInstance.value.name },
   ];
 });
 

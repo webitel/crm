@@ -42,7 +42,7 @@ import { useI18n } from 'vue-i18n';
 import { WtInput } from '@webitel/ui-sdk/components';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseSourcesFormStore } from '../stores';
+import { useCaseSourcesCardStore } from '../stores';
 
 // const props = defineProps({
 //   namespace: {
@@ -55,7 +55,7 @@ import { useCaseSourcesFormStore } from '../stores';
 //   },
 // });
 
-const sourcesStore = useCaseSourcesFormStore();
+const sourcesStore = useCaseSourcesCardStore();
 const {
   // itemInstance,
   validationSchema
