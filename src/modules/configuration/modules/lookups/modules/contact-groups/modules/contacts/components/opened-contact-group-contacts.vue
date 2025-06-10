@@ -15,7 +15,7 @@
     <contacts-table
       :header="t('contacts.allContacts', 2)"
       :table-store="tableStore"
-      :empty-data="{ primaryAction: () => addContactInGroup }"
+      :empty-data="{ primaryAction: addContactInGroup }"
     >
       <template #action-bar>
         <wt-action-bar
