@@ -1,8 +1,8 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { CasesSourceType } from 'webitel-sdk';
+import { WebitelCasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
-import { CasesRelationType } from 'webitel-sdk';
+import { WebitelCasesRelationType } from 'webitel-sdk';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -127,12 +127,12 @@ export default {
     sources: {
       sources: 'Case source | Case sources',
       types: {
-        [CasesSourceType.CALL]: 'Call',
-        [CasesSourceType.CHAT]: 'Chat',
-        [CasesSourceType.SOCIALMEDIA]: 'Social Media',
-        [CasesSourceType.EMAIL]: 'Email',
-        [CasesSourceType.API]: 'API',
-        [CasesSourceType.MANUAL]: 'Manual',
+        [WebitelCasesSourceType.CALL]: 'Call',
+        [WebitelCasesSourceType.CHAT]: 'Chat',
+        [WebitelCasesSourceType.SOCIALMEDIA]: 'Social Media',
+        [WebitelCasesSourceType.EMAIL]: 'Email',
+        [WebitelCasesSourceType.API]: 'API',
+        [WebitelCasesSourceType.MANUAL]: 'Manual',
       },
     },
 
@@ -275,15 +275,15 @@ export default {
       emptyText: 'There are no related cases yet',
       searchCasesPlaceholder: 'Search for a case',
       relationType: {
-        [CasesRelationType.DUPLICATES]: 'duplicates',
-        [CasesRelationType.ISDUPLICATEDBY]: 'is duplicated by',
-        [CasesRelationType.BLOCKS]: 'blocks',
-        [CasesRelationType.ISBLOCKEDBY]: 'is blocked by',
-        [CasesRelationType.CAUSES]: 'causes',
-        [CasesRelationType.ISCAUSEDBY]: 'is caused by',
-        [CasesRelationType.ISCHILDOF]: 'is child of',
-        [CasesRelationType.ISPARENTOF]: 'is parent of',
-        [CasesRelationType.RELATESTO]: 'relates to',
+        [WebitelCasesRelationType.DUPLICATES]: 'duplicates',
+        [WebitelCasesRelationType.ISDUPLICATEDBY]: 'is duplicated by',
+        [WebitelCasesRelationType.BLOCKS]: 'blocks',
+        [WebitelCasesRelationType.ISBLOCKEDBY]: 'is blocked by',
+        [WebitelCasesRelationType.CAUSES]: 'causes',
+        [WebitelCasesRelationType.ISCAUSEDBY]: 'is caused by',
+        [WebitelCasesRelationType.ISCHILDOF]: 'is child of',
+        [WebitelCasesRelationType.ISPARENTOF]: 'is parent of',
+        [WebitelCasesRelationType.RELATESTO]: 'relates to',
       },
     },
     slaRecalculationPopup: {

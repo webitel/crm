@@ -167,7 +167,7 @@ import {
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CasesRelationType } from 'webitel-sdk';
+import { WebitelCasesRelationType } from 'webitel-sdk';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -235,7 +235,7 @@ const defaultState = reactive({
 });
 
 const relatedTypesOptions = computed(() => {
-  const types = Object.values(CasesRelationType).map((type) => {
+  const types = Object.values(WebitelCasesRelationType).map((type) => {
     return {
       id: type,
       name: t(`cases.relatedCases.relationType.${type}`),

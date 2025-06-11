@@ -1,7 +1,7 @@
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { CasesRelationType } from 'webitel-sdk';
-import { CasesSourceType } from 'webitel-sdk';
+import { WebitelCasesRelationType } from 'webitel-sdk';
+import { WebitelCasesSourceType } from 'webitel-sdk';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -128,12 +128,12 @@ export default {
       sources: 'Джерело звернень | Джерела звернень',
 
       types: {
-        [CasesSourceType.CALL]: 'Дзвінок',
-        [CasesSourceType.CHAT]: 'Чат',
-        [CasesSourceType.SOCIALMEDIA]: 'Соціальна мережа',
-        [CasesSourceType.EMAIL]: 'Лист',
-        [CasesSourceType.API]: 'API',
-        [CasesSourceType.MANUAL]: 'Створене вручну',
+        [WebitelCasesSourceType.CALL]: 'Дзвінок',
+        [WebitelCasesSourceType.CHAT]: 'Чат',
+        [WebitelCasesSourceType.SOCIALMEDIA]: 'Соціальна мережа',
+        [WebitelCasesSourceType.EMAIL]: 'Лист',
+        [WebitelCasesSourceType.API]: 'API',
+        [WebitelCasesSourceType.MANUAL]: 'Створене вручну',
       },
     },
 
@@ -282,15 +282,15 @@ export default {
       emptyText: 'Тут ще немає звʼязаних звернень',
       searchCasesPlaceholder: 'Шукати звернення',
       relationType: {
-        [CasesRelationType.DUPLICATES]: 'дублює',
-        [CasesRelationType.ISDUPLICATEDBY]: 'дублюється',
-        [CasesRelationType.BLOCKS]: 'блокує',
-        [CasesRelationType.ISBLOCKEDBY]: 'блокується',
-        [CasesRelationType.CAUSES]: 'спричинило',
-        [CasesRelationType.ISCAUSEDBY]: 'спричинене',
-        [CasesRelationType.ISCHILDOF]: 'дочірнє до',
-        [CasesRelationType.ISPARENTOF]: 'батьківське для',
-        [CasesRelationType.RELATESTO]: 'стосується',
+        [WebitelCasesRelationType.DUPLICATES]: 'дублює',
+        [WebitelCasesRelationType.ISDUPLICATEDBY]: 'дублюється',
+        [WebitelCasesRelationType.BLOCKS]: 'блокує',
+        [WebitelCasesRelationType.ISBLOCKEDBY]: 'блокується',
+        [WebitelCasesRelationType.CAUSES]: 'спричинило',
+        [WebitelCasesRelationType.ISCAUSEDBY]: 'спричинене',
+        [WebitelCasesRelationType.ISCHILDOF]: 'дочірнє до',
+        [WebitelCasesRelationType.ISPARENTOF]: 'батьківське для',
+        [WebitelCasesRelationType.RELATESTO]: 'стосується',
       },
     },
     slaRecalculationPopup: {
