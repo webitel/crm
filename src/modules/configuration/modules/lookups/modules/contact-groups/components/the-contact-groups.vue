@@ -59,6 +59,14 @@
           @close="closeCreateGroupPopup"
         />
 
+        <add-contacts-in-group-popup
+          :group-ids="staticGroupIds"
+          :namespace="namespace"
+          :shown="isShowAddContactInGroupPopup"
+          @close="isShowAddContactInGroupPopup = false"
+          @load-data="loadData"
+        />
+
         <div
           class="table-section__table-wrapper"
         >
@@ -167,6 +175,7 @@ import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
+import AddContactsInGroupPopup from '../modules/add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 
 const baseNamespace = 'configuration/lookups/contactGroups';
 

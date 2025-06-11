@@ -1,8 +1,10 @@
 <template>
   <section class="table-page">
     <add-contacts-in-group-popup
+      :shown="isShowPopup"
       :group-ids="[itemInstance?.id]"
       @load-data="loadDataList"
+      @close="isShowPopup = false"
     />
 
     <delete-confirmation-popup
@@ -15,14 +17,14 @@
     <contacts-table
       :header="t('contacts.allContacts', 2)"
       :table-store="tableStore"
-      :empty-data="{ primaryAction: addContactInGroup }"
+      :empty-data="{ primaryAction: () => isShowPopup = true }"
     >
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess"
           :disabled:delete="!hasDeleteAccess || !selected.length"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="addContactInGroup"
+          @click:add="isShowPopup = true"
           @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
@@ -69,12 +71,10 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
-import { computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
@@ -90,7 +90,7 @@ const { itemInstance } = useCardStore(
   props.namespace,
 );
 
-const router = useRouter();
+const isShowPopup = ref(false);
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -120,12 +120,6 @@ const {
 const deleteEls = async (ids: string[]) => {
   await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
   await loadDataList()
-}
-
-const addContactInGroup = () => {
-  return router.push({
-    name: `${CrmSections.CONTACT_GROUPS}-contacts-list`,
-  });
 }
 
 watch(() => itemInstance.value?.id, (val) => {
