@@ -93,7 +93,7 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
 const { close } = useClose(CrmSections.CONTACT_GROUPS);
 
 const isDynamicGroup = computed(
-  () => itemInstance.value.type === WebitelContactsGroupType.DYNAMIC,
+  () => itemInstance.value.type === WebitelContactsGroupType.Dynamic,
 );
 
 const v$ = useVuelidate(
