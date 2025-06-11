@@ -36,10 +36,10 @@
 </template>
 
 <script setup>
+import { WebitelCasesSourceType } from '@webitel/api-services/gen/models';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WebitelCasesSourceType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 

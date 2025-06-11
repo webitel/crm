@@ -167,7 +167,7 @@ import {
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WebitelCasesRelationType } from 'webitel-sdk';
+import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';

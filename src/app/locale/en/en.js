@@ -1,8 +1,10 @@
+import {
+  WebitelCasesRelationType,
+  WebitelCasesSourceType,
+  WebitelContactsGroupType,
+} from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { WebitelCasesSourceType } from 'webitel-sdk';
-import { WebitelContactsGroupType } from 'webitel-sdk';
-import { WebitelCasesRelationType } from 'webitel-sdk';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
