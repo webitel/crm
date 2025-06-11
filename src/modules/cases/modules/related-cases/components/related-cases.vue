@@ -22,7 +22,7 @@
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => deleteEls(selected),
+              callback: () => deleteRelatedCases(selected),
             })
           "
         />
@@ -133,7 +133,7 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteEls(item),
+                  callback: () => deleteRelatedCases(item),
                 })
               "
             />
@@ -204,7 +204,7 @@ const {
   updateSelected,
   updateSize,
   updateSort,
-  deleteEls,
+  updatePage,
   appendToDataList,
 } = tableStore;
 
@@ -310,19 +310,34 @@ function getRevertedCaseRelation(item) {
 }
 
 async function submitCase() {
-  await RelatedCasesAPI.add({
-    parentId: props.parentId,
-    input: {
-      relatedCase: {
-        id: defaultState.relatedCase.id,
-        name: defaultState.relatedCase.name,
+  try {
+    await RelatedCasesAPI.add({
+      parentId: props.parentId,
+      input: {
+        relatedCase: {
+          id: defaultState.relatedCase.id,
+          name: defaultState.relatedCase.name,
+        },
+        relationType: defaultState.relationType,
       },
-      relationType: defaultState.relationType,
-    },
-  });
-  await loadDataList();
-  resetForm();
+    });
+    await loadDataList();
+    resetForm();
+  } catch (error) {
+    console.error(error);
+  }
 }
+
+const deleteRelatedCases = async (items) => {
+  const arrayEtags = items.map((item) => item.etag);
+
+  await RelatedCasesAPI.delete({
+    parentId: props.parentId,
+    id: arrayEtags,
+  });
+  updatePage(1);
+  await loadDataList();
+};
 </script>
 
 <style lang="scss" scoped>
