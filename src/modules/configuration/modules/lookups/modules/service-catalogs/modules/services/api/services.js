@@ -95,7 +95,7 @@ const preRequestHandler = ({ rootId, catalogId }) => {
   return (item) => ({
     ...item,
     assignee:
-      item.group?.type === WebitelContactsGroupType.DYNAMIC
+      item.group?.type === WebitelContactsGroupType.Dynamic
         ? {}
         : item.assignee,
     rootId,

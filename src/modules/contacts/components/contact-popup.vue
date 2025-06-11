@@ -179,7 +179,7 @@ async function loadItem(id = props.id) {
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.STATIC,
+    type: WebitelContactsGroupType.Static,
   });
 }
 

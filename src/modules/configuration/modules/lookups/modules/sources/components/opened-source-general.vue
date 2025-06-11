@@ -61,7 +61,7 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const typesSourcesOptions = computed(() => Object.values(WebitelCasesSourceType)
-.filter((type) => type !== WebitelCasesSourceType.TYPEUNSPECIFIED)
+.filter((type) => type !== WebitelCasesSourceType.TypeUnspecified)
 .map((type) => {
   return {
     id: type,
