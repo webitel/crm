@@ -2,7 +2,6 @@
   <wt-popup
     v-bind="$attrs"
     class="add-contacts-in-group-popup"
-    :shown="isContactListInPath"
     size="lg"
     @close="closePopup"
   >
@@ -115,12 +114,9 @@
 
 <script lang="ts" setup>
 import { useInfiniteScroll } from '@vueuse/core';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 
 import ContactGroupsAPI from '../../../api/contactGroups';
 import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
@@ -156,7 +152,6 @@ onMounted(() => {
   initialize();
 });
 
-const route = useRoute();
 const infiniteScrollWrap = ref(null);
 
 const save = async () => {
@@ -176,10 +171,6 @@ const closePopup = () => {
   close();
   if (selected.value.length) updateSelected([]);
 };
-
-const isContactListInPath = computed(() => {
-  return route.path.includes('add-contacts-in-group');
-});
 
 useInfiniteScroll(infiniteScrollWrap,
   async () => {

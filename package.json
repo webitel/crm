@@ -19,8 +19,8 @@
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^11.0.3",
-    "@webitel/ui-datalist": "^1.0.42",
     "@webitel/api-services": "^0.0.19",
+    "@webitel/ui-datalist": "^1.0.43",
     "@webitel/ui-sdk": "^25.6.36",
     "axios": "^1.7.7",
     "clipboard-copy": "^4.0.1",
@@ -35,13 +35,13 @@
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.2",
+    "qs": "^6.14.0",
     "sortablejs": "^1.15.6",
     "vue": "^3.5.1",
     "vue-i18n": "^11.1.1",
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0",
-    "webitel-sdk": "^25.5.4",
-    "qs": "^6.14.0"
+    "webitel-sdk": "^25.5.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
