@@ -321,19 +321,25 @@ async function submitCase() {
         relationType: defaultState.relationType,
       },
     });
+    updatePage(1);
     await loadDataList();
     resetForm();
   } catch (error) {
     console.error(error);
   }
 }
+function defineEtags(cases) {
+  if (Array.isArray(cases)) {
+    return cases.map(item => item?.etag);
+  }
+  return cases.etag ? [cases.etag] : [];
+}
+
 
 const deleteRelatedCases = async (items) => {
-  const arrayEtags = items.map((item) => item.etag);
-
   await RelatedCasesAPI.delete({
     parentId: props.parentId,
-    id: arrayEtags,
+    id: defineEtags(items),
   });
   updatePage(1);
   await loadDataList();
