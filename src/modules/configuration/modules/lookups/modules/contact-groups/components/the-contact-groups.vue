@@ -59,7 +59,7 @@
           @close="closeCreateGroupPopup"
         />
 
-        <add-contact-in-group-popup
+        <add-contacts-in-group-popup
           :group-ids="staticGroupIds"
           :namespace="namespace"
           :shown="isShowAddContactInGroupPopup"
@@ -174,7 +174,7 @@ import { useRouter } from 'vue-router';
 import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import AddContactInGroupPopup from '../modules/contacts/components/add-contact-in-group-popup.vue';
+import AddContactsInGroupPopup from '../modules/add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
 const baseNamespace = 'configuration/lookups/contactGroups';
@@ -242,7 +242,7 @@ const {
 
 const isCreateGroupPopup = ref(false);
 const isShowAddContactInGroupPopup = ref(false);
-const selectedStaticGroups = computed(() => selected.value.filter((el) => el.type === WebitelContactsGroupType.STATIC));
+const selectedStaticGroups = computed(() => selected.value.filter((el) => el.type === WebitelContactsGroupType.Static));
 const staticGroupIds = computed(() => selectedStaticGroups.value.map((el) => el.id));
 
 const path = computed(() => [

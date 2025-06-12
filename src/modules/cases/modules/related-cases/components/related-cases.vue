@@ -22,7 +22,7 @@
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => deleteEls(selected),
+              callback: () => deleteRelatedCases(selected),
             })
           "
         />
@@ -89,11 +89,7 @@
 
           <template #name="{ item }">
             <wt-item-link
-              :link="{
-                  name: `${CrmSections.CASES}-card`,
-                  params: { id: getRevertedCase(item).id },
-                }"
-              :disabled="isReadOnly"
+              :link="getCaseLink(item)"
               target="_blank"
             >
               <div class="related-cases__item-wrapper">
@@ -114,11 +110,7 @@
 
           <template #subject="{ item }">
             <wt-item-link
-              :link="{
-                  name: `${CrmSections.CASES}-card`,
-                  params: { id: getRevertedCase(item).id },
-                }"
-              :disabled="isReadOnly"
+              :link="getCaseLink(item)"
               target="_blank"
             >
               {{ getRevertedCase(item).subject }}
@@ -141,12 +133,21 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => deleteEls(item),
+                  callback: () => deleteRelatedCases(item),
                 })
               "
             />
           </template>
         </wt-table>
+        <div
+          v-if="next"
+          class="table-section-footer"
+        >
+          <a
+            class="table-section-footer__link"
+            @click="appendToDataList"
+          >{{ t('reusable.more') }}</a>
+        </div>
       </div>
     </section>
   </div>
@@ -166,7 +167,7 @@ import {
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CasesRelationType } from 'webitel-sdk';
+import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -194,7 +195,7 @@ const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 
 const tableStore = useCaseRelatedCasesStore();
 
-const { dataList, error, selected, isLoading, shownHeaders } =
+const { dataList, error, selected, isLoading, shownHeaders, next } =
   storeToRefs(tableStore);
 
 const {
@@ -203,10 +204,11 @@ const {
   updateSelected,
   updateSize,
   updateSort,
-  deleteEls,
+  updatePage,
+  appendToDataList,
 } = tableStore;
 
-updateSize(1000);
+updateSize(5);
 initialize({
   parentId: props.parentId,
 });
@@ -233,7 +235,7 @@ const defaultState = reactive({
 });
 
 const relatedTypesOptions = computed(() => {
-  const types = Object.values(CasesRelationType).map((type) => {
+  const types = Object.values(WebitelCasesRelationType).map((type) => {
     return {
       id: type,
       name: t(`cases.relatedCases.relationType.${type}`),
@@ -269,6 +271,22 @@ function getRevertedCase(item) {
   return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
 }
 
+const CASE_VIEW_NAME = 'case_view';
+const createRouteLinkParams = (name, id) => {
+  return {
+    name,
+    params: { id },
+  };
+};
+
+function getCaseLink(item) {
+  const revertedCase = getRevertedCase(item)
+  if (isReadOnly) {
+    return createRouteLinkParams(CASE_VIEW_NAME, revertedCase.etag);
+  }
+  return createRouteLinkParams(`${CrmSections.CASES}-card`, revertedCase.id);
+}
+
 // [https://webitel.atlassian.net/browse/WTEL-5492?focusedCommentId=655118]
 // this is where the inversion is done after linking the related cases
 const relationPairsMap = new Map([
@@ -292,19 +310,40 @@ function getRevertedCaseRelation(item) {
 }
 
 async function submitCase() {
-  await RelatedCasesAPI.add({
-    parentId: props.parentId,
-    input: {
-      relatedCase: {
-        id: defaultState.relatedCase.id,
-        name: defaultState.relatedCase.name,
+  try {
+    await RelatedCasesAPI.add({
+      parentId: props.parentId,
+      input: {
+        relatedCase: {
+          id: defaultState.relatedCase.id,
+          name: defaultState.relatedCase.name,
+        },
+        relationType: defaultState.relationType,
       },
-      relationType: defaultState.relationType,
-    },
-  });
-  await loadDataList();
-  resetForm();
+    });
+    updatePage(1);
+    await loadDataList();
+    resetForm();
+  } catch (error) {
+    console.error(error);
+  }
 }
+function defineEtags(cases) {
+  if (Array.isArray(cases)) {
+    return cases.map(item => item?.etag);
+  }
+  return cases.etag ? [cases.etag] : [];
+}
+
+
+const deleteRelatedCases = async (items) => {
+  await RelatedCasesAPI.delete({
+    parentId: props.parentId,
+    id: defineEtags(items),
+  });
+  updatePage(1);
+  await loadDataList();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -349,6 +388,15 @@ async function submitCase() {
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
+  }
+}
+
+.table-section-footer {
+  margin: auto;
+
+  &__link {
+    color: var(--link-color);
+    cursor: pointer;
   }
 }
 </style>

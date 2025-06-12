@@ -26,6 +26,7 @@
     >
       <template #default="props">
         <wt-textarea
+          :rows="8"
           v-bind="props"
           :disabled="disableUserInput"
           @input="props.updateValue($event)"

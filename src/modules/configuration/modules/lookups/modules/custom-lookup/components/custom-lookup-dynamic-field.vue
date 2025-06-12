@@ -55,12 +55,12 @@
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
-    :value="value * convertedTime"
+    :value="value"
     :v="v$.itemInstance[field.id]"
     mode="datetime"
     :required="isRequired"
     :disabled="props.disable"
-    @input="setValue(+$event / convertedTime)"
+    @input="setValue(+$event)"
   />
 </template>
 
@@ -101,9 +101,6 @@ const props = defineProps({
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const { t } = useI18n();
-
-// Number for convert time from seconds to milliseconds, when send to backend and display on frontend
-const convertedTime = 1000;
 
 const v$ = useVuelidate(
   computed(() => {

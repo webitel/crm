@@ -34,15 +34,17 @@
           {{ valueWithDefault }}
         </span>
         <template v-else>
-          <wt-item-link
-            :link="link"
-            :disabled="props.disableLink"
-            :class="{ 'editable-field__link_disabled': props.disableLink }"
-            class="editable-field__link"
-            target="_blank"
-          >
-            {{ value?.name }}
-          </wt-item-link>
+          <div @click.prevent.stop="openLink">
+            <wt-item-link
+              :link="link"
+              :disabled="props.disableLink"
+              :class="{ 'editable-field__link_disabled': props.disableLink }"
+              class="editable-field__link"
+              target="_blank"
+            >
+              {{ value?.name }}
+            </wt-item-link>
+          </div>
           <wt-icon
             v-if="showLinkIcon"
             class="editable-field__link-icon"
@@ -105,7 +107,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:value']);
+const emit = defineEmits(['update:value', 'open-link']);
 
 const updateValue = (newValue) => {
   emit('update:value', newValue);
@@ -120,6 +122,19 @@ const valueWithDefault = computed(() => {
 });
 
 const showLinkIcon = computed(() => props.link && props.value?.name && !props.disableLink)
+
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
+ *
+ * Added this function to rewrite default behaviour of wt-action-link,
+ * because of case-persons has logic to redirect to contact card in read-only mode with etag,
+ * that get with API by clicking on the link.
+ * */
+const openLink = () => {
+  return !props.disableLink && emit('open-link')
+}
 </script>
 
 <style lang="scss" scoped>

@@ -32,7 +32,7 @@
       </div>
 
       <wt-select
-        v-if="itemInstance.type === WebitelContactsGroupType.DYNAMIC"
+        v-if="itemInstance.type === WebitelContactsGroupType.Dynamic"
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
         :value="itemInstance.defaultGroup"
@@ -76,7 +76,7 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.STATIC,
+    type: WebitelContactsGroupType.Static,
     enabled: true,
   });
 }

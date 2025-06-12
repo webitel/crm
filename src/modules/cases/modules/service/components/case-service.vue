@@ -17,7 +17,9 @@
       <span class="case-service__title">
         {{ t('cases.service') }}
 
-        <wt-tooltip>
+        <wt-tooltip
+          v-if="!isReadOnly && !servicePath"
+        >
           <template #activator>
             <wt-icon
               icon="attention"
@@ -64,6 +66,7 @@ import SlaRecalculationPopup from './sla-recalculation-popup.vue';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
+const isReadOnly = inject('isReadOnly');
 
 const { disableUserInput } = useUserAccessControl();
 

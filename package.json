@@ -10,7 +10,7 @@
     "lint:fix-staged": "npx lint-staged",
     "tsc": "vue-tsc -p tsconfig.json",
     "utils:i": "npm i --install-links",
-    "utils:link-libs": "npm link @webitel/ui-sdk @webitel/ui-datalist @webitel/api-services",
+    "utils:link-libs": "npm link @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist",
     "prepare": "husky"
   },
   "type": "module",
@@ -19,9 +19,9 @@
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^11.0.3",
-    "@webitel/api-services": "^0.0.17",
-    "@webitel/ui-datalist": "^1.0.38",
-    "@webitel/ui-sdk": "^25.6.28",
+    "@webitel/api-services": "^0.0.19",
+    "@webitel/ui-datalist": "^1.0.44",
+    "@webitel/ui-sdk": "^25.6.37",
     "axios": "^1.7.7",
     "clipboard-copy": "^4.0.1",
     "date-fns": "^4.1.0",
@@ -35,13 +35,13 @@
     "lodash-es": "^4.17.21",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.2",
+    "qs": "^6.14.0",
     "sortablejs": "^1.15.6",
     "vue": "^3.5.1",
     "vue-i18n": "^11.1.1",
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0",
-    "webitel-sdk": "^25.2.19",
-    "zod": "^3.25.55"
+    "webitel-sdk": "^25.5.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

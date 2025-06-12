@@ -69,8 +69,7 @@
         <template #name="{ item }">
           <a
             target="_blank"
-            :href="contactCase(item.id)"
-            :class="{ 'contact-cases__link_disabled' : isReadOnly }"
+            :href="contactCase(item)"
             class="contact-cases__link"
           >
             <div class="contact-cases__link-content">
@@ -88,8 +87,7 @@
         <template #subject="{ item }">
           <a
             target="_blank"
-            :href="contactCase(item.id)"
-            :class="{ 'contact-cases__link_disabled' : isReadOnly }"
+            :href="contactCase(item)"
             class="contact-cases__link"
           >
             {{ item.subject }}
@@ -242,7 +240,12 @@ const parentId = computed(() => store.state.contacts.card.itemId);
 
 initialize({ parentId: parentId.value });
 
-const contactCase = (id: string) => `${import.meta.env.VITE_CRM_URL}/cases/${id}`;
+const contactCase = (caseItem: object) => {
+  if (isReadOnly) {
+    return `${import.meta.env.VITE_CRM_URL}/view/case_view/${caseItem.etag}`;
+  }
+  return `${import.meta.env.VITE_CRM_URL}/cases/${caseItem.id}`;
+}
 
 /*
  * show "toggle filters panel" badge if any filters are applied...

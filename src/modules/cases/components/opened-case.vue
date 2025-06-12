@@ -39,7 +39,7 @@
     </template>
 
     <template #side-panel>
-      <opened-case-general />
+      <opened-case-general :is-new="isNew"/>
     </template>
 
     <template #main>
@@ -227,6 +227,22 @@ watch(
   },
   { immediate: true },
 );
+
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
+ *
+ * This watcher is needed to set the id of the casesCard in readonly mode
+ * because in readonly mode we have etag as param in url,
+ * and some tabs cant get data from etag, so we need to set id from card get response
+ *
+ * */
+watch(() => itemInstance.value.id, (val) => {
+  if (val && isReadOnly) {
+    setId(val)
+  }
+})
 
 async function assignCaseToMe() {
   if (!userContact.value?.id) {

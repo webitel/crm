@@ -1,10 +1,10 @@
 <template>
   <section class="table-page">
-    <add-contact-in-group-popup
-      :group-ids="[itemInstance?.id]"
+    <add-contacts-in-group-popup
       :shown="isShowPopup"
-      @close="isShowPopup = false"
+      :group-ids="[itemInstance?.id]"
       @load-data="loadDataList"
+      @close="isShowPopup = false"
     />
 
     <delete-confirmation-popup
@@ -77,8 +77,8 @@ import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
+import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 import { useContactsGroupContactsStore } from '../stores/contacts';
-import AddContactInGroupPopup from './add-contact-in-group-popup.vue';
 
 const props = defineProps<{
   namespace: string,
