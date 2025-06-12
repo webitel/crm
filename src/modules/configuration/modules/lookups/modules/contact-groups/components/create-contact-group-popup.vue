@@ -34,7 +34,7 @@ const attrs = useAttrs();
 const { setItemProp } = useCardStore(`${props.namespace}/card`);
 
 const options = computed(() => Object.values(WebitelContactsGroupType)
-.filter((type) => type !== WebitelContactsGroupType.GROUPTYPEUNSPECIFIED)
+.filter((type) => type !== WebitelContactsGroupType.GroupTypeUnspecified)
 .map((type) => ({
   value: type,
   title: t(`lookups.contactGroups.types.${type}`),
