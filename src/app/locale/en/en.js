@@ -1,8 +1,10 @@
+import {
+  WebitelCasesRelationType,
+  WebitelCasesSourceType,
+  WebitelContactsGroupType,
+} from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { CasesSourceType } from 'webitel-sdk';
-import { WebitelContactsGroupType } from 'webitel-sdk';
-import { CasesRelationType } from 'webitel-sdk';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -127,12 +129,12 @@ export default {
     sources: {
       sources: 'Case source | Case sources',
       types: {
-        [CasesSourceType.CALL]: 'Call',
-        [CasesSourceType.CHAT]: 'Chat',
-        [CasesSourceType.SOCIALMEDIA]: 'Social Media',
-        [CasesSourceType.EMAIL]: 'Email',
-        [CasesSourceType.API]: 'API',
-        [CasesSourceType.MANUAL]: 'Manual',
+        [WebitelCasesSourceType.Call]: 'Call',
+        [WebitelCasesSourceType.Chat]: 'Chat',
+        [WebitelCasesSourceType.SocialMedia]: 'Social Media',
+        [WebitelCasesSourceType.Email]: 'Email',
+        [WebitelCasesSourceType.Api]: 'API',
+        [WebitelCasesSourceType.Manual]: 'Manual',
       },
     },
 
@@ -154,8 +156,8 @@ export default {
       addGroup: 'Add group',
       assignee: 'Assignee',
       types: {
-        [WebitelContactsGroupType.DYNAMIC]: 'Dynamic',
-        [WebitelContactsGroupType.STATIC]: 'Static',
+        [WebitelContactsGroupType.Dynamic]: 'Dynamic',
+        [WebitelContactsGroupType.Static]: 'Static',
       },
     },
 
@@ -275,15 +277,15 @@ export default {
       emptyText: 'There are no related cases yet',
       searchCasesPlaceholder: 'Search for a case',
       relationType: {
-        [CasesRelationType.DUPLICATES]: 'duplicates',
-        [CasesRelationType.ISDUPLICATEDBY]: 'is duplicated by',
-        [CasesRelationType.BLOCKS]: 'blocks',
-        [CasesRelationType.ISBLOCKEDBY]: 'is blocked by',
-        [CasesRelationType.CAUSES]: 'causes',
-        [CasesRelationType.ISCAUSEDBY]: 'is caused by',
-        [CasesRelationType.ISCHILDOF]: 'is child of',
-        [CasesRelationType.ISPARENTOF]: 'is parent of',
-        [CasesRelationType.RELATESTO]: 'relates to',
+        [WebitelCasesRelationType.Duplicates]: 'duplicates',
+        [WebitelCasesRelationType.IsDuplicatedBy]: 'is duplicated by',
+        [WebitelCasesRelationType.Blocks]: 'blocks',
+        [WebitelCasesRelationType.IsBlockedBy]: 'is blocked by',
+        [WebitelCasesRelationType.Causes]: 'causes',
+        [WebitelCasesRelationType.IsCausedBy]: 'is caused by',
+        [WebitelCasesRelationType.IsChildOf]: 'is child of',
+        [WebitelCasesRelationType.IsParentOf]: 'is parent of',
+        [WebitelCasesRelationType.RelatesTo]: 'relates to',
       },
     },
     slaRecalculationPopup: {

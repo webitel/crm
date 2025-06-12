@@ -20,7 +20,7 @@
         :search-method="loadContact"
         :value="itemInstance.assignee"
         :disabled="
-          disableUserInput || itemInstance.group?.type === WebitelContactsGroupType.DYNAMIC
+          disableUserInput || itemInstance.group?.type === WebitelContactsGroupType.Dynamic
         "
         @input="setItemProp({ path: 'assignee', value: $event })"
       />

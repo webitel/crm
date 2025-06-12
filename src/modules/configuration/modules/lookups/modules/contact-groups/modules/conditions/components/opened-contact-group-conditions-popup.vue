@@ -130,7 +130,7 @@ const save = async () => {
 async function loadStaticContactGroupsList(params) {
   return await ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.STATIC,
+    type: WebitelContactsGroupType.Static,
     enabled: true,
   });
 }

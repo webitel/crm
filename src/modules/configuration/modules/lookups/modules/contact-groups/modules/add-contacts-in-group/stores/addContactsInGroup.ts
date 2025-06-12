@@ -10,5 +10,6 @@ export const useAddContactsInGroupStore = createTableStore(
     apiModule: ContactsAPI,
     headers,
     isAppendDataList: true,
+    disablePersistence: true,
   },
 );

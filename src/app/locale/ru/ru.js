@@ -1,8 +1,10 @@
+import {
+  WebitelCasesRelationType,
+  WebitelCasesSourceType,
+  WebitelContactsGroupType,
+} from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import { CasesRelationType } from 'webitel-sdk';
-import { CasesSourceType } from 'webitel-sdk';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -127,12 +129,12 @@ export default {
     sources: {
       sources: 'Источник обращений | Источники обращений',
       types: {
-        [CasesSourceType.CALL]: 'Звонок',
-        [CasesSourceType.CHAT]: 'Чат',
-        [CasesSourceType.SOCIALMEDIA]: 'Социальная сеть',
-        [CasesSourceType.EMAIL]: 'Письмо',
-        [CasesSourceType.API]: 'API',
-        [CasesSourceType.MANUAL]: 'Созданное вручную',
+        [WebitelCasesSourceType.Call]: 'Звонок',
+        [WebitelCasesSourceType.Chat]: 'Чат',
+        [WebitelCasesSourceType.SocialMedia]: 'Социальная сеть',
+        [WebitelCasesSourceType.Email]: 'Письмо',
+        [WebitelCasesSourceType.Api]: 'API',
+        [WebitelCasesSourceType.Manual]: 'Созданное вручную',
       },
     },
 
@@ -154,8 +156,8 @@ export default {
       addGroup: 'Добавить контакты',
       assignee: 'Исполнитель',
       types: {
-        [WebitelContactsGroupType.DYNAMIC]: 'Динамическая',
-        [WebitelContactsGroupType.STATIC]: 'Статическая',
+        [WebitelContactsGroupType.Dynamic]: 'Динамическая',
+        [WebitelContactsGroupType.Static]: 'Статическая',
       },
     },
 
@@ -275,15 +277,15 @@ export default {
       emptyText: 'Тут еще нет связанных обращений',
       searchCasesPlaceholder: 'Найти обращение',
       relationType: {
-        [CasesRelationType.DUPLICATES]: 'дублирует',
-        [CasesRelationType.ISDUPLICATEDBY]: 'дублируется',
-        [CasesRelationType.BLOCKS]: 'блокирует',
-        [CasesRelationType.ISBLOCKEDBY]: 'блокируется',
-        [CasesRelationType.CAUSES]: 'вызывает',
-        [CasesRelationType.ISCAUSEDBY]: 'вызванное',
-        [CasesRelationType.ISCHILDOF]: 'дочернее для',
-        [CasesRelationType.ISPARENTOF]: 'родительское для',
-        [CasesRelationType.RELATESTO]: 'относится к',
+        [WebitelCasesRelationType.Duplicates]: 'дублирует',
+        [WebitelCasesRelationType.IsDuplicatedBy]: 'дублируется',
+        [WebitelCasesRelationType.Blocks]: 'блокирует',
+        [WebitelCasesRelationType.IsBlockedBy]: 'блокируется',
+        [WebitelCasesRelationType.Causes]: 'вызывает',
+        [WebitelCasesRelationType.IsCausedBy]: 'вызванное',
+        [WebitelCasesRelationType.IsChildOf]: 'дочернее для',
+        [WebitelCasesRelationType.IsParentOf]: 'родительское для',
+        [WebitelCasesRelationType.RelatesTo]: 'относится к',
       },
     },
     slaRecalculationPopup: {

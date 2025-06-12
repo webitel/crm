@@ -2,7 +2,7 @@
 export default function prettifyCustomLookupDate(timestamp) {
   const value = Number(timestamp);
   if (!value) return '';
-  const date = new Date(value * 1000);
+  const date = new Date(value);
 
   const time = date.toLocaleTimeString('en-GB', {
     hour: '2-digit',

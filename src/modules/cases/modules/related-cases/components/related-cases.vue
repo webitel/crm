@@ -167,7 +167,7 @@ import {
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CasesRelationType } from 'webitel-sdk';
+import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -235,7 +235,7 @@ const defaultState = reactive({
 });
 
 const relatedTypesOptions = computed(() => {
-  const types = Object.values(CasesRelationType).map((type) => {
+  const types = Object.values(WebitelCasesRelationType).map((type) => {
     return {
       id: type,
       name: t(`cases.relatedCases.relationType.${type}`),
@@ -321,19 +321,25 @@ async function submitCase() {
         relationType: defaultState.relationType,
       },
     });
+    updatePage(1);
     await loadDataList();
     resetForm();
   } catch (error) {
     console.error(error);
   }
 }
+function defineEtags(cases) {
+  if (Array.isArray(cases)) {
+    return cases.map(item => item?.etag);
+  }
+  return cases.etag ? [cases.etag] : [];
+}
+
 
 const deleteRelatedCases = async (items) => {
-  const arrayEtags = items.map((item) => item.etag);
-
   await RelatedCasesAPI.delete({
     parentId: props.parentId,
-    id: arrayEtags,
+    id: defineEtags(items),
   });
   updatePage(1);
   await loadDataList();

@@ -36,10 +36,10 @@
 </template>
 
 <script setup>
+import { WebitelCasesSourceType } from '@webitel/api-services/gen/models';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CasesSourceType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
@@ -60,8 +60,8 @@ const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
-const typesSourcesOptions = computed(() => Object.values(CasesSourceType)
-.filter((type) => type !== CasesSourceType.TYPEUNSPECIFIED)
+const typesSourcesOptions = computed(() => Object.values(WebitelCasesSourceType)
+.filter((type) => type !== WebitelCasesSourceType.TypeUnspecified)
 .map((type) => {
   return {
     id: type,

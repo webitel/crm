@@ -147,7 +147,7 @@ const { isNew } = useCardComponent({
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.STATIC,
+    type: WebitelContactsGroupType.Static,
     enabled: true,
   });
 }
@@ -200,7 +200,7 @@ watch(
 watch(
   () => itemInstance.value.group,
   (newValue) => {
-    const isDynamicGroup = newValue?.type === WebitelContactsGroupType.DYNAMIC;
+    const isDynamicGroup = newValue?.type === WebitelContactsGroupType.Dynamic;
 
     if (isDynamicGroup) {
       resetAssignee();
