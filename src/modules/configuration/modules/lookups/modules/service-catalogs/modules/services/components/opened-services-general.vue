@@ -67,10 +67,10 @@
 </template>
 
 <script setup>
+import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
 import { contacts } from '@webitel/ui-sdk/src/api/clients/сontacts/index.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import ContactGroupsAPI from '../../../../contact-groups/api/contactGroups.js';
