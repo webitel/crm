@@ -78,7 +78,7 @@
                 icon="link"
               />
               <span>
-                {{ item?.name }}
+                {{ item?.name || item?.url }}
               </span>
             </a>
           </template>
