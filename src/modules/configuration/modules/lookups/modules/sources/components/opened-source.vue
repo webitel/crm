@@ -18,6 +18,7 @@
         v-if="debouncedIsLoading"
       />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
@@ -58,9 +59,9 @@ const { id: routeId } = route.params;
 const formStore = useCaseSourcesCardStore();
 
 const {
-  // itemId,
-  // originalItemInstance,
-  // validationSchema,
+  itemId,
+  originalItemInstance,
+  validationSchema,
   isLoading,
   // isSaving, // todo: use me
   // error, // todo: use me
@@ -106,7 +107,7 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },
-    { name: isNew.value ? t('reusable.new') : originalItemInstance.value.name },
+    { name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name },
   ];
 });
 

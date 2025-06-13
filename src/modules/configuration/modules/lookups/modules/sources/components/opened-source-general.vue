@@ -9,7 +9,7 @@
       <wt-input
         v-model="modelValue.name"
         :label="t('reusable.name')"
-        :regle-validation="validationSchemaFields.name"
+        :regle-validation="validationSchemaFields?.name"
         :disabled="disableUserInput"
         required
       />
@@ -18,7 +18,7 @@
         v-model="modelValue.type"
         :label="t('vocabulary.type')"
         :options="typesSourcesOptions"
-        :v="null/*v.itemInstance.type*/"
+        :regle-validation="validationSchemaFields?.type"
         :disabled="disableUserInput"
         use-value-from-options-by-prop="id"
         required
@@ -39,7 +39,7 @@ import { WebitelCasesSourceType } from '@webitel/api-services/gen/models';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WtInput } from '@webitel/ui-sdk/components';
+import { WtInput, WtSelect } from '@webitel/ui-sdk/components';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesCardStore } from '../stores';
