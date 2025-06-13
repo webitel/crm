@@ -68,7 +68,7 @@ const {
 getFields();
 
 const resetFilters = () => {
-  filtersManager.value.reset();
+  filtersManager.value.reset({ exclude: ['search'] });
 };
 
 const applyPreset = (snapshot: string) => {
