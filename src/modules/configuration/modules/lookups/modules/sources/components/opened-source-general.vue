@@ -44,20 +44,8 @@ import { WtInput, WtSelect } from '@webitel/ui-sdk/components';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesCardStore } from '../stores';
 
-// const props = defineProps({
-//   namespace: {
-//     type: String,
-//     required: true,
-//   },
-//   v: {
-//     type: Object,
-//     required: true,
-//   },
-// });
-
 const sourcesStore = useCaseSourcesCardStore();
 const {
-  // itemInstance,
   validationSchema
 } = storeToRefs(sourcesStore);
 
@@ -73,20 +61,14 @@ const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
 
-// const { itemInstance, setItemProp } = useCardStore(props.namespace);
-
 const typesSourcesOptions = computed(() => Object.values(WebitelCasesSourceType)
-.filter((type) => type !== WebitelCasesSourceType.TYPE_UNSPECIFIED)
+.filter((type) => type !== WebitelCasesSourceType.TypeUnspecified)
 .map((type) => {
   return {
     id: type,
     name: t(`lookups.sources.types.${type}`),
   };
 }));
-
-// const currentTypeSource = computed(() => {
-//   return typesSourcesOptions.value.find((type) => type.id === itemInstance.value?.type);
-// });
 </script>
 
 <style lang="scss" scoped>
