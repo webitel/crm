@@ -31,10 +31,11 @@
           @input="setGroups"
         />
         <wt-select
-          :disabled="!itemInstance.group"
+          :key="itemInstance.group?.id"
+          :disabled="!itemInstance.group?.id"
           :value="itemInstance.assignee"
           :label="t('lookups.contactGroups.assignee')"
-          :options="contactList"
+          :search-method="loadContacts"
           @input="setItemProp({ path: 'assignee', value: $event })"
         />
       </form>
@@ -65,7 +66,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -107,7 +108,6 @@ v$.value.$touch();
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
-const contactList = ref([]);
 
 const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
@@ -144,17 +144,9 @@ async function loadContacts(params) {
 
 async function setGroups(value) {
   await setItemProp({ path: 'group', value });
-  contactList.value = [];
 
   if (!IsEmpty(itemInstance.value.assignee)) {
     await setItemProp({ path: 'assignee', value: '' });
-  }
-
-  if (!IsEmpty(value)) {
-    const { items } = await loadContacts();
-    if (items.length) {
-      contactList.value = items;
-    }
   }
 }
 
