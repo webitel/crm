@@ -1,6 +1,6 @@
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
-export default [
+export const headers = [
   {
     value: 'name',
     locale: 'reusable.name',
