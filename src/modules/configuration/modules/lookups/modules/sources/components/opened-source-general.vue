@@ -49,6 +49,8 @@ const {
   validationSchema
 } = storeToRefs(sourcesStore);
 
+window.vSchema = validationSchema;
+
 const modelValue = computed(() => {
   return validationSchema.value.r$.$value;
 });
