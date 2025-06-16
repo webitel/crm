@@ -154,6 +154,7 @@
 </template>
 
 <script setup>
+import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
@@ -171,7 +172,6 @@ import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreM
 import { computed, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import AddContactsInGroupPopup from '../modules/add-contacts-in-group/components/add-contacts-in-group-popup.vue';

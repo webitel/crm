@@ -83,10 +83,10 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { WebitelContactsGroupType } from 'webitel-sdk';
 
 import LabelsAPI from '../../_shared/modules/contacts/api/LabelsAPI';
 import ContactGroupsAPI from '../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
