@@ -138,7 +138,6 @@ const {
   headers,
   isLoading,
   next,
-  page,
 } = storeToRefs(tableStore);
 
 const {
@@ -146,9 +145,11 @@ const {
   updateSort,
   updateSelected,
   appendToDataList,
+  updatePage,
 } = tableStore;
 
 onMounted(() => {
+  updatePage(1);
   initialize();
 });
 

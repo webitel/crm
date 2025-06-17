@@ -146,7 +146,7 @@ async function setGroups(value) {
   await setItemProp({ path: 'group', value });
 
   if (!IsEmpty(itemInstance.value.assignee)) {
-    await setItemProp({ path: 'assignee', value: '' });
+    await setItemProp({ path: 'assignee', value: null });
   }
 }
 
