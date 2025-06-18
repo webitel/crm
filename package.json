@@ -21,7 +21,7 @@
     "@vueuse/core": "^11.0.3",
     "@webitel/api-services": "^0.0.22",
     "@webitel/ui-datalist": "^1.0.47",
-    "@webitel/ui-sdk": "^25.8.0",
+    "@webitel/ui-sdk": "~25.8",
     "axios": "^1.7.7",
     "clipboard-copy": "^4.0.1",
     "date-fns": "^4.1.0",
@@ -42,7 +42,8 @@
     "vue-router": "^4.3.2",
     "vuex": "^4.1.0",
     "webitel-sdk": "^25.5.4",
-    "zod": "^3.25.64"
+    "zod": "^3.25.64",
+    "@regle/schemas": "^1.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

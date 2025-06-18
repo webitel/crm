@@ -9,7 +9,7 @@
       <wt-input
         v-model="modelValue.name"
         :label="t('reusable.name')"
-        :regle-validation="validationSchemaFields?.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
       />
@@ -18,7 +18,7 @@
         v-model="modelValue.type"
         :label="t('vocabulary.type')"
         :options="typesSourcesOptions"
-        :regle-validation="validationSchemaFields?.type"
+        :regle-validation="validationFields?.type"
         :disabled="disableUserInput"
         use-value-from-options-by-prop="id"
         required
@@ -35,29 +35,23 @@
 </template>
 
 <script lang="ts" setup>
+import { RegleSchemaFieldStatus } from '@regle/schemas';
 import { WebitelCasesSourceType } from '@webitel/api-services/gen/models';
-import { storeToRefs } from 'pinia';
+import { WebitelCasesSource } from '@webitel/api-services/gen/models';
+import { WtInput, WtSelect } from '@webitel/ui-sdk/components';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WtInput, WtSelect } from '@webitel/ui-sdk/components';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseSourcesCardStore } from '../stores';
 
-const sourcesStore = useCaseSourcesCardStore();
-const {
-  validationSchema
-} = storeToRefs(sourcesStore);
+const modelValue = defineModel<WebitelCasesSource>();
 
-window.vSchema = validationSchema;
-
-const modelValue = computed(() => {
-  return validationSchema.value.r$.$value;
-});
-
-const validationSchemaFields = computed(() => {
-  return validationSchema.value.r$.$fields;
-});
+defineProps<{
+  validationFields: {
+    /* keys as in CaseSource, but values are Regle schema objects */
+    [K in keyof WebitelCasesSource]: RegleSchemaFieldStatus<WebitelCasesSource[K]>
+  };
+}>();
 
 const { t } = useI18n();
 

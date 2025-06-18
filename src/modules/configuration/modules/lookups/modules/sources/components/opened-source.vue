@@ -5,7 +5,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -25,6 +25,8 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
+            v-model="modelValue"
+            :validation-fields="validationFields"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
@@ -38,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useCardComponent, useItemCardSaveText, useValidation } from '@webitel/ui-datalist/card';
+import { useCardComponent, useCardValidation,useItemCardSaveText } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
@@ -80,10 +82,11 @@ initialize({
 });
 
 const {
-  disabledSave,
-  isEdited,
-  checkIfInvalid,
-} = useValidation({ validationSchema });
+  modelValue,
+  validationFields,
+  hasValidationErrors,
+  validate,
+} = useCardValidation({ validationSchema });
 
 const {
   debouncedIsLoading,
@@ -93,12 +96,13 @@ const {
   itemId,
   isLoading,
   saveItem,
-  checkIfInvalid,
+  validate,
 });
+
+const isAnyFieldEdited = true; // todo
 
 const { saveText } = useItemCardSaveText({
   isNew,
-  isEdited,
 });
 
 const path = computed(() => {
