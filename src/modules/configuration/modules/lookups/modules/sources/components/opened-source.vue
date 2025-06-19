@@ -40,69 +40,40 @@
 </template>
 
 <script lang="ts" setup>
-import { useCardComponent, useCardValidation,useItemCardSaveText } from '@webitel/ui-datalist/card';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { storeToRefs } from 'pinia';
-import { computed, onUnmounted } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesCardStore } from '../stores';
+import {WebitelCasesSource} from "@webitel/api-services/gen";
 
 const { t } = useI18n();
-const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { id: routeId } = route.params;
-
-const formStore = useCaseSourcesCardStore();
-
 const {
-  itemId,
-  originalItemInstance,
-  validationSchema,
-  isLoading,
-  // isSaving, // todo: use me
-  // error, // todo: use me
-} = storeToRefs(formStore);
-
-const {
-  initialize,
-  saveItem,
-  $reset: resetStore,
-} = formStore;
-
-onUnmounted(resetStore);
-
-initialize({
-  itemId: routeId as string,
-});
-
-const {
+  // models
   modelValue,
-  validationFields,
-  hasValidationErrors,
-  validate,
-} = useCardValidation({ validationSchema });
 
-const {
+  // state
   debouncedIsLoading,
-  save,
-  isNew
-} = useCardComponent({
-  itemId,
-  isLoading,
-  saveItem,
-  validate,
-});
+  originalItemInstance,
 
-const isAnyFieldEdited = true; // todo
-
-const { saveText } = useItemCardSaveText({
+  // computed
   isNew,
+  saveText,
+  hasValidationErrors,
+  isAnyFieldEdited,
+  validationFields,
+
+  // actions
+  save,
+} = useCardComponent<WebitelCasesSource>({
+  useCardStore: useCaseSourcesCardStore,
 });
 
 const path = computed(() => {
