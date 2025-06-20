@@ -34,6 +34,9 @@
               <dynamic-filter-search
                 :filters-manager="filtersManager"
                 single-search-name="q"
+                @filter:add="addFilter"
+                @filter:update="updateFilter"
+                @filter:delete="deleteFilter"
               />
             </template>
           </wt-action-bar>
@@ -146,7 +149,6 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 
 const tableStore = useCaseSourcesDatalistStore();
 
-
 const {
   dataList,
   selected,
@@ -167,6 +169,9 @@ const {
   updateSize,
   updateSort,
   deleteEls,
+  addFilter,
+  updateFilter,
+  deleteFilter,
 } = tableStore;
 
 initialize();
