@@ -3,6 +3,7 @@ import './app/css/main.scss';
 
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
+import { configureZod } from '@webitel/ui-sdk/validations';
 
 import App from './app.vue';
 import { createUserAccessControl } from './app/composables/useUserAccessControl';
@@ -30,6 +31,10 @@ const fetchConfig = async () => {
 };
 
 const pinia = createPinia();
+
+configureZod({
+  t: i18n.global.t,
+});
 
 const initApp = async () => {
   const app = createApp(App)

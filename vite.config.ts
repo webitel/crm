@@ -46,7 +46,7 @@ export default ({ mode }) => {
        where "/esm" dir still exists. need to update vue-datepicker to v8 at least */
         'date-fns/esm': 'date-fns',
       },
-      dedupe: ['vue', '@vue/compat'],
+      dedupe: ['vue', '@vue/compat', 'zod'],
     },
     plugins: [
       vue({

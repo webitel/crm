@@ -5,7 +5,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -14,15 +14,19 @@
     </template>
 
     <template #main>
+      <wt-loader
+        v-if="debouncedIsLoading"
+      />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
+            v-model="modelValue"
+            :validation-fields="validationFields"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
@@ -35,59 +39,54 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+<script lang="ts" setup>
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { CrmSections } from '@webitel/ui-sdk/enums';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const namespace = 'configuration/lookups/sources';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useCaseSourcesCardStore } from '../stores';
+import {WebitelCasesSource} from "@webitel/api-services/gen";
+
 const { t } = useI18n();
 
-const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
-} = useCardStore(namespace);
-
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-    type: { required },
-  },
-})), { itemInstance }, { $autoDirty: true });
-
-v$.value.$touch();
-
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-});
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { close } = useClose(CrmSections.SOURCES);
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const {
+  // models
+  modelValue,
+
+  // state
+  debouncedIsLoading,
+  originalItemInstance,
+
+  // computed
+  isNew,
+  saveText,
+  hasValidationErrors,
+  isAnyFieldEdited,
+  validationFields,
+
+  // actions
+  save,
+} = useCardComponent<WebitelCasesSource>({
+  useCardStore: useCaseSourcesCardStore,
+});
 
 const path = computed(() => {
-
   return [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },
-    { name: isNew.value ? t('reusable.new') : pathName.value },
+    { name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name },
   ];
 });
 
-initialize();
+const { close } = useClose(CrmSections.Sources);
 </script>
 
 <style lang="scss" scoped>

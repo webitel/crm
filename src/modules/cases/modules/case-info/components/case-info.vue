@@ -90,7 +90,7 @@ import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/sources.js';
+import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/caseSources.ts';
 import CaseComments from '../../comments/components/case-comments.vue';
 import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
