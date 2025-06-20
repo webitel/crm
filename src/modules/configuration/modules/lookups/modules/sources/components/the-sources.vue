@@ -73,7 +73,7 @@
               <template #name="{ item }">
                 <wt-item-link
                   :link="{
-                    name: `${CrmSections.SOURCES}-card`,
+                    name: `${CrmSections.Sources}-card`,
                     params: { id: item.id },
                   }"
                 >
@@ -126,10 +126,9 @@
 
 <script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import { useClose } from "@webitel/ui-sdk/composables";
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -140,7 +139,6 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesDatalistStore } from '../stores';
-
 const { t } = useI18n();
 const router = useRouter();
 
@@ -196,14 +194,14 @@ const { close } = useClose('configuration');
 
 const add = () => {
   return router.push({
-    name: `${CrmSections.SOURCES}-card`,
+    name: `${CrmSections.Sources}-card`,
     params: { id: 'new' },
   })
 };
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.SOURCES}-card`,
+    name: `${CrmSections.Sources}-card`,
     params: { id: item.id },
   });
 }
