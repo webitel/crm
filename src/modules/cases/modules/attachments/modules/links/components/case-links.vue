@@ -117,7 +117,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required, url } from '@vuelidate/validators';
-import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
