@@ -6,6 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "test:unit": "vitest",
+    "test:unit:ci": "vitest run --reporter=junit --outputFile.junit=test-results/tests.xml",
+    "lint:ci": "eslint --format junit ./src --output-file test-results/eslint-results.xml && prettier --check ./src",
     "lint:fix": "eslint --fix ./src && prettier --write --check ./src",
     "lint:fix-staged": "npx lint-staged",
     "tsc": "vue-tsc -p tsconfig.json",
