@@ -11,13 +11,13 @@ concurrency:
 jobs:
   prepare:
     name: Prepare
-    uses: webitel/reusable-workflows/.github/workflows/node-prepare.yml@10523d6d9a3a87627d49ac15645901f1de11abc4
+    uses: webitel/reusable-workflows/.github/workflows/node-prepare.yml@708359382442f9ac3b9f51b51b1357b2772e7079
     with: { only-dependencies: true }
 
   checks:
     name: Checks
     needs: [ prepare ]
-    uses: webitel/reusable-workflows/.github/workflows/node-checks.yml@10523d6d9a3a87627d49ac15645901f1de11abc4
+    uses: webitel/reusable-workflows/.github/workflows/node-checks.yml@708359382442f9ac3b9f51b51b1357b2772e7079
     permissions:
       contents: read
       actions: read
