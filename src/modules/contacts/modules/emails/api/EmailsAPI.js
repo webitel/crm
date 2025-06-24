@@ -5,9 +5,11 @@ import { applyTransform,
   notify,
   sanitize,
   snakeToCamel,
-  getDefaultGetParams,
   starToSearch,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
+import {
+  getDefaultGetParams,
+} from '@webitel/api-services/api/defaults';
 import { EmailsApiFactory } from 'webitel-sdk';
 
 import getDefaultGetListResponse from '../../../../../app/api/defaults/getDefaultGetListResponse';

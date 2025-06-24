@@ -1,16 +1,18 @@
-import { applyTransform,
+import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   camelToSnake,
-  generateUrl,
   merge,
   notify,
   sanitize,
   snakeToCamel,
+  generateUrl,
   starToSearch,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
 import { TypesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();

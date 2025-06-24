@@ -1,11 +1,13 @@
-import { applyTransform,
-  camelToSnake,
+import {
   getDefaultInstance,
   getDefaultOpenAPIConfig,
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
+  camelToSnake,
   notify,
   sanitize,
   snakeToCamel,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
 import { DynamicGroupsApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();

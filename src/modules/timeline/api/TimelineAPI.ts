@@ -3,7 +3,7 @@ import { applyTransform,
   notify,
   sanitize,
   snakeToCamel,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
 import deepCopy from 'deep-copy';
 import { CaseTimelineApiFactory, TimelineApiFactory } from 'webitel-sdk';
 

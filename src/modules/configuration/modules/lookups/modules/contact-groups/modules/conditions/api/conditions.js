@@ -1,15 +1,17 @@
-import { applyTransform,
+import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   camelToSnake,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
 import { DynamicConditionsApiFactory } from 'webitel-sdk';
 
 import i18n from '../../../../../../../../../app/locale/i18n.js';

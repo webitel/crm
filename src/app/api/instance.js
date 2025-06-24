@@ -1,4 +1,4 @@
-import { getDefaultInstance } from '@webitel/api-services/api';
+import { getDefaultInstance } from '@webitel/api-services/api/defaults';
 
 export const instance = getDefaultInstance();
 

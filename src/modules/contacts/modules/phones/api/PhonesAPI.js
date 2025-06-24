@@ -4,9 +4,11 @@ import { applyTransform,
   mergeEach,
   notify,
   sanitize,
-  snakeToCamel,getDefaultGetParams,
+  snakeToCamel,
   starToSearch,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
+import { getDefaultGetParams,
+} from '@webitel/api-services/api/defaults';
 import { PhonesApiFactory } from 'webitel-sdk';
 
 import getDefaultGetListResponse from '../../../../../app/api/defaults/getDefaultGetListResponse';

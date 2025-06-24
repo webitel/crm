@@ -1,18 +1,20 @@
 import {
-  applyTransform,
-  camelToSnake,
   generatePermissionsApi,
+} from '@webitel/api-services/api';
+import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
+} from '@webitel/api-services/api/defaults';
+import {
+  applyTransform,
+  camelToSnake,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
-  starToSearch,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
 import { snakeToKebab } from '@webitel/ui-sdk/scripts';
 import { CasesApiFactory } from 'webitel-sdk';
 

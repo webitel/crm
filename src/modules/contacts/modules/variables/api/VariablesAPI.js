@@ -1,13 +1,15 @@
-import { applyTransform,
+import {
   getDefaultGetListResponse,
   getDefaultGetParams,
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   camelToSnake,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/api-services/api';
+} from '@webitel/api-services/api/transformers';
 import { VariablesApiFactory } from 'webitel-sdk';
 
 import instance from '../../../../../app/api/instance';
