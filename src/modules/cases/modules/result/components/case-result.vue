@@ -50,6 +50,7 @@
   </div>
 </template>
 <script setup>
+import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -57,7 +58,6 @@ import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import EditableField from '../../case-info/components/editable-field.vue';
-import CloseReasonsAPI from '../api/CloseReasonsAPI.js';
 
 const props = defineProps({
   namespace: {
@@ -86,7 +86,7 @@ async function searchCloseReasons(params) {
   if (!closeReasonId.value) {
     return { items: [] };
   }
-  return await CloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
+  return await CaseCloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
 }
 
 </script>

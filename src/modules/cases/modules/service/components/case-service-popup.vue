@@ -47,11 +47,10 @@
 </template>
 
 <script setup>
+import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import deepCopy from 'deep-copy';
 import { onMounted, ref, watch } from 'vue';
 
-import CatalogsAPI from '../../../../configuration/modules/lookups/modules/service-catalogs/api/service-catalogs.js';
-import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 
 const props = defineProps({
@@ -73,7 +72,7 @@ const loading = ref(false);
 
 const save = async () => {
   const service = await ServiceAPI.get({ itemId: selectedElement.value });
-  const catalog = await CatalogAPI.get({
+  const catalog = await ServiceCatalogsAPI.get({
     itemId: service.catalogId,
   });
 
@@ -94,7 +93,7 @@ const loadCatalogs = async () => {
   try {
     loading.value = true;
 
-    const { items } = await CatalogsAPI.getList({
+    const { items } = await ServiceCatalogsAPI.getList({
       size: -1, // It this case for get all catalogs with services we need to pass size -1
       search: search.value,
       fields: ['id', 'name', 'closeReasonGroup', 'status', 'service'],

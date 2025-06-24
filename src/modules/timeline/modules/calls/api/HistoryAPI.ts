@@ -1,10 +1,10 @@
-import { getDefaultGetListResponse } from '@webitel/ui-sdk/src/api/defaults/index';
-import applyTransform from '@webitel/ui-sdk/src/api/transformers/applyTransform';
+import { getDefaultGetListResponse
+} from '@webitel/api-services/api/defaults';
 import {
+applyTransform,
   merge,
   notify,
-  snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers/index';
+  snakeToCamel} from '@webitel/api-services/api/transformers';
 import { CallServiceApiFactory } from 'webitel-sdk';
 
 import instance from '../../../../../app/api/instance.js';

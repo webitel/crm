@@ -3,8 +3,8 @@ import {
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   camelToSnake,
   generateUrl,
   merge,
@@ -12,7 +12,7 @@ import applyTransform, {
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api/transformers';
 import { TypesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();

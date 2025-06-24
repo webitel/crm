@@ -1,5 +1,7 @@
-import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+import {
+  getDefaultGetParams,
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   camelToSnake,
   merge,
   mergeEach,
@@ -7,7 +9,7 @@ import applyTransform, {
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api/transformers';
 import { EmailsApiFactory } from 'webitel-sdk';
 
 import getDefaultGetListResponse from '../../../../../app/api/defaults/getDefaultGetListResponse';

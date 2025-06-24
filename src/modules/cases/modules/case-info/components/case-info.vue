@@ -49,7 +49,7 @@
             v-bind="props"
             :v="v$.value.itemInstance.source"
             :disabled="disableUserInput"
-            :search-method="SourcesAPI.getLookup"
+            :search-method="CaseSourcesAPI.getLookup"
             @input="props.updateValue($event)"
           />
         </template>
@@ -83,14 +83,14 @@
   </div>
 </template>
 <script setup>
+import { CaseSourcesAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { WtObject } from '@webitel/ui-sdk/src/enums/index';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import SourcesAPI from '../../../../configuration/modules/lookups/modules/sources/api/caseSources.ts';
 import CaseComments from '../../comments/components/case-comments.vue';
 import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';

@@ -62,6 +62,7 @@
   </section>
 </template>
 <script setup lang="ts">
+import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { useAccessControl } from '@webitel/ui-sdk/composables/useAccessControl/useAccessControl';
 import { IconAction } from '@webitel/ui-sdk/enums';
@@ -70,7 +71,6 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
@@ -118,7 +118,7 @@ const {
 } = tableStore;
 
 const deleteEls = async (ids: string[]) => {
-  await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
+  await ContactGroupsAPI.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
   await loadDataList()
 }
 

@@ -1,11 +1,11 @@
-import { getDefaultGetParams } from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+  import { getDefaultGetParams
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   merge,
   notify,
-  sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api/transformers';
 import { IMClientsApiFactory } from 'webitel-sdk';
 
 import getDefaultGetListResponse from '../../../../../app/api/defaults/getDefaultGetListResponse';

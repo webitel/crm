@@ -1,3 +1,4 @@
+import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -5,7 +6,6 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import CatalogsAPI from '../api/service-catalogs.js';
 import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';
 
@@ -27,7 +27,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
   state: {
-    api: CatalogsAPI,
+    api: ServiceCatalogsAPI,
   },
 });
 

@@ -1,18 +1,19 @@
-import { generatePermissionsApi } from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi.js';
+import { generatePermissionsApi,
+} from '@webitel/api-services/api';
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+} from '@webitel/api-services/api/defaults';
+import { applyTransform,
   camelToSnake,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api/transformers';
 import { DictionariesApiFactory } from 'webitel-sdk';
 
 import sortFields from '../../wt-type-extension/utils/sortDynamicField';

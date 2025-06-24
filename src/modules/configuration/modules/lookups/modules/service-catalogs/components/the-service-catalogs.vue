@@ -73,7 +73,7 @@
                 <wt-item-link
                   class="the-service-catalogs__service-name"
                   :link="{
-                    name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                    name: `${CrmSections.ServiceCatalogs}-services`,
                     params: {
                       catalogId: item.catalogId ? item.catalogId : item.id,
                       rootId: item.id,
@@ -101,7 +101,7 @@
                     class="the-service-catalogs__service-assignee"
                     target="_blank"
                     :link="{
-                      name: `${CrmSections.CONTACTS}-card`,
+                      name: `${CrmSections.Contacts}-card`,
                       params: { id: item.assignee.id },
                     }"
                   >
@@ -181,10 +181,10 @@
 </template>
 
 <script setup>
+import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { CrmSections,IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -207,7 +207,6 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../app/utils/displayText.js';
-import CatalogsAPI from '../api/service-catalogs.js';
 import ServicesAPI from '../modules/services/api/services.js';
 import { checkDisableState } from '../utils/checkDisableState.js';
 import DisplayChipItems from './display-chip-items.vue';
@@ -284,7 +283,7 @@ const {
 
 const addNewCatalog = () => {
   router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-card`,
+    name: `${CrmSections.ServiceCatalogs}-card`,
     params: { id: 'new' },
   });
 };
@@ -292,12 +291,12 @@ const addNewCatalog = () => {
 const edit = (item) => {
   if (isRootElement(item)) {
     return router.push({
-      name: `${CrmSections.SERVICE_CATALOGS}-card`,
+      name: `${CrmSections.ServiceCatalogs}-card`,
       params: { id: item.id },
     });
   } else {
     return router.push({
-      name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+      name: `${CrmSections.ServiceCatalogs}-services-card`,
       params: {
         catalogId: item.catalogId,
         rootId: item.rootId,
@@ -324,7 +323,7 @@ const checkParentState = computed(() => ({ catalog, item }) => {
 
 const changeState = async (item) => {
   if (isRootElement(item)) {
-    await CatalogsAPI.update({
+    await ServiceCatalogsAPI.update({
       itemInstance: {
         ...item,
         state: !item.state,

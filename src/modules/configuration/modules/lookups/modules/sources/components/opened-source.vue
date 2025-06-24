@@ -46,10 +46,9 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesCardStore } from '../stores';
-import {WebitelCasesSource} from "@webitel/api-services/gen";
+// import {WebitelCasesSource} from "@webitel/api-services/gen";
 
 const { t } = useI18n();
 
@@ -72,7 +71,7 @@ const {
 
   // actions
   save,
-} = useCardComponent<WebitelCasesSource>({
+} = useCardComponent/*<WebitelCasesSource>*/({
   useCardStore: useCaseSourcesCardStore,
 });
 

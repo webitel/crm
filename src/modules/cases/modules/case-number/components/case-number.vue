@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
 import { useCardStore } from '@webitel/ui-sdk/modules/CardStoreModule/composables/useCardStore.js';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const namespace = inject('namespace');
