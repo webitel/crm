@@ -1,9 +1,8 @@
-import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
-import { contacts } from '@webitel/ui-sdk/src/api/clients/сontacts/index';
+import { ContactGroupsAPI,ContactsAPI } from '@webitel/api-services/api';
 
 const ContactGroupContactsAPI = {
-  delete: contactGroups.removeContactsFromGroup,
-  getList: contacts.getList,
+  delete: ContactGroupsAPI.removeContactsFromGroup,
+  getList: ContactsAPI.getList,
 };
 
 export default ContactGroupContactsAPI;

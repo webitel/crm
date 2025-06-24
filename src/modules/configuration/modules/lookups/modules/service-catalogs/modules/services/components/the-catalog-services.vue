@@ -143,9 +143,10 @@
 </template>
 
 <script setup>
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { ServiceCatalogsAPI } from '@webitel/api-services/api';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
@@ -162,7 +163,6 @@ import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { displayText } from '../../../../../../../../../app/utils/displayText.js';
-import CatalogsAPI from '../../../api/service-catalogs.js';
 import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
@@ -304,7 +304,7 @@ const loadRootService = async () => {
 };
 
 const loadCatalog = async () => {
-  catalog.value = await CatalogsAPI.get({
+  catalog.value = await ServiceCatalogsAPI.get({
     itemId: route.params.catalogId,
   });
 };

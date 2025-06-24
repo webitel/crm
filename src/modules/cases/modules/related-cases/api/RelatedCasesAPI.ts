@@ -1,16 +1,14 @@
-import {
+import { applyTransform,
+  camelToSnake,
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index';
-import applyTransform, {
-  camelToSnake,
   merge,
   notify,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index';
+} from '@webitel/api-services/api';
 import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule.d.ts';
 import { CasesRelatedCase, RelatedCasesApiFactory } from 'webitel-sdk';
 

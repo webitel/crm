@@ -1,17 +1,15 @@
-import {
-  getDefaultGetListResponse,
-  getDefaultGetParams,
-  getDefaultInstance,
-  getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index';
-import applyTransform, {
+import { applyTransform,
   camelToSnake,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index';
+  getDefaultGetListResponse,
+  getDefaultGetParams,
+  getDefaultInstance,
+  getDefaultOpenAPIConfig,
+} from '@webitel/api-services/api';
 import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule';
 import { CaseCommentsApiFactory, CasesCaseComment } from 'webitel-sdk';
 

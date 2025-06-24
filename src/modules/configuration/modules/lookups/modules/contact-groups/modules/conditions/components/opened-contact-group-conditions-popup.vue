@@ -61,7 +61,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
-import ContactsAPI from '@webitel/ui-sdk/src/api/clients/сontacts/contacts.js';
+import { ContactsAPI, ContactGroupsAPI } from '@webitel/api-services/api';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
@@ -69,8 +69,6 @@ import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-
-import ContactGroupsAPI from '../../../api/contactGroups.js';
 
 const props = defineProps({
   namespace: {

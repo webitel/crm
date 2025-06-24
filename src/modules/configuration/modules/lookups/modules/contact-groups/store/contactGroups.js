@@ -5,8 +5,8 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+import { ContactGroupsAPI } from '@webitel/api-services/api';
 
-import ContactGroupsAPI from '../api/contactGroups.js';
 import conditions from '../modules/conditions/store/conditions';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers';

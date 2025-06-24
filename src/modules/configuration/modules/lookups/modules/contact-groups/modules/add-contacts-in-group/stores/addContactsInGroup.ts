@@ -1,5 +1,5 @@
 import { createTableStore } from '@webitel/ui-datalist';
-import { contacts as ContactsAPI } from '@webitel/ui-sdk/src/api/clients/сontacts/index';
+import { ContactsAPI } from '@webitel/api-services/api';
 
 import { AddContactsInGroupNamespace } from '../namespace';
 import { headers } from './_internals/headers';

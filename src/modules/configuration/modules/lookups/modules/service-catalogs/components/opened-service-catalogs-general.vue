@@ -96,15 +96,11 @@
 </template>
 
 <script setup>
-import SkillsAPI from '@webitel/ui-sdk/src/api/clients/skills/skills.js';
-import TeamsAPI from '@webitel/ui-sdk/src/api/clients/teams/teams.js';
+import { SkillsAPI, TeamsAPI, SlasAPI, CaseStatusesAPI, CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CloseReasonGroupsAPI from '../../close-reason-groups/api/closeReasonGroups.js';
-import SlasAPI from '../../slas/api/slas.js';
-import StatusesApi from '../../statuses/api/statuses.js';
 
 const props = defineProps({
   namespace: {
@@ -124,11 +120,11 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStatusesList(params) {
-  return StatusesApi.getLookup(params);
+  return CaseStatusesAPI.getLookup(params);
 }
 
 function loadReasonList(params) {
-  return CloseReasonGroupsAPI.getLookup(params);
+  return CaseCloseReasonGroupsAPI.getLookup(params);
 }
 
 function loadSlaList(params) {

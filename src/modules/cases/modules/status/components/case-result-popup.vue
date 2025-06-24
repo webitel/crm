@@ -53,8 +53,7 @@ import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { WtTextarea }  from '@webitel/ui-sdk/components';
-
-import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
+import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 
 const createDraftData = () => ({
   reason: null,
@@ -105,7 +104,7 @@ const closeReasonId = computed(
 );
 
 async function searchCloseReasons(params) {
-  return await CloseReasonsAPI.getLookup({
+  return await CaseCloseReasonsAPI.getLookup({
     closeReasonGroupId: closeReasonId.value,
     ...params,
   });

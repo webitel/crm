@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import CalendarsAPI from '@webitel/ui-sdk/src/api/clients/calendars/calendars.js';
+import { CalendarsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 

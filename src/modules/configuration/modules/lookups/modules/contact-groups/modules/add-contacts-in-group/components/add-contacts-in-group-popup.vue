@@ -117,8 +117,8 @@ import { useInfiniteScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { ContactGroupsAPI } from '@webitel/api-services/api';
 
-import ContactGroupsAPI from '../../../api/contactGroups';
 import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';

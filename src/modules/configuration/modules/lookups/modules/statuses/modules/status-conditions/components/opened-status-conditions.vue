@@ -124,8 +124,9 @@
 </template>
 
 <script setup>
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
@@ -140,7 +141,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import StatusConditionsAPI from '../api/status-conditions.js';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
 
@@ -259,7 +259,7 @@ async function changeInitialStatus({ item, index, value }) {
       el.initial = false;
     });
     dataList.value[index].initial = value;
-    await StatusConditionsAPI.patch({
+    await CaseStatusConditionsAPI.patch({
       id: item.id,
       parentId: parentId.value,
       changes: { initial: value },
@@ -275,7 +275,7 @@ async function changeInitialStatus({ item, index, value }) {
 async function changeFinalStatus({ item, index, value }) {
   try {
     dataList.value[index].final = value;
-    await StatusConditionsAPI.patch({
+    await CaseStatusConditionsAPI.patch({
       id: item.id,
       parentId: parentId.value,
       changes: { final: value },

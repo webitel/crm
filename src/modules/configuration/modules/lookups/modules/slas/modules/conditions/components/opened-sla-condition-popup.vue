@@ -78,9 +78,9 @@ import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import PrioritiesAPI from '../../../../priorities/api/priorities.js';
 
 const props = defineProps({
   namespace: {
@@ -132,11 +132,11 @@ function loadDataList() {
 }
 
 function getFreePriorities(params) {
-  return PrioritiesAPI.getLookup({ ...params,notInSla: route.params.id });
+  return CasePrioritiesAPI.getLookup({ ...params,notInSla: route.params.id });
 }
 
 function getConditionPriorities(params) {
-  return PrioritiesAPI.getLookup({ ...params, inSlaCond: id.value });
+  return CasePrioritiesAPI.getLookup({ ...params, inSlaCond: id.value });
 }
 
 const save = async () => {

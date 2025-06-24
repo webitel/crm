@@ -70,7 +70,7 @@ import DeleteConfirmationPopup
 import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { contactGroups } from '@webitel/ui-sdk/src/api/clients/index';
+import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
@@ -118,7 +118,7 @@ const {
 } = tableStore;
 
 const deleteEls = async (ids: string[]) => {
-  await contactGroups.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
+  await ContactGroupsAPI.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
   await loadDataList()
 }
 

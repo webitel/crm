@@ -1,24 +1,22 @@
 import {
+  applyTransform,
+  camelToSnake,
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
-  camelToSnake,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api';
 import { CaseLinksApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
-const linksService = new CaseLinksApiFactory(configuration, '', instance);
+const linksService = CaseLinksApiFactory(configuration, '', instance);
 
 const getLinksList = async ({ parentId, ...rest }) => {
   const fieldsToSend = ['etag', 'page', 'size', 'q'];

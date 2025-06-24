@@ -28,9 +28,9 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import PrioritiesAPI from '../../../../configuration/modules/lookups/modules/priorities/api/priorities.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const { t } = useI18n();
@@ -48,7 +48,7 @@ const { isNew } = useCardComponent({
 });
 
 async function setDefaultPriority() {
-  const defaultPriority = (await PrioritiesAPI.getLookup({})).items[0];
+  const defaultPriority = (await CasePrioritiesAPI.getLookup({})).items[0];
   await setItemProp({ path: 'priority', value: defaultPriority });
 }
 

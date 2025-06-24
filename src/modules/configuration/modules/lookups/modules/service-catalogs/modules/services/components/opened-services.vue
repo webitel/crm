@@ -44,6 +44,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
@@ -53,7 +54,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import CatalogsAPI from '../../../api/service-catalogs.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 
@@ -107,7 +107,7 @@ const loadRootService = async () => {
 };
 
 const loadCatalog = async () => {
-  catalog.value = await CatalogsAPI.get({
+  catalog.value = await ServiceCatalogsAPI.get({
     itemId: catalogId.value,
   });
 };
