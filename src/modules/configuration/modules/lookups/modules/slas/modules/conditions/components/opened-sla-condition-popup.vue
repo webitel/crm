@@ -72,13 +72,13 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { minValue, required } from '@vuelidate/validators';
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 

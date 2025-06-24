@@ -184,7 +184,7 @@
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
-import { IconAction, CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections,IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {

@@ -83,12 +83,12 @@
   </div>
 </template>
 <script setup>
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { CaseSourcesAPI } from '@webitel/api-services/api';
 import { WtObject } from '@webitel/ui-sdk/enums';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
 import { inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CaseSourcesAPI } from '@webitel/api-services/api';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CaseComments from '../../comments/components/case-comments.vue';

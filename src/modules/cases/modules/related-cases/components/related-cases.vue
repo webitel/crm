@@ -154,6 +154,7 @@
 </template>
 
 <script setup>
+import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
 import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum.js';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup
@@ -167,7 +168,6 @@ import {
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';

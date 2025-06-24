@@ -48,12 +48,12 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
+import { WtTextarea }  from '@webitel/ui-sdk/components';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { WtTextarea }  from '@webitel/ui-sdk/components';
-import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 
 const createDraftData = () => ({
   reason: null,

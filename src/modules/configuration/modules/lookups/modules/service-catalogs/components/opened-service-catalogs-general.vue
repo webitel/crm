@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { SkillsAPI, TeamsAPI, SlasAPI, CaseStatusesAPI, CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
+import { CaseCloseReasonGroupsAPI,CaseStatusesAPI, SkillsAPI, SlasAPI, TeamsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 

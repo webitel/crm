@@ -82,9 +82,9 @@
 </template>
 
 <script setup>
+import { ContactsSearchMode } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import { ContactsSearchMode } from '@webitel/api-services/api';
 import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup

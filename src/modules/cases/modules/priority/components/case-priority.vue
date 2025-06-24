@@ -24,11 +24,11 @@
 </template>
 
 <script setup>
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import EditableField from '../../case-info/components/editable-field.vue';

@@ -1,9 +1,10 @@
+import { getDefaultGetListResponse
+} from '@webitel/api-services/api/defaults';
 import {
+applyTransform,
   merge,
   notify,
-  snakeToCamel,applyTransform
-} from '@webitel/api-services/api/transformers';import { getDefaultGetListResponse
-} from '@webitel/api-services/api/defaults';
+  snakeToCamel} from '@webitel/api-services/api/transformers';
 import { CallServiceApiFactory } from 'webitel-sdk';
 
 import instance from '../../../../../app/api/instance.js';

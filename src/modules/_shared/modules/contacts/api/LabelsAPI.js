@@ -1,12 +1,12 @@
 import {
   applyTransform,
   camelToSnake,
+  getDefaultGetParams,
   merge,
   notify,
   sanitize,
   snakeToCamel,
   starToSearch,
-  getDefaultGetParams,
 } from '@webitel/api-services/api';
 import { LabelsApiFactory } from 'webitel-sdk';
 

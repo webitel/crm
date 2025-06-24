@@ -1,10 +1,10 @@
+import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
 
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';

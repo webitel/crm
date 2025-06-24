@@ -6,10 +6,10 @@ import {
 } from '@webitel/api-services/api/defaults';
 import { applyTransform,
   camelToSnake,
+  generateUrl,
   merge,
   notify,
   sanitize,
-  generateUrl,
   snakeToCamel,
   starToSearch,
 } from '@webitel/api-services/api/transformers';

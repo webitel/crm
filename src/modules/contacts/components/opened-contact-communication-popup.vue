@@ -53,12 +53,12 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
+import { CommunicationsAPI } from '@webitel/api-services/api';
 import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { EngineCommunicationChannels } from 'webitel-sdk';
-import { CommunicationsAPI } from '@webitel/api-services/api';
 
 const props = defineProps({
   channel: {

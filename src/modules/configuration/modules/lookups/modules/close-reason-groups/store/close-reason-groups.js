@@ -1,10 +1,10 @@
+import { CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import { CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
 
 import closeReasons from '../modules/close-reasons/store/closeReasons.js';
 import filters from '../modules/filters/store/filters.js';

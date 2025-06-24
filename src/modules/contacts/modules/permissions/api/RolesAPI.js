@@ -1,3 +1,7 @@
+import {
+  getDefaultGetListResponse,
+  getDefaultGetParams,
+} from '@webitel/api-services/api/defaults';
 import { applyTransform,
   camelToSnake,
   generateUrl,
@@ -7,10 +11,6 @@ import { applyTransform,
   snakeToCamel,
   starToSearch,
 } from '@webitel/api-services/api/transformers';
-import {
-  getDefaultGetListResponse,
-  getDefaultGetParams,
-} from '@webitel/api-services/api/defaults';
 
 import instance from '../../../../../app/api/instance';
 

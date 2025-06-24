@@ -60,8 +60,8 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { ContactGroupsAPI,ContactsAPI } from '@webitel/api-services/api';
 import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
-import { ContactsAPI, ContactGroupsAPI } from '@webitel/api-services/api';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';

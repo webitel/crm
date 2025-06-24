@@ -1,9 +1,9 @@
 import './app/assets/icons/sprite';
 import './app/css/main.scss';
 
+import { configureZod } from '@webitel/ui-sdk/validations';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
-import { configureZod } from '@webitel/ui-sdk/validations';
 
 import App from './app.vue';
 import { createUserAccessControl } from './app/composables/useUserAccessControl';

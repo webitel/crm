@@ -1,4 +1,3 @@
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
   import { getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
@@ -11,6 +10,7 @@ import { applyTransform,
   sanitize,
   snakeToCamel,
 } from '@webitel/api-services/api/transformers';
+import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
 import { ServicesApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
