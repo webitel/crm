@@ -71,7 +71,7 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteEls(item),
+                    callback: () => deleteComment(item),
                   })
                 "
               />
@@ -128,7 +128,7 @@ const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
-const { dataList, selected, isLoading, page, size, next, shownHeaders } =
+const { dataList, selected, isLoading, next, shownHeaders } =
   storeToRefs(tableStore);
 
 const {
@@ -136,8 +136,8 @@ const {
   loadDataList,
   updateSelected,
   updateSize,
+  updatePage,
   updateSort,
-  deleteEls,
   appendToDataList,
 } = tableStore;
 
@@ -203,6 +203,14 @@ async function submitComment() {
   await loadDataList();
   resetForm();
 }
+
+const deleteComment = async (item) => {
+  await CommentsAPI.delete({
+    etag: item?.etag,
+  });
+  updatePage(1);
+  await loadDataList();
+};
 </script>
 
 <style lang="scss" scoped>

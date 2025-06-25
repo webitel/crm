@@ -13,7 +13,7 @@
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.priority"
             :placeholder="t('cases.priority')"
-            :search-method="PrioritiesAPI.getLookup"
+            :search-method="CasePrioritiesAPI.getLookup"
             class="case-priority__select"
             @input="props.updateValue($event)"
           />
