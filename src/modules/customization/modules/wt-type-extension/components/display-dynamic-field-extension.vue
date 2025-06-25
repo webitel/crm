@@ -24,10 +24,10 @@
 import { computed } from 'vue';
 
 import { displayText } from '../../../../../app/utils/displayText.js';
+import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 import DisplayChipItems
   from '../../../../configuration/modules/lookups/modules/service-catalogs/components/display-chip-items.vue';
 import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
-import prettifyCustomLookupDate from '../../custom-lookups/utils/prettifyDate.js';
 
 const props = defineProps({
   field: {
@@ -52,7 +52,7 @@ const showText = computed(() => {
   const value = props.value;
 
   if (props.field.kind === FieldType.Calendar) {
-    return displayText(prettifyCustomLookupDate(value));
+    return displayText(prettifyDate(value));
   }
 
   return displayText(value);

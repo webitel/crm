@@ -135,6 +135,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import CustomLookupsApi
   from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
