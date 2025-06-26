@@ -32,6 +32,6 @@ const {
 } = tableStore;
 
 const resetFilters = () => {
-  filtersManager.value.reset();
+  filtersManager.value.reset({ exclude: ['labels', 'name', 'about', 'variables', 'destination'] });
 };
 </script>
