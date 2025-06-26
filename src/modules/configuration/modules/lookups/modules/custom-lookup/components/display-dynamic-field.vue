@@ -14,6 +14,7 @@
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
+    disabled
     :value="value[field.value]"
   ></wt-switcher>
   <template v-else>
