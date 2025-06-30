@@ -200,6 +200,7 @@ async function submitComment() {
       input: { text: formState.commentText },
     });
   }
+  updatePage(1);
   await loadDataList();
   resetForm();
 }
