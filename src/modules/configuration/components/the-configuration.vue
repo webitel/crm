@@ -26,39 +26,39 @@ const nav = reactive([
       {
         value: CrmSections.CONTACT_GROUPS,
         name: computed(() => t('lookups.contactGroups.contactGroups', 2)),
-        route: 'lookups/contact-groups',
+        route: 'configuration/lookups/contact-groups',
       },
       {
         value: CrmSections.PRIORITIES,
         name: computed(() => t('vocabulary.priority', 2)),
-        route: 'lookups/priorities',
+        route: 'configuration/lookups/priorities',
       },
       {
         value: CrmSections.CLOSE_REASON_GROUPS,
         name: computed(() =>
           t('lookups.closeReasonGroups.closeReasonGroups', 2),
         ),
-        route: 'lookups/close-reason-groups',
+        route: 'configuration/lookups/close-reason-groups',
       },
       {
         value: CrmSections.STATUSES,
         name: computed(() => t(`lookups.statuses.statuses`, 2)),
-        route: 'lookups/statuses',
+        route: 'configuration/lookups/statuses',
       },
       {
         value: CrmSections.SOURCES,
         name: computed(() => t('lookups.sources.sources', 2)),
-        route: 'lookups/sources',
+        route: 'configuration/lookups/sources',
       },
       {
         value: CrmSections.SLAS,
         name: computed(() => t('lookups.slas.slas', 2)),
-        route: 'lookups/slas',
+        route: 'configuration/lookups/slas',
       },
       {
         value: CrmSections.SERVICE_CATALOGS,
         name: computed(() => t('lookups.serviceCatalogs.serviceCatalogs', 2)),
-        route: 'lookups/service-catalogs',
+        route: 'configuration/lookups/service-catalogs',
       },
     ],
   },
@@ -69,17 +69,17 @@ const nav = reactive([
       {
         value: 'type-extension-cases',
         name: computed(() => t('customization.extensions.cases')),
-        route: 'customization/types-extensions/cases',
+        route: 'configuration/customization/types-extensions/cases',
       },
       {
         value: 'type-extension-contact',
         name: computed(() => t('customization.extensions.contacts')),
-        route: 'customization/types-extensions/contacts',
+        route: 'configuration/customization/types-extensions/contacts',
       },
       {
         value: CrmSections.CUSTOM_LOOKUPS,
         name: computed(() => t('customization.customLookups.customLookups')),
-        route: 'customization/custom-lookups',
+        route: 'configuration/customization/custom-lookups',
       },
     ],
   },

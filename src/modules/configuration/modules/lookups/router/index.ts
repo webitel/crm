@@ -37,7 +37,7 @@ import OpenedStatusConditions from '../modules/statuses/modules/status-condition
 
 const lookupsRoutes: RouteRecordRaw[] = [
   {
-    path: 'lookups',
+    path: 'configuration/lookups',
     name: 'lookups',
     redirect: { name: 'configuration' },
     children: [
