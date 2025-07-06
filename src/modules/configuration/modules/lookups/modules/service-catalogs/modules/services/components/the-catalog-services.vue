@@ -224,8 +224,58 @@ subscribe({
   callback: onFilterEvent,
 });
 
+function findServicePath(services, targetId, path = []) {
+  for (const service of services) {
+    const newPath = [...path, service];
+    if (service.id === targetId) return newPath;
+    if (Array.isArray(service.service) && service.service.length > 0) {
+      const result = findServicePath(service.service, targetId, newPath);
+      if (result) return result;
+    }
+  }
+  return null;
+}
+
+function buildServiceCrumbs(servicePath, catalogId) {
+  if (!servicePath || servicePath.length === 0) return [];
+  if (servicePath.length > 2) {
+    return [
+      { name: '···' },
+      {
+        name: prettifyBreadcrumbName(servicePath[servicePath.length - 2].name),
+        route: {
+          name: `${CrmSections.SERVICE_CATALOGS}-services`,
+          params: {
+            catalogId,
+            rootId: servicePath[servicePath.length - 2].id,
+          },
+        },
+      },
+      {
+        name: prettifyBreadcrumbName(servicePath[servicePath.length - 1].name),
+      },
+    ];
+  }
+
+  return servicePath.map((service, index) => {
+    const crumb = {
+      name: prettifyBreadcrumbName(service.name),
+    };
+    if (index < servicePath.length - 1) {
+      crumb.route = {
+        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        params: {
+          catalogId,
+          rootId: service.id,
+        },
+      };
+    }
+    return crumb;
+});
+}
+
 const path = computed(() => {
-  const routes = [
+  const baseRoutes = [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
@@ -235,37 +285,28 @@ const path = computed(() => {
     },
   ];
 
-  if (route.params.rootId === route.params.catalogId) {
-    routes.push({
-      name: prettifyBreadcrumbName(catalog.value?.name),
-    });
+  if (!catalog.value) return baseRoutes;
 
-    return routes;
-  } else {
-    routes.push({
-      name: prettifyBreadcrumbName(catalog.value?.name),
+  const servicePath = findServicePath(catalog.value.service, route.params.rootId);
+
+  const routes = [
+    ...baseRoutes,
+    {
+      name: prettifyBreadcrumbName(catalog.value.name),
       route: {
         name: `${CrmSections.SERVICE_CATALOGS}-services`,
         params: {
-          catalogId: catalog.value?.id,
-          rootId: catalog.value?.id,
+          catalogId: catalog.value.id,
+          rootId: catalog.value.id,
         },
       },
-    });
-  }
-
-  if (catalog.value?.id !== rootService.value?.rootId) {
-    routes.push({
-      name: '···',
-    });
-  }
-
-  routes.push({
-    name: prettifyBreadcrumbName(rootService.value?.name),
-  });
+    },
+    ...buildServiceCrumbs(servicePath, route.params.catalogId)
+  ];
 
   return routes;
 });
+
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
 
 function edit(item) {
