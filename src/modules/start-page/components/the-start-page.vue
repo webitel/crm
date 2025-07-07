@@ -1,6 +1,6 @@
 <template>
   <wt-start-page
-    :nav="nav"
+    :nav="startPageNav"
     :app-logo="logo"
     :dark-mode="darkMode"
   />
@@ -44,7 +44,7 @@ const nav = [
     },
   },
   {
-    value: 'configuration',
+    value: CrmSections.CRM_CONFIGURATION,
     route: '/configuration',
     name: t(`startPage.configuration.name`),
     text: t(`startPage.configuration.text`),
@@ -64,6 +64,21 @@ const nav = [
     },
   },
 ];
+
+function checkRouteAccessByName(name) {
+  return store.getters['userinfo/CHECK_OBJECT_ACCESS']({name});
+}
+
+const startPageNav = computed(() =>
+  nav.map((navItem) => {
+    const access = checkRouteAccessByName(navItem.value);
+    return {
+      ...navItem,
+      disabled: !access,
+    };
+  })
+);
+
 </script>
 
 <style scoped>
