@@ -10,7 +10,7 @@ const configurationRoutes: RouteRecordRaw[] = [
     name: 'configuration',
     component: TheConfiguration,
     meta: {
-      WtObject: WtObject.CrmConfiguration,
+      WtObject: WtObject.Configuration,
       UiSection: CrmSections.CrmConfiguration,
     },
   },
