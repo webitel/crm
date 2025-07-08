@@ -44,7 +44,7 @@ const nav = [
     },
   },
   {
-    value: CrmSections.CRM_CONFIGURATION,
+    value: CrmSections.CONFIGURATION,
     route: '/configuration',
     name: t(`startPage.configuration.name`),
     text: t(`startPage.configuration.text`),

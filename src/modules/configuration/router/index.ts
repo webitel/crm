@@ -11,7 +11,7 @@ const configurationRoutes: RouteRecordRaw[] = [
     component: TheConfiguration,
     meta: {
       WtObject: WtObject.Configuration,
-      UiSection: CrmSections.CrmConfiguration,
+      UiSection: CrmSections.Configuration,
     },
   },
   ...lookupsRoutes,
