@@ -224,12 +224,14 @@ subscribe({
   callback: onFilterEvent,
 });
 
-function findServicePath(services, targetId, path = []) {
-  for (const service of services) {
+function findServicePath(currentServiceId, catalog, path = []) {
+  for (const service of catalog.service) {
     const newPath = [...path, service];
-    if (service.id === targetId) return newPath;
+
+    if (service.id === currentServiceId) return newPath;
+
     if (Array.isArray(service.service) && service.service.length > 0) {
-      const result = findServicePath(service.service, targetId, newPath);
+      const result = findServicePath(currentServiceId, service, newPath);
       if (result) return result;
     }
   }
@@ -271,7 +273,7 @@ function buildServiceCrumbs(servicePath, catalogId) {
       };
     }
     return crumb;
-});
+  });
 }
 
 const path = computed(() => {
@@ -287,7 +289,7 @@ const path = computed(() => {
 
   if (!catalog.value) return baseRoutes;
 
-  const servicePath = findServicePath(catalog.value.service, route.params.rootId);
+  const servicePath = findServicePath(route.params.rootId, catalog.value);
 
   const routes = [
     ...baseRoutes,
@@ -301,7 +303,7 @@ const path = computed(() => {
         },
       },
     },
-    ...buildServiceCrumbs(servicePath, route.params.catalogId)
+    ...buildServiceCrumbs(servicePath, route.params.catalogId),
   ];
 
   return routes;

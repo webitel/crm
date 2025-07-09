@@ -17,9 +17,7 @@
       <span class="case-service__title">
         {{ t('cases.service') }}
 
-        <wt-tooltip
-          v-if="!isReadOnly && !servicePath"
-        >
+        <wt-tooltip v-if="!isReadOnly && !servicePath">
           <template #activator>
             <wt-icon
               icon="attention"
@@ -51,9 +49,7 @@
 
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import {
-  useCardStore,
-} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -73,7 +69,6 @@ const { disableUserInput } = useUserAccessControl();
 const {
   namespace: cardNamespace,
   itemInstance,
-  resetState,
   setItemProp,
 } = useCardStore(namespace);
 
@@ -215,8 +210,8 @@ onUnmounted(() => {
 .case-service {
   display: flex;
   flex-direction: column;
-  width: fit-content;
   gap: var(--spacing-xs);
+  width: fit-content;
 
   &__wrapper {
     display: flex;
