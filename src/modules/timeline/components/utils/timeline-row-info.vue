@@ -42,14 +42,14 @@ const timestampTime = computed(() => {
 const timestampWeekDay = computed(() => {
   const date = new Date(+props.timestamp);
   return capitalize(
-    d(date, 'timelineWeekday', locale.value === 'ua' ? 'uk' : undefined),
+    d(date, 'timelineWeekday'),
   );
 });
 
 const timestampMonth = computed(() => {
   const date = new Date(+props.timestamp);
   return capitalize(
-    d(date, 'timelineMonth', locale.value === 'ua' ? 'uk' : undefined),
+    d(date, 'timelineMonth'),
   );
 });
 
