@@ -50,7 +50,7 @@ const customizationRoutes: RouteRecordRaw[] = [
         name: 'types-extensions',
         component: TheDictionaryExtensions,
         meta: {
-          WtObject: WtObject.SectionCustomization,
+          WtObject: WtObject.WtTypeExtensions,
           UiSection: CrmSections.SectionCustomization,
         },
       },
