@@ -4,12 +4,12 @@ import datetimeFormats from './datetimeFormats.js';
 import en from './en/en.js';
 import kz from './kz/kz.js';
 import ru from './ru/ru.js';
-import ua from './ua/ua.js';
+import uk from './uk/uk.js';
 
 const messages = {
   en,
   ru,
-  ua,
+  uk,
   kz,
 };
 
@@ -22,4 +22,3 @@ const i18n = createI18n({
 });
 
 export default i18n;
-

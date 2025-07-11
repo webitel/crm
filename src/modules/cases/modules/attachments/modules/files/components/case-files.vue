@@ -13,7 +13,7 @@
         </h3>
         <wt-action-bar
           :include="filteredActions"
-          :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
+          :disabled:delete="isBulkDeleteDisabled"
           :disabled:download="!dataList.length"
           :disabled:add="!hasCreateAccess || !editMode"
           @click:add="openFileDialog"
@@ -79,7 +79,7 @@
               "
             />
             <wt-icon-action
-              v-if="!isReadOnly"
+              v-if="!isReadOnly && item.source === FileSources.Direct"
               :disabled="!editMode || !hasDeleteAccess"
               action="delete"
               @click="
@@ -116,6 +116,7 @@ import downloadFile from '../../../../../../../app/utils/downloadFile.js';
 import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
 import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
 import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
+import { FileSources } from '../enums/FileSources.js';
 
 const props = defineProps({
   namespace: {
@@ -231,6 +232,18 @@ function openFileDialog() {
   input.addEventListener('change', handleFileInput);
   input.click();
 }
+
+const hasNonDirectFileSelected = computed(() =>
+  selected.value.some(item => item.source !== FileSources.Direct)
+);
+
+const isBulkDeleteDisabled = computed(() => {
+  return !hasDeleteAccess.value
+    || !editMode.value
+    || !selected.value.length
+    || hasNonDirectFileSelected.value;
+});
+
 </script>
 
 <style lang="scss" scoped>
