@@ -136,7 +136,11 @@
               {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
-              {{ item.service?.name }}
+              <service-path
+                v-if="item.service?.id"
+                :service-id="item.service.id"
+                :initial-name="item.service.name"
+              />
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -231,6 +235,7 @@ import { useStore } from 'vuex';
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { SearchMode } from '../enums/SearchMode';
+import ServicePath from '../modules/service/components/ServicePath.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
