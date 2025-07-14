@@ -177,8 +177,8 @@ const isRequired = computed(() => {
 const setValue = (value) => {
   setItemProp({
     path: props.pathToField
-      ? `${props.pathToField}.${props.field.id}`
-      : props.field.id,
+      ? `${props.pathToField}.${snakeToCamel(props.field.id)}`
+      : snakeToCamel(props.field.id),
     value,
   });
 };
