@@ -61,7 +61,7 @@ const getCustomLookupRecords = async ({ repo, ...params }) => {
 const getCustomLookupRecord = async ({ itemId: id, repo }) => {
   try {
     const response = await dictionariesService.locateData(repo, id);
-    return applyTransform(response.data, []);
+    return response.data;
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
