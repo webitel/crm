@@ -4,7 +4,8 @@ import {
   getDefaultInstance,
   getDefaultOpenAPIConfig,
 } from '@webitel/api-services/api/defaults';
-import { applyTransform,
+import {
+  applyTransform,
   camelToSnake,
   generateUrl,
   merge,
@@ -60,7 +61,7 @@ const getCustomLookupRecords = async ({ repo, ...params }) => {
 const getCustomLookupRecord = async ({ itemId: id, repo }) => {
   try {
     const response = await dictionariesService.locateData(repo, id);
-    return applyTransform(response.data, [snakeToCamel()]);
+    return applyTransform(response.data, []);
   } catch (err) {
     throw applyTransform(err, [notify]);
   }
