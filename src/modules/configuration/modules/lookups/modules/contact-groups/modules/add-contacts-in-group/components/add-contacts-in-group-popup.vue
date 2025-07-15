@@ -15,6 +15,7 @@
       <div class="add-contacts-in-group-popup__content">
         <div class="add-contacts-in-group-popup__filters">
           <add-contact-in-group-search-bar />
+
           <add-contacts-in-group-filters-panel />
         </div>
 
@@ -146,11 +147,13 @@ const {
   updateSelected,
   appendToDataList,
   updatePage,
+  deleteFilter,
 } = tableStore;
 
 onMounted(() => {
   updatePage(1);
   initialize();
+  deleteFilter({ name: 'search' })
 });
 
 const infiniteScrollWrap = ref(null);
