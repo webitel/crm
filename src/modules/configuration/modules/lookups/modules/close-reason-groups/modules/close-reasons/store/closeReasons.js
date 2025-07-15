@@ -1,4 +1,4 @@
-import { CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
+import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -30,7 +30,7 @@ const actions = {
 
 const api = createApiStoreModule({
   state: {
-    api: CaseCloseReasonGroupsAPI,
+    api: CaseCloseReasonsAPI,
   },
 });
 
