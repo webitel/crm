@@ -7,7 +7,7 @@ import {
 } from '@webitel/ui-sdk/store';
 
 import filters from '../modules/filters/store/filters';
-import headers from './_internals/headers';
+import { headers } from './_internals/headers';
 
 const resetCardState = {
   itemInstance: {
