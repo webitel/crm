@@ -15,6 +15,7 @@
       <div class="add-contacts-in-group-popup__content">
         <div class="add-contacts-in-group-popup__filters">
           <add-contact-in-group-search-bar />
+
           <add-contacts-in-group-filters-panel />
         </div>
 
@@ -138,6 +139,7 @@ const {
   headers,
   isLoading,
   next,
+  filtersManager,
 } = storeToRefs(tableStore);
 
 const {
@@ -151,6 +153,7 @@ const {
 onMounted(() => {
   updatePage(1);
   initialize();
+  filtersManager.value.reset()
 });
 
 const infiniteScrollWrap = ref(null);

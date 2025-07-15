@@ -67,7 +67,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { snakeToCamel } from '@webitel/ui-sdk/scripts';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import set from 'lodash/set';
@@ -155,7 +154,7 @@ const value = computed(() => {
     return get(itemInstance.value, `${props.pathToField}.${props.field.id}`);
   }
 
-  return itemInstance.value[snakeToCamel(props.field.id)];
+  return itemInstance.value[props.field.id];
 });
 
 const validation = computed(() => {
