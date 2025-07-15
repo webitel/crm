@@ -139,6 +139,7 @@ const {
   headers,
   isLoading,
   next,
+  filtersManager,
 } = storeToRefs(tableStore);
 
 const {
@@ -147,13 +148,12 @@ const {
   updateSelected,
   appendToDataList,
   updatePage,
-  deleteFilter,
 } = tableStore;
 
 onMounted(() => {
   updatePage(1);
   initialize();
-  deleteFilter({ name: 'search' })
+  filtersManager.value.reset()
 });
 
 const infiniteScrollWrap = ref(null);
