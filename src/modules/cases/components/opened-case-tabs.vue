@@ -46,7 +46,7 @@ const route = useRoute();
 const { disableUserInput } = useUserAccessControl();
 const { namespace: cardNamespace, id } = useCardStore(props.namespace);
 
-const actionAllow = computed(() => !disableUserInput && editMode.value && !isReadOnly.value);
+const actionAllow = computed(() => !disableUserInput.value && editMode.value && !isReadOnly);
 
 const CASE_VIEW_NAME = 'case_view';
 const currentCardRoute = computed(() => {
