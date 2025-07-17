@@ -135,7 +135,7 @@ const path = computed(() => {
   return [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('customization.customization'), route: '/customization' },
+    { name: t('customization.customization'), route: '/configuration' },
     {
       name: t('customization.customLookups.customLookups'),
       route: {
