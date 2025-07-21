@@ -48,13 +48,12 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
+import { WtTextarea } from '@webitel/ui-sdk/components';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import { WtTextarea }  from '@webitel/ui-sdk/components';
-
-import CloseReasonsAPI from '../../result/api/CloseReasonsAPI.js';
 
 const createDraftData = () => ({
   reason: null,
@@ -73,7 +72,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  'save': [{ result: ReturnType<createDraftData>, reason?: string}],
+  'save': [{ result: ReturnType<createDraftData>, reason?: string }],
   'cancel': [],
 }>();
 
@@ -100,15 +99,13 @@ const v$ = useVuelidate(computed(() => {
 
 v$.value.$touch();
 
-const closeReasonId = computed(
-  () => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
-);
+const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
 
 async function searchCloseReasons(params) {
-  return await CloseReasonsAPI.getLookup({
-    closeReasonGroupId: closeReasonId.value,
-    ...params,
-  });
+  if (!closeReasonId.value) {
+    return { items: [] };
+  }
+  return await CaseCloseReasonsAPI.getLookup({ parentId: closeReasonId.value, ...params });
 }
 
 function cancel() {

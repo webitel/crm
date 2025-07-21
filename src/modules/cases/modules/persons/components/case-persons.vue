@@ -108,6 +108,7 @@
 </template>
 
 <script setup>
+import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -119,8 +120,6 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import ContactGroupsAPI from '../../../../configuration/modules/lookups/modules/contact-groups/api/contactGroups.js';
-import ContactsAPI from '../../../../contacts/api/ContactsAPI.js';
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const store = useStore();

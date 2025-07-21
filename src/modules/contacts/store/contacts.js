@@ -1,3 +1,4 @@
+import { ContactsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -6,7 +7,6 @@ import {
 } from '@webitel/ui-sdk/store';
 
 import { headers } from '../../_shared/modules/contacts/store/_internals/headers';
-import ContactsAPI from '../api/ContactsAPI';
 import cases from '../modules/cases/store/cases';
 import emails from '../modules/emails/store/emails';
 import filters from '../modules/filters/store/filters';

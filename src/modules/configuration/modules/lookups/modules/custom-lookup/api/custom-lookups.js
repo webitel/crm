@@ -3,8 +3,9 @@ import {
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+} from '@webitel/api-services/api/defaults';
+import {
+  applyTransform,
   camelToSnake,
   generateUrl,
   merge,
@@ -12,7 +13,7 @@ import applyTransform, {
   sanitize,
   snakeToCamel,
   starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api/transformers';
 import get from 'lodash/get';
 import { DictionariesApiFactory } from 'webitel-sdk';
 
@@ -60,7 +61,7 @@ const getCustomLookupRecords = async ({ repo, ...params }) => {
 const getCustomLookupRecord = async ({ itemId: id, repo }) => {
   try {
     const response = await dictionariesService.locateData(repo, id);
-    return applyTransform(response.data, [snakeToCamel()]);
+    return response.data;
   } catch (err) {
     throw applyTransform(err, [notify]);
   }

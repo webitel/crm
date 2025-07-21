@@ -80,13 +80,13 @@
               </template>
               <template #actions="{ item }">
                 <wt-icon-action
-                  v-if="hasEditAccess"
                   action="edit"
+                  :disabled="!hasEditAccess"
                   @click="edit(item)"
                 />
                 <wt-icon-action
-                  v-if="hasDeleteAccess"
                   action="delete"
+                  :disabled="!hasDeleteAccess"
                   @click="
                     askDeleteConfirmation({
                       deleted: [item],
@@ -135,6 +135,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
+import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import CustomLookupsApi
   from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import DisplayDynamicField from './display-dynamic-field.vue';

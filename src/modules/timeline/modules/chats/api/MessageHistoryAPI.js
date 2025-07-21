@@ -1,9 +1,9 @@
-import applyTransform, {
+import { applyTransform,
   camelToSnake,
   generateUrl,
   notify,
   snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers/index';
+} from '@webitel/api-services/api/transformers';
 
 import instance from '../../../../../app/api/instance';
 import { TimelineMode } from '../../../enums/TimelineMode';

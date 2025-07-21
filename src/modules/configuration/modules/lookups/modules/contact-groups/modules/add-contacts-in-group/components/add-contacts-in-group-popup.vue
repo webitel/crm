@@ -15,6 +15,7 @@
       <div class="add-contacts-in-group-popup__content">
         <div class="add-contacts-in-group-popup__filters">
           <add-contact-in-group-search-bar />
+
           <add-contacts-in-group-filters-panel />
         </div>
 
@@ -114,11 +115,11 @@
 
 <script lang="ts" setup>
 import { useInfiniteScroll } from '@vueuse/core';
+import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import ContactGroupsAPI from '../../../api/contactGroups';
 import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
@@ -138,6 +139,7 @@ const {
   headers,
   isLoading,
   next,
+  filtersManager,
 } = storeToRefs(tableStore);
 
 const {
@@ -151,6 +153,7 @@ const {
 onMounted(() => {
   updatePage(1);
   initialize();
+  filtersManager.value.reset()
 });
 
 const infiniteScrollWrap = ref(null);

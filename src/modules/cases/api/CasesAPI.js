@@ -1,20 +1,21 @@
-import { generatePermissionsApi } from '@webitel/ui-sdk/src/api/clients/_shared/generatePermissionsApi';
+import {
+  generatePermissionsApi,
+} from '@webitel/api-services/api';
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+} from '@webitel/api-services/api/defaults';
+import {
+  applyTransform,
   camelToSnake,
   merge,
-  mergeEach,
   notify,
   sanitize,
   snakeToCamel,
-  starToSearch,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
-import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index.js';
+} from '@webitel/api-services/api/transformers';
+import { snakeToKebab } from '@webitel/ui-sdk/scripts';
 import { CasesApiFactory } from 'webitel-sdk';
 
 import ftsServiceAPI from './FTSServiceAPI.js';

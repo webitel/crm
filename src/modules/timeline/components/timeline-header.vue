@@ -58,7 +58,7 @@ const timelineInterval = computed(() => {
   const formatDate = (date) => {
     const fullDate = new Date(+date);
     return capitalize(
-      d(fullDate, 'timelineInterval', locale.value === 'ua' ? 'uk' : undefined),
+      d(fullDate, 'timelineInterval'),
     );
   };
 

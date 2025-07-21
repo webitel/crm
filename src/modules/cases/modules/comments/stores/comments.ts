@@ -8,4 +8,5 @@ export const useCaseCommentsStore = createTableStore(CaseCommentsNamespace, {
   apiModule: CommentsAPI,
   headers,
   disablePersistence: true,
+  isAppendDataList: true,
 });

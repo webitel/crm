@@ -1,4 +1,4 @@
-import { getDefaultInstance } from '@webitel/ui-sdk/api/defaults/index';
+import { getDefaultInstance } from '@webitel/api-services/api/defaults';
 
 export const instance = getDefaultInstance();
 

@@ -1,3 +1,4 @@
+import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index.js';
 import {
   createApiStoreModule,
@@ -6,7 +7,6 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import ContactGroupsAPI from '../api/contactGroups.js';
 import conditions from '../modules/conditions/store/conditions';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers';

@@ -1,3 +1,4 @@
+import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -5,7 +6,6 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import CloseReasonsAPI from '../api/closeReasons.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers.js';
 
@@ -30,7 +30,7 @@ const actions = {
 
 const api = createApiStoreModule({
   state: {
-    api: CloseReasonsAPI,
+    api: CaseCloseReasonsAPI,
   },
 });
 

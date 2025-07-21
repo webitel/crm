@@ -3,14 +3,15 @@ import {
   getDefaultGetParams,
   getDefaultInstance,
   getDefaultOpenAPIConfig,
-} from '@webitel/ui-sdk/src/api/defaults/index.js';
-import applyTransform, {
+  } from '@webitel/api-services/api/defaults';
+import {
+  applyTransform,
   camelToSnake,
   merge,
   notify,
   sanitize,
   snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers/index.js';
+} from '@webitel/api-services/api/transformers';
 import { FTSServiceApiFactory } from 'webitel-sdk';
 
 const instance = getDefaultInstance();

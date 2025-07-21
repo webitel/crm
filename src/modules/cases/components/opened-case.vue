@@ -54,7 +54,8 @@
 <script lang="ts" setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import UsersAPI from '@webitel/ui-sdk/src/api/clients/users/users.js';
+import { UsersAPI } from '@webitel/api-services/api';
+import { isEmpty } from '@webitel/ui-sdk/scripts';
 import { useCachedItemInstanceName }
   from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
@@ -63,7 +64,6 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';

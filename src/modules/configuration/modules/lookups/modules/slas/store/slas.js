@@ -1,3 +1,4 @@
+import { SlasAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -5,7 +6,6 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import SlasAPI from '../api/slas.js';
 import conditions from '../modules/conditions/store/conditions';
 import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';

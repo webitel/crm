@@ -176,8 +176,8 @@
 </template>
 
 <script lang="ts" setup>
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
-import { IconAction } from '@webitel/ui-sdk/src/enums/index.js';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import {
   useTableEmpty,
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';

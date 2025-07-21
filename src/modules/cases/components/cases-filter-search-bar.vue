@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ConfigurationsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { configurations } from '@webitel/ui-sdk/api/clients/index.js';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -66,7 +66,7 @@ const searchModeOptions = computed(() => {
 
 const loadFtsSearchConfiguration = async () => {
   try {
-    const { items } = await configurations.getList({
+    const { items } = await ConfigurationsAPI.getList({
       name: [EngineSystemSettingName.IsFulltextSearchEnabled],
     });
 

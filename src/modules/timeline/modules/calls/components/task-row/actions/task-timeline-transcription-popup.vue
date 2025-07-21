@@ -39,11 +39,10 @@
 </template>
 
 <script setup>
+import { CallTranscriptAPI } from '@webitel/api-services/api';
 import { saveAs } from 'file-saver';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import CallTranscriptAPI from './api/callTranscript.js';
 
 const props = defineProps({
   transcripts: {

@@ -1,3 +1,4 @@
+import { CaseStatusesAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -5,7 +6,6 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import StatusesAPI from '../api/statuses.js';
 import filters from '../modules/filters/store/filters';
 import statusConditions from '../modules/status-conditions/store/status-conditions';
 import headers from './_internals/headers';
@@ -20,7 +20,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
   state: {
-    api: StatusesAPI,
+    api: CaseStatusesAPI,
   },
 });
 

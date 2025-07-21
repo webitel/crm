@@ -1,9 +1,9 @@
-import applyTransform, {
+import { applyTransform,
   merge,
   notify,
   sanitize,
   snakeToCamel,
-} from '@webitel/ui-sdk/src/api/transformers/index';
+} from '@webitel/api-services/api/transformers';
 import deepCopy from 'deep-copy';
 import { CaseTimelineApiFactory, TimelineApiFactory } from 'webitel-sdk';
 

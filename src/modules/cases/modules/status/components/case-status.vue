@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
 import { isEmpty } from '@webitel/ui-sdk/scripts';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
@@ -48,7 +49,6 @@ import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CasesAPI from '../../../api/CasesAPI.js';
-import StatusConditionsAPI from '../api/StatusConditionsAPI.js';
 import CaseResultPopup from './case-result-popup.vue';
 
 const namespace = inject('namespace');
@@ -148,7 +148,7 @@ const fetchStatusConditions = async (params) => {
     return { items: [] };
   }
 
-  return await StatusConditionsAPI.getLookup({
+  return await CaseStatusConditionsAPI.getLookup({
     statusId: status.value.id,
     ...params,
     fields: ['id', 'name', 'initial', 'final'],
@@ -211,7 +211,7 @@ async function updateStatusCondition(isValidationRequired = true) {
 
   if (isValidationRequired && itemInstance.value.statusCondition.id) return;
 
-  const { items } = await StatusConditionsAPI.getList({
+  const { items } = await CaseStatusConditionsAPI.getList({
     statusId: status.value.id,
   });
 

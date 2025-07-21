@@ -67,14 +67,12 @@
 </template>
 
 <script setup>
+import { ContactGroupsAPI, ContactsAPI, SlasAPI } from '@webitel/api-services/api';
 import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
-import { contacts } from '@webitel/ui-sdk/src/api/clients/сontacts/index.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import ContactGroupsAPI from '../../../../contact-groups/api/contactGroups.js';
-import SlasAPI from '../../../../slas/api/slas.js';
 
 const props = defineProps({
   namespace: {
@@ -106,6 +104,6 @@ const loadContactGroupsList = (params) => {
 };
 
 const loadContact = (params) => {
-  return contacts.getLookup(params);
+  return ContactsAPI.getLookup(params);
 };
 </script>

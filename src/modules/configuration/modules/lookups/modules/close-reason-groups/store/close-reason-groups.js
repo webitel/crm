@@ -1,3 +1,4 @@
+import { CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
 import {
   createApiStoreModule,
   createBaseStoreModule,
@@ -5,7 +6,6 @@ import {
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import CloseReasonGroupsAPI from '../api/closeReasonGroups.js';
 import closeReasons from '../modules/close-reasons/store/closeReasons.js';
 import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers';
@@ -20,7 +20,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
   state: {
-    api: CloseReasonGroupsAPI,
+    api: CaseCloseReasonGroupsAPI,
   },
 });
 

@@ -7,71 +7,64 @@
     </header>
     <div class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50">
       <wt-input
+        v-model="modelValue.name"
         :label="t('reusable.name')"
-        :value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
+        v-model="modelValue.type"
         :label="t('vocabulary.type')"
         :options="typesSourcesOptions"
-        :value="currentTypeSource"
-        :v="v.itemInstance.type"
+        :regle-validation="validationFields?.type"
         :disabled="disableUserInput"
+        use-value-from-options-by-prop="id"
         required
-        @input="setItemProp({ path: 'type', value: $event.id })"
       />
 
       <wt-textarea
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :value="itemInstance.description"
-        @input="setItemProp({ path: 'description', value: $event })"
+        :value="modelValue.description"
+        @input="modelValue.description = $event"
       />
     </div>
   </section>
 </template>
 
-<script setup>
-import { WebitelCasesSourceType } from '@webitel/api-services/gen/models';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+<script lang="ts" setup>
+import {RegleSchemaFieldStatus} from '@regle/schemas';
+import {WebitelCasesSourceType} from '@webitel/api-services/gen/models';
+import {WebitelCasesSource} from '@webitel/api-services/gen/models';
+import {WtInput, WtSelect} from '@webitel/ui-sdk/components';
+import {computed} from 'vue';
+import {useI18n} from 'vue-i18n';
 
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import {useUserAccessControl} from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
-});
+const modelValue = defineModel<WebitelCasesSource>();
 
-const { t } = useI18n();
+defineProps<{
+  validationFields: {
+    /* keys as in CaseSource, but values are Regle schema objects */
+    [K in keyof WebitelCasesSource]: RegleSchemaFieldStatus<WebitelCasesSource[K]>
+  };
+}>();
 
-const { disableUserInput } = useUserAccessControl();
+const {t} = useI18n();
 
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
+const {disableUserInput} = useUserAccessControl();
 
 const typesSourcesOptions = computed(() => Object.values(WebitelCasesSourceType)
-.filter((type) => type !== WebitelCasesSourceType.TypeUnspecified)
-.map((type) => {
-  return {
-    id: type,
-    name: t(`lookups.sources.types.${type}`),
-  };
-}));
-
-const currentTypeSource = computed(() => {
-  return typesSourcesOptions.value.find((type) => type.id === itemInstance.value?.type);
-});
+  .filter((type) => type !== WebitelCasesSourceType.TypeUnspecified)
+  .map((type) => {
+    return {
+      id: type,
+      name: t(`lookups.sources.types.${type}`),
+    };
+  }));
 </script>
 
 <style lang="scss" scoped>

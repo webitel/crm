@@ -47,8 +47,8 @@
           :data="dataList"
           :headers="shownHeaders"
           :selected="selected"
-          headless
           :selectable="false"
+          headless
           sortable
           @sort="updateSort"
           @update:selected="updateSelected"
@@ -71,7 +71,7 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteEls(item),
+                    callback: () => deleteComment(item),
                   })
                 "
               />
@@ -79,15 +79,15 @@
           </template>
         </wt-table>
 
-        <wt-pagination
-          :next="next"
-          :prev="page > 1"
-          :size="size"
-          debounce
-          @change="updateSize"
-          @next="updatePage(page + 1)"
-          @prev="updatePage(page - 1)"
-        />
+        <div
+          v-if="next"
+          class="table-section-footer"
+        >
+          <a
+            class="table-section-footer__link"
+            @click="appendToDataList"
+          >{{ t('reusable.more') }}</a>
+        </div>
       </div>
     </section>
   </div>
@@ -128,17 +128,17 @@ const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
-const { dataList, selected, isLoading, page, size, next, shownHeaders } =
+const { dataList, selected, isLoading, next, shownHeaders } =
   storeToRefs(tableStore);
 
 const {
   initialize,
   loadDataList,
   updateSelected,
-  updatePage,
   updateSize,
+  updatePage,
   updateSort,
-  deleteEls,
+  appendToDataList,
 } = tableStore;
 
 updateSize(5);
@@ -200,9 +200,18 @@ async function submitComment() {
       input: { text: formState.commentText },
     });
   }
+  updatePage(1);
   await loadDataList();
   resetForm();
 }
+
+const deleteComment = async (item) => {
+  await CommentsAPI.delete({
+    etag: item?.etag,
+  });
+  updatePage(1);
+  await loadDataList();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -211,6 +220,15 @@ async function submitComment() {
     &__input {
       flex: 1;
     }
+  }
+}
+
+.table-section-footer {
+  margin: auto;
+
+  &__link {
+    color: var(--link-color);
+    cursor: pointer;
   }
 }
 </style>

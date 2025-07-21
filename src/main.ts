@@ -1,8 +1,11 @@
 import './app/assets/icons/sprite';
 import './app/css/main.scss';
 
+import { configureZod } from '@webitel/ui-sdk/validations';
+import { eventBus } from '@webitel/ui-sdk/scripts';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
+import { setConfig as setApiServicesConfig } from '@webitel/api-services';
 
 import App from './app.vue';
 import { createUserAccessControl } from './app/composables/useUserAccessControl';
@@ -30,6 +33,14 @@ const fetchConfig = async () => {
 };
 
 const pinia = createPinia();
+
+configureZod({
+  t: i18n.global.t,
+});
+
+setApiServicesConfig({
+  eventBus,
+});
 
 const initApp = async () => {
   const app = createApp(App)
