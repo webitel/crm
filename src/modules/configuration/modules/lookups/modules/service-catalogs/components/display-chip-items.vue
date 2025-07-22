@@ -23,9 +23,8 @@
 </template>
 
 <script setup>
+import { displayText, EMPTY_SYMBOL } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
-
-import { displayText, EMPTY_SYMBOL } from '../../../../../../../app/utils/displayText.js';
 
 const props = defineProps({
   items: {

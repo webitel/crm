@@ -1,14 +1,10 @@
 <template>
   <div class="call-task-timeline-action-transcription">
-    <wt-tooltip>
-      <template #activator>
-          <wt-icon-btn
-            icon="docs"
-            @click="openPopup"
-          />
-      </template>
-      {{ t('timeline.actions.transcription') }}
-    </wt-tooltip>
+    <wt-icon-btn
+      v-tooltip="t('timeline.actions.transcription')"
+      icon="docs"
+      @click="openPopup"
+    />
 
     <task-timeline-transcription-popup
       :shown="showPopup"

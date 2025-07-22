@@ -49,32 +49,7 @@
             </template>
 
             <template #groups="{ item }">
-              <div
-                v-if="item.groups"
-                class="contacts-groups"
-              >
-                <p>
-                  {{ item.groups[0]?.name }}
-                </p>
-
-                <wt-tooltip
-                  v-if="item.groups.length > 1"
-                  :triggers="['click']"
-                >
-                  <template #activator>
-                    <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
-                  </template>
-
-                  <div class="add-contacts-in-group-popup__group-wrapper">
-                    <p
-                      v-for="(group, idx) of item.groups.slice(1)"
-                      :key="idx"
-                    >
-                      {{ group.name }}
-                    </p>
-                  </div>
-                </wt-tooltip>
-              </div>
+              <wt-display-chip-items v-if="item.groups" :items="item.groups" />
             </template>
 
             <template #labels="{ item }">
@@ -116,6 +91,7 @@
 <script lang="ts" setup>
 import { useInfiniteScroll } from '@vueuse/core';
 import { ContactGroupsAPI } from '@webitel/api-services/api';
+import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';

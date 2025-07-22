@@ -1,18 +1,14 @@
 <template>
   <div class="call-task-timeline-actions-history-link">
-    <wt-tooltip>
-      <template #activator>
-        <a
-          :href="historyLink"
-          target="_blank"
-        >
-          <wt-icon-btn
-            icon="link"
-          />
-        </a>
-      </template>
-      {{ $t('timeline.actions.openInHistory') }}
-    </wt-tooltip>
+    <a
+      v-tooltip="$t('timeline.actions.openInHistory')"
+      :href="historyLink"
+      target="_blank"
+    >
+      <wt-icon-btn
+        icon="link"
+      />
+    </a>
   </div>
 </template>
 <script setup>
