@@ -35,11 +35,6 @@
         :last="!next && key === dataList.length - 1"
       />
 
-      <wt-player
-        v-if="audioURL"
-        :src="audioURL"
-        @close="closePlayer"
-      />
     </template>
 
     <template #after-content>
@@ -55,7 +50,7 @@
 <script lang="ts" setup>
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
+import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import dummyDark from '../assets/timeline-dummy-dark.svg';
@@ -73,15 +68,10 @@ const props = defineProps<Props>();
 
 const timelineNamespace = 'timeline';
 
-const audioURL = ref(null);
-const audioId = ref('');
-
 provide<TimelineMode>('mode', props.mode);
 provide('namespace', timelineNamespace);
-provide('audioId', audioId);
 
 const store = useStore();
-const eventBus = inject('$eventBus');
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
@@ -98,12 +88,6 @@ const setMode = (mode) => {
 
 setParentId(props.parentId);
 setMode(props.mode);
-
-function closePlayer() {
-  eventBus.$emit('close-player');
-  audioURL.value = '';
-  audioId.value = '';
-}
 
 function initializeList() {
   return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
@@ -131,15 +115,6 @@ async function loadNext() {
   nextLoading.value = false;
 }
 
-onMounted(() => {
-  return eventBus.$on('audio-handler', ({ url, id }) => {
-    if(!url || !id) return closePlayer();
-    audioURL.value = url;
-    audioId.value = id;
-  });
-});
-
-
 onUnmounted(() => {
   flushSubscribers();
 
@@ -148,8 +123,6 @@ onUnmounted(() => {
   /* Caching doesn't work because of this code, a fix later. See the task for more details */
 
   store.dispatch(`${timelineNamespace}/RESET_STATE`);
-
-  eventBus.$off('audio-handler');
 });
 </script>
 
