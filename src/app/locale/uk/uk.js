@@ -110,154 +110,201 @@ export default {
       text: 'У цьому розділі ви можете налаштувати процес роботи зі Зверненнями.',
     },
   },
+  lookups: {
+    lookups: 'Довідники',
+
+    slas: {
+      slas: 'SLA | SLAs',
+      conditions: 'Умова | Умови',
+      editCondition: 'Редагувати умову',
+      addCondition: 'Додати умову',
+      reactionTime: 'Плановий час реакції',
+      reactionTimeTitle: 'Плановий час реакції (dd:hh:mm)',
+      resolutionTime: 'Плановий час вирішення',
+      resolutionTimeTitle: 'Плановий час вирішення (dd:hh:mm)',
+      validFrom: 'Дійсний з',
+      validTo: 'Дійсний до',
+    },
+
+    sources: {
+      sources: 'Джерело звернень | Джерела звернень',
+
+      types: {
+        [WebitelCasesSourceType.Call]: 'Дзвінок',
+        [WebitelCasesSourceType.Chat]: 'Чат',
+        [WebitelCasesSourceType.SocialMedia]: 'Соціальна мережа',
+        [WebitelCasesSourceType.Email]: 'Лист',
+        [WebitelCasesSourceType.Api]: 'API',
+        [WebitelCasesSourceType.Manual]: 'Створене вручну',
+      },
+    },
+
+    serviceCatalogs: {
+      serviceCatalogs: 'Каталог сервісів | Каталоги сервісів',
+      prefix: 'Префікс',
+      code: 'Код',
+      statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
+      skills: 'Навички',
+    },
+
+    service: {
+      service: 'Cервіси | Cервіси',
+    },
+
+    contactGroups: {
+      contactGroups: 'Група контактів | Групи контактів',
+      defaultGroup: 'Група за замовчуванням',
+      addGroup: 'Додати контакти',
+      assignee: 'Виконавець',
+      types: {
+        [WebitelContactsGroupType.Dynamic]: 'Динамічна',
+        [WebitelContactsGroupType.Static]: 'Статична',
+      },
+    },
+
+    closeReasonGroups: {
+      closeReasonGroups: 'Причини закриття',
+      reason: 'Причина | Причини',
+      addReason: 'Додати причину',
+      editReason: 'Редагувати причину',
+      sameConditionError: 'Така умова вже існує',
+    },
+
+    statuses: {
+      statuses: 'Статус | Статуси',
+      initial: 'Початковий',
+      final: 'Кінцевий',
+      addStatus: ({ linked }) =>
+        `${linked('reusable.add')} ${linked(
+          `lookups.statuses.statuses`,
+          1,
+        ).toLowerCase()}`,
+      editStatus: ({ linked }) =>
+        `${linked('reusable.edit')} ${linked(
+          `lookups.statuses.statuses`,
+          1,
+        ).toLowerCase()}`,
+      statusType: 'Тип статусу',
+      finalStatusValidationText:
+        'У вас має бути принаймні один кінцевий статус і лише один початковий.\n Будь ласка, поверніться і перевірте типи.',
+    },
+  },
+  customization: {
+    customization: 'Персоналізація',
+    customLookups: {
+      customLookups: 'Користувацькі довідники',
+      code: 'Код',
+      allValues: 'Всі значення',
+      columns: 'Колонки',
+      addColumn: 'Додати колонку',
+      editColumn: 'Редагувати колонку',
+      confirmDeleteColumn:
+        'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
+      controlPermissions: 'Контролювати права доступу',
+      field: {
+        id: 'ID',
+        name: ({ linked }) => linked('reusable.name'),
+        createdAt: ({ linked }) => linked('reusable.createdAt'),
+        createdBy: ({ linked }) => linked('reusable.createdBy'),
+        modifiedAt: ({ linked }) => linked('reusable.modifiedAt'),
+        modifiedBy: ({ linked }) => linked('reusable.modifiedBy'),
+      },
+      fieldType: {
+        string: 'Текст',
+        int32: 'Число',
+        int64: 'Число',
+        lookup: 'Вибір',
+        list: 'Мультивибір',
+        datetime: 'Календар',
+        bool: 'Логічне',
+      },
+    },
+    extensions: {
+      contacts: ({ linked }) => linked('contacts.contact'),
+      cases: ({ linked }) => linked('cases.case'),
+    },
+  },
   cases: {
     case: 'Звернення | Звернення',
-    allCases: ({ linked }) =>
-      `${linked('reusable.all')} ${linked(`cases.case`).toLowerCase()}`,
-    addCase: ({ linked }) =>
-      `${linked('reusable.add')} ${linked(`cases.case`).toLowerCase()}`,
-    caseInfo: 'Інформація про звернення',
-    caseDetails: 'Деталі звернення',
-    caseDescription: 'Опис звернення',
-    caseResolution: 'Рішення',
-    caseResolutionDescription: 'Опис рішення',
-    caseResolutionDate: 'Дата рішення',
-    caseResolutionUser: 'Користувач рішення',
-    caseResolutionReason: 'Причина рішення',
-    caseResolutionReasonGroup: 'Група причин рішення',
-    caseResolutionReasonGroups: 'Групи причин рішення',
-    caseResolutionReasons: 'Причини рішення',
-    caseResolutionReasonDescription: 'Опис причини рішення',
-    caseResolutionReasonGroupDescription: 'Опис групи причин рішення',
-    caseResolutionReasonGroupName: 'Назва групи причин рішення',
-    caseResolutionReasonName: 'Назва причини рішення',
-    caseResolutionReasonGroupEmpty: 'Групи причин рішення ще не створені',
-    caseResolutionReasonEmpty: 'Причини рішення ще не створені',
-    caseResolutionReasonGroupSelect: 'Виберіть групу причин рішення',
-    caseResolutionReasonSelect: 'Виберіть причину рішення',
-    caseResolutionReasonGroupAdd: 'Додати групу причин рішення',
-    caseResolutionReasonAdd: 'Додати причину рішення',
-    caseResolutionReasonGroupEdit: 'Редагувати групу причин рішення',
-    caseResolutionReasonEdit: 'Редагувати причину рішення',
-    caseResolutionReasonGroupDelete: 'Видалити групу причин рішення',
-    caseResolutionReasonDelete: 'Видалити причину рішення',
-    caseResolutionReasonGroupDeleteConfirm:
-      'Ви впевнені, що хочете видалити групу причин рішення?',
-    caseResolutionReasonDeleteConfirm:
-      'Ви впевнені, що хочете видалити причину рішення?',
-    caseResolutionReasonGroupDeleteSuccess: 'Група причин рішення видалена',
-    caseResolutionReasonDeleteSuccess: 'Причина рішення видалена',
-    caseResolutionReasonGroupAddSuccess: 'Група причин рішення додана',
-    caseResolutionReasonAddSuccess: 'Причина рішення додана',
-    caseResolutionReasonGroupEditSuccess: 'Група причин рішення відредагована',
-    caseResolutionReasonEditSuccess: 'Причина рішення відредагована',
-    caseResolutionReasonGroupAddError: 'Помилка додавання групи причин рішення',
-    caseResolutionReasonAddError: 'Помилка додавання причини рішення',
-    caseResolutionReasonGroupEditError:
-      'Помилка редагування групи причин рішення',
-    caseResolutionReasonEditError: 'Помилка редагування причини рішення',
-    caseResolutionReasonGroupDeleteError:
-      'Помилка видалення групи причин рішення',
-    caseResolutionReasonDeleteError: 'Помилка видалення причини рішення',
-    caseResolutionReasonGroupRequired: "Група причин рішення обов'язкова",
-    caseResolutionReasonRequired: "Причина рішення обов'язкова",
-    caseResolutionReasonGroupNameRequired: "Назва групи причин рішення обов'язкова",
-    caseResolutionReasonNameRequired: "Назва причини рішення обов'язкова",
-    caseResolutionReasonGroupDescriptionRequired:
-      "Опис групи причин рішення обов'язковий",
-    caseResolutionReasonDescriptionRequired: "Опис причини рішення обов'язковий",
-    caseResolutionReasonGroupNameExists: 'Група причин рішення з такою назвою вже існує',
-    caseResolutionReasonNameExists: 'Причина рішення з такою назвою вже існує',
-    caseResolutionReasonGroupDescriptionExists:
-      'Група причин рішення з таким описом вже існує',
-    caseResolutionReasonDescriptionExists: 'Причина рішення з таким описом вже існує',
-    caseResolutionReasonGroupNameLength:
-      'Назва групи причин рішення повинна бути не більше 255 символів',
-    caseResolutionReasonNameLength:
-      'Назва причини рішення повинна бути не більше 255 символів',
-    caseResolutionReasonGroupDescriptionLength:
-      'Опис групи причин рішення повинен бути не більше 255 символів',
-    caseResolutionReasonDescriptionLength:
-      'Опис причини рішення повинен бути не більше 255 символів',
-    caseResolutionReasonGroupNamePattern:
-      'Назва групи причин рішення повинна містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonNamePattern:
-      'Назва причини рішення повинна містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonGroupDescriptionPattern:
-      'Опис групи причин рішення повинен містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonDescriptionPattern:
-      'Опис причини рішення повинен містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonGroupNameUnique: 'Назва групи причин рішення повинна бути унікальною',
-    caseResolutionReasonNameUnique: 'Назва причини рішення повинна бути унікальною',
-    caseResolutionReasonGroupDescriptionUnique:
-      'Опис групи причин рішення повинен бути унікальним',
-    caseResolutionReasonDescriptionUnique: 'Опис причини рішення повинен бути унікальним',
-    caseResolutionReasonGroupNameRequired: "Назва групи причин рішення обов'язкова",
-    caseResolutionReasonNameRequired: "Назва причини рішення обов'язкова",
-    caseResolutionReasonGroupDescriptionRequired:
-      "Опис групи причин рішення обов'язковий",
-    caseResolutionReasonDescriptionRequired: "Опис причини рішення обов'язковий",
-    caseResolutionReasonGroupNameExists: 'Група причин рішення з такою назвою вже існує',
-    caseResolutionReasonNameExists: 'Причина рішення з такою назвою вже існує',
-    caseResolutionReasonGroupDescriptionExists:
-      'Група причин рішення з таким описом вже існує',
-    caseResolutionReasonDescriptionExists: 'Причина рішення з таким описом вже існує',
-    caseResolutionReasonGroupNameLength:
-      'Назва групи причин рішення повинна бути не більше 255 символів',
-    caseResolutionReasonNameLength:
-      'Назва причини рішення повинна бути не більше 255 символів',
-    caseResolutionReasonGroupDescriptionLength:
-      'Опис групи причин рішення повинен бути не більше 255 символів',
-    caseResolutionReasonDescriptionLength:
-      'Опис причини рішення повинен бути не більше 255 символів',
-    caseResolutionReasonGroupNamePattern:
-      'Назва групи причин рішення повинна містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonNamePattern:
-      'Назва причини рішення повинна містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonGroupDescriptionPattern:
-      'Опис групи причин рішення повинен містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonDescriptionPattern:
-      'Опис причини рішення повинен містити тільки літери, цифри, пробіли та символи - _ . , ( )',
-    caseResolutionReasonGroupNameUnique: 'Назва групи причин рішення повинна бути унікальною',
-    caseResolutionReasonNameUnique: 'Назва причини рішення повинна бути унікальною',
-    caseResolutionReasonGroupDescriptionUnique:
-      'Опис групи причин рішення повинен бути унікальним',
-    caseResolutionReasonDescriptionUnique: 'Опис причини рішення повинен бути унікальним',
+    id: 'ID',
+    subject: 'Тема',
+    priority: 'Пріоритет',
+    status: 'Статус',
+    source: 'Джерело',
+    author: 'Автор',
+    service: '@:lookups.service.service',
+    assignee: '@:lookups.contactGroups.assignee',
+    reporter: 'Ініціатор',
+    impacted: 'Впливає на',
+    appliedSLA: 'Застосований SLA',
+    appliedCondition: 'Застосована умова',
+    reactionTime: '@:lookups.slas.reactionTime',
+    resolutionTime: '@:lookups.slas.resolutionTime',
+    actualReactionTime: 'Фактичний час реакції',
+    actualResolutionTime: 'Фактичний час вирішення',
+    closureReason: 'Причина закриття',
+    result: 'Результат',
+    rating: 'Оцінка',
+    persons: 'Особи',
+    selectAService: 'Вибрати сервіс',
+    deadlines: 'Терміни',
+    ratingComment: 'Коментар до оцінки',
+    caseResult: 'Результат звернення',
+    assignToMe: 'Взяти на себе',
+    company: 'Компанія',
+    department: 'Відділ',
+    position: 'Посада',
+    location: 'Розташування',
+    serviceValidation: 'Будь ласка, виберіть спочатку сервіс',
+    caseNumber: 'Номер звернення',
+    caseInfo: {
+      caseInfo: 'Інформація',
+      contactInfo: 'Контактна інформація',
+    },
+    comments: {
+      comments: 'Коментарі',
+      edited: 'Редаговано',
+      yourCommentHere: 'Ваш коментар тут',
+      emptyText: 'Тут ще немає коментарів',
+    },
+    attachments: {
+      attachments: 'Вкладення',
+      files: 'Файли',
+      links: 'Посилання',
+      url: 'URL',
+      linkText: 'Текст посилання',
+      emptyFilesText: 'Тут ще немає вкладень',
+      emptyLinksText: 'Тут ще немає посилань',
+    },
+    details: {
+      details: 'Деталі',
+    },
+    relatedCases: {
+      relatedCases: 'Звʼязані звернення',
+      emptyText: 'Тут ще немає звʼязаних звернень',
+      searchCasesPlaceholder: 'Шукати звернення',
+      relationType: {
+        [WebitelCasesRelationType.Duplicates]: 'дублює',
+        [WebitelCasesRelationType.IsDuplicatedBy]: 'дублюється',
+        [WebitelCasesRelationType.Blocks]: 'блокує',
+        [WebitelCasesRelationType.IsBlockedBy]: 'блокується',
+        [WebitelCasesRelationType.Causes]: 'спричинило',
+        [WebitelCasesRelationType.IsCausedBy]: 'спричинене',
+        [WebitelCasesRelationType.IsChildOf]: 'дочірнє до',
+        [WebitelCasesRelationType.IsParentOf]: 'батьківське для',
+        [WebitelCasesRelationType.RelatesTo]: 'стосується',
+      },
+    },
+    slaRecalculationPopup: {
+      title: 'Перерахунок SLA',
+      message:
+        'Після зміни сервісу та збереження звернення SLA буде перераховано.',
+    },
+  },
+  filters: {
     search: {
       [SearchMode.Search]: 'Звичайний пошук',
       [SearchMode.Fts]: 'Повнотекстовий пошук',
-      [SearchMode.Description]: 'Опис',
-    },
-    relationType: {
-      [WebitelCasesRelationType.PARENT]: 'Батьківське',
-      [WebitelCasesRelationType.CHILD]: 'Дочірнє',
-      [WebitelCasesRelationType.RELATED]: "Пов'язане",
-    },
-    sourceType: {
-      [WebitelCasesSourceType.CALL]: 'Дзвінок',
-      [WebitelCasesSourceType.CHAT]: 'Чат',
-      [WebitelCasesSourceType.EMAIL]: 'Електронна пошта',
-      [WebitelCasesSourceType.FORM]: 'Форма',
-      [WebitelCasesSourceType.MANUAL]: 'Вручну',
-    },
-  },
-  contactGroups: {
-    contactGroup: 'Група контактів | Групи контактів',
-    allContactGroups: ({ linked }) =>
-      `${linked('reusable.all')} ${linked(
-        `contactGroups.contactGroup`,
-      ).toLowerCase()}`,
-    addContactGroup: ({ linked }) =>
-      `${linked('reusable.add')} ${linked(
-        `contactGroups.contactGroup`,
-      ).toLowerCase()}`,
-    contactGroupInfo: 'Інформація про групу контактів',
-    contactGroupDetails: 'Деталі групи контактів',
-    contactGroupDescription: 'Опис групи контактів',
-    contactGroupType: 'Тип групи контактів',
-    contactGroupTypes: {
-      [WebitelContactsGroupType.STATIC]: 'Статична',
-      [WebitelContactsGroupType.DYNAMIC]: 'Динамічна',
     },
   },
 };

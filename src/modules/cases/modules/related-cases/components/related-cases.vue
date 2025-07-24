@@ -205,6 +205,7 @@ const {
   updateSize,
   updateSort,
   updatePage,
+  deleteEls,
   appendToDataList,
 } = tableStore;
 
@@ -280,7 +281,7 @@ const createRouteLinkParams = (name, id) => {
 };
 
 function getCaseLink(item) {
-  const revertedCase = getRevertedCase(item)
+  const revertedCase = getRevertedCase(item);
   if (isReadOnly) {
     return createRouteLinkParams(CASE_VIEW_NAME, revertedCase.etag);
   }
@@ -328,6 +329,7 @@ async function submitCase() {
     console.error(error);
   }
 }
+
 function defineEtags(cases) {
   if (Array.isArray(cases)) {
     return cases.map(item => item?.etag);
@@ -335,12 +337,12 @@ function defineEtags(cases) {
   return cases.etag ? [cases.etag] : [];
 }
 
-
 const deleteRelatedCases = async (items) => {
-  await RelatedCasesAPI.delete({
-    parentId: props.parentId,
-    id: defineEtags(items),
-  });
+  const etags = defineEtags(items);
+
+  for (const etag of etags) {
+    await RelatedCasesAPI.delete({ parentId: props.parentId, id: etag });
+  }
   updatePage(1);
   await loadDataList();
 };
