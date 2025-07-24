@@ -186,8 +186,8 @@ function closePlayer() {
 }
 
 onMounted(() => {
-  return eventBus.$on('audio-handler', ({ url, id }) => {
-    if(!url || !id) return closePlayer();
+  eventBus.$on('audio-handler', ({ url, id }) => {
+    if (!url || !id) return closePlayer();
     audioURL.value = url;
     audioId.value = id;
   });
