@@ -6,28 +6,31 @@
     </slot>
 
     <slot name="tooltip">
-      <wt-tooltip
+      <wt-popover
         v-if="hiddenParticipants.length"
-        :triggers="['click']"
       >
-        <template #activator>
-          <wt-chip> +{{ hiddenParticipants.length }} </wt-chip>
+        <template #activator="{ toggle }">
+          <div @click="toggle">
+            <wt-chip> +{{ hiddenParticipants.length }} </wt-chip>
+          </div>
         </template>
 
         <div class="email-task-timeline-header-section__wrapper">
           <p
-            v-for="(name, idx) of hiddenParticipants"
+            v-for="(participantName, idx) of hiddenParticipants"
             :key="idx"
           >
-            {{ name }}
+            {{ participantName }}
           </p>
         </div>
-      </wt-tooltip>
+      </wt-popover>
     </slot>
   </div>
 </template>
 
 <script setup>
+import { WtPopover } from '@webitel/ui-sdk/components';
+
 const props = defineProps({
   title: {
     type: String,

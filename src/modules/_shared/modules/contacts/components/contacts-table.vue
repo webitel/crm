@@ -57,32 +57,6 @@
 
           <template #groups="{ item }">
             <wt-display-chip-items v-if="item.groups" :items="item.groups" />
-<!--            <div-->
-<!--              v-if="item.groups"-->
-<!--              class="contacts-groups"-->
-<!--            >-->
-<!--              <p>-->
-<!--                {{ item.groups[0]?.name }}-->
-<!--              </p>-->
-
-<!--              <wt-tooltip-->
-<!--                v-if="item.groups.length > 1"-->
-<!--                :triggers="['click']"-->
-<!--              >-->
-<!--                <template #activator>-->
-<!--                  <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>-->
-<!--                </template>-->
-
-<!--                <div class="contacts-groups__wrapper">-->
-<!--                  <p-->
-<!--                    v-for="(group, idx) of item.groups.slice(1)"-->
-<!--                    :key="idx"-->
-<!--                  >-->
-<!--                    {{ group.name }}-->
-<!--                  </p>-->
-<!--                </div>-->
-<!--              </wt-tooltip>-->
-<!--            </div>-->
           </template>
 
           <template #about="{ item }">

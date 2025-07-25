@@ -32,22 +32,15 @@
               :type="initiatorType"
             />
 
-            <wt-tooltip
-              v-if="hiddenParticipants.length"
-              :triggers="['click']"
-            >
-              <template #activator>
-                <wt-chip>
-                  +{{ hiddenParticipants.length }}
-                </wt-chip>
-              </template>
-
-              <timeline-row-initiator
-                v-for="({ name, id }) of hiddenParticipants"
-                :key="id"
-                :text="name"
-              />
-            </wt-tooltip>
+        <wt-display-chip-items v-if="hiddenParticipants.length" :items="hiddenParticipants" hide-first-item>
+          <template #items>
+            <timeline-row-initiator
+              v-for="({ id, name }) of hiddenParticipants"
+              :key="id"
+              :text="name"
+            />
+          </template>
+        </wt-display-chip-items>
 
             <timeline-row-duration
               :duration="duration"
@@ -83,6 +76,7 @@
 </template>
 
 <script setup>
+import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { computed, inject, onMounted, onUnmounted, provide, ref, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';

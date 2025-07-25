@@ -145,13 +145,13 @@
               <template #teams="{ item }">
                 <template v-if="!isRootElement(item)"> -</template>
                 <template v-else>
-                  <display-chip-items :items="item.teams" />
+                  <wt-display-chip-items :items="item.teams" />
                 </template>
               </template>
               <template #skills="{ item }">
                 <template v-if="!isRootElement(item)"> -</template>
                 <template v-else>
-                  <display-chip-items :items="item.skills" />
+                  <wt-display-chip-items :items="item.skills" />
                 </template>
               </template>
               <template #actions="{ item }">
@@ -192,7 +192,7 @@
 <script setup>
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
+import { WtDisplayChipItems,WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
@@ -201,17 +201,16 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { displayText } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { displayText } from '../../../../../../../app/utils/displayText';
 import ServicesAPI from '../modules/services/api/services';
 import { useServiceCatalogsStore } from '../stores/service-catalogs';
 import { checkDisableState } from '../utils/checkDisableState';
-import DisplayChipItems from './display-chip-items.vue';
 
 const { t } = useI18n();
 const router = useRouter();
