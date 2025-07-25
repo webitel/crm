@@ -33,8 +33,7 @@
           :type="initiatorType"
         />
 
-        <wt-display-chip-items
-          v-if="hiddenParticipants.length" :items="hiddenParticipants">
+        <wt-display-chip-items v-if="hiddenParticipants.length" :items="hiddenParticipants">
           <template #items>
             <timeline-row-initiator
               v-for="({ id, name }) of hiddenParticipants"
