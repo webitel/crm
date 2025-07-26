@@ -78,7 +78,7 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     {
       name: t('customization.customization'),
-      route: '/customization',
+      route: '/configuration',
     },
     {
       name: repo.value && t(`customization.extensions.${repo.value}`),
