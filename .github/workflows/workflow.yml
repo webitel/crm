@@ -45,7 +45,7 @@ jobs:
   deploy:
     name: Deploy
     needs: [ prepare ]
-    uses: webitel/reusable-workflows/.github/workflows/_deploy.yml@02ba6fdf0eef2e7b064293fea4779b8a5bca6a28ß
+    uses: webitel/reusable-workflows/.github/workflows/_deploy.yml@02ba6fdf0eef2e7b064293fea4779b8a5bca6a28
     permissions: { contents: write }
     secrets: inherit
     with:
