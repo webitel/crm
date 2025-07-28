@@ -32,7 +32,7 @@
         <wt-select
           :value="draft.timezones[0]?.timezone"
           :label="t('date.timezone', 1)"
-          :search-method="CalendarsAPI.getTimezonesLookup()"
+          :search-method="CalendarsAPI.getTimezonesLookup"
           @input="draft.timezones[0] = { timezone: $event }"
         />
 
