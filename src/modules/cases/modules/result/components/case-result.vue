@@ -86,7 +86,7 @@ async function searchCloseReasons(params) {
   if (!closeReasonId.value) {
     return { items: [] };
   }
-  return await CaseCloseReasonsAPI.getLookup({ closeReasonGroupId: closeReasonId.value, ...params });
+  return await CaseCloseReasonsAPI.getLookup({ parentId: closeReasonId.value, ...params });
 }
 
 </script>

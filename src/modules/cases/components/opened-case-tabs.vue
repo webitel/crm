@@ -46,7 +46,7 @@ const route = useRoute();
 const { disableUserInput } = useUserAccessControl();
 const { namespace: cardNamespace, id } = useCardStore(props.namespace);
 
-const actionAllow = computed(() => !disableUserInput && editMode.value && !isReadOnly.value);
+const actionAllow = computed(() => !disableUserInput.value && editMode.value && !isReadOnly);
 
 const CASE_VIEW_NAME = 'case_view';
 const currentCardRoute = computed(() => {
@@ -67,12 +67,13 @@ const tabs = computed(() => {
       value: 'result',
       pathName: `${currentCardRoute.value}-result`,
     },
-    {
-      text: t('timeline.timeline'),
-      value: 'timeline',
-      pathName: `${currentCardRoute.value}-timeline`,
-    },
   ];
+
+  const timeline = {
+    text: t('timeline.timeline'),
+    value: 'timeline',
+    pathName: `${currentCardRoute.value}-timeline`,
+  };
 
   const attachments = {
     text: t('cases.attachments.attachments'),
@@ -80,7 +81,7 @@ const tabs = computed(() => {
     pathName: `${currentCardRoute.value}-attachments`,
   };
 
-  if (id.value) tabs.push(attachments);
+  if (id.value) tabs.push(timeline, attachments);
 
   if (customFields.value.length) {
     tabs.push({

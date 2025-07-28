@@ -65,29 +65,11 @@
             {{ item.name }}
           </template>
           <template #priorities="{ item }">
-            <div
+            <wt-display-chip-items
               v-if="item.priorities?.length"
+              :items="item.priorities"
               class="opened-sla-conditions__priorities"
-            >
-              <p>{{ item.priorities[0]?.name }}</p>
-              <wt-tooltip
-                v-if="item.priorities?.length > 1"
-                :triggers="['click']"
-              >
-                <template #activator>
-                  <wt-chip> +{{ item.priorities?.length - 1 }}</wt-chip>
-                </template>
-
-                <ul>
-                  <li
-                    v-for="{ id, name } of item.priorities?.slice(1)"
-                    :key="id"
-                  >
-                    <p>{{ name }}</p>
-                  </li>
-                </ul>
-              </wt-tooltip>
-            </div>
+            />
           </template>
           <template #reactionTime="{ item }">
             {{ ConvertDurationWithDays(item.reactionTime) }}
@@ -131,7 +113,7 @@
 
 <script setup lang="ts">
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import {WtEmpty} from '@webitel/ui-sdk/src/components/index';
+import {WtDisplayChipItems,WtEmpty} from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -141,16 +123,12 @@ import {
 import {useTableEmpty} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import {useCardStore} from '@webitel/ui-sdk/store';
 import {storeToRefs} from 'pinia';
-import {computed, ref} from 'vue';
+import {computed} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useRoute, useRouter} from 'vue-router';
 
 import {useUserAccessControl} from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
-import {
-  SearchMode,
-  SearchModeType,
-} from '../../../../../../../../cases/enums/SearchMode';
 import {SLAConditionsCardNamespace} from "../namespace";
 import {useSLAConditionsStore} from '../stores/conditions';
 import ConditionPopup from './opened-sla-condition-popup.vue';

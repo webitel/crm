@@ -8,7 +8,7 @@
   <template v-else-if="field.kind === FieldType.Select">
     {{ displayText(value[field.value]?.name) }}
   </template>
-  <display-chip-items
+  <wt-display-chip-items
     v-else-if="field.kind === FieldType.Multiselect"
     :items="value[field.value]"
   />
@@ -23,14 +23,14 @@
 </template>
 
 <script setup>
+import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
-import { displayText } from '../../../../../../../app/utils/displayText.js';
 import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import {
   FieldType,
 } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum.js';
-import DisplayChipItems from '../../service-catalogs/components/display-chip-items.vue';
 
 const props = defineProps({
   field: {

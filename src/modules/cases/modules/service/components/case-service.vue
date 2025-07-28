@@ -17,17 +17,14 @@
       <span class="case-service__title">
         {{ t('cases.service') }}
 
-        <wt-tooltip v-if="!isReadOnly && !servicePath">
-          <template #activator>
-            <wt-icon
-              icon="attention"
-              color="error"
-            />
-          </template>
-
-          {{ t('cases.serviceValidation') }}
-        </wt-tooltip>
+        <wt-icon
+          v-if="!isReadOnly && !servicePath"
+          v-tooltip="t('cases.serviceValidation')"
+          icon="attention"
+          color="error"
+        />
       </span>
+
       <span
         v-if="servicePath"
         class="case-service__path"

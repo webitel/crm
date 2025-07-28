@@ -2,7 +2,7 @@
   <template v-if="field.kind === FieldType.Select">
     {{ displayText(value?.name) }}
   </template>
-  <display-chip-items
+  <wt-display-chip-items
     v-else-if="field.kind === FieldType.Multiselect"
     :items="value"
   />
@@ -21,12 +21,11 @@
 </template>
 
 <script setup>
+import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
-import { displayText } from '../../../../../app/utils/displayText.js';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
-import DisplayChipItems
-  from '../../../../configuration/modules/lookups/modules/service-catalogs/components/display-chip-items.vue';
 import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
 
 const props = defineProps({
