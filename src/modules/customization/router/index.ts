@@ -6,7 +6,7 @@ import OpenedCustomLookupColumns from '../modules/custom-lookups/components/open
 import OpenedCustomLookupGeneral from '../modules/custom-lookups/components/opened-custom-lookup-general.vue';
 import TheCustomLookups from '../modules/custom-lookups/components/the-custom-lookups.vue';
 import TheDictionaryExtensions from '../modules/wt-type-extension/components/the-wt-type-extension.vue';
-import { WtObject } from '../../../../../webitel-ui-sdk/src/enums';
+import { WtObject } from '@webitel/ui-sdk/enums';
 
 const customizationRoutes: RouteRecordRaw[] = [
   {

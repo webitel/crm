@@ -1,4 +1,4 @@
-import { CrmSections, WtObject } from '@webitel/ui-sdk/src/enums/index';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type RouteRecordRaw } from 'vue-router';
 
 import TheConfiguration from '../components/the-configuration.vue';
