@@ -6,7 +6,7 @@
     >
       <wt-checkbox
         :selected="selected"
-        @change="set"
+        @update:selected="set"
       >
         <template #label>
           <div class="timeline-task-type-filter__label-wrapper">
