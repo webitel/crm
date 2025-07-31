@@ -11,7 +11,6 @@ import caseViewRoute from '../../modules/cases/router/case-view';
 import configurationRoutes from '../../modules/configuration/router';
 import contactsRoutes from '../../modules/contacts/router';
 import contactViewRoute from '../../modules/contacts/router/contact-view';
-import customizationRoutes from '../../modules/customization/router';
 import startPageRoutes from '../../modules/start-page/router';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
@@ -29,7 +28,6 @@ const routes: Array<RouteRecordRaw> = [
       ...casesRoutes,
       ...contactsRoutes,
       ...configurationRoutes,
-      ...customizationRoutes,
     ],
   },
   {
