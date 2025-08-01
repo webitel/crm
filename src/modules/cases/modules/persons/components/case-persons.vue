@@ -25,7 +25,7 @@
         <template #default="props">
           <wt-select
             v-bind="props"
-            :search-method="ContactsAPI.getLookup"
+            :search-method="getContactsLookup"
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.reporter"
             class="case-persons__select"
@@ -251,6 +251,10 @@ const getContactLink = async (id) => {
   }
 
   window.open(url, '_blank', 'noopener');
+};
+
+const getContactsLookup = async (params) => {
+  return await ContactsAPI.getLookup({ ...params, qin: 'name,phones,emails' });
 };
 </script>
 
