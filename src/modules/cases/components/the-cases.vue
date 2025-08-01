@@ -55,8 +55,8 @@
             </template>
             <template #columns>
               <wt-table-column-select
-                :headers="allHeaders"
-                @change="handleHeadersChange"
+                :headers="mergedHeaders"
+                @change="updateShownHeaders"
               />
             </template>
           </wt-action-bar>
@@ -366,7 +366,7 @@ const customHeaders = ref([]);
 const customHeadersLoaded = ref(false);
 
 // Computed property that combines base headers with custom headers
-const allHeaders = computed(() => {
+const mergedHeaders = computed(() => {
   const baseHeaders = headers.value || [];
 
   // Return only base headers if custom headers aren't loaded yet
@@ -375,15 +375,15 @@ const allHeaders = computed(() => {
   }
 
   // Get unique custom headers that don't conflict with base headers
-  const uniqueCustomHeaders = getUniqueCustomHeaders(baseHeaders);
+  const uniqueCustomHeaders = filterUniqueHeaders(customHeaders.value, baseHeaders);
 
   return [...baseHeaders, ...uniqueCustomHeaders];
 });
 
-// Helper function to filter out duplicate headers
-const getUniqueCustomHeaders = (baseHeaders) => {
-  const existingFields = new Set(baseHeaders.map(h => h.field));
-  return customHeaders.value.filter(h => !existingFields.has(h.field));
+// Helper function to filter out duplicate headers based on field property
+const filterUniqueHeaders = (headersToFilter, existingHeaders) => {
+  const existingFields = new Set(existingHeaders.map(header => header.field));
+  return headersToFilter.filter(header => !existingFields.has(header.field));
 };
 
 // Helper function to transform API field objects into table header format
@@ -407,33 +407,19 @@ const getCustomValues = (item, fieldName) => {
   return get(item, ['custom', fieldName]);
 };
 
-
-// Handle header changes from the column select component
-const handleHeadersChange = (updatedHeaders) => {
-  // Update the table store with the new headers configuration
-  updateShownHeaders(updatedHeaders);
-};
-
-
 // Helper function to fetch custom headers from API
 const fetchCustomHeadersFromAPI = async () => {
   const response = await WtTypeExtensionAPI.getList({ itemId: 'cases' });
   return response?.fields || [];
 };
 
-// Helper function to check for duplicate headers
-const filterUniqueHeaders = (customHeaders, existingHeaders) => {
-  const existingFields = new Set(existingHeaders.map(header => header.field));
-  return customHeaders.filter(header => !existingFields.has(header.field));
-};
+// Helper function to merge headers and update store
+const updateHeaders = (headersToAdd, baseHeaders) => {
+  const existingHeaders = baseHeaders || headers.value || [];
+  const uniqueHeaders = filterUniqueHeaders(headersToAdd, existingHeaders);
 
-// Helper function to merge headers with store updates
-const mergeAndUpdateHeaders = (customHeaders) => {
-  const currentHeaders = headers.value || [];
-  const uniqueCustomHeaders = filterUniqueHeaders(customHeaders, currentHeaders);
-
-  if (uniqueCustomHeaders.length > 0) {
-    const mergedHeaders = [...currentHeaders, ...uniqueCustomHeaders];
+  if (uniqueHeaders.length) {
+    const mergedHeaders = [...existingHeaders, ...uniqueHeaders];
     updateShownHeaders(mergedHeaders);
   }
 };
@@ -449,8 +435,8 @@ const loadCustomHeaders = async () => {
   customHeadersLoaded.value = true;
 
   // Merge with existing headers and update store if we have any custom headers
-  if (transformedHeaders.length > 0) {
-    mergeAndUpdateHeaders(transformedHeaders);
+  if (transformedHeaders.length) {
+    updateHeaders(transformedHeaders);
   }
 };
 
@@ -458,12 +444,8 @@ const loadCustomHeaders = async () => {
 const syncMissingCustomHeaders = (newHeaders) => {
   if (!customHeadersLoaded.value || !newHeaders) return;
 
-  const missingCustomHeaders = filterUniqueHeaders(customHeaders.value, newHeaders);
-
-  if (missingCustomHeaders.length > 0) {
-    const updatedHeaders = [...newHeaders, ...missingCustomHeaders];
-    updateShownHeaders(updatedHeaders);
-  }
+  // Use the same merge function but with reversed parameters
+  updateHeaders(customHeaders.value, newHeaders);
 };
 
 // Initialize headers before table store
