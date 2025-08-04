@@ -136,7 +136,11 @@
               {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
-              {{ item.service?.name }}
+              <service-path
+                v-if="item.service?.id"
+                :service-id="item.service.id"
+                :initial-name="item.service.name"
+              />
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -249,6 +253,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import DisplayDynamicFieldExtension
   from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { SearchMode } from '../enums/SearchMode';
+import ServicePath from '../modules/service/components/ServicePath.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
