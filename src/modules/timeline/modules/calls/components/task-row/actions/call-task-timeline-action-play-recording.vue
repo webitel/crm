@@ -5,12 +5,14 @@
     max-width="400px"
     @click="handleOptionSelect"
   >
-    <template #activator>
+    <template #activator="{ toggle }">
       <wt-icon-btn
         v-tooltip="$t('timeline.actions.playRecording')"
         :icon="isAnyFilesPlaying ? 'stop': 'play'"
+        @click="toggle"
       />
     </template>
+
     <template #option="{ text, id }">
       <div class="call-task-timeline-action-play-recording__option">
         <wt-icon

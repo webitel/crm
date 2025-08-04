@@ -6,8 +6,8 @@
       :options="actionOptions"
       @click="$event.option.handler()"
     >
-      <template #activator>
-        <wt-icon-btn v-tooltip="t('vocabulary.options', 2)" icon="options" />
+      <template #activator="{ toggle }">
+        <wt-icon-btn v-tooltip="t('vocabulary.options', 2)" icon="options" @click="toggle" />
       </template>
 
       <template #option="option">
