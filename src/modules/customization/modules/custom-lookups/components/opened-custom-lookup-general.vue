@@ -39,8 +39,8 @@
       <!--      TODO Hidden before backend will be ready for this-->
       <!--      <wt-switcher-->
       <!--        :label="t('customization.customLookups.controlPermissions')"-->
-      <!--        :value="itemInstance.administered"-->
-      <!--        @change="setItemProp({ path: 'administered', value: $event })"-->
+      <!--        :model-value="itemInstance.administered"-->
+      <!--        @update:model-value="setItemProp({ path: 'administered', value: $event })"-->
       <!--      />-->
     </div>
   </section>

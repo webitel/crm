@@ -128,7 +128,7 @@
               </template>
               <template #state="{ item, index }">
                 <wt-switcher
-                  :value="item.state"
+                  :model-value="item.state"
                   :disabled="
                     !hasUpdateAccess ||
                     checkParentState({
@@ -136,7 +136,7 @@
                       item,
                     })
                   "
-                  @change="changeState(item, index)"
+                  @update:model-value="changeState(item, index)"
                 />
               </template>
               <template #code="{ item }">

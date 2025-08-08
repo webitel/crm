@@ -106,9 +106,9 @@
               </template>
               <template #state="{ item, index }">
                 <wt-switcher
-                  :value="item.state"
+                  :model-value="item.state"
                   :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
-                  @change="
+                  @update:model-value="
                     patchProperty({ index, prop: 'state', value: $event })
                   "
                 />

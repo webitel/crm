@@ -88,8 +88,8 @@
       <wt-switcher
         :disabled="disableUserInput"
         :label="t('reusable.state')"
-        :value="itemInstance.state"
-        @change="setItemProp({ path: 'state', value: $event })"
+        :model-value="itemInstance.state"
+        @update:model-value="setItemProp({ path: 'state', value: $event })"
       />
     </div>
   </section>

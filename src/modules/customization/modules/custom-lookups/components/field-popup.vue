@@ -45,9 +45,9 @@
 
         <!--        TODO hide switcher https://webitel.atlassian.net/browse/WTEL-6774-->
         <!--        <wt-switcher-->
-        <!--          :value="value.required"-->
+        <!--          :model-value="value.required"-->
         <!--          :label="$t('reusable.required')"-->
-        <!--          @change="value.required = $event"-->
+        <!--          @update:model-value="value.required = $event"-->
         <!--        ></wt-switcher>-->
       </div>
     </template>
