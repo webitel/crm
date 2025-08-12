@@ -1,3 +1,4 @@
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type RouteRecordRaw } from 'vue-router';
 
 import TheConfiguration from '../components/the-configuration.vue';
@@ -8,7 +9,10 @@ const configurationRoutes: RouteRecordRaw[] = [
     path: 'configuration',
     name: 'configuration',
     component: TheConfiguration,
-    // beforeEnter: checkRouteAccess,
+    meta: {
+      WtObject: WtObject.Configuration,
+      UiSection: CrmSections.Configuration,
+    },
   },
   ...lookupsRoutes,
 ];

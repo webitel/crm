@@ -286,6 +286,9 @@ const lookupsRoutes: RouteRecordRaw[] = [
         path: ':repo',
         name: 'custom-lookup',
         component: TheCustomLookup,
+        meta: {
+          routeParamForSectionName: 'repo',
+        },
       },
       {
         path: ':repo/:id',
