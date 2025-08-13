@@ -9,14 +9,27 @@
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
 import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 import CustomLookupsApi from '../../customization/modules/custom-lookups/api/custom-lookups.js';
+import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
 const { t } = useI18n();
-//
+const router = useRouter();
+
+const { routeAccessGuard } = useUserinfoStore();
+
 const icons = [lookupsIcon, customizationIcon];
+
+const navAccessReducer = (reducedNav, currentNav) => {
+  if (currentNav.subNav) {
+    currentNav.subNav = currentNav.subNav.reduce(navAccessReducer, []);
+  }
+  const route = router.resolve({ path: currentNav.route });
+  return routeAccessGuard(route) === true ? [...reducedNav, currentNav] : reducedNav;
+};
 
 const nav = reactive([
   {
@@ -83,7 +96,7 @@ const nav = reactive([
       },
     ],
   },
-]);
+].reduce(navAccessReducer, []));
 
 const loadCustomLookups = async () => {
   try {
