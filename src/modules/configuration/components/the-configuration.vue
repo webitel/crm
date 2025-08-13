@@ -15,7 +15,7 @@ import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 import CustomLookupsApi from '../../customization/modules/custom-lookups/api/custom-lookups.js';
 
 const { t } = useI18n();
-
+//
 const icons = [lookupsIcon, customizationIcon];
 
 const nav = reactive([
