@@ -1,6 +1,6 @@
 <template>
   <div class="case-result">
-    <div class="opened-card-input-grid">
+    <div class="opened-card-input-grid opened-card-input-grid--1-col">
       <editable-field
         :edit-mode="editMode"
         :label="t('cases.closureReason')"
@@ -27,7 +27,7 @@
         @update:value="setItemProp({ path: 'closeResult', value: $event })"
       >
         <template #default="props">
-          <wt-input
+          <wt-textarea
             v-bind="props"
             required
             :v="v$.value.itemInstance.closeResult"
@@ -37,17 +37,19 @@
         </template>
       </editable-field>
 
-      <editable-field
-        :label="t('cases.rating')"
-        :value="itemInstance.rating"
-      />
+      <div class="opened-card-input-grid">
+        <editable-field
+          :label="t('cases.rating')"
+          :value="itemInstance.rating"
+        />
 
-      <editable-field
-        :label="t('cases.ratingComment')"
-        :value="itemInstance.ratingComment"
-      />
+        <editable-field
+          :label="t('cases.ratingComment')"
+          :value="itemInstance.ratingComment"
+        />
+      </div>
     </div>
-  </div>
+    </div>
 </template>
 <script setup>
 import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
