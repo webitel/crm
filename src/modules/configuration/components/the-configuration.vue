@@ -1,13 +1,13 @@
 <template>
   <wt-navigation-menu
-    :nav="nav"
+    :nav="accessibleNav"
     :icons="icons"
   />
 </template>
 
 <script setup>
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -22,6 +22,7 @@ const router = useRouter();
 const { routeAccessGuard } = useUserinfoStore();
 
 const icons = [lookupsIcon, customizationIcon];
+const customLookups = ref([]);
 
 const navAccessReducer = (reducedNav, currentNav) => {
   if (currentNav.subNav) {
@@ -31,7 +32,15 @@ const navAccessReducer = (reducedNav, currentNav) => {
   return routeAccessGuard(route) === true ? [...reducedNav, currentNav] : reducedNav;
 };
 
-const nav = reactive([
+const customLookupsNav = computed(() => {
+  return customLookups.value.map((item) => ({
+      value: item.id,
+      name: item.name,
+      route: `lookups/${item.repo}`,
+    }));
+});
+
+const nav = computed(() => [
   {
     value: 'lookups',
     name: computed(() => t('lookups.lookups')),
@@ -73,6 +82,7 @@ const nav = reactive([
         name: computed(() => t('lookups.serviceCatalogs.serviceCatalogs', 2)),
         route: 'lookups/service-catalogs',
       },
+      ...customLookupsNav.value,
     ],
   },
   {
@@ -96,24 +106,18 @@ const nav = reactive([
       },
     ],
   },
-].reduce(navAccessReducer, []));
+]);
+
+const accessibleNav = computed(() => {
+  return nav.reduce(navAccessReducer, []);
+});
 
 const loadCustomLookups = async () => {
-  try {
     const { items } = await CustomLookupsApi.getList({
       size: -1,
     });
 
-    const formatedNav = items.map((item) => ({
-      value: item.id,
-      name: item.name,
-      route: `lookups/${item.repo}`,
-    }));
-
-    nav[0].subNav.push(...formatedNav);
-  } catch (error) {
-    console.error(error);
-  }
+    customLookups.value = items;
 };
 
 loadCustomLookups();
