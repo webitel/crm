@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -46,37 +46,37 @@ const nav = computed(() => {
     name: t('lookups.lookups'),
     subNav: [
       {
-        value: CrmSections.CONTACT_GROUPS,
+        value: CrmSections.ContactGroups,
         name: t('lookups.contactGroups.contactGroups', 2),
         route: 'lookups/contact-groups',
       },
       {
-        value: CrmSections.PRIORITIES,
+        value: CrmSections.Priorities,
         name: t('vocabulary.priority', 2),
         route: 'lookups/priorities',
       },
       {
-        value: CrmSections.CLOSE_REASON_GROUPS,
+        value: CrmSections.CloseReasonGroups,
         name: t('lookups.closeReasonGroups.closeReasonGroups', 2),
         route: 'lookups/close-reason-groups',
       },
       {
-        value: CrmSections.STATUSES,
+        value: CrmSections.Statuses,
         name: t(`lookups.statuses.statuses`, 2),
         route: 'lookups/statuses',
       },
       {
-        value: CrmSections.SOURCES,
+        value: CrmSections.Sources,
         name: t('lookups.sources.sources', 2),
         route: 'lookups/sources',
       },
       {
-        value: CrmSections.SLAS,
+        value: CrmSections.Slas,
         name: t('lookups.slas.slas', 2),
         route: 'lookups/slas',
       },
       {
-        value: CrmSections.SERVICE_CATALOGS,
+        value: CrmSections.ServiceCatalogs,
         name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
         route: 'lookups/service-catalogs',
       },
@@ -88,17 +88,17 @@ const nav = computed(() => {
     name: t('customization.customization'),
     subNav: [
       {
-        value: 'type-extension-cases',
+        value: CrmSections.CasesExtensions,
         name: t('customization.extensions.cases'),
         route: 'customization/types-extensions/cases',
       },
       {
-        value: 'type-extension-contact',
+        value: CrmSections.ContactsExtensions,
         name: t('customization.extensions.contacts'),
         route: 'customization/types-extensions/contacts',
       },
       {
-        value: CrmSections.CUSTOM_LOOKUPS,
+        value: CrmSections.CustomLookups,
         name: t('customization.customLookups.customLookups'),
         route: 'customization/custom-lookups',
       },
