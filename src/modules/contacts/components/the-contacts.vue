@@ -12,7 +12,7 @@
         @saved="saved"
       />
 
-      <wt-headline-nav :path="path" />
+      <wt-breadcrumb :path="path" />
     </template>
 
     <template #actions-panel>
