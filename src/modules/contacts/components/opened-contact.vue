@@ -9,7 +9,7 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
         <template #actions>
           <div id="page-header-actions" />
         </template>
