@@ -1,13 +1,19 @@
 <template>
+  <div class="the-configuration">
+  <wt-loader
+   v-if="!isCustomLookupsLoaded"
+  />
   <wt-navigation-menu
+    v-else
     :nav="accessibleNav"
     :icons="icons"
   />
+</div>
 </template>
 
 <script setup>
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, reactive, ref } from 'vue';
+import { CrmSections } from '@webitel/ui-sdk/enums';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { WtNavigationMenu } from '@webitel/ui-sdk/components';
@@ -23,12 +29,18 @@ const router = useRouter();
 const { routeAccessGuard } = useUserinfoStore();
 
 const icons = [lookupsIcon, customizationIcon];
+const isCustomLookupsLoaded = ref(false);
 const customLookups = ref([]);
 
 const navAccessReducer = (reducedNav, currentNav) => {
   if (currentNav.subNav) {
     currentNav.subNav = currentNav.subNav.reduce(navAccessReducer, []);
   }
+
+  if (currentNav.subNav?.length === 0) {
+    return reducedNav;
+  }
+
   const route = router.resolve({ path: currentNav.route });
   return routeAccessGuard(route) === true ? [...reducedNav, currentNav] : reducedNav;
 };
@@ -46,37 +58,37 @@ const nav = computed(() => {
     name: t('lookups.lookups'),
     subNav: [
       {
-        value: CrmSections.CONTACT_GROUPS,
+        value: CrmSections.ContactGroups,
         name: t('lookups.contactGroups.contactGroups', 2),
         route: 'lookups/contact-groups',
       },
       {
-        value: CrmSections.PRIORITIES,
+        value: CrmSections.Priorities,
         name: t('vocabulary.priority', 2),
         route: 'lookups/priorities',
       },
       {
-        value: CrmSections.CLOSE_REASON_GROUPS,
+        value: CrmSections.CloseReasonGroups,
         name: t('lookups.closeReasonGroups.closeReasonGroups', 2),
         route: 'lookups/close-reason-groups',
       },
       {
-        value: CrmSections.STATUSES,
+        value: CrmSections.Statuses,
         name: t(`lookups.statuses.statuses`, 2),
         route: 'lookups/statuses',
       },
       {
-        value: CrmSections.SOURCES,
+        value: CrmSections.Sources,
         name: t('lookups.sources.sources', 2),
         route: 'lookups/sources',
       },
       {
-        value: CrmSections.SLAS,
+        value: CrmSections.Slas,
         name: t('lookups.slas.slas', 2),
         route: 'lookups/slas',
       },
       {
-        value: CrmSections.SERVICE_CATALOGS,
+        value: CrmSections.ServiceCatalogs,
         name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
         route: 'lookups/service-catalogs',
       },
@@ -85,21 +97,21 @@ const nav = computed(() => {
   },
   {
     value: 'customization',
-    name: t('customization.customization'),
+    name: t('objects.customization.customization'),
     subNav: [
       {
-        value: 'type-extension-cases',
+        value: CrmSections.CasesExtensions,
         name: t('customization.extensions.cases'),
         route: 'customization/types-extensions/cases',
       },
       {
-        value: 'type-extension-contact',
+        value: CrmSections.ContactsExtensions,
         name: t('customization.extensions.contacts'),
         route: 'customization/types-extensions/contacts',
       },
       {
-        value: CrmSections.CUSTOM_LOOKUPS,
-        name: t('customization.customLookups.customLookups'),
+        value: CrmSections.CustomLookups,
+        name: t('objects.customLookup.customLookup', 2),
         route: 'customization/custom-lookups',
       },
     ],
@@ -111,15 +123,32 @@ const accessibleNav = computed(() => {
   return nav.value.reduce(navAccessReducer, []);
 });
 
+watch(() => accessibleNav.value, (newVal) => {
+  if (newVal.length === 0 && isCustomLookupsLoaded.value) {
+    router.push('/access-denied');
+  }
+});
+
 const loadCustomLookups = async () => {
+  try {
     const { items } = await CustomLookupsApi.getList({
       size: -1,
     });
 
     customLookups.value = items;
+  } finally {
+    isCustomLookupsLoaded.value = true;
+  }
 };
 
 loadCustomLookups();
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.the-configuration {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

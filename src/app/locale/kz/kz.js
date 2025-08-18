@@ -183,9 +183,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Баптау',
     customLookups: {
-      customLookups: 'Арнайы анықтамалықтар',
       allValues: 'Барлық мәндер',
       code: 'Код',
       columns: 'Бағандар',

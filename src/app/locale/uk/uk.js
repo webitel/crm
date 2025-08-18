@@ -190,9 +190,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Персоналізація',
     customLookups: {
-      customLookups: 'Користувацькі довідники',
       code: 'Код',
       allValues: 'Всі значення',
       columns: 'Колонки',

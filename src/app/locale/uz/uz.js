@@ -182,9 +182,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Moslash',
     customLookups: {
-      customLookups: "Maxsus ma'lumotnomalar",
       allValues: 'Barcha qiymatlar',
       code: 'Kod',
       columns: 'Ustunlar',
