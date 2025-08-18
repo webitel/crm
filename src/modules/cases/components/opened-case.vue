@@ -13,7 +13,7 @@
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
 
         <template #actions>
           <div class="opened-case__actions-wrapper">
