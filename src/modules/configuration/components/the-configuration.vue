@@ -1,13 +1,19 @@
 <template>
+  <div class="the-configuration">
+  <wt-loader
+   v-if="!isCustomLookupsLoaded"
+  />
   <wt-navigation-menu
+    v-else
     :nav="accessibleNav"
     :icons="icons"
   />
+</div>
 </template>
 
 <script setup>
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { computed, reactive, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { WtNavigationMenu } from '@webitel/ui-sdk/components';
@@ -23,12 +29,18 @@ const router = useRouter();
 const { routeAccessGuard } = useUserinfoStore();
 
 const icons = [lookupsIcon, customizationIcon];
+const isCustomLookupsLoaded = ref(false);
 const customLookups = ref([]);
 
 const navAccessReducer = (reducedNav, currentNav) => {
   if (currentNav.subNav) {
     currentNav.subNav = currentNav.subNav.reduce(navAccessReducer, []);
   }
+
+  if (currentNav.subNav?.length === 0) {
+    return reducedNav;
+  }
+
   const route = router.resolve({ path: currentNav.route });
   return routeAccessGuard(route) === true ? [...reducedNav, currentNav] : reducedNav;
 };
@@ -99,7 +111,7 @@ const nav = computed(() => {
       },
       {
         value: CrmSections.CustomLookups,
-        name: t('objects.customLookups.customLookups'),
+        name: t('objects.customLookup.customLookup', 2),
         route: 'customization/custom-lookups',
       },
     ],
@@ -111,15 +123,32 @@ const accessibleNav = computed(() => {
   return nav.value.reduce(navAccessReducer, []);
 });
 
+watch(() => accessibleNav.value, (newVal) => {
+  if (newVal.length === 0 && isCustomLookupsLoaded.value) {
+    router.push('/access-denied');
+  }
+});
+
 const loadCustomLookups = async () => {
+  try {
     const { items } = await CustomLookupsApi.getList({
       size: -1,
     });
 
     customLookups.value = items;
+  } finally {
+    isCustomLookupsLoaded.value = true;
+  }
 };
 
 loadCustomLookups();
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.the-configuration {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
