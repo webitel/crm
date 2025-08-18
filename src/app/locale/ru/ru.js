@@ -183,9 +183,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Персонализация',
     customLookups: {
-      customLookups: 'Пользовательские справочники',
       code: 'Код',
       allValues: 'Все значения',
       columns: 'Колонки',

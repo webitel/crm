@@ -85,7 +85,7 @@ const nav = computed(() => {
   },
   {
     value: 'customization',
-    name: t('customization.customization'),
+    name: t('objects.customization.customization'),
     subNav: [
       {
         value: CrmSections.CasesExtensions,
@@ -99,7 +99,7 @@ const nav = computed(() => {
       },
       {
         value: CrmSections.CustomLookups,
-        name: t('customization.customLookups.customLookups'),
+        name: t('objects.customLookups.customLookups'),
         route: 'customization/custom-lookups',
       },
     ],

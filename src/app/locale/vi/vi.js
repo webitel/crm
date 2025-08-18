@@ -189,9 +189,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Tùy chỉnh',
     customLookups: {
-      customLookups: 'Tra cứu tùy chỉnh',
       allValues: 'Tất cả giá trị',
       code: 'Mã',
       columns: 'Cột',

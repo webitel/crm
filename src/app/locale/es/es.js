@@ -189,9 +189,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Personalización',
     customLookups: {
-      customLookups: 'Búsquedas personalizadas',
       allValues: 'Todos los valores',
       code: 'Código',
       columns: 'Columnas',

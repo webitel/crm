@@ -189,9 +189,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Personalizare',
     customLookups: {
-      customLookups: 'Căutări personalizate',
       allValues: 'Toate valorile',
       code: 'Cod',
       columns: 'Coloane',

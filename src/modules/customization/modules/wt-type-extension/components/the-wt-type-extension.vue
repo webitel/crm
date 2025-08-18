@@ -77,7 +77,7 @@ const path = computed(() => {
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     {
-      name: t('customization.customization'),
+      name: t('objects.customization.customization'),
       route: '/customization',
     },
     {
