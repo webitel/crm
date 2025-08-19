@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { CrmSections } from '@webitel/ui-sdk/enums';
@@ -126,6 +126,10 @@ export const useConfigurationStore = defineStore('configuration', () => {
         }
     };
 
+    const initializeConfiguration = () => {
+        return loadCustomLookups();
+    };
+
     return {
         isCustomLookupsLoaded,
         customLookups,
@@ -133,5 +137,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
         accessibleNav,
         hasAnyConfigurationAccess,
         loadCustomLookups,
+        initializeConfiguration,
     };
 });
