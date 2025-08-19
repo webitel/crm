@@ -32,7 +32,8 @@
             required
             :v="v$.value.itemInstance.closeResult"
             :disabled="disableUserInput || !itemInstance.statusCondition.final"
-            @input="props.updateValue($event)"
+            :model-value="props.value"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>
