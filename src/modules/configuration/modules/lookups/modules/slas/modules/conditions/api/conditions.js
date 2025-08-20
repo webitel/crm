@@ -132,7 +132,7 @@ const addCondition = async ({ itemInstance, parentId }) => {
     );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [notify]);
+    throw err;
   }
 };
 
