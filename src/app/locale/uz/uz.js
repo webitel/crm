@@ -123,6 +123,7 @@ export default {
       resolutionTimeTitle: 'Yechim vaqti (kk:ss:dd)',
       validFrom: 'Amal qilish muddati',
       validTo: 'Tugash muddati',
+      duplicateConditionName: 'Bunday nomli shart allaqachon mavjud'
     },
     sources: {
       sources: 'Murojaat manbasi | Murojaat manbalari',

@@ -124,6 +124,7 @@ export default {
       resolutionTimeTitle: 'Шешім уақыты (кк:сс:мм)',
       validFrom: 'Бастап жарамды',
       validTo: 'Дейін жарамды',
+      duplicateConditionName: 'Осындай атауы бар шарт қазірдің өзінде бар'
     },
 
     sources: {

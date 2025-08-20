@@ -14,6 +14,10 @@ import { applyTransform,
 } from '@webitel/api-services/api/transformers';
 import { SLAConditionsApiFactory } from 'webitel-sdk';
 
+import i18n from '../../../../../../../../../app/locale/i18n.js';
+
+const { t } = i18n.global;
+
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
 
@@ -132,7 +136,17 @@ const addCondition = async ({ itemInstance, parentId }) => {
     );
     return applyTransform(response.data, [snakeToCamel()]);
   } catch (err) {
-    throw applyTransform(err, [notify]);
+    throw applyTransform(err, [
+      notify(({ callback }) =>
+        callback({
+          type: 'error',
+          text:
+            err.response.data.code === 400
+              ? t('lookups.slas.duplicateConditionName')
+              : err.response?.data?.detail,
+        }),
+      ),
+    ]);
   }
 };
 
