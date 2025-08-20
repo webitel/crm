@@ -4,11 +4,12 @@ import {
   createCardStoreModule,
   createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import applyTransform, {
+import {
+  applyTransform,
   notify,
-} from '@webitel/ui-sdk/src/api/transformers/index';
+} from '@webitel/api-services/api/transformers';
 
-import i18n from '../../../../../../../../../app/locale/i18n.js';
+import i18n from '../../../../../../../../../app/locale/i18n';
 
 const { t } = i18n.global;
 
