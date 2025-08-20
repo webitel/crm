@@ -124,7 +124,9 @@ export default {
       resolutionTimeTitle: 'Czas rozwiązania (dd:hh:mm)',
       validFrom: 'Ważne od',
       validTo: 'Ważne do',
-      duplicateConditionName: 'Warunek o takiej nazwie już istnieje'
+      error: {
+        duplicateConditionName: 'Warunek o takiej nazwie już istnieje'
+      }
     },
 
     sources: {

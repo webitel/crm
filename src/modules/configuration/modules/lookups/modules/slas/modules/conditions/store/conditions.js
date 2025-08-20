@@ -44,7 +44,7 @@ const actions = {
             type: 'error',
             text:
               err.response.data.code === 400
-                ? t('lookups.slas.duplicateConditionName')
+                ? t('lookups.slas.error.duplicateConditionName')
                 : err.response?.data?.detail,
           }),
         ),

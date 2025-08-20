@@ -124,7 +124,9 @@ export default {
       resolutionTimeTitle: 'Thời gian giải quyết (dd:hh:mm)',
       validFrom: 'Có hiệu lực từ',
       validTo: 'Có hiệu lực đến',
-      duplicateConditionName: 'Điều kiện với tên này đã tồn tại'
+      error: {
+        duplicateConditionName: 'Điều kiện với tên này đã tồn tại'
+      }
     },
 
     sources: {

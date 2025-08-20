@@ -124,7 +124,9 @@ export default {
       resolutionTimeTitle: 'Timp de rezolvare (zz:hh:mm)',
       validFrom: 'Valid de la',
       validTo: 'Valid până la',
-      duplicateConditionName: 'O condiție cu acest nume există deja'
+      error: {
+        duplicateConditionName: 'O condiție cu acest nume există deja'
+      }
     },
 
     sources: {

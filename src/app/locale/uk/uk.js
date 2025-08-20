@@ -124,7 +124,9 @@ export default {
       resolutionTimeTitle: 'Плановий час вирішення (dd:hh:mm)',
       validFrom: 'Дійсний з',
       validTo: 'Дійсний до',
-      duplicateConditionName: 'Умова з такою назвою вже існує'
+      error: {
+        duplicateConditionName: 'Умова з такою назвою вже існує'
+      }
     },
 
     sources: {

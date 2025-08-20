@@ -124,7 +124,9 @@ export default {
       resolutionTimeTitle: 'Resolution time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
-      duplicateConditionName: 'Condition with this name already exists'
+      error: {
+        duplicateConditionName: 'Condition with this name already exists'
+      }
     },
 
     sources: {
