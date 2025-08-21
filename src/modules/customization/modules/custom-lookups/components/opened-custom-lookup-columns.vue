@@ -56,7 +56,7 @@
           :movable="true"
           sortable
           @update:selected="setSelected"
-          @reorder="handleReorder"
+          @reorder:row="handleReorder"
         >
           <template #title="{ item }">
             {{ t(item?.name ?? 'reusable.title') }}

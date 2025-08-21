@@ -42,7 +42,7 @@
           :headers="headers"
           :selectable="false"
           :movable="hasUpdateAccess"
-          @reorder="handleReorder"
+          @reorder:row="handleReorder"
         >
           <template #expression="{ item }">
             {{ item.expression }}
