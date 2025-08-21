@@ -6,7 +6,8 @@
       </h3>
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.DELETE]"
-        :disabled:delete="!selected.length"
+        :disabled:delete="!selected.length || disableUserInput"
+        :disabled:add="disableUserInput"
         @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
@@ -70,10 +71,12 @@
               />
               <wt-icon-action
                 action="edit"
+                :disabled="disableUserInput"
                 @click="edit(item)"
               />
               <wt-icon-action
                 action="delete"
+                :disabled="disableUserInput"
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
@@ -105,9 +108,8 @@
 </template>
 
 <script setup>
-import { WtEmpty } from '@webitel/ui-sdk/components';
-import WtTable from '@webitel/ui-sdk/src/components/wt-table/wt-table.vue';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -122,6 +124,7 @@ import Sortable, { Swap } from 'sortablejs';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import FieldPopup from './field-popup.vue';
 
 const props = defineProps({
@@ -144,6 +147,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 

@@ -11,7 +11,7 @@
     "tsc": "vue-tsc -p tsconfig.json",
     "utils:i": "npm i --install-links",
     "utils:up-lib": "npm up @webitel/ui-sdk && npm ls @webitel/ui-sdk",
-    "utils:link-libs": "npm link @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist",
+    "utils:link-libs": "npm link @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist && npm ls @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist",
     "prepare": "husky"
   },
   "type": "module",
@@ -73,7 +73,7 @@
     "vite-plugin-checker": "^0.8.0",
     "vite-plugin-node-polyfills": "^0.23.0",
     "vite-plugin-svg-sprite": "=0.5.1",
-    "vite-plugin-vue-devtools": "^7.7.2",
+    "vite-plugin-vue-devtools": "^8.0.0",
     "vitest": "^3.0.6",
     "vue-tsc": "^2.1.10"
   },
