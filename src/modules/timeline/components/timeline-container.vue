@@ -26,6 +26,5 @@
 .timeline-content {
   @extend %wt-scrollbar;
   height: 100%;
-  padding: var(--spacing-sm);
 }
 </style>
