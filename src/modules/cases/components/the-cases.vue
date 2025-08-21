@@ -188,7 +188,6 @@
               <display-dynamic-field-extension
                 :field="header"
                 :value="getCustomValues(item, header.value)"
-                :label="header.locale"
               />
             </template>
             <template #actions="{ item }">
