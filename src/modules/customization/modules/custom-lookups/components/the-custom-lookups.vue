@@ -20,7 +20,7 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
+            :disabled:delete="!selected.length || !hasDeleteAccess"
             @click:refresh="loadData"
             @click:add="add"
             @click:delete="
@@ -90,7 +90,7 @@
               <template #actions="{ item }">
                 <wt-icon-action
                   action="edit"
-                  :disabled="!hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   @click="edit(item)"
                 />
                 <wt-icon-action
@@ -118,9 +118,6 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import {
-  useAccessControl,
-} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -145,13 +142,14 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const baseNamespace = 'customization/customLookups';
 
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
