@@ -314,7 +314,9 @@ const deleteField = (field) => {
   const itemIndex = itemInstance.value.fields.findIndex(
     (item) => item.id === field.id,
   );
-  itemInstance.value.fields.splice(itemIndex, 1);
+  if (itemIndex !== -1) {
+    itemInstance.value.fields.splice(itemIndex, 1);
+  }
 
   itemInstance.value.fields.forEach((item, index) => {
     if (item?.position > field.position) {
