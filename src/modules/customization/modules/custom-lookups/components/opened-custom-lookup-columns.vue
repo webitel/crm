@@ -43,6 +43,7 @@
         :headline="emptyHeadline"
         :title="emptyTitle"
         :text="textEmpty"
+        :disabled-primary-action="disableUserInput"
         :primary-action-text="emptyPrimaryActionText"
         @click:primary="showAddFieldPopup = true"
       />
@@ -68,6 +69,7 @@
               <wt-icon-btn
                 class="sortable-btn"
                 icon="move"
+                :disabled="disableUserInput"
               />
               <wt-icon-action
                 action="edit"
