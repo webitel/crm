@@ -56,32 +56,7 @@
           </template>
 
           <template #groups="{ item }">
-            <div
-              v-if="item.groups"
-              class="contacts-groups"
-            >
-              <p>
-                {{ item.groups[0]?.name }}
-              </p>
-
-              <wt-tooltip
-                v-if="item.groups.length > 1"
-                :triggers="['click']"
-              >
-                <template #activator>
-                  <wt-chip> +{{ item.groups.length - 1 }}</wt-chip>
-                </template>
-
-                <div class="contacts-groups__wrapper">
-                  <p
-                    v-for="(group, idx) of item.groups.slice(1)"
-                    :key="idx"
-                  >
-                    {{ group.name }}
-                  </p>
-                </div>
-              </wt-tooltip>
-            </div>
+            <wt-display-chip-items v-if="item.groups" :items="item.groups" />
           </template>
 
           <template #about="{ item }">
@@ -127,6 +102,7 @@
 
 <script setup lang="ts">
 import { createTableStore } from '@webitel/ui-datalist';
+import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';

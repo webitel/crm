@@ -59,7 +59,7 @@
             />
           </template>
           <template #actions="{ item }">
-            <div v-if="showActions(item)">
+            <template v-if="showActions(item)">
               <wt-icon-action
                 :disabled="!hasUpdateAccess || formState.isAdding"
                 action="edit"
@@ -75,7 +75,7 @@
                   })
                 "
               />
-            </div>
+            </template>
           </template>
         </wt-table>
 

@@ -17,25 +17,19 @@
       <span class="case-service__title">
         {{ t('cases.service') }}
 
-        <wt-tooltip
-          v-if="!isReadOnly && !servicePath"
-        >
-          <template #activator>
-            <wt-icon
-              icon="attention"
-              color="error"
-            />
-          </template>
+        <wt-icon
+          v-if="!isReadOnly && !itemInstance?.service"
+          v-tooltip="t('cases.serviceValidation')"
+          icon="attention"
+          color="error"
+        />
+      </span>
 
-          {{ t('cases.serviceValidation') }}
-        </wt-tooltip>
-      </span>
-      <span
-        v-if="servicePath"
+      <service-path
         class="case-service__path"
-      >
-        {{ servicePath }}
-      </span>
+        :service="itemInstance?.service"
+        :catalog="catalogData"
+      />
     </div>
     <wt-button
       v-if="editMode"
@@ -51,9 +45,7 @@
 
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import {
-  useCardStore,
-} from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -62,6 +54,7 @@ import { useUserAccessControl } from '../../../../../app/composables/useUserAcce
 import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
+import ServicePath from './service-path.vue';
 import SlaRecalculationPopup from './sla-recalculation-popup.vue';
 
 const namespace = inject('namespace');
@@ -73,7 +66,6 @@ const { disableUserInput } = useUserAccessControl();
 const {
   namespace: cardNamespace,
   itemInstance,
-  resetState,
   setItemProp,
 } = useCardStore(namespace);
 
@@ -85,7 +77,7 @@ const { t } = useI18n();
 const store = useStore();
 const isServicePopup = ref(false);
 const isSlaRecalculationPopup = ref(false);
-const servicePath = ref('');
+const catalogData = ref(null);
 
 const serviceNamespace = `${cardNamespace}/service`;
 
@@ -97,43 +89,6 @@ function setCatalogToStore(catalog) {
   return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
-// Finds the parent service for the given service within a catalog.
-function findParentService(currentService, parentServices) {
-  for (const parent of parentServices) {
-    if (parent.service?.some((child) => child.id === currentService.id))
-      return parent;
-    const foundParent =
-      parent.service && findParentService(currentService, parent.service);
-    if (foundParent) return foundParent;
-  }
-  return null;
-}
-
-// Builds the hierarchical path for the service within the catalog.
-function buildServicePath(service, catalog) {
-  const path = [];
-  let currentService = service;
-
-  while (currentService) {
-    path.unshift(currentService.name);
-    currentService = findParentService(currentService, catalog.service || []);
-  }
-
-  path.unshift(catalog.name);
-  return path;
-}
-
-// Generates the service path as a string.
-function generateServicePath(service, catalog) {
-  if (!service || !catalog) {
-    console.error('Invalid service or catalog data');
-    return '';
-  }
-
-  const pathArray = buildServicePath(service, catalog);
-  return pathArray.join(' / ');
-}
-
 // Updates the store and component state with service and catalog data.
 async function addServiceToStore(serviceCatalogData) {
   if (!serviceCatalogData)
@@ -142,6 +97,9 @@ async function addServiceToStore(serviceCatalogData) {
   const { service, catalog } = serviceCatalogData;
   await setServiceToStore(service);
   await setCatalogToStore(catalog);
+
+  // Store catalog data for the service-path component
+  catalogData.value = catalog;
 
   await setItemProp({
     path: 'close_reason_group',
@@ -152,8 +110,6 @@ async function addServiceToStore(serviceCatalogData) {
     path: 'service',
     value: { id: service.id, name: service.name },
   });
-
-  servicePath.value = generateServicePath(service, catalog);
 }
 
 /**
@@ -206,6 +162,7 @@ watch(
 onUnmounted(() => {
   setServiceToStore(null);
   setCatalogToStore(null);
+  catalogData.value = null;
 });
 </script>
 
@@ -215,8 +172,8 @@ onUnmounted(() => {
 .case-service {
   display: flex;
   flex-direction: column;
-  width: fit-content;
   gap: var(--spacing-xs);
+  width: fit-content;
 
   &__wrapper {
     display: flex;

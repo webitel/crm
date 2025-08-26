@@ -1,6 +1,6 @@
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
-import { type RouteRecordRaw } from 'vue-router';
+import { RouteLocationNormalized, type RouteRecordRaw } from 'vue-router';
 
 import OpenedCloseReasonGroups from '../modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../modules/close-reason-groups/components/opened-close-reason-groups-general.vue';
@@ -286,6 +286,12 @@ const lookupsRoutes: RouteRecordRaw[] = [
         path: ':repo',
         name: 'custom-lookup',
         component: TheCustomLookup,
+        meta: {
+          WtObject: WtObject.CustomLookup,
+          UiSection: (thisRoute: RouteLocationNormalized) => {
+            return thisRoute.params.repo;
+          },
+        },
       },
       {
         path: ':repo/:id',

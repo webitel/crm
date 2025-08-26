@@ -124,6 +124,9 @@ export default {
       resolutionTimeTitle: 'Плановий час вирішення (dd:hh:mm)',
       validFrom: 'Дійсний з',
       validTo: 'Дійсний до',
+      error: {
+        duplicateConditionName: 'Умова з такою назвою вже існує'
+      }
     },
 
     sources: {
@@ -190,9 +193,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Персоналізація',
     customLookups: {
-      customLookups: 'Користувацькі довідники',
       code: 'Код',
       allValues: 'Всі значення',
       columns: 'Колонки',

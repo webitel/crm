@@ -130,7 +130,7 @@ const getCasesList = async (params) => {
       q,
       ids,
       sort,
-      fields,
+      ['custom', 'priority', ...fields],
       stringifyCaseFilters(filters),
       options,
     );

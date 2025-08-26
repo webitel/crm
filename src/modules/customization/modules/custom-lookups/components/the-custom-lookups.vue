@@ -8,19 +8,19 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #main>
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('customization.customLookups.customLookups') }}
+            {{ t('objects.customLookup.customLookup', 2) }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
+            :disabled:delete="!selected.length || !hasDeleteAccess"
             @click:refresh="loadData"
             @click:add="add"
             @click:delete="
@@ -90,7 +90,7 @@
               <template #actions="{ item }">
                 <wt-icon-action
                   action="edit"
-                  :disabled="!hasEditAccess"
+                  :disabled="!hasUpdateAccess"
                   @click="edit(item)"
                 />
                 <wt-icon-action
@@ -118,9 +118,6 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import {
-  useAccessControl,
-} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -145,13 +142,14 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const baseNamespace = 'customization/customLookups';
 
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -202,8 +200,8 @@ onUnmounted(() => {
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('customization.customization'), route: '/configuration' },
-  { name: t('customization.customLookups.customLookups') },
+  { name: t('objects.customization.customization'), route: '/configuration' },
+  { name: t('objects.customLookup.customLookup', 2) },
 ]);
 
 const { close } = useClose('configuration');

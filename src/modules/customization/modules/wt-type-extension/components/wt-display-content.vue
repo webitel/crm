@@ -18,10 +18,10 @@
 </template>
 
 <script setup>
+import { EMPTY_SYMBOL } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { EMPTY_SYMBOL } from '../../../../../app/utils/displayText.js';
 import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
 import DisplayDynamicFieldExtension from './display-dynamic-field-extension.vue';
 

@@ -8,7 +8,7 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #actions-panel>
@@ -55,7 +55,7 @@
             </template>
             <template #columns>
               <wt-table-column-select
-                :headers="headers"
+                :headers="mergedHeaders"
                 @change="updateShownHeaders"
               />
             </template>
@@ -136,7 +136,7 @@
               {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
-              {{ item.service?.name }}
+              <service-path :service="item?.service"/>
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -180,6 +180,16 @@
             <template #rating="{ item }">
               {{ item.rating }}
             </template>
+            <template
+              v-for="header in customHeaders"
+              #[header.value]="{ item }"
+              :key="header.field"
+            >
+              <display-dynamic-field-extension
+                :field="header"
+                :value="getCustomValues(item, header.value)"
+              />
+            </template>
             <template #actions="{ item }">
               <wt-icon-action
                 :disabled="!hasUpdateAccess"
@@ -215,6 +225,10 @@
 </template>
 
 <script setup>
+import { WtTypeExtensionAPI } from '@webitel/api-services/api';
+import {
+  snakeToCamel,
+} from '@webitel/api-services/utils';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
@@ -222,15 +236,19 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import get from 'lodash/get';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import DisplayDynamicFieldExtension
+  from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { SearchMode } from '../enums/SearchMode';
+import ServicePath from '../modules/service/components/service-path.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
@@ -343,7 +361,105 @@ function deleteSelectedItems() {
   });
 }
 
-initialize();
+// Reactive reference for custom headers from API
+const customHeaders = ref([]);
+const customHeadersLoaded = ref(false);
+
+// Computed property that combines base headers with custom headers
+const mergedHeaders = computed(() => {
+  const baseHeaders = headers.value || [];
+
+  // Return only base headers if custom headers aren't loaded yet
+  if (!customHeadersLoaded.value) {
+    return baseHeaders;
+  }
+
+  // Get unique custom headers that don't conflict with base headers
+  const uniqueCustomHeaders = filterUniqueHeaders(customHeaders.value, baseHeaders);
+
+  return [...baseHeaders, ...uniqueCustomHeaders];
+});
+
+// Helper function to filter out duplicate headers based on field property
+const filterUniqueHeaders = (headersToFilter, existingHeaders) => {
+  const existingFields = new Set(existingHeaders.map(header => header.field));
+  return headersToFilter.filter(header => !existingFields.has(header.field));
+};
+
+// Helper function to transform API field objects into table header format
+const transformFieldsToHeaders = (fields) => {
+  if (!Array.isArray(fields)) return [];
+
+  return fields.map(field => createHeaderFromField(field));
+};
+
+// Helper function to create a single header object from API field data
+const createHeaderFromField = (field) => ({
+  value: snakeToCamel(field?.name),
+  show: false,
+  kind: field.kind,
+  field: field.id,
+  locale: field.name,
+});
+
+// Helper function to extract custom field value from item data
+const getCustomValues = (item, fieldName) => {
+  return get(item, ['custom', fieldName]);
+};
+
+// Helper function to fetch custom headers from API
+const fetchCustomHeadersFromAPI = async () => {
+  const response = await WtTypeExtensionAPI.getList({ itemId: 'cases' });
+  return response?.fields || [];
+};
+
+// Helper function to merge headers and update store
+const updateHeaders = (headersToAdd, baseHeaders) => {
+  const existingHeaders = baseHeaders || headers.value || [];
+  const uniqueHeaders = filterUniqueHeaders(headersToAdd, existingHeaders);
+
+  if (uniqueHeaders.length) {
+    const mergedHeaders = [...existingHeaders, ...uniqueHeaders];
+    updateShownHeaders(mergedHeaders);
+  }
+};
+
+// Main function to load and integrate custom headers
+const loadCustomHeaders = async () => {
+  // Fetch fields from API
+  const fields = await fetchCustomHeadersFromAPI();
+
+  // Transform API fields to header format
+  const transformedHeaders = transformFieldsToHeaders(fields);
+  customHeaders.value = transformedHeaders;
+  customHeadersLoaded.value = true;
+
+  // Merge with existing headers and update store if we have any custom headers
+  if (transformedHeaders.length) {
+    updateHeaders(transformedHeaders);
+  }
+};
+
+// Helper function to sync missing custom headers
+const syncMissingCustomHeaders = (newHeaders) => {
+  if (!customHeadersLoaded.value || !newHeaders) return;
+
+  // Use the same merge function but with reversed parameters
+  updateHeaders(customHeaders.value, newHeaders);
+};
+
+// Initialize headers before table store
+onMounted(async () => {
+  await loadCustomHeaders();
+  await initialize();
+});
+
+// Keep custom headers in sync when base headers change
+watch(
+  () => headers.value,
+  syncMissingCustomHeaders,
+  { deep: true }
+);
 </script>
 
 <style lang="scss" scoped>

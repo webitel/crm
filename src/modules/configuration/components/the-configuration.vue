@@ -1,109 +1,44 @@
 <template>
-  <wt-navigation-menu
-    :nav="nav"
-    :icons="icons"
-  />
+  <div class="the-configuration">
+    <wt-loader v-if="!isCustomLookupsLoaded" />
+    <wt-navigation-menu v-else :nav="accessibleNav" :icons="icons" />
+  </div>
 </template>
 
 <script setup>
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import { computed, reactive } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { WtNavigationMenu } from '@webitel/ui-sdk/components';
+import { watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
 import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
-import CustomLookupsApi from '../../customization/modules/custom-lookups/api/custom-lookups.js';
+import { useConfigurationStore } from '../store/configurationStore';
 
-const { t } = useI18n();
+const router = useRouter();
 
 const icons = [lookupsIcon, customizationIcon];
 
-const nav = reactive([
-  {
-    value: 'lookups',
-    name: computed(() => t('lookups.lookups')),
-    subNav: [
-      {
-        value: CrmSections.CONTACT_GROUPS,
-        name: computed(() => t('lookups.contactGroups.contactGroups', 2)),
-        route: 'configuration/lookups/contact-groups',
-      },
-      {
-        value: CrmSections.PRIORITIES,
-        name: computed(() => t('vocabulary.priority', 2)),
-        route: 'configuration/lookups/priorities',
-      },
-      {
-        value: CrmSections.CLOSE_REASON_GROUPS,
-        name: computed(() =>
-          t('lookups.closeReasonGroups.closeReasonGroups', 2),
-        ),
-        route: 'configuration/lookups/close-reason-groups',
-      },
-      {
-        value: CrmSections.STATUSES,
-        name: computed(() => t(`lookups.statuses.statuses`, 2)),
-        route: 'configuration/lookups/statuses',
-      },
-      {
-        value: CrmSections.SOURCES,
-        name: computed(() => t('lookups.sources.sources', 2)),
-        route: 'configuration/lookups/sources',
-      },
-      {
-        value: CrmSections.SLAS,
-        name: computed(() => t('lookups.slas.slas', 2)),
-        route: 'configuration/lookups/slas',
-      },
-      {
-        value: CrmSections.SERVICE_CATALOGS,
-        name: computed(() => t('lookups.serviceCatalogs.serviceCatalogs', 2)),
-        route: 'configuration/lookups/service-catalogs',
-      },
-    ],
-  },
-  {
-    value: 'customization',
-    name: computed(() => t('customization.customization')),
-    subNav: [
-      {
-        value: 'type-extension-cases',
-        name: computed(() => t('customization.extensions.cases')),
-        route: 'configuration/customization/types-extensions/cases',
-      },
-      {
-        value: 'type-extension-contact',
-        name: computed(() => t('customization.extensions.contacts')),
-        route: 'configuration/customization/types-extensions/contacts',
-      },
-      {
-        value: CrmSections.CUSTOM_LOOKUPS,
-        name: computed(() => t('customization.customLookups.customLookups')),
-        route: 'configuration/customization/custom-lookups',
-      },
-    ],
-  },
-]);
+const configurationStore = useConfigurationStore();
+const { isCustomLookupsLoaded, accessibleNav, hasAnyConfigurationAccess } = storeToRefs(configurationStore);
+const { loadCustomLookups } = configurationStore;
 
-const loadCustomLookups = async () => {
-  try {
-    const { items } = await CustomLookupsApi.getList({
-      size: -1,
-    });
 
-    const formatedNav = items.map((item) => ({
-      value: item.id,
-      name: item.name,
-      route: `lookups/${item.repo}`,
-    }));
-
-    nav[0].subNav.push(...formatedNav);
-  } catch (error) {
-    console.error(error);
-  }
-};
+    // Watch for empty accessible navigation and redirect to access denied
+    watch(() => isCustomLookupsLoaded.value, (newVal) => {
+        if (newVal && !hasAnyConfigurationAccess.value) {
+            router.push('/access-denied');
+        }
+    }, { immediate: true });
 
 loadCustomLookups();
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.the-configuration {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

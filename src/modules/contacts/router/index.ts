@@ -1,7 +1,6 @@
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type RouteRecordRaw } from 'vue-router';
 
-import { checkRouteAccess } from '../../../app/router/internals/guards';
 import OpenedContact from '../components/opened-contact.vue';
 import ContactCommunications from '../components/opened-contact-communications.vue';
 import TheContacts from '../components/the-contacts.vue';
@@ -16,14 +15,20 @@ const contactsRoutes: RouteRecordRaw[] = [
     path: 'contacts',
     name: CrmSections.Contacts,
     component: TheContacts,
-    beforeEnter: checkRouteAccess,
+    meta: {
+      UiSection: CrmSections.Contacts,
+      WtObject: WtObject.Contact,
+    },
     // redirect: { name: `the-start-page` },
   },
   {
     path: 'contacts/:id',
     name: `${CrmSections.Contacts}-card`,
     component: OpenedContact,
-    beforeEnter: checkRouteAccess,
+    meta: {
+      UiSection: CrmSections.Contacts,
+      WtObject: WtObject.Contact,
+    },
     redirect: { name: `${CrmSections.Contacts}-timeline` },
     children: [
       {

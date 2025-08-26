@@ -8,7 +8,7 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #main>
@@ -155,6 +155,7 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { displayText } from '@webitel/ui-sdk/utils';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -162,10 +163,13 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import { displayText } from '../../../../../../../../../app/utils/displayText.js';
 import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
+import {
+  buildServiceCrumbs,
+  findServicePath,
+} from '../utils/breadcrumbUtils.js';
 
 const route = useRoute();
 const store = useStore();
@@ -225,7 +229,7 @@ subscribe({
 });
 
 const path = computed(() => {
-  const routes = [
+  const baseRoutes = [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
@@ -235,37 +239,28 @@ const path = computed(() => {
     },
   ];
 
-  if (route.params.rootId === route.params.catalogId) {
-    routes.push({
-      name: prettifyBreadcrumbName(catalog.value?.name),
-    });
+  if (!catalog.value) return baseRoutes;
 
-    return routes;
-  } else {
-    routes.push({
-      name: prettifyBreadcrumbName(catalog.value?.name),
+  const servicePath = findServicePath(route.params.rootId, catalog.value);
+
+  const routes = [
+    ...baseRoutes,
+    {
+      name: prettifyBreadcrumbName(catalog.value.name),
       route: {
         name: `${CrmSections.SERVICE_CATALOGS}-services`,
         params: {
-          catalogId: catalog.value?.id,
-          rootId: catalog.value?.id,
+          catalogId: catalog.value.id,
+          rootId: catalog.value.id,
         },
       },
-    });
-  }
-
-  if (catalog.value?.id !== rootService.value?.rootId) {
-    routes.push({
-      name: '···',
-    });
-  }
-
-  routes.push({
-    name: prettifyBreadcrumbName(rootService.value?.name),
-  });
+    },
+    ...buildServiceCrumbs(servicePath, route.params.catalogId),
+  ];
 
   return routes;
 });
+
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);
 
 function edit(item) {
