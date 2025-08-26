@@ -450,8 +450,8 @@ const syncMissingCustomHeaders = (newHeaders) => {
 
 // Initialize headers before table store
 onMounted(async () => {
-  await loadCustomHeaders();
   await initialize();
+  await loadCustomHeaders();
 });
 
 // Keep custom headers in sync when base headers change
@@ -460,6 +460,24 @@ watch(
   syncMissingCustomHeaders,
   { deep: true }
 );
+
+watch(customHeadersLoaded, (isLoaded) => {
+  if (!isLoaded) return;
+
+  // "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
+  const notInitializedHeaders = headers.value.filter((header) => header.shouldBeInitialized);
+  if (!notInitializedHeaders.length) return;
+  
+  // ... so, we can just extend those restored (but not initialized yet) headers with custom headers
+  notInitializedHeaders.forEach((header) => {
+    const customHeader = customHeaders.value.find((customHeader) => customHeader.field === header.field);
+    Object.assign(header, {
+      ...customHeader,
+      shouldBeInitialized: false,
+      show: true,
+    });
+  });
+});
 </script>
 
 <style lang="scss" scoped>
