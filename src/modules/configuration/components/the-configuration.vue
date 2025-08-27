@@ -30,7 +30,7 @@ const { loadCustomLookups } = configurationStore;
             router.push('/access-denied');
         }
     }, { immediate: true });
-    
+
 loadCustomLookups();
 </script>
 
