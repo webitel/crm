@@ -8,7 +8,7 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #actions-panel>
@@ -188,7 +188,6 @@
               <display-dynamic-field-extension
                 :field="header"
                 :value="getCustomValues(item, header.value)"
-                :label="header.locale"
               />
             </template>
             <template #actions="{ item }">

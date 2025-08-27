@@ -8,14 +8,14 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #main>
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
-            {{ t('customization.customLookups.customLookups') }}
+            {{ t('objects.customLookup.customLookup', 2) }}
           </h3>
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
@@ -202,8 +202,8 @@ onUnmounted(() => {
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('customization.customization'), route: '/customization' },
-  { name: t('customization.customLookups.customLookups') },
+  { name: t('objects.customization.customization'), route: '/customization' },
+  { name: t('objects.customLookup.customLookup', 2) },
 ]);
 
 const { close } = useClose('configuration');

@@ -53,9 +53,7 @@ const colorVariable = computed(
   }
 
   .wt-icon {
-    :deep(.wt-icon__icon) {
       fill: v-bind(colorVariable);
-    }
   }
 }
 </style>

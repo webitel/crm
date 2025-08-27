@@ -5,7 +5,7 @@
         <wt-notifications-bar />
         <wt-navigation-bar
           :current-app="currentApp"
-          :nav="nav"
+          :nav="accessibleNav"
           :dark-mode="darkMode"
           :logo-route="StartPageRoutePaths.TheStartPage"
         />
@@ -42,8 +42,10 @@ import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
 
 import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
+import { useNavStore } from '../../modules/start-page/stores/navStore';
 
 const route = useRoute()
 const release = process.env.npm_package_version;
@@ -51,17 +53,25 @@ const build = import.meta.env.VITE_BUILD_NUMBER;
 const timestamp = import.meta.env.VITE_BUILD_TIMESTAMP;
 
 const store = useStore();
+const navStore = useNavStore();
 
 const userinfo = computed(() => store.state.userinfo);
 const currentApp = userinfo.value.thisApp;
 
 const checkAccess = computed(() => store.getters['userinfo/CHECK_APP_ACCESS']);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-const shouldHideHeader  = computed(() => !!route.meta.hideHeader);
+const shouldHideHeader = computed(() => !!route.meta.hideHeader);
 
 const { t } = useI18n();
 
 const startPageHref = computed(() => import.meta.env.VITE_START_PAGE_URL);
+
+// Initialize nav, if not initialized yet
+navStore.initializeNav();
+
+const { nav } = storeToRefs(navStore);
+
+const accessibleNav = computed(() => nav.value.filter(({ disabled }) => !disabled));
 
 const apps = computed(() => {
   const agent = {
@@ -98,33 +108,6 @@ const apps = computed(() => {
   const allApps = [admin, supervisor, agent, history, audit, crm];
   if (config?.ON_SITE) allApps.push(grafana);
   return allApps.filter(({ name }) => checkAccess.value(name));
-});
-
-const nav = computed(() => {
-  const contacts = {
-    value: CrmSections.CONTACTS,
-    name: t(
-      `WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CONTACTS}`,
-    ),
-    route: '/contacts',
-  };
-  const cases = {
-    value: CrmSections.CASES,
-    name: t(
-      `WebitelApplications.${WebitelApplications.CRM}.sections.${CrmSections.CASES}`,
-    ),
-    route: '/cases',
-  };
-  const configuration = {
-    value: 'configuration',
-    name: t('startPage.configuration.name'),
-    route: '/configuration',
-  };
-  const nav = [contacts, cases];
-  const accessibleNav = nav.filter((nav) =>
-    checkAccess.value({ name: nav.value }),
-  );
-  return [...accessibleNav, configuration];
 });
 
 function settings() {

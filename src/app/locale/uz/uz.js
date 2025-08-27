@@ -123,6 +123,9 @@ export default {
       resolutionTimeTitle: 'Yechim vaqti (kk:ss:dd)',
       validFrom: 'Amal qilish muddati',
       validTo: 'Tugash muddati',
+      error: {
+        duplicateConditionName: 'Bunday nomli shart allaqachon mavjud'
+      }
     },
     sources: {
       sources: 'Murojaat manbasi | Murojaat manbalari',
@@ -182,9 +185,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Moslash',
     customLookups: {
-      customLookups: "Maxsus ma'lumotnomalar",
       allValues: 'Barcha qiymatlar',
       code: 'Kod',
       columns: 'Ustunlar',
