@@ -10,7 +10,7 @@
     v-else-if="field.kind === FieldType.Boolean"
     :label="label"
     disabled
-    :value="value"
+    :model-value="value"
   ></wt-switcher>
   <template v-else-if="field.kind === FieldType.Number">
     {{ value }}

@@ -52,8 +52,8 @@
       <wt-switcher
         :label="t('reusable.state')"
         :disabled="disableUserInput"
-        :value="itemInstance.state"
-        @change="setItemProp({ path: 'state', value: $event })"
+        :model-value="itemInstance.state"
+        @update:model-value="setItemProp({ path: 'state', value: $event })"
       />
 
       <wt-textarea

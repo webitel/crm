@@ -76,16 +76,16 @@
           <template #initial="{ item, index }">
             <wt-switcher
               :disabled="!hasUpdateAccess"
-              :value="item.initial"
-              @change="changeInitialStatus({ item, index, value: $event })"
+              :model-value="item.initial"
+              @update:model-value="changeInitialStatus({ item, index, value: $event })"
             />
           </template>
 
           <template #final="{ item, index }">
             <wt-switcher
               :disabled="!hasUpdateAccess"
-              :value="item.final"
-              @change="changeFinalStatus({ item, index, value: $event })"
+              :model-value="item.final"
+              @update:model-value="changeFinalStatus({ item, index, value: $event })"
             />
           </template>
 
