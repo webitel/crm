@@ -36,7 +36,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
     const customLookupsNav = customLookups.value.map((item) => ({
       value: item.repo,
       name: item.name,
-      route: `lookups/${item.repo}`,
+      route: `configuration/lookups/${item.repo}`,
     }));
 
     return [
