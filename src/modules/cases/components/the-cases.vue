@@ -187,7 +187,7 @@
             >
               <display-dynamic-field-extension
                 :field="header"
-                :value="getCustomValues(item, header.value)"
+                :value="getCustomValues(item, header.field)"
               />
             </template>
             <template #actions="{ item }">
