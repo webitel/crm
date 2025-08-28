@@ -88,7 +88,7 @@
           </template>
 
           <template #actions="{ item }">
-            <div
+            <template
               v-if="!isReadOnly"
             >
               <wt-icon-action
@@ -106,7 +106,7 @@
                 })
               "
               />
-            </div>
+            </template>
           </template>
         </wt-table>
       </div>
