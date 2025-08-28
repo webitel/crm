@@ -10,7 +10,7 @@
     "lint:fix-staged": "npx lint-staged",
     "tsc": "vue-tsc -p tsconfig.json",
     "utils:i": "npm i --install-links",
-    "utils:up-lib": "npm up @webitel/ui-sdk && npm ls @webitel/ui-sdk",
+    "utils:up-lib": "npm up @webitel/ui-sdk @webitel/ui-datalist && npm ls @webitel/ui-sdk @webitel/ui-datalist",
     "utils:link-libs": "npm link @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist && npm ls @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist",
     "prepare": "husky"
   },
