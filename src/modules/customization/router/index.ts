@@ -9,7 +9,7 @@ import TheDictionaryExtensions from '../modules/wt-type-extension/components/the
 
 const customizationRoutes: RouteRecordRaw[] = [
   {
-    path: 'customization',
+    path: 'configuration/customization',
     name: 'customization',
     redirect: { name: 'configuration' },
     children: [
