@@ -14,14 +14,14 @@
         </h3>
         <wt-action-bar
           v-if="!isReadOnly"
-          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink || !editMode"
-          :disabled:delete="!editMode || !hasDeleteAccess || !selected.length"
+          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink || !editMode || isSubmitting"
+          :disabled:delete="!editMode || !hasDeleteAccess || !selected.length || isSubmitting || isNew"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => deleteData(selected),
+              callback: () => handleDeleteData(selected),
             })
           "
         >
@@ -30,7 +30,7 @@
 
       <table-top-row-bar
         v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
-        :disabled-add-action="isUrlInvalid"
+        :disabled-add-action="isUrlInvalid || isSubmitting"
         @reset="resetForm"
         @submit="submitLink"
       >
@@ -50,17 +50,18 @@
       </table-top-row-bar>
 
       <wt-empty
-        v-show="showEmpty"
+        v-show="showEmpty && !isSubmitting"
         :text="emptyText"
       />
 
-      <wt-loader v-show="isLoading" />
+      <wt-loader v-show="isLoading || isSubmitting" />
+
       <div
-        v-show="!isLoading && dataList.length"
+        v-show="!isLoading && currentDataList.length && !isSubmitting"
         class="table-section__table-wrapper"
       >
         <wt-table
-          :data="dataList"
+          :data="currentDataList"
           :headers="headers"
           :selected="selected"
           :selectable="editMode"
@@ -88,23 +89,21 @@
           </template>
 
           <template #actions="{ item }">
-            <template
-              v-if="!isReadOnly"
-            >
+            <template v-if="!isReadOnly">
               <wt-icon-action
-                :disabled="!editMode || !hasUpdateAccess || formState.isAdding"
+                :disabled="!editMode || !hasUpdateAccess || formState.isAdding || isNew"
                 action="edit"
                 @click="startEditingLink(item)"
               />
               <wt-icon-action
-                :disabled="!editMode || !hasDeleteAccess"
+                :disabled="!editMode || !hasDeleteAccess || isNew"
                 action="delete"
                 @click="
-                askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })
-              "
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => handleDeleteData(item),
+                  })
+                "
               />
             </template>
           </template>
@@ -131,9 +130,14 @@ import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
+import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
 import LinksAPI from '../api/LinksAPI.js';
 
 const props = defineProps({
+  linksNamespace: {
+    type: String,
+    required: true,
+  },
   namespace: {
     type: String,
     required: true,
@@ -154,7 +158,7 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessContr
 });
 
 const {
-  namespace,
+  namespace: linksTableNamespace,
   dataList,
   selected,
   isLoading,
@@ -163,13 +167,13 @@ const {
   deleteData,
   setSelected,
   onFilterEvent,
-} = useTableStore(props.namespace);
+} = useTableStore(props.linksNamespace);
 
 const {
   restoreFilters,
   subscribe,
   flushSubscribers,
-} = useTableFilters(namespace);
+} = useTableFilters(linksTableNamespace);
 
 const {
   isVisible: isConfirmationPopup,
@@ -179,7 +183,40 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
-const { showEmpty } = useTableEmpty({ dataList, isLoading });
+// Transform and process functions for links
+const transformStoreItemToPending = (linkData) => ({
+  name: linkData.input?.name || linkData.name,
+  url: linkData.input?.url || linkData.url,
+});
+
+const processItemToAPI = async (link) => {
+  await LinksAPI.add({
+    parentId: props.itemId,
+    input: {
+      name: link.name,
+      url: link.url,
+    },
+  });
+};
+
+const {
+  isNew,
+  pendingItems: pendingLinks,
+  isSubmitting,
+  addNewItem,
+  handleDeleteData,
+} = useCaseAttachments({
+  cardNamespace: props.namespace,
+  itemId: props.itemId,
+  storePath: 'links',
+  loadData,
+  transformStoreItemToPending,
+  processItemToAPI,
+  deleteData,
+});
+
+const currentDataList = computed(() => isNew.value ? pendingLinks.value : dataList.value);
+const { showEmpty } = useTableEmpty({ dataList: currentDataList, isLoading });
 
 const emptyText = computed(() => {
   return t('cases.attachments.emptyLinksText');
@@ -187,14 +224,22 @@ const emptyText = computed(() => {
 
 subscribe({
   event: '*',
-  callback: onFilterEvent,
+  callback: (...args) => {
+    if (!isNew.value) {
+      onFilterEvent(...args);
+    }
+  },
 });
 
-restoreFilters();
+if (!isNew.value) {
+  restoreFilters();
+}
+
 onUnmounted(() => {
   flushSubscribers();
 });
 
+// Form state for links
 const formState = reactive({
   isAdding: false,
   editingLink: null,
@@ -206,7 +251,6 @@ function requiredIfIsAdding(value, state, siblings) {
   if (!formState.isAdding) {
     return true;
   }
-
   return required.$validator(value, state, siblings);
 }
 
@@ -215,7 +259,6 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, formState);
-
 v$.value.$touch();
 
 const isUrlInvalid = computed(() => v$.value.linkUrl.$invalid);
@@ -254,25 +297,28 @@ async function submitLink() {
   const name = linkText || linkUrl;
 
   if (editingLink) {
-    await LinksAPI.patch({
-      parentId: props.itemId,
-      linkId: editingLink.etag,
-      changes: {
-        name: name,
-        url: linkUrl,
-      },
-    });
+    // Handle editing existing link
+    await updateExistingLink(editingLink, name, linkUrl);
   } else {
-    await LinksAPI.add({
-      parentId: props.itemId,
-      input: {
-        name: name,
-        url: linkUrl,
-      },
-    });
+    // Handle creating new link - use composable
+    const linkData = { name, url: linkUrl };
+    const storeData = { input: { name, url: linkUrl } };
+    await addNewItem(linkData, storeData);
   }
-  await loadData();
+
   resetForm();
+}
+
+async function updateExistingLink(editingLink, name, linkUrl) {
+  await LinksAPI.patch({
+    parentId: props.itemId,
+    linkId: editingLink.etag,
+    changes: {
+      name,
+      url: linkUrl,
+    },
+  });
+  await loadData();
 }
 </script>
 
