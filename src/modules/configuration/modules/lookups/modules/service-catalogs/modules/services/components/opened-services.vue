@@ -119,7 +119,7 @@ const path = computed(() => {
     { name: t('lookups.lookups'), route: '/configuration' },
     {
       name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
-      route: '/lookups/service-catalogs',
+      route: '/configuration/lookups/service-catalogs',
     },
   ];
 
