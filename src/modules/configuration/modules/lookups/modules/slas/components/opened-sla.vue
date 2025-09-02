@@ -120,7 +120,7 @@ const path = computed(() => {
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.slas.slas', 2), route: '/lookups/slas' },
+    { name: t('lookups.slas.slas', 2), route: '/configuration/lookups/slas' },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
       route: {

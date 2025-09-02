@@ -156,7 +156,7 @@ const path = computed(() => {
     { name: t('lookups.lookups'), route: '/configuration' },
     {
       name: t('lookups.contactGroups.contactGroups', 2),
-      route: '/lookups/contact-groups',
+      route: '/configuration/lookups/contact-groups',
     },
     { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
