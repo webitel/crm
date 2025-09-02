@@ -1,6 +1,6 @@
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 export function useCaseAttachments({
   cardNamespace,
@@ -21,12 +21,15 @@ export function useCaseAttachments({
   const pendingItems = ref([]);
   const isPendingItemsLoading = ref(false);
 
+  // Get current items from store path
+  const currentStoreItems = computed(() => itemInstance.value?.[storePath] || []);
+
   // Restore pending items from store for new cases
   function restorePendingItems() {
-    if (isNew.value && itemInstance.value?.[storePath]) {
-      const itemsFromStore = Array.isArray(itemInstance.value[storePath])
-        ? itemInstance.value[storePath]
-        : [itemInstance.value[storePath]];
+    if (isNew.value && currentStoreItems.value.length) {
+      const itemsFromStore = Array.isArray(currentStoreItems.value)
+        ? currentStoreItems.value
+        : [currentStoreItems.value];
 
       if (transformStoreItemToPending) {
         pendingItems.value = itemsFromStore.map(transformStoreItemToPending);
@@ -71,10 +74,9 @@ export function useCaseAttachments({
     // Add to pending items for UI
     pendingItems.value.push(itemData);
     // Add to store for persistence
-    const existingItems = itemInstance.value?.[storePath] || [];
     await setItemProp({
       path: storePath,
-      value: [...existingItems, storeData],
+      value: [...currentStoreItems.value, storeData],
     });
   }
 

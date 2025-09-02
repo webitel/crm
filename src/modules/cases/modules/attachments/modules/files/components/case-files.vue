@@ -82,8 +82,8 @@
               "
             />
             <wt-icon-action
-              v-if="isFileDeleteButton(item)"
-              :disabled="isFileDeleteButtonDisabled"
+              v-if="isFileDeleteAction(item)"
+              :disabled="isFileDeleteActionDisabled"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -314,11 +314,11 @@ const isTableVisible = computed(() => {
   return !isLoading.value && currentDataList.value.length && !isPendingItemsLoading.value;
 });
 
-const isFileDeleteButton = computed(() => (item) => {
+const isFileDeleteAction = computed(() => (item) => {
   return !isReadOnly && (item.source === FileSources.Direct || isNew.value);
 });
 
-const isFileDeleteButtonDisabled = computed(() => {
+const isFileDeleteActionDisabled = computed(() => {
   return !editMode.value || !hasDeleteAccess.value || isNew.value;
 });
 </script>

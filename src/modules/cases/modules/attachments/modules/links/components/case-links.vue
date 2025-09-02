@@ -91,12 +91,12 @@
           <template #actions="{ item }">
             <template v-if="!isReadOnly">
               <wt-icon-action
-                :disabled="isLinkEditButtonDisabled"
+                :disabled="isLinkEditActionDisabled"
                 action="edit"
                 @click="startEditingLink(item)"
               />
               <wt-icon-action
-                :disabled="isLinkDeleteButtonDisabled"
+                :disabled="isLinkDeleteActionDisabled"
                 action="delete"
                 @click="
                   askDeleteConfirmation({
@@ -204,11 +204,11 @@ const isTableVisible = computed(() => {
   return !isLoading.value && currentDataList.value.length && !isPendingItemsLoading.value;
 });
 
-const isLinkEditButtonDisabled = computed(() => {
+const isLinkEditActionDisabled = computed(() => {
   return !editMode.value || !hasUpdateAccess.value || formState.isAdding || isNew.value;
 });
 
-const isLinkDeleteButtonDisabled = computed(() => {
+const isLinkDeleteActionDisabled = computed(() => {
   return !editMode.value || !hasDeleteAccess.value || isNew.value;
 });
 
