@@ -14,8 +14,8 @@
         </h3>
         <wt-action-bar
           v-if="!isReadOnly"
-          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingLink || !editMode || isSubmitting"
-          :disabled:delete="!editMode || !hasDeleteAccess || !selected.length || isSubmitting || isNew"
+          :disabled:add="isTableActionAddDisabled"
+          :disabled:delete="isTableActionDeleteDisabled"
           :include="[IconAction.ADD, IconAction.DELETE]"
           @click:add="startAddingLink"
           @click:delete="
@@ -29,8 +29,8 @@
       </header>
 
       <table-top-row-bar
-        v-if="hasUpdateAccess && (formState.isAdding || formState.editingLink)"
-        :disabled-add-action="isUrlInvalid || isSubmitting"
+        v-if="isFormVisible"
+        :disabled-add-action="isFormAddActionDisabled"
         @reset="resetForm"
         @submit="submitLink"
       >
@@ -50,14 +50,14 @@
       </table-top-row-bar>
 
       <wt-empty
-        v-show="showEmpty && !isSubmitting"
+        v-show="showEmpty && !isPendingItemsLoading"
         :text="emptyText"
       />
 
-      <wt-loader v-show="isLoading || isSubmitting" />
+      <wt-loader v-show="isLoading || isPendingItemsLoading" />
 
       <div
-        v-show="!isLoading && currentDataList.length && !isSubmitting"
+        v-show="isTableVisible"
         class="table-section__table-wrapper"
       >
         <wt-table
@@ -91,12 +91,12 @@
           <template #actions="{ item }">
             <template v-if="!isReadOnly">
               <wt-icon-action
-                :disabled="!editMode || !hasUpdateAccess || formState.isAdding || isNew"
+                :disabled="isLinkEditButtonDisabled"
                 action="edit"
                 @click="startEditingLink(item)"
               />
               <wt-icon-action
-                :disabled="!editMode || !hasDeleteAccess || isNew"
+                :disabled="isLinkDeleteButtonDisabled"
                 action="delete"
                 @click="
                   askDeleteConfirmation({
@@ -113,7 +113,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core';
 import { required, url } from '@vuelidate/validators';
 import { IconAction } from '@webitel/ui-sdk/enums';
@@ -131,6 +131,7 @@ import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
 import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
+import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
 import LinksAPI from '../api/LinksAPI.js';
 
 const props = defineProps({
@@ -183,13 +184,41 @@ const {
   closeDelete,
 } = useDeleteConfirmationPopup();
 
+const isTableActionAddDisabled = computed(() => {
+  return !hasCreateAccess.value || formState.isAdding || formState.editingLink || !editMode.value || isPendingItemsLoading.value;
+});
+
+const isTableActionDeleteDisabled = computed(() => {
+  return !editMode.value || !hasDeleteAccess.value || !selected.value.length || isPendingItemsLoading.value || isNew.value;
+});
+
+const isFormVisible = computed(() => {
+  return hasUpdateAccess.value && (formState.isAdding || formState.editingLink);
+});
+
+const isFormAddActionDisabled = computed(() => {
+  return isUrlInvalid.value || isPendingItemsLoading.value;
+});
+
+const isTableVisible = computed(() => {
+  return !isLoading.value && currentDataList.value.length && !isPendingItemsLoading.value;
+});
+
+const isLinkEditButtonDisabled = computed(() => {
+  return !editMode.value || !hasUpdateAccess.value || formState.isAdding || isNew.value;
+});
+
+const isLinkDeleteButtonDisabled = computed(() => {
+  return !editMode.value || !hasDeleteAccess.value || isNew.value;
+});
+
 // Transform and process functions for links
 const transformStoreItemToPending = (linkData) => ({
   name: linkData.input?.name || linkData.name,
   url: linkData.input?.url || linkData.url,
 });
 
-const processItemToAPI = async (link) => {
+const addLink = async (link) => {
   await LinksAPI.add({
     parentId: props.itemId,
     input: {
@@ -202,16 +231,16 @@ const processItemToAPI = async (link) => {
 const {
   isNew,
   pendingItems: pendingLinks,
-  isSubmitting,
+  isPendingItemsLoading,
   addNewItem,
   handleDeleteData,
 } = useCaseAttachments({
   cardNamespace: props.namespace,
   itemId: props.itemId,
-  storePath: 'links',
+  storePath: AttachmentsTypes.LINKS,
   loadData,
   transformStoreItemToPending,
-  processItemToAPI,
+  processItemToAPI: addLink,
   deleteData,
 });
 

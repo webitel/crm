@@ -13,9 +13,9 @@
         </h3>
         <wt-action-bar
           :include="filteredActions"
-          :disabled:delete="isBulkDeleteDisabled || isSubmitting || isNew"
-          :disabled:download="!currentDataList.length || isSubmitting || isNew"
-          :disabled:add="!hasCreateAccess || !editMode || isSubmitting"
+          :disabled:delete="isTableActionDeleteDisabled"
+          :disabled:download="isTableActionDownloadDisabled"
+          :disabled:add="isTableActionAddDisabled"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
           @click:delete="
@@ -29,14 +29,14 @@
       </header>
 
       <wt-empty
-        v-show="showEmpty && !isSubmitting"
+        v-show="showEmpty && !isPendingItemsLoading"
         :text="emptyText"
       />
 
-      <wt-loader v-show="isLoading || isSubmitting" />
+      <wt-loader v-show="isLoading || isPendingItemsLoading" />
 
       <div
-        v-show="!isLoading && currentDataList.length && !isSubmitting"
+        v-show="isTableVisible"
         class="table-section__table-wrapper"
       >
         <wt-table
@@ -56,7 +56,7 @@
               <span
                 class="case-files__name"
                 :class="{ 'case-files__name--disabled': isNew }"
-                @click="!isNew ? openFileInNewTab(item) : null"
+                @click="!isNew && openFileInNewTab(item)"
               >{{ item?.name }}</span
               >
             </div>
@@ -82,8 +82,8 @@
               "
             />
             <wt-icon-action
-              v-if="!isReadOnly && (item.source === FileSources.Direct || isNew)"
-              :disabled="!editMode || !hasDeleteAccess || isNew"
+              v-if="isFileDeleteButton(item)"
+              :disabled="isFileDeleteButtonDisabled"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -99,7 +99,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
@@ -123,6 +123,7 @@ import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZi
 import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
 import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
 import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
+import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
 import { FileSources } from '../enums/FileSources.js';
 
 const props = defineProps({
@@ -145,6 +146,8 @@ const editMode = inject('editMode');
 const store = useStore();
 
 const { t } = useI18n();
+
+const client = computed(() => store.getters['CLIENT']);
 
 const { hasCreateAccess, hasDeleteAccess } =
   useUserAccessControl({
@@ -186,10 +189,8 @@ const transformStoreItemToPending = (fileData) => ({
   file: fileData,
 });
 
-const client = store.getters['CLIENT'];
-
-const processItemToAPI = async (file) => {
-  const cliInstance = await client.getCliInstance();
+const addFile = async (file) => {
+  const cliInstance = await client.value.getCliInstance();
   await cliInstance.storeFile(props.itemId, [file.file], null, 'case');
 };
 
@@ -197,16 +198,16 @@ const processItemToAPI = async (file) => {
 const {
   isNew,
   pendingItems: pendingFiles,
-  isSubmitting,
+  isPendingItemsLoading,
   addNewItem,
   handleDeleteData,
 } = useCaseAttachments({
   cardNamespace: props.namespace,
   itemId: props.itemId,
-  storePath: 'files',
+  storePath: AttachmentsTypes.FILES,
   loadData,
   transformStoreItemToPending,
-  processItemToAPI,
+  processItemToAPI: addFile,
   deleteData,
 });
 
@@ -295,6 +296,30 @@ const isBulkDeleteDisabled = computed(() => {
     || !editMode.value
     || !selected.value.length
     || hasNonDirectFileSelected.value;
+});
+
+const isTableActionDownloadDisabled = computed(() => {
+  return !currentDataList.value.length || isPendingItemsLoading.value || isNew.value;
+});
+
+const isTableActionAddDisabled = computed(() => {
+  return !hasCreateAccess.value || !editMode.value || isPendingItemsLoading.value;
+});
+
+const isTableActionDeleteDisabled = computed(() => {
+  return isBulkDeleteDisabled.value || isPendingItemsLoading.value || isNew.value;
+});
+
+const isTableVisible = computed(() => {
+  return !isLoading.value && currentDataList.value.length && !isPendingItemsLoading.value;
+});
+
+const isFileDeleteButton = computed(() => (item) => {
+  return !isReadOnly && (item.source === FileSources.Direct || isNew.value);
+});
+
+const isFileDeleteButtonDisabled = computed(() => {
+  return !editMode.value || !hasDeleteAccess.value || isNew.value;
 });
 </script>
 
