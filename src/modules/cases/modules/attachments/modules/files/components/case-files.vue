@@ -99,7 +99,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup

@@ -113,7 +113,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required, url } from '@vuelidate/validators';
 import { IconAction } from '@webitel/ui-sdk/enums';
