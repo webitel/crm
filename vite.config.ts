@@ -91,7 +91,7 @@ export default ({ mode }) => {
         },
       },
       coverage: {
-        enabled: true,
+        enabled: false,
         reporter: 'json',
       },
       environment: 'happy-dom',
