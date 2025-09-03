@@ -17,6 +17,9 @@ export default ({ mode }) => {
         JSON.stringify(env).replaceAll('VITE_', 'VUE_APP_'),
       ),
     },
+    build: {
+      sourcemap: true,
+    },
     server: {
       host: true,
       port: 8080,
@@ -88,7 +91,7 @@ export default ({ mode }) => {
         },
       },
       coverage: {
-        enabled: true,
+        enabled: false,
         reporter: 'json',
       },
       environment: 'happy-dom',
