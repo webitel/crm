@@ -98,54 +98,58 @@ export function useCaseAttachments({
       // Direct match
       if (item === targetItem) return true;
 
+      // Extract comparison conditions into variables
+      const isTargetName = item.name === targetItem.name;
+      const isTargetUrl = item.url === targetItem.url;
+      const isTargetSize = item.size === targetItem.size;
+      const isTargetMime = item.mime === targetItem.mime;
+
       // Compare by URL if available
       if (targetItem.url) {
-        return item.name === targetItem.name && item.url === targetItem.url;
+        return isTargetName && isTargetUrl;
       }
 
       // Compare by basic properties
-      return (
-        item.name === targetItem.name &&
-        item.size === targetItem.size &&
-        item.mime === targetItem.mime
-      );
+      return isTargetName && isTargetSize && isTargetMime;
     });
+  }
+
+  // Helper method to save current state to store
+  async function saveToStore() {
+    await setItemProp({
+      path: storePath,
+      value: [...currentStoreItems.value],
+    });
+  }
+
+  // Helper method to find and validate item index
+  function findValidItemIndex(item) {
+    const index = findItemIndex(pendingItems.value, item);
+    return index !== -1 ? index : null;
   }
 
   // deletes a single item from pending list
   async function deletePendingItem(itemToDelete) {
-    const index = findItemIndex(pendingItems.value, itemToDelete);
-
-    if (index === -1) return false;
+    const index = findValidItemIndex(itemToDelete);
+    if (index === null) return;
 
     // Delete from both arrays
     pendingItems.value.splice(index, 1);
     currentStoreItems.value.splice(index, 1);
 
-    await setItemProp({
-      path: storePath,
-      value: [...currentStoreItems.value],
-    });
-
-    return true;
+    await saveToStore();
   }
 
   // Updates existing item data
   async function updatePendingItem(oldItem, newItemData) {
-    const index = findItemIndex(pendingItems.value, oldItem);
-
-    if (index === -1) return false;
+    const index = findValidItemIndex(oldItem);
+    if (index === null) return;
 
     // Update data in both arrays
     pendingItems.value[index] = newItemData;
     currentStoreItems.value[index] = { input: newItemData };
 
-    await setItemProp({
-      path: storePath,
-      value: [...currentStoreItems.value],
-    });
-
-    return true;
+    await saveToStore();
   }
 
   // deletes multiple items at once
@@ -155,14 +159,14 @@ export function useCaseAttachments({
       ? itemsToDelete
       : [itemsToDelete];
 
-    // Find indices to delete
+    // Find valid indices to delete
     const indices = items
       .map((item) => findItemIndex(pendingItems.value, item))
       .filter((index) => index !== -1)
       .filter((index, pos, arr) => arr.indexOf(index) === pos) // unique indices
       .sort((a, b) => b - a); // sort from highest to lowest
 
-    if (!indices.length) return false;
+    if (!indices.length) return;
 
     // Delete items (starting from the end)
     indices.forEach((index) => {
@@ -170,12 +174,7 @@ export function useCaseAttachments({
       currentStoreItems.value.splice(index, 1);
     });
 
-    await setItemProp({
-      path: storePath,
-      value: [...currentStoreItems.value],
-    });
-
-    return true;
+    await saveToStore();
   }
 
   return {
