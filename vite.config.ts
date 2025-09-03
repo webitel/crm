@@ -19,6 +19,7 @@ export default ({ mode }) => {
     },
     build: {
       sourcemap: true,
+      minify: false, // Disable minification for readable debugging
     },
     server: {
       host: true,
