@@ -30,7 +30,7 @@ jobs:
           node-version: lts/*
           check-latest: true
 
-      - run: npm i
+      - run: npm ci
 
       - name: Update selected lib
         run: |
