@@ -12,11 +12,6 @@ export default ({ mode }) => {
 
   return defineConfig({
     base: '/crm',
-    define: {
-      'process.env': JSON.parse(
-        JSON.stringify(env).replaceAll('VITE_', 'VUE_APP_'),
-      ),
-    },
     build: {
       sourcemap: true,
       minify: false, // Disable minification for readable debugging
@@ -81,22 +76,5 @@ export default ({ mode }) => {
         launchEditor: 'webstorm',
       }),
     ],
-    test: {
-      globals: true,
-      alias: {
-        vue: 'vue',
-      },
-      server: {
-        deps: {
-          inline: ['@webitel/ui-sdk'],
-        },
-      },
-      coverage: {
-        enabled: false,
-        reporter: 'json',
-      },
-      environment: 'happy-dom',
-      setupFiles: ['./tests/config/config.js'],
-    },
   });
 };
