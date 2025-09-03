@@ -2,30 +2,40 @@
   <main class="object-wrap">
     <section class="object">
       <wt-app-header v-if="!shouldHideHeader">
-        <wt-notifications-bar />
-        <wt-navigation-bar
-          :current-app="currentApp"
-          :nav="accessibleNav"
-          :dark-mode="darkMode"
-          :logo-route="StartPageRoutePaths.TheStartPage"
-        />
-        <wt-logo
-          :dark-mode="darkMode"
-          :logo-href="startPageHref"
-        />
-        <wt-dark-mode-switcher />
-        <wt-app-navigator
-          :apps="apps"
-          :current-app="currentApp"
-          :dark-mode="darkMode"
-        />
-        <wt-header-actions
-          :build-info="{ release, build, timestamp }"
-          :user="userinfo"
-          @logout="logoutUser"
-          @settings="settings"
-        />
+        <template #start>
+          <wt-notifications-bar />
+
+          <wt-navigation-bar
+            :current-app="currentApp"
+            :nav="accessibleNav"
+            :dark-mode="darkMode"
+            :logo-route="StartPageRoutePaths.TheStartPage"
+          />
+
+          <wt-logo
+            :dark-mode="darkMode"
+            :logo-href="startPageHref"
+          />
+
+          <wt-dark-mode-switcher />
+        </template>
+
+        <template #end>
+          <wt-app-navigator
+            :apps="apps"
+            :current-app="currentApp"
+            :dark-mode="darkMode"
+          />
+
+          <wt-header-actions
+            :build-info="{ release, build, timestamp }"
+            :user="userinfo"
+            @logout="logoutUser"
+            @settings="settings"
+          />
+        </template>
       </wt-app-header>
+
       <div class="object-content-wrap">
         <router-view />
       </div>
@@ -34,15 +44,15 @@
 </template>
 
 <script setup>
-import { WtNavigationBar } from '@webitel/ui-sdk/components';
+import { WtAppHeader,WtNavigationBar } from '@webitel/ui-sdk/components';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/WebitelApplications.enum';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
+import { storeToRefs } from 'pinia';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { storeToRefs } from 'pinia';
 
 import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 import { useNavStore } from '../../modules/start-page/stores/navStore';
