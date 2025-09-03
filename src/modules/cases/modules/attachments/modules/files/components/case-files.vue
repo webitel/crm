@@ -13,7 +13,7 @@
         </h3>
         <wt-action-bar
           :include="filteredActions"
-          :disabled:delete="isTableActionDeleteDisabled"
+          :disabled:delete="isBulkDeleteDisabled"
           :disabled:download="isTableActionDownloadDisabled"
           :disabled:add="isTableActionAddDisabled"
           @click:add="openFileDialog"
@@ -21,7 +21,7 @@
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => handleDeleteData(selected),
+              callback: () => handleBulkDelete(selected),
             })
           "
         >
@@ -88,7 +88,7 @@
               @click="
                 askDeleteConfirmation({
                   deleted: [item],
-                  callback: () => handleDeleteData(item),
+                  callback: () => handleFileDelete(item),
                 })
               "
             />
@@ -186,6 +186,7 @@ const transformStoreItemToPending = (fileData) => ({
   name: fileData.name,
   size: fileData.size,
   mime: fileData.type,
+  source: FileSources.Direct,
   file: fileData,
 });
 
@@ -201,6 +202,8 @@ const {
   isPendingItemsLoading,
   addNewItem,
   handleDeleteData,
+  deletePendingItem,
+  deleteMultiplePendingItems,
 } = useCaseAttachments({
   cardNamespace: props.namespace,
   itemId: props.itemId,
@@ -295,7 +298,8 @@ const isBulkDeleteDisabled = computed(() => {
   return !hasDeleteAccess.value
     || !editMode.value
     || !selected.value.length
-    || hasNonDirectFileSelected.value;
+    || hasNonDirectFileSelected.value
+    || isPendingItemsLoading.value;
 });
 
 const isTableActionDownloadDisabled = computed(() => {
@@ -306,21 +310,28 @@ const isTableActionAddDisabled = computed(() => {
   return !hasCreateAccess.value || !editMode.value || isPendingItemsLoading.value;
 });
 
-const isTableActionDeleteDisabled = computed(() => {
-  return isBulkDeleteDisabled.value || isPendingItemsLoading.value || isNew.value;
-});
-
 const isTableVisible = computed(() => {
   return !isLoading.value && currentDataList.value.length && !isPendingItemsLoading.value;
 });
 
 const isFileDeleteAction = computed(() => (item) => {
-  return !isReadOnly && (item.source === FileSources.Direct || isNew.value);
+  return !isReadOnly && item?.source === FileSources.Direct;
 });
 
 const isFileDeleteActionDisabled = computed(() => {
-  return !editMode.value || !hasDeleteAccess.value || isNew.value;
+  return !editMode.value || !hasDeleteAccess.value;
 });
+
+
+// Function to handle single file deletion (pending or existing)
+async function handleFileDelete(file) {
+  await (isNew.value ? deletePendingItem(file) : handleDeleteData(file));
+}
+
+// Function to handle bulk deletion of files (pending or existing)
+async function handleBulkDelete(files) {
+  await (isNew.value ? deleteMultiplePendingItems(files) : handleDeleteData(files));
+}
 </script>
 
 <style lang="scss" scoped>
