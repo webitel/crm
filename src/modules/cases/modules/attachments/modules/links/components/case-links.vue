@@ -21,7 +21,7 @@
           @click:delete="
             askDeleteConfirmation({
               deleted: selected,
-              callback: () => handleDeleteData(selected),
+              callback: () => handleBulkDelete(selected),
             })
           "
         >
@@ -101,7 +101,7 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => handleDeleteData(item),
+                    callback: () => handleLinkDelete(item),
                   })
                 "
               />
@@ -185,11 +185,15 @@ const {
 } = useDeleteConfirmationPopup();
 
 const isTableActionAddDisabled = computed(() => {
-  return !hasCreateAccess.value || formState.isAdding || formState.editingLink || !editMode.value || isPendingItemsLoading.value;
+  return !hasCreateAccess.value
+    || formState.isAdding
+    || formState.editingLink
+    || !editMode.value
+    || isPendingItemsLoading.value;
 });
 
 const isTableActionDeleteDisabled = computed(() => {
-  return !editMode.value || !hasDeleteAccess.value || !selected.value.length || isPendingItemsLoading.value || isNew.value;
+  return !editMode.value || !hasDeleteAccess.value || !selected.value.length || isPendingItemsLoading.value;
 });
 
 const isFormVisible = computed(() => {
@@ -205,11 +209,11 @@ const isTableVisible = computed(() => {
 });
 
 const isLinkEditActionDisabled = computed(() => {
-  return !editMode.value || !hasUpdateAccess.value || formState.isAdding || isNew.value;
+  return !editMode.value || !hasUpdateAccess.value || formState.isAdding;
 });
 
 const isLinkDeleteActionDisabled = computed(() => {
-  return !editMode.value || !hasDeleteAccess.value || isNew.value;
+  return !editMode.value || !hasDeleteAccess.value;
 });
 
 // Transform and process functions for links
@@ -234,6 +238,9 @@ const {
   isPendingItemsLoading,
   addNewItem,
   handleDeleteData,
+  deletePendingItem,
+  updatePendingItem,
+  deleteMultiplePendingItems,
 } = useCaseAttachments({
   cardNamespace: props.namespace,
   itemId: props.itemId,
@@ -326,8 +333,8 @@ async function submitLink() {
   const name = linkText || linkUrl;
 
   if (editingLink) {
-    // Handle editing existing link
-    await updateExistingLink(editingLink, name, linkUrl);
+    // Handle editing existing or pending link
+    await handleLinkEdit(editingLink);
   } else {
     // Handle creating new link - use composable
     const linkData = { name, url: linkUrl };
@@ -348,6 +355,23 @@ async function updateExistingLink(editingLink, name, linkUrl) {
     },
   });
   await loadData();
+}
+
+// Function to handle deletion of pending links
+async function handleLinkDelete(link) {
+  await (isNew.value ? deletePendingItem(link) : handleDeleteData(link));
+}
+
+// Function to handle editing of pending links
+async function handleLinkEdit(link) {
+  await (isNew.value
+    ? updatePendingItem(link, { name: formState.linkText, url: formState.linkUrl })
+    : updateExistingLink(link, formState.linkText, formState.linkUrl));
+}
+
+// Function to handle bulk deletion of links (pending or existing)
+async function handleBulkDelete(links) {
+  await (isNew.value ? deleteMultiplePendingItems(links) : handleDeleteData(links));
 }
 </script>
 

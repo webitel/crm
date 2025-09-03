@@ -22,7 +22,9 @@ export function useCaseAttachments({
   const isPendingItemsLoading = ref(false);
 
   // Get current items from store path
-  const currentStoreItems = computed(() => itemInstance.value?.[storePath] || []);
+  const currentStoreItems = computed(
+    () => itemInstance.value?.[storePath] || [],
+  );
 
   // Restore pending items from store for new cases
   function restorePendingItems() {
@@ -90,6 +92,92 @@ export function useCaseAttachments({
     }
   }
 
+  // Finds the index of an item in the array
+  function findItemIndex(items, targetItem) {
+    return items.findIndex((item) => {
+      // Direct match
+      if (item === targetItem) return true;
+
+      // Compare by URL if available
+      if (targetItem.url) {
+        return item.name === targetItem.name && item.url === targetItem.url;
+      }
+
+      // Compare by basic properties
+      return (
+        item.name === targetItem.name &&
+        item.size === targetItem.size &&
+        item.mime === targetItem.mime
+      );
+    });
+  }
+
+  // deletes a single item from pending list
+  async function deletePendingItem(itemToDelete) {
+    const index = findItemIndex(pendingItems.value, itemToDelete);
+
+    if (index === -1) return false;
+
+    // Delete from both arrays
+    pendingItems.value.splice(index, 1);
+    currentStoreItems.value.splice(index, 1);
+
+    await setItemProp({
+      path: storePath,
+      value: [...currentStoreItems.value],
+    });
+
+    return true;
+  }
+
+  // Updates existing item data
+  async function updatePendingItem(oldItem, newItemData) {
+    const index = findItemIndex(pendingItems.value, oldItem);
+
+    if (index === -1) return false;
+
+    // Update data in both arrays
+    pendingItems.value[index] = newItemData;
+    currentStoreItems.value[index] = { input: newItemData };
+
+    await setItemProp({
+      path: storePath,
+      value: [...currentStoreItems.value],
+    });
+
+    return true;
+  }
+
+  // deletes multiple items at once
+  async function deleteMultiplePendingItems(itemsToDelete) {
+    // Convert to array
+    const items = Array.isArray(itemsToDelete)
+      ? itemsToDelete
+      : [itemsToDelete];
+
+    // Find indices to delete
+    const indices = items
+      .map((item) => findItemIndex(pendingItems.value, item))
+      .filter((index) => index !== -1)
+      .filter((index, pos, arr) => arr.indexOf(index) === pos) // unique indices
+      .sort((a, b) => b - a); // sort from highest to lowest
+
+    if (!indices.length) return false;
+
+    // Delete items (starting from the end)
+    indices.forEach((index) => {
+      pendingItems.value.splice(index, 1);
+      currentStoreItems.value.splice(index, 1);
+    });
+
+    await setItemProp({
+      path: storePath,
+      value: [...currentStoreItems.value],
+    });
+
+    return true;
+  }
+
   return {
     isNew,
     pendingItems,
@@ -97,5 +185,8 @@ export function useCaseAttachments({
 
     addNewItem,
     handleDeleteData,
+    deletePendingItem,
+    updatePendingItem,
+    deleteMultiplePendingItems,
   };
 }
