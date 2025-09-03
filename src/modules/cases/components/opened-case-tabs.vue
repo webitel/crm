@@ -67,6 +67,11 @@ const tabs = computed(() => {
       value: 'result',
       pathName: `${currentCardRoute.value}-result`,
     },
+    {
+      text: t('cases.attachments.attachments'),
+      value: 'attachments',
+      pathName: `${currentCardRoute.value}-attachments`,
+    }
   ];
 
   const timeline = {
@@ -75,13 +80,7 @@ const tabs = computed(() => {
     pathName: `${currentCardRoute.value}-timeline`,
   };
 
-  const attachments = {
-    text: t('cases.attachments.attachments'),
-    value: 'attachments',
-    pathName: `${currentCardRoute.value}-attachments`,
-  };
-
-  if (id.value) tabs.push(timeline, attachments);
+  if (id.value) tabs.push(timeline);
 
   if (customFields.value.length) {
     tabs.push({
