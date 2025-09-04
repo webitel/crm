@@ -6,16 +6,23 @@
       @change="changeTab"
     />
     <router-view
-      :namespace="cardNamespace"
-      :access="/*is used by permissions tab*/ {
-        read: true,
-        edit: actionAllow,
-        delete: actionAllow,
-        add: actionAllow,
-      }"
-      :fields="customFields"
+      v-slot="{ Component }"
       class="opened-card-tabs__tab"
-    />
+    >
+      <keep-alive>
+        <component
+          :is="Component"
+          :namespace="cardNamespace"
+          :access="/*is used by permissions tab*/{
+            read: true,
+            edit: actionAllow,
+            delete: actionAllow,
+            add: actionAllow,
+          }"
+          :fields="customFields"
+        />
+      </keep-alive>
+    </router-view>
   </article>
 </template>
 
