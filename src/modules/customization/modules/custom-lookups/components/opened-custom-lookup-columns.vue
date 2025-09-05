@@ -55,8 +55,9 @@
           :data="fields"
           :headers="headers"
           :selected="selected"
-          :movable="true"
           sortable
+          row-reorder
+          :is-row-reorder-disabled="isReorderDisabled"
           @update:selected="setSelected"
           @reorder:row="handleReorder"
         >
@@ -68,11 +69,6 @@
           </template>
           <template #actions="{ item }">
             <template v-if="!isSystemField(item)">
-              <wt-icon-btn
-                class="sortable-btn"
-                icon="move"
-                :disabled="disableUserInput"
-              />
               <wt-icon-action
                 action="edit"
                 :disabled="disableUserInput"
@@ -217,6 +213,11 @@ const headers = computed(() => {
 
 const isSystemField = (field) => field.id === 'name' || field.readonly;
 
+const isReorderDisabled = (field) => {
+  if (!field) return true;
+  return isSystemField(field) || disableUserInput.value
+}
+
 const getFieldsForSortable = () => {
   return !search.value
     ? itemInstance.value.fields
@@ -227,6 +228,7 @@ const getFieldsForSortable = () => {
 
 // Handle row reorder from the table
 const handleReorder = async ({ oldIndex, newIndex }) => {
+  if (isReorderDisabled(fields.value[newIndex])) return
   // change value to true for hide table and trigger re-render table with new positions items
   isLoading.value = true;
   

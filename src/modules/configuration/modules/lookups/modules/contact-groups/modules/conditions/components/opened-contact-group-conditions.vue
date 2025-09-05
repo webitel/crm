@@ -41,7 +41,7 @@
           :data="dataList"
           :headers="headers"
           :selectable="false"
-          :movable="hasUpdateAccess"
+          :row-reorder="hasUpdateAccess"
           @reorder:row="handleReorder"
         >
           <template #expression="{ item }">
