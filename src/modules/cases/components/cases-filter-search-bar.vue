@@ -4,9 +4,11 @@
     :filters-manager="filtersManager"
     :is-filters-restoring="isFiltersRestoring"
     :search-mode-options="searchModeOptions"
+    :search-mode="searchMode"
     @filter:add="addFilter"
     @filter:update="updateFilter"
     @filter:delete="deleteFilter"
+    @update:search-mode="updateSearchMode"
   />
 </template>
 
@@ -36,9 +38,13 @@ const props = defineProps({
 
 const { t } = useI18n();
 
-const { filtersManager, isFiltersRestoring } = storeToRefs(props.tableStore);
+const { filtersManager, isFiltersRestoring, searchMode } = storeToRefs(props.tableStore);
 
-const { addFilter, updateFilter, deleteFilter } = props.tableStore;
+const {
+  addFilter,
+  updateFilter,
+  deleteFilter,
+  updateSearchMode } = props.tableStore;
 
 const isFTSEnabled = ref();
 const isFTSConfigLoaded = ref(false);
