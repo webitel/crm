@@ -39,7 +39,7 @@
 
     <template #after-content>
       <wt-intersection-observer
-        :next="next"
+        :canLoadMore="next"
         :loading="nextLoading"
         @next="loadNext"
       />

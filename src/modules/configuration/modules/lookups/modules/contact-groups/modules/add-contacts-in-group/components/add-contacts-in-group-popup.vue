@@ -20,7 +20,6 @@
         </div>
 
         <div
-          ref="infiniteScrollWrap"
           class="add-contacts-in-group-popup__scroll-wrapper"
         >
           <wt-table
@@ -66,6 +65,11 @@
               </div>
             </template>
           </wt-table>
+          <wt-intersection-observer
+            :canLoadMore="!isLoading || next"
+            :loading="isLoading"
+            @next="appendToDataList"
+          />
         </div>
       </div>
     </template>
@@ -89,7 +93,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useInfiniteScroll } from '@vueuse/core';
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { storeToRefs } from 'pinia';
@@ -99,6 +102,7 @@ import { useI18n } from 'vue-i18n';
 import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
+import WtIntersectionObserver from '@webitel/ui-sdk/components/wt-intersection-observer/wt-intersection-observer.vue';
 
 const props = defineProps<{
   groupIds: string[]
@@ -132,7 +136,6 @@ onMounted(() => {
   filtersManager.value.reset()
 });
 
-const infiniteScrollWrap = ref(null);
 
 const save = async () => {
   await ContactGroupsAPI.addContactsToGroups({
@@ -151,14 +154,6 @@ const closePopup = () => {
   close();
   if (selected.value.length) updateSelected([]);
 };
-
-useInfiniteScroll(infiniteScrollWrap,
-  async () => {
-    if (isLoading.value || !next.value) return;
-    await appendToDataList();
-  },
-  { distance: 100 },
-);
 
 </script>
 
