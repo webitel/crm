@@ -16,7 +16,7 @@
     pointer-events: none;
   }
 
-  .wt-table__tr:hover .set-primary-btn {
+  .wt-table tr:hover .set-primary-btn {
     opacity: 1;
     pointer-events: auto;
   }
