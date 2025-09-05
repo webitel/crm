@@ -7,7 +7,7 @@
         :primary-text="saveText"
         :secondary-action="close"
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
 
@@ -120,7 +120,7 @@ const path = computed(() => {
     { name: t('lookups.lookups'), route: '/configuration' },
     {
       name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
-      route: '/lookups/service-catalogs',
+      route: '/configuration/lookups/service-catalogs',
     },
     {
       name: isNew.value

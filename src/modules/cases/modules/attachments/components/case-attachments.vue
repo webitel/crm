@@ -1,7 +1,7 @@
 <template>
-  <div v-if="!isNew" class="case-attachments">
-    <case-files :item-id="id" :namespace="filesNamespace" />
-    <case-links :item-id="id" :namespace="linksNamespace" />
+  <div class="case-attachments">
+    <case-files :item-id="id" :namespace="props.namespace" :files-namespace="filesNamespace" />
+    <case-links :item-id="id" :namespace="props.namespace" :links-namespace="linksNamespace" />
   </div>
 </template>
 <script setup>

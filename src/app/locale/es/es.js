@@ -124,6 +124,9 @@ export default {
       resolutionTimeTitle: 'Tiempo de resolución (dd:hh:mm)',
       validFrom: 'Válido desde',
       validTo: 'Válido hasta',
+      error: {
+        duplicateConditionName: 'Ya existe una condición con este nombre'
+      }
     },
 
     sources: {
@@ -189,9 +192,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Personalización',
     customLookups: {
-      customLookups: 'Búsquedas personalizadas',
       allValues: 'Todos los valores',
       code: 'Código',
       columns: 'Columnas',

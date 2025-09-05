@@ -9,7 +9,7 @@
         :primary-text="saveText"
         :secondary-action="close"
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
 
@@ -80,7 +80,7 @@ const path = computed(() => {
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.sources.sources', 2), route: '/lookups/sources' },
+    { name: t('lookups.sources.sources', 2), route: '/configuration/lookups/sources' },
     { name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name },
   ];
 });

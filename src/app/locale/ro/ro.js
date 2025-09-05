@@ -124,6 +124,9 @@ export default {
       resolutionTimeTitle: 'Timp de rezolvare (zz:hh:mm)',
       validFrom: 'Valid de la',
       validTo: 'Valid până la',
+      error: {
+        duplicateConditionName: 'O condiție cu acest nume există deja'
+      }
     },
 
     sources: {
@@ -189,9 +192,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Personalizare',
     customLookups: {
-      customLookups: 'Căutări personalizate',
       allValues: 'Toate valorile',
       code: 'Cod',
       columns: 'Coloane',

@@ -8,7 +8,7 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #actions-panel>
@@ -136,7 +136,7 @@
               {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
-              {{ item.service?.name }}
+              <service-path :service="item?.service"/>
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -187,8 +187,7 @@
             >
               <display-dynamic-field-extension
                 :field="header"
-                :value="getCustomValues(item, header.value)"
-                :label="header.locale"
+                :value="getCustomValues(item, header.field)"
               />
             </template>
             <template #actions="{ item }">
@@ -249,6 +248,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import DisplayDynamicFieldExtension
   from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { SearchMode } from '../enums/SearchMode';
+import ServicePath from '../modules/service/components/service-path.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
@@ -450,8 +450,8 @@ const syncMissingCustomHeaders = (newHeaders) => {
 
 // Initialize headers before table store
 onMounted(async () => {
-  await loadCustomHeaders();
   await initialize();
+  await loadCustomHeaders();
 });
 
 // Keep custom headers in sync when base headers change
@@ -460,6 +460,24 @@ watch(
   syncMissingCustomHeaders,
   { deep: true }
 );
+
+watch(customHeadersLoaded, (isLoaded) => {
+  if (!isLoaded) return;
+
+  // "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
+  const notInitializedHeaders = headers.value.filter((header) => header.shouldBeInitialized);
+  if (!notInitializedHeaders.length) return;
+
+  // ... so, we can just extend those restored (but not initialized yet) headers with custom headers
+  notInitializedHeaders.forEach((header) => {
+    const customHeader = customHeaders.value.find((customHeader) => customHeader.field === header.field);
+    Object.assign(header, {
+      ...customHeader,
+      shouldBeInitialized: false,
+      show: true,
+    });
+  });
+});
 </script>
 
 <style lang="scss" scoped>

@@ -8,7 +8,7 @@
         hide-primary
         :secondary-action="close"
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #main>
@@ -114,8 +114,8 @@
               <template #state="{ item, index }">
                 <wt-switcher
                   :disabled="!hasUpdateAccess"
-                  :value="item.enabled"
-                  @change="
+                  :model-value="item.enabled"
+                  @update:model-value="
                     patchProperty({
                       item,
                       index,

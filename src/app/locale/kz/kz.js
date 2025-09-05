@@ -124,6 +124,9 @@ export default {
       resolutionTimeTitle: 'Шешім уақыты (кк:сс:мм)',
       validFrom: 'Бастап жарамды',
       validTo: 'Дейін жарамды',
+      error: {
+        duplicateConditionName: 'Осындай атауы бар шарт қазірдің өзінде бар'
+      }
     },
 
     sources: {
@@ -183,9 +186,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Баптау',
     customLookups: {
-      customLookups: 'Арнайы анықтамалықтар',
       allValues: 'Барлық мәндер',
       code: 'Код',
       columns: 'Бағандар',

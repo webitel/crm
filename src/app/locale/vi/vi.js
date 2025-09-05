@@ -124,6 +124,9 @@ export default {
       resolutionTimeTitle: 'Thời gian giải quyết (dd:hh:mm)',
       validFrom: 'Có hiệu lực từ',
       validTo: 'Có hiệu lực đến',
+      error: {
+        duplicateConditionName: 'Điều kiện với tên này đã tồn tại'
+      }
     },
 
     sources: {
@@ -189,9 +192,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Tùy chỉnh',
     customLookups: {
-      customLookups: 'Tra cứu tùy chỉnh',
       allValues: 'Tất cả giá trị',
       code: 'Mã',
       columns: 'Cột',

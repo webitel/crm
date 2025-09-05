@@ -21,11 +21,11 @@
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
     :label="label"
-    :value="!!value"
+    :model-value="!!value"
     :v="validation"
     :required="isRequired"
     :disabled="props.disable"
-    @change="setValue($event)"
+    @update:model-value="setValue($event)"
   />
   <wt-select
     v-else-if="field.kind === FieldType.Select"

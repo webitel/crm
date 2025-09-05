@@ -8,7 +8,7 @@
         :secondary-action="close"
         hide-primary
       >
-        <wt-headline-nav :path="path" />
+        <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
     <template #main>
@@ -209,11 +209,9 @@ function edit(item) {
 
 const {
   showEmpty,
-  image: emptyImage,
-  headline: emptyHeadline,
-  title: emptyTitle,
-  text: emptyText,
-  primaryActionText: emptyPrimaryActionText,
+  image: imageEmpty,
+  text: textEmpty,
+  primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
   dataList,
   error,

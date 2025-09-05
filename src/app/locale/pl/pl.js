@@ -124,6 +124,9 @@ export default {
       resolutionTimeTitle: 'Czas rozwiązania (dd:hh:mm)',
       validFrom: 'Ważne od',
       validTo: 'Ważne do',
+      error: {
+        duplicateConditionName: 'Warunek o takiej nazwie już istnieje'
+      }
     },
 
     sources: {
@@ -189,9 +192,7 @@ export default {
     },
   },
   customization: {
-    customization: 'Dostosowywanie',
     customLookups: {
-      customLookups: 'Niestandardowe wyszukiwania',
       allValues: 'Wszystkie wartości',
       code: 'Kod',
       columns: 'Kolumny',

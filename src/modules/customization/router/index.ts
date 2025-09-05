@@ -1,4 +1,4 @@
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type RouteRecordRaw } from 'vue-router';
 
 import OpenedCustomLookup from '../modules/custom-lookups/components/opened-custom-lookup.vue';
@@ -9,7 +9,7 @@ import TheDictionaryExtensions from '../modules/wt-type-extension/components/the
 
 const customizationRoutes: RouteRecordRaw[] = [
   {
-    path: 'customization',
+    path: 'configuration/customization',
     name: 'customization',
     redirect: { name: 'configuration' },
     children: [
@@ -17,11 +17,19 @@ const customizationRoutes: RouteRecordRaw[] = [
         path: 'custom-lookups',
         name: CrmSections.CustomLookups,
         component: TheCustomLookups,
+        meta: {
+          WtObject: WtObject.CustomLookup,
+          UiSection: CrmSections.CustomLookups,
+        },
       },
       {
         path: 'custom-lookups/:id',
         name: `${CrmSections.CustomLookups}-card`,
         component: OpenedCustomLookup,
+        meta: {
+          WtObject: WtObject.CustomLookup,
+          UiSection: CrmSections.CustomLookups,
+        },
         redirect: { name: `${CrmSections.CustomLookups}-general` },
         children: [
           {
@@ -40,6 +48,21 @@ const customizationRoutes: RouteRecordRaw[] = [
         path: 'types-extensions/:id',
         name: 'types-extensions',
         component: TheDictionaryExtensions,
+        meta: {
+          WtObject: WtObject.CustomLookup,
+          UiSection: (thisRoute) => {
+            const repo = thisRoute.params.id;
+
+            switch (repo) {
+              case 'cases':
+                return CrmSections.CasesExtensions;
+              case 'contacts':
+                return CrmSections.ContactsExtensions;
+              default:
+                return `unknown type extension repo: ${repo}`;
+            }
+          },
+        },
       },
     ],
   },

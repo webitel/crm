@@ -84,7 +84,7 @@ onUnmounted(() => eventBus.$off('timeline/rows/collapse-all', collapseRow));
 }
 
 .timeline-row-before-content {
-  flex: 0 0 120px;
+  flex: 0 0 80px;
 }
 
 .timeline-row-pin {
