@@ -141,8 +141,8 @@ import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 
 const baseNamespace = 'customization/customLookups';
 
@@ -197,6 +197,13 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * [WTEL-7510](https://webitel.atlassian.net/browse/WTEL-7510)
+ *
+ * link for description https://webitel.atlassian.net/browse/WTEL-7510?focusedCommentId=693399
+ * */
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
