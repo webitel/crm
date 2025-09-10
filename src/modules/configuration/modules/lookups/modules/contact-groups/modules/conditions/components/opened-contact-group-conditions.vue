@@ -41,6 +41,8 @@
           :data="dataList"
           :headers="headers"
           :selectable="false"
+          :row-reorder="hasUpdateAccess"
+          @reorder:row="handleReorder"
         >
           <template #expression="{ item }">
             {{ item.expression }}
@@ -52,10 +54,6 @@
             {{ item.assignee.name }}
           </template>
           <template #actions="{ item }">
-            <wt-icon-btn
-              icon="move"
-              :disabled="!hasUpdateAccess"
-            />
             <wt-icon-action
               :disabled="!hasUpdateAccess"
               action="edit"
@@ -94,8 +92,7 @@ import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import Sortable, { Swap } from 'sortablejs';
-import { onMounted, onUnmounted, watch } from 'vue';
+import { onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -109,13 +106,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const sortableConfig = {
-  swap: true, // Enable swap mode
-  swapClass: 'sortable-swap-highlight', // Class name for swap item (if swap mode is enabled)
-  animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
-  easing: 'cubic-bezier(1, 0, 0, 1)', // Easing for animation. Defaults to null. See https://easings.net/ for examples.
-};
 
 const { namespace: parentCardNamespace, id: parentId } = useCardStore(
   props.namespace,
@@ -180,8 +170,6 @@ const add = () => {
   return router.push({ ...route, params: { conditionId: 'new' } });
 };
 
-let sortableInstance = null;
-
 function setPosition(newIndex, list) {
   if (newIndex === 0)
     return {
@@ -200,68 +188,23 @@ function setPosition(newIndex, list) {
     condUp: list[newIndex + 1].id,
   };
 }
+const handleReorder = async ({ oldIndex, newIndex }) => {
+  const updatedDataList = [...dataList.value];
 
-function initSortable(wrapper) {
-  if (sortableInstance) {
-    sortableInstance.destroy();
-    sortableInstance = null;
-  }
+  const [movedItem] = updatedDataList.splice(oldIndex, 1);
+  updatedDataList.splice(newIndex, 0, movedItem);
 
-  sortableInstance = new Sortable(wrapper, {
-    ...sortableConfig,
-
-    async onEnd({ oldIndex, newIndex }) {
-      const updatedDataList = [...dataList.value];
-
-      const [movedItem] = updatedDataList.splice(oldIndex, 1);
-      updatedDataList.splice(newIndex, 0, movedItem);
-
-      await ConditionsAPI.patch({
-        parentId: dataList.value[oldIndex].id,
-        changes: {
-          position: setPosition(newIndex, updatedDataList),
-        },
-      });
-      await loadData();
+  await ConditionsAPI.patch({
+    parentId: dataList.value[oldIndex].id,
+    changes: {
+      position: setPosition(newIndex, updatedDataList),
     },
   });
-}
-
-function callSortable() {
-  if (!hasUpdateAccess.value) return;
-
-  setTimeout(() => {
-    const wrapper = document.querySelector('.wt-table__body');
-    if (wrapper) {
-      initSortable(wrapper);
-    }
-  }, 500);
-}
-
-watch(dataList, () => callSortable());
-onMounted(async () => {
-  if (!Sortable.__pluginsMounted) {
-    Sortable.mount(new Swap());
-    Sortable.__pluginsMounted = true;
-  }
-
-  callSortable();
-});
+  await loadData();
+};
 
 onUnmounted(() => {
   flushSubscribers();
   resetFilters();
-  if (sortableInstance) {
-    sortableInstance.destroy();
-    sortableInstance = null;
-  }
 });
 </script>
-
-<style lang="scss" scoped>
-.opened-contact-group-conditions {
-  :deep(.wt-table .sortable-swap-highlight) {
-    background: var(--primary-color);
-  }
-}
-</style>
