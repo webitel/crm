@@ -22,7 +22,7 @@
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^11.0.3",
     "@webitel/api-services": "^0.0.44",
-    "@webitel/ui-datalist": "^1.0.76",
+    "@webitel/ui-datalist": "^1.0.77",
     "@webitel/ui-sdk": "~25.10",
     "axios": "^1.7.7",
     "clipboard-copy": "^4.0.1",
