@@ -1,16 +1,9 @@
 <template>
   <wt-page-wrapper
     class="cases table-page"
-    :actions-panel="showActionsPanel"
+    :actions-panel="showActionsPanel && !isInitialEmpty"
+    :hide-header="true"
   >
-    <template #header>
-      <wt-page-header
-        :secondary-action="close"
-        hide-primary
-      >
-        <wt-breadcrumb :path="path" />
-      </wt-page-header>
-    </template>
     <template #actions-panel>
       <cases-filters-panel @hide="showActionsPanel = false" />
     </template>
@@ -24,20 +17,14 @@
 
       <section class="table-section">
         <header class="table-title">
-          <h3 class="table-title__title">
-            {{ $t('cases.case', 2) }}
-          </h3>
+          <wt-breadcrumb :path="path" />
 
-          <cases-filter-search-bar class="cases__search-filter" />
+          <cases-filter-search-bar
+            v-if="!isInitialEmpty"
+            class="cases__search-filter" />
 
           <wt-action-bar
-            :include="[
-              IconAction.ADD,
-              IconAction.REFRESH,
-              IconAction.FILTERS,
-              IconAction.COLUMNS,
-              IconAction.DELETE,
-            ]"
+            :include="displayIncludeActions"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
             @click:add="add"
@@ -82,12 +69,15 @@
             :data="dataList"
             :headers="shownHeaders"
             :selected="selected"
+            :row-class="rowClass"
+            fixed-actions
             sortable
             @sort="updateSort"
             @update:selected="updateSelected"
           >
             <template #name="{ item }">
               <wt-item-link
+                class="cases__link-name"
                 :link="{
                   name: `${CrmSections.CASES}-card`,
                   params: { id: item?.id },
@@ -95,9 +85,9 @@
               >
                 <div class="cases__link-content">
                   <color-component-wrapper
-                    :color="item.priority?.color"
                     component="wt-icon"
-                    icon="cases"
+                    :color="item?.statusCondition?.final ? 'default' : item.priority?.color"
+                    :icon="item?.statusCondition?.final ? 'case-done' : 'case--filled'"
                     size="md"
                   />
 
@@ -232,6 +222,7 @@ import {
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
+import { EmptyCause } from "@webitel/ui-sdk/enums/EmptyCause/EmptyCause";
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -302,6 +293,7 @@ const {
 
 const {
   showEmpty,
+  emptyCause,
   image: emptyImage,
   headline: emptyHeadline,
   title: emptyTitle,
@@ -315,6 +307,14 @@ const {
 });
 
 const showActionsPanel = ref(true);
+
+const isInitialEmpty = ref(null);
+
+const displayIncludeActions = computed(() => {
+  const baseActions = [IconAction.ADD, IconAction.REFRESH, IconAction.FILTERS, IconAction.COLUMNS, IconAction.DELETE];
+
+  return isInitialEmpty.value ? [IconAction.ADD] : baseActions;
+});
 
 /*
  * show "toggle filters panel" badge if any filters are applied...
@@ -448,6 +448,10 @@ const syncMissingCustomHeaders = (newHeaders) => {
   updateHeaders(customHeaders.value, newHeaders);
 };
 
+const rowClass = (item) => {
+  if(item.statusCondition?.final) return 'row-success';
+}
+
 // Initialize headers before table store
 onMounted(async () => {
   await initialize();
@@ -460,6 +464,12 @@ watch(
   syncMissingCustomHeaders,
   { deep: true }
 );
+
+watch(() => emptyCause.value, (newCause, oldCause) => {
+  if(newCause && oldCause !== newCause && newCause === EmptyCause.EMPTY) {
+    isInitialEmpty.value = true;
+  }
+});
 
 watch(customHeadersLoaded, (isLoaded) => {
   if (!isLoaded) return;
@@ -491,6 +501,10 @@ watch(customHeadersLoaded, (isLoaded) => {
   &__link-content {
     display: flex;
     gap: var(--spacing-xs);
+  }
+
+  &__link-name {
+    color: var(--text-link-color);
   }
 
   &__search-filter {
