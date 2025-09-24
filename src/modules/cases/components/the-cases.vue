@@ -83,8 +83,11 @@
             :headers="shownHeaders"
             :selected="selected"
             sortable
+            resizable-columns
             @sort="updateSort"
             @update:selected="updateSelected"
+            @column-resize="columnResize"
+            @column-reorder="columnReorder"
           >
             <template #name="{ item }">
               <wt-item-link
@@ -290,6 +293,8 @@ const {
   updateSort,
   deleteEls,
   updateShownHeaders,
+  columnResize,
+  columnReorder,
 } = tableStore;
 
 const {
