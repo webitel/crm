@@ -308,7 +308,7 @@ const {
 
 const showActionsPanel = ref(true);
 
-const isInitialEmpty = ref(null);
+const isInitialEmpty = ref(false);
 
 const displayIncludeActions = computed(() => {
   const baseActions = [IconAction.ADD, IconAction.REFRESH, IconAction.FILTERS, IconAction.COLUMNS, IconAction.DELETE];
