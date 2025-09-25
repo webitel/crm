@@ -72,6 +72,8 @@
             :row-class="rowClass"
             fixed-actions
             sortable
+            resizable-columns
+            @column-resize="columnResize"
             @sort="updateSort"
             @update:selected="updateSelected"
           >
@@ -281,6 +283,7 @@ const {
   updateSort,
   deleteEls,
   updateShownHeaders,
+  columnResize,
 } = tableStore;
 
 const {
