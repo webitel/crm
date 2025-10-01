@@ -73,7 +73,9 @@
             fixed-actions
             sortable
             resizable-columns
+            reorderable-columns
             @column-resize="columnResize"
+            @column-reorder="columnReorder"
             @sort="updateSort"
             @update:selected="updateSelected"
           >
@@ -284,6 +286,7 @@ const {
   deleteEls,
   updateShownHeaders,
   columnResize,
+  columnReorder,
 } = tableStore;
 
 const {
