@@ -1,7 +1,7 @@
-import { WebitelCasesCaseTimelineEventType, WebitelContactsTimelineEventType } from '@webitel/api-services/gen';
+import { WebitelCasesCaseTimelineEventType, ContactsTimelineEventType } from '@webitel/api-services/gen';
 
 export const TimelineEventType = {
-  ...WebitelContactsTimelineEventType,
+  ...ContactsTimelineEventType,
   ...WebitelCasesCaseTimelineEventType,
 } as const;
 

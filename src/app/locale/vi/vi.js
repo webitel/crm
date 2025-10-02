@@ -1,7 +1,7 @@
 import {
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
+  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -159,8 +159,8 @@ export default {
       addGroup: 'Thêm nhóm',
       assignee: 'Người được giao',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Động',
-        [WebitelContactsGroupType.Static]: 'Tĩnh',
+        [ContactsGroupType.Dynamic]: 'Động',
+        [ContactsGroupType.Static]: 'Tĩnh',
       },
     },
 

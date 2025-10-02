@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
@@ -242,7 +242,7 @@ const {
 
 const isCreateGroupPopup = ref(false);
 const isShowAddContactInGroupPopup = ref(false);
-const selectedStaticGroups = computed(() => selected.value.filter((el) => el.type === WebitelContactsGroupType.Static));
+const selectedStaticGroups = computed(() => selected.value.filter((el) => el.type === ContactsGroupType.Static));
 const staticGroupIds = computed(() => selectedStaticGroups.value.map((el) => el.id));
 
 const path = computed(() => [
