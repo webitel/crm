@@ -109,7 +109,7 @@
 
 <script setup>
 import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
@@ -146,7 +146,7 @@ const { isNew } = useCardComponent({
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.Static,
+    type: ContactsGroupType.Static,
     enabled: true,
   });
 }
@@ -204,7 +204,7 @@ watch(
 watch(
   () => itemInstance.value.group,
   (newValue) => {
-    const isDynamicGroup = newValue?.type === WebitelContactsGroupType.Dynamic;
+    const isDynamicGroup = newValue?.type === ContactsGroupType.Dynamic;
 
     if (isDynamicGroup) {
       resetAssignee();

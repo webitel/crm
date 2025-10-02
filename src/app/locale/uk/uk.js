@@ -1,7 +1,7 @@
 import {
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
+  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -160,8 +160,8 @@ export default {
       addGroup: 'Додати контакти',
       assignee: 'Виконавець',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Динамічна',
-        [WebitelContactsGroupType.Static]: 'Статична',
+        [ContactsGroupType.Dynamic]: 'Динамічна',
+        [ContactsGroupType.Static]: 'Статична',
       },
     },
 

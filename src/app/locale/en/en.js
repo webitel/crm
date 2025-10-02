@@ -1,7 +1,7 @@
 import {
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
+  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -159,8 +159,8 @@ export default {
       addGroup: 'Add group',
       assignee: 'Assignee',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Dynamic',
-        [WebitelContactsGroupType.Static]: 'Static',
+        [ContactsGroupType.Dynamic]: 'Dynamic',
+        [ContactsGroupType.Static]: 'Static',
       },
     },
 

@@ -20,7 +20,7 @@
         :search-method="loadContact"
         :value="itemInstance.assignee"
         :disabled="
-          disableUserInput || itemInstance.group?.type === WebitelContactsGroupType.Dynamic
+          disableUserInput || itemInstance.group?.type === ContactsGroupType.Dynamic
         "
         @input="setItemProp({ path: 'assignee', value: $event })"
       />
@@ -68,7 +68,7 @@
 
 <script setup>
 import { ContactGroupsAPI, ContactsAPI, SlasAPI } from '@webitel/api-services/api';
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 

@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed, ref, useAttrs } from 'vue';
@@ -33,8 +33,8 @@ const attrs = useAttrs();
 
 const { setItemProp } = useCardStore(`${props.namespace}/card`);
 
-const options = computed(() => Object.values(WebitelContactsGroupType)
-.filter((type) => type !== WebitelContactsGroupType.GroupTypeUnspecified)
+const options = computed(() => Object.values(ContactsGroupType)
+.filter((type) => type !== ContactsGroupType.GroupTypeUnspecified)
 .map((type) => ({
   value: type,
   title: t(`lookups.contactGroups.types.${type}`),
