@@ -69,7 +69,7 @@ const tabs = computed(() => {
     },
   ];
 
-  if(hasCaseReadAccess) {
+  if(hasCaseReadAccess.value) {
     tabList.splice(1, 0, {
       text: t('cases.case', 2),
       value: 'cases',

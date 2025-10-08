@@ -52,34 +52,29 @@ export const useNavStore = defineStore('nav', () => {
             dark: ContactsImgDark,
           },
         },
-      ]
-
-      if(hasCaseReadAccess) {
-        navigation.push(...[
-          {
-            value: 'configuration',
-            route: '/configuration',
-            name: t(`startPage.configuration.name`),
-            text: t(`startPage.configuration.text`),
-            disabled: !hasAnyConfigurationAccess.value,
-            images: {
-              light: ConfigurationImgLight,
-              dark: ConfigurationImgDark,
-            },
+        {
+          value: 'configuration',
+          route: '/configuration',
+          name: t(`startPage.configuration.name`),
+          text: t(`startPage.configuration.text`),
+          disabled: !hasAnyConfigurationAccess.value || !hasCaseReadAccess.value,
+          images: {
+            light: ConfigurationImgLight,
+            dark: ConfigurationImgDark,
           },
-          {
-            value: CrmSections.Cases,
-            route: casesRoutePath,
-            name: t(`startPage.${CrmSections.Cases}.name`),
-            text: t(`startPage.${CrmSections.Cases}.text`),
-            disabled: !hasCasesAccess,
-            images: {
-              light: CasesLight,
-              dark: CasesDark,
-            }
+        },
+        {
+          value: CrmSections.Cases,
+          route: casesRoutePath,
+          name: t(`startPage.${CrmSections.Cases}.name`),
+          text: t(`startPage.${CrmSections.Cases}.text`),
+          disabled: !hasCasesAccess || !hasCaseReadAccess.value,
+          images: {
+            light: CasesLight,
+            dark: CasesDark,
           }
-        ])
-      }
+        }
+      ]
 
       return navigation;
     });
