@@ -109,6 +109,7 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
 import {
   useAccessControl,
 } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -135,7 +136,6 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
-import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import CustomLookupsApi
   from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
@@ -166,6 +166,7 @@ const loadDictionary = async () => {
           show: true,
           field: field.id,
           kind: field.kind,
+          sort: SortSymbols.NONE,
         })),
     });
   } catch (e) {
