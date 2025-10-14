@@ -30,7 +30,7 @@ import { computed } from 'vue';
 import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import {
   FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum.js';
+} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 
 const props = defineProps({
   field: {

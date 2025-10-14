@@ -42,7 +42,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ObjectsApi from '../api/objects';
-import { FieldType } from '../enums/FieldType.enum';
+import { FieldType } from '../enums/FieldType.js';
 
 const props = defineProps({
   value: {

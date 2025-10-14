@@ -22,7 +22,7 @@ import { EMPTY_SYMBOL } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
+import { FieldType } from '../../custom-lookups/enums/FieldType.js';
 import DisplayDynamicFieldExtension from './display-dynamic-field-extension.vue';
 
 const props = defineProps({

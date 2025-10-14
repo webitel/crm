@@ -75,7 +75,7 @@ import { useI18n } from 'vue-i18n';
 
 import {
   FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
+} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import CustomLookupApi from '../api/custom-lookups.js';
 
 const props = defineProps({

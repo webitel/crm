@@ -43,12 +43,13 @@
           :value="value"
         />
 
-        <!--        TODO hide switcher https://webitel.atlassian.net/browse/WTEL-6774-->
-        <!--        <wt-switcher-->
-        <!--          :model-value="value.required"-->
-        <!--          :label="$t('reusable.required')"-->
-        <!--          @update:model-value="value.required = $event"-->
-        <!--        ></wt-switcher>-->
+        <default-value-input :value="value" :is-new="isNew" />
+
+        <wt-switcher
+          :model-value="value.required"
+          :label="$t('reusable.required')"
+          @update:model-value="value.required = $event"
+        ></wt-switcher>
       </div>
     </template>
     <template #actions>
@@ -75,6 +76,7 @@ import deepCopy from 'deep-copy';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import DefaultValueInput from './default-value-input.vue';
 import TypeFieldSelect from './type-field-select.vue';
 
 const props = defineProps({

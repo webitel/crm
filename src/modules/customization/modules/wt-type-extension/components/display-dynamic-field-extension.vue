@@ -26,7 +26,7 @@ import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
-import { FieldType } from '../../custom-lookups/enums/FieldType.enum.js';
+import { FieldType } from '../../custom-lookups/enums/FieldType.js';
 
 const props = defineProps({
   field: {
