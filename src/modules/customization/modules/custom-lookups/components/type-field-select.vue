@@ -122,6 +122,8 @@ const selectObject = (value) => {
   props.value.lookup = {
     path: value.path,
     name: value.name,
+    display: value.display,
+    primary: value.primary,
   };
 };
 const loadLookupList = (params) => {

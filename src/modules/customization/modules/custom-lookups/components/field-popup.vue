@@ -43,7 +43,12 @@
           :value="value"
         />
 
-        <default-value-input :value="value" :is-new="isNew" />
+        <default-value-input
+          v-if="value.required"
+          :value="value"
+          :is-new="isNew"
+          :v="v$"
+        />
 
         <wt-switcher
           :model-value="value.required"
@@ -116,6 +121,15 @@ const updateValue = (newValue) => {
   Object.assign(value.value, deepCopy(newValue));
 };
 
+const requiredIf = (conditionFn) =>
+  helpers.withMessage('This field is required', (value, vm) => {
+    // Only validate as required if conditionFn returns true
+    if (conditionFn(vm)) {
+      return required(value);
+    }
+    return true;
+  });
+
 const v$ = useVuelidate(
   computed(() => ({
     value: {
@@ -123,6 +137,9 @@ const v$ = useVuelidate(
       id: {
         required,
         checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
+      },
+      default: {
+        required: requiredIf((vm) => vm.value.required === true),
       },
     },
   })),

@@ -7,11 +7,16 @@ export interface CustomLookupField {
   required: boolean;
   lookup: null | CustomLookupLookup;
   list: null;
-  default: null | string | CustomLookupLookup;
+  default: null | string | CustomLookupValue;
   _dirty: boolean;
 }
 
 export interface CustomLookupLookup {
   path: string;
+  name: string;
+}
+
+export interface CustomLookupValue {
+  id: string;
   name: string;
 }

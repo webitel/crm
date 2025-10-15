@@ -1,7 +1,7 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -125,8 +125,8 @@ export default {
       validFrom: 'Có hiệu lực từ',
       validTo: 'Có hiệu lực đến',
       error: {
-        duplicateConditionName: 'Điều kiện với tên này đã tồn tại'
-      }
+        duplicateConditionName: 'Điều kiện với tên này đã tồn tại',
+      },
     },
 
     sources: {
@@ -198,6 +198,7 @@ export default {
       columns: 'Cột',
       addColumn: 'Thêm cột',
       editColumn: 'Sửa cột',
+      defaultValue: 'Giá trị mặc định',
       confirmDeleteColumn:
         'Sau khi xóa cột và lưu, tất cả dữ liệu đã nhập trong trường tương ứng cũng sẽ bị xóa.',
       controlPermissions: 'Kiểm soát quyền',

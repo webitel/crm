@@ -1,7 +1,7 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -125,8 +125,8 @@ export default {
       validFrom: 'Válido desde',
       validTo: 'Válido hasta',
       error: {
-        duplicateConditionName: 'Ya existe una condición con este nombre'
-      }
+        duplicateConditionName: 'Ya existe una condición con este nombre',
+      },
     },
 
     sources: {
@@ -198,6 +198,7 @@ export default {
       columns: 'Columnas',
       addColumn: 'Agregar columna',
       editColumn: 'Editar columna',
+      defaultValue: 'Valor predeterminado',
       confirmDeleteColumn:
         'Después de eliminar la columna y guardar, todos los datos ingresados en el campo correspondiente también se eliminarán.',
       controlPermissions: 'Controlar permisos',
