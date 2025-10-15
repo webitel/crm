@@ -72,8 +72,10 @@
             :row-class="rowClass"
             fixed-actions
             sortable
+            row-expander
             resizable-columns
             reorderable-columns
+            :row-expander-disabled="isRowExpandedDisabled"
             @column-resize="columnResize"
             @column-reorder="columnReorder"
             @sort="updateSort"
@@ -184,6 +186,11 @@
                 :value="getCustomValues(item, header.field)"
               />
             </template>
+            <template #expansion="{ item }">
+                <cases-details-table
+                  :item="item"
+                />
+            </template>
             <template #actions="{ item }">
               <wt-icon-action
                 :disabled="!hasUpdateAccess"
@@ -224,6 +231,7 @@ import {
   snakeToCamel,
 } from '@webitel/api-services/utils';
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import { WtTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { EmptyCause } from "@webitel/ui-sdk/enums/EmptyCause/EmptyCause";
@@ -246,6 +254,7 @@ import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
+import CasesDetailsTable from './cases-details-table.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
 
@@ -456,6 +465,11 @@ const syncMissingCustomHeaders = (newHeaders) => {
 
 const rowClass = (item) => {
   if(item.statusCondition?.final) return 'row-success';
+}
+
+// Disable row expansion if neither 'comments' nor 'description' exist in the row data
+const isRowExpandedDisabled = (row) => {
+  return !['comments', 'description'].some(key => Object.hasOwn(row || {}, key));
 }
 
 // Initialize headers before table store

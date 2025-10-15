@@ -1,6 +1,4 @@
-import {
-  generatePermissionsApi,
-} from '@webitel/api-services/api';
+import { generatePermissionsApi } from '@webitel/api-services/api';
 import {
   getDefaultGetListResponse,
   getDefaultGetParams,
@@ -130,7 +128,7 @@ const getCasesList = async (params) => {
       q,
       ids,
       sort,
-      ['custom', 'priority', ...fields],
+      ['custom', 'priority', 'description', 'comments', ...fields],
       stringifyCaseFilters(filters),
       options,
     );
