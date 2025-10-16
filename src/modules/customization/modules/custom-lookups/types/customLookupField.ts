@@ -14,6 +14,8 @@ export interface CustomLookupField {
 export interface CustomLookupLookup {
   path: string;
   name: string;
+  primary: string;
+  display: string;
 }
 
 export interface CustomLookupValue {

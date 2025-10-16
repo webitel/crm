@@ -53,7 +53,8 @@
         <wt-switcher
           :model-value="value.required"
           :label="$t('reusable.required')"
-          @update:model-value="value.required = $event"
+          :v="v$"
+          @update:model-value="changeRequired($event)"
         ></wt-switcher>
       </div>
     </template>
@@ -78,7 +79,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import deepCopy from 'deep-copy';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick,ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import DefaultValueInput from './default-value-input.vue';
@@ -121,15 +122,6 @@ const updateValue = (newValue) => {
   Object.assign(value.value, deepCopy(newValue));
 };
 
-const requiredIf = (conditionFn) =>
-  helpers.withMessage('This field is required', (value, vm) => {
-    // Only validate as required if conditionFn returns true
-    if (conditionFn(vm)) {
-      return required(value);
-    }
-    return true;
-  });
-
 const v$ = useVuelidate(
   computed(() => ({
     value: {
@@ -138,9 +130,9 @@ const v$ = useVuelidate(
         required,
         checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
       },
-      default: {
-        required: requiredIf((vm) => vm.value.required === true),
-      },
+      default: value.value.required ? {
+        required,
+      } : {},
     },
   })),
   { value },
@@ -151,6 +143,14 @@ v$.value.$touch();
 
 const changeDirty = (dirty) => {
   value.value._dirty = dirty;
+};
+
+const changeRequired = (event) => {
+  value.value.required = event;
+
+  nextTick(() => {
+    v$.value.$touch();
+  });
 };
 
 const disabledSave = computed(() => v$.value?.$invalid || !value.value._dirty);
