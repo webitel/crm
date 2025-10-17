@@ -1,7 +1,7 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -125,8 +125,8 @@ export default {
       validFrom: 'Дійсний з',
       validTo: 'Дійсний до',
       error: {
-        duplicateConditionName: 'Умова з такою назвою вже існує'
-      }
+        duplicateConditionName: 'Умова з такою назвою вже існує',
+      },
     },
 
     sources: {
@@ -199,6 +199,7 @@ export default {
       columns: 'Колонки',
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
+      defaultValue: 'Значення за замовчуванням',
       confirmDeleteColumn:
         'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
       controlPermissions: 'Контролювати права доступу',

@@ -1,7 +1,7 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -125,8 +125,8 @@ export default {
       validFrom: 'Valid de la',
       validTo: 'Valid până la',
       error: {
-        duplicateConditionName: 'O condiție cu acest nume există deja'
-      }
+        duplicateConditionName: 'O condiție cu acest nume există deja',
+      },
     },
 
     sources: {
@@ -198,6 +198,7 @@ export default {
       columns: 'Coloane',
       addColumn: 'Adaugă coloană',
       editColumn: 'Editează coloană',
+      defaultValue: 'Valoare implicită',
       confirmDeleteColumn:
         'După ștergerea coloanei și salvare, toate datele introduse în câmpul corespunzător vor fi șterse de asemenea.',
       controlPermissions: 'Control permisiuni',
