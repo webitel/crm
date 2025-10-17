@@ -72,10 +72,10 @@
             :row-class="rowClass"
             fixed-actions
             sortable
-            row-expander
+            row-expansion
             resizable-columns
             reorderable-columns
-            :row-expander-disabled="isRowExpandedDisabled"
+            :row-expansion-disabled="isRowExpansionDisabled"
             @column-resize="columnResize"
             @column-reorder="columnReorder"
             @sort="updateSort"
@@ -187,7 +187,7 @@
               />
             </template>
             <template #expansion="{ item }">
-                <cases-details-table
+                <case-details-table
                   :item="item"
                 />
             </template>
@@ -254,7 +254,7 @@ import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
-import CasesDetailsTable from './cases-details-table.vue';
+import CaseDetailsTable from './case-details-table.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
 
@@ -468,7 +468,7 @@ const rowClass = (item) => {
 }
 
 // Disable row expansion if neither 'comments' nor 'description' exist in the row data
-const isRowExpandedDisabled = (row) => {
+const isRowExpansionDisabled = (row) => {
   return !['comments', 'description'].some(key => Object.hasOwn(row || {}, key));
 }
 
