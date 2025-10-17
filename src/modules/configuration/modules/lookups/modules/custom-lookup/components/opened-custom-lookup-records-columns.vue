@@ -25,7 +25,7 @@ import { useStore } from 'vuex';
 
 import {
   FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
+} from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
 
 const props = defineProps({

@@ -1,32 +1,32 @@
 <template>
   <wt-select
-    v-if="value.kind === FieldType.Select || value.kind === FieldType.Multiselect"
-    :key="value.lookup?.path + value.kind"
+    v-if="displaySelect"
+    :key="lookup?.path + value.kind"
     :value="value.default"
     :options="options"
     :label="t('customization.customLookups.defaultValue')"
     required
     :v="v.value.default"
-    :track-by="value.lookup?.primary || 'id'"
+    :track-by="lookup?.primary || 'id'"
     :search-method="loadLookupList"
     :multiple="multiple"
     @input="selectValue($event)"
   />
   <wt-input
-    v-else-if="value.kind !== FieldType.Boolean"
-    :key="value.kind"
+    v-else-if="displayInput"
+    :key="kind"
     :label="t('customization.customLookups.defaultValue')"
     :value="value.default"
     required
     :v="v.value.default"
-    :type="value.kind === FieldType.Number ? 'number' : 'string'"
+    :type="inputType"
     @input="value.default = $event"
   />
 </template>
 
 <script setup lang="ts">
 import deepCopy from 'deep-copy';
-import { computed, defineProps, ref, watch } from 'vue';
+import { computed, defineProps, ref, toRefs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import CustomLookupApi
@@ -43,9 +43,14 @@ const props = defineProps<{
   v: any
 }>();
 
+const { lookup, kind } = toRefs(props.value);
+
 const { t } = useI18n();
 const options = ref([]);
-const multiple = computed(() => props.value.kind === FieldType.Multiselect);
+const displaySelect = computed(() => kind.value === FieldType.Select || kind.value === FieldType.Multiselect);
+const displayInput = computed(() => kind.value !== FieldType.Boolean);
+const multiple = computed(() => kind.value === FieldType.Multiselect);
+const inputType = computed(() => kind.value === FieldType.Number ? 'number' : 'string');
 
 const getLoadLookupList = (lookup: CustomLookupLookup) => {
   return (params) => CustomLookupApi.getLookup({
@@ -55,7 +60,7 @@ const getLoadLookupList = (lookup: CustomLookupLookup) => {
     primary: lookup?.primary || 'id',
   });
 };
-const loadLookupList = ref(getLoadLookupList(props.value.lookup));
+const loadLookupList = ref(getLoadLookupList(lookup.value));
 
 const selectValue = (event: CustomLookupValue) => {
   if (!Object.keys(event).length) {
@@ -65,7 +70,7 @@ const selectValue = (event: CustomLookupValue) => {
   props.value.default = deepCopy(event);
 };
 
-watch(() => props.value.lookup, (newValue) => {
+watch(() => lookup.value, (newValue) => {
   props.value.default = null;
   loadLookupList.value = getLoadLookupList(newValue);
 });
