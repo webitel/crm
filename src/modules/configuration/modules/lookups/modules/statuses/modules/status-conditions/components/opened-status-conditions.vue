@@ -56,64 +56,63 @@
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="dataList.length && !isLoading">
-        <wt-table
-          :data="dataList"
-          :headers="headers"
-          :selected="selected"
-          sortable
-          @sort="sort"
-          @update:selected="setSelected"
-        >
-          <template #name="{ item }">
-            {{ item.name }}
-          </template>
+      <wt-table
+        v-if="dataList.length && !isLoading"
+        :data="dataList"
+        :headers="headers"
+        :selected="selected"
+        sortable
+        @sort="sort"
+        @update:selected="setSelected"
+      >
+        <template #name="{ item }">
+          {{ item.name }}
+        </template>
 
-          <template #description="{ item }">
-            {{ item.description }}
-          </template>
+        <template #description="{ item }">
+          {{ item.description }}
+        </template>
 
-          <template #initial="{ item, index }">
-            <wt-switcher
-              :disabled="!hasUpdateAccess"
-              :model-value="item.initial"
-              @update:model-value="changeInitialStatus({ item, index, value: $event })"
-            />
-          </template>
+        <template #initial="{ item, index }">
+          <wt-switcher
+            :disabled="!hasUpdateAccess"
+            :model-value="item.initial"
+            @update:model-value="changeInitialStatus({ item, index, value: $event })"
+          />
+        </template>
 
-          <template #final="{ item, index }">
-            <wt-switcher
-              :disabled="!hasUpdateAccess"
-              :model-value="item.final"
-              @update:model-value="changeFinalStatus({ item, index, value: $event })"
-            />
-          </template>
+        <template #final="{ item, index }">
+          <wt-switcher
+            :disabled="!hasUpdateAccess"
+            :model-value="item.final"
+            @update:model-value="changeFinalStatus({ item, index, value: $event })"
+          />
+        </template>
 
-          <template #actions="{ item }">
-            <wt-icon-action
-              action="edit"
-              :disabled="!hasUpdateAccess"
-              @click="
-                router.push({
-                  ...route,
-                  params: { statusConditionId: item.id },
-                })
-              "
-            />
+        <template #actions="{ item }">
+          <wt-icon-action
+            action="edit"
+            :disabled="!hasUpdateAccess"
+            @click="
+              router.push({
+                ...route,
+                params: { statusConditionId: item.id },
+              })
+            "
+          />
 
-            <wt-icon-action
-              action="delete"
-              :disabled="!hasDeleteAccess"
-              @click="
-                askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })
-              "
-            />
-          </template>
-        </wt-table>
-      </div>
+          <wt-icon-action
+            action="delete"
+            :disabled="!hasDeleteAccess"
+            @click="
+              askDeleteConfirmation({
+                deleted: [item],
+                callback: () => deleteData(item),
+              })
+            "
+          />
+        </template>
+      </wt-table>
 
       <filter-pagination
         :namespace="filtersNamespace"

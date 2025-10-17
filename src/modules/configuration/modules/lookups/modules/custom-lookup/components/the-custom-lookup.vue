@@ -59,44 +59,44 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
+          <wt-table
+            v-if="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template
+              v-for="header in headers"
+              :key="header.value"
+              #[header.value]="{ item }"
             >
-              <template
-                v-for="header in headers"
-                :key="header.value"
-                #[header.value]="{ item }"
-              >
-                <display-dynamic-field
-                  :field="header"
-                  :value="item"
-                />
-              </template>
-              <template #actions="{ item }">
-                <wt-icon-action
-                  action="edit"
-                  :disabled="!hasEditAccess"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  action="delete"
-                  :disabled="!hasDeleteAccess"
-                  @click="
-                    askDeleteConfirmation({
-                      deleted: [item],
-                      callback: () => deleteData(item),
-                    })
-                  "
-                />
-              </template>
-            </wt-table>
-          </div>
+              <display-dynamic-field
+                :field="header"
+                :value="item"
+              />
+            </template>
+            <template #actions="{ item }">
+              <wt-icon-action
+                action="edit"
+                :disabled="!hasEditAccess"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                action="delete"
+                :disabled="!hasDeleteAccess"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })
+                "
+              />
+            </template>
+          </wt-table>
+
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"

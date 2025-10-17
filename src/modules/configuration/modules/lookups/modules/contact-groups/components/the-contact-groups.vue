@@ -82,67 +82,67 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
-            >
-              <template #name="{ item }">
-                <wt-item-link
-                  :link="{ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: item.id } }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
-              </template>
+          <wt-table
+            v-if="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                :link="{ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: item.id } }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
 
-              <template #description="{ item }">
-                {{ item.description }}
-              </template>
+            <template #description="{ item }">
+              {{ item.description }}
+            </template>
 
-              <template #type="{ item }">
-                {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
-              </template>
+            <template #type="{ item }">
+              {{ t(`lookups.contactGroups.types.${item.type.toUpperCase()}`) }}
+            </template>
 
-              <template #contactsSize="{ item }">
-                {{ item.contactsSize }}
-              </template>
+            <template #contactsSize="{ item }">
+              {{ item.contactsSize }}
+            </template>
 
-              <template #state="{ item, index }">
-                <wt-switcher
-                  :disabled="!hasUpdateAccess"
-                  :model-value="item.enabled"
-                  @update:model-value="
-                    patchProperty({
-                      item,
-                      index,
-                      prop: 'enabled',
-                      value: $event,
-                    })
-                  "
-                />
-              </template>
+            <template #state="{ item, index }">
+              <wt-switcher
+                :disabled="!hasUpdateAccess"
+                :model-value="item.enabled"
+                @update:model-value="
+                  patchProperty({
+                    item,
+                    index,
+                    prop: 'enabled',
+                    value: $event,
+                  })
+                "
+              />
+            </template>
 
-              <template #actions="{ item }">
-                <wt-icon-action
-                  :disabled="!hasUpdateAccess"
-                  action="edit"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  :disabled="!hasDeleteAccess"
-                  action="delete"
-                  @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
-                />
-              </template>
-            </wt-table>
-          </div>
+            <template #actions="{ item }">
+              <wt-icon-action
+                :disabled="!hasUpdateAccess"
+                action="edit"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                :disabled="!hasDeleteAccess"
+                action="delete"
+                @click="askDeleteConfirmation({
+              deleted: [item],
+              callback: () => deleteData(item),
+            })"
+              />
+            </template>
+          </wt-table>
+
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"
