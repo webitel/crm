@@ -1,7 +1,7 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -124,8 +124,8 @@ export default {
       validFrom: 'Amal qilish muddati',
       validTo: 'Tugash muddati',
       error: {
-        duplicateConditionName: 'Bunday nomli shart allaqachon mavjud'
-      }
+        duplicateConditionName: 'Bunday nomli shart allaqachon mavjud',
+      },
     },
     sources: {
       sources: 'Murojaat manbasi | Murojaat manbalari',
@@ -191,6 +191,7 @@ export default {
       columns: 'Ustunlar',
       addColumn: "Ustun qo'shish",
       editColumn: 'Ustunni tahrirlash',
+      defaultValue: 'Standart qiymat',
       confirmDeleteColumn:
         "Ustunni o'chirgandan va saqlagandan so'ng, tegishli maydondagi barcha kiritilgan ma'lumotlar ham o'chiriladi.",
       controlPermissions: 'Huquqlarni boshqarish',

@@ -1,7 +1,7 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  ContactsGroupType,
 } from '@webitel/api-services/gen/models';
 import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
@@ -125,8 +125,8 @@ export default {
       validFrom: 'Бастап жарамды',
       validTo: 'Дейін жарамды',
       error: {
-        duplicateConditionName: 'Осындай атауы бар шарт қазірдің өзінде бар'
-      }
+        duplicateConditionName: 'Осындай атауы бар шарт қазірдің өзінде бар',
+      },
     },
 
     sources: {
@@ -192,6 +192,7 @@ export default {
       columns: 'Бағандар',
       addColumn: 'Баған қосу',
       editColumn: 'Бағанды өңдеу',
+      defaultValue: 'Әдепкі мән',
       confirmDeleteColumn:
         'Бағанды жойғаннан және сақтағаннан кейін, тиісті өрістегі барлық енгізілген деректер де жойылады.',
       controlPermissions: 'Рұқсаттарды басқару',
