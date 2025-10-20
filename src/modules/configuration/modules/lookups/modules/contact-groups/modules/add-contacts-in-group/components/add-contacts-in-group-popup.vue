@@ -27,6 +27,8 @@
             :headers="headers"
             :selected="selected"
             sortable
+            :lazy="true"
+            :on-loading="appendToDataList"
             @sort="updateSort"
             @update:selected="updateSelected"
           >
@@ -65,11 +67,6 @@
               </div>
             </template>
           </wt-table>
-          <wt-intersection-observer
-            :canLoadMore="!isLoading || next"
-            :loading="isLoading"
-            @next="appendToDataList"
-          />
         </div>
       </div>
     </template>
@@ -164,7 +161,6 @@ const closePopup = () => {
   &__scroll-wrapper {
     @extend %wt-scrollbar;
     height: 440px;
-    overflow: auto;
   }
 
   &__content {
