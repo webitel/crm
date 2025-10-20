@@ -36,44 +36,44 @@
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="dataList.length && !isLoading">
-        <wt-table
-          :data="dataList"
-          :headers="headers"
-          :selectable="false"
-          :row-reorder="hasUpdateAccess"
-          @reorder:row="handleReorder"
-        >
-          <template #expression="{ item }">
-            {{ item.expression }}
-          </template>
-          <template #group="{ item }">
-            {{ item.group.name }}
-          </template>
-          <template #assignee="{ item }">
-            {{ item.assignee.name }}
-          </template>
-          <template #actions="{ item }">
-            <wt-icon-action
-              :disabled="!hasUpdateAccess"
-              action="edit"
-              @click="
-                router.push({ ...route, params: { conditionId: item.id } })
-              "
-            />
-            <wt-icon-action
-              :disabled="!hasDeleteAccess"
-              action="delete"
-              @click="
-                askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })
-              "
-            />
-          </template>
-        </wt-table>
-      </div>
+      <wt-table
+        v-if="dataList.length && !isLoading"
+        :data="dataList"
+        :headers="headers"
+        :selectable="false"
+        :row-reorder="hasUpdateAccess"
+        @reorder:row="handleReorder"
+      >
+        <template #expression="{ item }">
+          {{ item.expression }}
+        </template>
+        <template #group="{ item }">
+          {{ item.group.name }}
+        </template>
+        <template #assignee="{ item }">
+          {{ item.assignee.name }}
+        </template>
+        <template #actions="{ item }">
+          <wt-icon-action
+            :disabled="!hasUpdateAccess"
+            action="edit"
+            @click="
+              router.push({ ...route, params: { conditionId: item.id } })
+            "
+          />
+          <wt-icon-action
+            :disabled="!hasDeleteAccess"
+            action="delete"
+            @click="
+              askDeleteConfirmation({
+                deleted: [item],
+                callback: () => deleteData(item),
+              })
+            "
+          />
+        </template>
+      </wt-table>
+
       <filter-pagination
         :namespace="filtersNamespace"
         :next="isNext"

@@ -59,53 +59,52 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
-            >
-              <template #name="{ item }">
-                <wt-item-link
-                  :link="{
-                    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                    params: { id: item.repo },
-                  }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
-              </template>
-              <template #about="{ item }">
-                {{ item.about }}
-              </template>
-              <template #createdAt="{ item }">
-                {{ prettifyDate(item.createdAt) }}
-              </template>
-              <template #createdBy="{ item }">
-                {{ item.createdBy?.name }}
-              </template>
-              <template #actions="{ item }">
-                <wt-icon-action
-                  action="edit"
-                  :disabled="!hasUpdateAccess"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  action="delete"
-                  :disabled="!hasDeleteAccess"
-                  @click="
-                    askDeleteConfirmation({
-                      deleted: [item],
-                      callback: () => deleteData(item),
-                    })
-                  "
-                />
-              </template>
-            </wt-table>
-          </div>
+          <wt-table
+            v-if="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                :link="{
+                  name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+                  params: { id: item.repo },
+                }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
+            <template #about="{ item }">
+              {{ item.about }}
+            </template>
+            <template #createdAt="{ item }">
+              {{ prettifyDate(item.createdAt) }}
+            </template>
+            <template #createdBy="{ item }">
+              {{ item.createdBy?.name }}
+            </template>
+            <template #actions="{ item }">
+              <wt-icon-action
+                action="edit"
+                :disabled="!hasUpdateAccess"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                action="delete"
+                :disabled="!hasDeleteAccess"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })
+                "
+              />
+            </template>
+          </wt-table>
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"

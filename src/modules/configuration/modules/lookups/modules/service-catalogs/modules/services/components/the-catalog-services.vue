@@ -58,80 +58,80 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
-            >
-              <template #name="{ item }">
-                <wt-item-link
-                  class="the-catalog-service__service-name"
-                  :link="{
-                    name: `${CrmSections.SERVICE_CATALOGS}-services`,
-                    params: {
-                      catalogId: route.params?.id,
-                      rootId: item.id,
-                    },
-                  }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
+          <wt-table
+            v-if="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                class="the-catalog-service__service-name"
+                :link="{
+                  name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                  params: {
+                    catalogId: route.params?.id,
+                    rootId: item.id,
+                  },
+                }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
+            <template #description="{ item }">
+              <p class="the-catalog-service__service-description">
+                {{ item.description }}
+              </p>
+            </template>
+            <template #group="{ item }">
+              {{ displayText(item.group?.name) }}
+            </template>
+            <template #assignee="{ item }">
+              <wt-item-link
+                v-if="item.assignee?.id"
+                class="the-catalog-service__service-assignee"
+                :link="{
+                  name: `${CrmSections.CONTACTS}-card`,
+                  params: { id: item.assignee.id },
+                }"
+              >
+                {{ item.assignee.name }}
+              </wt-item-link>
+              <template v-else>
+                {{ displayText(item.assignee?.name) }}
               </template>
-              <template #description="{ item }">
-                <p class="the-catalog-service__service-description">
-                  {{ item.description }}
-                </p>
-              </template>
-              <template #group="{ item }">
-                {{ displayText(item.group?.name) }}
-              </template>
-              <template #assignee="{ item }">
-                <wt-item-link
-                  v-if="item.assignee?.id"
-                  class="the-catalog-service__service-assignee"
-                  :link="{
-                    name: `${CrmSections.CONTACTS}-card`,
-                    params: { id: item.assignee.id },
-                  }"
-                >
-                  {{ item.assignee.name }}
-                </wt-item-link>
-                <template v-else>
-                  {{ displayText(item.assignee?.name) }}
-                </template>
-              </template>
-              <template #state="{ item, index }">
-                <wt-switcher
-                  :model-value="item.state"
-                  :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
-                  @update:model-value="
-                    patchProperty({ index, prop: 'state', value: $event })
-                  "
-                />
-              </template>
-              <template #actions="{ item }">
-                <wt-icon-action
-                  :disabled="!hasUpdateAccess"
-                  action="edit"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  :disabled="!hasDeleteAccess"
-                  action="delete"
-                  @click="
-                    askDeleteConfirmation({
-                      deleted: [item],
-                      callback: () => deleteData(item),
-                    })
-                  "
-                />
-              </template>
-            </wt-table>
-          </div>
+            </template>
+            <template #state="{ item, index }">
+              <wt-switcher
+                :model-value="item.state"
+                :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
+                @update:model-value="
+                  patchProperty({ index, prop: 'state', value: $event })
+                "
+              />
+            </template>
+            <template #actions="{ item }">
+              <wt-icon-action
+                :disabled="!hasUpdateAccess"
+                action="edit"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                :disabled="!hasDeleteAccess"
+                action="delete"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })
+                "
+              />
+            </template>
+          </wt-table>
+
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"

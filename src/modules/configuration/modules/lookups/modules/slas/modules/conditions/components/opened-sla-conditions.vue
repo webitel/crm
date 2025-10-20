@@ -52,52 +52,52 @@
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="dataList.length && !isLoading">
-        <wt-table
-          :data="dataList"
-          :headers="headers"
-          :selected="selected"
-          sortable
-          @sort="updateSort"
-          @update:selected="updateSelected"
-        >
-          <template #name="{ item }">
-            {{ item.name }}
-          </template>
-          <template #priorities="{ item }">
-            <wt-display-chip-items
-              v-if="item.priorities?.length"
-              :items="item.priorities"
-              class="opened-sla-conditions__priorities"
-            />
-          </template>
-          <template #reactionTime="{ item }">
-            {{ ConvertDurationWithDays(item.reactionTime) }}
-          </template>
-          <template #resolutionTime="{ item }">
-            {{ ConvertDurationWithDays(item.resolutionTime) }}
-          </template>
-          <template #actions="{ item }">
-            <wt-icon-action
-              :disabled="!hasUpdateAccess"
-              action="edit"
-              @click="
-                router.push({ ...route, params: { conditionId: item.id } })
-              "
-            />
-            <wt-icon-action
-              :disabled="!hasDeleteAccess"
-              action="delete"
-              @click="
-                askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteEls(item),
-                })
-              "
-            />
-          </template>
-        </wt-table>
-      </div>
+      <wt-table
+        v-if="dataList.length && !isLoading"
+        :data="dataList"
+        :headers="headers"
+        :selected="selected"
+        sortable
+        @sort="updateSort"
+        @update:selected="updateSelected"
+      >
+        <template #name="{ item }">
+          {{ item.name }}
+        </template>
+        <template #priorities="{ item }">
+          <wt-display-chip-items
+            v-if="item.priorities?.length"
+            :items="item.priorities"
+            class="opened-sla-conditions__priorities"
+          />
+        </template>
+        <template #reactionTime="{ item }">
+          {{ ConvertDurationWithDays(item.reactionTime) }}
+        </template>
+        <template #resolutionTime="{ item }">
+          {{ ConvertDurationWithDays(item.resolutionTime) }}
+        </template>
+        <template #actions="{ item }">
+          <wt-icon-action
+            :disabled="!hasUpdateAccess"
+            action="edit"
+            @click="
+              router.push({ ...route, params: { conditionId: item.id } })
+            "
+          />
+          <wt-icon-action
+            :disabled="!hasDeleteAccess"
+            action="delete"
+            @click="
+              askDeleteConfirmation({
+                deleted: [item],
+                callback: () => deleteEls(item),
+              })
+            "
+          />
+        </template>
+      </wt-table>
+
       <wt-pagination
         :next="next"
         :prev="page > 1"
