@@ -110,3 +110,13 @@ const tabs = computed(() => {
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 </script>
+
+<style lang="scss" scoped>
+@use '@webitel/styleguide/scroll' as *;
+
+.opened-card-tabs {
+  @extend %wt-scrollbar;
+  height: 100%;
+  overflow: auto;
+}
+</style>
