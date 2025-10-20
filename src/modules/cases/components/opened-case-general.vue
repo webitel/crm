@@ -28,9 +28,13 @@ const props = defineProps({
 
 </script>
 <style lang="scss" scoped>
+@use '@webitel/styleguide/scroll' as *;
+
 .opened-case-general {
+  @extend %wt-scrollbar;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+  overflow: auto;
 }
 </style>
