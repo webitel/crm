@@ -61,7 +61,7 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading" class="the-service-catalogs__table">
+          <div v-show="dataList.length && !isLoading" class="the-service-catalogs__table">
             <wt-tree-table
               :headers="shownHeaders"
               :data="dataList"
