@@ -53,7 +53,7 @@
       <wt-loader v-show="isLoading" />
 
       <wt-table
-        v-if="dataList.length && !isLoading"
+        v-show="dataList.length && !isLoading"
         :data="dataList"
         :headers="headers"
         :selected="selected"
