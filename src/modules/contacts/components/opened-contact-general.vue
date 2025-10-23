@@ -1,5 +1,10 @@
 <template>
   <article class="opened-contact-general">
+    <contact-send-message
+      v-if="isOpenChat"
+      @close="isOpenChat = false"
+    />
+
     <wt-context-menu
       v-if="!isReadOnly"
       class="opened-contact-general-options"
@@ -34,6 +39,17 @@
       />
 
       {{ name }}
+    </div>
+
+    <div>
+      <wt-rounded-action
+        icon="chat--filled"
+        color="chat"
+        rounded
+        @click="isOpenChat = true"
+      >
+
+      </wt-rounded-action>
     </div>
 
     <wt-divider />
@@ -102,8 +118,10 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+import ContactSendMessage from './contact-send-message.vue';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
@@ -142,6 +160,7 @@ const props = defineProps({
 const emit = defineEmits(['edit', 'delete']);
 
 const { t } = useI18n();
+const isOpenChat = ref(false);
 
 const actionOptions = computed(() => {
   const editAction = {

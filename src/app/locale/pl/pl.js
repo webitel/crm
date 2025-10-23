@@ -3,7 +3,7 @@ import {
   WebitelCasesRelationType,
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Dostawca ',
         username: 'Nazwa użytkownika',
         dummy: 'Nie ma jeszcze opcji wiadomości',
+        sendMessage: 'Хабар жіберу',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Bot Telegram',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Aplikacja Telegram',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Czat internetowy',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Niestandardowa bramka czatu',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
