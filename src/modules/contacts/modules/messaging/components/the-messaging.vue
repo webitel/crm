@@ -10,6 +10,7 @@
     <contact-send-message
       v-if="isOpenChatPopup"
       :item="selectItem"
+      :providers="availableProviders"
       @close="closeChat" />
 
     <wt-loader v-show="isLoading" />
@@ -47,7 +48,7 @@
         </template>
         <template #actions="{ item }">
           <wt-icon-action
-            :disabled="!access.hasRbacEditAccess || isReadOnly"
+            :disabled="isDisabledChatAction(item)"
             action="chat"
             @click="openChat(item)"
           />
@@ -68,6 +69,7 @@
 </template>
 
 <script setup>
+import { ChatGatewayProvider } from '@webitel/api-services/enums';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -136,6 +138,13 @@ const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 const isOpenChatPopup = ref(false);
 const selectItem = ref(null);
 
+const availableProviders = [
+  ChatGatewayProvider.TELEGRAM_BOT,
+  ChatGatewayProvider.VIBER,
+  ChatGatewayProvider.MESSENGER,
+  ChatGatewayProvider.PORTAL,
+];
+
 const openChat = (item) => {
   isOpenChatPopup.value = true;
   selectItem.value = item
@@ -144,6 +153,10 @@ const openChat = (item) => {
 const closeChat = () => {
   isOpenChatPopup.value = false;
   selectItem.value = null;
+};
+
+const isDisabledChatAction = (item) => {
+  return !availableProviders.includes(item.protocol) && (!access.hasRbacEditAccess || isReadOnly);
 };
 </script>
 

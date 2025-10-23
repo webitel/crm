@@ -35,7 +35,7 @@
 
       <wt-textarea
         :value="draft.message"
-        :placeholder="$t('objects.chat.draftPlaceholder')"
+        :placeholder="t('objects.chat.draftPlaceholder')"
         @enter="sendMessage"
         @input="draft.message = $event"
       />
@@ -60,20 +60,12 @@
 
 <script setup lang="ts">
 import { AgentsAPI, ChatGatewaysAPI, MessagesServiceAPI } from '@webitel/api-services/api';
-import { ChatGatewayProvider } from '@webitel/api-services/enums';
 import { WtChatEmoji, WtSelect } from '@webitel/ui-sdk/components';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserinfoStore } from '../../../../src/modules/userinfo/store/userinfoStore';
-
-const availableProviders = [
-  ChatGatewayProvider.TELEGRAM_BOT,
-  ChatGatewayProvider.VIBER,
-  ChatGatewayProvider.MESSENGER,
-  ChatGatewayProvider.PORTAL,
-];
 
 const { t } = useI18n();
 
@@ -95,6 +87,7 @@ interface Item {
 
 const props = defineProps<{
   item?: Item;
+  providers: [string];
 }>();
 
 const emit = defineEmits(['close']);
@@ -102,7 +95,7 @@ const emit = defineEmits(['close']);
 const generateNewDraft = () => {
   const provider = props.item?.protocol;
 
-  const gateway = availableProviders.includes(provider)
+  const gateway = props.providers.includes(provider)
     ? { provider, ...props.item?.app }
     : {};
 
@@ -125,24 +118,29 @@ function getChatGateways(params) {
   return ChatGatewaysAPI.getLookup({
     ...params,
     fields: ['provider', 'id', 'name'],
-    provider: availableProviders });
+    provider: props.providers });
 }
 
 const sendMessage = async () => {
-  await MessagesServiceAPI.patch({
-    peers: [{
-      via: draft.value.gateway.id,
-      id: props.item?.externalId,
-      type: draft.value.gateway.provider,
-    }],
-    variables: {
-      agentId: draft.value.agentId,
-    },
-    message: {
-      text: draft.value.message,
-    }
-  });
-  emit('close');
+  try {
+    await MessagesServiceAPI.patch({
+      peers: [{
+        via: draft.value.gateway.id,
+        id: props.item?.externalId,
+        type: draft.value.gateway.provider,
+      }],
+      variables: {
+        agentId: draft.value.agentId,
+      },
+      message: {
+        text: draft.value.message,
+      }
+    });
+  } catch (e) {
+    throw new Error(e);
+  } finally {
+    emit('close');
+  }
 };
 
 const insertEmoji = (emoji) => {
