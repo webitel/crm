@@ -66,6 +66,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { ErrorRedirectMap } from '../../error-pages/enems/ErrorRedirectMap.enum.js';
 
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
@@ -87,7 +88,7 @@ const {
   setId,
   resetState,
   deleteItem,
-} = useCardStore(baseNamespace, { isRedirectOnLoadFail: true });
+} = useCardStore(baseNamespace, { errorRedirectMap: ErrorRedirectMap });
 
 provide(
   'access',

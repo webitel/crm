@@ -49,6 +49,7 @@ import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { ErrorRedirectMap } from '../../../../../../error-pages/enems/ErrorRedirectMap.enum.js';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -62,15 +63,13 @@ const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const isRedirectOnLoadFail = true
-
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
   resetState,
   ...restStore
-} = useCardStore(namespace, { isRedirectOnLoadFail });
+} = useCardStore(namespace, { errorRedirectMap: ErrorRedirectMap });
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -93,7 +92,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   id,
   itemInstance,
   resetState,
-  isRedirectOnLoadFail,
+  errorRedirectMap: ErrorRedirectMap,
 });
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);

@@ -72,6 +72,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import {
   useExtensionFields,
 } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+import { ErrorRedirectMap } from '../../error-pages/enems/ErrorRedirectMap.enum.js';
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
@@ -97,7 +98,6 @@ provide('editMode', editMode);
 provide('customFields', customFields);
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
-const isRedirectOnLoadFail = true
 
 const {
   namespace: cardNamespace,
@@ -111,7 +111,7 @@ const {
   resetState,
   setItemProp,
 } = useCardStore(namespace, {
-  isRedirectOnLoadFail,
+  errorRedirectMap: ErrorRedirectMap,
 }
 );
 
@@ -176,7 +176,7 @@ const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
   updateItem,
   setId,
   resetState,
-  isRedirectOnLoadFail,
+  errorRedirectMap: ErrorRedirectMap,
 
   invalid: computed(() => v$.value.$invalid),
 });
