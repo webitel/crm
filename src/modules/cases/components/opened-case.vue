@@ -97,6 +97,7 @@ provide('editMode', editMode);
 provide('customFields', customFields);
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
+const isRedirectOnLoadFail = true
 
 const {
   namespace: cardNamespace,
@@ -109,7 +110,10 @@ const {
   setId,
   resetState,
   setItemProp,
-} = useCardStore(namespace);
+} = useCardStore(namespace, {
+  isRedirectOnLoadFail,
+}
+);
 
 function requiredIfFinal(value, state, siblings) {
   if (!state.statusCondition?.final) {
@@ -172,6 +176,7 @@ const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
   updateItem,
   setId,
   resetState,
+  isRedirectOnLoadFail,
 
   invalid: computed(() => v$.value.$invalid),
 });

@@ -69,6 +69,8 @@ const router = useRouter();
 
 const { hasSaveActionAccess } = useUserAccessControl();
 
+const isRedirectOnLoadFail = true
+
 const {
   namespace: cardNamespace,
   id,
@@ -78,7 +80,7 @@ const {
   loadItem,
   setId,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { isRedirectOnLoadFail });
 
 const { isNew, pathName, saveText, initialize } = useCardComponent({
   ...restStore,
@@ -88,6 +90,7 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
   updateItem,
   loadItem,
   setId,
+  isRedirectOnLoadFail
 });
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);

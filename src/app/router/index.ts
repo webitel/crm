@@ -14,6 +14,7 @@ import contactViewRoute from '../../modules/contacts/router/contact-view';
 import startPageRoutes from '../../modules/start-page/router';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
+import NotFound from '../../modules/error-pages/components/the-not-found-component.vue'
 import { checkAppAccess } from './internals/guards';
 
 const routes: Array<RouteRecordRaw> = [
@@ -41,6 +42,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/access-denied',
     name: 'access-denied',
     component: AccessDenied,
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: NotFound,
   },
 ];
 

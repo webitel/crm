@@ -87,7 +87,7 @@ const {
   setId,
   resetState,
   deleteItem,
-} = useCardStore(baseNamespace);
+} = useCardStore(baseNamespace, { isRedirectOnLoadFail: true });
 
 provide(
   'access',

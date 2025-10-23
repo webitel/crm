@@ -62,13 +62,15 @@ const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
+const isRedirectOnLoadFail = true
+
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
   resetState,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { isRedirectOnLoadFail });
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -91,6 +93,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   id,
   itemInstance,
   resetState,
+  isRedirectOnLoadFail,
 });
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);

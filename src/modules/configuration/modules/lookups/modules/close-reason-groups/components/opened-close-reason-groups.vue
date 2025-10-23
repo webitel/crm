@@ -66,6 +66,7 @@ const namespace = 'configuration/lookups/closeReasonGroups';
 const { t } = useI18n();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const isRedirectOnLoadFail = true
 
 const {
   namespace: cardNamespace,
@@ -76,7 +77,7 @@ const {
   loadItem,
   setId,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { isRedirectOnLoadFail });
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
@@ -86,6 +87,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   updateItem,
   loadItem,
   setId,
+  isRedirectOnLoadFail,
 });
 
 const { close } = useClose(CrmSections.CLOSE_REASON_GROUPS);
