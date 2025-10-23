@@ -60,7 +60,7 @@
           <wt-loader v-show="isLoading" />
 
           <wt-table
-            v-if="dataList.length && !isLoading"
+            v-show="dataList.length && !isLoading"
             :data="dataList"
             :headers="headers"
             :selected="selected"
@@ -108,6 +108,7 @@
 </template>
 
 <script setup>
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
 import {
@@ -166,7 +167,7 @@ const loadDictionary = async () => {
           show: true,
           field: field.id,
           kind: field.kind,
-          sort: SortSymbols.NONE,
+          sort: field.kind === FieldType.Multiselect ? undefined : SortSymbols.NONE,
         })),
     });
   } catch (e) {
