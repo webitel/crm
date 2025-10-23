@@ -43,19 +43,20 @@
           :value="value"
         />
 
-        <default-value-input
-          v-if="value.required"
-          :value="value"
-          :is-new="isNew"
-          :v="v$"
-        />
+      <!--        TODO Hide this block to next version https://webitel.atlassian.net/browse/WTEL-6632?focusedCommentId=702270 -->
+      <!--        <default-value-input-->
+      <!--          v-if="value.required"-->
+      <!--          :value="value"-->
+      <!--          :is-new="isNew"-->
+      <!--          :v="v$"-->
+      <!--        />-->
 
-        <wt-switcher
-          :model-value="value.required"
-          :label="$t('reusable.required')"
-          :v="v$"
-          @update:model-value="changeRequired($event)"
-        ></wt-switcher>
+      <!--        <wt-switcher-->
+      <!--          :model-value="value.required"-->
+      <!--          :label="$t('reusable.required')"-->
+      <!--          :v="v$"-->
+      <!--          @update:model-value="changeRequired($event)"-->
+      <!--        ></wt-switcher>-->
       </div>
     </template>
     <template #actions>
