@@ -62,12 +62,10 @@
 import { AgentsAPI, ChatGatewaysAPI, MessagesServiceAPI } from '@webitel/api-services/api';
 import { WtChatEmoji, WtSelect } from '@webitel/ui-sdk/components';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserinfoStore } from '../../../../src/modules/userinfo/store/userinfoStore';
-
-const { t } = useI18n();
 
 interface Item {
   id: string;
@@ -91,6 +89,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['close']);
+const eventBus = inject('$eventBus');
+const { t } = useI18n();
 
 const generateNewDraft = () => {
   const provider = props.item?.protocol;
@@ -122,25 +122,23 @@ function getChatGateways(params) {
 }
 
 const sendMessage = async () => {
-  try {
-    await MessagesServiceAPI.patch({
-      peers: [{
-        via: draft.value.gateway.id,
-        id: props.item?.externalId,
-        type: draft.value.gateway.provider,
-      }],
-      variables: {
-        agentId: draft.value.agentId,
-      },
-      message: {
-        text: draft.value.message,
-      }
-    });
-  } catch (e) {
-    throw new Error(e);
-  } finally {
-    emit('close');
+  const response = await MessagesServiceAPI.patch({
+    peers: [{
+      via: draft.value.gateway.id,
+      id: props.item?.externalId,
+      type: draft.value.gateway.provider,
+    }],
+    variables: {
+      agentId: draft.value.agentId,
+    },
+    message: {
+      text: draft.value.message,
+    }
+  });
+  if(response.failure) {
+    eventBus.$emit('notification', { type: 'error', text: response.failure[0].error.message });
   }
+  emit('close');
 };
 
 const insertEmoji = (emoji) => {
