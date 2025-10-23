@@ -63,7 +63,7 @@ import { AgentsAPI, ChatGatewaysAPI, MessagesServiceAPI } from '@webitel/api-ser
 import { ChatGatewayProvider } from '@webitel/api-services/enums';
 import { WtChatEmoji, WtSelect } from '@webitel/ui-sdk/components';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserinfoStore } from '../../../../src/modules/userinfo/store/userinfoStore';
@@ -117,17 +117,12 @@ const draft = ref(generateNewDraft());
 const { userId } = useUserinfoStore();
 
 async function getAgentId (params) {
-  try {
-    const { items } = await AgentsAPI.getList({ ...params, userId });
-    draft.value.agentId = items[0]?.id;
-  } catch (e) {
-    console.error('Error fetching agent ID:', e);
-  }
+  const { items } = await AgentsAPI.getList({ ...params, userId });
+  draft.value.agentId = items[0]?.id;
 }
-getAgentId();
 
-async function getChatGateways(params) {
-  return await ChatGatewaysAPI.getLookup({
+function getChatGateways(params) {
+  return ChatGatewaysAPI.getLookup({
     ...params,
     fields: ['provider', 'id', 'name'],
     provider: availableProviders });
@@ -153,6 +148,8 @@ const sendMessage = async () => {
 const insertEmoji = (emoji) => {
   draft.value.message += emoji;
 };
+
+onMounted(async() => await getAgentId());
 </script>
 
 <style lang="scss" scoped>
