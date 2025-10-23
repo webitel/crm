@@ -72,7 +72,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import {
   useExtensionFields,
 } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
-import { ErrorRedirectMap } from '../../error-pages/enems/ErrorRedirectMap.enum.js';
+import { ErrorRedirectMap } from '../../error-pages/enems/ErrorRedirectMap.enum';
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';

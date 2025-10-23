@@ -55,7 +55,7 @@ import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { ErrorRedirectMap } from '../../../../../../error-pages/enems/ErrorRedirectMap.enum.js';
+import { ErrorRedirectMap } from '../../../../../../error-pages/enems/ErrorRedirectMap.enum';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
