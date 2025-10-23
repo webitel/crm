@@ -3,7 +3,7 @@ import {
   WebitelCasesRelationType,
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Furnizor ',
         username: 'Nume utilizator',
         dummy: 'Nu există opțiuni de mesagerie încă',
+        sendMessage: 'Trimite mesaj',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Chat web',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Gateway de chat personalizat',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
