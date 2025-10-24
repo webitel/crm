@@ -66,8 +66,8 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 
+import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
