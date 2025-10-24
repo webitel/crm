@@ -139,8 +139,10 @@ const {
   updatePage,
   updateSort,
   appendToDataList,
+  resetInfiniteScrollTableParamsToDefaults,
 } = tableStore;
 
+resetInfiniteScrollTableParamsToDefaults()
 updateSize(5);
 initialize({
   parentId: props.parentId,
