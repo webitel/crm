@@ -10,29 +10,6 @@
     </template>
 
     <template #main>
-      <wt-select
-        :value="draft.gateway"
-        :search-method="getChatGateways"
-        :label="t('objects.chatGateway')"
-        :placeholder="t('objects.chatGateway')"
-        track-by="id"
-        clearable
-        @input="draft.gateway = $event"
-      >
-        <template #singleLabel="{ option }">
-          <div class="contact-send-message__gateway">
-            <wt-icon :icon="ProviderIconType[option.provider]" />
-            <span>{{ option.name }}</span>
-          </div>
-        </template>
-        <template #option="{ option }">
-          <div class="contact-send-message__gateway">
-            <wt-icon :icon="ProviderIconType[option.provider]" />
-            <span>{{ option.name }}</span>
-          </div>
-        </template>
-      </wt-select>
-
       <wt-textarea
         :value="draft.message"
         :placeholder="t('objects.chat.draftPlaceholder')"
@@ -50,7 +27,7 @@
         icon="chat-send"
         color="accent"
         rounded
-        :disabled="!draft.message || !draft.gateway?.id"
+        :disabled="!draft.message"
         wide
         @click="sendMessage"
       />
@@ -59,13 +36,12 @@
 </template>
 
 <script setup lang="ts">
-import { AgentsAPI, ChatGatewaysAPI, MessagesServiceAPI } from '@webitel/api-services/api';
-import { WtChatEmoji, WtSelect } from '@webitel/ui-sdk/components';
-import { ProviderIconType } from '@webitel/ui-sdk/enums';
+import { AgentsAPI, MessagesServiceAPI } from '@webitel/api-services/api';
+import { WtChatEmoji } from '@webitel/ui-sdk/components';
 import { inject, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useUserinfoStore } from '../../../../src/modules/userinfo/store/userinfoStore';
+import { useUserinfoStore } from '../../../../userinfo/store/userinfoStore';
 
 interface Item {
   id: string;
@@ -85,7 +61,6 @@ interface Item {
 
 const props = defineProps<{
   item?: Item;
-  providers: [string];
 }>();
 
 const emit = defineEmits(['close']);
@@ -93,14 +68,9 @@ const eventBus = inject('$eventBus');
 const { t } = useI18n();
 
 const generateNewDraft = () => {
-  const provider = props.item?.protocol;
-
-  const gateway = props.providers.includes(provider)
-    ? { provider, ...props.item?.app }
-    : {};
-
   return {
-    gateway,
+    gateway: props.item?.app || {},
+    provider: props.item?.protocol || '',
     message: '',
     agentId: null,
   };
@@ -114,19 +84,12 @@ async function getAgentId (params) {
   draft.value.agentId = items[0]?.id;
 }
 
-function getChatGateways(params) {
-  return ChatGatewaysAPI.getLookup({
-    ...params,
-    fields: ['provider', 'id', 'name'],
-    provider: props.providers });
-}
-
 const sendMessage = async () => {
   const response = await MessagesServiceAPI.patch({
     peers: [{
       via: draft.value.gateway.id,
       id: props.item?.externalId,
-      type: draft.value.gateway.provider,
+      type: draft.value.provider,
     }],
     variables: {
       agentId: draft.value.agentId,
