@@ -60,12 +60,14 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 
 const namespace = 'configuration/lookups/closeReasonGroups';
 
 const { t } = useI18n();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
@@ -76,7 +78,7 @@ const {
   loadItem,
   setId,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { onLoadErrorHandler: handleError });
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
@@ -86,6 +88,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   updateItem,
   loadItem,
   setId,
+  onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.CLOSE_REASON_GROUPS);

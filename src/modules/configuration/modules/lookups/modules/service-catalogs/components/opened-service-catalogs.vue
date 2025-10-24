@@ -54,6 +54,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
 
 const namespace = 'configuration/lookups/catalogs';
@@ -61,6 +62,7 @@ const { t } = useI18n();
 const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
@@ -68,7 +70,7 @@ const {
   itemInstance,
   resetState,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { onLoadErrorHandler: handleError });
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -91,6 +93,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   id,
   itemInstance,
   resetState,
+  onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.SERVICE_CATALOGS);

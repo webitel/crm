@@ -61,6 +61,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 
 const namespace = 'configuration/lookups/statuses';
 
@@ -68,13 +69,13 @@ const { t } = useI18n();
 const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
-
+const { handleError } = useErrorRedirectHandler();
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { onLoadErrorHandler: handleError });
 
 const v$ = useVuelidate(
   computed(() => ({
@@ -92,6 +93,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
+  onLoadErrorHandler: handleError
 });
 
 const { close } = useClose(CrmSections.STATUSES);

@@ -60,6 +60,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import dynamicContactGroupsAPI from '../api/dynamicGroups.js';
 
 const namespace = 'configuration/lookups/contactGroups';
@@ -68,6 +69,7 @@ const route = useRoute();
 const router = useRouter();
 
 const { hasSaveActionAccess } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
@@ -78,7 +80,7 @@ const {
   loadItem,
   setId,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { onLoadErrorHandler: handleError });
 
 const { isNew, pathName, saveText, initialize } = useCardComponent({
   ...restStore,
@@ -88,6 +90,7 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
   updateItem,
   loadItem,
   setId,
+  onLoadErrorHandler: handleError
 });
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);
