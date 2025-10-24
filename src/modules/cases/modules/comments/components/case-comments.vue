@@ -139,8 +139,10 @@ const {
   updatePage,
   updateSort,
   appendToDataList,
+  resetParamsToDefaults,
 } = tableStore;
 
+resetParamsToDefaults()
 updateSize(5);
 initialize({
   parentId: props.parentId,
