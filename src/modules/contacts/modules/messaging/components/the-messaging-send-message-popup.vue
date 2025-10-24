@@ -106,6 +106,7 @@ const sendMessage = async () => {
 
 const insertEmoji = (emoji) => {
   draft.value.message += emoji;
+  document.querySelector('textarea').focus();
 };
 
 onMounted(async() => await getAgentId());
