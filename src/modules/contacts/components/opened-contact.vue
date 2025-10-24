@@ -66,7 +66,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { ErrorRedirectMap } from '../../error-pages/enems/ErrorRedirectMap.enum';
+import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
@@ -78,6 +78,7 @@ const isReadOnly = inject('isReadOnly');
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace,
@@ -88,7 +89,7 @@ const {
   setId,
   resetState,
   deleteItem,
-} = useCardStore(baseNamespace, { errorRedirectMap: ErrorRedirectMap });
+} = useCardStore(baseNamespace, { onLoadErrorHandler: handleError });
 
 provide(
   'access',

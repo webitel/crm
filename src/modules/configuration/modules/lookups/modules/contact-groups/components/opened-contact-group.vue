@@ -55,7 +55,7 @@ import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { ErrorRedirectMap } from '../../../../../../error-pages/enems/ErrorRedirectMap.enum';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -69,6 +69,7 @@ const route = useRoute();
 const router = useRouter();
 
 const { hasSaveActionAccess } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
@@ -79,7 +80,7 @@ const {
   loadItem,
   setId,
   ...restStore
-} = useCardStore(namespace, { errorRedirectMap: ErrorRedirectMap });
+} = useCardStore(namespace, { onLoadErrorHandler: handleError });
 
 const { isNew, pathName, saveText, initialize } = useCardComponent({
   ...restStore,
@@ -89,7 +90,7 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
   updateItem,
   loadItem,
   setId,
-  errorRedirectMap: ErrorRedirectMap
+  onLoadErrorHandler: handleError
 });
 
 const { close } = useClose(CrmSections.CONTACT_GROUPS);

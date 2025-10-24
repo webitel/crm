@@ -55,7 +55,7 @@ import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
-import { ErrorRedirectMap } from '../../../../../../error-pages/enems/ErrorRedirectMap.enum';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -67,13 +67,14 @@ const { t } = useI18n();
 const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
   ...restStore
-} = useCardStore(SLANamespace, { errorRedirectMap: ErrorRedirectMap });
+} = useCardStore(SLANamespace, { onLoadErrorHandler: handleError });
 
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {
@@ -90,7 +91,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
-  errorRedirectMap: ErrorRedirectMap,
+  onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.SLAS);

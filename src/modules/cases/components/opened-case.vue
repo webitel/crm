@@ -72,7 +72,7 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import {
   useExtensionFields,
 } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
-import { ErrorRedirectMap } from '../../error-pages/enems/ErrorRedirectMap.enum';
+import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import casesAPI from '../api/CasesAPI.js';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
@@ -81,6 +81,7 @@ const namespace = 'cases';
 
 const store = useStore();
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
 const editMode = computed(() => {
   return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
@@ -111,7 +112,7 @@ const {
   resetState,
   setItemProp,
 } = useCardStore(namespace, {
-  errorRedirectMap: ErrorRedirectMap,
+  onLoadErrorHandler: handleError,
 }
 );
 
@@ -176,7 +177,7 @@ const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
   updateItem,
   setId,
   resetState,
-  errorRedirectMap: ErrorRedirectMap,
+  onLoadErrorHandler: handleError,
 
   invalid: computed(() => v$.value.$invalid),
 });
