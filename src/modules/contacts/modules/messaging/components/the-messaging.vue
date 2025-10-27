@@ -7,10 +7,9 @@
       @close="closeDelete"
     />
 
-    <contact-send-message
+    <the-messaging-send-message-popup
       v-if="isOpenChatPopup"
       :item="selectItem"
-      :providers="availableProviders"
       @close="closeChat" />
 
     <wt-loader v-show="isLoading" />
@@ -79,9 +78,9 @@ import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
-import ContactSendMessage from '../../../components/contact-send-message.vue';
 import dummyDark from '../assets/messaging-dummy-dark.svg';
 import dummyLight from '../assets/messaging-dummy-light.svg';
+import TheMessagingSendMessagePopup from './the-messaging-send-message-popup.vue';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
