@@ -3,8 +3,8 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 
-import CustomLookupsApi from '../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
 // Pinia
@@ -118,11 +118,16 @@ export const useConfigurationStore = defineStore('configuration', () => {
     if (isCustomLookupsLoaded.value) return; // already loaded
 
     try {
-      const { items } = await CustomLookupsApi.getList({
+      const { items } = await AdjunctTypesAPI.getList({
         size: -1,
-      });
+      }, { silent: true });
 
-      customLookups.value = items;
+      const itemsWithId = items.map((item) => ({
+        ...item,
+        id: item.repo,
+      }));
+
+      customLookups.value = itemsWithId;
     } finally {
       isCustomLookupsLoaded.value = true;
     }
