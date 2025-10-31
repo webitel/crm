@@ -28,7 +28,7 @@
             :selected="selected"
             sortable
             :lazy="true"
-            :on-loading="appendToDataList"
+            :on-loading="handleIntersect"
             @sort="updateSort"
             @update:selected="updateSelected"
           >
@@ -99,7 +99,6 @@ import { useI18n } from 'vue-i18n';
 import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
-import WtIntersectionObserver from '@webitel/ui-sdk/components/wt-intersection-observer/wt-intersection-observer.vue';
 
 const props = defineProps<{
   groupIds: string[]
@@ -109,6 +108,7 @@ const emit = defineEmits(['load-data', 'close']);
 const { t } = useI18n();
 
 const tableStore = useAddContactsInGroupStore();
+const isFirstLoad = ref(false)
 
 const {
   dataList,
@@ -133,6 +133,12 @@ onMounted(() => {
   filtersManager.value.reset()
 });
 
+
+const handleIntersect = (params) => {
+  if (!next.value && isFirstLoad.value) return;
+  appendToDataList(params)
+  isFirstLoad.value = true
+}
 
 const save = async () => {
   await ContactGroupsAPI.addContactsToGroups({
