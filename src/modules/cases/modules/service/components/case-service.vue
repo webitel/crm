@@ -18,7 +18,7 @@
         {{ t('cases.service') }}
 
         <wt-icon
-          v-if="!isReadOnly && !itemInstance?.service"
+          v-if="!isReadOnly && !itemInstance?.service.name"
           v-tooltip="t('cases.serviceValidation')"
           icon="attention"
           color="error"
