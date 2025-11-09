@@ -11,20 +11,19 @@
 
 <script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
-import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
+import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 
-const tableStore = useAddContactsInGroupStore();
-const { filtersManager, isFiltersRestoring } = storeToRefs(tableStore);
+const props = defineProps<{
+  useTableStore: ReturnType<typeof createAddContactsInGroupComposableTableStore>;
+}>();
 
-const {
-  addFilter,
-  updateFilter,
-  deleteFilter,
-} = tableStore;
+const tableStore = props.useTableStore();
+
+const { filtersManager, isFiltersRestoring } = tableStore;
+
+const { addFilter, updateFilter, deleteFilter } = tableStore;
 
 const searchValue = computed(() => filtersManager.value.filters.get('search')?.value || '');
 </script>
-
