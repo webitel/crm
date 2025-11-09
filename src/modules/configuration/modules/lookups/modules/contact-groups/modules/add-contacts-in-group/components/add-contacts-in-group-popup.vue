@@ -3,7 +3,7 @@
     v-bind="$attrs"
     class="add-contacts-in-group-popup"
     size="lg"
-    @close="closePopup"
+    @close="close"
   >
     <template #title>
       {{
@@ -14,9 +14,9 @@
     <template #main>
       <div class="add-contacts-in-group-popup__content">
         <div class="add-contacts-in-group-popup__filters">
-          <add-contact-in-group-search-bar />
+          <add-contact-in-group-search-bar :use-table-store="useTableStore" />
 
-          <add-contacts-in-group-filters-panel />
+          <add-contacts-in-group-filters-panel :use-table-store="useTableStore" />
         </div>
 
         <div
@@ -81,7 +81,7 @@
 
       <wt-button
         color="secondary"
-        @click="closePopup"
+        @click="close"
       >
         {{ t('reusable.close') }}
       </wt-button>
@@ -92,11 +92,10 @@
 <script lang="ts" setup>
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
-import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
+import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
 
@@ -107,37 +106,31 @@ const emit = defineEmits(['load-data', 'close']);
 
 const { t } = useI18n();
 
-const tableStore = useAddContactsInGroupStore();
+const useTableStore = createAddContactsInGroupComposableTableStore();
+const tableStore = useTableStore();
 const isFirstLoad = ref(false)
 
 const {
   dataList,
   selected,
   headers,
-  isLoading,
   next,
-  filtersManager,
-} = storeToRefs(tableStore);
+} = tableStore;
 
 const {
   initialize,
   updateSort,
   updateSelected,
   appendToDataList,
-  updatePage,
 } = tableStore;
 
-onMounted(() => {
-  updatePage(1);
-  initialize();
-  filtersManager.value.reset()
-});
+initialize();
 
 
-const handleIntersect = (params) => {
+const handleIntersect = () => {
   if (!next.value && isFirstLoad.value) return;
-  appendToDataList(params)
-  isFirstLoad.value = true
+  appendToDataList();
+  isFirstLoad.value = true;
 }
 
 const save = async () => {
@@ -145,18 +138,13 @@ const save = async () => {
     groupIds: props.groupIds,
     contactIds: selected.value.map(({ id }) => id),
   });
-  closePopup();
+  close();
   emit('load-data');
 };
 
 function close() {
   emit('close');
 }
-
-const closePopup = () => {
-  close();
-  if (selected.value.length) updateSelected([]);
-};
 
 </script>
 

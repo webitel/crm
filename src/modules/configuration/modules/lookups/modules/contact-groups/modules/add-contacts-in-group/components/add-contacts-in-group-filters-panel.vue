@@ -12,13 +12,17 @@
 
 <script lang="ts" setup>
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
-import { storeToRefs } from 'pinia';
 
 import { filtersOptions } from '../configs/filtersOptions';
-import { useAddContactsInGroupStore } from '../stores/addContactsInGroup';
+import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 
-const tableStore = useAddContactsInGroupStore();
-const { filtersManager } = storeToRefs(tableStore);
+const props = defineProps<{
+  useTableStore: ReturnType<typeof createAddContactsInGroupComposableTableStore>;
+}>();
+
+const tableStore = props.useTableStore();
+
+const { filtersManager } = tableStore;
 
 const {
   addFilter,
