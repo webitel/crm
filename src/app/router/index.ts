@@ -6,10 +6,6 @@ import {
   type RouteRecordRaw,
 } from 'vue-router';
 
-import { eventBus } from '@webitel/ui-sdk/scripts';
-import i18n from '../locale/i18n'
-import { nextTick } from 'vue';
-
 import casesRoutes from '../../modules/cases/router';
 import caseViewRoute from '../../modules/cases/router/case-view';
 import configurationRoutes from '../../modules/configuration/router';
@@ -82,23 +78,5 @@ router.beforeEach(
     }
   },
 );
-
-router.afterEach(async () => {
-  const passwordExpirationDays = localStorage.getItem('passwordExpirationDays');
-
-  await nextTick();
-
-  if (passwordExpirationDays) {
-    const { t } = i18n.global;
-    eventBus.$emit('notification', {
-      type: 'info',
-      text: t('systemNotifications.info.passwordExpirationMessage', { days: passwordExpirationDays }),
-    });
-
-    setTimeout(() => {
-      localStorage.removeItem('passwordExpirationDays')
-    }, 5000);
-  }
-});
 
 export default router;
