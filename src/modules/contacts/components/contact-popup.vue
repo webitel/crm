@@ -54,9 +54,9 @@
         />
 
         <wt-textarea
-          :value="draft.about"
+          :model-value="draft.about"
           :label="t('vocabulary.description')"
-          @input="draft.about = $event"
+          @update:model-value="draft.about = $event"
         />
       </form>
     </template>

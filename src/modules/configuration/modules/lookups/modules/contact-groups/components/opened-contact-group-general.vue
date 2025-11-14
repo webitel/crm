@@ -18,9 +18,9 @@
 
         <wt-textarea
           :label="t('vocabulary.description')"
-          :value="itemInstance.description"
+          :model-value="itemInstance.description"
           :disabled="disableUserInput"
-          @input="setItemProp({ path: 'description', value: $event })"
+          @update:model-value="setItemProp({ path: 'description', value: $event })"
         />
 
         <wt-switcher

@@ -28,7 +28,8 @@
           :rows="8"
           v-bind="props"
           :disabled="disableUserInput"
-          @input="props.updateValue($event)"
+          :model-value="props.value"
+          @update:model-value="props.updateValue($event)"
         />
       </template>
     </editable-field>

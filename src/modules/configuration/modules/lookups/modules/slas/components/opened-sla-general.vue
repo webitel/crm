@@ -28,8 +28,8 @@
       <wt-textarea
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :value="itemInstance.description"
-        @input="setItemProp({ path: 'description', value: $event })"
+        :model-value="itemInstance.description"
+        @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
 
       <div class="opened-card-input-grid opened-sla-general__wrapper">

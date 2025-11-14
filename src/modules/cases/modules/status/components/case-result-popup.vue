@@ -23,8 +23,8 @@
           :label="t('cases.result')"
           required
           :v="v$.draft.result"
-          :value="draft.result"
-          @input="draft.result = $event"
+          :model-value="draft.result"
+          @update:model-value="draft.result = $event"
         />
       </div>
     </template>

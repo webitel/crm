@@ -27,8 +27,8 @@
       <wt-textarea
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :value="modelValue.description"
-        @input="modelValue.description = $event"
+        :model-value="modelValue.description"
+        @update:model-value="modelValue.description = $event"
       />
     </div>
   </section>

@@ -21,8 +21,8 @@
         <wt-textarea
           :disabled="disableUserInput"
           :label="t('vocabulary.description')"
-          :value="itemInstance.description"
-          @input="setItemProp({ path: 'description', value: $event })"
+          :model-value="itemInstance.description"
+          @update:model-value="setItemProp({ path: 'description', value: $event })"
         />
       </form>
     </template>
