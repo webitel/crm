@@ -6,15 +6,19 @@ import {
   type RouteRecordRaw,
 } from 'vue-router';
 
+import { eventBus } from '@webitel/ui-sdk/scripts';
+import i18n from '../locale/i18n'
+import { nextTick } from 'vue';
+
 import casesRoutes from '../../modules/cases/router';
 import caseViewRoute from '../../modules/cases/router/case-view';
 import configurationRoutes from '../../modules/configuration/router';
 import contactsRoutes from '../../modules/contacts/router';
 import contactViewRoute from '../../modules/contacts/router/contact-view';
-import customizationRoutes from '../../modules/customization/router';
 import startPageRoutes from '../../modules/start-page/router';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
+import NotFound from '../../modules/error-pages/components/the-not-found-component.vue'
 import { checkAppAccess } from './internals/guards';
 
 const routes: Array<RouteRecordRaw> = [
@@ -29,7 +33,6 @@ const routes: Array<RouteRecordRaw> = [
       ...casesRoutes,
       ...contactsRoutes,
       ...configurationRoutes,
-      ...customizationRoutes,
     ],
   },
   {
@@ -43,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/access-denied',
     name: 'access-denied',
     component: AccessDenied,
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: NotFound,
   },
 ];
 
@@ -74,5 +82,23 @@ router.beforeEach(
     }
   },
 );
+
+router.afterEach(async () => {
+  const passwordExpirationDays = localStorage.getItem('passwordExpirationDays');
+
+  await nextTick();
+
+  if (passwordExpirationDays) {
+    const { t } = i18n.global;
+    eventBus.$emit('notification', {
+      type: 'info',
+      text: t('systemNotifications.info.passwordExpirationMessage', { days: passwordExpirationDays }),
+    });
+
+    setTimeout(() => {
+      localStorage.removeItem('passwordExpirationDays')
+    }, 5000);
+  }
+});
 
 export default router;

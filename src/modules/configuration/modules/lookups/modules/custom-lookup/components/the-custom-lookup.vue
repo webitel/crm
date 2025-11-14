@@ -59,44 +59,44 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
+          <wt-table
+            v-show="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template
+              v-for="header in headers"
+              :key="header.value"
+              #[header.value]="{ item }"
             >
-              <template
-                v-for="header in headers"
-                :key="header.value"
-                #[header.value]="{ item }"
-              >
-                <display-dynamic-field
-                  :field="header"
-                  :value="item"
-                />
-              </template>
-              <template #actions="{ item }">
-                <wt-icon-action
-                  action="edit"
-                  :disabled="!hasEditAccess"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  action="delete"
-                  :disabled="!hasDeleteAccess"
-                  @click="
-                    askDeleteConfirmation({
-                      deleted: [item],
-                      callback: () => deleteData(item),
-                    })
-                  "
-                />
-              </template>
-            </wt-table>
-          </div>
+              <display-dynamic-field
+                :field="header"
+                :value="item"
+              />
+            </template>
+            <template #actions="{ item }">
+              <wt-icon-action
+                action="edit"
+                :disabled="!hasEditAccess"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                action="delete"
+                :disabled="!hasDeleteAccess"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })
+                "
+              />
+            </template>
+          </wt-table>
+
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"
@@ -108,7 +108,9 @@
 </template>
 
 <script setup>
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
 import {
   useAccessControl,
 } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
@@ -135,7 +137,6 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
-import prettifyDate from '../../../../../../cases/utils/prettifyDate.js';
 import CustomLookupsApi
   from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
@@ -166,6 +167,7 @@ const loadDictionary = async () => {
           show: true,
           field: field.id,
           kind: field.kind,
+          sort: field.kind === FieldType.Multiselect ? undefined : SortSymbols.NONE,
         })),
     });
   } catch (e) {

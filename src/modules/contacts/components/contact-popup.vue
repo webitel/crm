@@ -84,7 +84,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { CalendarsAPI, ContactGroupsAPI, ContactsAPI, LabelsAPI,UsersAPI } from '@webitel/api-services/api';
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -174,7 +174,7 @@ async function loadItem(id = props.id) {
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.Static,
+    type: ContactsGroupType.Static,
   });
 }
 

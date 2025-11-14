@@ -3,9 +3,8 @@
     :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
-        :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="disabledSave || !hasSaveActionAccess"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -57,7 +56,6 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -65,6 +63,8 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const namespace = 'customization/customLookups';
 const { t } = useI18n();
@@ -104,7 +104,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   id,
   itemInstance,
 });
-const { hasSaveActionAccess, disableUserInput } = useAccessControl();
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const { close } = useClose(CrmSections.CUSTOM_LOOKUPS);
 const disabledSave = computed(
@@ -135,9 +135,9 @@ const path = computed(() => {
   return [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('objects.customization.customization'), route: '/customization' },
+    { name: t('objects.customization.customization'), route: '/configuration' },
     {
-      name: t('objects.customLookups.customLookups'),
+      name: t('objects.customLookup.customLookup', 2),
       route: {
         name: CrmSections.CUSTOM_LOOKUPS,
       },

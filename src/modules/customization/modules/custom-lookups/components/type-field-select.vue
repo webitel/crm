@@ -42,7 +42,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ObjectsApi from '../api/objects';
-import { FieldType } from '../enums/FieldType.enum';
+import { FieldType } from '../enums/FieldType';
 
 const props = defineProps({
   value: {
@@ -122,6 +122,8 @@ const selectObject = (value) => {
   props.value.lookup = {
     path: value.path,
     name: value.name,
+    display: value.display,
+    primary: value.primary,
   };
 };
 const loadLookupList = (params) => {

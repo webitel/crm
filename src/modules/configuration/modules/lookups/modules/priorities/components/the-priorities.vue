@@ -60,48 +60,47 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
-            >
-              <template #name="{ item }">
-                <wt-item-link
-                  :link="{ name: `${CrmSections.PRIORITIES}-card`, params: { id: item.id } }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
-              </template>
+          <wt-table
+            v-show="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                :link="{ name: `${CrmSections.PRIORITIES}-card`, params: { id: item.id } }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
 
-              <template #color="{ item }">
-                <color-component-wrapper
-                  :color="item.color"
-                  component="wt-indicator"
-                />
-              </template>
-              <template #description="{ item }">
-                {{ item.description }}
-              </template>
+            <template #color="{ item }">
+              <color-component-wrapper
+                :color="item.color"
+                component="wt-indicator"
+              />
+            </template>
+            <template #description="{ item }">
+              {{ item.description }}
+            </template>
 
-              <template #actions="{ item }">
-                <wt-icon-action
-                  :disabled="!hasUpdateAccess"
-                  action="edit"
-                  @click="edit(item)"
-                />
+            <template #actions="{ item }">
+              <wt-icon-action
+                :disabled="!hasUpdateAccess"
+                action="edit"
+                @click="edit(item)"
+              />
 
-                <wt-icon-action
-                  :disabled="!hasDeleteAccess"
-                  action="delete"
-                  @click="askDeleteConfirmationWrapper(item)"
-                />
-              </template>
-            </wt-table>
-          </div>
+              <wt-icon-action
+                :disabled="!hasDeleteAccess"
+                action="delete"
+                @click="askDeleteConfirmationWrapper(item)"
+              />
+            </template>
+          </wt-table>
 
           <filter-pagination
             :namespace="filtersNamespace"

@@ -72,13 +72,20 @@ const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value?._dirty,
 );
 
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * [WTEL-7510](https://webitel.atlassian.net/browse/WTEL-7510)
+ *
+ * link for description https://webitel.atlassian.net/browse/WTEL-7510?focusedCommentId=693399
+ * */
 const path = computed(() => {
   return [
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     {
       name: t('objects.customization.customization'),
-      route: '/customization',
+      route: '/configuration',
     },
     {
       name: repo.value && t(`customization.extensions.${repo.value}`),

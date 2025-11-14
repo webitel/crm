@@ -1,16 +1,9 @@
 <template>
   <wt-page-wrapper
     class="cases table-page"
-    :actions-panel="showActionsPanel"
+    :actions-panel="showActionsPanel && !isInitialEmpty"
+    :hide-header="true"
   >
-    <template #header>
-      <wt-page-header
-        :secondary-action="close"
-        hide-primary
-      >
-        <wt-breadcrumb :path="path" />
-      </wt-page-header>
-    </template>
     <template #actions-panel>
       <cases-filters-panel @hide="showActionsPanel = false" />
     </template>
@@ -24,20 +17,14 @@
 
       <section class="table-section">
         <header class="table-title">
-          <h3 class="table-title__title">
-            {{ $t('cases.case', 2) }}
-          </h3>
+          <wt-breadcrumb :path="path" />
 
-          <cases-filter-search-bar class="cases__search-filter" />
+          <cases-filter-search-bar
+            v-if="!isInitialEmpty"
+            class="cases__search-filter" />
 
           <wt-action-bar
-            :include="[
-              IconAction.ADD,
-              IconAction.REFRESH,
-              IconAction.FILTERS,
-              IconAction.COLUMNS,
-              IconAction.DELETE,
-            ]"
+            :include="displayIncludeActions"
             :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
             @click:add="add"
@@ -82,12 +69,21 @@
             :data="dataList"
             :headers="shownHeaders"
             :selected="selected"
+            :row-class="rowClass"
+            fixed-actions
             sortable
+            row-expansion
+            resizable-columns
+            reorderable-columns
+            :row-expansion-disabled="isRowExpansionDisabled"
+            @column-resize="columnResize"
+            @column-reorder="columnReorder"
             @sort="updateSort"
             @update:selected="updateSelected"
           >
             <template #name="{ item }">
               <wt-item-link
+                class="cases__link-name"
                 :link="{
                   name: `${CrmSections.CASES}-card`,
                   params: { id: item?.id },
@@ -95,9 +91,9 @@
               >
                 <div class="cases__link-content">
                   <color-component-wrapper
-                    :color="item.priority?.color"
                     component="wt-icon"
-                    icon="cases"
+                    :color="item?.statusCondition?.final ? 'default' : item.priority?.color"
+                    :icon="item?.statusCondition?.final ? 'case-done' : 'case--filled'"
                     size="md"
                   />
 
@@ -187,9 +183,13 @@
             >
               <display-dynamic-field-extension
                 :field="header"
-                :value="getCustomValues(item, header.value)"
-                :label="header.locale"
+                :value="getCustomValues(item, header.field)"
               />
+            </template>
+            <template #expansion="{ item }">
+                <case-details-table
+                  :item="item"
+                />
             </template>
             <template #actions="{ item }">
               <wt-icon-action
@@ -231,8 +231,10 @@ import {
   snakeToCamel,
 } from '@webitel/api-services/utils';
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import { WtTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
+import { EmptyCause } from "@webitel/ui-sdk/enums/EmptyCause/EmptyCause";
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -252,6 +254,7 @@ import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
+import CaseDetailsTable from './case-details-table.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
 
@@ -291,6 +294,8 @@ const {
   updateSort,
   deleteEls,
   updateShownHeaders,
+  columnResize,
+  columnReorder,
 } = tableStore;
 
 const {
@@ -303,6 +308,7 @@ const {
 
 const {
   showEmpty,
+  emptyCause,
   image: emptyImage,
   headline: emptyHeadline,
   title: emptyTitle,
@@ -316,6 +322,14 @@ const {
 });
 
 const showActionsPanel = ref(true);
+
+const isInitialEmpty = ref(false);
+
+const displayIncludeActions = computed(() => {
+  const baseActions = [IconAction.ADD, IconAction.REFRESH, IconAction.FILTERS, IconAction.COLUMNS, IconAction.DELETE];
+
+  return isInitialEmpty.value ? [IconAction.ADD] : baseActions;
+});
 
 /*
  * show "toggle filters panel" badge if any filters are applied...
@@ -449,10 +463,19 @@ const syncMissingCustomHeaders = (newHeaders) => {
   updateHeaders(customHeaders.value, newHeaders);
 };
 
+const rowClass = (item) => {
+  if(item.statusCondition?.final) return 'row-success';
+}
+
+// Disable row expansion if neither 'comments' nor 'description' exist in the row data
+const isRowExpansionDisabled = (row) => {
+  return !['comments', 'description'].some(key => Object.hasOwn(row || {}, key));
+}
+
 // Initialize headers before table store
 onMounted(async () => {
-  await loadCustomHeaders();
   await initialize();
+  await loadCustomHeaders();
 });
 
 // Keep custom headers in sync when base headers change
@@ -461,6 +484,30 @@ watch(
   syncMissingCustomHeaders,
   { deep: true }
 );
+
+watch(() => emptyCause.value, (newCause, oldCause) => {
+  if(newCause && oldCause !== newCause && newCause === EmptyCause.EMPTY) {
+    isInitialEmpty.value = true;
+  }
+});
+
+watch(customHeadersLoaded, (isLoaded) => {
+  if (!isLoaded) return;
+
+  // "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
+  const notInitializedHeaders = headers.value.filter((header) => header.shouldBeInitialized);
+  if (!notInitializedHeaders.length) return;
+
+  // ... so, we can just extend those restored (but not initialized yet) headers with custom headers
+  notInitializedHeaders.forEach((header) => {
+    const customHeader = customHeaders.value.find((customHeader) => customHeader.field === header.field);
+    Object.assign(header, {
+      ...customHeader,
+      shouldBeInitialized: false,
+      show: true,
+    });
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -474,6 +521,10 @@ watch(
   &__link-content {
     display: flex;
     gap: var(--spacing-xs);
+  }
+
+  &__link-name {
+    color: var(--text-link-color);
   }
 
   &__search-filter {

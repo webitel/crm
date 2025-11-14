@@ -48,38 +48,37 @@
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="dataList.length && !isLoading">
-        <wt-table
-          :data="dataList"
-          :headers="headers"
-          :selected="selected"
-          sortable
-          @sort="sort"
-          @update:selected="setSelected"
-        >
-          <template #name="{ item }">
-            {{ item.name }}
-          </template>
-          <template #description="{ item }">
-            {{ item.description }}
-          </template>
-          <template #actions="{ item }">
-            <wt-icon-action
-              :disabled="!hasUpdateAccess"
-              action="edit"
-              @click="router.push({ ...route, params: { closeReasonsId: item.id } })"
-            />
-            <wt-icon-action
-              action="delete"
-              :disabled="!hasDeleteAccess"
-              @click="askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })"
-            />
-          </template>
-        </wt-table>
-      </div>
+      <wt-table
+        v-show="dataList.length && !isLoading"
+        :data="dataList"
+        :headers="headers"
+        :selected="selected"
+        sortable
+        @sort="sort"
+        @update:selected="setSelected"
+      >
+        <template #name="{ item }">
+          {{ item.name }}
+        </template>
+        <template #description="{ item }">
+          {{ item.description }}
+        </template>
+        <template #actions="{ item }">
+          <wt-icon-action
+            :disabled="!hasUpdateAccess"
+            action="edit"
+            @click="router.push({ ...route, params: { closeReasonsId: item.id } })"
+          />
+          <wt-icon-action
+            action="delete"
+            :disabled="!hasDeleteAccess"
+            @click="askDeleteConfirmation({
+              deleted: [item],
+              callback: () => deleteData(item),
+            })"
+          />
+        </template>
+      </wt-table>
       <filter-pagination
         :namespace="filtersNamespace"
         :next="isNext"

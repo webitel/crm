@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Provider',
         username: 'Foydalanuvchi nomi',
         dummy: "Hali xabar almashish variantlari yo'q",
+        sendMessage: 'Xabar yuborish',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Ilova',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Maxsus Chat Shlyuzi',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
@@ -123,6 +125,9 @@ export default {
       resolutionTimeTitle: 'Yechim vaqti (kk:ss:dd)',
       validFrom: 'Amal qilish muddati',
       validTo: 'Tugash muddati',
+      error: {
+        duplicateConditionName: 'Bunday nomli shart allaqachon mavjud',
+      },
     },
     sources: {
       sources: 'Murojaat manbasi | Murojaat manbalari',
@@ -151,8 +156,8 @@ export default {
       addGroup: "Guruh qo'shish",
       assignee: "Mas'ul",
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Dinamik',
-        [WebitelContactsGroupType.Static]: 'Statik',
+        [ContactsGroupType.Dynamic]: 'Dinamik',
+        [ContactsGroupType.Static]: 'Statik',
       },
     },
     closeReasonGroups: {
@@ -188,6 +193,7 @@ export default {
       columns: 'Ustunlar',
       addColumn: "Ustun qo'shish",
       editColumn: 'Ustunni tahrirlash',
+      defaultValue: 'Standart qiymat',
       confirmDeleteColumn:
         "Ustunni o'chirgandan va saqlagandan so'ng, tegishli maydondagi barcha kiritilgan ma'lumotlar ham o'chiriladi.",
       controlPermissions: 'Huquqlarni boshqarish',

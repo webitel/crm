@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Nhà cung cấp ',
         username: 'Tên người dùng',
         dummy: 'Chưa có tùy chọn nhắn tin nào',
+        sendMessage: 'Gửi tin nhắn',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Ứng dụng Telegram',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Cổng chat tùy chỉnh',
+          [ChatGatewayProvider.PORTAL]: 'Cổng thông tin',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Thời gian giải quyết (dd:hh:mm)',
       validFrom: 'Có hiệu lực từ',
       validTo: 'Có hiệu lực đến',
+      error: {
+        duplicateConditionName: 'Điều kiện với tên này đã tồn tại',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Thêm nhóm',
       assignee: 'Người được giao',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Động',
-        [WebitelContactsGroupType.Static]: 'Tĩnh',
+        [ContactsGroupType.Dynamic]: 'Động',
+        [ContactsGroupType.Static]: 'Tĩnh',
       },
     },
 
@@ -195,6 +200,7 @@ export default {
       columns: 'Cột',
       addColumn: 'Thêm cột',
       editColumn: 'Sửa cột',
+      defaultValue: 'Giá trị mặc định',
       confirmDeleteColumn:
         'Sau khi xóa cột và lưu, tất cả dữ liệu đã nhập trong trường tương ứng cũng sẽ bị xóa.',
       controlPermissions: 'Kiểm soát quyền',

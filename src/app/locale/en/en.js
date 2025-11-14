@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Provider ',
         username: 'Username',
         dummy: 'There are no messaging options yet',
+        sendMessage: 'Send message',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Custom Chat Gateway',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Resolution time (dd:hh:mm)',
       validFrom: 'Valid from',
       validTo: 'Valid to',
+      error: {
+        duplicateConditionName: 'Condition with this name already exists',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Add group',
       assignee: 'Assignee',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Dynamic',
-        [WebitelContactsGroupType.Static]: 'Static',
+        [ContactsGroupType.Dynamic]: 'Dynamic',
+        [ContactsGroupType.Static]: 'Static',
       },
     },
 
@@ -189,6 +194,7 @@ export default {
       columns: 'Columns',
       addColumn: 'Add column',
       editColumn: 'Edit column',
+      defaultValue: 'Default value',
       confirmDeleteColumn:
         'After deleting the column and saving, all the entered data in the corresponding field will be deleted as well.',
       controlPermissions: 'Control permissions',

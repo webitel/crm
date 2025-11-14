@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Провайдер',
         username: "Ім'я користувача",
         dummy: 'Поки ще не було текстових діалогів',
+        sendMessage: 'Надіслати повідомлення',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Застосунок',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Custom Chat Gateway',
+          [ChatGatewayProvider.PORTAL]: 'Портал',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Плановий час вирішення (dd:hh:mm)',
       validFrom: 'Дійсний з',
       validTo: 'Дійсний до',
+      error: {
+        duplicateConditionName: 'Умова з такою назвою вже існує',
+      },
     },
 
     sources: {
@@ -157,8 +162,8 @@ export default {
       addGroup: 'Додати контакти',
       assignee: 'Виконавець',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Динамічна',
-        [WebitelContactsGroupType.Static]: 'Статична',
+        [ContactsGroupType.Dynamic]: 'Динамічна',
+        [ContactsGroupType.Static]: 'Статична',
       },
     },
 
@@ -196,6 +201,7 @@ export default {
       columns: 'Колонки',
       addColumn: 'Додати колонку',
       editColumn: 'Редагувати колонку',
+      defaultValue: 'Значення за замовчуванням',
       confirmDeleteColumn:
         'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
       controlPermissions: 'Контролювати права доступу',

@@ -61,7 +61,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { ContactGroupsAPI,ContactsAPI } from '@webitel/api-services/api';
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
@@ -128,7 +128,7 @@ const save = async () => {
 async function loadStaticContactGroupsList(params) {
   return await ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.Static,
+    type: ContactsGroupType.Static,
     enabled: true,
   });
 }

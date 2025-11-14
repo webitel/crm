@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Dostawca ',
         username: 'Nazwa użytkownika',
         dummy: 'Nie ma jeszcze opcji wiadomości',
+        sendMessage: 'Хабар жіберу',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Bot Telegram',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Aplikacja Telegram',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Czat internetowy',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Niestandardowa bramka czatu',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Czas rozwiązania (dd:hh:mm)',
       validFrom: 'Ważne od',
       validTo: 'Ważne do',
+      error: {
+        duplicateConditionName: 'Warunek o takiej nazwie już istnieje',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Dodaj grupę',
       assignee: 'Przypisany',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Dynamiczna',
-        [WebitelContactsGroupType.Static]: 'Statyczna',
+        [ContactsGroupType.Dynamic]: 'Dynamiczna',
+        [ContactsGroupType.Static]: 'Statyczna',
       },
     },
 
@@ -195,6 +200,7 @@ export default {
       columns: 'Kolumny',
       addColumn: 'Dodaj kolumnę',
       editColumn: 'Edytuj kolumnę',
+      defaultValue: 'Wartość domyślna',
       confirmDeleteColumn:
         'Po usunięciu kolumny i zapisaniu, wszystkie wprowadzone dane w odpowiednim polu zostaną również usunięte.',
       controlPermissions: 'Kontroluj uprawnienia',

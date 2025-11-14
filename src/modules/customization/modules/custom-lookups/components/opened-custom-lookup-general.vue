@@ -12,6 +12,7 @@
         :label="t('reusable.name')"
         :value="itemInstance.name"
         :v="v.itemInstance.name"
+        :disabled="disableUserInput"
         required
         @input="setItemProp({ path: 'name', value: $event })"
       />
@@ -19,7 +20,7 @@
         :label="t('customization.customLookups.code')"
         :value="itemInstance.repo"
         :v="v.itemInstance.repo"
-        :disabled="!isNew"
+        :disabled="!isNew || disableUserInput"
         :custom-validators="[
           {
             name: 'checkRepo',
@@ -33,14 +34,15 @@
       <wt-textarea
         :label="t('vocabulary.description')"
         :model-value="itemInstance.about"
+        :disabled="disableUserInput"
         @update:model-value="setItemProp({ path: 'about', value: $event })"
       />
 
       <!--      TODO Hidden before backend will be ready for this-->
       <!--      <wt-switcher-->
       <!--        :label="t('customization.customLookups.controlPermissions')"-->
-      <!--        :value="itemInstance.administered"-->
-      <!--        @change="setItemProp({ path: 'administered', value: $event })"-->
+      <!--        :model-value="itemInstance.administered"-->
+      <!--        @update:model-value="setItemProp({ path: 'administered', value: $event })"-->
       <!--      />-->
     </div>
   </section>
@@ -49,6 +51,8 @@
 <script setup>
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
+
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
   namespace: {
@@ -66,6 +70,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 </script>

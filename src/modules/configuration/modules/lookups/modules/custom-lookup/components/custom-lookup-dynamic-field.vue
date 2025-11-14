@@ -21,11 +21,11 @@
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
     :label="label"
-    :value="!!value"
+    :model-value="!!value"
     :v="validation"
     :required="isRequired"
     :disabled="props.disable"
-    @change="setValue($event)"
+    @update:model-value="setValue($event)"
   />
   <wt-select
     v-else-if="field.kind === FieldType.Select"
@@ -75,7 +75,7 @@ import { useI18n } from 'vue-i18n';
 
 import {
   FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.enum';
+} from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 import CustomLookupApi from '../api/custom-lookups.js';
 
 const props = defineProps({

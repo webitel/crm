@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Провайдер',
         username: 'Пайдаланушы аты',
         dummy: 'Әзірге хабарлама опциялары жоқ',
+        sendMessage: 'Хабар жіберу',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Қосымшасы',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Веб-чат',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Арнайы чат шлюзі',
+          [ChatGatewayProvider.PORTAL]: 'Портал',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Шешім уақыты (кк:сс:мм)',
       validFrom: 'Бастап жарамды',
       validTo: 'Дейін жарамды',
+      error: {
+        duplicateConditionName: 'Осындай атауы бар шарт қазірдің өзінде бар',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Топ қосу',
       assignee: 'Тағайындалған',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Динамикалық',
-        [WebitelContactsGroupType.Static]: 'Статикалық',
+        [ContactsGroupType.Dynamic]: 'Динамикалық',
+        [ContactsGroupType.Static]: 'Статикалық',
       },
     },
 
@@ -189,6 +194,7 @@ export default {
       columns: 'Бағандар',
       addColumn: 'Баған қосу',
       editColumn: 'Бағанды өңдеу',
+      defaultValue: 'Әдепкі мән',
       confirmDeleteColumn:
         'Бағанды жойғаннан және сақтағаннан кейін, тиісті өрістегі барлық енгізілген деректер де жойылады.',
       controlPermissions: 'Рұқсаттарды басқару',

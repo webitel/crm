@@ -21,7 +21,6 @@
       :edit-mode="editMode"
       :label="t('vocabulary.description')"
       :value="itemInstance.description"
-      required
       @update:value="setItemProp({ path: 'description', value: $event })"
     >
       <template #default="props">

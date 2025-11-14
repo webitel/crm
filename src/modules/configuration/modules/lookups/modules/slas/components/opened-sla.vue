@@ -60,19 +60,21 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { SLANamespace } from '../namespace.js';
 
 const { t } = useI18n();
 const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
   ...restStore
-} = useCardStore(SLANamespace);
+} = useCardStore(SLANamespace, { onLoadErrorHandler: handleError });
 
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {
@@ -89,6 +91,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
+  onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.SLAS);
@@ -120,7 +123,7 @@ const path = computed(() => {
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.slas.slas', 2), route: '/lookups/slas' },
+    { name: t('lookups.slas.slas', 2), route: '/configuration/lookups/slas' },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
       route: {

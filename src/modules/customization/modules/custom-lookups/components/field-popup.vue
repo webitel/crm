@@ -43,12 +43,20 @@
           :value="value"
         />
 
-        <!--        TODO hide switcher https://webitel.atlassian.net/browse/WTEL-6774-->
-        <!--        <wt-switcher-->
-        <!--          :value="value.required"-->
-        <!--          :label="$t('reusable.required')"-->
-        <!--          @change="value.required = $event"-->
-        <!--        ></wt-switcher>-->
+      <!--        TODO Hide this block to next version https://webitel.atlassian.net/browse/WTEL-6632?focusedCommentId=702270 -->
+      <!--        <default-value-input-->
+      <!--          v-if="value.required"-->
+      <!--          :value="value"-->
+      <!--          :is-new="isNew"-->
+      <!--          :v="v$"-->
+      <!--        />-->
+
+      <!--        <wt-switcher-->
+      <!--          :model-value="value.required"-->
+      <!--          :label="$t('reusable.required')"-->
+      <!--          :v="v$"-->
+      <!--          @update:model-value="changeRequired($event)"-->
+      <!--        ></wt-switcher>-->
       </div>
     </template>
     <template #actions>
@@ -72,9 +80,10 @@
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import deepCopy from 'deep-copy';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick,ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import DefaultValueInput from './default-value-input.vue';
 import TypeFieldSelect from './type-field-select.vue';
 
 const props = defineProps({
@@ -122,6 +131,9 @@ const v$ = useVuelidate(
         required,
         checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
       },
+      default: value.value.required ? {
+        required,
+      } : {},
     },
   })),
   { value },
@@ -132,6 +144,14 @@ v$.value.$touch();
 
 const changeDirty = (dirty) => {
   value.value._dirty = dirty;
+};
+
+const changeRequired = (event) => {
+  value.value.required = event;
+
+  nextTick(() => {
+    v$.value.$touch();
+  });
 };
 
 const disabledSave = computed(() => v$.value?.$invalid || !value.value._dirty);

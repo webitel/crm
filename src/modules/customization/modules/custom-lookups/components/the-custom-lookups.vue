@@ -20,7 +20,7 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
+            :disabled:delete="!selected.length || !hasDeleteAccess"
             @click:refresh="loadData"
             @click:add="add"
             @click:delete="
@@ -59,53 +59,52 @@
 
           <wt-loader v-show="isLoading" />
 
-          <div v-if="dataList.length && !isLoading">
-            <wt-table
-              :data="dataList"
-              :headers="headers"
-              :selected="selected"
-              sortable
-              @sort="sort"
-              @update:selected="setSelected"
-            >
-              <template #name="{ item }">
-                <wt-item-link
-                  :link="{
-                    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
-                    params: { id: item.repo },
-                  }"
-                >
-                  {{ item.name }}
-                </wt-item-link>
-              </template>
-              <template #about="{ item }">
-                {{ item.about }}
-              </template>
-              <template #createdAt="{ item }">
-                {{ prettifyDate(item.createdAt) }}
-              </template>
-              <template #createdBy="{ item }">
-                {{ item.createdBy?.name }}
-              </template>
-              <template #actions="{ item }">
-                <wt-icon-action
-                  action="edit"
-                  :disabled="!hasEditAccess"
-                  @click="edit(item)"
-                />
-                <wt-icon-action
-                  action="delete"
-                  :disabled="!hasDeleteAccess"
-                  @click="
-                    askDeleteConfirmation({
-                      deleted: [item],
-                      callback: () => deleteData(item),
-                    })
-                  "
-                />
-              </template>
-            </wt-table>
-          </div>
+          <wt-table
+            v-show="dataList.length && !isLoading"
+            :data="dataList"
+            :headers="headers"
+            :selected="selected"
+            sortable
+            @sort="sort"
+            @update:selected="setSelected"
+          >
+            <template #name="{ item }">
+              <wt-item-link
+                :link="{
+                  name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+                  params: { id: item.repo },
+                }"
+              >
+                {{ item.name }}
+              </wt-item-link>
+            </template>
+            <template #about="{ item }">
+              {{ item.about }}
+            </template>
+            <template #createdAt="{ item }">
+              {{ prettifyDate(item.createdAt) }}
+            </template>
+            <template #createdBy="{ item }">
+              {{ item.createdBy?.name }}
+            </template>
+            <template #actions="{ item }">
+              <wt-icon-action
+                action="edit"
+                :disabled="!hasUpdateAccess"
+                @click="edit(item)"
+              />
+              <wt-icon-action
+                action="delete"
+                :disabled="!hasDeleteAccess"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteData(item),
+                  })
+                "
+              />
+            </template>
+          </wt-table>
           <filter-pagination
             :namespace="filtersNamespace"
             :is-next="isNext"
@@ -118,9 +117,6 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import {
-  useAccessControl,
-} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
@@ -144,6 +140,7 @@ import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 
 const baseNamespace = 'customization/customLookups';
@@ -151,7 +148,7 @@ const baseNamespace = 'customization/customLookups';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl();
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -199,10 +196,17 @@ onUnmounted(() => {
   flushSubscribers();
 });
 
+/**
+ * @author @Oleksandr Palonnyi
+ *
+ * [WTEL-7510](https://webitel.atlassian.net/browse/WTEL-7510)
+ *
+ * link for description https://webitel.atlassian.net/browse/WTEL-7510?focusedCommentId=693399
+ * */
 const path = computed(() => [
   { name: t('crm'), route: '/start-page' },
   { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('objects.customization.customization'), route: '/customization' },
+  { name: t('objects.customization.customization'), route: '/configuration' },
   { name: t('objects.customLookup.customLookup', 2) },
 ]);
 

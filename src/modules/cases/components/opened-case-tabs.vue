@@ -6,16 +6,23 @@
       @change="changeTab"
     />
     <router-view
-      :namespace="cardNamespace"
-      :access="/*is used by permissions tab*/ {
-        read: true,
-        edit: actionAllow,
-        delete: actionAllow,
-        add: actionAllow,
-      }"
-      :fields="customFields"
+      v-slot="{ Component }"
       class="opened-card-tabs__tab"
-    />
+    >
+      <keep-alive>
+        <component
+          :is="Component"
+          :namespace="cardNamespace"
+          :access="/*is used by permissions tab*/{
+            read: true,
+            edit: actionAllow,
+            delete: actionAllow,
+            add: actionAllow,
+          }"
+          :fields="customFields"
+        />
+      </keep-alive>
+    </router-view>
   </article>
 </template>
 
@@ -67,6 +74,11 @@ const tabs = computed(() => {
       value: 'result',
       pathName: `${currentCardRoute.value}-result`,
     },
+    {
+      text: t('cases.attachments.attachments'),
+      value: 'attachments',
+      pathName: `${currentCardRoute.value}-attachments`,
+    }
   ];
 
   const timeline = {
@@ -75,13 +87,7 @@ const tabs = computed(() => {
     pathName: `${currentCardRoute.value}-timeline`,
   };
 
-  const attachments = {
-    text: t('cases.attachments.attachments'),
-    value: 'attachments',
-    pathName: `${currentCardRoute.value}-attachments`,
-  };
-
-  if (id.value) tabs.push(timeline, attachments);
+  if (id.value) tabs.push(timeline);
 
   if (customFields.value.length) {
     tabs.push({
@@ -104,3 +110,13 @@ const tabs = computed(() => {
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 </script>
+
+<style lang="scss" scoped>
+@use '@webitel/styleguide/scroll' as *;
+
+.opened-card-tabs {
+  @extend %wt-scrollbar;
+  height: 100%;
+  overflow: auto;
+}
+</style>

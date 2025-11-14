@@ -5,8 +5,9 @@ env:
   deb_artifact_name: deb_package
 
 on:
-  push:
-    branches: [ master ]
+  workflow_dispatch:
+  # push:
+  #   branches: [ master ]
 
 jobs:
   install_deps:

@@ -6,7 +6,8 @@
       </h3>
       <wt-action-bar
         :include="[IconAction.ADD, IconAction.DELETE]"
-        :disabled:delete="!selected.length"
+        :disabled:delete="!selected.length || disableUserInput"
+        :disabled:add="disableUserInput"
         @click:add="showAddFieldPopup = true"
         @click:delete="
           askDeleteConfirmation({
@@ -42,6 +43,7 @@
         :headline="emptyHeadline"
         :title="emptyTitle"
         :text="textEmpty"
+        :disabled-primary-action="disableUserInput"
         :primary-action-text="emptyPrimaryActionText"
         @click:primary="showAddFieldPopup = true"
       />
@@ -54,7 +56,10 @@
           :headers="headers"
           :selected="selected"
           sortable
+          row-reorder
+          :is-row-reorder-disabled="isReorderDisabled"
           @update:selected="setSelected"
+          @reorder:row="handleReorder"
         >
           <template #title="{ item }">
             {{ t(item?.name ?? 'reusable.title') }}
@@ -64,16 +69,14 @@
           </template>
           <template #actions="{ item }">
             <template v-if="!isSystemField(item)">
-              <wt-icon-btn
-                class="sortable-btn"
-                icon="move"
-              />
               <wt-icon-action
                 action="edit"
+                :disabled="disableUserInput"
                 @click="edit(item)"
               />
               <wt-icon-action
                 action="delete"
+                :disabled="disableUserInput"
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
@@ -105,9 +108,8 @@
 </template>
 
 <script setup>
-import { WtEmpty } from '@webitel/ui-sdk/components';
-import WtTable from '@webitel/ui-sdk/src/components/wt-table/wt-table.vue';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -117,11 +119,10 @@ import {
   useTableEmpty,
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import deepCopy from 'deep-copy';
-import Sortable, { Swap } from 'sortablejs';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import FieldPopup from './field-popup.vue';
 
 const props = defineProps({
@@ -144,6 +145,8 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const { disableUserInput } = useUserAccessControl();
 
 const { itemInstance, loadItem, setItemProp } = useCardStore(props.namespace);
 
@@ -210,26 +213,10 @@ const headers = computed(() => {
 
 const isSystemField = (field) => field.id === 'name' || field.readonly;
 
-const sortableConfig = {
-  swap: true, // Enable swap mode
-  swapClass: 'sortable-swap-highlight', // Class name for swap item (if swap mode is enabled)
-  animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
-  easing: 'cubic-bezier(1, 0, 0, 1)', // Easing for animation. Defaults to null. See https://easings.net/ for examples.
-  filter: (_, rowElement) => {
-    const allowDraggable =
-      rowElement.getElementsByClassName('sortable-btn')?.length;
-
-    return !allowDraggable; // Prevent draggable if the element has not draggable button
-  },
-  onMove: function(evt) {
-    const preventSwap =
-      evt.related.getElementsByClassName('sortable-btn')?.length;
-
-    return !!preventSwap; // Prevent swap if the element has not draggable button
-  },
-};
-
-let sortableInstance = null;
+const isReorderDisabled = (field) => {
+  if (!field) return true;
+  return isSystemField(field) || disableUserInput.value
+}
 
 const getFieldsForSortable = () => {
   return !search.value
@@ -239,61 +226,46 @@ const getFieldsForSortable = () => {
     });
 };
 
-const initSortable = (wrapper) => {
-  if (sortableInstance) {
-    sortableInstance.destroy();
-    sortableInstance = null;
-  }
+// Handle row reorder from the table
+const handleReorder = async ({ oldIndex, newIndex }) => {
+  if (isReorderDisabled(fields.value[newIndex])) return
+  // change value to true for hide table and trigger re-render table with new positions items
+  isLoading.value = true;
+  
+  // Swap items in the array
+  if (oldIndex === newIndex) {
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 100);
+    return;
+  } // No need to swap if indexes are the same
 
-  sortableInstance = new Sortable(wrapper, {
-    ...sortableConfig,
+  // We need sort array before change position
+  const changePositionArray = getFieldsForSortable().toSorted(
+    (a, b) => a.position - b.position,
+  );
 
-    async onEnd({ oldIndex, newIndex }) {
-      // change value to true for hide table and trigger re-render table with new positions items
-      isLoading.value = true;
-      // Swap items in the array
-      if (oldIndex === newIndex) {
-        setTimeout(() => {
-          isLoading.value = false;
-        }, 100);
-        return;
-      } // No need to swap if indexes are the same
+  const movedItem = changePositionArray[newIndex];
+  const movedItemPosition = movedItem.position;
+  const replaceItem = changePositionArray[oldIndex];
+  movedItem.position = replaceItem.position;
+  replaceItem.position = movedItemPosition;
 
-      // We need sort array before change position
-      const changePositionArray = getFieldsForSortable().toSorted(
-        (a, b) => a.position - b.position,
-      );
-
-      const movedItem = changePositionArray[newIndex];
-      const movedItemPosition = movedItem.position;
-      const replaceItem = changePositionArray[oldIndex];
-      movedItem.position = replaceItem.position;
-      replaceItem.position = movedItemPosition;
-
-      itemInstance.value.fields.forEach((field, index) => {
-        if (field.id === movedItem.id) {
-          itemInstance.value.fields[index] = movedItem;
-        } else if (field.id === replaceItem.id) {
-          itemInstance.value.fields[index] = replaceItem;
-        }
-      });
-
-      setItemProp({ path: 'fields', value: itemInstance.value.fields });
-
-      // wait until all data will be loaded and then display table
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 100);
-    },
+  itemInstance.value.fields.forEach((field, index) => {
+    if (field.id === movedItem.id) {
+      itemInstance.value.fields[index] = movedItem;
+    } else if (field.id === replaceItem.id) {
+      itemInstance.value.fields[index] = replaceItem;
+    }
   });
-};
 
-function callSortable() {
-  const wrapper = document.querySelector('.wt-table__body');
-  if (wrapper) {
-    initSortable(wrapper);
-  }
-}
+  setItemProp({ path: 'fields', value: itemInstance.value.fields });
+
+  // wait until all data will be loaded and then display table
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 100);
+};
 
 const {
   isVisible: isDeleteConfirmationPopup,
@@ -307,7 +279,9 @@ const deleteField = (field) => {
   const itemIndex = itemInstance.value.fields.findIndex(
     (item) => item.id === field.id,
   );
-  itemInstance.value.fields.splice(itemIndex, 1);
+  if (itemIndex !== -1) {
+    itemInstance.value.fields.splice(itemIndex, 1);
+  }
 
   itemInstance.value.fields.forEach((item, index) => {
     if (item?.position > field.position) {
@@ -385,51 +359,13 @@ const addNewField = (field) => {
 };
 
 watch(
-  () => fields.value,
-  () => {
-    callSortable();
-  },
-  {
-    deep: true,
-  },
-);
-watch(
   () => itemInstance.value,
   () => {
     setSelected([]);
   },
 );
 
-// IMPORTANT that watch trigger for isLoading, because we need to wait until all data will be loaded and then call sortable
-watch(
-  () => isLoading.value,
-  (value) => {
-    if (!value) {
-      setTimeout(() => {
-        callSortable();
-      }, 300);
-    }
-  },
-);
-
-onMounted(async () => {
+onMounted(() => {
   isLoading.value = false;
-
-  if (!Sortable.__pluginsMounted) {
-    Sortable.mount(new Swap());
-    Sortable.__pluginsMounted = true;
-  }
-
-  setTimeout(() => {
-    callSortable();
-  }, 100);
 });
 </script>
-
-<style lang="scss" scoped>
-.opened-custom-lookup-columns {
-  :deep(.wt-table .sortable-swap-highlight) {
-    background: var(--primary-color);
-  }
-}
-</style>

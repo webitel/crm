@@ -25,14 +25,14 @@
 
         <wt-switcher
           :label="t('reusable.state')"
-          :value="itemInstance.enabled"
+          :model-value="itemInstance.enabled"
           :disabled="disableUserInput"
-          @change="setItemProp({ path: 'enabled', value: $event })"
+          @update:model-value="setItemProp({ path: 'enabled', value: $event })"
         />
       </div>
 
       <wt-select
-        v-if="itemInstance.type === WebitelContactsGroupType.Dynamic"
+        v-if="itemInstance.type === ContactsGroupType.Dynamic"
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
         :value="itemInstance.defaultGroup"
@@ -47,7 +47,7 @@
 
 <script setup>
 import { ContactGroupsAPI } from '@webitel/api-services/api';
-import { WebitelContactsGroupType } from '@webitel/api-services/gen/models';
+import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -76,7 +76,7 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 function loadStaticContactGroupsList(params) {
   return ContactGroupsAPI.getLookup({
     ...params,
-    type: WebitelContactsGroupType.Static,
+    type: ContactsGroupType.Static,
     enabled: true,
   });
 }

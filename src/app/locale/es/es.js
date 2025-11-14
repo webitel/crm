@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Proveedor ',
         username: 'Nombre de usuario',
         dummy: 'No hay opciones de mensajería todavía',
+        sendMessage: 'Enviar mensaje',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Bot de Telegram',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Aplicación de Telegram',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Chat web',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Pasarela de chat personalizada',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Tiempo de resolución (dd:hh:mm)',
       validFrom: 'Válido desde',
       validTo: 'Válido hasta',
+      error: {
+        duplicateConditionName: 'Ya existe una condición con este nombre',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Agregar grupo',
       assignee: 'Asignado',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Dinámico',
-        [WebitelContactsGroupType.Static]: 'Estático',
+        [ContactsGroupType.Dynamic]: 'Dinámico',
+        [ContactsGroupType.Static]: 'Estático',
       },
     },
 
@@ -195,6 +200,7 @@ export default {
       columns: 'Columnas',
       addColumn: 'Agregar columna',
       editColumn: 'Editar columna',
+      defaultValue: 'Valor predeterminado',
       confirmDeleteColumn:
         'Después de eliminar la columna y guardar, todos los datos ingresados en el campo correspondiente también se eliminarán.',
       controlPermissions: 'Controlar permisos',

@@ -14,11 +14,13 @@
 </template>
 
 <script setup>
+import { WtObject } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl.js';
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 
 defineProps({
@@ -44,17 +46,16 @@ const currentCardRoute = computed(() => {
     CrmSections.CONTACTS;
 });
 
+const { hasReadAccess: hasCaseReadAccess } = useUserAccessControl({
+  resource: WtObject.Case,
+});
+
 const tabs = computed(() => {
   const tabList = [
     {
       text: t('timeline.timeline'),
       value: 'timeline',
       pathName: `${currentCardRoute.value}-timeline`,
-    },
-    {
-      text: t('cases.case', 2),
-      value: 'cases',
-      pathName: `${currentCardRoute.value}-cases`,
     },
     {
       text: t('contacts.communications.communications', 2),
@@ -67,6 +68,14 @@ const tabs = computed(() => {
       pathName: `${currentCardRoute.value}-variables`,
     },
   ];
+
+  if(hasCaseReadAccess.value) {
+    tabList.splice(1, 0, {
+      text: t('cases.case', 2),
+      value: 'cases',
+      pathName: `${currentCardRoute.value}-cases`,
+    })
+  }
 
   if (customFields.value.length) {
     tabList.push({

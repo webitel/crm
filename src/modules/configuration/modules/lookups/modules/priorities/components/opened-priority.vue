@@ -47,24 +47,27 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 
 const namespace = 'configuration/lookups/priorities';
 const { t } = useI18n();
 const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace: cardNamespace,
   id,
   itemInstance,
   ...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, { onLoadErrorHandler: handleError });
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   ...restStore,
   id,
   itemInstance,
+  onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.PRIORITIES);
@@ -84,7 +87,7 @@ const path = computed(() => {
     { name: t('crm'), route: '/start-page' },
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('vocabulary.priority', 2), route: '/lookups/priorities' },
+    { name: t('vocabulary.priority', 2), route: '/configuration/lookups/priorities' },
     {
       name: isNew.value ? t('reusable.new') : pathName.value,
     },

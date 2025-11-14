@@ -2,7 +2,7 @@
   <template>
     <div
       v-if="editMode"
-      class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50"
+      class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50 case-details-container"
     >
       <custom-lookup-dynamic-field
         v-for="field in fields"
@@ -14,7 +14,7 @@
     </div>
     <div
       v-else
-      class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50"
+      class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50 case-details-container"
     >
       <wt-display-content
         v-for="field in fields"
@@ -65,4 +65,8 @@ watch(() => props.fields, () => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.case-details-container {
+  max-height: fit-content;
+}
+</style>

@@ -67,6 +67,7 @@ import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
+import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
@@ -77,6 +78,7 @@ const isReadOnly = inject('isReadOnly');
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
 const {
   namespace,
@@ -87,7 +89,7 @@ const {
   setId,
   resetState,
   deleteItem,
-} = useCardStore(baseNamespace);
+} = useCardStore(baseNamespace, { onLoadErrorHandler: handleError });
 
 provide(
   'access',

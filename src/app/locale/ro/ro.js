@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Furnizor ',
         username: 'Nume utilizator',
         dummy: 'Nu există opțiuni de mesagerie încă',
+        sendMessage: 'Trimite mesaj',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Chat web',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Gateway de chat personalizat',
+          [ChatGatewayProvider.PORTAL]: 'Portal',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Timp de rezolvare (zz:hh:mm)',
       validFrom: 'Valid de la',
       validTo: 'Valid până la',
+      error: {
+        duplicateConditionName: 'O condiție cu acest nume există deja',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Adaugă grup',
       assignee: 'Responsabil',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Dinamic',
-        [WebitelContactsGroupType.Static]: 'Static',
+        [ContactsGroupType.Dynamic]: 'Dinamic',
+        [ContactsGroupType.Static]: 'Static',
       },
     },
 
@@ -195,6 +200,7 @@ export default {
       columns: 'Coloane',
       addColumn: 'Adaugă coloană',
       editColumn: 'Editează coloană',
+      defaultValue: 'Valoare implicită',
       confirmDeleteColumn:
         'După ștergerea coloanei și salvare, toate datele introduse în câmpul corespunzător vor fi șterse de asemenea.',
       controlPermissions: 'Control permisiuni',

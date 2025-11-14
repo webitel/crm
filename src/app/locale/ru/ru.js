@@ -1,9 +1,9 @@
 import {
+  ContactsGroupType,
   WebitelCasesRelationType,
   WebitelCasesSourceType,
-  WebitelContactsGroupType,
 } from '@webitel/api-services/gen/models';
-import ChatGatewayProvider from '@webitel/ui-sdk/src/enums/ChatGatewayProvider/ChatGatewayProvider.enum.js';
+import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
 import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
@@ -42,6 +42,7 @@ export default {
         provider: 'Провайдер',
         username: 'Имя пользователя',
         dummy: 'Пока еще не было текстовых диалогов',
+        sendMessage: 'Отправить сообщение',
         messengers: {
           [ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
           [ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Приложение',
@@ -50,6 +51,7 @@ export default {
           [ChatGatewayProvider.WEBCHAT]: 'Web chat',
           [ChatGatewayProvider.INFOBIP]: 'Infobip',
           [ChatGatewayProvider.CUSTOM]: 'Custom Chat Gateway',
+          [ChatGatewayProvider.PORTAL]: 'Портал',
         },
       },
     },
@@ -124,6 +126,9 @@ export default {
       resolutionTimeTitle: 'Плановое время решения (dd:hh:mm)',
       validFrom: 'Действителен с',
       validTo: 'Действителен до',
+      error: {
+        duplicateConditionName: 'Условие с таким названием уже существует',
+      },
     },
 
     sources: {
@@ -156,8 +161,8 @@ export default {
       addGroup: 'Добавить контакты',
       assignee: 'Исполнитель',
       types: {
-        [WebitelContactsGroupType.Dynamic]: 'Динамическая',
-        [WebitelContactsGroupType.Static]: 'Статическая',
+        [ContactsGroupType.Dynamic]: 'Динамическая',
+        [ContactsGroupType.Static]: 'Статическая',
       },
     },
 
@@ -189,6 +194,7 @@ export default {
       columns: 'Колонки',
       addColumn: 'Добавить колонку',
       editColumn: 'Редактировать колонку',
+      defaultValue: 'Значение по умолчанию',
       confirmDeleteColumn:
         'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
       controlPermissions: 'Контролировать права доступа',
