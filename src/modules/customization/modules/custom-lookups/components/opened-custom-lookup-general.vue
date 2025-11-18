@@ -33,9 +33,9 @@
 
       <wt-textarea
         :label="t('vocabulary.description')"
-        :value="itemInstance.about"
+        :model-value="itemInstance.about"
         :disabled="disableUserInput"
-        @input="setItemProp({ path: 'about', value: $event })"
+        @update:model-value="setItemProp({ path: 'about', value: $event })"
       />
 
       <!--      TODO Hidden before backend will be ready for this-->
