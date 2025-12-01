@@ -1,3 +1,4 @@
+import { FormatDateMode } from '@webitel/ui-sdk/enums';
 import { formatDate } from '@webitel/ui-sdk/utils';
 
 export default function prettifyDate(timestamp) {
@@ -5,5 +6,5 @@ export default function prettifyDate(timestamp) {
   if (!value) return '';
   const date = new Date(value);
 
-  return formatDate(date, 'datetimeShort');
+  return formatDate(date, FormatDateMode.DATETIME_SHORT);
 }
