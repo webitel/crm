@@ -183,7 +183,7 @@
             >
               <display-dynamic-field-extension
                 :field="header"
-                :value="getCustomValues(item, header.field)"
+                :value="getCustomValues(item, header)"
               />
             </template>
             <template #expansion="{ item }">
@@ -248,6 +248,7 @@ import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { FieldType } from '../../customization/modules/custom-lookups/enums/FieldType';
 import DisplayDynamicFieldExtension
   from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { SearchMode } from '../enums/SearchMode';
@@ -267,8 +268,6 @@ const store = useStore();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
   useUserAccessControl();
-
-const { close } = useClose('the-start-page');
 
 const tableStore = useCasesStore();
 
@@ -418,8 +417,11 @@ const createHeaderFromField = (field) => ({
 });
 
 // Helper function to extract custom field value from item data
-const getCustomValues = (item, fieldName) => {
-  return get(item, ['custom', fieldName]);
+// For boolean fields, uses header.field (field ID), for other fields uses header.value (field name)
+const getCustomValues = (item, header) => {
+  // Boolean fields are stored by field ID, other fields by field name (camelCase)
+  const key = header.kind === FieldType.Boolean ? header.field : header.value;
+  return get(item, ['custom', key]);
 };
 
 // Helper function to fetch custom headers from API
