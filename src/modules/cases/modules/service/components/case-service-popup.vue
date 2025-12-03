@@ -23,7 +23,18 @@
         item-label="name"
         children-prop="service"
         @update:model-value="selectedElement = $event"
-      />
+      >
+        <template #item-prefix="{data}">
+          <wt-icon-btn
+            v-tooltip.bottom="data.description"
+            class="case-service-popup__description-icon"
+            :disabled="!data.description"
+            :size="ComponentSize.SM"
+            color="info"
+            icon="docs"
+          />
+        </template>
+      </wt-tree>
       <wt-empty
         v-else
         :text="$t('webitelUI.empty.text.empty')"
@@ -48,6 +59,7 @@
 
 <script setup>
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
+import { ComponentSize } from '@webitel/ui-sdk/enums/ComponentSize/ComponentSize.js';
 import deepCopy from 'deep-copy';
 import { onMounted, ref, watch } from 'vue';
 
@@ -134,6 +146,11 @@ onMounted(() => {
 .case-service-popup {
   &__search-bar {
     margin-bottom: var(--spacing-sm);
+  }
+
+  &__description-icon {
+    margin: auto 0;
+    flex-shrink: 0;
   }
 }
 </style>
