@@ -21,6 +21,8 @@
 </template>
 
 <script setup>
+import { FormatDateMode } from '@webitel/ui-sdk/enums';
+import { formatDate } from '@webitel/ui-sdk/utils';
 import capitalize from 'lodash/capitalize';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -35,8 +37,7 @@ const props = defineProps({
 const { d, locale } = useI18n();
 
 const timestampTime = computed(() => {
-  const date = new Date(+props.timestamp);
-  return capitalize(date.toLocaleTimeString());
+  return formatDate(+props.timestamp, FormatDateMode.TIME);
 });
 
 const timestampWeekDay = computed(() => {
