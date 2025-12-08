@@ -12,9 +12,6 @@
     disabled
     :model-value="value"
   ></wt-switcher>
-  <template v-else-if="field.kind === FieldType.Number">
-    {{ value }}
-  </template>
   <template v-else>
     {{ showText }}
   </template>
@@ -44,17 +41,11 @@ const props = defineProps({
 });
 
 const showText = computed(() => {
-  if (!props.value) {
-    return '';
+  if (props?.field?.kind === FieldType.Calendar) {
+    return displayText(prettifyDate(props?.value));
   }
 
-  const value = props.value;
-
-  if (props.field.kind === FieldType.Calendar) {
-    return displayText(prettifyDate(value));
-  }
-
-  return displayText(value);
+  return displayText(props?.value);
 });
 </script>
 
