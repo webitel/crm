@@ -27,7 +27,7 @@
 <script setup>
 import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 
-import generateMediaURL from '../../../../../../../app/scripts/generateMediaURL.js';
+import { getCallMediaUrl } from '@webitel/api-services/api';
 
 const eventBus = inject('$eventBus');
 const audioId = inject('audioId'); // value from the-timeline.vue component
@@ -59,7 +59,7 @@ const closePlayer = () => {
 const openPlayer = (id) => {
   if (id) {
     currentFileId.value = id;
-    audioURL.value = generateMediaURL(id);
+    audioURL.value = getCallMediaUrl(id);
   } else {
     closePlayer();
   }
