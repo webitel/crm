@@ -476,8 +476,10 @@ const isRowExpansionDisabled = (row) => {
 
 // Initialize headers before table store
 onMounted(async () => {
-  await initialize();
+  // @author @stanislav-kozak
+  // Order is important
   await loadCustomHeaders();
+  await initialize();
 });
 
 // Keep custom headers in sync when base headers change
