@@ -108,7 +108,7 @@ const loadCatalogs = async () => {
     const { items } = await ServiceCatalogsAPI.getList({
       size: -1, // It this case for get all catalogs with services we need to pass size -1
       search: search.value,
-      fields: ['id', 'name', 'closeReasonGroup', 'status', 'service'],
+      fields: ['id', 'name', 'closeReasonGroup', 'status', 'service', 'description'],
       hasSubservices: true,
       state: true,
     });
