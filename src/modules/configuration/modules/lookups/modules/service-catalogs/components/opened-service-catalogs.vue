@@ -51,7 +51,6 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
@@ -59,7 +58,6 @@ import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
 
 const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
-const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
@@ -129,10 +127,6 @@ const path = computed(() => {
       name: isNew.value
         ? t('reusable.new')
         : prettifyBreadcrumbName(pathName.value),
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
     },
   ];
 });
