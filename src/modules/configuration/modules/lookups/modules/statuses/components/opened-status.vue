@@ -58,7 +58,6 @@ import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSectio
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
@@ -66,7 +65,6 @@ import { useErrorRedirectHandler } from '../../../../../../error-pages/composabl
 const namespace = 'configuration/lookups/statuses';
 
 const { t } = useI18n();
-const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
@@ -127,13 +125,7 @@ const path = computed(() => {
     { name: t('startPage.configuration.name'), route: '/configuration' },
     { name: t('lookups.lookups'), route: '/configuration' },
     { name: t('lookups.statuses.statuses', 2), route: '/configuration/lookups/statuses' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
-    },
+    { name: isNew.value ? t('reusable.new') : pathName.value },
   ];
 });
 initialize();
