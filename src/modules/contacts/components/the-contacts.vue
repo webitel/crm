@@ -49,9 +49,11 @@
                   :filters-manager="filtersManager"
                   :is-filters-restoring="isFiltersRestoring"
                   :search-mode-options="searchModeOpts"
+                  :search-mode="searchMode"
                   @filter:add="addFilter"
                   @filter:update="updateFilter"
                   @filter:delete="deleteFilter"
+                  @update:search-mode="updateSearchMode"
                 />
               </template>
             </wt-action-bar>
@@ -126,7 +128,8 @@ const {
   selected,
   filtersManager,
   isFiltersRestoring,
-} = storeToRefs(tableStore);
+  searchMode
+ } = storeToRefs(tableStore);
 
 const {
   initialize,
@@ -135,6 +138,7 @@ const {
   addFilter,
   updateFilter,
   deleteFilter,
+  updateSearchMode,
 } = tableStore;
 
 const isContactPopup = ref(false);
