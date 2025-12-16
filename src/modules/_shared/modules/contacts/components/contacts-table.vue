@@ -27,6 +27,10 @@
           :headers="headers"
           :selected="selected"
           sortable
+          resizable-columns
+          reorderable-columns
+          @column-resize="columnResize"
+          @column-reorder="columnReorder"
           @sort="updateSort"
           @update:selected="updateSelected"
         >
@@ -139,6 +143,8 @@ const {
   updatePage,
   updateSize,
   updateSort,
+  columnResize,
+  columnReorder
 } = props.tableStore;
 
 const defaultEmptyProps = useTableEmpty({
