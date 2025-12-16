@@ -64,6 +64,10 @@
         :selectable="false"
         :grid-actions="false"
         sortable
+        resizable-columns
+        reorderable-columns
+        @column-resize="columnResize"
+        @column-reorder="columnReorder"
         @sort="updateSort"
       >
         <template #name="{ item }">
@@ -221,6 +225,8 @@ const {
   updateSize,
   updateSort,
   updateShownHeaders,
+  columnReorder,
+  columnResize,
 } = tableStore;
 
 const {
