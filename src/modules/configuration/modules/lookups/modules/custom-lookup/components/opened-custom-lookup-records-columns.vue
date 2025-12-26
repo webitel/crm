@@ -41,7 +41,7 @@ const { t } = useI18n();
 
 const fields = computed(() =>
   store.getters[`${props.namespace}/LOOKUP_FIELDS`]?.filter(
-    (field) => !field.hidden && (!field.default || field.kind === FieldType.Boolean) && !field.always,
+    (field) => !field.hidden && (!field.readonly || field.kind === FieldType.Boolean) && !field.always,
   ),
 );
 </script>
