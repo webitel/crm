@@ -56,7 +56,7 @@
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
     :value="value"
-    :v="v$.itemInstance[field.id]"
+    :v="validation"
     mode="datetime"
     :required="isRequired"
     :disabled="props.disable"
