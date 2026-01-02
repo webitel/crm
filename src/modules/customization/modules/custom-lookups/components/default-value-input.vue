@@ -12,16 +12,28 @@
     :multiple="multiple"
     @input="selectValue($event)"
   />
-  <wt-input
-    v-else-if="displayInput"
-    :key="kind"
-    :label="t('customization.customLookups.defaultValue')"
-    :value="value.default"
-    required
-    :v="v.value.default"
-    :type="inputType"
-    @input="value.default = $event"
-  />
+  <template v-else-if="displayInput">
+    <wt-datepicker
+      v-if="kind === FieldType.Calendar"
+      :key="kind"
+      :label="t('customization.customLookups.defaultValue')"
+      :value="value.default"
+      required
+      :v="v.value.default"
+      mode="datetime"
+      @input="value.default = +$event"
+    />
+    <wt-input
+      v-else
+      :key="kind"
+      :label="t('customization.customLookups.defaultValue')"
+      :value="value.default"
+      required
+      :v="v.value.default"
+      :type="inputType"
+      @input="value.default = $event"
+    />
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -49,6 +61,7 @@ const { t } = useI18n();
 const options = ref([]);
 const displaySelect = computed(() => kind.value === FieldType.Select || kind.value === FieldType.Multiselect);
 const displayInput = computed(() => kind.value !== FieldType.Boolean);
+const displayDatePicker = computed(() => kind.value !== FieldType.Boolean);
 const multiple = computed(() => kind.value === FieldType.Multiselect);
 const inputType = computed(() => kind.value === FieldType.Number ? 'number' : 'string');
 
