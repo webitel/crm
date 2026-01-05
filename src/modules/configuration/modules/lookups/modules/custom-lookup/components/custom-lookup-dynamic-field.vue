@@ -212,12 +212,4 @@ const selectElements = (value) => {
     })),
   );
 };
-
-onMounted(() => {
-  const defaultValue = props.field.default;
-
-  if (!value.value && defaultValue) {
-    setValue(defaultValue);
-  }
-});
 </script>

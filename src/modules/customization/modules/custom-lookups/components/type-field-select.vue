@@ -115,6 +115,7 @@ const changeType = (value) => {
   }
 
   props.value.default = value === FieldType.Boolean ? false : null;
+  props.value.required = false
 
   props.value.kind = value;
 };

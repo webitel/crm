@@ -283,6 +283,19 @@ const saveCase = async () => {
   await toggleEditMode(false);
 };
 
+watch(() => customFields.value, () => {
+  if(isNew.value) {
+    customFields.value.forEach((field) => {
+      if (field.required) {
+        setItemProp({
+          path: `custom.${field.id}`,
+          value: field.default
+        })
+      }
+    })
+  }
+})
+
 onUnmounted(() => {
   toggleEditMode(false);
 });
