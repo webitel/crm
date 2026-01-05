@@ -42,7 +42,7 @@
           :disabled="!isNew"
           :value="value"
         />
-        
+
         <default-value-input
           v-if="value.required"
           :value="value"
@@ -51,6 +51,7 @@
         />
 
         <wt-switcher
+          v-if="value.kind && value.kind !== FieldType.Boolean"
           :model-value="value.required"
           :label="$t('reusable.required')"
           :v="v$"
@@ -82,6 +83,7 @@ import deepCopy from 'deep-copy';
 import { computed, nextTick,ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { FieldType } from '../enums/FieldType.js';
 import DefaultValueInput from './default-value-input.vue';
 import TypeFieldSelect from './type-field-select.vue';
 

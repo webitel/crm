@@ -78,6 +78,7 @@ const {
   namespace: cardNamespace,
   id,
   itemInstance,
+  setItemProp,
   ...restStore
 } = useCardStore(namespace);
 
@@ -181,6 +182,17 @@ onMounted(async () => {
   await loadDictionary();
 
   await initializeCard();
+
+  if (isNew.value) {
+    store.getters[`${namespace}/card/LOOKUP_FIELDS`]?.forEach((field) => {
+      if (field.required) {
+        setItemProp({
+          path: `${field.id}`,
+          value: field.default
+        })
+      }
+    })
+  }
 });
 </script>
 
