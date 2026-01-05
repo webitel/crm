@@ -21,12 +21,7 @@
           <h3 class="table-title__title">
             {{ t('customization.customLookups.allValues') }}
           </h3>
-          <upload-file-icon-btn
-            v-if="hasCreateAccess"
-            accept=".csv"
-            class="icon-action"
-            @change="processCSV"
-          />
+
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
@@ -44,6 +39,12 @@
               <filter-search
                 :namespace="filtersNamespace"
                 name="search"
+              />
+              <upload-file-icon-btn
+                v-if="hasCreateAccess"
+                accept=".csv"
+                class="icon-action"
+                @change="processCSV"
               />
             </template>
           </wt-action-bar>

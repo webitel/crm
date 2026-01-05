@@ -1,7 +1,7 @@
 <template>
   <div class="upload-file-icon-btn">
     <wt-icon-btn
-      v-tooltip="t('iconHints.upload')"
+      v-tooltip="t('reusable.upload')"
       icon="upload"
       @click="triggerFileInput"
     />
