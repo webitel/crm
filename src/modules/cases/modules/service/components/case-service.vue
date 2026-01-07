@@ -18,7 +18,7 @@
         {{ t('cases.service') }}
 
         <wt-icon
-          v-if="(!isReadOnly && !itemInstance?.service.name) || editMode"
+          v-if="hasServiceValidationError"
           v-tooltip="t('cases.serviceValidation')"
           icon="attention"
           color="error"
@@ -46,7 +46,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { inject, onUnmounted, ref, watch } from 'vue';
+import { inject, onUnmounted, ref, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -80,6 +80,12 @@ const isSlaRecalculationPopup = ref(false);
 const catalogData = ref(null);
 
 const serviceNamespace = `${cardNamespace}/service`;
+
+const hasServiceValidationError = computed(() => {
+  if (isReadOnly) return false; // skip errors on read-only mode
+
+  return !itemInstance?.value?.service?.name;
+});
 
 function setServiceToStore(service) {
   return store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
