@@ -29,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
       ...casesRoutes,
       ...contactsRoutes,
       ...configurationRoutes,
+      {
+        path: '/404',
+        name: 'not-found',
+        component: NotFound,
+      },
     ],
   },
   {
@@ -43,11 +48,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'access-denied',
     component: AccessDenied,
   },
-  {
-    path: '/404',
-    name: 'not-found',
-    component: NotFound,
-  },
+
 ];
 
 const router = createRouter({
