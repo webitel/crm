@@ -11,10 +11,9 @@
 
     <template #main>
       <wt-textarea
-        :value="draft.message"
+        v-model:model-value="draft.message"
         :placeholder="t('objects.chat.draftPlaceholder')"
         @enter="sendMessage"
-        @input="draft.message = $event"
       />
     </template>
     <template #actions>
