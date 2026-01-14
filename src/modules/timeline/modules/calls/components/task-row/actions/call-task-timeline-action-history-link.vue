@@ -6,7 +6,7 @@
       target="_blank"
     >
       <wt-icon-btn
-        icon="link"
+        icon="history"
       />
     </a>
   </div>
