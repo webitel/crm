@@ -49,7 +49,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { minValue,required } from '@vuelidate/validators';
+import { minValue, required, maxValue } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
@@ -80,6 +80,10 @@ const v$ = useVuelidate(computed(() => ({
     calendar: { required },
     reactionTime: { required, minValue: minValue(1) },
     resolutionTime: { required, minValue: minValue(1) },
+    // The values can't be equal, so I subtract 1 minute for that.
+    // @author @Lera24
+    // https://webitel.atlassian.net/browse/WTEL-8635
+    validFrom: { maxValue: maxValue(itemInstance.value.validTo - 60000) }
   },
 })), { itemInstance }, { $autoDirty: true });
 

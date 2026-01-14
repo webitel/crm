@@ -57,6 +57,8 @@
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           :disabled="disableUserInput"
+          :v="v.itemInstance.validFrom"
+          :custom-validators="customValidation"
           mode="datetime"
           clearable
           @input="setItemProp({ path: 'validFrom', value: +$event })"
@@ -79,6 +81,7 @@
 import { CalendarsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
@@ -102,6 +105,15 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 function loadCalendarsList(search) {
   return CalendarsAPI.getLookup(search);
 }
+
+const customValidation = computed(() => {
+  if (!itemInstance.value.validTo) return [];
+
+  return [{
+    name: 'maxValue',
+    text: t('validation.maxValue', { max: new Date(itemInstance.value.validTo).toLocaleString() }),
+  }]
+})
 </script>
 
 <style lang="scss" scoped>
