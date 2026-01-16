@@ -149,6 +149,7 @@ const changeDirty = (dirty) => {
 
 const changeRequired = (event) => {
   value.value.required = event;
+  value.value.default = null
 
   nextTick(() => {
     v$.value.$touch();
