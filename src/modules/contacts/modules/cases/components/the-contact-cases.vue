@@ -10,20 +10,21 @@
       />
     </header>
     <header class="contact-cases-header">
-      <h3 class="contact-cases-header__title">
+      <h3 class="contact-cases-header__title typo-heading-3">
         {{ $t('cases.case', 2) }}
       </h3>
 
       <cases-filter-search-bar
         :table-store="tableStore"
-        class="contact-cases__search-filter" />
+        class="contact-cases__search-filter"
+      />
 
       <wt-action-bar
         :include="[
-              IconAction.REFRESH,
-              IconAction.FILTERS,
-              IconAction.COLUMNS,
-            ]"
+          IconAction.REFRESH,
+          IconAction.FILTERS,
+          IconAction.COLUMNS,
+        ]"
         @click:refresh="loadDataList"
         @click:filters="showActionsPanel = !showActionsPanel"
       >
@@ -99,7 +100,7 @@
         </template>
         <template #priority="{ item }">
           <color-component-wrapper
-            :class="{ 'contact-cases__priority': !!item.priority?.color }"
+            :class="{ 'contact-cases__priority typo-body-1': !!item.priority?.color }"
             :color="item.priority?.color"
           >
             {{ item.priority?.name }}
@@ -179,7 +180,10 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script
+  lang="ts"
+  setup
+>
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import {
@@ -268,8 +272,10 @@ const anyFiltersOnFiltersPanel = computed(() => {
 
 </script>
 
-<style lang="scss" scoped>
-
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .contact-cases {
@@ -284,9 +290,7 @@ const anyFiltersOnFiltersPanel = computed(() => {
     align-items: center;
   }
 
-  &-header__title {
-    @extend %typo-heading-3;
-  }
+  &-header__title {}
 
   &__search-filter {
     margin-left: auto;
@@ -307,7 +311,6 @@ const anyFiltersOnFiltersPanel = computed(() => {
   }
 
   &__priority {
-    @extend %typo-body-1;
     font-weight: bold;
   }
 }

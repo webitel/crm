@@ -1,6 +1,6 @@
 <template>
   <div class="case-persons">
-    <span class="case-persons__title">{{ t('cases.persons') }}</span>
+    <span class="case-persons__title typo-heading-4">{{ t('cases.persons') }}</span>
     <div class="case-persons__wrapper">
       <editable-field
         :label="t('cases.author')"
@@ -68,7 +68,7 @@
             path: 'assignee',
             value: { id: $event.id, name: $event.name },
           })
-        "
+          "
         @open-link="getContactLink(itemInstance.assignee?.id)"
       >
         <template #default="props">
@@ -258,7 +258,10 @@ const getContactsLookup = async (params) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-persons {
@@ -273,7 +276,6 @@ const getContactsLookup = async (params) => {
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
     padding: var(--spacing-xs);
   }
 
@@ -298,7 +300,6 @@ const getContactsLookup = async (params) => {
 
   &__label {
     font-weight: bold;
-    @extend %typo-body-1;
   }
 
   &__select {

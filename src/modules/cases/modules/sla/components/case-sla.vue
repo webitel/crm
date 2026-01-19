@@ -1,11 +1,11 @@
 <template>
   <div class="case-sla">
-    <span class="case-sla__title">{{ t('cases.appliedSLA') }}</span>
+    <span class="case-sla__title typo-heading-4">{{ t('cases.appliedSLA') }}</span>
     <div
       v-if="itemInstance.sla"
       class="case-sla__content"
     >
-      <div class="case-sla__name">
+      <div class="case-sla__name typo-body-1">
         <span>{{ itemInstance?.sla?.name }}</span>
       </div>
       <template v-if="slaConditionName">
@@ -96,7 +96,10 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-sla {
@@ -104,7 +107,6 @@ watch(
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
     padding: var(--spacing-xs);
   }
 
@@ -122,7 +124,6 @@ watch(
   }
 
   &__name {
-    @extend %typo-body-1;
     //TODO: replace bold with actual font-weight after TYPOGRAPHY/body 1 bold is implemented
     font-weight: bold;
   }

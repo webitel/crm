@@ -1,6 +1,6 @@
 <template>
   <div class="timeline-row-info">
-    <p class="timeline-row-info-title">
+    <p class="timeline-row-info-title typo-subtitle-2">
       <slot
         name="title"
         v-bind="timesScope"
@@ -9,7 +9,7 @@
       </slot>
     </p>
 
-    <p class="timeline-row-info-subtitle">
+    <p class="timeline-row-info-subtitle typo-subtitle-2">
       <slot
         name="subtitle"
         v-bind="timesScope"
@@ -64,11 +64,10 @@ const timesScope = computed(() => {
 });
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
-.timeline-row-info-title,
-.timeline-row-info-subtitle {
-  @extend %typo-subtitle-2;
-}
 </style>

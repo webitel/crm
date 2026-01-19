@@ -2,7 +2,7 @@
   <div class="wt-display-content">
     <span
       v-if="showLabel"
-      class="wt-display-content__title"
+      class="wt-display-content__title typo-heading-4"
     >
       {{ label }}
     </span>
@@ -47,7 +47,10 @@ const label = computed(() => {
 });
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .wt-display-content {
@@ -55,8 +58,5 @@ const label = computed(() => {
   flex-direction: column;
   gap: var(--spacing-sm);
 
-  &__title {
-    @extend %typo-heading-4;
-  }
 }
 </style>

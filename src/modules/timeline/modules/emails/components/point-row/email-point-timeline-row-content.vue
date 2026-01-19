@@ -5,7 +5,7 @@
     <div>
       <p
         v-if="subject"
-        class="email-point-timeline-subject__title"
+        class="email-point-timeline-subject__title typo-subtitle-1"
       >
         {{ t('timeline.emails.subject') }}:
         <span>{{ props.subject }}</span>
@@ -47,7 +47,10 @@ const content = computed(() => {
 });
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .email-point-timeline-subject {
@@ -55,8 +58,5 @@ const content = computed(() => {
   gap: var(--spacing-xs);
   flex-direction: column;
 
-  &__title {
-    @extend %typo-subtitle-1;
-  }
 }
 </style>
