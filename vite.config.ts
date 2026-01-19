@@ -1,20 +1,17 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
 import vueDevTools from 'vite-plugin-vue-devtools';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-
   return defineConfig({
     base: '/crm',
     build: {
-      sourcemap: true,
-      minify: false, // Disable minification for readable debugging
+      // sourcemap: true,
+      // minify: false, // Disable minification for readable debugging
     },
     server: {
       host: true,
@@ -34,7 +31,6 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         vue: '@vue/compat',
-        '@': resolve(__dirname, 'src'),
         'lodash/fp': 'lodash-es',
         lodash: 'lodash-es',
         '@aliasedDeps/api-services/axios': resolve(
@@ -64,9 +60,6 @@ export default ({ mode }) => {
         globals: {
           Buffer: true, // can also be 'build', 'dev', or false
         },
-      }),
-      createSvgSpritePlugin({
-        include: '**/sprite/*.svg',
       }),
       checker({
         typescript: false,
