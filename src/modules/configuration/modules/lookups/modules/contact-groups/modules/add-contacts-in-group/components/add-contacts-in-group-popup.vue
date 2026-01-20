@@ -26,9 +26,10 @@
             :data="dataList"
             :headers="headers"
             :selected="selected"
-            sortable
             :lazy="true"
             :on-loading="handleIntersect"
+            data-key="id"
+            sortable
             @sort="updateSort"
             @update:selected="updateSelected"
           >
