@@ -59,7 +59,8 @@
 
             <wt-player
               v-if="isShowPlayer"
-              :src="audioURL"
+              :src="'https://cdn6.sefon.pro/files/prev/1/The%20Eagles%20-%20Hotel%20California%20%28192kbps%29.mp3' || audioURL"
+              position="relative"
               @close="closePlayer"
             />
         </task-timeline-row-content-wrapper>
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { WtDisplayChipItems, WtPlayer } from '@webitel/ui-sdk/components';
 import { computed, inject, onMounted, onUnmounted, provide, ref, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';

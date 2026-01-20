@@ -36,7 +36,6 @@
       </template>
     </delete-confirmation-popup>
 
-    <div class="table-section__table-wrapper">
       <wt-empty
         v-if="showEmpty"
         :image="imageEmpty"
@@ -50,7 +49,10 @@
 
       <wt-loader v-show="isLoading" />
 
-      <div v-if="!showEmpty && !isLoading">
+      <div
+       v-if="!showEmpty && !isLoading"
+       class="table-section__table-wrapper"
+      >
         <wt-table
           :data="fields"
           :headers="headers"
@@ -87,7 +89,6 @@
             </template>
           </template>
         </wt-table>
-      </div>
     </div>
 
     <!--    TODO With some reason validation from this popup using on validate all ItemInstance, need investigate why this happening, for now use v-if to work correct for add and update field -->

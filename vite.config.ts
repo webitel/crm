@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import { vite as vidstack } from 'vidstack/plugins';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -41,7 +42,7 @@ export default ({ mode }) => {
        where "/esm" dir still exists. need to update vue-datepicker to v8 at least */
         'date-fns/esm': 'date-fns',
       },
-      dedupe: ['vue', '@vue/compat', 'zod'],
+      dedupe: ['vue', '@vue/compat', 'zod', 'pinia', 'vidstack'],
     },
     plugins: [
       vue({
@@ -50,9 +51,11 @@ export default ({ mode }) => {
             compatConfig: {
               MODE: 2,
             },
+            isCustomElement: (tag) => tag.startsWith('media-'),
           },
         },
       }),
+      vidstack(),
       // https://www.npmjs.com/package/vite-plugin-node-polyfills
       nodePolyfills({
         // are needed for csv-parse
