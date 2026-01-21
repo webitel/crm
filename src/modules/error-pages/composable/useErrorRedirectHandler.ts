@@ -1,13 +1,47 @@
 import { useRouter } from 'vue-router';
 import { ErrorRedirectMap } from '../enems/ErrorRedirectMap.enum';
 
+const HTTP_METHODS = {
+  GET: 'get',
+} as const;
+
+ //@author o.chorpita https://webitel.atlassian.net/browse/WTEL-8133
+ // Checks if this is an error loading an item
+ //onLoadErrorHandler is called only for loadItem() errors (GET request)
+function isItemLoadError(err: any): boolean {
+  const method = (err?.config?.method ?? err?.request?.method).toLowerCase();
+  return method === HTTP_METHODS.GET;
+}
+
+function getErrorStatus(err: any): number | undefined {
+  return err?.status ?? err?.response?.status;
+}
+
+function redirectToErrorPage(router: any, path: string) {
+  router.replace(path)
+}
+
 export function useErrorRedirectHandler() {
   const router = useRouter();
 
   const handleError = (err: any) => {
-    const status = err?.status ?? err?.response?.status;
-    const to = ErrorRedirectMap[status];
-    if (to) return router.push(to);
+    if (!err) return;
+
+    const status = getErrorStatus(err);
+    if (!status) return;
+
+    // Check if there's a direct redirect for this status in the map
+    const directRedirect = ErrorRedirectMap[status];
+    if (directRedirect) {
+      redirectToErrorPage(router, directRedirect);
+      return;
+    }
+
+    // If this is an item load error (GET request) and there's no direct redirect,
+    // use 404 redirect
+    if (isItemLoadError(err)) {
+      redirectToErrorPage(router, ErrorRedirectMap[404]);
+    }
   };
 
   return { handleError };
