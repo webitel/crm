@@ -3,7 +3,7 @@
     v-if="showHeader"
     class="timeline-header"
   >
-    <p class="timeline-header-duration">
+    <p class="timeline-header-duration typo-subtitle-2">
       {{ timelineInterval }}
     </p>
     <div class="timeline-header-actions">
@@ -14,7 +14,7 @@
         :emails-count="emailsCount"
       />
       <button
-        class="timeline-header-collapse"
+        class="timeline-header-collapse typo-body-2"
         @click="collapseAll"
       >
         {{ t('contacts.collapseAll') }}
@@ -91,7 +91,10 @@ async function loadCounters() {
 loadCounters();
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .timeline-header {
@@ -103,17 +106,12 @@ loadCounters();
   border-radius: var(--border-radius);
 }
 
-.timeline-header-duration {
-  @extend %typo-subtitle-2;
-}
-
 .timeline-header-actions {
   display: flex;
   gap: var(--spacing-md);
 }
 
 .timeline-header-collapse {
-  @extend %typo-body-2;
   cursor: pointer;
 }
 </style>

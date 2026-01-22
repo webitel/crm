@@ -11,13 +11,11 @@ import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import customizationIcon from '../../../app/assets/icons/sprite/crm-customization.svg';
-import lookupsIcon from '../../../app/assets/icons/sprite/crm-lookups.svg';
 import { useConfigurationStore } from '../store/configurationStore';
 
 const router = useRouter();
 
-const icons = [lookupsIcon, customizationIcon];
+const icons = ['crm-lookups', 'crm-customization'];
 
 const configurationStore = useConfigurationStore();
 const { isCustomLookupsLoaded, accessibleNav, hasAnyConfigurationAccess } = storeToRefs(configurationStore);

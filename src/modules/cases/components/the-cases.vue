@@ -21,7 +21,8 @@
 
           <cases-filter-search-bar
             v-if="!isInitialEmpty"
-            class="cases__search-filter" />
+            class="cases__search-filter"
+          />
 
           <wt-action-bar
             :include="displayIncludeActions"
@@ -102,18 +103,16 @@
               </wt-item-link>
             </template>
             <template #subject="{ item }">
-              <wt-item-link
-                :link="{
-                  name: `${CrmSections.CASES}-card`,
-                  params: { id: item?.id },
-                }"
-              >
+              <wt-item-link :link="{
+                name: `${CrmSections.CASES}-card`,
+                params: { id: item?.id },
+              }">
                 {{ item.subject }}
               </wt-item-link>
             </template>
             <template #priority="{ item }">
               <color-component-wrapper
-                :class="{ 'case-priority': !!item.priority?.color }"
+                :class="{ 'case-priority typo-body-1': !!item.priority?.color }"
                 :color="item.priority?.color"
               >
                 {{ item.priority?.name }}
@@ -132,7 +131,7 @@
               {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
-              <service-path :service="item?.service"/>
+              <service-path :service="item?.service" />
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -187,9 +186,7 @@
               />
             </template>
             <template #expansion="{ item }">
-                <case-details-table
-                  :item="item"
-                />
+              <case-details-table :item="item" />
             </template>
             <template #actions="{ item }">
               <wt-icon-action
@@ -205,7 +202,7 @@
                     deleted: [item],
                     callback: () => deleteEls(item),
                   })
-                "
+                  "
               />
             </template>
           </wt-table>
@@ -466,7 +463,7 @@ const syncMissingCustomHeaders = (newHeaders) => {
 };
 
 const rowClass = (item) => {
-  if(item.statusCondition?.final) return 'row-success';
+  if (item.statusCondition?.final) return 'row-success';
 }
 
 // Disable row expansion if neither 'comments' nor 'description' exist in the row data
@@ -490,7 +487,7 @@ watch(
 );
 
 watch(() => emptyCause.value, (newCause, oldCause) => {
-  if(newCause && oldCause !== newCause && newCause === EmptyCause.EMPTY) {
+  if (newCause && oldCause !== newCause && newCause === EmptyCause.EMPTY) {
     isInitialEmpty.value = true;
   }
 });
@@ -514,7 +511,10 @@ watch(customHeadersLoaded, (isLoaded) => {
 });
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .cases {
@@ -537,7 +537,6 @@ watch(customHeadersLoaded, (isLoaded) => {
 
   //TODO: typo-body-1 bold
   .case-priority {
-    @extend %typo-body-1;
     font-weight: bold;
   }
 }

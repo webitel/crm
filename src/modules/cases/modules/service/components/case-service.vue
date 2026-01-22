@@ -14,7 +14,7 @@
     />
 
     <div class="case-service__wrapper">
-      <span class="case-service__title">
+      <span class="case-service__title typo-heading-4">
         {{ t('cases.service') }}
 
         <wt-icon
@@ -26,7 +26,7 @@
       </span>
 
       <service-path
-        class="case-service__path"
+        class="case-service__path typo-body-1"
         :service="itemInstance?.service"
         :catalog="catalogData"
       />
@@ -172,7 +172,10 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-service {
@@ -191,13 +194,7 @@ onUnmounted(() => {
     padding: var(--spacing-xs);
   }
 
-  &__path {
-    @extend %typo-body-1;
-  }
-
   &__title {
-    @extend %typo-heading-4;
-
     display: flex;
     align-items: center;
     gap: var(--spacing-2xs);

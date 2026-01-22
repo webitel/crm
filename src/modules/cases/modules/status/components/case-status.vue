@@ -6,7 +6,7 @@
     @cancel="cancelChangingStatusToFinal"
   />
   <div class="case-status">
-    <span class="case-status__title">{{ t('cases.status') }}</span>
+    <span class="case-status__title typo-heading-4">{{ t('cases.status') }}</span>
 
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
@@ -235,7 +235,10 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-status {
@@ -243,7 +246,6 @@ watch(
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
   }
 
   &__select,

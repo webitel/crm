@@ -1,6 +1,6 @@
 <template>
   <div class="case-priority">
-    <span class="case-priority__title">{{ t('cases.priority') }}</span>
+    <span class="case-priority__title typo-heading-4">{{ t('cases.priority') }}</span>
     <div>
       <editable-field
         :edit-mode="editMode"
@@ -57,7 +57,10 @@ if (isNew.value) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-priority {
@@ -65,7 +68,6 @@ if (isNew.value) {
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
   }
 
   &__select,

@@ -1,12 +1,10 @@
 <template>
   <template>
     <div class="case-number">
-      <span class="case-number__title">{{ t('cases.caseNumber') }}</span>
+      <span class="case-number__title typo-heading-4">{{ t('cases.caseNumber') }}</span>
       <div class="case-number__wrapper">
         <p>{{ itemInstance.name }}</p>
-        <wt-copy-action
-          :value="itemInstance.name"
-        />
+        <wt-copy-action :value="itemInstance.name" />
       </div>
     </div>
   </template>
@@ -29,7 +27,10 @@ const {
 const { t } = useI18n();
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-number {
@@ -37,7 +38,6 @@ const { t } = useI18n();
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
     padding: var(--spacing-xs);
   }
 

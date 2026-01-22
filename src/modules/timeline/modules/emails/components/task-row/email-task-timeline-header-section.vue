@@ -2,13 +2,11 @@
   <div class="email-task-timeline-header-section">
     <p>{{ title }}:</p>
     <slot name="name">
-      <span class="email-task-timeline-header-section__name">{{ name }}</span>
+      <span class="email-task-timeline-header-section__name typo-subtitle-1">{{ name }}</span>
     </slot>
 
     <slot name="tooltip">
-      <wt-popover
-        v-if="hiddenParticipants.length"
-      >
+      <wt-popover v-if="hiddenParticipants.length">
         <template #activator="{ toggle }">
           <div @click="toggle">
             <wt-chip> +{{ hiddenParticipants.length }} </wt-chip>
@@ -45,7 +43,10 @@ const props = defineProps({
 });
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .email-task-timeline-header-section {
@@ -53,9 +54,6 @@ const props = defineProps({
   align-items: center;
   gap: var(--spacing-xs);
 
-  &__name {
-    @extend %typo-subtitle-1;
-  }
 
   &__wrapper {
     padding: var(--spacing-xs);

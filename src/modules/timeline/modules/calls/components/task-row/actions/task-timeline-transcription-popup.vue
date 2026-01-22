@@ -25,7 +25,7 @@
         />
       </div>
       <wt-loader v-show="isLoading" />
-      <div class="task-timeline-transcription-popup__table">
+      <div class="task-timeline-transcription-popup__table wt-scrollbar">
         <wt-table
           v-show="!isLoading"
           :data="phraseData"
@@ -160,7 +160,6 @@ watch(
   }
 
   &__table {
-    @extend %wt-scrollbar;
     overflow: auto;
     max-height: 40vh;
   }
