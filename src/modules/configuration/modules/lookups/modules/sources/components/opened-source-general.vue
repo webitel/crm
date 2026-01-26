@@ -6,8 +6,8 @@
       </h3>
     </header>
     <div class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50">
-      <wt-input
-        v-model="modelValue.name"
+      <wt-input-text
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
         :regle-validation="validationFields?.name"
         :disabled="disableUserInput"

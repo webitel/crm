@@ -6,13 +6,13 @@
       </h3>
     </header>
     <div class="opened-card-input-grid">
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
@@ -25,13 +25,13 @@
         @input="setItemProp({ path: 'status', value: $event })"
       />
 
-      <wt-input
+      <wt-input-text
         :label="t('lookups.serviceCatalogs.prefix')"
-        :value="itemInstance.prefix"
+        :model-value="itemInstance.prefix"
         :v="v.itemInstance.prefix"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'prefix', value: $event })"
+        @update:model-value="setItemProp({ path: 'prefix', value: $event })"
       />
 
       <wt-select
@@ -62,11 +62,11 @@
         @input="setItemProp({ path: 'teams', value: $event })"
       />
 
-      <wt-input
+      <wt-input-text
         :label="t('lookups.serviceCatalogs.code')"
         :disabled="disableUserInput"
-        :value="itemInstance.code"
-        @input="setItemProp({ path: 'code', value: $event })"
+        :model-value="itemInstance.code"
+        @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
       <wt-select

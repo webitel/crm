@@ -11,13 +11,13 @@
     </template>
     <template #main>
       <form class="opened-card-input-grid opened-card-input-grid--1-col">
-        <wt-input
-          :value="itemInstance.name"
+        <wt-input-text
+          :model-value="itemInstance.name"
           :label="t('reusable.name')"
           :v="v$.itemInstance.name"
           :disabled="disableUserInput"
           required
-          @input="setItemProp({ path: 'name', value: $event })"
+          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
         <wt-select
           :value="itemInstance.priorities"

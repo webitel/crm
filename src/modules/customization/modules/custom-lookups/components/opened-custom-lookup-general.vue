@@ -8,17 +8,17 @@
     <div
       class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50"
     >
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
-      <wt-input
+      <wt-input-text
         :label="t('customization.customLookups.code')"
-        :value="itemInstance.repo"
+        :model-value="itemInstance.repo"
         :v="v.itemInstance.repo"
         :disabled="!isNew || disableUserInput"
         :custom-validators="[
@@ -28,7 +28,7 @@
           },
         ]"
         required
-        @input="setItemProp({ path: 'repo', value: $event })"
+        @update:model-value="setItemProp({ path: 'repo', value: $event })"
       />
 
       <wt-textarea
