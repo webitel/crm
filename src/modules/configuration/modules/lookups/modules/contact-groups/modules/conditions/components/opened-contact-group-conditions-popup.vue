@@ -15,12 +15,12 @@
     </template>
     <template #main>
       <form class="opened-contact-group-conditions-popup__wrapper">
-        <wt-input
-          :value="itemInstance.expression"
+        <wt-input-text
+          :model-value="itemInstance.expression"
           :label="t('lookups.slas.conditions', 1)"
           :v="v$.itemInstance.expression"
           required
-          @input="setItemProp({ path: 'expression', value: $event })"
+          @update:model-value="setItemProp({ path: 'expression', value: $event })"
         />
         <wt-select
           :value="itemInstance.group"

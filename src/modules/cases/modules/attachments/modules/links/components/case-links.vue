@@ -34,18 +34,18 @@
         @reset="resetForm"
         @submit="submitLink"
       >
-        <wt-input
+        <wt-input-text
           :placeholder="t('cases.attachments.url')"
-          :value="formState.linkUrl"
+          :model-value="formState.linkUrl"
           :v="v$.linkUrl"
           class="link-form__input"
-          @input="updateLinkUrl"
+          @update:model-value="updateLinkUrl"
         />
-        <wt-input
+        <wt-input-text
           :placeholder="t('cases.attachments.linkText')"
-          :value="formState.linkText"
+          :model-value="formState.linkText"
           class="link-form__input"
-          @input="updateLinkText"
+          @update:model-value="updateLinkText"
         />
       </table-top-row-bar>
 

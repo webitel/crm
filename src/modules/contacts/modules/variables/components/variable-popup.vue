@@ -11,17 +11,15 @@
     </template>
     <template #main>
       <form>
-        <wt-input
-          v-model="draft.key"
+        <wt-input-text
+          v-model:model-value="draft.key"
           :v="v$.draft.key"
-          :clearable="false"
           :label="t('vocabulary.keys',1)"
           required
         />
-        <wt-input
-          v-model="draft.value"
+        <wt-input-text
+          v-model:model-value="draft.value"
           :v="v$.draft.value"
-          :clearable="false"
           :label="t('vocabulary.values',1)"
           required
         />

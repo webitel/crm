@@ -25,11 +25,10 @@
         @reset="resetForm"
         @submit="submitComment"
       >
-        <wt-input
+        <wt-input-text
+          v-model:model-value="formState.commentText"
           :placeholder="t('cases.comments.yourCommentHere')"
-          :value="formState.commentText"
           class="comment-form__input"
-          @input="updateCommentText"
         />
       </table-top-row-bar>
 
