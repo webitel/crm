@@ -122,10 +122,13 @@
               {{ item.statusCondition?.name }}
             </template>
             <template #source="{ item }">
-              <wt-icon
-                color="info"
-                :icon="item?.source?.type"
-              />
+              <div class="cases-source">
+                <wt-icon
+                  color="info"
+                  :icon="item?.source?.type"
+                />
+                <span >{{ item?.source?.name }}</span>
+              </div>
             </template>
             <template #createdAt="{ item }">
               {{ prettifyDate(item.createdAt) }}
@@ -538,6 +541,11 @@ watch(customHeadersLoaded, (isLoaded) => {
   //TODO: typo-body-1 bold
   .case-priority {
     font-weight: bold;
+  }
+
+  .cases-source {
+    display: flex;
+    gap: var(--spacing-xs);
   }
 }
 </style>
