@@ -64,8 +64,8 @@
 <script setup lang="ts">
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { useAccessControl } from '@webitel/ui-sdk/composables/useAccessControl/useAccessControl';
-import { IconAction } from '@webitel/ui-sdk/enums';
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -85,7 +85,7 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
-const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
+const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl(WtObject.Contact);
 const { itemInstance } = useCardStore(
   props.namespace,
 );
