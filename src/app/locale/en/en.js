@@ -4,7 +4,7 @@ import {
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
 import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import {CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -99,11 +99,11 @@ export default {
     },
   },
   startPage: {
-    [CrmSections.CONTACTS]: {
+    [CrmSections.Contacts]: {
       name: 'Contacts',
       text: 'In this section, you can work with your contacts: clients, customers etc.',
     },
-    [CrmSections.CASES]: {
+    [CrmSections.Cases]: {
       name: 'Cases',
       text: 'Here you can view Cases registered in the system.',
     },

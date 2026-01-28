@@ -30,7 +30,7 @@
                 deleted: selected,
                 callback: () => deleteData(selected),
               })
-            "
+              "
           >
             <template #search-bar>
               <filter-search
@@ -70,12 +70,10 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link
-                :link="{
-                  name: `${CrmSections.STATUSES}-card`,
-                  params: { id: item.id },
-                }"
-              >
+              <wt-item-link :link="{
+                name: `${CrmSections.STATUSES}-card`,
+                params: { id: item.id },
+              }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -103,7 +101,7 @@
                     deleted: [item],
                     callback: () => deleteData(item),
                   })
-                "
+                  "
               />
             </template>
           </wt-table>
@@ -121,7 +119,7 @@
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
@@ -220,4 +218,7 @@ const add = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style
+  lang="scss"
+  scoped
+></style>

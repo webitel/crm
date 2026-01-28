@@ -15,7 +15,7 @@
 
 <script setup>
 import { WtObject } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -69,7 +69,7 @@ const tabs = computed(() => {
     },
   ];
 
-  if(hasCaseReadAccess.value) {
+  if (hasCaseReadAccess.value) {
     tabList.splice(1, 0, {
       text: t('cases.case', 2),
       value: 'cases',
@@ -105,7 +105,10 @@ function changeTab(tab) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .opened-contact-tabs {
   flex-grow: 1;
   display: flex;

@@ -4,7 +4,7 @@ import {
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
 import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -99,11 +99,11 @@ export default {
     },
   },
   startPage: {
-    [CrmSections.CONTACTS]: {
+    [CrmSections.Contacts]: {
       name: 'Контакты',
       text: 'В этом разделе вы можете работать с Контактами: клиентами, партнерами и т.д.',
     },
-    [CrmSections.CASES]: {
+    [CrmSections.Cases]: {
       name: 'Обращения',
       text: 'Здесь вы можете просматривать Обращения, зарегистрированные в системе.',
     },

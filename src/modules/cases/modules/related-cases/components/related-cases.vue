@@ -155,7 +155,7 @@
 
 <script setup>
 import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
-import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum.js';
+import {CrmSections } from '@webitel/ui-sdk/enums';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';

@@ -9,9 +9,7 @@
         wide
         @click="changeTab(tab)"
       >
-        <wt-icon
-          :icon="tab.icon"
-        />
+        <wt-icon :icon="tab.icon" />
         {{ tab.label }}
       </wt-button>
     </header>
@@ -23,7 +21,7 @@
 </template>
 
 <script setup>
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -96,7 +94,10 @@ function changeTab(tab) {
 
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .opened-contact-communications {
   display: flex;
   flex-direction: column;

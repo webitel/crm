@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { createTableStore } from '@webitel/ui-datalist';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
-import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum';
+import {CrmSections } from '@webitel/ui-sdk/enums';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';

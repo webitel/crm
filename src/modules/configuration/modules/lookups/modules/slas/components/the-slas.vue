@@ -44,9 +44,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -68,9 +66,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link
-                :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
-              >
+              <wt-item-link :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -111,7 +107,7 @@
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -182,7 +178,7 @@ onUnmounted(() => {
 });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }});
+  return router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' } });
 };
 
 const path = computed(() => [
@@ -209,5 +205,7 @@ const {
 } = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

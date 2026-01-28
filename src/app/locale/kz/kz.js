@@ -4,7 +4,7 @@ import {
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
 import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -99,11 +99,11 @@ export default {
     },
   },
   startPage: {
-    [CrmSections.CONTACTS]: {
+    [CrmSections.Contacts]: {
       name: 'Байланыстар',
       text: 'Бұл бөлімде сіз байланыстарыңызбен жұмыс істей аласыз: клиенттер, тұтынушылар және т.б.',
     },
-    [CrmSections.CASES]: {
+    [CrmSections.Cases]: {
       name: 'Кейстер',
       text: 'Мұнда сіз жүйеде тіркелген кейстерді көре аласыз.',
     },

@@ -26,8 +26,11 @@
   </template>
 </template>
 
-<script setup lang="ts">
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+<script
+  setup
+  lang="ts"
+>
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
@@ -65,7 +68,10 @@ watch(() => props.fields, () => {
 });
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .case-details-container {
   max-height: fit-content;
 }

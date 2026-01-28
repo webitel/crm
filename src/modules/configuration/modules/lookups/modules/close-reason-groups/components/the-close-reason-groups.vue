@@ -44,9 +44,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -68,9 +66,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link
-                :link="{ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: item.id } }"
-              >
+              <wt-item-link :link="{ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -107,7 +103,7 @@
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -198,7 +194,7 @@ const {
 } = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' }})
+  return router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' } })
 };
 
 function edit(item) {
@@ -210,5 +206,7 @@ function edit(item) {
 
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

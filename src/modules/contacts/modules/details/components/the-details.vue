@@ -3,7 +3,10 @@
     v-if="hasEditAccess && !isReadOnly"
     to="#page-header-actions"
   >
-    <wt-button :disabled="disabledSave" @click="saveDetails">{{ t('reusable.save') }}</wt-button>
+    <wt-button
+      :disabled="disabledSave"
+      @click="saveDetails"
+    >{{ t('reusable.save') }}</wt-button>
   </teleport>
   <div class="opened-card">
     <div class="opened-card-form">
@@ -35,9 +38,12 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { useVuelidate } from '@vuelidate/core';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import get from 'lodash/get';
 import { computed, inject, watch } from 'vue';
@@ -93,4 +99,7 @@ watch(() => props.fields, () => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style
+  scoped
+  lang="scss"
+></style>

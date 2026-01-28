@@ -28,7 +28,7 @@
                 deleted: selected,
                 callback: () => deleteData(selected),
               })
-            "
+              "
           >
             <template #search-bar>
               <filter-search
@@ -110,7 +110,7 @@
                 :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
                 @update:model-value="
                   patchProperty({ index, prop: 'state', value: $event })
-                "
+                  "
               />
             </template>
             <template #actions="{ item }">
@@ -127,7 +127,7 @@
                     deleted: [item],
                     callback: () => deleteData(item),
                   })
-                "
+                  "
               />
             </template>
           </wt-table>
@@ -147,7 +147,7 @@ import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
@@ -348,7 +348,10 @@ watch(
 );
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;

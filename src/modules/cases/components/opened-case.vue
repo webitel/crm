@@ -39,7 +39,7 @@
     </template>
 
     <template #side-panel>
-      <opened-case-general :is-new="isNew"/>
+      <opened-case-general :is-new="isNew" />
     </template>
 
     <template #main>
@@ -51,7 +51,10 @@
   </wt-dual-panel>
 </template>
 
-<script lang="ts" setup>
+<script
+  lang="ts"
+  setup
+>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { UsersAPI } from '@webitel/api-services/api';
@@ -60,7 +63,7 @@ import { useCachedItemInstanceName }
   from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName.js';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
@@ -284,7 +287,7 @@ const saveCase = async () => {
 };
 
 watch(() => customFields.value, () => {
-  if(isNew.value) {
+  if (isNew.value) {
     customFields.value.forEach((field) => {
       if (field.required) {
         setItemProp({
@@ -301,7 +304,10 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .opened-case {
   &__actions-wrapper {
     display: flex;

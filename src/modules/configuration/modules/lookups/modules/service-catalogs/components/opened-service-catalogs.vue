@@ -47,7 +47,7 @@ import { required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -140,4 +140,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style
+  scoped
+  lang="scss"
+></style>

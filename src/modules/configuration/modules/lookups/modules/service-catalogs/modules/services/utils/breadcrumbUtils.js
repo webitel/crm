@@ -1,4 +1,4 @@
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 

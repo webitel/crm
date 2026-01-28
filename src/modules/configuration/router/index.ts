@@ -9,7 +9,6 @@ const configurationRoutes: RouteRecordRaw[] = [
     path: 'configuration',
     name: 'configuration',
     component: TheConfiguration,
-    // beforeEnter: checkRouteAccess,
   },
   ...lookupsRoutes,
   ...customizationRoutes,
