@@ -21,7 +21,7 @@
         />
         <wt-header-actions
           :build-info="{ release, build, timestamp }"
-          :user="userinfo"
+          :user="userInfo"
           @logout="logoutUser"
           @settings="settings"
         />
