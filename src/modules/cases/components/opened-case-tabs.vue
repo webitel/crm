@@ -59,7 +59,7 @@ const CASE_VIEW_NAME = 'case_view';
 const currentCardRoute = computed(() => {
   return typeof route.name === 'string' && route.name.includes(CASE_VIEW_NAME) ?
     CASE_VIEW_NAME :
-    CrmSections.CASES;
+    CrmSections.Cases;
 });
 
 const tabs = computed(() => {

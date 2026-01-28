@@ -70,7 +70,7 @@
           >
             <template #name="{ item }">
               <wt-item-link :link="{
-                name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+                name: `${CrmSections.CustomLookups}-card`,
                 params: { id: item.repo },
               }">
                 {{ item.name }}
@@ -212,7 +212,7 @@ const { close } = useClose('configuration');
 
 function edit(item) {
   router.push({
-    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+    name: `${CrmSections.CustomLookups}-card`,
     params: { id: item.repo },
   });
 }
@@ -240,7 +240,7 @@ const {
 
 const add = () => {
   router.push({
-    name: `${CrmSections.CUSTOM_LOOKUPS}-card`,
+    name: `${CrmSections.CustomLookups}-card`,
     params: { id: 'new' },
   });
 };

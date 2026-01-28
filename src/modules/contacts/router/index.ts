@@ -19,7 +19,6 @@ const contactsRoutes: RouteRecordRaw[] = [
       UiSection: CrmSections.Contacts,
       WtObject: WtObject.Contact,
     },
-    // redirect: { name: `the-start-page` },
   },
   {
     path: 'contacts/:id',

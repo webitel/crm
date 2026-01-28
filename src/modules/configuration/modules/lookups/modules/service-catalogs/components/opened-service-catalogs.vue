@@ -94,7 +94,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const { close } = useClose(CrmSections.ServiceCatalogs);
 
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
@@ -104,7 +104,7 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.SERVICE_CATALOGS}-general`,
+    pathName: `${CrmSections.ServiceCatalogs}-general`,
   };
 
   const tabs = [general];

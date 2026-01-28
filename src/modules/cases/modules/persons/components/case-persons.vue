@@ -226,7 +226,7 @@ const createRouteLinkParams = (name, id) => {
 
 const getContactLinkPreview = (id) => {
   if (!isReadOnly) {
-    return createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id);
+    return createRouteLinkParams(`${CrmSections.Contacts}-card`, id);
   }
 
   return createRouteLinkParams(CONTACT_VIEW_NAME, ':etag');
@@ -244,7 +244,7 @@ const getContactLink = async (id) => {
   let url;
 
   if (!isReadOnly) {
-    url = router.resolve(createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id)).href;
+    url = router.resolve(createRouteLinkParams(`${CrmSections.Contacts}-card`, id)).href;
   } else {
     const { etag } = await ContactsAPI.get({ itemId: id });
     url = router.resolve(createRouteLinkParams(CONTACT_VIEW_NAME, etag)).href;

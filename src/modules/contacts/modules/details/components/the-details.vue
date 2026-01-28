@@ -93,7 +93,7 @@ const saveDetails = () => {
 watch(() => props.fields, () => {
   if (!props.fields.length) {
     router.push({
-      name: `${CrmSections.CONTACTS}-timeline`,
+      name: `${CrmSections.Contacts}-timeline`,
     });
   }
 });

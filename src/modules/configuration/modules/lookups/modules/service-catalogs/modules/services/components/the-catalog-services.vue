@@ -71,7 +71,7 @@
               <wt-item-link
                 class="the-catalog-service__service-name"
                 :link="{
-                  name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                  name: `${CrmSections.ServiceCatalogs}-services`,
                   params: {
                     catalogId: route.params?.id,
                     rootId: item.id,
@@ -94,7 +94,7 @@
                 v-if="item.assignee?.id"
                 class="the-catalog-service__service-assignee"
                 :link="{
-                  name: `${CrmSections.CONTACTS}-card`,
+                  name: `${CrmSections.Contacts}-card`,
                   params: { id: item.assignee.id },
                 }"
               >
@@ -248,7 +248,7 @@ const path = computed(() => {
     {
       name: prettifyBreadcrumbName(catalog.value.name),
       route: {
-        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        name: `${CrmSections.ServiceCatalogs}-services`,
         params: {
           catalogId: catalog.value.id,
           rootId: catalog.value.id,
@@ -261,11 +261,11 @@ const path = computed(() => {
   return routes;
 });
 
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const { close } = useClose(CrmSections.ServiceCatalogs);
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+    name: `${CrmSections.ServiceCatalogs}-services-card`,
     params: {
       catalogId: route.params?.id,
       rootId: route.params?.rootId,
@@ -283,7 +283,7 @@ const {
 
 const addNewService = () => {
   router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+    name: `${CrmSections.ServiceCatalogs}-services-card`,
     params: {
       catalogId: route.params?.catalogId,
       rootId: route.params?.rootId,
@@ -314,7 +314,7 @@ const initializeBreadcrumbs = async () => {
       await loadRootService();
     }
   } catch {
-    router.push({ name: CrmSections.SERVICE_CATALOGS });
+    router.push({ name: CrmSections.ServiceCatalogs });
   }
 };
 const setRootForServices = () => {

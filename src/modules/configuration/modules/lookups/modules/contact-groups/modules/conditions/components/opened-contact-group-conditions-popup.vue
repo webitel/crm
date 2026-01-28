@@ -107,7 +107,7 @@ v$.value.$touch();
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 
-const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
+const { close } = useClose(`${CrmSections.ContactGroups}-conditions`);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {

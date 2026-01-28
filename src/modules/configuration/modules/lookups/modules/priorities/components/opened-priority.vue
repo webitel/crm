@@ -68,7 +68,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.PRIORITIES);
+const { close } = useClose(CrmSections.Priorities);
 
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {

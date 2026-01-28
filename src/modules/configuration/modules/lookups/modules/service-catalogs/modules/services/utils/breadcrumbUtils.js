@@ -25,7 +25,7 @@ export function buildServiceCrumbs(servicePath, catalogId) {
       {
         name: prettifyBreadcrumbName(servicePath[servicePath.length - 2].name),
         route: {
-          name: `${CrmSections.SERVICE_CATALOGS}-services`,
+          name: `${CrmSections.ServiceCatalogs}-services`,
           params: {
             catalogId,
             rootId: servicePath[servicePath.length - 2].id,
@@ -44,7 +44,7 @@ export function buildServiceCrumbs(servicePath, catalogId) {
     };
     if (index < servicePath.length - 1) {
       crumb.route = {
-        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        name: `${CrmSections.ServiceCatalogs}-services`,
         params: {
           catalogId,
           rootId: service.id,

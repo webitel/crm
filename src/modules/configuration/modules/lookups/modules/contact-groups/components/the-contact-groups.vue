@@ -90,7 +90,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link :link="{ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: item.id } }">
+              <wt-item-link :link="{ name: `${CrmSections.ContactGroups}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -250,7 +250,7 @@ const path = computed(() => [
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.CONTACT_GROUPS}-card`,
+    name: `${CrmSections.ContactGroups}-card`,
     params: { id: item.id },
   });
 }

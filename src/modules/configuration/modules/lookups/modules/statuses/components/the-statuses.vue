@@ -71,7 +71,7 @@
           >
             <template #name="{ item }">
               <wt-item-link :link="{
-                name: `${CrmSections.STATUSES}-card`,
+                name: `${CrmSections.Statuses}-card`,
                 params: { id: item.id },
               }">
                 {{ item.name }}
@@ -198,7 +198,7 @@ const { close } = useClose('configuration');
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.STATUSES}-card`,
+    name: `${CrmSections.Statuses}-card`,
     params: { id: item.id },
   });
 }
@@ -212,7 +212,7 @@ const {
 
 const add = () => {
   return router.push({
-    name: `${CrmSections.STATUSES}-card`,
+    name: `${CrmSections.Statuses}-card`,
     params: { id: 'new' },
   });
 };

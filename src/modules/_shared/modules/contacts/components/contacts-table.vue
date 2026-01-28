@@ -43,7 +43,7 @@
 
               <wt-item-link
                 :link="{
-                  name: `${CrmSections.CONTACTS}-card`,
+                  name: `${CrmSections.Contacts}-card`,
                   params: { id: item.id },
                 }"
               >

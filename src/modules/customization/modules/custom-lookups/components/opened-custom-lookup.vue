@@ -105,7 +105,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 });
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { close } = useClose(CrmSections.CUSTOM_LOOKUPS);
+const { close } = useClose(CrmSections.CustomLookups);
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );
@@ -114,12 +114,12 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.CUSTOM_LOOKUPS}-general`,
+    pathName: `${CrmSections.CustomLookups}-general`,
   };
   const columns = {
     text: t('customization.customLookups.columns', 2),
     value: 'columns',
-    pathName: `${CrmSections.CUSTOM_LOOKUPS}-columns`,
+    pathName: `${CrmSections.CustomLookups}-columns`,
   };
 
   const tabs = [general];
@@ -138,7 +138,7 @@ const path = computed(() => {
     {
       name: t('objects.customLookup.customLookup', 2),
       route: {
-        name: CrmSections.CUSTOM_LOOKUPS,
+        name: CrmSections.CustomLookups,
       },
     },
     {

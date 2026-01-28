@@ -62,7 +62,7 @@ const { itemInstance } = useCardStore(props.namespace);
 watch(() => props.fields, () => {
   if (!props.fields.length) {
     router.push({
-      name: `${CrmSections.CASES}-case-info`,
+      name: `${CrmSections.Cases}-case-info`,
     });
   }
 });

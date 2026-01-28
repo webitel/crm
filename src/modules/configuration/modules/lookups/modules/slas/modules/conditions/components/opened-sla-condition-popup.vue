@@ -124,7 +124,7 @@ const v$ = useVuelidate(computed(() => ({
 
 v$.value.$touch();
 
-const { close } = useClose(`${CrmSections.SLAS}-conditions`);
+const { close } = useClose(`${CrmSections.Slas}-conditions`);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {

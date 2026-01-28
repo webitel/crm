@@ -44,7 +44,7 @@ const selected = ref(options.value[0]);
 
 function createGroup() {
   router.push({
-    name: `${CrmSections.CONTACT_GROUPS}-card`,
+    name: `${CrmSections.ContactGroups}-card`,
     params: { id: 'new' },
     query: { type: selected.value.value.toLowerCase() }
   });

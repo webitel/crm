@@ -66,7 +66,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }">
+              <wt-item-link :link="{ name: `${CrmSections.Slas}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -178,7 +178,7 @@ onUnmounted(() => {
 });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' } });
+  return router.push({ name: `${CrmSections.Slas}-card`, params: { id: 'new' } });
 };
 
 const path = computed(() => [
@@ -192,7 +192,7 @@ const { close } = useClose('configuration');
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.SLAS}-card`,
+    name: `${CrmSections.Slas}-card`,
     params: { id: item.id },
   });
 };

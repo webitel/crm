@@ -68,7 +68,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link :link="{ name: `${CrmSections.PRIORITIES}-card`, params: { id: item.id } }">
+              <wt-item-link :link="{ name: `${CrmSections.Priorities}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -187,7 +187,7 @@ onUnmounted(() => {
 });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.PRIORITIES}-card`, params: { id: 'new' } });
+  return router.push({ name: `${CrmSections.Priorities}-card`, params: { id: 'new' } });
 };
 
 const path = computed(() => [
@@ -208,7 +208,7 @@ function askDeleteConfirmationWrapper(item) {
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.PRIORITIES}-card`,
+    name: `${CrmSections.Priorities}-card`,
     params: { id: item.id },
   });
 }

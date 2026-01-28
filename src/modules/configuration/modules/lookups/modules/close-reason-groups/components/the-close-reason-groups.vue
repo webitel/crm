@@ -66,7 +66,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link :link="{ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: item.id } }">
+              <wt-item-link :link="{ name: `${CrmSections.CloseReasonGroups}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -194,12 +194,12 @@ const {
 } = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.CLOSE_REASON_GROUPS}-card`, params: { id: 'new' } })
+  return router.push({ name: `${CrmSections.CloseReasonGroups}-card`, params: { id: 'new' } })
 };
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.CLOSE_REASON_GROUPS}-card`,
+    name: `${CrmSections.CloseReasonGroups}-card`,
     params: { id: item.id },
   });
 }

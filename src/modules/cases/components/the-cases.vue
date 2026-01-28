@@ -86,7 +86,7 @@
               <wt-item-link
                 class="cases__link-name"
                 :link="{
-                  name: `${CrmSections.CASES}-card`,
+                  name: `${CrmSections.Cases}-card`,
                   params: { id: item?.id },
                 }"
               >
@@ -104,7 +104,7 @@
             </template>
             <template #subject="{ item }">
               <wt-item-link :link="{
-                name: `${CrmSections.CASES}-card`,
+                name: `${CrmSections.Cases}-card`,
                 params: { id: item?.id },
               }">
                 {{ item.subject }}
@@ -351,7 +351,7 @@ const path = computed(() => [
 
 function add() {
   return router.push({
-    name: `${CrmSections.CASES}-card`,
+    name: `${CrmSections.Cases}-card`,
     params: { id: 'new' },
   });
 }
@@ -363,7 +363,7 @@ function edit(item) {
    */
   store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
   return router.push({
-    name: `${CrmSections.CASES}-card`,
+    name: `${CrmSections.Cases}-card`,
     params: { id: item.id },
   });
 }

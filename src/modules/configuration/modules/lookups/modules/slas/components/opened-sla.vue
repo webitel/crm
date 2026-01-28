@@ -94,19 +94,19 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.SLAS);
+const { close } = useClose(CrmSections.Slas);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.SLAS}-general`,
+    pathName: `${CrmSections.Slas}-general`,
   };
   const conditions = {
     text: t('lookups.slas.conditions', 2),
     value: 'conditions',
-    pathName: `${CrmSections.SLAS}-conditions`,
+    pathName: `${CrmSections.Slas}-conditions`,
   };
 
   const tabs = [general];

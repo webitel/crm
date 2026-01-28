@@ -93,7 +93,7 @@ const { isNew, pathName, saveText, initialize } = useCardComponent({
   onLoadErrorHandler: handleError
 });
 
-const { close } = useClose(CrmSections.CONTACT_GROUPS);
+const { close } = useClose(CrmSections.ContactGroups);
 
 const isDynamicGroup = computed(
   () => itemInstance.value.type === ContactsGroupType.Dynamic,
@@ -119,25 +119,25 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.CONTACT_GROUPS}-general`,
+    pathName: `${CrmSections.ContactGroups}-general`,
   };
 
   const contacts = {
     text: t(`vocabulary.contact`, 2),
     value: 'contacts',
-    pathName: `${CrmSections.CONTACT_GROUPS}-contacts`,
+    pathName: `${CrmSections.ContactGroups}-contacts`,
   };
 
   const conditions = {
     text: t('lookups.slas.conditions', 2),
     value: 'conditions',
-    pathName: `${CrmSections.CONTACT_GROUPS}-conditions`,
+    pathName: `${CrmSections.ContactGroups}-conditions`,
   };
 
   const permissions = {
     text: t('vocabulary.permissions', 2),
     value: 'permissions',
-    pathName: `${CrmSections.CONTACT_GROUPS}-permissions`,
+    pathName: `${CrmSections.ContactGroups}-permissions`,
   };
 
   const tabs = [general];

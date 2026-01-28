@@ -53,7 +53,7 @@ const CONTACT_VIEW_NAME = 'contact_view'
 const currentCardRoute = computed(() => {
   return typeof route.name === 'string' && route.name.includes(CONTACT_VIEW_NAME) ?
     CONTACT_VIEW_NAME :
-    CrmSections.CONTACTS;
+    CrmSections.Contacts;
 });
 
 const tabs = computed(() => [

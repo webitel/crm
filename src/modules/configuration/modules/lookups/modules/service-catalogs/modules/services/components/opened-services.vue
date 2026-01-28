@@ -126,7 +126,7 @@ const path = computed(() => {
   routes.push({
     name: prettifyBreadcrumbName(catalog.value?.name),
     route: {
-      name: `${CrmSections.SERVICE_CATALOGS}-services`,
+      name: `${CrmSections.ServiceCatalogs}-services`,
       params: {
         catalogId: catalog.value?.id,
         rootId: catalog.value?.id,
@@ -153,7 +153,7 @@ const path = computed(() => {
   routes.push({
     name: prettifyBreadcrumbName(rootService.value?.name),
     route: {
-      name: `${CrmSections.SERVICE_CATALOGS}-services`,
+      name: `${CrmSections.ServiceCatalogs}-services`,
       params: { catalogId: catalogId.value, rootId: rootId.value },
     },
   });
@@ -170,7 +170,7 @@ const path = computed(() => {
 const close = () => {
   if (window.history.length === 1) window.close();
   return router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services`,
+    name: `${CrmSections.ServiceCatalogs}-services`,
     params: { catalogId: catalogId.value, rootId: rootId.value },
   });
 };
@@ -187,7 +187,7 @@ const initializeBreadcrumbs = async () => {
       await loadRootService();
     }
   } catch {
-    router.push({ name: CrmSections.SERVICE_CATALOGS });
+    router.push({ name: CrmSections.ServiceCatalogs });
   }
 };
 

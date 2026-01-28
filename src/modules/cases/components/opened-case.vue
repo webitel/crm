@@ -187,7 +187,7 @@ const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
 
 initialize();
 
-const { close } = useClose(CrmSections.CASES);
+const { close } = useClose(CrmSections.Cases);
 
 const { name: breadcrumbSubject } = useCachedItemInstanceName(itemInstance, { namePath: 'subject' });
 

@@ -89,7 +89,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.CLOSE_REASON_GROUPS);
+const { close } = useClose(CrmSections.CloseReasonGroups);
 
 const v$ = useVuelidate(computed(() => ({
   itemInstance: {
@@ -105,7 +105,7 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.CLOSE_REASON_GROUPS}-general`,
+    pathName: `${CrmSections.CloseReasonGroups}-general`,
   };
   const closeReasons = {
     text: t('lookups.closeReasonGroups.reason', 2),
