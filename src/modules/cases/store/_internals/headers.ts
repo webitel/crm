@@ -38,7 +38,7 @@ export const headers: WtTableHeader[] = [
     show: true,
     field: 'source',
     sort: SortSymbols.NONE,
-    width: '80px',
+    width: '150px',
   },
   {
     value: 'createdAt',
