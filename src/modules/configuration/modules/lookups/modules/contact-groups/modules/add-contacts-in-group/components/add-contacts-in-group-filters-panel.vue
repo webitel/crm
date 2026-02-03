@@ -34,3 +34,15 @@ const resetFilters = () => {
   filtersManager.value.reset();
 };
 </script>
+
+<style lang="scss" scoped>
+
+.table-filters-panel {
+  &--static-wrapper {
+    :deep(.dynamic-filter-panel-wrapper__filters) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+</style>

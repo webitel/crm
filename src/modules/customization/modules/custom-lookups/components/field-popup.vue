@@ -15,17 +15,16 @@
     </template>
     <template #main>
       <div class="field-popup-wrapper" @input="changeDirty(true)">
-        <wt-input
+        <wt-input-text
+          v-model:model-value="value.name"
           :label="$t('reusable.title')"
-          :value="value.name"
           :v="v$.value.name"
           required
-          @input="value.name = $event"
         />
 
-        <wt-input
+        <wt-input-text
+          v-model:model-value="value.id"
           :label="t('customization.customLookups.code')"
-          :value="value.id"
           :disabled="!isNew"
           :v="v$.value.id"
           :custom-validators="[
@@ -35,7 +34,6 @@
             },
           ]"
           required
-          @input="value.id = $event"
         />
 
         <type-field-select
@@ -149,6 +147,7 @@ const changeDirty = (dirty) => {
 
 const changeRequired = (event) => {
   value.value.required = event;
+  value.value.default = null
 
   nextTick(() => {
     v$.value.$touch();

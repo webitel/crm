@@ -1,6 +1,6 @@
 <template>
   <div class="case-deadline-list">
-    <span class="case-deadline-list__title">{{ t('cases.deadlines') }}</span>
+    <span class="case-deadline-list__title typo-heading-4">{{ t('cases.deadlines') }}</span>
     <div class="case-deadline-list__wrapper">
       <case-deadline
         :time="itemInstance?.createdAt"
@@ -43,7 +43,10 @@ const namespace = inject('namespace');
 const { itemInstance } = useCardStore(namespace);
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-deadline-list {
@@ -51,7 +54,6 @@ const { itemInstance } = useCardStore(namespace);
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
     padding: var(--spacing-xs);
   }
 

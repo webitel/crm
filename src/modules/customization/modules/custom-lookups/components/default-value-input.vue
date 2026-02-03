@@ -23,15 +23,21 @@
       mode="datetime"
       @input="value.default = +$event"
     />
-    <wt-input
-      v-else
+    <wt-input-number
+      v-else-if="kind === FieldType.Number"
       :key="kind"
+      v-model:model-value="value.default"
       :label="t('customization.customLookups.defaultValue')"
-      :value="value.default"
       required
       :v="v.value.default"
-      :type="inputType"
-      @input="value.default = $event"
+    />
+    <wt-input-text
+      v-else
+      :key="kind"
+      v-model:model-value="value.default"
+      :label="t('customization.customLookups.defaultValue')"
+      required
+      :v="v.value.default"
     />
   </template>
 </template>
@@ -63,7 +69,6 @@ const displaySelect = computed(() => kind.value === FieldType.Select || kind.val
 const displayInput = computed(() => kind.value !== FieldType.Boolean);
 const displayDatePicker = computed(() => kind.value !== FieldType.Boolean);
 const multiple = computed(() => kind.value === FieldType.Multiselect);
-const inputType = computed(() => kind.value === FieldType.Number ? 'number' : 'string');
 
 const getLoadLookupList = (lookup: CustomLookupLookup) => {
   return (params) => CustomLookupApi.getLookup({

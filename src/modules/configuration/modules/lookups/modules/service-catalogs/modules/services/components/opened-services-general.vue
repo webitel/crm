@@ -6,13 +6,13 @@
       </h3>
     </header>
     <div class="opened-card-input-grid">
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
@@ -42,11 +42,11 @@
         @input="setItemProp({ path: 'group', value: $event })"
       />
 
-      <wt-input
+      <wt-input-text
         :label="t('lookups.serviceCatalogs.code')"
-        :value="itemInstance.code"
+        :model-value="itemInstance.code"
         :disabled="disableUserInput"
-        @input="setItemProp({ path: 'code', value: $event })"
+        @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
       <wt-switcher

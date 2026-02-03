@@ -23,9 +23,8 @@
           required
           @input="draft.type = $event"
         />
-        <wt-input
-          v-model="draft.destination"
-          :clearable="false"
+        <wt-input-text
+          v-model:model-value="draft.destination"
           :label="t('contacts.communications.destination')"
           :v="v$.draft.destination"
           required

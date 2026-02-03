@@ -12,13 +12,13 @@
 
     <template #main>
       <form class="contact-popup-form">
-        <wt-input
-          :value="draft.name"
+        <wt-input-text
+          :model-value="draft.name"
           :label="t('reusable.name')"
           :v="v$.draft.name"
           required
           prevent-trim
-          @input="draft.name = $event"
+          @update:model-value="draft.name = $event"
         />
 
         <wt-select

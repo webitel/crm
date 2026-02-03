@@ -1,20 +1,18 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import createSvgSpritePlugin from 'vite-plugin-svg-sprite';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import { vite as vidstack } from 'vidstack/plugins';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-
   return defineConfig({
     base: '/crm',
     build: {
-      sourcemap: true,
-      minify: false, // Disable minification for readable debugging
+      // sourcemap: true,
+      // minify: false, // Disable minification for readable debugging
     },
     server: {
       host: true,
@@ -34,7 +32,6 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         vue: '@vue/compat',
-        '@': resolve(__dirname, 'src'),
         'lodash/fp': 'lodash-es',
         lodash: 'lodash-es',
         '@aliasedDeps/api-services/axios': resolve(
@@ -45,7 +42,7 @@ export default ({ mode }) => {
        where "/esm" dir still exists. need to update vue-datepicker to v8 at least */
         'date-fns/esm': 'date-fns',
       },
-      dedupe: ['vue', '@vue/compat', 'zod'],
+      dedupe: ['vue', '@vue/compat', 'zod', 'pinia', 'vidstack'],
     },
     plugins: [
       vue({
@@ -54,9 +51,11 @@ export default ({ mode }) => {
             compatConfig: {
               MODE: 2,
             },
+            isCustomElement: (tag) => tag.startsWith('media-'),
           },
         },
       }),
+      vidstack(),
       // https://www.npmjs.com/package/vite-plugin-node-polyfills
       nodePolyfills({
         // are needed for csv-parse
@@ -64,9 +63,6 @@ export default ({ mode }) => {
         globals: {
           Buffer: true, // can also be 'build', 'dev', or false
         },
-      }),
-      createSvgSpritePlugin({
-        include: '**/sprite/*.svg',
       }),
       checker({
         typescript: false,

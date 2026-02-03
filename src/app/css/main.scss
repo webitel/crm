@@ -1,9 +1,7 @@
-@use '@webitel/ui-sdk/src/css/main' as *;
+@use '@webitel/ui-sdk/src/css/main.css' as *;
 
 //disables scrollbar on 100vh auth on small laptops
 body {
-  @extend %typo-body-1;
-  @extend %wt-scrollbar;
   display: flex;
   background: var(--wt-page-wrapper-background-color);
   min-width: 100%;
@@ -77,7 +75,7 @@ a {
     flex-direction: column;
     width: 100%;
 
-    & > section {
+    &>section {
       display: flex;
       flex-direction: column;
       height: 100%;

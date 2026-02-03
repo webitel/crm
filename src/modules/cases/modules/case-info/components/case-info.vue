@@ -8,11 +8,11 @@
       @update:value="setItemProp({ path: 'subject', value: $event })"
     >
       <template #default="props">
-        <wt-input
+        <wt-input-text
           v-bind="props"
           :v="v$.value.itemInstance.subject"
           :disabled="disableUserInput"
-          @input="props.updateValue($event)"
+          @update:model-value="props.updateValue($event)"
         />
       </template>
     </editable-field>
@@ -62,10 +62,10 @@
         @update:value="setItemProp({ path: 'contactInfo', value: $event })"
       >
         <template #default="props">
-          <wt-input
+          <wt-input-text
             v-bind="props"
             :disabled="disableUserInput"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>

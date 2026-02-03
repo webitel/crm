@@ -17,7 +17,7 @@
           :color="color"
           :icon="icon"
         />
-        <wt-label>
+        <wt-label :class="horizontalView ? 'typo-body-1' : 'typo-heading-4'">
           {{ label }}
         </wt-label>
       </div>
@@ -29,7 +29,7 @@
         />
         <span
           v-if="!link"
-          class="editable-field__value"
+          :class="['editable-field__value', horizontalView ? 'typo-subtitle-1' : 'typo-body-1']"
         >
           {{ valueWithDefault }}
         </span>
@@ -39,7 +39,7 @@
               :link="link"
               :disabled="props.disableLink"
               :class="{ 'editable-field__link_disabled': props.disableLink }"
-              class="editable-field__link"
+              class="editable-field__link typo-subtitle-1"
               target="_blank"
             >
               {{ value?.name }}
@@ -137,7 +137,10 @@ const openLink = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .editable-field {
@@ -149,10 +152,6 @@ const openLink = () => {
     flex-direction: column;
   }
 
-  &__label-wrapper .wt-label {
-    @extend %typo-heading-4;
-  }
-
   &__label-wrapper {
     display: flex;
     align-items: center;
@@ -160,7 +159,6 @@ const openLink = () => {
   }
 
   &__value {
-    @extend %typo-body-1;
     white-space: pre-line;
   }
 
@@ -199,19 +197,16 @@ const openLink = () => {
 
     .editable-field__value {
       word-break: break-all;
-      @extend %typo-subtitle-1;
     }
 
     .editable-field__label-wrapper .wt-label {
       text-align: start;
       //TODO: remove bold after proper typography implementation
       font-weight: bold;
-      @extend %typo-body-1;
     }
 
     .editable-field__link {
       word-break: break-all;
-      @extend %typo-subtitle-1;
       color: var(--link-color);
 
       &_disabled {

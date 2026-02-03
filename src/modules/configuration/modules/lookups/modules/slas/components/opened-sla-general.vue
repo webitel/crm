@@ -6,13 +6,13 @@
       </h3>
     </header>
     <div class="opened-card-input-grid">
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
@@ -35,28 +35,30 @@
       <div class="opened-card-input-grid opened-sla-general__wrapper">
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
-          :value="itemInstance.reactionTime"
+          :model-value="itemInstance.reactionTime"
           :v="v.itemInstance.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'reactionTime', value: +$event })"
+          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
-          :value="itemInstance.resolutionTime"
+          :model-value="itemInstance.resolutionTime"
           :v="v.itemInstance.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
+          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
           :value="itemInstance.validFrom"
           :disabled="disableUserInput"
+          :v="v.itemInstance.validFrom"
+          :custom-validators="customValidation"
           mode="datetime"
           clearable
           @input="setItemProp({ path: 'validFrom', value: +$event })"
@@ -79,6 +81,7 @@
 import { CalendarsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
@@ -102,6 +105,15 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 function loadCalendarsList(search) {
   return CalendarsAPI.getLookup(search);
 }
+
+const customValidation = computed(() => {
+  if (!itemInstance.value.validTo) return [];
+
+  return [{
+    name: 'maxValue',
+    text: t('validation.maxValue', { max: new Date(itemInstance.value.validTo).toLocaleString() }),
+  }]
+})
 </script>
 
 <style lang="scss" scoped>

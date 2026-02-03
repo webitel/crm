@@ -1,22 +1,21 @@
 <template>
-  <wt-input
+  <wt-input-text
     v-if="field.kind === FieldType.Text"
-    :value="value"
+    :model-value="value"
     :v="validation"
     :label="label"
     :required="isRequired"
     :disabled="props.disable"
-    @input="setValue($event)"
+    @update:model-value="setValue($event)"
   />
-  <wt-input
+  <wt-input-number
     v-else-if="field.kind === FieldType.Number"
-    :value="value"
+    :model-value="value"
     :v="validation"
     :label="label"
-    type="number"
     :required="isRequired"
     :disabled="props.disable"
-    @input="setValue($event)"
+    @update:model-value="setValue($event)"
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"

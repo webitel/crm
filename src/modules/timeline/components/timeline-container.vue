@@ -4,7 +4,7 @@
       <slot name="header" />
     </header>
 
-    <article class="timeline-content">
+    <article class="timeline-content wt-scrollbar">
       <slot name="content" />
 
       <slot name="after-content" />
@@ -24,7 +24,6 @@
 }
 
 .timeline-content {
-  @extend %wt-scrollbar;
   height: 100%;
 }
 </style>

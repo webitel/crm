@@ -7,13 +7,13 @@
     </header>
 
     <div class="opened-card-input-grid">
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <div class="opened-priority-general__wrapper">
