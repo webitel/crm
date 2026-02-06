@@ -67,7 +67,7 @@ const shouldHideHeader = computed(() => !!route.meta.hideHeader);
 
 const { t } = useI18n();
 
-const startPageHref = computed(() => import.meta.env.VITE_START_PAGE_URL);
+const startPageHref = computed(() => import.meta.env.VITE_APPLICATION_HUB_URL);
 
 // Initialize nav, if not initialized yet
 navStore.initializeNav();
