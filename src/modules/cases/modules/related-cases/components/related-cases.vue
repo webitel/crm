@@ -24,7 +24,7 @@
               deleted: selected,
               callback: () => deleteRelatedCases(selected),
             })
-          "
+            "
         />
       </header>
 
@@ -101,8 +101,8 @@
                 />
 
                 <span>
-                {{ getRevertedCase(item).name }}
-              </span>
+                  {{ getRevertedCase(item).name }}
+                </span>
               </div>
             </wt-item-link>
 
@@ -135,7 +135,7 @@
                   deleted: [item],
                   callback: () => deleteRelatedCases(item),
                 })
-              "
+                "
             />
           </template>
         </wt-table>
@@ -155,7 +155,7 @@
 
 <script setup>
 import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
-import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -285,7 +285,7 @@ function getCaseLink(item) {
   if (isReadOnly) {
     return createRouteLinkParams(CASE_VIEW_NAME, revertedCase.etag);
   }
-  return createRouteLinkParams(`${CrmSections.CASES}-card`, revertedCase.id);
+  return createRouteLinkParams(`${CrmSections.Cases}-card`, revertedCase.id);
 }
 
 // [https://webitel.atlassian.net/browse/WTEL-5492?focusedCommentId=655118]
@@ -348,7 +348,10 @@ const deleteRelatedCases = async (items) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .related-cases {
   .type-select {
     flex: 1;

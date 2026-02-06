@@ -47,7 +47,7 @@ import { required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -94,7 +94,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const { close } = useClose(CrmSections.ServiceCatalogs);
 
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
@@ -104,7 +104,7 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.SERVICE_CATALOGS}-general`,
+    pathName: `${CrmSections.ServiceCatalogs}-general`,
   };
 
   const tabs = [general];
@@ -140,4 +140,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style
+  scoped
+  lang="scss"
+></style>

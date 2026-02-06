@@ -46,9 +46,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -70,9 +68,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link
-                :link="{ name: `${CrmSections.PRIORITIES}-card`, params: { id: item.id } }"
-              >
+              <wt-item-link :link="{ name: `${CrmSections.Priorities}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -116,7 +112,7 @@
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -130,8 +126,8 @@ import {
 } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted } from 'vue';
-import {useI18n} from 'vue-i18n';
-import {useRouter} from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -191,7 +187,7 @@ onUnmounted(() => {
 });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.PRIORITIES}-card`, params: { id: 'new' }});
+  return router.push({ name: `${CrmSections.Priorities}-card`, params: { id: 'new' } });
 };
 
 const path = computed(() => [
@@ -212,7 +208,7 @@ function askDeleteConfirmationWrapper(item) {
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.PRIORITIES}-card`,
+    name: `${CrmSections.Priorities}-card`,
     params: { id: item.id },
   });
 }
@@ -225,5 +221,7 @@ const {
 } = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

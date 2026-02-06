@@ -25,9 +25,9 @@
             @click:add="addGroup"
             @click:refresh="loadData"
             @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+              deleted: selected,
+              callback: () => deleteData(selected),
+            })"
           >
             <template #search-bar>
               <filter-search
@@ -67,9 +67,7 @@
           @load-data="loadData"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
 
           <wt-empty
             v-show="showEmpty"
@@ -92,9 +90,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link
-                :link="{ name: `${CrmSections.CONTACT_GROUPS}-card`, params: { id: item.id } }"
-              >
+              <wt-item-link :link="{ name: `${CrmSections.ContactGroups}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -122,7 +118,7 @@
                     prop: 'enabled',
                     value: $event,
                   })
-                "
+                  "
               />
             </template>
 
@@ -136,9 +132,9 @@
                 :disabled="!hasDeleteAccess"
                 action="delete"
                 @click="askDeleteConfirmation({
-              deleted: [item],
-              callback: () => deleteData(item),
-            })"
+                  deleted: [item],
+                  callback: () => deleteData(item),
+                })"
               />
             </template>
           </wt-table>
@@ -158,7 +154,7 @@ import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -254,7 +250,7 @@ const path = computed(() => [
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.CONTACT_GROUPS}-card`,
+    name: `${CrmSections.ContactGroups}-card`,
     params: { id: item.id },
   });
 }
@@ -268,5 +264,7 @@ function closeCreateGroupPopup() {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

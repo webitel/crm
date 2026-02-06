@@ -4,7 +4,7 @@ import {
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
 import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -99,11 +99,11 @@ export default {
     },
   },
   startPage: {
-    [CrmSections.CONTACTS]: {
+    [CrmSections.Contacts]: {
       name: 'Kontaktlar',
       text: "Ushbu bo'limda siz kontaktlaringiz bilan ishlashingiz mumkin: mijozlar, xaridorlar va hokazo.",
     },
-    [CrmSections.CASES]: {
+    [CrmSections.Cases]: {
       name: 'Murojaat',
       text: "Bu yerda siz tizimda ro'yxatdan o'tgan Murojaatlarni ko'rishingiz mumkin.",
     },

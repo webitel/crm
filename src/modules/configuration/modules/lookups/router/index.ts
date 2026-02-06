@@ -191,7 +191,6 @@ const lookupsRoutes: RouteRecordRaw[] = [
           WtObject: WtObject.ContactGroup,
           UiSection: CrmSections.ContactGroups,
         },
-        // beforeEnter: checkRouteAccess,
       },
       {
         path: 'contact-groups/:id',

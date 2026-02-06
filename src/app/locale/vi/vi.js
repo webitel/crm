@@ -4,7 +4,7 @@ import {
   WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
 import { ChatGatewayProvider } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
@@ -99,11 +99,11 @@ export default {
     },
   },
   startPage: {
-    [CrmSections.CONTACTS]: {
+    [CrmSections.Contacts]: {
       name: 'Danh bạ',
       text: 'Trong phần này, bạn có thể làm việc với danh bạ của mình: khách hàng, đối tác, v.v.',
     },
-    [CrmSections.CASES]: {
+    [CrmSections.Cases]: {
       name: 'Vụ việc',
       text: 'Ở đây bạn có thể xem các Vụ việc đã đăng ký trong hệ thống.',
     },

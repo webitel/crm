@@ -28,7 +28,7 @@
                 deleted: selected,
                 callback: () => deleteData(selected),
               })
-            "
+              "
           >
             <template #search-bar>
               <filter-search
@@ -71,7 +71,7 @@
               <wt-item-link
                 class="the-catalog-service__service-name"
                 :link="{
-                  name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                  name: `${CrmSections.ServiceCatalogs}-services`,
                   params: {
                     catalogId: route.params?.id,
                     rootId: item.id,
@@ -94,7 +94,7 @@
                 v-if="item.assignee?.id"
                 class="the-catalog-service__service-assignee"
                 :link="{
-                  name: `${CrmSections.CONTACTS}-card`,
+                  name: `${CrmSections.Contacts}-card`,
                   params: { id: item.assignee.id },
                 }"
               >
@@ -110,7 +110,7 @@
                 :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
                 @update:model-value="
                   patchProperty({ index, prop: 'state', value: $event })
-                "
+                  "
               />
             </template>
             <template #actions="{ item }">
@@ -127,7 +127,7 @@
                     deleted: [item],
                     callback: () => deleteData(item),
                   })
-                "
+                  "
               />
             </template>
           </wt-table>
@@ -147,7 +147,7 @@ import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
@@ -248,7 +248,7 @@ const path = computed(() => {
     {
       name: prettifyBreadcrumbName(catalog.value.name),
       route: {
-        name: `${CrmSections.SERVICE_CATALOGS}-services`,
+        name: `${CrmSections.ServiceCatalogs}-services`,
         params: {
           catalogId: catalog.value.id,
           rootId: catalog.value.id,
@@ -261,11 +261,11 @@ const path = computed(() => {
   return routes;
 });
 
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const { close } = useClose(CrmSections.ServiceCatalogs);
 
 function edit(item) {
   return router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+    name: `${CrmSections.ServiceCatalogs}-services-card`,
     params: {
       catalogId: route.params?.id,
       rootId: route.params?.rootId,
@@ -283,7 +283,7 @@ const {
 
 const addNewService = () => {
   router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
+    name: `${CrmSections.ServiceCatalogs}-services-card`,
     params: {
       catalogId: route.params?.catalogId,
       rootId: route.params?.rootId,
@@ -314,7 +314,7 @@ const initializeBreadcrumbs = async () => {
       await loadRootService();
     }
   } catch {
-    router.push({ name: CrmSections.SERVICE_CATALOGS });
+    router.push({ name: CrmSections.ServiceCatalogs });
   }
 };
 const setRootForServices = () => {
@@ -348,7 +348,10 @@ watch(
 );
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;

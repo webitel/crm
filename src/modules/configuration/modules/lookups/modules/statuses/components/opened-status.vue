@@ -54,7 +54,7 @@ import { required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -94,7 +94,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
   onLoadErrorHandler: handleError
 });
 
-const { close } = useClose(CrmSections.STATUSES);
+const { close } = useClose(CrmSections.Statuses);
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );
@@ -103,7 +103,7 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.STATUSES}-general`,
+    pathName: `${CrmSections.Statuses}-general`,
   };
   const statusConditions = {
     text: t('lookups.statuses.statuses', 2),
@@ -131,4 +131,7 @@ const path = computed(() => {
 initialize();
 </script>
 
-<style lang="scss" scoped></style>
+<style
+  lang="scss"
+  scoped
+></style>

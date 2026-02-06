@@ -28,7 +28,7 @@
 
 <script setup>
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -59,7 +59,7 @@ const CASE_VIEW_NAME = 'case_view';
 const currentCardRoute = computed(() => {
   return typeof route.name === 'string' && route.name.includes(CASE_VIEW_NAME) ?
     CASE_VIEW_NAME :
-    CrmSections.CASES;
+    CrmSections.Cases;
 });
 
 const tabs = computed(() => {

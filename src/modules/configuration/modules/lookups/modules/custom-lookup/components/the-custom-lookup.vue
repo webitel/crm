@@ -111,9 +111,6 @@
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
-import {
-  useAccessControl,
-} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup
@@ -136,10 +133,12 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { WtObject } from '@webitel/ui-sdk/enums';
 
 import CustomLookupsApi
   from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const baseNamespace = 'configuration/lookups/customLookup';
 
@@ -180,7 +179,7 @@ store.commit(`${baseNamespace}/table/SET`, {
   value: repo.value,
 });
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useUserAccessControl(WtObject.CustomLookup);
 
 const {
   isVisible: isDeleteConfirmationPopup,

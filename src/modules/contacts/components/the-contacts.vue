@@ -74,7 +74,7 @@
                   deleted: [item],
                   callback: () => deleteEls(item),
                 })
-              "
+                "
             />
           </template>
         </contacts-table>
@@ -87,8 +87,7 @@
 import { ContactsSearchMode } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup
   from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import {
@@ -100,6 +99,7 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
 import { ContactsNamespace } from '../namespace';
 import { useContactsStore } from '../stores/contacts';
@@ -109,7 +109,8 @@ import ContactsFiltersPanel from './contacts-filters-panel.vue';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
+const { hasCreateAccess, hasDeleteAccess } =
+  useUserAccessControl();
 
 const showActionsPanel = ref(true);
 
@@ -129,7 +130,7 @@ const {
   filtersManager,
   isFiltersRestoring,
   searchMode
- } = storeToRefs(tableStore);
+} = storeToRefs(tableStore);
 
 const {
   initialize,
@@ -189,7 +190,7 @@ function edit({ id }) {
 
 function saved(id) {
   return router.push({
-    name: `${CrmSections.CONTACTS}-card`,
+    name: `${CrmSections.Contacts}-card`,
     params: { id },
   });
 }
@@ -209,7 +210,10 @@ function deleteSelectedItems() {
 initialize();
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .table-page {
   width: 100%;
 

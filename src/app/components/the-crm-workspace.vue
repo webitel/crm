@@ -21,7 +21,7 @@
         />
         <wt-header-actions
           :build-info="{ release, build, timestamp }"
-          :user="userinfo"
+          :user="userInfo"
           @logout="logoutUser"
           @settings="settings"
         />
@@ -35,8 +35,7 @@
 
 <script setup>
 import { WtNavigationBar } from '@webitel/ui-sdk/components';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import WebitelApplications from '@webitel/ui-sdk/src/enums/WebitelApplications/WebitelApplications.enum';
+import {CrmSections, WtApplication } from '@webitel/ui-sdk/enums';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 import { storeToRefs } from 'pinia';
 import { computed, inject } from 'vue';
@@ -44,6 +43,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
+import { useUserinfoStore } from '../../modules/userinfo/store/userinfoStore';
 import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 import { useNavStore } from '../../modules/start-page/stores/navStore';
 import packageJson from './../../../package.json' with { type: 'json' };
@@ -56,16 +56,18 @@ const timestamp = import.meta.env.VITE_BUILD_TIMESTAMP;
 const store = useStore();
 const navStore = useNavStore();
 
-const userinfo = computed(() => store.state.userinfo);
-const currentApp = userinfo.value.thisApp;
+const currentApp = WtApplication.Crm;
 
-const checkAccess = computed(() => store.getters['userinfo/CHECK_APP_ACCESS']);
+const userInfoStore = useUserinfoStore();
+const { hasApplicationVisibility, logoutUser } = userInfoStore;
+const { userInfo } = storeToRefs(userInfoStore);
+
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 const shouldHideHeader = computed(() => !!route.meta.hideHeader);
 
 const { t } = useI18n();
 
-const startPageHref = computed(() => import.meta.env.VITE_START_PAGE_URL);
+const startPageHref = computed(() => import.meta.env.VITE_APPLICATION_HUB_URL);
 
 // Initialize nav, if not initialized yet
 navStore.initializeNav();
@@ -76,31 +78,31 @@ const accessibleNav = computed(() => nav.value.filter(({ disabled }) => !disable
 
 const apps = computed(() => {
   const agent = {
-    name: WebitelApplications.AGENT,
+    name: WtApplication.Agent,
     href: import.meta.env.VITE_AGENT_URL,
   };
   const supervisor = {
-    name: WebitelApplications.SUPERVISOR,
+    name: WtApplication.Supervisor,
     href: import.meta.env.VITE_SUPERVISOR_URL,
   };
   const history = {
-    name: WebitelApplications.HISTORY,
+    name: WtApplication.History,
     href: import.meta.env.VITE_HISTORY_URL,
   };
   const audit = {
-    name: WebitelApplications.AUDIT,
+    name: WtApplication.Audit,
     href: import.meta.env.VITE_AUDIT_URL,
   };
   const admin = {
-    name: WebitelApplications.ADMIN,
+    name: WtApplication.Admin,
     href: import.meta.env.VITE_ADMIN_URL,
   };
   const grafana = {
-    name: WebitelApplications.ANALYTICS,
+    name: WtApplication.Analytics,
     href: import.meta.env.VITE_GRAFANA_URL,
   };
   const crm = {
-    name: WebitelApplications.CRM,
+    name: WtApplication.Crm,
     href: import.meta.env.VITE_CRM_URL,
   };
 
@@ -108,7 +110,7 @@ const apps = computed(() => {
 
   const allApps = [admin, supervisor, agent, history, audit, crm];
   if (config?.ON_SITE) allApps.push(grafana);
-  return allApps.filter(({ name }) => checkAccess.value(name));
+  return allApps.filter(({ name }) => hasApplicationVisibility(name));
 });
 
 function settings() {
@@ -116,13 +118,6 @@ function settings() {
   window.open(settingsUrl);
 }
 
-function logout() {
-  return store.dispatch('userinfo/LOGOUT');
-}
-
-async function logoutUser() {
-  return logout();
-}
 </script>
 
 <style lang="scss" scoped>

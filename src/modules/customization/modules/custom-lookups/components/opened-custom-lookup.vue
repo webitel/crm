@@ -1,6 +1,5 @@
 <template>
-  <wt-page-wrapper
-    :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -59,7 +58,7 @@ import { helpers, required } from '@vuelidate/validators';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -106,7 +105,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 });
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { close } = useClose(CrmSections.CUSTOM_LOOKUPS);
+const { close } = useClose(CrmSections.CustomLookups);
 const disabledSave = computed(
   () => v$.value?.$invalid || !itemInstance.value._dirty,
 );
@@ -115,12 +114,12 @@ const tabs = computed(() => {
   const general = {
     text: t('reusable.general'),
     value: 'general',
-    pathName: `${CrmSections.CUSTOM_LOOKUPS}-general`,
+    pathName: `${CrmSections.CustomLookups}-general`,
   };
   const columns = {
     text: t('customization.customLookups.columns', 2),
     value: 'columns',
-    pathName: `${CrmSections.CUSTOM_LOOKUPS}-columns`,
+    pathName: `${CrmSections.CustomLookups}-columns`,
   };
 
   const tabs = [general];
@@ -139,7 +138,7 @@ const path = computed(() => {
     {
       name: t('objects.customLookup.customLookup', 2),
       route: {
-        name: CrmSections.CUSTOM_LOOKUPS,
+        name: CrmSections.CustomLookups,
       },
     },
     {
@@ -151,4 +150,7 @@ const path = computed(() => {
 initialize();
 </script>
 
-<style lang="scss" scoped></style>
+<style
+  lang="scss"
+  scoped
+></style>

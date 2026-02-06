@@ -86,7 +86,7 @@
               <wt-item-link
                 class="cases__link-name"
                 :link="{
-                  name: `${CrmSections.CASES}-card`,
+                  name: `${CrmSections.Cases}-card`,
                   params: { id: item?.id },
                 }"
               >
@@ -104,7 +104,7 @@
             </template>
             <template #subject="{ item }">
               <wt-item-link :link="{
-                name: `${CrmSections.CASES}-card`,
+                name: `${CrmSections.Cases}-card`,
                 params: { id: item?.id },
               }">
                 {{ item.subject }}
@@ -127,7 +127,7 @@
                   color="info"
                   :icon="item?.source?.type"
                 />
-                <span >{{ item?.source?.name }}</span>
+                <span>{{ item?.source?.name }}</span>
               </div>
             </template>
             <template #createdAt="{ item }">
@@ -235,7 +235,7 @@ import { WtTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { EmptyCause } from "@webitel/ui-sdk/enums/EmptyCause/EmptyCause";
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -351,7 +351,7 @@ const path = computed(() => [
 
 function add() {
   return router.push({
-    name: `${CrmSections.CASES}-card`,
+    name: `${CrmSections.Cases}-card`,
     params: { id: 'new' },
   });
 }
@@ -363,7 +363,7 @@ function edit(item) {
    */
   store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
   return router.push({
-    name: `${CrmSections.CASES}-card`,
+    name: `${CrmSections.Cases}-card`,
     params: { id: item.id },
   });
 }

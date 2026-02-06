@@ -26,8 +26,11 @@
   </template>
 </template>
 
-<script setup lang="ts">
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+<script
+  setup
+  lang="ts"
+>
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import {
   useCardStore,
 } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
@@ -59,13 +62,16 @@ const { itemInstance } = useCardStore(props.namespace);
 watch(() => props.fields, () => {
   if (!props.fields.length) {
     router.push({
-      name: `${CrmSections.CASES}-case-info`,
+      name: `${CrmSections.Cases}-case-info`,
     });
   }
 });
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .case-details-container {
   max-height: fit-content;
 }

@@ -60,10 +60,10 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { ContactGroupsAPI,ContactsAPI } from '@webitel/api-services/api';
+import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
@@ -107,7 +107,7 @@ v$.value.$touch();
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 
-const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
+const { close } = useClose(`${CrmSections.ContactGroups}-conditions`);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {
@@ -167,7 +167,10 @@ watch(
   { immediate: true },
 );
 </script>
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .opened-contact-group-conditions-popup__wrapper {
   display: flex;
   flex-direction: column;

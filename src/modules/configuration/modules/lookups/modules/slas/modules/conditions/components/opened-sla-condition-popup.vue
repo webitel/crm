@@ -74,7 +74,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { minValue, required } from '@vuelidate/validators';
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -124,7 +124,7 @@ const v$ = useVuelidate(computed(() => ({
 
 v$.value.$touch();
 
-const { close } = useClose(`${CrmSections.SLAS}-conditions`);
+const { close } = useClose(`${CrmSections.Slas}-conditions`);
 const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
 
 function loadDataList() {
@@ -132,7 +132,7 @@ function loadDataList() {
 }
 
 function getFreePriorities(params) {
-  return CasePrioritiesAPI.getLookup({ ...params,notInSla: route.params.id });
+  return CasePrioritiesAPI.getLookup({ ...params, notInSla: route.params.id });
 }
 
 function getConditionPriorities(params) {
@@ -170,5 +170,7 @@ watch(() => conditionId.value, (value) => {
 }, { immediate: true });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

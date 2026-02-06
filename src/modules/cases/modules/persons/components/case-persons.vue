@@ -111,7 +111,7 @@
 import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, ref, watch } from 'vue';
@@ -226,7 +226,7 @@ const createRouteLinkParams = (name, id) => {
 
 const getContactLinkPreview = (id) => {
   if (!isReadOnly) {
-    return createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id);
+    return createRouteLinkParams(`${CrmSections.Contacts}-card`, id);
   }
 
   return createRouteLinkParams(CONTACT_VIEW_NAME, ':etag');
@@ -244,7 +244,7 @@ const getContactLink = async (id) => {
   let url;
 
   if (!isReadOnly) {
-    url = router.resolve(createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id)).href;
+    url = router.resolve(createRouteLinkParams(`${CrmSections.Contacts}-card`, id)).href;
   } else {
     const { etag } = await ContactsAPI.get({ itemId: id });
     url = router.resolve(createRouteLinkParams(CONTACT_VIEW_NAME, etag)).href;
