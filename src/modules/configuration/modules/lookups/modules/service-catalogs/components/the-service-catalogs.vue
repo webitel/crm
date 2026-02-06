@@ -203,7 +203,7 @@ import {
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { displayText } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -276,6 +276,11 @@ const {
   filters: computed(() => filtersManager.value.getAllValues()),
   error,
   isLoading,
+});
+
+// Reset filters when component is unmounted to prevent search results from freezing
+onUnmounted(() => {
+  filtersManager.value.reset();
 });
 
 const addNewCatalog = () => {

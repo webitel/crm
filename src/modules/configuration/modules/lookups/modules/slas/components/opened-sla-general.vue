@@ -35,22 +35,22 @@
       <div class="opened-card-input-grid opened-sla-general__wrapper">
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
-          :value="itemInstance.reactionTime"
+          :model-value="itemInstance.reactionTime"
           :v="v.itemInstance.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'reactionTime', value: +$event })"
+          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
-          :value="itemInstance.resolutionTime"
+          :model-value="itemInstance.resolutionTime"
           :v="v.itemInstance.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @input="setItemProp({ path: 'resolutionTime', value: +$event })"
+          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
 
         <wt-datepicker
