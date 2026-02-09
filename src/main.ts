@@ -10,21 +10,30 @@ import { setConfig as setApiServicesConfig } from '@webitel/api-services';
 import App from './app.vue';
 import { createUserAccessControl } from './app/composables/useUserAccessControl';
 import i18n from './app/locale/i18n';
-import { webitelUiOptions, webitelUiPlugin } from './app/plugins/webitel-ui';
-import router from './app/router';
+import { plugin as WebitelUi, options as WebitelUiOptions } from './app/plugins/webitel/ui-sdk';
+import { initRouter, router } from './app/router';
 import store from './app/store';
 import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
-const setTokenFromUrl = (): void => {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('accessToken');
-    if (accessToken) {
-      localStorage.setItem('access-token', accessToken);
-    }
-  } catch (err) {
-    console.error('Error restoring token from URL', err);
-  }
+const setTokenFromUrl = () => {
+	try {
+		const queryMap: {
+			accessToken?: string;
+		} = window.location.search
+			.slice(1)
+			.split('&')
+			.reduce((obj, query) => {
+				const [key, value] = query.split('=');
+				obj[key] = value;
+				return obj;
+			}, {});
+
+		if (queryMap.accessToken) {
+			localStorage.setItem('access-token', queryMap.accessToken);
+		}
+	} catch (err) {
+		console.error('Error restoring token from url', err);
+	}
 };
 
 const fetchConfig = async () => {
@@ -46,19 +55,25 @@ const initApp = async () => {
   const app = createApp(App)
     .use(store)
     .use(i18n)
-    .use(pinia)
-    .use(webitelUiPlugin, webitelUiOptions);
+    .use(pinia);
 
   const { initialize, routeAccessGuard } = useUserinfoStore();
   try {
     await initialize();
     createUserAccessControl(useUserinfoStore);
-    router.beforeEach(routeAccessGuard);
+    await initRouter({
+      beforeEach: [routeAccessGuard],
+    });
   } catch (err) {
     console.error('Error initializing app', err);
   }
 
+
   app.use(router);
+  app.use(WebitelUi, {
+    ...WebitelUiOptions,
+    router,
+  }); // setup webitel ui after router init
 
   return app;
 };
