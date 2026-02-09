@@ -5,6 +5,7 @@ import {
   type RouteLocationNormalized,
   type RouteRecordRaw,
 } from 'vue-router';
+import { WtApplication } from '@webitel/ui-sdk/enums';
 
 import casesRoutes from '../../modules/cases/router';
 import caseViewRoute from '../../modules/cases/router/case-view';
@@ -22,6 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'crm-workspace',
     redirect: { name: 'the-start-page' },
     component: TheCrmWorkspace,
+    meta: { app: WtApplication.Crm },
     children: [
       ...startPageRoutes,
       ...casesRoutes,
