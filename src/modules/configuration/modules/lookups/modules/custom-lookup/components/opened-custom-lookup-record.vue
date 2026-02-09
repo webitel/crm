@@ -62,7 +62,6 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { WtObject } from '@webitel/ui-sdk/enums';
 
-import router from '../../../../../../../app/router/index.js';
 import CustomLookupsApi
   from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -71,6 +70,7 @@ const store = useStore();
 
 const namespace = 'configuration/lookups/customLookup';
 const { t } = useI18n();
+const router = useRouter();
 const route = useRoute();
 
 const {
