@@ -10,7 +10,7 @@
       />
     </header>
     <header class="contact-cases-header">
-      <h3 class="contact-cases-header__title typo-heading-3">
+      <h3 class="contact-cases-header__title typo-heading-4">
         {{ $t('cases.case', 2) }}
       </h3>
 
