@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'crm-workspace',
     redirect: { name: 'the-start-page' },
     component: TheCrmWorkspace,
-    meta: { app: WtApplication.Crm },
+    meta: { WtApplication: WtApplication.Crm },
     children: [
       ...startPageRoutes,
       ...casesRoutes,
