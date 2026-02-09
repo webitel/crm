@@ -15,7 +15,6 @@ import startPageRoutes from '../../modules/start-page/router';
 import TheCrmWorkspace from '../components/the-crm-workspace.vue';
 import AccessDenied from '../components/utils/access-denied-component.vue';
 import NotFound from '../../modules/error-pages/components/the-not-found-component.vue'
-import { checkAppAccess } from './internals/guards';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -23,7 +22,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'crm-workspace',
     redirect: { name: 'the-start-page' },
     component: TheCrmWorkspace,
-    beforeEnter: checkAppAccess,
     children: [
       ...startPageRoutes,
       ...casesRoutes,
