@@ -417,11 +417,9 @@ const createHeaderFromField = (field) => ({
 });
 
 // Helper function to extract custom field value from item data
-// For boolean fields, uses header.field (field ID), for other fields uses header.value (field name)
 const getCustomValues = (item, header) => {
-  // Boolean fields are stored by field ID, other fields by field name (camelCase)
-  const key = header.kind === FieldType.Boolean ? header.field : header.value;
-  return get(item, ['custom', key]);
+  // Boolean fields are stored by field ID, other fields by field (camelCase)
+  return get(item, ['custom', header.field]);
 };
 
 // Helper function to fetch custom headers from API
