@@ -83,11 +83,11 @@ const initApp = async () => {
 	try {
 		setTokenFromUrl();
 		config = await fetchConfig();
-		store.commit('SET_ROUTER', router);
 	} catch (err) {
 		console.error('before app mount error:', err);
 	} finally {
 		const app = await initApp();
+		store.commit('SET_ROUTER', router);
 		app.provide('$config', config);
 		app.mount('#app');
 	}
