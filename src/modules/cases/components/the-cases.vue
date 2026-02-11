@@ -52,7 +52,7 @@
         <wt-loader v-show="isLoading" />
 
         <wt-empty
-          v-if="showEmpty"
+          v-if="showEmpty && isInitializedTableStore"
           :image="emptyImage"
           :headline="emptyHeadline"
           :title="emptyTitle"
@@ -319,6 +319,8 @@ const showActionsPanel = ref(true);
 
 const isInitialEmpty = ref(false);
 
+const isInitializedTableStore = ref(false); // https://webitel.atlassian.net/browse/WTEL-7518?focusedCommentId=726522
+
 const displayIncludeActions = computed(() => {
 	const baseActions = [
 		IconAction.ADD,
@@ -510,6 +512,7 @@ onMounted(async () => {
 	// Order is important
 	await loadCustomHeaders();
 	await initialize();
+	isInitializedTableStore.value = true;
 });
 
 // Keep custom headers in sync when base headers change
@@ -553,7 +556,6 @@ watch(customHeadersLoaded, (isLoaded) => {
   lang="scss"
   scoped
 >
-@use '@webitel/ui-sdk/src/css/main' as *;
 
 .cases {
   .table-title {
