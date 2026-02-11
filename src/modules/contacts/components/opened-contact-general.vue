@@ -43,7 +43,7 @@
     <wt-divider />
 
     <div class="opened-contact-general-item">
-      <p class="opened-contact-general-item__title typo-subtitle-1">
+      <p class="opened-contact-general-item__title typo-heading-4">
         {{ t('reusable.group') }}
       </p>
 
@@ -55,7 +55,7 @@
     <wt-divider />
 
     <div class="opened-contact-general-item">
-      <p class="opened-contact-general-item__title">
+      <p class="opened-contact-general-item__title typo-heading-4">
         {{ t('date.timezone', 1) }}
       </p>
       <p
@@ -69,7 +69,7 @@
     <wt-divider />
 
     <div class="opened-contact-general-item">
-      <p class="opened-contact-general-item__title">
+      <p class="opened-contact-general-item__title typo-heading-4">
         {{ t('contacts.manager', 1) }}
       </p>
       <p class="opened-contact-general-item__value">
@@ -80,7 +80,7 @@
     <wt-divider />
 
     <div class="opened-contact-general-item">
-      <p class="opened-contact-general-item__title">
+      <p class="opened-contact-general-item__title typo-heading-4">
         {{ t('vocabulary.description') }}
       </p>
       <p class="opened-contact-general-item__value">
