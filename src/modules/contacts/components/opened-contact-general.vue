@@ -111,54 +111,60 @@ const access = inject('access');
 const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
-  name: {
-    type: String,
-    default: '',
-  },
-  timezones: {
-    type: Array,
-    default: () => [],
-  },
-  managers: {
-    type: Array,
-    default: () => [],
-  },
-  about: {
-    type: String,
-    default: '',
-  },
-  labels: {
-    type: Array,
-    default: () => [],
-  },
-  groups: {
-    type: Array,
-    default: () => [],
-  },
-  user: {
-    type: Object,
-    default: null,
-  },
+	name: {
+		type: String,
+		default: '',
+	},
+	timezones: {
+		type: Array,
+		default: () => [],
+	},
+	managers: {
+		type: Array,
+		default: () => [],
+	},
+	about: {
+		type: String,
+		default: '',
+	},
+	labels: {
+		type: Array,
+		default: () => [],
+	},
+	groups: {
+		type: Array,
+		default: () => [],
+	},
+	user: {
+		type: Object,
+		default: null,
+	},
 });
 
-const emit = defineEmits(['edit', 'delete']);
+const emit = defineEmits([
+	'edit',
+	'delete',
+]);
 
 const { t } = useI18n();
 
 const actionOptions = computed(() => {
-  const editAction = {
-    text: t('reusable.edit'),
-    icon: 'edit',
-    handler: () => emit('edit'),
-    disabled: !access.value.hasRbacEditAccess,
-  };
-  const deleteAction = {
-    text: t('reusable.delete'),
-    icon: 'bucket',
-    handler: () => emit('delete'),
-    disabled: !access.value.hasRbacDeleteAccess,
-  };
-  return [editAction, deleteAction];
+	const editAction = {
+		text: t('reusable.edit'),
+		icon: 'edit',
+		handler: () => emit('edit'),
+		disabled: !access.value.hasRbacEditAccess,
+	};
+	const deleteAction = {
+		text: t('reusable.delete'),
+		icon: 'bucket',
+		handler: () => emit('delete'),
+		disabled: !access.value.hasRbacDeleteAccess,
+	};
+	return [
+		editAction,
+		deleteAction,
+	];
 });
 
 const groupsList = computed(() => props.groups.map((el) => el.name).join(', '));

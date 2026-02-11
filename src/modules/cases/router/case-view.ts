@@ -11,49 +11,51 @@ import CaseTimeline from '../modules/timeline/components/case-timeline.vue';
 const CASE_VIEW_NAME = 'case_view';
 
 const casesChildrenRoutes: RouteRecordRaw[] = [
-  {
-    path: 'case-info',
-    name: `${CASE_VIEW_NAME}-case-info`,
-    component: CaseInfo,
-  },
-  {
-    path: 'result',
-    name: `${CASE_VIEW_NAME}-result`,
-    component: CaseResult,
-  },
-  {
-    path: 'attachments',
-    name: `${CASE_VIEW_NAME}-attachments`,
-    component: CaseAttachments,
-  },
-  {
-    path: 'details',
-    name: `${CASE_VIEW_NAME}-details`,
-    component: CaseDetails,
-  },
-  {
-    path: 'timeline',
-    name: `${CASE_VIEW_NAME}-timeline`,
-    component: CaseTimeline,
-  },
-  {
-    path: 'permissions/:permissionId?',
-    name: `${CASE_VIEW_NAME}-permissions`,
-    component: PermissionsTab,
-  },
+	{
+		path: 'case-info',
+		name: `${CASE_VIEW_NAME}-case-info`,
+		component: CaseInfo,
+	},
+	{
+		path: 'result',
+		name: `${CASE_VIEW_NAME}-result`,
+		component: CaseResult,
+	},
+	{
+		path: 'attachments',
+		name: `${CASE_VIEW_NAME}-attachments`,
+		component: CaseAttachments,
+	},
+	{
+		path: 'details',
+		name: `${CASE_VIEW_NAME}-details`,
+		component: CaseDetails,
+	},
+	{
+		path: 'timeline',
+		name: `${CASE_VIEW_NAME}-timeline`,
+		component: CaseTimeline,
+	},
+	{
+		path: 'permissions/:permissionId?',
+		name: `${CASE_VIEW_NAME}-permissions`,
+		component: PermissionsTab,
+	},
 ];
 
 const caseViewRoute: RouteRecordRaw[] = [
-  {
-    path: `${CASE_VIEW_NAME}/:id`,
-    name: CASE_VIEW_NAME,
-    component: OpenedCaseWrapper,
-    redirect: { name: `${CASE_VIEW_NAME}-case-info` },
-    meta: {
-      hideHeader: true,
-    },
-    children: casesChildrenRoutes,
-  },
+	{
+		path: `${CASE_VIEW_NAME}/:id`,
+		name: CASE_VIEW_NAME,
+		component: OpenedCaseWrapper,
+		redirect: {
+			name: `${CASE_VIEW_NAME}-case-info`,
+		},
+		meta: {
+			hideHeader: true,
+		},
+		children: casesChildrenRoutes,
+	},
 ];
 
 export default caseViewRoute;

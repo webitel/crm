@@ -53,26 +53,26 @@ import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js
 import ChatPointRowContent from './chat-point-timeline-row-content.vue';
 
 const props = defineProps({
-  point: {
-    type: Object,
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	point: {
+		type: Object,
+		required: true,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const pinType = computed(() => {
-  if (props.point.peer?.type === 'user') return TimelinePinType.AGENT;
-  if (props.point.peer?.type === 'bot') return TimelinePinType.BOT;
-  return TimelinePinType.USER;
+	if (props.point.peer?.type === 'user') return TimelinePinType.AGENT;
+	if (props.point.peer?.type === 'bot') return TimelinePinType.BOT;
+	return TimelinePinType.USER;
 });
 
 // transfer is not implemented
 const pointStatus = computed(() => {
-  if (false) return TimelineTaskStatusEnum.TRANSFERRED;
-  return false;
+	if (false) return TimelineTaskStatusEnum.TRANSFERRED;
+	return false;
 });
 </script>
 

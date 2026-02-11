@@ -109,21 +109,16 @@
 </template>
 
 <script setup>
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { CrmSections } from '@webitel/ui-sdk/enums';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import {
-  useTableEmpty
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -138,87 +133,112 @@ const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+	useUserAccessControl();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
 } = useTableStore(baseNamespace);
 
 const {
-  namespace: filtersNamespace,
-  filtersValue,
-  restoreFilters,
+	namespace: filtersNamespace,
+	filtersValue,
+	restoreFilters,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.Priorities}-card`, params: { id: 'new' } });
+	return router.push({
+		name: `${CrmSections.Priorities}-card`,
+		params: {
+			id: 'new',
+		},
+	});
 };
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('vocabulary.priority', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.lookups'),
+		route: '/configuration',
+	},
+	{
+		name: t('vocabulary.priority', 2),
+	},
 ]);
 
 const { close } = useClose('configuration');
 
 function askDeleteConfirmationWrapper(item) {
-  askDeleteConfirmation({
-    deleted: [item],
-    callback: () => deleteData(item),
-  })
+	askDeleteConfirmation({
+		deleted: [
+			item,
+		],
+		callback: () => deleteData(item),
+	});
 }
 
 function edit(item) {
-  return router.push({
-    name: `${CrmSections.Priorities}-card`,
-    params: { id: item.id },
-  });
+	return router.push({
+		name: `${CrmSections.Priorities}-card`,
+		params: {
+			id: item.id,
+		},
+	});
 }
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 </script>
 
 <style

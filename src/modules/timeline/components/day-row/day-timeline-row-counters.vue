@@ -26,18 +26,18 @@ import { useI18n } from 'vue-i18n';
 import { TimelineEventType } from '../../enums/TimelineEventType';
 
 const props = defineProps({
-  callsCount: {
-    type: Number,
-    default: 0,
-  },
-  chatsCount: {
-    type: Number,
-    default: 0,
-  },
-  emailsCount: {
-    type: Number,
-    default: 0,
-  },
+	callsCount: {
+		type: Number,
+		default: 0,
+	},
+	chatsCount: {
+		type: Number,
+		default: 0,
+	},
+	emailsCount: {
+		type: Number,
+		default: 0,
+	},
 });
 
 const { t } = useI18n();

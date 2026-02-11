@@ -48,47 +48,47 @@ import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js
 import EmailPointTimelineRow from '../point-row/email-point-timeline-row.vue';
 
 const props = defineProps({
-  task: {
-    type: Object,
-    required: true,
-  },
-  detailed: {
-    type: Boolean,
-    default: false,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	task: {
+		type: Object,
+		required: true,
+	},
+	detailed: {
+		type: Boolean,
+		default: false,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
-const {
-  createdAt,
-  isInbound
-} = toRefs(props.task);
+const { createdAt, isInbound } = toRefs(props.task);
 
-const taskType = computed(() => isInbound?.value ? TimelineTaskKind.EMAIL_INBOUND : TimelineTaskKind.EMAIL_OUTBOUND);
+const taskType = computed(() =>
+	isInbound?.value
+		? TimelineTaskKind.EMAIL_INBOUND
+		: TimelineTaskKind.EMAIL_OUTBOUND,
+);
 
 const taskStatus = computed(() => {
-  switch (taskType.value) {
-    case TimelineTaskKind.EMAIL_INBOUND:
-      return TimelineTaskStatusEnum.RECEIVED;
-    case TimelineTaskKind.EMAIL_OUTBOUND:
-      return TimelineTaskStatusEnum.SENT;
-    default:
-      throw new Error(`Unknown task type: ${taskType.value}`);
-  }
+	switch (taskType.value) {
+		case TimelineTaskKind.EMAIL_INBOUND:
+			return TimelineTaskStatusEnum.RECEIVED;
+		case TimelineTaskKind.EMAIL_OUTBOUND:
+			return TimelineTaskStatusEnum.SENT;
+		default:
+			throw new Error(`Unknown task type: ${taskType.value}`);
+	}
 });
 
 const pinType = computed(() => {
-  switch (taskType.value) {
-    case TimelineTaskKind.EMAIL_INBOUND:
-      return TimelinePinType.EMAIL_INBOUND;
-    case TimelineTaskKind.EMAIL_OUTBOUND:
-      return TimelinePinType.EMAIL_OUTBOUND;
-    default:
-      throw new Error(`Unknown task type: ${taskType.value}`);
-  }
+	switch (taskType.value) {
+		case TimelineTaskKind.EMAIL_INBOUND:
+			return TimelinePinType.EMAIL_INBOUND;
+		case TimelineTaskKind.EMAIL_OUTBOUND:
+			return TimelinePinType.EMAIL_OUTBOUND;
+		default:
+			throw new Error(`Unknown task type: ${taskType.value}`);
+	}
 });
-
 </script>

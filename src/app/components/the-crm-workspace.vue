@@ -35,20 +35,19 @@
 
 <script setup>
 import { WtNavigationBar } from '@webitel/ui-sdk/components';
-import {CrmSections, WtApplication } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtApplication } from '@webitel/ui-sdk/enums';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 import { storeToRefs } from 'pinia';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-
-import { useUserinfoStore } from '../../modules/userinfo/store/userinfoStore';
+import packageJson from './../../../package.json' with { type: 'json' };
 import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 import { useNavStore } from '../../modules/start-page/stores/navStore';
-import packageJson from './../../../package.json' with { type: 'json' };
+import { useUserinfoStore } from '../../modules/userinfo/store/userinfoStore';
 
-const route = useRoute()
+const route = useRoute();
 const release = packageJson.version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
 const timestamp = import.meta.env.VITE_BUILD_TIMESTAMP;
@@ -74,50 +73,58 @@ navStore.initializeNav();
 
 const { nav } = storeToRefs(navStore);
 
-const accessibleNav = computed(() => nav.value.filter(({ disabled }) => !disabled));
+const accessibleNav = computed(() =>
+	nav.value.filter(({ disabled }) => !disabled),
+);
 
 const apps = computed(() => {
-  const agent = {
-    name: WtApplication.Agent,
-    href: import.meta.env.VITE_AGENT_URL,
-  };
-  const supervisor = {
-    name: WtApplication.Supervisor,
-    href: import.meta.env.VITE_SUPERVISOR_URL,
-  };
-  const history = {
-    name: WtApplication.History,
-    href: import.meta.env.VITE_HISTORY_URL,
-  };
-  const audit = {
-    name: WtApplication.Audit,
-    href: import.meta.env.VITE_AUDIT_URL,
-  };
-  const admin = {
-    name: WtApplication.Admin,
-    href: import.meta.env.VITE_ADMIN_URL,
-  };
-  const grafana = {
-    name: WtApplication.Analytics,
-    href: import.meta.env.VITE_GRAFANA_URL,
-  };
-  const crm = {
-    name: WtApplication.Crm,
-    href: import.meta.env.VITE_CRM_URL,
-  };
+	const agent = {
+		name: WtApplication.Agent,
+		href: import.meta.env.VITE_AGENT_URL,
+	};
+	const supervisor = {
+		name: WtApplication.Supervisor,
+		href: import.meta.env.VITE_SUPERVISOR_URL,
+	};
+	const history = {
+		name: WtApplication.History,
+		href: import.meta.env.VITE_HISTORY_URL,
+	};
+	const audit = {
+		name: WtApplication.Audit,
+		href: import.meta.env.VITE_AUDIT_URL,
+	};
+	const admin = {
+		name: WtApplication.Admin,
+		href: import.meta.env.VITE_ADMIN_URL,
+	};
+	const grafana = {
+		name: WtApplication.Analytics,
+		href: import.meta.env.VITE_GRAFANA_URL,
+	};
+	const crm = {
+		name: WtApplication.Crm,
+		href: import.meta.env.VITE_CRM_URL,
+	};
 
-  const config = inject('$config');
+	const config = inject('$config');
 
-  const allApps = [admin, supervisor, agent, history, audit, crm];
-  if (config?.ON_SITE) allApps.push(grafana);
-  return allApps.filter(({ name }) => hasApplicationVisibility(name));
+	const allApps = [
+		admin,
+		supervisor,
+		agent,
+		history,
+		audit,
+		crm,
+	];
+	if (config?.ON_SITE) allApps.push(grafana);
+	return allApps.filter(({ name }) => hasApplicationVisibility(name));
 });
 
 function settings() {
-  const settingsUrl = import.meta.env.VITE_SETTINGS_URL;
-  window.open(settingsUrl);
+	const settingsUrl = import.meta.env.VITE_SETTINGS_URL;
+	window.open(settingsUrl);
 }
-
 </script>
 
 <style lang="scss" scoped>

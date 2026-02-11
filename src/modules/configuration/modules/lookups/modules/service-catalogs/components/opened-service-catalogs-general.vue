@@ -96,21 +96,27 @@
 </template>
 
 <script setup>
-import { CaseCloseReasonGroupsAPI,CaseStatusesAPI, SkillsAPI, SlasAPI, TeamsAPI } from '@webitel/api-services/api';
+import {
+	CaseCloseReasonGroupsAPI,
+	CaseStatusesAPI,
+	SkillsAPI,
+	SlasAPI,
+	TeamsAPI,
+} from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
@@ -120,22 +126,22 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStatusesList(params) {
-  return CaseStatusesAPI.getLookup(params);
+	return CaseStatusesAPI.getLookup(params);
 }
 
 function loadReasonList(params) {
-  return CaseCloseReasonGroupsAPI.getLookup(params);
+	return CaseCloseReasonGroupsAPI.getLookup(params);
 }
 
 function loadSlaList(params) {
-  return SlasAPI.getLookup(params);
+	return SlasAPI.getLookup(params);
 }
 
 function loadTeamsList(params) {
-  return TeamsAPI.getLookup(params);
+	return TeamsAPI.getLookup(params);
 }
 
 function loadSkillsList(params) {
-  return SkillsAPI.getLookup(params);
+	return SkillsAPI.getLookup(params);
 }
 </script>

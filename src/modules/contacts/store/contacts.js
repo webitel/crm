@@ -1,9 +1,9 @@
 import { ContactsAPI } from '@webitel/api-services/api';
 import {
-  createApiStoreModule,
-  createBaseStoreModule,
-  createCardStoreModule,
-  createTableStoreModule,
+	createApiStoreModule,
+	createBaseStoreModule,
+	createCardStoreModule,
+	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
 import { headers } from '../../_shared/modules/contacts/store/_internals/headers';
@@ -16,56 +16,58 @@ import phones from '../modules/phones/store/phones';
 import variables from '../modules/variables/store/variables';
 
 const cardState = {
-  itemInstance: {
-    name: '',
-    timezones: [],
-    managers: [],
-    groups: [],
-    labels: [],
-    about: '',
-    user: null,
-  },
+	itemInstance: {
+		name: '',
+		timezones: [],
+		managers: [],
+		groups: [],
+		labels: [],
+		about: '',
+		user: null,
+	},
 };
 
 const tableGetters = {
-  // REQUIRED_FIELDS: () => ['mode'],
+	// REQUIRED_FIELDS: () => ['mode'],
 };
 
 const api = createApiStoreModule({
-  state: {
-    api: ContactsAPI,
-  },
+	state: {
+		api: ContactsAPI,
+	},
 });
 
 const table = createTableStoreModule({
-  state: { headers },
-  getters: tableGetters,
-  modules: {
-    filters,
-    api,
-  },
+	state: {
+		headers,
+	},
+	getters: tableGetters,
+	modules: {
+		filters,
+		api,
+	},
 });
 
 const card = createCardStoreModule({
-  state: {
-    _resettable: cardState,
-    itemInstance: cardState.itemInstance,
-  },
-  modules: {
-    api,
-    emails,
-    phones,
-    messaging,
-    variables,
-    permissions,
-    cases,
-  },
+	state: {
+		_resettable: cardState,
+		itemInstance: cardState.itemInstance,
+	},
+	modules: {
+		api,
+		emails,
+		phones,
+		messaging,
+		variables,
+		permissions,
+		cases,
+	},
 });
 
 const contacts = createBaseStoreModule({
-  modules: {
-    table,
-    card,
-  },
+	modules: {
+		table,
+		card,
+	},
 });
 export default contacts;

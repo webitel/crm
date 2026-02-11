@@ -117,11 +117,8 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required, url } from '@vuelidate/validators';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
@@ -135,18 +132,18 @@ import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
 import LinksAPI from '../api/LinksAPI.js';
 
 const props = defineProps({
-  linksNamespace: {
-    type: String,
-    required: true,
-  },
-  namespace: {
-    type: String,
-    required: true,
-  },
-  itemId: {
-    type: String,
-    required: true,
-  },
+	linksNamespace: {
+		type: String,
+		required: true,
+	},
+	namespace: {
+		type: String,
+		required: true,
+	},
+	itemId: {
+		type: String,
+		required: true,
+	},
 });
 
 const isReadOnly = inject('isReadOnly');
@@ -154,144 +151,161 @@ const editMode = inject('editMode');
 
 const { t } = useI18n();
 
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
-});
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+	useUserAccessControl({
+		useUpdateAccessAsAllMutableChecksSource: true,
+	});
 
 const {
-  namespace: linksTableNamespace,
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  loadData,
-  deleteData,
-  setSelected,
-  onFilterEvent,
+	namespace: linksTableNamespace,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	loadData,
+	deleteData,
+	setSelected,
+	onFilterEvent,
 } = useTableStore(props.linksNamespace);
 
-const {
-  restoreFilters,
-  subscribe,
-  flushSubscribers,
-} = useTableFilters(linksTableNamespace);
+const { restoreFilters, subscribe, flushSubscribers } =
+	useTableFilters(linksTableNamespace);
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-  askDeleteConfirmation,
-  closeDelete,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const isTableActionAddDisabled = computed(() => {
-  return !hasCreateAccess.value
-    || formState.isAdding
-    || formState.editingLink
-    || !editMode.value
-    || isPendingItemsLoading.value;
+	return (
+		!hasCreateAccess.value ||
+		formState.isAdding ||
+		formState.editingLink ||
+		!editMode.value ||
+		isPendingItemsLoading.value
+	);
 });
 
 const isTableActionDeleteDisabled = computed(() => {
-  return !editMode.value || !hasDeleteAccess.value || !selected.value.length || isPendingItemsLoading.value;
+	return (
+		!editMode.value ||
+		!hasDeleteAccess.value ||
+		!selected.value.length ||
+		isPendingItemsLoading.value
+	);
 });
 
 const isFormVisible = computed(() => {
-  return hasUpdateAccess.value && (formState.isAdding || formState.editingLink);
+	return hasUpdateAccess.value && (formState.isAdding || formState.editingLink);
 });
 
 const isFormAddActionDisabled = computed(() => {
-  return isUrlInvalid.value || isPendingItemsLoading.value;
+	return isUrlInvalid.value || isPendingItemsLoading.value;
 });
 
 const isTableVisible = computed(() => {
-  return !isLoading.value && currentDataList.value.length && !isPendingItemsLoading.value;
+	return (
+		!isLoading.value &&
+		currentDataList.value.length &&
+		!isPendingItemsLoading.value
+	);
 });
 
 const isLinkEditActionDisabled = computed(() => {
-  return !editMode.value || !hasUpdateAccess.value || formState.isAdding;
+	return !editMode.value || !hasUpdateAccess.value || formState.isAdding;
 });
 
 const isLinkDeleteActionDisabled = computed(() => {
-  return !editMode.value || !hasDeleteAccess.value;
+	return !editMode.value || !hasDeleteAccess.value;
 });
 
 // Transform and process functions for links
 const transformStoreItemToPending = (linkData) => ({
-  name: linkData.input?.name || linkData.name,
-  url: linkData.input?.url || linkData.url,
+	name: linkData.input?.name || linkData.name,
+	url: linkData.input?.url || linkData.url,
 });
 
 const addLink = async (link) => {
-  await LinksAPI.add({
-    parentId: props.itemId,
-    input: {
-      name: link.name,
-      url: link.url,
-    },
-  });
+	await LinksAPI.add({
+		parentId: props.itemId,
+		input: {
+			name: link.name,
+			url: link.url,
+		},
+	});
 };
 
 const {
-  isNew,
-  pendingItems: pendingLinks,
-  isPendingItemsLoading,
-  addNewItem,
-  handleDeleteData,
-  deletePendingItem,
-  updatePendingItem,
-  deleteMultiplePendingItems,
+	isNew,
+	pendingItems: pendingLinks,
+	isPendingItemsLoading,
+	addNewItem,
+	handleDeleteData,
+	deletePendingItem,
+	updatePendingItem,
+	deleteMultiplePendingItems,
 } = useCaseAttachments({
-  cardNamespace: props.namespace,
-  itemId: props.itemId,
-  storePath: AttachmentsTypes.LINKS,
-  loadData,
-  transformStoreItemToPending,
-  processItemToAPI: addLink,
-  deleteData,
+	cardNamespace: props.namespace,
+	itemId: props.itemId,
+	storePath: AttachmentsTypes.LINKS,
+	loadData,
+	transformStoreItemToPending,
+	processItemToAPI: addLink,
+	deleteData,
 });
 
-const currentDataList = computed(() => isNew.value ? pendingLinks.value : dataList.value);
-const { showEmpty } = useTableEmpty({ dataList: currentDataList, isLoading });
+const currentDataList = computed(() =>
+	isNew.value ? pendingLinks.value : dataList.value,
+);
+const { showEmpty } = useTableEmpty({
+	dataList: currentDataList,
+	isLoading,
+});
 
 const emptyText = computed(() => {
-  return t('cases.attachments.emptyLinksText');
+	return t('cases.attachments.emptyLinksText');
 });
 
 subscribe({
-  event: '*',
-  callback: (...args) => {
-    if (!isNew.value) {
-      onFilterEvent(...args);
-    }
-  },
+	event: '*',
+	callback: (...args) => {
+		if (!isNew.value) {
+			onFilterEvent(...args);
+		}
+	},
 });
 
 if (!isNew.value) {
-  restoreFilters();
+	restoreFilters();
 }
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 // Form state for links
 const formState = reactive({
-  isAdding: false,
-  editingLink: null,
-  linkText: '',
-  linkUrl: '',
+	isAdding: false,
+	editingLink: null,
+	linkText: '',
+	linkUrl: '',
 });
 
 function requiredIfIsAdding(value, state, siblings) {
-  if (!formState.isAdding) {
-    return true;
-  }
-  return required.$validator(value, state, siblings);
+	if (!formState.isAdding) {
+		return true;
+	}
+	return required.$validator(value, state, siblings);
 }
 
 const rules = computed(() => ({
-  linkUrl: { requiredIfIsAdding, url },
+	linkUrl: {
+		requiredIfIsAdding,
+		url,
+	},
 }));
 
 const v$ = useVuelidate(rules, formState);
@@ -300,78 +314,91 @@ v$.value.$touch();
 const isUrlInvalid = computed(() => v$.value.linkUrl.$invalid);
 
 function startAddingLink() {
-  formState.isAdding = true;
-  formState.editingLink = null;
-  updateLinkText('');
-  updateLinkUrl('');
+	formState.isAdding = true;
+	formState.editingLink = null;
+	updateLinkText('');
+	updateLinkUrl('');
 }
 
 function startEditingLink(link) {
-  formState.isAdding = false;
-  formState.editingLink = link;
-  updateLinkText(link.name);
-  updateLinkUrl(link.url);
+	formState.isAdding = false;
+	formState.editingLink = link;
+	updateLinkText(link.name);
+	updateLinkUrl(link.url);
 }
 
 function resetForm() {
-  formState.isAdding = false;
-  formState.editingLink = null;
-  updateLinkText('');
-  updateLinkUrl('');
+	formState.isAdding = false;
+	formState.editingLink = null;
+	updateLinkText('');
+	updateLinkUrl('');
 }
 
 function updateLinkText(value) {
-  formState.linkText = value;
+	formState.linkText = value;
 }
 
 function updateLinkUrl(value) {
-  formState.linkUrl = value;
+	formState.linkUrl = value;
 }
 
 async function submitLink() {
-  const { editingLink, linkText, linkUrl } = formState;
-  const name = linkText || linkUrl;
+	const { editingLink, linkText, linkUrl } = formState;
+	const name = linkText || linkUrl;
 
-  if (editingLink) {
-    // Handle editing existing or pending link
-    await handleLinkEdit(editingLink);
-  } else {
-    // Handle creating new link - use composable
-    const linkData = { name, url: linkUrl };
-    const storeData = { input: { name, url: linkUrl } };
-    await addNewItem(linkData, storeData);
-  }
+	if (editingLink) {
+		// Handle editing existing or pending link
+		await handleLinkEdit(editingLink);
+	} else {
+		// Handle creating new link - use composable
+		const linkData = {
+			name,
+			url: linkUrl,
+		};
+		const storeData = {
+			input: {
+				name,
+				url: linkUrl,
+			},
+		};
+		await addNewItem(linkData, storeData);
+	}
 
-  resetForm();
+	resetForm();
 }
 
 async function updateExistingLink(editingLink, name, linkUrl) {
-  await LinksAPI.patch({
-    parentId: props.itemId,
-    linkId: editingLink.etag,
-    changes: {
-      name,
-      url: linkUrl,
-    },
-  });
-  await loadData();
+	await LinksAPI.patch({
+		parentId: props.itemId,
+		linkId: editingLink.etag,
+		changes: {
+			name,
+			url: linkUrl,
+		},
+	});
+	await loadData();
 }
 
 // Function to handle deletion of pending links
 async function handleLinkDelete(link) {
-  await (isNew.value ? deletePendingItem(link) : handleDeleteData(link));
+	await (isNew.value ? deletePendingItem(link) : handleDeleteData(link));
 }
 
 // Function to handle editing of pending links
 async function handleLinkEdit(link) {
-  await (isNew.value
-    ? updatePendingItem(link, { name: formState.linkText, url: formState.linkUrl })
-    : updateExistingLink(link, formState.linkText, formState.linkUrl));
+	await (isNew.value
+		? updatePendingItem(link, {
+				name: formState.linkText,
+				url: formState.linkUrl,
+			})
+		: updateExistingLink(link, formState.linkText, formState.linkUrl));
 }
 
 // Function to handle bulk deletion of links (pending or existing)
 async function handleBulkDelete(links) {
-  await (isNew.value ? deleteMultiplePendingItems(links) : handleDeleteData(links));
+	await (isNew.value
+		? deleteMultiplePendingItems(links)
+		: handleDeleteData(links));
 }
 </script>
 

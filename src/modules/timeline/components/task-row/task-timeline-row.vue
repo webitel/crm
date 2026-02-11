@@ -16,29 +16,31 @@ import ChatTaskTimelineRow from '../../modules/chats/components/task-row/chat-ta
 import EmailTaskTimelineRow from '../../modules/emails/components/task-row/email-task-timeline-row.vue';
 
 const props = defineProps({
-  task: {
-    type: Object,
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	task: {
+		type: Object,
+		required: true,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
-const isDetailed = computed(() => props.task?.isDetailed || props.task.type === TimelineEventType.Email);
+const isDetailed = computed(
+	() => props.task?.isDetailed || props.task.type === TimelineEventType.Email,
+);
 
 const component = computed(() => {
-  switch (props.task.type) {
-    case TimelineEventType.Chat:
-      return ChatTaskTimelineRow;
-    case TimelineEventType.Call:
-      return CallTaskTimelineRow;
-    case TimelineEventType.Email:
-      return EmailTaskTimelineRow;
-    default:
-      throw new Error(`Unknown item type, ${props.task.type}!`);
-  }
+	switch (props.task.type) {
+		case TimelineEventType.Chat:
+			return ChatTaskTimelineRow;
+		case TimelineEventType.Call:
+			return CallTaskTimelineRow;
+		case TimelineEventType.Email:
+			return EmailTaskTimelineRow;
+		default:
+			throw new Error(`Unknown item type, ${props.task.type}!`);
+	}
 });
 </script>
 

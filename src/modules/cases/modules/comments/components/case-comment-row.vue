@@ -27,10 +27,10 @@ import ColorComponentWrapper from '../../../../../app/components/utils/color-com
 import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
-  comment: {
-    type: Object,
-    required: true,
-  },
+	comment: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();

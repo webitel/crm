@@ -105,52 +105,43 @@ import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
 
 const props = defineProps<{
-  groupIds: string[]
+	groupIds: string[];
 }>();
-const emit = defineEmits(['load-data', 'close']);
+const emit = defineEmits([
+	'load-data',
+	'close',
+]);
 
 const { t } = useI18n();
 
 const useTableStore = createAddContactsInGroupComposableTableStore();
 const tableStore = useTableStore();
-const isFirstLoad = ref(false)
+const isFirstLoad = ref(false);
 
-const {
-  dataList,
-  selected,
-  headers,
-  next,
-} = tableStore;
+const { dataList, selected, headers, next } = tableStore;
 
-const {
-  initialize,
-  updateSort,
-  updateSelected,
-  appendToDataList,
-} = tableStore;
+const { initialize, updateSort, updateSelected, appendToDataList } = tableStore;
 
 initialize();
 
-
 const handleIntersect = () => {
-  if (!next.value && isFirstLoad.value) return;
-  appendToDataList();
-  isFirstLoad.value = true;
-}
+	if (!next.value && isFirstLoad.value) return;
+	appendToDataList();
+	isFirstLoad.value = true;
+};
 
 const save = async () => {
-  await ContactGroupsAPI.addContactsToGroups({
-    groupIds: props.groupIds,
-    contactIds: selected.value.map(({ id }) => id),
-  });
-  close();
-  emit('load-data');
+	await ContactGroupsAPI.addContactsToGroups({
+		groupIds: props.groupIds,
+		contactIds: selected.value.map(({ id }) => id),
+	});
+	close();
+	emit('load-data');
 };
 
 function close() {
-  emit('close');
+	emit('close');
 }
-
 </script>
 
 <style

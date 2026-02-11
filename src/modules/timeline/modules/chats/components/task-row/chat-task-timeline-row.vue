@@ -78,61 +78,62 @@ import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js
 import ChatPointsRowSection from '../point-row/chat-points-timeline-row-section.vue';
 
 const props = defineProps({
-  task: {
-    type: Object,
-    required: true,
-  },
-  detailed: {
-    type: Boolean,
-    default: false,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	task: {
+		type: Object,
+		required: true,
+	},
+	detailed: {
+		type: Boolean,
+		default: false,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const namespace = inject('namespace');
 
 const {
-  createdAt,
-  participants,
-  duration,
-  flowScheme,
-  id: taskId,
+	createdAt,
+	participants,
+	duration,
+	flowScheme,
+	id: taskId,
 } = toRefs(props.task);
 
 const taskType = computed(() => {
-  return TimelineTaskKind.CHAT_INBOUND;
+	return TimelineTaskKind.CHAT_INBOUND;
 });
 
 const pinType = computed(() => {
-  switch (taskType.value) {
-    case TimelineTaskKind.CHAT_INBOUND:
-      return TimelinePinType.CHAT_INBOUND;
-    default:
-      throw new Error(`Unknown task type: ${taskType.value}`);
-  }
+	switch (taskType.value) {
+		case TimelineTaskKind.CHAT_INBOUND:
+			return TimelinePinType.CHAT_INBOUND;
+		default:
+			throw new Error(`Unknown task type: ${taskType.value}`);
+	}
 });
 
 const initiatorType = computed(() => {
-  if (!participants?.value) return TimelineInitiatorType.BOT;
-  return TimelineInitiatorType.CONTACT;
+	if (!participants?.value) return TimelineInitiatorType.BOT;
+	return TimelineInitiatorType.CONTACT;
 });
 
 const initiator = computed(() => {
-  switch (initiatorType.value) {
-    case TimelineInitiatorType.BOT:
-      return flowScheme?.value;
-    default:
-      return participants?.value.at(0);
-  }
+	switch (initiatorType.value) {
+		case TimelineInitiatorType.BOT:
+			return flowScheme?.value;
+		default:
+			return participants?.value.at(0);
+	}
 });
 
-const hiddenParticipants = computed(() => (
-  (participants?.value || []).filter((participant) => participant.id !== initiator.value.id)
-));
-
+const hiddenParticipants = computed(() =>
+	(participants?.value || []).filter(
+		(participant) => participant.id !== initiator.value.id,
+	),
+);
 </script>
 
 <style lang="scss" scoped>

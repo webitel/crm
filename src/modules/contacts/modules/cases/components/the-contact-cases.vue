@@ -186,16 +186,13 @@
 >
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import {
-  useTableEmpty,
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
-import CasesFilterSearchBar
-  from '../../../../cases/components/cases-filter-search-bar.vue';
+import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
@@ -211,65 +208,66 @@ const tableStore = useContactCasesStore();
 const showActionsPanel = ref(true);
 
 const {
-  dataList,
-  error,
-  isLoading,
-  page,
-  size,
-  next,
-  headers,
-  shownHeaders,
-  filtersManager,
+	dataList,
+	error,
+	isLoading,
+	page,
+	size,
+	next,
+	headers,
+	shownHeaders,
+	filtersManager,
 } = storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updatePage,
-  updateSize,
-  updateSort,
-  updateShownHeaders,
-  columnReorder,
-  columnResize,
+	initialize,
+	loadDataList,
+	updatePage,
+	updateSize,
+	updateSort,
+	updateShownHeaders,
+	columnReorder,
+	columnResize,
 } = tableStore;
 
 const {
-  showEmpty,
-  image: emptyImage,
-  headline: emptyHeadline,
-  title: emptyTitle,
-  text: emptyText,
+	showEmpty,
+	image: emptyImage,
+	headline: emptyHeadline,
+	title: emptyTitle,
+	text: emptyText,
 } = useTableEmpty({
-  dataList,
-  error,
-  filters: computed(() => filtersManager.value.getAllValues()),
-  isLoading,
+	dataList,
+	error,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	isLoading,
 });
 
 const parentId = computed(() => store.state.contacts.card.itemId);
 
-initialize({ parentId: parentId.value });
+initialize({
+	parentId: parentId.value,
+});
 
 const contactCase = (caseItem: object) => {
-  if (isReadOnly) {
-    return `${import.meta.env.VITE_CRM_URL}/view/case_view/${caseItem.etag}`;
-  }
-  return `${import.meta.env.VITE_CRM_URL}/cases/${caseItem.id}`;
-}
+	if (isReadOnly) {
+		return `${import.meta.env.VITE_CRM_URL}/view/case_view/${caseItem.etag}`;
+	}
+	return `${import.meta.env.VITE_CRM_URL}/cases/${caseItem.id}`;
+};
 
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
 
 const anyFiltersOnFiltersPanel = computed(() => {
-  /*
-   * ...excluding search filters, which shown in other panel
-   * */
-  return filtersManager.value.getAllKeys().some((filterName) => {
-    return !Object.values(SearchMode).some((mode) => mode === filterName);
-  });
+	/*
+	 * ...excluding search filters, which shown in other panel
+	 * */
+	return filtersManager.value.getAllKeys().some((filterName) => {
+		return !Object.values(SearchMode).some((mode) => mode === filterName);
+	});
 });
-
 </script>
 
 <style

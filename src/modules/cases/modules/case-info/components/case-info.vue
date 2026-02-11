@@ -99,28 +99,24 @@ const editMode = inject('editMode');
 const v$ = inject('v$');
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
-const {
-  hasReadAccess: hasCaseCommentsReadAccess,
-} = useUserAccessControl({ resource: WtObject.CaseComment });
+const { hasReadAccess: hasCaseCommentsReadAccess } = useUserAccessControl({
+	resource: WtObject.CaseComment,
+});
 
-const {
-  itemInstance,
-  setItemProp,
-  id,
-} = useCardStore(props.namespace);
+const { itemInstance, setItemProp, id } = useCardStore(props.namespace);
 
 const { isNew } = useCardComponent({
-  id,
-  itemInstance,
+	id,
+	itemInstance,
 });
 </script>
 

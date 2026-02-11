@@ -61,177 +61,200 @@ const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
 
-const disableStatusSelect = computed(() => disableUserInput.value || isReadOnly)
+const disableStatusSelect = computed(
+	() => disableUserInput.value || isReadOnly,
+);
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
+	namespace: cardNamespace,
+	id,
+	itemInstance,
 
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
-  setItemProp,
+	loadItem,
+	addItem,
+	updateItem,
+	setId,
+	resetState,
+	setItemProp,
 } = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
-  id,
-  itemInstance,
-  loadItem,
-  addItem,
-  updateItem,
-  setId,
-  resetState,
+	id,
+	itemInstance,
+	loadItem,
+	addItem,
+	updateItem,
+	setId,
+	resetState,
 });
 
 const isResultPopup = ref(false);
 const prevStatusCondition = ref(itemInstance.value.statusCondition);
 
 const openCaseResultPopup = () => {
-  isResultPopup.value = true;
+	isResultPopup.value = true;
 };
 
 const closeCaseResultPopup = () => {
-  isResultPopup.value = false;
+	isResultPopup.value = false;
 };
 
 const startChangingStatusToFinal = (statusCondition) => {
-  itemInstance.value.statusCondition = statusCondition;
-  openCaseResultPopup();
+	itemInstance.value.statusCondition = statusCondition;
+	openCaseResultPopup();
 };
 
 const confirmChangingStatusToFinal = async ({ reason, result }) => {
-  await setItemProp({
-    path: 'closeReason',
-    value: reason,
-  });
-  await setItemProp({
-    path: 'closeResult',
-    value: result,
-  });
+	await setItemProp({
+		path: 'closeReason',
+		value: reason,
+	});
+	await setItemProp({
+		path: 'closeResult',
+		value: result,
+	});
 
-  if (!editMode.value) {
-    await patchStatusCondition(itemInstance.value.statusCondition);
+	if (!editMode.value) {
+		await patchStatusCondition(itemInstance.value.statusCondition);
 
-    await CasesAPI.patch({
-      changes: {
-        closeReason: reason,
-        closeResult: result,
-      },
-      etag: itemInstance.value.etag,
-    });
+		await CasesAPI.patch({
+			changes: {
+				closeReason: reason,
+				closeResult: result,
+			},
+			etag: itemInstance.value.etag,
+		});
 
-    //NOTE: needed to get new etag so new patch will work correctly
-    await loadItem();
-  }
+		//NOTE: needed to get new etag so new patch will work correctly
+		await loadItem();
+	}
 
-  closeCaseResultPopup();
+	closeCaseResultPopup();
 };
 
 const cancelChangingStatusToFinal = () => {
-  closeCaseResultPopup();
-  itemInstance.value.statusCondition = prevStatusCondition.value;
+	closeCaseResultPopup();
+	itemInstance.value.statusCondition = prevStatusCondition.value;
 };
 
 const getIndicatorColor = (option) => {
-  if (option?.final) return 'final-status';
-  if (option?.initial) return 'initial-status';
-  return 'other-status';
+	if (option?.final) return 'final-status';
+	if (option?.initial) return 'initial-status';
+	return 'other-status';
 };
 
 const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
 
 const fetchStatusConditions = async (params) => {
-  if (!status?.value?.id) {
-    return { items: [] };
-  }
+	if (!status?.value?.id) {
+		return {
+			items: [],
+		};
+	}
 
-  return await CaseStatusConditionsAPI.getLookup({
-    statusId: status.value.id,
-    ...params,
-    fields: ['id', 'name', 'initial', 'final'],
-  });
+	return await CaseStatusConditionsAPI.getLookup({
+		statusId: status.value.id,
+		...params,
+		fields: [
+			'id',
+			'name',
+			'initial',
+			'final',
+		],
+	});
 };
 
 async function patchStatusCondition(condition) {
-  await updateLocalProperties(condition);
+	await updateLocalProperties(condition);
 
-  if (!isNew.value && !editMode.value) {
-    await patchRemoteChanges(condition);
-    await loadItem();
-  }
+	if (!isNew.value && !editMode.value) {
+		await patchRemoteChanges(condition);
+		await loadItem();
+	}
 }
 
 async function updateLocalProperties(condition) {
-  await setItemProp({ path: 'statusCondition', value: condition });
-  await setItemProp({ path: 'status', value: status.value });
+	await setItemProp({
+		path: 'statusCondition',
+		value: condition,
+	});
+	await setItemProp({
+		path: 'status',
+		value: status.value,
+	});
 
-  if (editMode.value && !condition.final) {
-    await setItemProp({ path: 'closeReason', value: {} });
-    await setItemProp({ path: 'closeResult', value: '' });
-  }
+	if (editMode.value && !condition.final) {
+		await setItemProp({
+			path: 'closeReason',
+			value: {},
+		});
+		await setItemProp({
+			path: 'closeResult',
+			value: '',
+		});
+	}
 }
 
 async function patchRemoteChanges(condition) {
-  const changes = {
-    statusCondition: condition,
-    status: status.value,
-  };
+	const changes = {
+		statusCondition: condition,
+		status: status.value,
+	};
 
-  if (!condition.final) {
-    changes.closeReason = {};
-    changes.closeResult = '';
-  }
+	if (!condition.final) {
+		changes.closeReason = {};
+		changes.closeResult = '';
+	}
 
-  await CasesAPI.patch({
-    changes,
-    etag: itemInstance.value.etag,
-  });
+	await CasesAPI.patch({
+		changes,
+		etag: itemInstance.value.etag,
+	});
 }
 
 async function handleSelect(selectedStatusCondition) {
-  if (selectedStatusCondition.final) {
-    startChangingStatusToFinal(selectedStatusCondition);
-  } else if /* at reset */(isEmpty(selectedStatusCondition)) {
-    const { items } = await fetchStatusConditions();
-    const initialStatusCondition = items.find(({ initial }) => initial);
-    handleSelect(initialStatusCondition);
-  } else {
-    await patchStatusCondition(selectedStatusCondition);
-    prevStatusCondition.value = selectedStatusCondition;
-  }
+	if (selectedStatusCondition.final) {
+		startChangingStatusToFinal(selectedStatusCondition);
+	} else if (/* at reset */ isEmpty(selectedStatusCondition)) {
+		const { items } = await fetchStatusConditions();
+		const initialStatusCondition = items.find(({ initial }) => initial);
+		handleSelect(initialStatusCondition);
+	} else {
+		await patchStatusCondition(selectedStatusCondition);
+		prevStatusCondition.value = selectedStatusCondition;
+	}
 }
 
 async function updateStatusCondition(isValidationRequired = true) {
-  if (!status?.value?.id) {
-    return;
-  }
+	if (!status?.value?.id) {
+		return;
+	}
 
-  if (isValidationRequired && itemInstance.value.statusCondition.id) return;
+	if (isValidationRequired && itemInstance.value.statusCondition.id) return;
 
-  const { items } = await CaseStatusConditionsAPI.getList({
-    statusId: status.value.id,
-  });
+	const { items } = await CaseStatusConditionsAPI.getList({
+		statusId: status.value.id,
+	});
 
-  const initialCondition = items.find((item) => item.initial);
-  if (initialCondition) {
-    await patchStatusCondition(initialCondition);
-  }
+	const initialCondition = items.find((item) => item.initial);
+	if (initialCondition) {
+		await patchStatusCondition(initialCondition);
+	}
 }
 
 watch(
-  () => status.value?.id,
-  async (newStatusId, oldStatusId) => {
-    if (!newStatusId || itemInstance.value.statusCondition.final) return;
+	() => status.value?.id,
+	async (newStatusId, oldStatusId) => {
+		if (!newStatusId || itemInstance.value.statusCondition.final) return;
 
-    // NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a stat usCondition.id, on any subsequent status‐change we force the reset
-    const validationRequired = oldStatusId === undefined;
+		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a stat usCondition.id, on any subsequent status‐change we force the reset
+		const validationRequired = oldStatusId === undefined;
 
-    await updateStatusCondition(validationRequired);
-  },
-  { immediate: true },
+		await updateStatusCondition(validationRequired);
+	},
+	{
+		immediate: true,
+	},
 );
 </script>
 

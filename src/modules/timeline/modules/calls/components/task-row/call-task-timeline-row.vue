@@ -78,7 +78,15 @@
 
 <script setup>
 import { WtDisplayChipItems, WtPlayer } from '@webitel/ui-sdk/components';
-import { computed, inject, onMounted, onUnmounted, provide, ref, toRefs } from 'vue';
+import {
+	computed,
+	inject,
+	onMounted,
+	onUnmounted,
+	provide,
+	ref,
+	toRefs,
+} from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
@@ -95,18 +103,18 @@ import CallPointsTimelineRowSection from '../point-row/call-points-timeline-row-
 import CallTaskTimelineActions from './actions/call-task-timeline-actions.vue';
 
 const props = defineProps({
-  task: {
-    type: Object,
-    required: true,
-  },
-  detailed: {
-    type: Boolean,
-    default: false,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	task: {
+		type: Object,
+		required: true,
+	},
+	detailed: {
+		type: Boolean,
+		default: false,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const audioURL = ref(null);
@@ -116,83 +124,86 @@ const eventBus = inject('$eventBus');
 provide('audioId', audioId);
 
 const {
-  createdAt,
-  participants,
-  isInbound,
-  isMissed,
-  duration,
-  totalDuration,
-  flowScheme,
-  queue,
-  id: taskId,
+	createdAt,
+	participants,
+	isInbound,
+	isMissed,
+	duration,
+	totalDuration,
+	flowScheme,
+	queue,
+	id: taskId,
 } = toRefs(props.task);
 
 const taskType = computed(() => {
-  if (isMissed?.value) return TimelineTaskKind.CALL_MISSED;
-  if (isInbound?.value) return TimelineTaskKind.CALL_INBOUND;
-  return TimelineTaskKind.CALL_OUTBOUND;
+	if (isMissed?.value) return TimelineTaskKind.CALL_MISSED;
+	if (isInbound?.value) return TimelineTaskKind.CALL_INBOUND;
+	return TimelineTaskKind.CALL_OUTBOUND;
 });
 
 const pinType = computed(() => {
-  switch (taskType.value) {
-    case TimelineTaskKind.CALL_MISSED:
-      return TimelinePinType.CALL_MISSED;
-    case TimelineTaskKind.CALL_INBOUND:
-      return TimelinePinType.CALL_INBOUND;
-    case TimelineTaskKind.CALL_OUTBOUND:
-      return TimelinePinType.CALL_OUTBOUND;
-    default:
-      throw new Error('Unknown task type for pin');
-  }
+	switch (taskType.value) {
+		case TimelineTaskKind.CALL_MISSED:
+			return TimelinePinType.CALL_MISSED;
+		case TimelineTaskKind.CALL_INBOUND:
+			return TimelinePinType.CALL_INBOUND;
+		case TimelineTaskKind.CALL_OUTBOUND:
+			return TimelinePinType.CALL_OUTBOUND;
+		default:
+			throw new Error('Unknown task type for pin');
+	}
 });
 
 const taskStatus = computed(() => {
-  if (taskType.value === TimelineTaskKind.CALL_MISSED) return TimelineTaskStatusEnum.MISSED;
-  return TimelineTaskStatusEnum.STARTED;
+	if (taskType.value === TimelineTaskKind.CALL_MISSED)
+		return TimelineTaskStatusEnum.MISSED;
+	return TimelineTaskStatusEnum.STARTED;
 });
 
 const initiatorType = computed(() => {
-  if (!isInbound?.value) return TimelineInitiatorType.CONTACT; // agent
-  if (participants?.value) return TimelineInitiatorType.CONTACT;
-  if (queue?.value) return TimelineInitiatorType.BOT;
-  if (flowScheme?.value) return TimelineInitiatorType.FLOW;
-  return TimelineInitiatorType.CONTACT;
+	if (!isInbound?.value) return TimelineInitiatorType.CONTACT; // agent
+	if (participants?.value) return TimelineInitiatorType.CONTACT;
+	if (queue?.value) return TimelineInitiatorType.BOT;
+	if (flowScheme?.value) return TimelineInitiatorType.FLOW;
+	return TimelineInitiatorType.CONTACT;
 });
 
 const initiator = computed(() => {
-  switch (initiatorType.value) {
-    case TimelineInitiatorType.FLOW:
-      return flowScheme?.value;
-    case TimelineInitiatorType.BOT:
-      return queue?.value;
-    default:
-      return participants?.value.at(0);
-  }
+	switch (initiatorType.value) {
+		case TimelineInitiatorType.FLOW:
+			return flowScheme?.value;
+		case TimelineInitiatorType.BOT:
+			return queue?.value;
+		default:
+			return participants?.value.at(0);
+	}
 });
 
-const hiddenParticipants = computed(() => (participants?.value || [])
-  .filter(({ id }) => id !== initiator.value.id),
+const hiddenParticipants = computed(() =>
+	(participants?.value || []).filter(({ id }) => id !== initiator.value.id),
 );
 
 function closePlayer() {
-  eventBus.$emit('close-player');
-  audioURL.value = '';
-  audioId.value = '';
+	eventBus.$emit('close-player');
+	audioURL.value = '';
+	audioId.value = '';
 }
 
 onMounted(() => {
-  eventBus.$on('audio-handler', ({ url, id }) => {
-    if (!url || !id) return closePlayer();
-    audioURL.value = url;
-    audioId.value = id;
-  });
+	eventBus.$on('audio-handler', ({ url, id }) => {
+		if (!url || !id) return closePlayer();
+		audioURL.value = url;
+		audioId.value = id;
+	});
 });
 
 onUnmounted(() => {
-  eventBus.$off('audio-handler');
+	eventBus.$off('audio-handler');
 });
 
-const isShowPlayer = computed(() => props.task.files?.find((file) => file.id === audioId.value));
+const isShowPlayer = computed(() =>
+	props.task.files?.find((file) => file.id === audioId.value),
+);
 </script>
 
 <style lang="scss" scoped>

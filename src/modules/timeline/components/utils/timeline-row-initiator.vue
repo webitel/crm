@@ -35,15 +35,15 @@
 import TimelineInitiatorType from '../../enums/TimelineInitiatorType.enum.js';
 
 const props = defineProps({
-  text: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: TimelineInitiatorType.CONTACT,
-    validator: (value) => Object.values(TimelineInitiatorType).includes(value),
-  },
+	text: {
+		type: String,
+		required: true,
+	},
+	type: {
+		type: String,
+		default: TimelineInitiatorType.CONTACT,
+		validator: (value) => Object.values(TimelineInitiatorType).includes(value),
+	},
 });
 </script>
 

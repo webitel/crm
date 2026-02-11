@@ -115,25 +115,16 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { CrmSections } from '@webitel/ui-sdk/enums';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import {
-  useTableFilters,
-} from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import {
-  useTableEmpty,
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import {
-  useTableStore,
-} from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -146,52 +137,53 @@ const baseNamespace = 'customization/customLookups';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+	useUserAccessControl();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
 } = useTableStore(baseNamespace);
 
 const {
-  namespace: filtersNamespace,
-  filtersValue,
-  restoreFilters,
+	namespace: filtersNamespace,
+	filtersValue,
+	restoreFilters,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 /**
@@ -202,47 +194,62 @@ onUnmounted(() => {
  * link for description https://webitel.atlassian.net/browse/WTEL-7510?focusedCommentId=693399
  * */
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('objects.customization.customization'), route: '/configuration' },
-  { name: t('objects.customLookup.customLookup', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('objects.customization.customization'),
+		route: '/configuration',
+	},
+	{
+		name: t('objects.customLookup.customLookup', 2),
+	},
 ]);
 
 const { close } = useClose('configuration');
 
 function edit(item) {
-  router.push({
-    name: `${CrmSections.CustomLookups}-card`,
-    params: { id: item.repo },
-  });
+	router.push({
+		name: `${CrmSections.CustomLookups}-card`,
+		params: {
+			id: item.repo,
+		},
+	});
 }
 
 // This method for delete many lookups, one by one, because if we send many delete lookups requests at once, backend will return error
 const deleteMany = async (items) => {
-  for (const item of items) {
-    await deleteData(item);
-  }
+	for (const item of items) {
+		await deleteData(item);
+	}
 };
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  headline: emptyHeadline,
-  title: emptyTitle,
-  primaryActionText: emptyPrimaryActionText,
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	headline: emptyHeadline,
+	title: emptyTitle,
+	primaryActionText: emptyPrimaryActionText,
 } = useTableEmpty({
-  dataList,
-  error,
-  filters: filtersValue,
-  isLoading,
+	dataList,
+	error,
+	filters: filtersValue,
+	isLoading,
 });
 
 const add = () => {
-  router.push({
-    name: `${CrmSections.CustomLookups}-card`,
-    params: { id: 'new' },
-  });
+	router.push({
+		name: `${CrmSections.CustomLookups}-card`,
+		params: {
+			id: 'new',
+		},
+	});
 };
 </script>
 

@@ -45,16 +45,16 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  transcripts: {
-    type: Array,
-  },
-  createdAt: {
-    type: String,
-  },
-  shown: {
-    type: Boolean,
-    default: false,
-  },
+	transcripts: {
+		type: Array,
+	},
+	createdAt: {
+		type: String,
+	},
+	shown: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const { t } = useI18n();
@@ -64,86 +64,93 @@ const phrases = ref([]);
 const isLoading = ref(false);
 
 const headers = computed(() => {
-  return [
-    {
-      value: 'time',
-      text: t('vocabulary.time'),
-      width: '120px',
-    },
-    {
-      value: 'channel',
-      text: t('vocabulary.channel'),
-      width: '140px',
-    },
-    {
-      value: 'phrase',
-      text: t('vocabulary.text'),
-    },
-  ];
+	return [
+		{
+			value: 'time',
+			text: t('vocabulary.time'),
+			width: '120px',
+		},
+		{
+			value: 'channel',
+			text: t('vocabulary.channel'),
+			width: '140px',
+		},
+		{
+			value: 'phrase',
+			text: t('vocabulary.text'),
+		},
+	];
 });
 
 const phraseData = computed(() => {
-  return phrases.value.map(({ startSec, endSec, phrase, channel }) => ({
-    time: `${startSec} - ${endSec}`,
-    channel: channel
-      ? activeTranscript.value.to?.name ||
-        activeTranscript.value.to?.number ||
-        activeTranscript.value.to?.destination ||
-        1
-      : activeTranscript.value.from?.name ||
-        activeTranscript.value.from?.number ||
-        activeTranscript.value.from?.destination ||
-        0,
-    phrase,
-  }));
+	return phrases.value.map(({ startSec, endSec, phrase, channel }) => ({
+		time: `${startSec} - ${endSec}`,
+		channel: channel
+			? activeTranscript.value.to?.name ||
+				activeTranscript.value.to?.number ||
+				activeTranscript.value.to?.destination ||
+				1
+			: activeTranscript.value.from?.name ||
+				activeTranscript.value.from?.number ||
+				activeTranscript.value.from?.destination ||
+				0,
+		phrase,
+	}));
 });
 
 const transcriptData = computed(() => {
-  return props.transcripts.map((transcript) => ({
-    fileName: transcript.file.name,
-    fileId: transcript.file.id,
-    id: transcript.id,
-    locale: transcript.locale,
-  }));
+	return props.transcripts.map((transcript) => ({
+		fileName: transcript.file.name,
+		fileId: transcript.file.id,
+		id: transcript.id,
+		locale: transcript.locale,
+	}));
 });
 
 function downloadTxt(phrases) {
-  const text = phrases
-    .map(
-      ({ phrase, channel, time }) =>
-        `${time} [${channel != null ? channel : 'author'}] ${phrase || ''}`,
-    )
-    .join('\n');
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  return saveAs(
-    blob,
-    `Transcript ${activeTranscript.value?.id} ${props.createdAt}`,
-  );
+	const text = phrases
+		.map(
+			({ phrase, channel, time }) =>
+				`${time} [${channel != null ? channel : 'author'}] ${phrase || ''}`,
+		)
+		.join('\n');
+	const blob = new Blob(
+		[
+			text,
+		],
+		{
+			type: 'text/plain;charset=utf-8',
+		},
+	);
+	return saveAs(
+		blob,
+		`Transcript ${activeTranscript.value?.id} ${props.createdAt}`,
+	);
 }
 
 async function loadCallTranscript() {
-  try {
-    isLoading.value = true;
-    phrases.value = await CallTranscriptAPI.get({
-      id: activeTranscript.value?.id,
-    });
-  } finally {
-    isLoading.value = false;
-  }
+	try {
+		isLoading.value = true;
+		phrases.value = await CallTranscriptAPI.get({
+			id: activeTranscript.value?.id,
+		});
+	} finally {
+		isLoading.value = false;
+	}
 }
 
 function initTranscript() {
-  activeTranscript.value = transcriptData.value[0];
+	activeTranscript.value = transcriptData.value[0];
 }
 
 onMounted(() => initTranscript());
 
 watch(
-  () => activeTranscript.value,
-  (value) => {
-    if (value) return loadCallTranscript();
-    return (phrases.value = []);
-  },
+	() => activeTranscript.value,
+	(value) => {
+		if (value) return loadCallTranscript();
+		return (phrases.value = []);
+	},
 );
 </script>
 

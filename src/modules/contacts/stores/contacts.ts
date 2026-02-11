@@ -5,6 +5,6 @@ import { headers } from '../../_shared/modules/contacts/store/_internals/headers
 import { ContactsNamespace } from '../namespace';
 
 export const useContactsStore = createTableStore(ContactsNamespace, {
-  apiModule: ContactsAPI,
-  headers,
+	apiModule: ContactsAPI,
+	headers,
 });

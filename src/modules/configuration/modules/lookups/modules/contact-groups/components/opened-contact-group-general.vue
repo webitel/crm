@@ -56,14 +56,14 @@ import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
@@ -74,17 +74,20 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({
-    ...params,
-    type: ContactsGroupType.Static,
-    enabled: true,
-  });
+	return ContactGroupsAPI.getLookup({
+		...params,
+		type: ContactsGroupType.Static,
+		enabled: true,
+	});
 }
 
 function setContactGroupType() {
-  if(route.query.type) {
-    setItemProp({ path: 'type', value: route.query.type.toUpperCase() });
-  }
+	if (route.query.type) {
+		setItemProp({
+			path: 'type',
+			value: route.query.type.toUpperCase(),
+		});
+	}
 }
 
 onMounted(() => setContactGroupType());

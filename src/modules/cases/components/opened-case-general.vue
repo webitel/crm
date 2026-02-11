@@ -20,12 +20,11 @@ import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
 
 const props = defineProps({
-  isNew: {
-    type: Boolean,
-    default: false,
-  },
+	isNew: {
+		type: Boolean,
+		default: false,
+	},
 });
-
 </script>
 <style
   lang="scss"

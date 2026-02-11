@@ -151,15 +151,12 @@
 
 <script setup>
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import { CrmSections } from '@webitel/ui-sdk/enums';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
@@ -178,89 +175,112 @@ const baseNamespace = 'configuration/lookups/contactGroups';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } = useUserAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+	useUserAccessControl();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-  patchProperty,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
+	patchProperty,
 } = useTableStore(baseNamespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const { close } = useClose('configuration');
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 
 const isCreateGroupPopup = ref(false);
 const isShowAddContactInGroupPopup = ref(false);
-const selectedStaticGroups = computed(() => selected.value.filter((el) => el.type === ContactsGroupType.Static));
-const staticGroupIds = computed(() => selectedStaticGroups.value.map((el) => el.id));
+const selectedStaticGroups = computed(() =>
+	selected.value.filter((el) => el.type === ContactsGroupType.Static),
+);
+const staticGroupIds = computed(() =>
+	selectedStaticGroups.value.map((el) => el.id),
+);
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.contactGroups.contactGroups', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.lookups'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.contactGroups.contactGroups', 2),
+	},
 ]);
 
 function edit(item) {
-  return router.push({
-    name: `${CrmSections.ContactGroups}-card`,
-    params: { id: item.id },
-  });
+	return router.push({
+		name: `${CrmSections.ContactGroups}-card`,
+		params: {
+			id: item.id,
+		},
+	});
 }
 
 function addGroup() {
-  isCreateGroupPopup.value = true;
+	isCreateGroupPopup.value = true;
 }
 
 function closeCreateGroupPopup() {
-  isCreateGroupPopup.value = false;
+	isCreateGroupPopup.value = false;
 }
 </script>
 

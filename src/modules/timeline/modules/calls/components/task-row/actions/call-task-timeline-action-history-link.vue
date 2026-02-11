@@ -12,12 +12,11 @@
   </div>
 </template>
 <script setup>
-
 const props = defineProps({
-  id: {
-    type: Object,
-    required: true,
-  },
+	id: {
+		type: Object,
+		required: true,
+	},
 });
 
 const historyLink = `${import.meta.env.VITE_HISTORY_URL}/${props.id}`;

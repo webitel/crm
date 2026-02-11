@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { createTableStore } from '@webitel/ui-datalist';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
-import {CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
@@ -115,43 +115,43 @@ import { storeToRefs } from 'pinia';
 import { computed, isRef } from 'vue';
 
 interface Props {
-  header: string
-  tableStore: ReturnType<createTableStore>
-  emptyData?: {
-    primaryActionText?: string | boolean;
-    disabledPrimaryAction?: boolean
-    primaryAction?: () => void
-  };
+	header: string;
+	tableStore: ReturnType<createTableStore>;
+	emptyData?: {
+		primaryActionText?: string | boolean;
+		disabledPrimaryAction?: boolean;
+		primaryAction?: () => void;
+	};
 }
 
 const props = defineProps<Props>();
 
 const {
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  page,
-  size,
-  next,
-  error,
-  filtersManager,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	page,
+	size,
+	next,
+	error,
+	filtersManager,
 } = storeToRefs(props.tableStore);
 
 const {
-  updateSelected,
-  updatePage,
-  updateSize,
-  updateSort,
-  columnResize,
-  columnReorder
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	columnResize,
+	columnReorder,
 } = props.tableStore;
 
 const defaultEmptyProps = useTableEmpty({
-  dataList,
-  error,
-  filters: computed(() => filtersManager.value.getAllValues()),
-  isLoading,
+	dataList,
+	error,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	isLoading,
 });
 
 /**
@@ -165,20 +165,23 @@ const defaultEmptyProps = useTableEmpty({
  * and the component will not work correctly
  */
 function unwrapProps(obj) {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, val]) => [key, isRef(val) ? val.value : val])
-  );
+	return Object.fromEntries(
+		Object.entries(obj).map(([key, val]) => [
+			key,
+			isRef(val) ? val.value : val,
+		]),
+	);
 }
 
 const emptyProps = computed(() => {
-  if (!props.emptyData) {
-    return unwrapProps(defaultEmptyProps)
-  }
+	if (!props.emptyData) {
+		return unwrapProps(defaultEmptyProps);
+	}
 
-  return deepmerge.all([
-    unwrapProps(defaultEmptyProps),
-    props.emptyData,
-  ]);
+	return deepmerge.all([
+		unwrapProps(defaultEmptyProps),
+		props.emptyData,
+	]);
 });
 </script>
 

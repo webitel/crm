@@ -35,25 +35,27 @@
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  shown: {
-    type: Boolean,
-    required: true,
-  },
+	shown: {
+		type: Boolean,
+		required: true,
+	},
 });
 
-const emit = defineEmits(['save', 'close']);
+const emit = defineEmits([
+	'save',
+	'close',
+]);
 
 const { t } = useI18n();
 
 function save() {
-  emit('save');
-  close()
+	emit('save');
+	close();
 }
 
 function close() {
-  emit('close');
+	emit('close');
 }
-
 </script>
 
 <style lang="scss" scoped>

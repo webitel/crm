@@ -7,62 +7,81 @@ import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';
 
 const getters = {
-  PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
+	PARENT_ID: (state, getters, rootState) => rootState.contacts.card.itemId,
 };
 
 const actions = {
-  SET_AS_PRIMARY: async (context, { item }) => {
-    /*
+	SET_AS_PRIMARY: async (context, { item }) => {
+		/*
      can't use default table patch action because default action is changing UI value,
      so there's would be 2 primary records which is incorrect :)
     */
-    try {
-      const changes = { primary: true };
-      await context.dispatch('api/PATCH_ITEM', {
-        context,
-        etag: item.etag,
-        changes,
-      });
-    } finally {
-      await context.dispatch('LOAD_DATA_LIST');
-    }
-  },
-  GET_EMAIL: async (context, { id }) => {
-    return context.dispatch('api/GET_ITEM', {
-      context,
-      params: { itemId: id },
-    });
-  },
-  ADD_EMAIL: async (context, { itemInstance }) => {
-    const primary = !context.state.dataList.length;
-    try {
-      await context.dispatch('api/POST_ITEM', {
-        parentId: context.getters.PARENT_ID,
-        itemInstance: { ...itemInstance, primary },
-      });
-    } finally {
-      await context.dispatch('LOAD_DATA_LIST');
-    }
-  },
-  UPDATE_EMAIL: async (context, { etag, itemInstance }) => {
-    try {
-      await context.dispatch('api/UPD_ITEM', {
-        parentId: context.getters.PARENT_ID,
-        etag,
-        itemInstance,
-      });
-    } finally {
-      await context.dispatch('LOAD_DATA_LIST');
-    }
-  },
+		try {
+			const changes = {
+				primary: true,
+			};
+			await context.dispatch('api/PATCH_ITEM', {
+				context,
+				etag: item.etag,
+				changes,
+			});
+		} finally {
+			await context.dispatch('LOAD_DATA_LIST');
+		}
+	},
+	GET_EMAIL: async (context, { id }) => {
+		return context.dispatch('api/GET_ITEM', {
+			context,
+			params: {
+				itemId: id,
+			},
+		});
+	},
+	ADD_EMAIL: async (context, { itemInstance }) => {
+		const primary = !context.state.dataList.length;
+		try {
+			await context.dispatch('api/POST_ITEM', {
+				parentId: context.getters.PARENT_ID,
+				itemInstance: {
+					...itemInstance,
+					primary,
+				},
+			});
+		} finally {
+			await context.dispatch('LOAD_DATA_LIST');
+		}
+	},
+	UPDATE_EMAIL: async (context, { etag, itemInstance }) => {
+		try {
+			await context.dispatch('api/UPD_ITEM', {
+				parentId: context.getters.PARENT_ID,
+				etag,
+				itemInstance,
+			});
+		} finally {
+			await context.dispatch('LOAD_DATA_LIST');
+		}
+	},
 };
 
 const api = new ApiStoreModule().generateAPIActions(EmailsAPI).getModule();
 
-const table = new TableStoreModule({ headers })
-  .setChildModules({ api, filters })
-  .getModule({ getters, actions });
+const table = new TableStoreModule({
+	headers,
+})
+	.setChildModules({
+		api,
+		filters,
+	})
+	.getModule({
+		getters,
+		actions,
+	});
 
-const emails = new BaseStoreModule().setChildModules({ table }).getModule();
+const emails = new BaseStoreModule()
+	.setChildModules({
+		table,
+	})
+	.getModule();
 
 export default emails;

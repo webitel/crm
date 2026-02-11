@@ -67,7 +67,11 @@
 </template>
 
 <script setup>
-import { ContactGroupsAPI, ContactsAPI, SlasAPI } from '@webitel/api-services/api';
+import {
+	ContactGroupsAPI,
+	ContactsAPI,
+	SlasAPI,
+} from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
@@ -75,35 +79,39 @@ import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
+	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const loadSlaList = (params) => {
-  return SlasAPI.getLookup(params);
+	return SlasAPI.getLookup(params);
 };
 
 const loadContactGroupsList = (params) => {
-  return ContactGroupsAPI.getLookup({
-    ...params,
-    fields: ['id', 'name', 'type'],
-  });
+	return ContactGroupsAPI.getLookup({
+		...params,
+		fields: [
+			'id',
+			'name',
+			'type',
+		],
+	});
 };
 
 const loadContact = (params) => {
-  return ContactsAPI.getLookup(params);
+	return ContactsAPI.getLookup(params);
 };
 </script>

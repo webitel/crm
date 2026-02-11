@@ -22,22 +22,22 @@ import ChatEndedPointTimelineRow from './chat-ended-point-timeline-row.vue';
 import ChatPointTimelineRow from './chat-point-timeline-row.vue';
 
 const props = defineProps({
-  taskId: {
-    type: String,
-    required: true,
-  },
-  /**
-   * @type {Object}
-   * @description Task object is needed to display "ended" stub with task.closedAt
-   */
-  task: {
-    type: Object,
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	taskId: {
+		type: String,
+		required: true,
+	},
+	/**
+	 * @type {Object}
+	 * @description Task object is needed to display "ended" stub with task.closedAt
+	 */
+	task: {
+		type: Object,
+		required: true,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const timelineNamespace = inject('namespace');
@@ -45,10 +45,9 @@ const timelineNamespace = inject('namespace');
 const namespace = `${timelineNamespace}/chats`;
 
 const { points } = useTaskPoints({
-  taskId: props.taskId,
-  namespace,
+	taskId: props.taskId,
+	namespace,
 });
-
 </script>
 
 <style lang="scss" scoped>

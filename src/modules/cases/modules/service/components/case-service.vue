@@ -46,7 +46,7 @@
 <script setup>
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
-import { inject, onUnmounted, ref, watch, computed } from 'vue';
+import { computed, inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
@@ -64,13 +64,13 @@ const isReadOnly = inject('isReadOnly');
 const { disableUserInput } = useUserAccessControl();
 
 const {
-  namespace: cardNamespace,
-  itemInstance,
-  setItemProp,
+	namespace: cardNamespace,
+	itemInstance,
+	setItemProp,
 } = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
-  itemInstance,
+	itemInstance,
 });
 
 const { t } = useI18n();
@@ -82,40 +82,45 @@ const catalogData = ref(null);
 const serviceNamespace = `${cardNamespace}/service`;
 
 const hasServiceValidationError = computed(() => {
-  if (isReadOnly) return false; // skip errors on read-only mode
+	if (isReadOnly) return false; // skip errors on read-only mode
 
-  return !itemInstance?.value?.service?.name;
+	return !itemInstance?.value?.service?.name;
 });
 
 function setServiceToStore(service) {
-  return store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
+	return store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
 }
 
 function setCatalogToStore(catalog) {
-  return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
+	return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
 // Updates the store and component state with service and catalog data.
 async function addServiceToStore(serviceCatalogData) {
-  if (!serviceCatalogData)
-    return console.error('No serviceCatalogData provided');
+	if (!serviceCatalogData)
+		return console.error('No serviceCatalogData provided');
 
-  const { service, catalog } = serviceCatalogData;
-  await setServiceToStore(service);
-  await setCatalogToStore(catalog);
+	const { service, catalog } = serviceCatalogData;
+	await setServiceToStore(service);
+	await setCatalogToStore(catalog);
 
-  // Store catalog data for the service-path component
-  catalogData.value = catalog;
+	// Store catalog data for the service-path component
+	catalogData.value = catalog;
 
-  await setItemProp({
-    path: 'close_reason_group',
-    value: { id: catalog.closeReasonGroup.id },
-  });
+	await setItemProp({
+		path: 'close_reason_group',
+		value: {
+			id: catalog.closeReasonGroup.id,
+		},
+	});
 
-  await setItemProp({
-    path: 'service',
-    value: { id: service.id, name: service.name },
-  });
+	await setItemProp({
+		path: 'service',
+		value: {
+			id: service.id,
+			name: service.name,
+		},
+	});
 }
 
 /**
@@ -129,46 +134,50 @@ async function addServiceToStore(serviceCatalogData) {
 const pendingServiceData = ref(null);
 
 function onServicePopupSave(serviceCatalogData) {
-  pendingServiceData.value = serviceCatalogData;
-  isServicePopup.value = false;
+	pendingServiceData.value = serviceCatalogData;
+	isServicePopup.value = false;
 
-  if (isNew.value) {
-    addServiceToStore(serviceCatalogData);
-  } else {
-    isSlaRecalculationPopup.value = true;
-  }
+	if (isNew.value) {
+		addServiceToStore(serviceCatalogData);
+	} else {
+		isSlaRecalculationPopup.value = true;
+	}
 }
 
 async function onSlaRecalculationSave() {
-  if (!pendingServiceData.value) return;
+	if (!pendingServiceData.value) return;
 
-  await addServiceToStore(pendingServiceData.value);
-  pendingServiceData.value = null;
-  isSlaRecalculationPopup.value = false;
+	await addServiceToStore(pendingServiceData.value);
+	pendingServiceData.value = null;
+	isSlaRecalculationPopup.value = false;
 }
 
 const serviceResponse = ref(null);
 
 watch(
-  () => itemInstance.value?.service?.id,
-  async (newService) => {
-    if (!newService) return;
-    serviceResponse.value = await ServiceAPI.get({ itemId: newService });
-    const catalogResponse = await CatalogAPI.get({
-      itemId: serviceResponse.value.catalogId,
-    });
-    await addServiceToStore({
-      service: serviceResponse.value,
-      catalog: catalogResponse,
-    });
-  },
-  { immediate: true },
+	() => itemInstance.value?.service?.id,
+	async (newService) => {
+		if (!newService) return;
+		serviceResponse.value = await ServiceAPI.get({
+			itemId: newService,
+		});
+		const catalogResponse = await CatalogAPI.get({
+			itemId: serviceResponse.value.catalogId,
+		});
+		await addServiceToStore({
+			service: serviceResponse.value,
+			catalog: catalogResponse,
+		});
+	},
+	{
+		immediate: true,
+	},
 );
 
 onUnmounted(() => {
-  setServiceToStore(null);
-  setCatalogToStore(null);
-  catalogData.value = null;
+	setServiceToStore(null);
+	setCatalogToStore(null);
+	catalogData.value = null;
 });
 </script>
 

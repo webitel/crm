@@ -5,11 +5,11 @@ import RouteNames from './internals/start-page-route-names';
 import RoutePaths from './internals/start-page-route-paths';
 
 const startPageRoutes: RouteRecordRaw[] = [
-  {
-    path: RoutePaths.TheStartPage,
-    name: RouteNames.TheStartPage,
-    component: TheStartPage,
-  },
+	{
+		path: RoutePaths.TheStartPage,
+		name: RouteNames.TheStartPage,
+		component: TheStartPage,
+	},
 ];
 
 export default startPageRoutes;

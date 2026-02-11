@@ -50,10 +50,10 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -72,130 +72,155 @@ const { hasSaveActionAccess } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  addItem,
-  updateItem,
-  loadItem,
-  setId,
-  ...restStore
-} = useCardStore(namespace, { onLoadErrorHandler: handleError });
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	addItem,
+	updateItem,
+	loadItem,
+	setId,
+	...restStore
+} = useCardStore(namespace, {
+	onLoadErrorHandler: handleError,
+});
 
 const { isNew, pathName, saveText, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-  addItem,
-  updateItem,
-  loadItem,
-  setId,
-  onLoadErrorHandler: handleError
+	...restStore,
+	id,
+	itemInstance,
+	addItem,
+	updateItem,
+	loadItem,
+	setId,
+	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.ContactGroups);
 
 const isDynamicGroup = computed(
-  () => itemInstance.value.type === ContactsGroupType.Dynamic,
+	() => itemInstance.value.type === ContactsGroupType.Dynamic,
 );
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      name: { required },
-      defaultGroup: { required: requiredIf(isDynamicGroup) },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true },
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+			defaultGroup: {
+				required: requiredIf(isDynamicGroup),
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 v$.value.$touch();
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
 );
 
 const tabs = computed(() => {
-  const general = {
-    text: t('reusable.general'),
-    value: 'general',
-    pathName: `${CrmSections.ContactGroups}-general`,
-  };
+	const general = {
+		text: t('reusable.general'),
+		value: 'general',
+		pathName: `${CrmSections.ContactGroups}-general`,
+	};
 
-  const contacts = {
-    text: t(`vocabulary.contact`, 2),
-    value: 'contacts',
-    pathName: `${CrmSections.ContactGroups}-contacts`,
-  };
+	const contacts = {
+		text: t(`vocabulary.contact`, 2),
+		value: 'contacts',
+		pathName: `${CrmSections.ContactGroups}-contacts`,
+	};
 
-  const conditions = {
-    text: t('lookups.slas.conditions', 2),
-    value: 'conditions',
-    pathName: `${CrmSections.ContactGroups}-conditions`,
-  };
+	const conditions = {
+		text: t('lookups.slas.conditions', 2),
+		value: 'conditions',
+		pathName: `${CrmSections.ContactGroups}-conditions`,
+	};
 
-  const permissions = {
-    text: t('vocabulary.permissions', 2),
-    value: 'permissions',
-    pathName: `${CrmSections.ContactGroups}-permissions`,
-  };
+	const permissions = {
+		text: t('vocabulary.permissions', 2),
+		value: 'permissions',
+		pathName: `${CrmSections.ContactGroups}-permissions`,
+	};
 
-  const tabs = [general];
+	const tabs = [
+		general,
+	];
 
-  if (id.value) {
-    tabs.push(isDynamicGroup.value ? conditions : contacts);
-    tabs.push(permissions);
-  }
+	if (id.value) {
+		tabs.push(isDynamicGroup.value ? conditions : contacts);
+		tabs.push(permissions);
+	}
 
-  return tabs;
+	return tabs;
 });
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    {
-      name: t('lookups.contactGroups.contactGroups', 2),
-      route: '/configuration/lookups/contact-groups',
-    },
-    { name: isNew.value ? t('reusable.new') : pathName.value },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.contactGroups.contactGroups', 2),
+			route: '/configuration/lookups/contact-groups',
+		},
+		{
+			name: isNew.value ? t('reusable.new') : pathName.value,
+		},
+	];
 });
 
 const redirectToEdit = () => {
-  return router.replace({
-    ...route,
-    params: { id: id?.value },
-  });
+	return router.replace({
+		...route,
+		params: {
+			id: id?.value,
+		},
+	});
 };
 
 const save = async () => {
-  if (isNew.value) {
-    if (isDynamicGroup.value) {
-      const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);
-      await setId(id);
-      await loadItem();
-    } else {
-      await addItem();
-    }
-  } else {
-    if (isDynamicGroup.value) {
-      await dynamicContactGroupsAPI.update({
-        itemInstance: itemInstance.value,
-        itemId: id.value,
-      });
-      await loadItem();
-    } else {
-      await updateItem();
-    }
-  }
+	if (isNew.value) {
+		if (isDynamicGroup.value) {
+			const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);
+			await setId(id);
+			await loadItem();
+		} else {
+			await addItem();
+		}
+	} else {
+		if (isDynamicGroup.value) {
+			await dynamicContactGroupsAPI.update({
+				itemInstance: itemInstance.value,
+				itemId: id.value,
+			});
+			await loadItem();
+		} else {
+			await updateItem();
+		}
+	}
 
-  if (id?.value) {
-    await redirectToEdit();
-  }
+	if (id?.value) {
+		await redirectToEdit();
+	}
 };
 
 initialize();

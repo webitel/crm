@@ -23,16 +23,14 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
-import {
-  FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const store = useStore();
@@ -40,8 +38,11 @@ const store = useStore();
 const { t } = useI18n();
 
 const fields = computed(() =>
-  store.getters[`${props.namespace}/LOOKUP_FIELDS`]?.filter(
-    (field) => !field.hidden && (!field.readonly || field.kind === FieldType.Boolean) && !field.always,
-  ),
+	store.getters[`${props.namespace}/LOOKUP_FIELDS`]?.filter(
+		(field) =>
+			!field.hidden &&
+			(!field.readonly || field.kind === FieldType.Boolean) &&
+			!field.always,
+	),
 );
 </script>

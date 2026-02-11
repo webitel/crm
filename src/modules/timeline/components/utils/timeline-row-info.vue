@@ -28,39 +28,38 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  timestamp: {
-    type: [Number, String],
-    default: 0,
-  },
+	timestamp: {
+		type: [
+			Number,
+			String,
+		],
+		default: 0,
+	},
 });
 
 const { d, locale } = useI18n();
 
 const timestampTime = computed(() => {
-  return formatDate(+props.timestamp, FormatDateMode.TIME);
+	return formatDate(+props.timestamp, FormatDateMode.TIME);
 });
 
 const timestampWeekDay = computed(() => {
-  const date = new Date(+props.timestamp);
-  return capitalize(
-    d(date, 'timelineWeekday'),
-  );
+	const date = new Date(+props.timestamp);
+	return capitalize(d(date, 'timelineWeekday'));
 });
 
 const timestampMonth = computed(() => {
-  const date = new Date(+props.timestamp);
-  return capitalize(
-    d(date, 'timelineMonth'),
-  );
+	const date = new Date(+props.timestamp);
+	return capitalize(d(date, 'timelineMonth'));
 });
 
 const timesScope = computed(() => {
-  return {
-    timestamp: props.timestamp,
-    time: timestampTime.value,
-    weekDay: timestampWeekDay.value,
-    month: timestampMonth.value,
-  };
+	return {
+		timestamp: props.timestamp,
+		time: timestampTime.value,
+		weekDay: timestampWeekDay.value,
+		month: timestampMonth.value,
+	};
 });
 </script>
 
