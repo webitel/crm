@@ -14,10 +14,6 @@ export default ({ mode }) => {
       // sourcemap: true,
       // minify: false, // Disable minification for readable debugging
     },
-    server: {
-      host: true,
-      port: 8080,
-    },
     css: {
       preprocessorOptions: {
         scss: {
