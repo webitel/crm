@@ -59,7 +59,7 @@ import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';

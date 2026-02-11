@@ -81,7 +81,7 @@
             <template #actions="{ item }">
               <wt-icon-action
                 action="edit"
-                :disabled="!hasEditAccess"
+                :disabled="!hasUpdateAccess"
                 @click="edit(item)"
               />
               <wt-icon-action
@@ -172,7 +172,7 @@ store.commit(`${baseNamespace}/table/SET`, {
 	value: repo.value,
 });
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } =
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl(WtObject.CustomLookup);
 
 const {
