@@ -8,7 +8,7 @@ const HTTP_METHODS = {
  //@author o.chorpita https://webitel.atlassian.net/browse/WTEL-8133
  // Checks if this is an error loading an item
  //onLoadErrorHandler is called only for loadItem() errors (GET request)
-function isItemLoadError(err: any): boolean {
+function isItemLoadRequest(err: any): boolean {
   const method = (err?.config?.method ?? err?.request?.method).toLowerCase();
   return method === HTTP_METHODS.GET;
 }
@@ -33,7 +33,7 @@ export function useErrorRedirectHandler() {
     // Check if there's a direct redirect for this status in the map
     const redirectPath =
       ErrorRedirectMap[status] ||
-      (isItemLoadError(err) ? ErrorRedirectMap[404] : undefined);
+      (isItemLoadRequest(err) ? ErrorRedirectMap[404] : undefined);
 
     if (!redirectPath) return;
 
