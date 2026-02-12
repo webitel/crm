@@ -54,24 +54,29 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 const createDraftData = () => ({
-  reason: null,
-  result: null,
+	reason: null,
+	result: null,
 });
 
 const props = defineProps({
-  shown: {
-    type: Boolean,
-    required: true,
-  },
-  namespace: {
-    type: String,
-    required: true,
-  },
+	shown: {
+		type: Boolean,
+		required: true,
+	},
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const emit = defineEmits<{
-  save: [{ result: ReturnType<createDraftData>; reason?: string }];
-  cancel: [];
+	save: [
+		{
+			result: ReturnType<createDraftData>;
+			reason?: string;
+		},
+	];
+	cancel: [];
 }>();
 
 const { namespace: cardNamespace } = useCardStore(props.namespace);
@@ -83,51 +88,62 @@ const { t } = useI18n();
 const draft = reactive(createDraftData());
 
 watch(
-  () => props.shown,
-  () => {
-    Object.assign(draft, createDraftData());
-  },
+	() => props.shown,
+	() => {
+		Object.assign(draft, createDraftData());
+	},
 );
 
 const v$ = useVuelidate(
-  computed(() => {
-    return {
-      draft: {
-        reason: { required },
-        result: { required },
-      },
-    };
-  }),
-  { draft },
-  { $autoDirty: true, $stopPropagation: true },
+	computed(() => {
+		return {
+			draft: {
+				reason: {
+					required,
+				},
+				result: {
+					required,
+				},
+			},
+		};
+	}),
+	{
+		draft,
+	},
+	{
+		$autoDirty: true,
+		$stopPropagation: true,
+	},
 );
 
 v$.value.$touch();
 
 const closeReasonId = computed(
-  () => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
+	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
 );
 
 async function searchCloseReasons(params) {
-  if (!closeReasonId.value) {
-    return { items: [] };
-  }
-  return await CaseCloseReasonsAPI.getLookup({
-    parentId: closeReasonId.value,
-    ...params,
-  });
+	if (!closeReasonId.value) {
+		return {
+			items: [],
+		};
+	}
+	return await CaseCloseReasonsAPI.getLookup({
+		parentId: closeReasonId.value,
+		...params,
+	});
 }
 
 function cancel() {
-  emit('cancel');
+	emit('cancel');
 }
 
 function save() {
-  const finalStatusData = {
-    reason: draft.reason,
-    result: draft.result,
-  };
-  emit('save', finalStatusData);
+	const finalStatusData = {
+		reason: draft.reason,
+		result: draft.result,
+	};
+	emit('save', finalStatusData);
 }
 </script>
 

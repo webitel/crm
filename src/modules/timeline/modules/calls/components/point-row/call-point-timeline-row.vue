@@ -54,30 +54,30 @@ import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 
 const props = defineProps({
-  point: {
-    type: Object,
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	point: {
+		type: Object,
+		required: true,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const pointStatus = computed(() => {
-  return TimelineTaskStatusEnum.TRANSFERRED;
+	return TimelineTaskStatusEnum.TRANSFERRED;
 });
 
 const pinType = computed(() => {
-  return TimelinePinType.CALL_TRANSFER;
+	return TimelinePinType.CALL_TRANSFER;
 });
 
 const initiatorType = computed(() => {
-  return props.point?.to?.type || props.point?.from?.type;
+	return props.point?.to?.type || props.point?.from?.type;
 });
 
 const initiator = computed(() => {
-  return props.point?.to?.name || props.point?.from?.name;
+	return props.point?.to?.name || props.point?.from?.name;
 });
 </script>
 

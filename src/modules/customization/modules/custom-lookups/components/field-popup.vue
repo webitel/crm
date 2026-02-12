@@ -15,17 +15,16 @@
     </template>
     <template #main>
       <div class="field-popup-wrapper" @input="changeDirty(true)">
-        <wt-input
+        <wt-input-text
+          v-model:model-value="value.name"
           :label="$t('reusable.title')"
-          :value="value.name"
           :v="v$.value.name"
           required
-          @input="value.name = $event"
         />
 
-        <wt-input
+        <wt-input-text
+          v-model:model-value="value.id"
           :label="t('customization.customLookups.code')"
-          :value="value.id"
           :disabled="!isNew"
           :v="v$.value.id"
           :custom-validators="[
@@ -35,7 +34,6 @@
             },
           ]"
           required
-          @input="value.id = $event"
         />
 
         <type-field-select
@@ -80,7 +78,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import deepCopy from 'deep-copy';
-import { computed, nextTick,ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { FieldType } from '../enums/FieldType.js';
@@ -88,117 +86,129 @@ import DefaultValueInput from './default-value-input.vue';
 import TypeFieldSelect from './type-field-select.vue';
 
 const props = defineProps({
-  field: {
-    type: Object,
-    default: () => null,
-  },
-  shown: {
-    type: Boolean,
-    required: true,
-  },
+	field: {
+		type: Object,
+		default: () => null,
+	},
+	shown: {
+		type: Boolean,
+		required: true,
+	},
 });
 
-const emit = defineEmits(['save', 'close']);
+const emit = defineEmits([
+	'save',
+	'close',
+]);
 
 const draft = {
-  name: '',
-  id: '',
-  kind: '',
-  required: false,
-  lookup: null,
-  list: null,
-  default: null,
-  _dirty: false,
+	name: '',
+	id: '',
+	kind: '',
+	required: false,
+	lookup: null,
+	list: null,
+	default: null,
+	_dirty: false,
 };
 const { t } = useI18n();
 
 const checkId = (repo) => {
-  const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
-  return regex.test(repo);
+	const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+	return regex.test(repo);
 };
 
 const value = ref(Object.assign(deepCopy(draft), deepCopy(props.field)));
 const isNew = computed(() => !props.field);
 
 const updateValue = (newValue) => {
-  Object.assign(value.value, deepCopy(newValue));
+	Object.assign(value.value, deepCopy(newValue));
 };
 
 const v$ = useVuelidate(
-  computed(() => ({
-    value: {
-      name: { required },
-      id: {
-        required,
-        checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
-      },
-      default: value.value.required ? {
-        required,
-      } : {},
-    },
-  })),
-  { value },
-  { $autoDirty: true },
+	computed(() => ({
+		value: {
+			name: {
+				required,
+			},
+			id: {
+				required,
+				checkId: helpers.withMessage(t('validation.latinWithNumber'), checkId),
+			},
+			default: value.value.required
+				? {
+						required,
+					}
+				: {},
+		},
+	})),
+	{
+		value,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 
 const changeDirty = (dirty) => {
-  value.value._dirty = dirty;
+	value.value._dirty = dirty;
 };
 
 const changeRequired = (event) => {
-  value.value.required = event;
+	value.value.required = event;
+	value.value.default = null;
 
-  nextTick(() => {
-    v$.value.$touch();
-  });
+	nextTick(() => {
+		v$.value.$touch();
+	});
 };
 
 const disabledSave = computed(() => v$.value?.$invalid || !value.value._dirty);
 
 const save = () => {
-  const savedFiled = deepCopy(value.value);
-  delete savedFiled._dirty;
+	const savedFiled = deepCopy(value.value);
+	delete savedFiled._dirty;
 
-  Object.keys(savedFiled).forEach((key) => {
-    if (!savedFiled[key] && key !== 'default') {
-      delete savedFiled[key];
-    }
-  });
+	Object.keys(savedFiled).forEach((key) => {
+		if (!savedFiled[key] && key !== 'default') {
+			delete savedFiled[key];
+		}
+	});
 
-  emit('save', savedFiled);
-  changeDirty(false);
-  close();
+	emit('save', savedFiled);
+	changeDirty(false);
+	close();
 
-  if (!props.field) {
-    updateValue(draft);
-  }
+	if (!props.field) {
+		updateValue(draft);
+	}
 };
 
 const close = () => {
-  emit('close');
+	emit('close');
 };
 
 watch(
-  () => props.field,
-  () => {
-    if (props.field) {
-      updateValue(props.field);
-    }
-  },
-  {
-    deep: true,
-  },
+	() => props.field,
+	() => {
+		if (props.field) {
+			updateValue(props.field);
+		}
+	},
+	{
+		deep: true,
+	},
 );
 
 watch(
-  () => props.shown,
-  (shown) => {
-    if (!shown && props.field) {
-      updateValue(props.field);
-    }
-  },
+	() => props.shown,
+	(shown) => {
+		if (!shown && props.field) {
+			updateValue(props.field);
+		}
+	},
 );
 </script>
 

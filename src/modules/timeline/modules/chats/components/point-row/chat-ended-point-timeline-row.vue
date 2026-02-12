@@ -34,14 +34,14 @@ import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
 import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
 
 const props = defineProps({
-  point: {
-    type: Object,
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	point: {
+		type: Object,
+		required: true,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 </script>
 

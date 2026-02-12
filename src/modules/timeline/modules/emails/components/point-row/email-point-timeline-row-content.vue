@@ -5,7 +5,7 @@
     <div>
       <p
         v-if="subject"
-        class="email-point-timeline-subject__title"
+        class="email-point-timeline-subject__title typo-subtitle-1"
       >
         {{ t('timeline.emails.subject') }}:
         <span>{{ props.subject }}</span>
@@ -24,30 +24,36 @@ import MarkdownIt from 'markdown-it';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const md = new MarkdownIt({ linkify: true, html: true });
+const md = new MarkdownIt({
+	linkify: true,
+	html: true,
+});
 
 const props = defineProps({
-  subject: {
-    type: Object,
-    required: true,
-  },
-  body: {
-    type: String,
-  },
-  opened: {
-    type: Boolean,
-    default: false,
-  },
+	subject: {
+		type: Object,
+		required: true,
+	},
+	body: {
+		type: String,
+	},
+	opened: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const { t } = useI18n();
 
 const content = computed(() => {
-  return dompurify.sanitize(md.render(props.body));
+	return dompurify.sanitize(md.render(props.body));
 });
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .email-point-timeline-subject {
@@ -55,8 +61,5 @@ const content = computed(() => {
   gap: var(--spacing-xs);
   flex-direction: column;
 
-  &__title {
-    @extend %typo-subtitle-1;
-  }
 }
 </style>

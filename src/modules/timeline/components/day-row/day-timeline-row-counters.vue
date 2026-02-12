@@ -1,6 +1,6 @@
 <template>
   <div class="day-timeline-row-counters">
-    <div class="day-timeline-row-counters__wrapper">
+    <div class="day-timeline-row-counters__wrapper typo-body-2">
       <span>
         {{
           `${t(`timeline.eventType.${TimelineEventType.Call}`, 2)}: (${props.callsCount})`
@@ -26,24 +26,27 @@ import { useI18n } from 'vue-i18n';
 import { TimelineEventType } from '../../enums/TimelineEventType';
 
 const props = defineProps({
-  callsCount: {
-    type: Number,
-    default: 0,
-  },
-  chatsCount: {
-    type: Number,
-    default: 0,
-  },
-  emailsCount: {
-    type: Number,
-    default: 0,
-  },
+	callsCount: {
+		type: Number,
+		default: 0,
+	},
+	chatsCount: {
+		type: Number,
+		default: 0,
+	},
+	emailsCount: {
+		type: Number,
+		default: 0,
+	},
 });
 
 const { t } = useI18n();
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 $colWidth: 80px;
@@ -54,7 +57,6 @@ $colWidth: 80px;
   justify-content: flex-end;
 
   &__wrapper {
-    @extend %typo-body-2;
     display: grid;
     grid-template-columns: repeat(3, $colWidth);
     gap: var(--spacing-xs);

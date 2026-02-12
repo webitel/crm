@@ -17,7 +17,7 @@
           :color="color"
           :icon="icon"
         />
-        <wt-label>
+        <wt-label :class="horizontalView ? 'typo-body-1' : 'typo-heading-4'">
           {{ label }}
         </wt-label>
       </div>
@@ -29,7 +29,7 @@
         />
         <span
           v-if="!link"
-          class="editable-field__value"
+          :class="['editable-field__value', horizontalView ? 'typo-subtitle-1' : 'typo-body-1']"
         >
           {{ valueWithDefault }}
         </span>
@@ -39,7 +39,7 @@
               :link="link"
               :disabled="props.disableLink"
               :class="{ 'editable-field__link_disabled': props.disableLink }"
-              class="editable-field__link"
+              class="editable-field__link typo-subtitle-1"
               target="_blank"
             >
               {{ value?.name }}
@@ -69,59 +69,64 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  editMode: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: String,
-    default: '',
-  },
-  label: {
-    type: String,
-    default: '',
-  },
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  horizontalView: {
-    type: Boolean,
-    default: false,
-  },
-  icon: {
-    type: String,
-    default: '',
-  },
-  color: {
-    type: String,
-    default: '',
-  },
-  link: {
-    type: Object,
-    default: null,
-  },
-  disableLink: {
-    type: Boolean,
-    default: false,
-  },
+	editMode: {
+		type: Boolean,
+		default: false,
+	},
+	value: {
+		type: String,
+		default: '',
+	},
+	label: {
+		type: String,
+		default: '',
+	},
+	required: {
+		type: Boolean,
+		default: false,
+	},
+	horizontalView: {
+		type: Boolean,
+		default: false,
+	},
+	icon: {
+		type: String,
+		default: '',
+	},
+	color: {
+		type: String,
+		default: '',
+	},
+	link: {
+		type: Object,
+		default: null,
+	},
+	disableLink: {
+		type: Boolean,
+		default: false,
+	},
 });
 
-const emit = defineEmits(['update:value', 'open-link']);
+const emit = defineEmits([
+	'update:value',
+	'open-link',
+]);
 
 const updateValue = (newValue) => {
-  emit('update:value', newValue);
+	emit('update:value', newValue);
 };
 
 const valueWithDefault = computed(() => {
-  if (typeof props.value === 'object' && props.value !== null) {
-    return props.value?.name ?? '-';
-  }
+	if (typeof props.value === 'object' && props.value !== null) {
+		return props.value?.name ?? '-';
+	}
 
-  return props.horizontalView ? props.value : props.value || '-';
+	return props.horizontalView ? props.value : props.value || '-';
 });
 
-const showLinkIcon = computed(() => props.link && props.value?.name && !props.disableLink)
+const showLinkIcon = computed(
+	() => props.link && props.value?.name && !props.disableLink,
+);
 
 /**
  * @author @Oleksandr Palonnyi
@@ -133,11 +138,14 @@ const showLinkIcon = computed(() => props.link && props.value?.name && !props.di
  * that get with API by clicking on the link.
  * */
 const openLink = () => {
-  return !props.disableLink && emit('open-link')
-}
+	return !props.disableLink && emit('open-link');
+};
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .editable-field {
@@ -149,10 +157,6 @@ const openLink = () => {
     flex-direction: column;
   }
 
-  &__label-wrapper .wt-label {
-    @extend %typo-heading-4;
-  }
-
   &__label-wrapper {
     display: flex;
     align-items: center;
@@ -160,7 +164,6 @@ const openLink = () => {
   }
 
   &__value {
-    @extend %typo-body-1;
     white-space: pre-line;
   }
 
@@ -199,19 +202,16 @@ const openLink = () => {
 
     .editable-field__value {
       word-break: break-all;
-      @extend %typo-subtitle-1;
     }
 
     .editable-field__label-wrapper .wt-label {
       text-align: start;
       //TODO: remove bold after proper typography implementation
       font-weight: bold;
-      @extend %typo-body-1;
     }
 
     .editable-field__link {
       word-break: break-all;
-      @extend %typo-subtitle-1;
       color: var(--link-color);
 
       &_disabled {

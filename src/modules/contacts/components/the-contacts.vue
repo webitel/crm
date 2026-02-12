@@ -74,7 +74,7 @@
                   deleted: [item],
                   callback: () => deleteEls(item),
                 })
-              "
+                "
             />
           </template>
         </contacts-table>
@@ -86,20 +86,16 @@
 <script setup>
 import { ContactsSearchMode } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { IconAction } from '@webitel/ui-sdk/enums';
-import { useAccessControl } from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
 import { ContactsNamespace } from '../namespace';
 import { useContactsStore } from '../stores/contacts';
@@ -109,107 +105,118 @@ import ContactsFiltersPanel from './contacts-filters-panel.vue';
 const { t } = useI18n();
 const router = useRouter();
 
-const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
+const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl();
 
 const showActionsPanel = ref(true);
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const tableStore = useContactsStore();
 
-const {
-  selected,
-  filtersManager,
-  isFiltersRestoring,
-  searchMode
- } = storeToRefs(tableStore);
+const { selected, filtersManager, isFiltersRestoring, searchMode } =
+	storeToRefs(tableStore);
 
 const {
-  initialize,
-  deleteEls,
-  loadDataList,
-  addFilter,
-  updateFilter,
-  deleteFilter,
-  updateSearchMode,
+	initialize,
+	deleteEls,
+	loadDataList,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+	updateSearchMode,
 } = tableStore;
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('contacts.contact', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('contacts.contact', 2),
+	},
 ]);
 
 const searchModeOpts = computed(() => [
-  {
-    value: ContactsSearchMode.NAME,
-    text: t('reusable.name'),
-  },
-  {
-    value: ContactsSearchMode.LABELS,
-    text: t('vocabulary.labels', 1),
-  },
-  {
-    value: ContactsSearchMode.ABOUT,
-    text: t('vocabulary.description'),
-  },
-  {
-    value: ContactsSearchMode.VARIABLES,
-    text: t('contacts.attributes', 1),
-    hint: t('webitelUI.searchBar.variableSearchHint'),
-    v: { variableSearchValidator },
-  },
-  {
-    value: ContactsSearchMode.DESTINATION,
-    text: t('contacts.destination'),
-  },
+	{
+		value: ContactsSearchMode.NAME,
+		text: t('reusable.name'),
+	},
+	{
+		value: ContactsSearchMode.LABELS,
+		text: t('vocabulary.labels', 1),
+	},
+	{
+		value: ContactsSearchMode.ABOUT,
+		text: t('vocabulary.description'),
+	},
+	{
+		value: ContactsSearchMode.VARIABLES,
+		text: t('contacts.attributes', 1),
+		hint: t('webitelUI.searchBar.variableSearchHint'),
+		v: {
+			variableSearchValidator,
+		},
+	},
+	{
+		value: ContactsSearchMode.DESTINATION,
+		text: t('contacts.destination'),
+	},
 ]);
 
 const deletableSelectedItems = computed(() =>
-  selected.value.filter((item) => item.access.delete),
+	selected.value.filter((item) => item.access.delete),
 );
 
 function create() {
-  isContactPopup.value = true;
+	isContactPopup.value = true;
 }
 
 function edit({ id }) {
-  editedContactId.value = id;
-  isContactPopup.value = true;
+	editedContactId.value = id;
+	isContactPopup.value = true;
 }
 
 function saved(id) {
-  return router.push({
-    name: `${CrmSections.CONTACTS}-card`,
-    params: { id },
-  });
+	return router.push({
+		name: `${CrmSections.Contacts}-card`,
+		params: {
+			id,
+		},
+	});
 }
 
 function closeContactPopup() {
-  isContactPopup.value = false;
-  editedContactId.value = null;
+	isContactPopup.value = false;
+	editedContactId.value = null;
 }
 
 function deleteSelectedItems() {
-  return askDeleteConfirmation({
-    deleted: deletableSelectedItems.value,
-    callback: () => deleteEls([...deletableSelectedItems.value]),
-  });
+	return askDeleteConfirmation({
+		deleted: deletableSelectedItems.value,
+		callback: () =>
+			deleteEls([
+				...deletableSelectedItems.value,
+			]),
+	});
 }
 
 initialize();
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .table-page {
   width: 100%;
 

@@ -1,3 +1,3 @@
-import { LookupsNamespace } from "../../namespace";
+import { LookupsNamespace } from '../../namespace';
 
 export const CaseSourcesNamespace = `${LookupsNamespace}/sources`;

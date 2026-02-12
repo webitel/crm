@@ -36,278 +36,301 @@ import TheStatuses from '../modules/statuses/components/the-statuses.vue';
 import OpenedStatusConditions from '../modules/statuses/modules/status-conditions/components/opened-status-conditions.vue';
 
 const lookupsRoutes: RouteRecordRaw[] = [
-  {
-    path: 'configuration/lookups',
-    name: 'lookups',
-    redirect: { name: 'configuration' },
-    children: [
-      {
-        path: 'slas',
-        name: CrmSections.Slas,
-        component: TheSlas,
-        meta: {
-          WtObject: WtObject.Slas,
-          UiSection: CrmSections.Slas,
-        },
-      },
-      {
-        path: 'slas/:id',
-        name: `${CrmSections.Slas}-card`,
-        component: OpenedSla,
-        redirect: { name: `${CrmSections.Slas}-general` },
-        meta: {
-          WtObject: WtObject.Slas,
-          UiSection: CrmSections.Slas,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.Slas}-general`,
-            component: OpenedSlaGeneral,
-          },
-          {
-            path: 'conditions/:conditionId?',
-            name: `${CrmSections.Slas}-conditions`,
-            component: OpenedSlaConditions,
-          },
-        ],
-      },
-      {
-        path: 'sources',
-        name: CrmSections.Sources,
-        component: TheSources,
-        meta: {
-          WtObject: WtObject.Source,
-          UiSection: CrmSections.Sources,
-        },
-      },
-      {
-        path: 'sources/:id',
-        name: `${CrmSections.Sources}-card`,
-        component: OpenedSource,
-        redirect: { name: `${CrmSections.Sources}-general` },
-        meta: {
-          WtObject: WtObject.Source,
-          UiSection: CrmSections.Sources,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.Sources}-general`,
-            component: OpenedSourceGeneral,
-          },
-        ],
-      },
-      {
-        path: 'close-reason-groups',
-        name: CrmSections.CloseReasonGroups,
-        component: TheCloseReasonGroups,
-        meta: {
-          WtObject: WtObject.CloseReasonGroup,
-          UiSection: CrmSections.CloseReasonGroups,
-        },
-      },
-      {
-        path: 'close-reason-groups/:id',
-        name: `${CrmSections.CloseReasonGroups}-card`,
-        component: OpenedCloseReasonGroups,
-        redirect: { name: `${CrmSections.CloseReasonGroups}-general` },
-        meta: {
-          WtObject: WtObject.CloseReasonGroup,
-          UiSection: CrmSections.CloseReasonGroups,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.CloseReasonGroups}-general`,
-            component: OpenedCloseReasonGroupsGeneral,
-          },
-          {
-            path: 'close-reasons/:closeReasonsId?',
-            name: `close-reasons`,
-            component: OpenedCloseReasons,
-          },
-        ],
-      },
-      {
-        path: 'service-catalogs',
-        name: CrmSections.ServiceCatalogs,
-        component: TheServiceCatalogs,
-        meta: {
-          WtObject: WtObject.ServiceCatalog,
-          UiSection: CrmSections.ServiceCatalogs,
-        },
-      },
-      {
-        path: 'service-catalogs/:id',
-        name: `${CrmSections.ServiceCatalogs}-card`,
-        component: OpenedServiceCatalogs,
-        redirect: { name: `${CrmSections.ServiceCatalogs}-general` },
-        meta: {
-          WtObject: WtObject.ServiceCatalog,
-          UiSection: CrmSections.ServiceCatalogs,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.ServiceCatalogs}-general`,
-            component: OpenedServiceCatalogsGeneral,
-          },
-        ],
-      },
-      {
-        path: 'service-catalogs/:catalogId/:rootId/services',
-        name: `${CrmSections.ServiceCatalogs}-services`,
-        component: TheCatalogServices,
-        meta: {
-          WtObject: WtObject.ServiceCatalog,
-          UiSection: CrmSections.ServiceCatalogs,
-        },
-      },
-      {
-        path: 'service-catalogs/:catalogId/:rootId/services/:id',
-        name: `${CrmSections.ServiceCatalogs}-services-card`,
-        component: OpenedServices,
-        redirect: {
-          name: `${CrmSections.ServiceCatalogs}-services-card-general`,
-        },
-        meta: {
-          WtObject: WtObject.ServiceCatalog,
-          UiSection: CrmSections.ServiceCatalogs,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.ServiceCatalogs}-services-card-general`,
-            component: OpenedServicesGeneral,
-          },
-        ],
-      },
-      {
-        path: 'contact-groups',
-        name: CrmSections.ContactGroups,
-        component: TheContactGroups,
-        meta: {
-          WtObject: WtObject.ContactGroup,
-          UiSection: CrmSections.ContactGroups,
-        },
-        // beforeEnter: checkRouteAccess,
-      },
-      {
-        path: 'contact-groups/:id',
-        name: `${CrmSections.ContactGroups}-card`,
-        component: OpenedContactGroup,
-        redirect: { name: `${CrmSections.ContactGroups}-general` },
-        meta: {
-          WtObject: WtObject.ContactGroup,
-          UiSection: CrmSections.ContactGroups,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.ContactGroups}-general`,
-            component: OpenedContactGroupGeneral,
-          },
-          {
-            path: 'conditions/:conditionId?',
-            name: `${CrmSections.ContactGroups}-conditions`,
-            component: OpenedContactGroupsConditions,
-          },
-          {
-            path: 'contacts/:contactId?',
-            name: `${CrmSections.ContactGroups}-contacts`,
-            component: OpenedContactGroupsContacts,
-          },
-          {
-            path: 'permissions/:permissionId?',
-            name: `${CrmSections.ContactGroups}-permissions`,
-            component: PermissionsTab,
-          },
-        ],
-      },
-      {
-        path: 'priorities',
-        name: CrmSections.Priorities,
-        component: ThePriorities,
-        meta: {
-          WtObject: WtObject.Priorities,
-          UiSection: CrmSections.Priorities,
-        },
-      },
-      {
-        path: 'priorities/:id',
-        name: `${CrmSections.Priorities}-card`,
-        component: OpenedPriority,
-        redirect: { name: `${CrmSections.Priorities}-general` },
-        meta: {
-          WtObject: WtObject.Priorities,
-          UiSection: CrmSections.Priorities,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.Priorities}-general`,
-            component: OpenedPriorityGeneral,
-          },
-        ],
-      },
-      {
-        path: 'statuses',
-        name: CrmSections.Statuses,
-        component: TheStatuses,
-        meta: {
-          WtObject: WtObject.Status,
-          UiSection: CrmSections.Statuses,
-        },
-      },
-      {
-        path: 'statuses/:id',
-        name: `${CrmSections.Statuses}-card`,
-        component: OpenedStatus,
-        redirect: { name: `${CrmSections.Statuses}-general` },
-        meta: {
-          WtObject: WtObject.Status,
-          UiSection: CrmSections.Statuses,
-        },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.Statuses}-general`,
-            component: OpenedStatusGeneral,
-          },
-          {
-            path: 'status-conditions/:statusConditionId?',
-            name: `status-conditions`,
-            component: OpenedStatusConditions,
-          },
-        ],
-      },
-      {
-        path: ':repo',
-        name: 'custom-lookup',
-        component: TheCustomLookup,
-        meta: {
-          WtObject: WtObject.CustomLookup,
-          UiSection: (thisRoute: RouteLocationNormalized) => {
-            return thisRoute.params.repo;
-          },
-        },
-      },
-      {
-        path: ':repo/:id',
-        name: 'custom-lookup-record',
-        component: OpenedCustomLookupRecord,
-        redirect: { name: 'custom-lookup-record-columns' },
-        children: [
-          {
-            path: 'columns',
-            name: 'custom-lookup-record-columns',
-            component: OpenedCustomLookupRecordsColumns,
-          },
-        ],
-      },
-    ],
-  },
+	{
+		path: 'configuration/lookups',
+		name: 'lookups',
+		redirect: {
+			name: 'configuration',
+		},
+		children: [
+			{
+				path: 'slas',
+				name: CrmSections.Slas,
+				component: TheSlas,
+				meta: {
+					WtObject: WtObject.Slas,
+					UiSection: CrmSections.Slas,
+				},
+			},
+			{
+				path: 'slas/:id',
+				name: `${CrmSections.Slas}-card`,
+				component: OpenedSla,
+				redirect: {
+					name: `${CrmSections.Slas}-general`,
+				},
+				meta: {
+					WtObject: WtObject.Slas,
+					UiSection: CrmSections.Slas,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.Slas}-general`,
+						component: OpenedSlaGeneral,
+					},
+					{
+						path: 'conditions/:conditionId?',
+						name: `${CrmSections.Slas}-conditions`,
+						component: OpenedSlaConditions,
+					},
+				],
+			},
+			{
+				path: 'sources',
+				name: CrmSections.Sources,
+				component: TheSources,
+				meta: {
+					WtObject: WtObject.Source,
+					UiSection: CrmSections.Sources,
+				},
+			},
+			{
+				path: 'sources/:id',
+				name: `${CrmSections.Sources}-card`,
+				component: OpenedSource,
+				redirect: {
+					name: `${CrmSections.Sources}-general`,
+				},
+				meta: {
+					WtObject: WtObject.Source,
+					UiSection: CrmSections.Sources,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.Sources}-general`,
+						component: OpenedSourceGeneral,
+					},
+				],
+			},
+			{
+				path: 'close-reason-groups',
+				name: CrmSections.CloseReasonGroups,
+				component: TheCloseReasonGroups,
+				meta: {
+					WtObject: WtObject.CloseReasonGroup,
+					UiSection: CrmSections.CloseReasonGroups,
+				},
+			},
+			{
+				path: 'close-reason-groups/:id',
+				name: `${CrmSections.CloseReasonGroups}-card`,
+				component: OpenedCloseReasonGroups,
+				redirect: {
+					name: `${CrmSections.CloseReasonGroups}-general`,
+				},
+				meta: {
+					WtObject: WtObject.CloseReasonGroup,
+					UiSection: CrmSections.CloseReasonGroups,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.CloseReasonGroups}-general`,
+						component: OpenedCloseReasonGroupsGeneral,
+					},
+					{
+						path: 'close-reasons/:closeReasonsId?',
+						name: `close-reasons`,
+						component: OpenedCloseReasons,
+					},
+				],
+			},
+			{
+				path: 'service-catalogs',
+				name: CrmSections.ServiceCatalogs,
+				component: TheServiceCatalogs,
+				meta: {
+					WtObject: WtObject.ServiceCatalog,
+					UiSection: CrmSections.ServiceCatalogs,
+				},
+			},
+			{
+				path: 'service-catalogs/:id',
+				name: `${CrmSections.ServiceCatalogs}-card`,
+				component: OpenedServiceCatalogs,
+				redirect: {
+					name: `${CrmSections.ServiceCatalogs}-general`,
+				},
+				meta: {
+					WtObject: WtObject.ServiceCatalog,
+					UiSection: CrmSections.ServiceCatalogs,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.ServiceCatalogs}-general`,
+						component: OpenedServiceCatalogsGeneral,
+					},
+				],
+			},
+			{
+				path: 'service-catalogs/:catalogId/:rootId/services',
+				name: `${CrmSections.ServiceCatalogs}-services`,
+				component: TheCatalogServices,
+				meta: {
+					WtObject: WtObject.ServiceCatalog,
+					UiSection: CrmSections.ServiceCatalogs,
+				},
+			},
+			{
+				path: 'service-catalogs/:catalogId/:rootId/services/:id',
+				name: `${CrmSections.ServiceCatalogs}-services-card`,
+				component: OpenedServices,
+				redirect: {
+					name: `${CrmSections.ServiceCatalogs}-services-card-general`,
+				},
+				meta: {
+					WtObject: WtObject.ServiceCatalog,
+					UiSection: CrmSections.ServiceCatalogs,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.ServiceCatalogs}-services-card-general`,
+						component: OpenedServicesGeneral,
+					},
+				],
+			},
+			{
+				path: 'contact-groups',
+				name: CrmSections.ContactGroups,
+				component: TheContactGroups,
+				meta: {
+					WtObject: WtObject.ContactGroup,
+					UiSection: CrmSections.ContactGroups,
+				},
+			},
+			{
+				path: 'contact-groups/:id',
+				name: `${CrmSections.ContactGroups}-card`,
+				component: OpenedContactGroup,
+				redirect: {
+					name: `${CrmSections.ContactGroups}-general`,
+				},
+				meta: {
+					WtObject: WtObject.ContactGroup,
+					UiSection: CrmSections.ContactGroups,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.ContactGroups}-general`,
+						component: OpenedContactGroupGeneral,
+					},
+					{
+						path: 'conditions/:conditionId?',
+						name: `${CrmSections.ContactGroups}-conditions`,
+						component: OpenedContactGroupsConditions,
+					},
+					{
+						path: 'contacts/:contactId?',
+						name: `${CrmSections.ContactGroups}-contacts`,
+						component: OpenedContactGroupsContacts,
+					},
+					{
+						path: 'permissions/:permissionId?',
+						name: `${CrmSections.ContactGroups}-permissions`,
+						component: PermissionsTab,
+					},
+				],
+			},
+			{
+				path: 'priorities',
+				name: CrmSections.Priorities,
+				component: ThePriorities,
+				meta: {
+					WtObject: WtObject.Priorities,
+					UiSection: CrmSections.Priorities,
+				},
+			},
+			{
+				path: 'priorities/:id',
+				name: `${CrmSections.Priorities}-card`,
+				component: OpenedPriority,
+				redirect: {
+					name: `${CrmSections.Priorities}-general`,
+				},
+				meta: {
+					WtObject: WtObject.Priorities,
+					UiSection: CrmSections.Priorities,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.Priorities}-general`,
+						component: OpenedPriorityGeneral,
+					},
+				],
+			},
+			{
+				path: 'statuses',
+				name: CrmSections.Statuses,
+				component: TheStatuses,
+				meta: {
+					WtObject: WtObject.Status,
+					UiSection: CrmSections.Statuses,
+				},
+			},
+			{
+				path: 'statuses/:id',
+				name: `${CrmSections.Statuses}-card`,
+				component: OpenedStatus,
+				redirect: {
+					name: `${CrmSections.Statuses}-general`,
+				},
+				meta: {
+					WtObject: WtObject.Status,
+					UiSection: CrmSections.Statuses,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.Statuses}-general`,
+						component: OpenedStatusGeneral,
+					},
+					{
+						path: 'status-conditions/:statusConditionId?',
+						name: `status-conditions`,
+						component: OpenedStatusConditions,
+					},
+				],
+			},
+			{
+				path: ':repo',
+				name: 'custom-lookup',
+				component: TheCustomLookup,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: (thisRoute: RouteLocationNormalized) => {
+						return thisRoute.params.repo;
+					},
+				},
+			},
+			{
+				path: ':repo/:id',
+				name: 'custom-lookup-record',
+				component: OpenedCustomLookupRecord,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: (thisRoute: RouteLocationNormalized) => {
+						return thisRoute.params.repo;
+					},
+				},
+				redirect: {
+					name: 'custom-lookup-record-columns',
+				},
+				children: [
+					{
+						path: 'columns',
+						name: 'custom-lookup-record-columns',
+						component: OpenedCustomLookupRecordsColumns,
+					},
+				],
+			},
+		],
+	},
 ];
 
 export default lookupsRoutes;

@@ -11,10 +11,9 @@
 
     <template #main>
       <wt-textarea
-        :value="draft.message"
+        v-model:model-value="draft.message"
         :placeholder="t('objects.chat.draftPlaceholder')"
         @enter="sendMessage"
-        @input="draft.message = $event"
       />
     </template>
     <template #actions>
@@ -44,72 +43,82 @@ import { useI18n } from 'vue-i18n';
 import { useUserinfoStore } from '../../../../userinfo/store/userinfoStore';
 
 interface Item {
-  id: string;
-  protocol: string;
-  externalId: string;
-  createdAt: string;
-  etag: string;
-  app: {
-    id: string;
-    name: string;
-  }
-  user: {
-    id: string;
-    name: string;
-  }
+	id: string;
+	protocol: string;
+	externalId: string;
+	createdAt: string;
+	etag: string;
+	app: {
+		id: string;
+		name: string;
+	};
+	user: {
+		id: string;
+		name: string;
+	};
 }
 
 const props = defineProps<{
-  item?: Item;
+	item?: Item;
 }>();
 
-const emit = defineEmits(['close']);
+const emit = defineEmits([
+	'close',
+]);
 const eventBus = inject('$eventBus');
 const { t } = useI18n();
 
 const generateNewDraft = () => {
-  return {
-    gateway: props.item?.app || {},
-    provider: props.item?.protocol || '',
-    message: '',
-    agentId: null,
-  };
+	return {
+		gateway: props.item?.app || {},
+		provider: props.item?.protocol || '',
+		message: '',
+		agentId: null,
+	};
 };
 
 const draft = ref(generateNewDraft());
 const { userId } = useUserinfoStore();
 
-async function getAgentId (params) {
-  const { items } = await AgentsAPI.getList({ ...params, userId });
-  draft.value.agentId = items[0]?.id;
+async function getAgentId(params) {
+	const { items } = await AgentsAPI.getList({
+		...params,
+		userId,
+	});
+	draft.value.agentId = items[0]?.id;
 }
 
 const sendMessage = async () => {
-  const response = await MessagesServiceAPI.patch({
-    peers: [{
-      via: draft.value.gateway.id,
-      id: props.item?.externalId,
-      type: draft.value.provider,
-    }],
-    variables: {
-      agentId: draft.value.agentId,
-    },
-    message: {
-      text: draft.value.message,
-    }
-  });
-  if(response.failure) {
-    eventBus.$emit('notification', { type: 'error', text: response.failure[0].error.message });
-  }
-  emit('close');
+	const response = await MessagesServiceAPI.patch({
+		peers: [
+			{
+				via: draft.value.gateway.id,
+				id: props.item?.externalId,
+				type: draft.value.provider,
+			},
+		],
+		variables: {
+			agentId: draft.value.agentId,
+		},
+		message: {
+			text: draft.value.message,
+		},
+	});
+	if (response.failure) {
+		eventBus.$emit('notification', {
+			type: 'error',
+			text: response.failure[0].error.message,
+		});
+	}
+	emit('close');
 };
 
 const insertEmoji = (emoji) => {
-  draft.value.message += emoji;
-  document.querySelector('textarea').focus();
+	draft.value.message += emoji;
+	document.querySelector('textarea').focus();
 };
 
-onMounted(async() => await getAgentId());
+onMounted(async () => await getAgentId());
 </script>
 
 <style lang="scss" scoped>

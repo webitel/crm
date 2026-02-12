@@ -126,7 +126,7 @@
 <script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import { useClose } from "@webitel/ui-sdk/composables";
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -138,84 +138,99 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesDatalistStore } from '../stores';
+
 const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+	useUserAccessControl();
 
 const tableStore = useCaseSourcesDatalistStore();
 
 const {
-  dataList,
-  selected,
-  error,
-  isLoading,
-  page,
-  size,
-  next,
-  shownHeaders,
-  filtersManager,
+	dataList,
+	selected,
+	error,
+	isLoading,
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
 } = storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updateSelected,
-  updatePage,
-  updateSize,
-  updateSort,
-  deleteEls,
-  addFilter,
-  updateFilter,
-  deleteFilter,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
 } = tableStore;
 
 initialize();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.sources.sources', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.lookups'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.sources.sources', 2),
+	},
 ]);
 
 const { close } = useClose('configuration');
 
 const add = () => {
-  return router.push({
-    name: `${CrmSections.Sources}-card`,
-    params: { id: 'new' },
-  })
+	return router.push({
+		name: `${CrmSections.Sources}-card`,
+		params: {
+			id: 'new',
+		},
+	});
 };
 
 function edit(item) {
-  return router.push({
-    name: `${CrmSections.Sources}-card`,
-    params: { id: item.id },
-  });
+	return router.push({
+		name: `${CrmSections.Sources}-card`,
+		params: {
+			id: item.id,
+		},
+	});
 }
 
-
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
-  dataList,
-  error,
-  filters: computed(() => filtersManager.value.getAllValues()),
-  isLoading,
+	dataList,
+	error,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	isLoading,
 });
 </script>
 

@@ -3,7 +3,10 @@
     v-if="hasEditAccess && !isReadOnly"
     to="#page-header-actions"
   >
-    <wt-button :disabled="disabledSave" @click="saveDetails">{{ t('reusable.save') }}</wt-button>
+    <wt-button
+      :disabled="disabledSave"
+      @click="saveDetails"
+    >{{ t('reusable.save') }}</wt-button>
   </teleport>
   <div class="opened-card">
     <div class="opened-card-form">
@@ -16,7 +19,7 @@
           :key="field.id"
           :field="field"
           :namespace="namespace"
-          :disable="isReadOnly"
+          :disabled="isReadOnly"
           path-to-field="custom"
         />
       </div>
@@ -35,32 +38,33 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { useVuelidate } from '@vuelidate/core';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import get from 'lodash/get';
 import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-import CustomLookupDynamicField
-  from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
-import WtDisplayContent
-  from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
+import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  fields: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	fields: {
+		type: Object,
+		required: true,
+	},
 });
 
 const hasEditAccess = computed(() => access.value?.hasRbacEditAccess);
@@ -70,27 +74,41 @@ const { t } = useI18n();
 
 const { itemInstance, updateItem } = useCardStore(props.namespace);
 
-const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
+const v$ = useVuelidate(
+	{},
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
+);
 
 v$.value.$touch();
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty || isReadOnly,
+	() => v$.value?.$invalid || !itemInstance.value._dirty || isReadOnly,
 );
 
 const saveDetails = () => {
-  updateItem({
-    custom: itemInstance.custom,
-  });
+	updateItem({
+		custom: itemInstance.custom,
+	});
 };
 
-watch(() => props.fields, () => {
-  if (!props.fields.length) {
-    router.push({
-      name: `${CrmSections.CONTACTS}-timeline`,
-    });
-  }
-});
+watch(
+	() => props.fields,
+	() => {
+		if (!props.fields.length) {
+			router.push({
+				name: `${CrmSections.Contacts}-timeline`,
+			});
+		}
+	},
+);
 </script>
 
-<style scoped lang="scss"></style>
+<style
+  scoped
+  lang="scss"
+></style>

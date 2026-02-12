@@ -1,9 +1,9 @@
 import { CaseCloseReasonGroupsAPI } from '@webitel/api-services/api';
 import {
-  createApiStoreModule,
-  createBaseStoreModule,
-  createCardStoreModule,
-  createTableStoreModule,
+	createApiStoreModule,
+	createBaseStoreModule,
+	createCardStoreModule,
+	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
 import closeReasons from '../modules/close-reasons/store/closeReasons.js';
@@ -11,40 +11,44 @@ import filters from '../modules/filters/store/filters.js';
 import headers from './_internals/headers';
 
 const resetCardState = {
-  itemId: '',
-  itemInstance: {
-    name: '',
-    description: '',
-  },
+	itemId: '',
+	itemInstance: {
+		name: '',
+		description: '',
+	},
 };
 
 const api = createApiStoreModule({
-  state: {
-    api: CaseCloseReasonGroupsAPI,
-  },
+	state: {
+		api: CaseCloseReasonGroupsAPI,
+	},
 });
 
 const table = createTableStoreModule({
-  state: { headers },
-  modules: {
-    filters,
-    api,
-  },
+	state: {
+		headers,
+	},
+	modules: {
+		filters,
+		api,
+	},
 });
 
 const card = createCardStoreModule({
-  state: { _resettable: resetCardState },
-  modules: {
-    api,
-    closeReasons,
-  },
+	state: {
+		_resettable: resetCardState,
+	},
+	modules: {
+		api,
+		closeReasons,
+	},
 });
 
 const closeReasonGroups = createBaseStoreModule({
-  modules: {
-    table,
-    card,
-  },
+	modules: {
+		table,
+		card,
+	},
 });
 
 export default closeReasonGroups;

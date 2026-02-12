@@ -5,11 +5,11 @@ import { CaseRelatedCasesNamespace } from '../namespace';
 import { headers } from './headers/headers';
 
 export const useCaseRelatedCasesStore = createTableStore(
-  CaseRelatedCasesNamespace,
-  {
-    apiModule: RelatedCasesAPI,
-    headers,
-    disablePersistence: true,
-    isAppendDataList: true,
-  },
+	CaseRelatedCasesNamespace,
+	{
+		apiModule: RelatedCasesAPI,
+		headers,
+		disablePersistence: true,
+		isAppendDataList: true,
+	},
 );

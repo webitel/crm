@@ -4,9 +4,9 @@ import lookups from '../modules/lookups/store/lookups.js';
 
 // VUEX
 const configuration = createBaseStoreModule({
-  modules: {
-    lookups,
-  },
+	modules: {
+		lookups,
+	},
 });
 
 export default configuration;

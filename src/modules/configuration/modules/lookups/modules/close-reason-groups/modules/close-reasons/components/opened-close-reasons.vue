@@ -90,11 +90,8 @@
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
@@ -109,21 +106,20 @@ import { useUserAccessControl } from '../../../../../../../../../app/composables
 import OpenedCloseReasonsPopup from './opened-close-reasons-popup.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl({
-    useUpdateAccessAsAllMutableChecksSource: true,
-  });
+	useUserAccessControl({
+		useUpdateAccessAsAllMutableChecksSource: true,
+	});
 
-const {
-  namespace: parentCardNamespace,
-  id: parentId,
-} = useCardStore(props.namespace);
+const { namespace: parentCardNamespace, id: parentId } = useCardStore(
+	props.namespace,
+);
 
 const namespace = `${parentCardNamespace}/closeReasons`;
 
@@ -132,64 +128,73 @@ const route = useRoute();
 const { t } = useI18n();
 
 const {
-  namespace: tableNamespace,
+	namespace: tableNamespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  setSelected,
-  onFilterEvent,
-  sort,
+	loadData,
+	deleteData,
+	setSelected,
+	onFilterEvent,
+	sort,
 } = useTableStore(namespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
-  resetFilters,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
+	resetFilters,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(tableNamespace);
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
-  resetFilters();
+	flushSubscribers();
+	resetFilters();
 });
 
 const add = () => {
-  return router.push({ ...route, params: { closeReasonsId: 'new' } });
+	return router.push({
+		...route,
+		params: {
+			closeReasonsId: 'new',
+		},
+	});
 };
-
 </script>
 
 <style lang="scss" scoped>

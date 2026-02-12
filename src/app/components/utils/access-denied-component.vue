@@ -7,8 +7,8 @@
 
 <script setup>
 function goToApplicationHub() {
-  const adminUrl = import.meta.env.VITE_APPLICATION_HUB_URL;
-  window.location.href = adminUrl;
+	const adminUrl = import.meta.env.VITE_APPLICATION_HUB_URL;
+	window.location.href = adminUrl;
 }
 </script>
 

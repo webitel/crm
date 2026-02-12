@@ -1,52 +1,54 @@
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import {
-  createApiStoreModule,
-  createBaseStoreModule,
-  createCardStoreModule,
-  createTableStoreModule,
+	createApiStoreModule,
+	createBaseStoreModule,
+	createCardStoreModule,
+	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
 import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';
 
 const resetCardState = {
-  itemId: '',
-  itemInstance: {
-    name: '',
-    description: '',
-    color: '',
-  },
+	itemId: '',
+	itemInstance: {
+		name: '',
+		description: '',
+		color: '',
+	},
 };
 
 const api = createApiStoreModule({
-  state: {
-    api: CasePrioritiesAPI,
-  },
+	state: {
+		api: CasePrioritiesAPI,
+	},
 });
 
 const table = createTableStoreModule({
-  state: { headers },
-  modules: {
-    filters,
-    api,
-  },
+	state: {
+		headers,
+	},
+	modules: {
+		filters,
+		api,
+	},
 });
 
 const card = createCardStoreModule({
-  state: {
-    _resettable: resetCardState,
-    itemInstance: resetCardState.itemInstance,
-  },
-  modules: {
-    api,
-  },
+	state: {
+		_resettable: resetCardState,
+		itemInstance: resetCardState.itemInstance,
+	},
+	modules: {
+		api,
+	},
 });
 
 const priorities = createBaseStoreModule({
-  modules: {
-    table,
-    card,
-  },
+	modules: {
+		table,
+		card,
+	},
 });
 
 export default priorities;

@@ -9,13 +9,13 @@
     </template>
     <template #main>
       <form>
-        <wt-input
+        <wt-input-text
           :label="t('reusable.name')"
-          :value="itemInstance.name"
+          :model-value="itemInstance.name"
           :v="v$.itemInstance.name"
           :disabled="disableUserInput"
           required
-          @input="setItemProp({ path: 'name', value: $event })"
+          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
 
         <wt-textarea
@@ -55,81 +55,107 @@ import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
-const emit = defineEmits(['load-data']);
+const emit = defineEmits([
+	'load-data',
+]);
 
 const route = useRoute();
 const { t } = useI18n();
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
+	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
 const {
-  namespace: cardNamespace,
-  itemInstance,
-  resetState,
-  addItem,
-  loadItem,
-  updateItem,
-  setId,
-  setItemProp,
-  id,
+	namespace: cardNamespace,
+	itemInstance,
+	resetState,
+	addItem,
+	loadItem,
+	updateItem,
+	setId,
+	setItemProp,
+	id,
 } = useCardStore(props.namespace);
 
 const closeReasonsId = computed(() => route.params.closeReasonsId);
 const isNew = computed(() => closeReasonsId.value === 'new');
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-  },
-})), { itemInstance }, { $autoDirty: true, $stopPropagation: true });
+const v$ = useVuelidate(
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+		$stopPropagation: true,
+	},
+);
 
 v$.value.$touch();
 
 const { close } = useClose(`close-reasons`);
 
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const disabledSave = computed(
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 function loadDataList() {
-  emit('load-data');
+	emit('load-data');
 }
 
 const save = async () => {
-  if (isNew.value) {
-    await addItem({ itemInstance, parentId: id.value });
-  } else {
-    await updateItem({ itemInstance, itemId: id.value });
-  }
+	if (isNew.value) {
+		await addItem({
+			itemInstance,
+			parentId: id.value,
+		});
+	} else {
+		await updateItem({
+			itemInstance,
+			itemId: id.value,
+		});
+	}
 
-  close();
-  loadDataList();
+	close();
+	loadDataList();
 };
 
 async function initializePopup() {
-  try {
-    if (!isNew.value) {
-      await setId(closeReasonsId.value);
-      await loadItem();
-    }
-  } catch (error) {
-    throw error;
-  }
+	try {
+		if (!isNew.value) {
+			await setId(closeReasonsId.value);
+			await loadItem();
+		}
+	} catch (error) {
+		throw error;
+	}
 }
 
-watch(() => closeReasonsId.value, (value) => {
-  if (value) {
-    initializePopup();
-  } else {
-    resetState();
-  }
-}, { immediate: true });
-
+watch(
+	() => closeReasonsId.value,
+	(value) => {
+		if (value) {
+			initializePopup();
+		} else {
+			resetState();
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 </script>
 
 <style lang="scss" scoped>

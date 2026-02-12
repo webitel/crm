@@ -63,10 +63,10 @@ import { useUserAccessControl } from '../../../../../app/composables/useUserAcce
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const editMode = inject('editMode');
@@ -78,20 +78,26 @@ const store = useStore();
 const { disableUserInput } = useUserAccessControl();
 
 const {
-  namespace: cardNamespace,
-  itemInstance,
-  setItemProp,
+	namespace: cardNamespace,
+	itemInstance,
+	setItemProp,
 } = useCardStore(props.namespace);
 
-const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
+const closeReasonId = computed(
+	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
+);
 
 async function searchCloseReasons(params) {
-  if (!closeReasonId.value) {
-    return { items: [] };
-  }
-  return await CaseCloseReasonsAPI.getLookup({ parentId: closeReasonId.value, ...params });
+	if (!closeReasonId.value) {
+		return {
+			items: [],
+		};
+	}
+	return await CaseCloseReasonsAPI.getLookup({
+		parentId: closeReasonId.value,
+		...params,
+	});
 }
-
 </script>
 <style lang="scss" scoped>
 </style>

@@ -3,7 +3,7 @@
     <wt-icon icon="comment" />
     <section class="case-comment-info">
       <header class="case-comment-header">
-        <p class="case-comment-author">
+        <p class="case-comment-author typo-body-1">
           {{ comment.createdBy?.name }}
         </p>
         <p>
@@ -27,16 +27,19 @@ import ColorComponentWrapper from '../../../../../app/components/utils/color-com
 import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
-  comment: {
-    type: Object,
-    required: true,
-  },
+	comment: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-comment-row {
@@ -56,7 +59,6 @@ const { t } = useI18n();
 }
 
 .case-comment-author {
-  @extend %typo-body-1;
   font-weight: bold; // rm and refactor extended typo to typo-body bold when it's ready
 }
 </style>

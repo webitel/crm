@@ -31,12 +31,14 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits(['close']);
+const emit = defineEmits([
+	'close',
+]);
 
 const { t } = useI18n();
 
 function close() {
-  emit('close');
+	emit('close');
 }
 </script>
 

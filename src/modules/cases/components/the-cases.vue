@@ -21,7 +21,8 @@
 
           <cases-filter-search-bar
             v-if="!isInitialEmpty"
-            class="cases__search-filter" />
+            class="cases__search-filter"
+          />
 
           <wt-action-bar
             :include="displayIncludeActions"
@@ -51,7 +52,7 @@
         <wt-loader v-show="isLoading" />
 
         <wt-empty
-          v-if="showEmpty"
+          v-if="showEmpty && isInitializedTableStore"
           :image="emptyImage"
           :headline="emptyHeadline"
           :title="emptyTitle"
@@ -85,7 +86,7 @@
               <wt-item-link
                 class="cases__link-name"
                 :link="{
-                  name: `${CrmSections.CASES}-card`,
+                  name: `${CrmSections.Cases}-card`,
                   params: { id: item?.id },
                 }"
               >
@@ -102,18 +103,16 @@
               </wt-item-link>
             </template>
             <template #subject="{ item }">
-              <wt-item-link
-                :link="{
-                  name: `${CrmSections.CASES}-card`,
-                  params: { id: item?.id },
-                }"
-              >
+              <wt-item-link :link="{
+                name: `${CrmSections.Cases}-card`,
+                params: { id: item?.id },
+              }">
                 {{ item.subject }}
               </wt-item-link>
             </template>
             <template #priority="{ item }">
               <color-component-wrapper
-                :class="{ 'case-priority': !!item.priority?.color }"
+                :class="{ 'case-priority typo-body-1': !!item.priority?.color }"
                 :color="item.priority?.color"
               >
                 {{ item.priority?.name }}
@@ -123,16 +122,19 @@
               {{ item.statusCondition?.name }}
             </template>
             <template #source="{ item }">
-              <wt-icon
-                color="info"
-                :icon="item?.source?.type"
-              />
+              <div class="cases-source">
+                <wt-icon
+                  color="info"
+                  :icon="item?.source?.type"
+                />
+                <span>{{ item?.source?.name }}</span>
+              </div>
             </template>
             <template #createdAt="{ item }">
               {{ prettifyDate(item.createdAt) }}
             </template>
             <template #service="{ item }">
-              <service-path :service="item?.service"/>
+              <service-path :service="item?.service" />
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -187,9 +189,7 @@
               />
             </template>
             <template #expansion="{ item }">
-                <case-details-table
-                  :item="item"
-                />
+              <case-details-table :item="item" />
             </template>
             <template #actions="{ item }">
               <wt-icon-action
@@ -205,7 +205,7 @@
                     deleted: [item],
                     callback: () => deleteEls(item),
                   })
-                "
+                  "
               />
             </template>
           </wt-table>
@@ -227,15 +227,11 @@
 
 <script setup>
 import { WtTypeExtensionAPI } from '@webitel/api-services/api';
-import {
-  snakeToCamel,
-} from '@webitel/api-services/utils';
-import { WtEmpty } from '@webitel/ui-sdk/components';
-import { WtTable } from '@webitel/ui-sdk/components';
+import { snakeToCamel } from '@webitel/api-services/utils';
+import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
-import { IconAction } from '@webitel/ui-sdk/enums';
-import { EmptyCause } from "@webitel/ui-sdk/enums/EmptyCause/EmptyCause";
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
+import { EmptyCause } from '@webitel/ui-sdk/enums/EmptyCause/EmptyCause';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -249,8 +245,7 @@ import { useStore } from 'vuex';
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../customization/modules/custom-lookups/enums/FieldType';
-import DisplayDynamicFieldExtension
-  from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
+import DisplayDynamicFieldExtension from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { useCasesStore } from '../stores/cases.ts';
@@ -267,112 +262,134 @@ const router = useRouter();
 const store = useStore();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+	useUserAccessControl();
 
 const tableStore = useCasesStore();
 
 const {
-  dataList,
-  selected,
-  error,
-  isLoading,
-  page,
-  size,
-  next,
-  headers,
-  shownHeaders,
-  filtersManager,
+	dataList,
+	selected,
+	error,
+	isLoading,
+	page,
+	size,
+	next,
+	headers,
+	shownHeaders,
+	filtersManager,
 } = storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updateSelected,
-  updatePage,
-  updateSize,
-  updateSort,
-  deleteEls,
-  updateShownHeaders,
-  columnResize,
-  columnReorder,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	updateShownHeaders,
+	columnResize,
+	columnReorder,
 } = tableStore;
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-  askDeleteConfirmation,
-  closeDelete,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  showEmpty,
-  emptyCause,
-  image: emptyImage,
-  headline: emptyHeadline,
-  title: emptyTitle,
-  text: emptyText,
-  primaryActionText: emptyPrimaryActionText,
+	showEmpty,
+	emptyCause,
+	image: emptyImage,
+	headline: emptyHeadline,
+	title: emptyTitle,
+	text: emptyText,
+	primaryActionText: emptyPrimaryActionText,
 } = useTableEmpty({
-  dataList,
-  error,
-  filters: computed(() => filtersManager.value.getAllValues()),
-  isLoading,
+	dataList,
+	error,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	isLoading,
 });
 
 const showActionsPanel = ref(true);
 
 const isInitialEmpty = ref(false);
 
-const displayIncludeActions = computed(() => {
-  const baseActions = [IconAction.ADD, IconAction.REFRESH, IconAction.FILTERS, IconAction.COLUMNS, IconAction.DELETE];
+const isInitializedTableStore = ref(false); // https://webitel.atlassian.net/browse/WTEL-7518?focusedCommentId=726522
 
-  return isInitialEmpty.value ? [IconAction.ADD] : baseActions;
+const displayIncludeActions = computed(() => {
+	const baseActions = [
+		IconAction.ADD,
+		IconAction.REFRESH,
+		IconAction.FILTERS,
+		IconAction.COLUMNS,
+		IconAction.DELETE,
+	];
+
+	return isInitialEmpty.value
+		? [
+				IconAction.ADD,
+			]
+		: baseActions;
 });
 
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
 const anyFiltersOnFiltersPanel = computed(() => {
-  /*
-   * ...excluding search filters, which shown in other panel
-   * */
-  return filtersManager.value.getAllKeys().some((filterName) => {
-    return !Object.values(SearchMode).some((mode) => mode === filterName);
-  });
+	/*
+	 * ...excluding search filters, which shown in other panel
+	 * */
+	return filtersManager.value.getAllKeys().some((filterName) => {
+		return !Object.values(SearchMode).some((mode) => mode === filterName);
+	});
 });
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  {
-    name: t('cases.case', 2),
-  },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('cases.case', 2),
+	},
 ]);
 
 function add() {
-  return router.push({
-    name: `${CrmSections.CASES}-card`,
-    params: { id: 'new' },
-  });
+	return router.push({
+		name: `${CrmSections.Cases}-card`,
+		params: {
+			id: 'new',
+		},
+	});
 }
 
 function edit(item) {
-  /*
+	/*
   at "edit", only(!) store state is used to determine read/edit mode
   because store is much reliable as the state source, comparing to url query
    */
-  store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
-  return router.push({
-    name: `${CrmSections.CASES}-card`,
-    params: { id: item.id },
-  });
+	store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
+	return router.push({
+		name: `${CrmSections.Cases}-card`,
+		params: {
+			id: item.id,
+		},
+	});
 }
 
 function deleteSelectedItems() {
-  return askDeleteConfirmation({
-    deleted: selected.value,
-    callback: () => deleteEls([...selected.value]),
-  });
+	return askDeleteConfirmation({
+		deleted: selected.value,
+		callback: () =>
+			deleteEls([
+				...selected.value,
+			]),
+	});
 }
 
 // Reactive reference for custom headers from API
@@ -381,141 +398,164 @@ const customHeadersLoaded = ref(false);
 
 // Computed property that combines base headers with custom headers
 const mergedHeaders = computed(() => {
-  const baseHeaders = headers.value || [];
+	const baseHeaders = headers.value || [];
 
-  // Return only base headers if custom headers aren't loaded yet
-  if (!customHeadersLoaded.value) {
-    return baseHeaders;
-  }
+	// Return only base headers if custom headers aren't loaded yet
+	if (!customHeadersLoaded.value) {
+		return baseHeaders;
+	}
 
-  // Get unique custom headers that don't conflict with base headers
-  const uniqueCustomHeaders = filterUniqueHeaders(customHeaders.value, baseHeaders);
+	// Get unique custom headers that don't conflict with base headers
+	const uniqueCustomHeaders = filterUniqueHeaders(
+		customHeaders.value,
+		baseHeaders,
+	);
 
-  return [...baseHeaders, ...uniqueCustomHeaders];
+	return [
+		...baseHeaders,
+		...uniqueCustomHeaders,
+	];
 });
 
 // Helper function to filter out duplicate headers based on field property
 const filterUniqueHeaders = (headersToFilter, existingHeaders) => {
-  const existingFields = new Set(existingHeaders.map(header => header.field));
-  return headersToFilter.filter(header => !existingFields.has(header.field));
+	const existingFields = new Set(existingHeaders.map((header) => header.field));
+	return headersToFilter.filter((header) => !existingFields.has(header.field));
 };
 
 // Helper function to transform API field objects into table header format
 const transformFieldsToHeaders = (fields) => {
-  if (!Array.isArray(fields)) return [];
+	if (!Array.isArray(fields)) return [];
 
-  return fields.map(field => createHeaderFromField(field));
+	return fields.map((field) => createHeaderFromField(field));
 };
 
 // Helper function to create a single header object from API field data
 const createHeaderFromField = (field) => ({
-  value: snakeToCamel(field?.name),
-  show: false,
-  kind: field.kind,
-  field: field.id,
-  locale: field.name,
+	value: snakeToCamel(field?.name),
+	show: false,
+	kind: field.kind,
+	field: field.id,
+	locale: field.name,
 });
 
 // Helper function to extract custom field value from item data
-// For boolean fields, uses header.field (field ID), for other fields uses header.value (field name)
 const getCustomValues = (item, header) => {
-  // Boolean fields are stored by field ID, other fields by field name (camelCase)
-  const key = header.kind === FieldType.Boolean ? header.field : header.value;
-  return get(item, ['custom', key]);
+	// Boolean fields are stored by field ID, other fields by field (camelCase)
+	return get(item, [
+		'custom',
+		header.field,
+	]);
 };
 
 // Helper function to fetch custom headers from API
 const fetchCustomHeadersFromAPI = async () => {
-  const response = await WtTypeExtensionAPI.getList({ itemId: 'cases' });
-  return response?.fields || [];
+	const response = await WtTypeExtensionAPI.getList({
+		itemId: 'cases',
+	});
+	return response?.fields || [];
 };
 
 // Helper function to merge headers and update store
 const updateHeaders = (headersToAdd, baseHeaders) => {
-  const existingHeaders = baseHeaders || headers.value || [];
-  const uniqueHeaders = filterUniqueHeaders(headersToAdd, existingHeaders);
+	const existingHeaders = baseHeaders || headers.value || [];
+	const uniqueHeaders = filterUniqueHeaders(headersToAdd, existingHeaders);
 
-  if (uniqueHeaders.length) {
-    const mergedHeaders = [...existingHeaders, ...uniqueHeaders];
-    updateShownHeaders(mergedHeaders);
-  }
+	if (uniqueHeaders.length) {
+		const mergedHeaders = [
+			...existingHeaders,
+			...uniqueHeaders,
+		];
+		updateShownHeaders(mergedHeaders);
+	}
 };
 
 // Main function to load and integrate custom headers
 const loadCustomHeaders = async () => {
-  // Fetch fields from API
-  const fields = await fetchCustomHeadersFromAPI();
+	// Fetch fields from API
+	const fields = await fetchCustomHeadersFromAPI();
 
-  // Transform API fields to header format
-  const transformedHeaders = transformFieldsToHeaders(fields);
-  customHeaders.value = transformedHeaders;
-  customHeadersLoaded.value = true;
+	// Transform API fields to header format
+	const transformedHeaders = transformFieldsToHeaders(fields);
+	customHeaders.value = transformedHeaders;
+	customHeadersLoaded.value = true;
 
-  // Merge with existing headers and update store if we have any custom headers
-  if (transformedHeaders.length) {
-    updateHeaders(transformedHeaders);
-  }
+	// Merge with existing headers and update store if we have any custom headers
+	if (transformedHeaders.length) {
+		updateHeaders(transformedHeaders);
+	}
 };
 
 // Helper function to sync missing custom headers
 const syncMissingCustomHeaders = (newHeaders) => {
-  if (!customHeadersLoaded.value || !newHeaders) return;
+	if (!customHeadersLoaded.value || !newHeaders) return;
 
-  // Use the same merge function but with reversed parameters
-  updateHeaders(customHeaders.value, newHeaders);
+	// Use the same merge function but with reversed parameters
+	updateHeaders(customHeaders.value, newHeaders);
 };
 
 const rowClass = (item) => {
-  if(item.statusCondition?.final) return 'row-success';
-}
+	if (item.statusCondition?.final) return 'row-success';
+};
 
 // Disable row expansion if neither 'comments' nor 'description' exist in the row data
 const isRowExpansionDisabled = (row) => {
-  return !['comments', 'description'].some(key => Object.hasOwn(row || {}, key));
-}
+	return ![
+		'comments',
+		'description',
+	].some((key) => Object.hasOwn(row || {}, key));
+};
 
 // Initialize headers before table store
 onMounted(async () => {
-  // @author @stanislav-kozak
-  // Order is important
-  await loadCustomHeaders();
-  await initialize();
+	// @author @stanislav-kozak
+	// Order is important
+	await loadCustomHeaders();
+	await initialize();
+	isInitializedTableStore.value = true;
 });
 
 // Keep custom headers in sync when base headers change
-watch(
-  () => headers.value,
-  syncMissingCustomHeaders,
-  { deep: true }
-);
-
-watch(() => emptyCause.value, (newCause, oldCause) => {
-  if(newCause && oldCause !== newCause && newCause === EmptyCause.EMPTY) {
-    isInitialEmpty.value = true;
-  }
+watch(() => headers.value, syncMissingCustomHeaders, {
+	deep: true,
 });
 
+watch(
+	() => emptyCause.value,
+	(newCause, oldCause) => {
+		if (newCause && oldCause !== newCause && newCause === EmptyCause.EMPTY) {
+			isInitialEmpty.value = true;
+		}
+	},
+);
+
 watch(customHeadersLoaded, (isLoaded) => {
-  if (!isLoaded) return;
+	if (!isLoaded) return;
 
-  // "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
-  const notInitializedHeaders = headers.value.filter((header) => header.shouldBeInitialized);
-  if (!notInitializedHeaders.length) return;
+	// "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
+	const notInitializedHeaders = headers.value.filter(
+		(header) => header.shouldBeInitialized,
+	);
+	if (!notInitializedHeaders.length) return;
 
-  // ... so, we can just extend those restored (but not initialized yet) headers with custom headers
-  notInitializedHeaders.forEach((header) => {
-    const customHeader = customHeaders.value.find((customHeader) => customHeader.field === header.field);
-    Object.assign(header, {
-      ...customHeader,
-      shouldBeInitialized: false,
-      show: true,
-    });
-  });
+	// ... so, we can just extend those restored (but not initialized yet) headers with custom headers
+	notInitializedHeaders.forEach((header) => {
+		const customHeader = customHeaders.value.find(
+			(customHeader) => customHeader.field === header.field,
+		);
+		Object.assign(header, {
+			...customHeader,
+			shouldBeInitialized: false,
+			show: true,
+		});
+	});
 });
 </script>
 
-<style lang="scss" scoped>
-@use '@webitel/ui-sdk/src/css/main' as *;
+<style
+  lang="scss"
+  scoped
+>
 
 .cases {
   .table-title {
@@ -537,8 +577,12 @@ watch(customHeadersLoaded, (isLoaded) => {
 
   //TODO: typo-body-1 bold
   .case-priority {
-    @extend %typo-body-1;
     font-weight: bold;
+  }
+
+  .cases-source {
+    display: flex;
+    gap: var(--spacing-xs);
   }
 }
 </style>

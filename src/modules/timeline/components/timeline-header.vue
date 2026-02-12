@@ -3,7 +3,7 @@
     v-if="showHeader"
     class="timeline-header"
   >
-    <p class="timeline-header-duration">
+    <p class="timeline-header-duration typo-subtitle-2">
       {{ timelineInterval }}
     </p>
     <div class="timeline-header-actions">
@@ -14,7 +14,7 @@
         :emails-count="emailsCount"
       />
       <button
-        class="timeline-header-collapse"
+        class="timeline-header-collapse typo-body-2"
         @click="collapseAll"
       >
         {{ t('contacts.collapseAll') }}
@@ -31,14 +31,14 @@ import TimelineAPI from '../api/TimelineAPI';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
 
 const props = defineProps({
-  parentId: {
-    type: String,
-    required: true,
-  },
-  filtersNamespace: {
-    type: String,
-    required: true,
-  },
+	parentId: {
+		type: String,
+		required: true,
+	},
+	filtersNamespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const mode = inject('mode');
@@ -55,43 +55,47 @@ const dateFrom = ref(Date.now());
 const dateTo = ref(Date.now());
 
 const timelineInterval = computed(() => {
-  const formatDate = (date) => {
-    const fullDate = new Date(+date);
-    return capitalize(
-      d(fullDate, 'timelineInterval'),
-    );
-  };
+	const formatDate = (date) => {
+		const fullDate = new Date(+date);
+		return capitalize(d(fullDate, 'timelineInterval'));
+	};
 
-  const from = +dateFrom.value;
-  const to = +dateTo.value;
+	const from = +dateFrom.value;
+	const to = +dateTo.value;
 
-  return `${formatDate(from)} - ${formatDate(to)}`;
+	return `${formatDate(from)} - ${formatDate(to)}`;
 });
 
 function collapseAll() {
-  return eventBus.$emit('timeline/rows/collapse-all');
+	return eventBus.$emit('timeline/rows/collapse-all');
 }
 
 async function loadCounters() {
-  const {
-    dateFrom: sourceDateFrom,
-    dateTo: sourceDateTo,
-    callsCount: sourceCallsCount,
-    chatsCount: sourceChatsCount,
-    emailsCount: sourceEmailsCount,
-  } = await TimelineAPI.getCounters({ mode, parentId: props.parentId });
+	const {
+		dateFrom: sourceDateFrom,
+		dateTo: sourceDateTo,
+		callsCount: sourceCallsCount,
+		chatsCount: sourceChatsCount,
+		emailsCount: sourceEmailsCount,
+	} = await TimelineAPI.getCounters({
+		mode,
+		parentId: props.parentId,
+	});
 
-  callsCount.value = sourceCallsCount;
-  chatsCount.value = sourceChatsCount;
-  emailsCount.value = sourceEmailsCount;
-  dateFrom.value = sourceDateFrom;
-  dateTo.value = sourceDateTo;
+	callsCount.value = sourceCallsCount;
+	chatsCount.value = sourceChatsCount;
+	emailsCount.value = sourceEmailsCount;
+	dateFrom.value = sourceDateFrom;
+	dateTo.value = sourceDateTo;
 }
 
 loadCounters();
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .timeline-header {
@@ -103,17 +107,12 @@ loadCounters();
   border-radius: var(--border-radius);
 }
 
-.timeline-header-duration {
-  @extend %typo-subtitle-2;
-}
-
 .timeline-header-actions {
   display: flex;
   gap: var(--spacing-md);
 }
 
 .timeline-header-collapse {
-  @extend %typo-body-2;
   cursor: pointer;
 }
 </style>

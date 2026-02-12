@@ -1,6 +1,6 @@
 <template>
   <div class="case-priority">
-    <span class="case-priority__title">{{ t('cases.priority') }}</span>
+    <span class="case-priority__title typo-heading-4">{{ t('cases.priority') }}</span>
     <div>
       <editable-field
         :edit-mode="editMode"
@@ -44,20 +44,26 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
-  itemInstance,
+	itemInstance,
 });
 
 async function setDefaultPriority() {
-  const defaultPriority = (await CasePrioritiesAPI.getLookup({})).items[0];
-  await setItemProp({ path: 'priority', value: defaultPriority });
+	const defaultPriority = (await CasePrioritiesAPI.getLookup({})).items[0];
+	await setItemProp({
+		path: 'priority',
+		value: defaultPriority,
+	});
 }
 
 if (isNew.value) {
-  setDefaultPriority();
+	setDefaultPriority();
 }
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .case-priority {
@@ -65,7 +71,6 @@ if (isNew.value) {
 
   &__title {
     display: block;
-    @extend %typo-heading-4;
   }
 
   &__select,

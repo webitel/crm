@@ -45,8 +45,8 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -65,147 +65,170 @@ const router = useRouter();
 const baseNamespace = 'configuration/lookups/services';
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
+	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
+	namespace: cardNamespace,
+	id,
+	itemInstance,
 
-  ...restStore
+	...restStore
 } = useCardStore(baseNamespace);
 
 const v$ = useVuelidate(
-  {
-    itemInstance: {
-      name: { required },
-    },
-  },
-  { itemInstance },
-  { $autoDirty: true },
+	{
+		itemInstance: {
+			name: {
+				required,
+			},
+		},
+	},
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
 );
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
+	...restStore,
+	id,
+	itemInstance,
 });
 
 const rootService = ref(null);
 const catalog = ref(null);
 
 const loadRootService = async () => {
-  rootService.value = await ServicesAPI.get({
-    itemId: rootId.value,
-  });
+	rootService.value = await ServicesAPI.get({
+		itemId: rootId.value,
+	});
 };
 
 const loadCatalog = async () => {
-  catalog.value = await ServiceCatalogsAPI.get({
-    itemId: catalogId.value,
-  });
+	catalog.value = await ServiceCatalogsAPI.get({
+		itemId: catalogId.value,
+	});
 };
 
 const path = computed(() => {
-  const routes = [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    {
-      name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
-      route: '/configuration/lookups/service-catalogs',
-    },
-  ];
+	const routes = [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+			route: '/configuration/lookups/service-catalogs',
+		},
+	];
 
-  routes.push({
-    name: prettifyBreadcrumbName(catalog.value?.name),
-    route: {
-      name: `${CrmSections.SERVICE_CATALOGS}-services`,
-      params: {
-        catalogId: catalog.value?.id,
-        rootId: catalog.value?.id,
-      },
-    },
-  });
+	routes.push({
+		name: prettifyBreadcrumbName(catalog.value?.name),
+		route: {
+			name: `${CrmSections.ServiceCatalogs}-services`,
+			params: {
+				catalogId: catalog.value?.id,
+				rootId: catalog.value?.id,
+			},
+		},
+	});
 
-  if (route.params.rootId === route.params.catalogId) {
-    routes.push({
-      name: isNew.value
-        ? t('reusable.new')
-        : prettifyBreadcrumbName(pathName.value),
-    });
+	if (route.params.rootId === route.params.catalogId) {
+		routes.push({
+			name: isNew.value
+				? t('reusable.new')
+				: prettifyBreadcrumbName(pathName.value),
+		});
 
-    return routes;
-  }
+		return routes;
+	}
 
-  if (catalog.value?.id !== rootService.value?.rootId) {
-    routes.push({
-      name: '···',
-    });
-  }
+	if (catalog.value?.id !== rootService.value?.rootId) {
+		routes.push({
+			name: '···',
+		});
+	}
 
-  routes.push({
-    name: prettifyBreadcrumbName(rootService.value?.name),
-    route: {
-      name: `${CrmSections.SERVICE_CATALOGS}-services`,
-      params: { catalogId: catalogId.value, rootId: rootId.value },
-    },
-  });
+	routes.push({
+		name: prettifyBreadcrumbName(rootService.value?.name),
+		route: {
+			name: `${CrmSections.ServiceCatalogs}-services`,
+			params: {
+				catalogId: catalogId.value,
+				rootId: rootId.value,
+			},
+		},
+	});
 
-  routes.push({
-    name: isNew.value
-      ? t('reusable.new')
-      : prettifyBreadcrumbName(pathName.value),
-  });
+	routes.push({
+		name: isNew.value
+			? t('reusable.new')
+			: prettifyBreadcrumbName(pathName.value),
+	});
 
-  return routes;
+	return routes;
 });
 
 const close = () => {
-  if (window.history.length === 1) window.close();
-  return router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services`,
-    params: { catalogId: catalogId.value, rootId: rootId.value },
-  });
+	if (window.history.length === 1) window.close();
+	return router.push({
+		name: `${CrmSections.ServiceCatalogs}-services`,
+		params: {
+			catalogId: catalogId.value,
+			rootId: rootId.value,
+		},
+	});
 };
 
 const rootId = computed(() => route.params.rootId);
 const catalogId = computed(() => route.params.catalogId);
 
 const initializeBreadcrumbs = async () => {
-  rootService.value = null;
+	rootService.value = null;
 
-  try {
-    await loadCatalog();
-    if (rootId.value !== catalogId.value) {
-      await loadRootService();
-    }
-  } catch {
-    router.push({ name: CrmSections.SERVICE_CATALOGS });
-  }
+	try {
+		await loadCatalog();
+		if (rootId.value !== catalogId.value) {
+			await loadRootService();
+		}
+	} catch {
+		router.push({
+			name: CrmSections.ServiceCatalogs,
+		});
+	}
 };
 
 const setCatalogAndRootService = () => {
-  store.commit(`${baseNamespace}/card/SET`, {
-    path: 'rootId',
-    value: rootId.value,
-  });
-  store.commit(`${baseNamespace}/card/SET`, {
-    path: 'catalogId',
-    value: catalogId.value,
-  });
+	store.commit(`${baseNamespace}/card/SET`, {
+		path: 'rootId',
+		value: rootId.value,
+	});
+	store.commit(`${baseNamespace}/card/SET`, {
+		path: 'catalogId',
+		value: catalogId.value,
+	});
 };
 
 initialize();
 
 onMounted(async () => {
-  await initializeBreadcrumbs();
-  setCatalogAndRootService();
+	await initializeBreadcrumbs();
+	setCatalogAndRootService();
 });
 </script>
