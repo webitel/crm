@@ -31,17 +31,13 @@ export function useErrorRedirectHandler() {
     if (!status) return;
 
     // Check if there's a direct redirect for this status in the map
-    const directRedirect = ErrorRedirectMap[status];
-    if (directRedirect) {
-      redirectToErrorPage(router, directRedirect);
-      return;
-    }
+    const redirectPath =
+      ErrorRedirectMap[status] ||
+      (isItemLoadError(err) ? ErrorRedirectMap[404] : undefined);
 
-    // If this is an item load error (GET request) and there's no direct redirect,
-    // use 404 redirect
-    if (isItemLoadError(err)) {
-      redirectToErrorPage(router, ErrorRedirectMap[404]);
-    }
+    if (!redirectPath) return;
+
+    redirectToErrorPage(router, redirectPath);
   };
 
   return { handleError };
