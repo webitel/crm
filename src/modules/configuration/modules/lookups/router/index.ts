@@ -312,6 +312,12 @@ const lookupsRoutes: RouteRecordRaw[] = [
 				path: ':repo/:id',
 				name: 'custom-lookup-record',
 				component: OpenedCustomLookupRecord,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: (thisRoute: RouteLocationNormalized) => {
+						return thisRoute.params.repo;
+					},
+				},
 				redirect: {
 					name: 'custom-lookup-record-columns',
 				},

@@ -19,7 +19,7 @@
           :key="field.id"
           :field="field"
           :namespace="namespace"
-          :disable="isReadOnly"
+          :disabled="isReadOnly"
           path-to-field="custom"
         />
       </div>

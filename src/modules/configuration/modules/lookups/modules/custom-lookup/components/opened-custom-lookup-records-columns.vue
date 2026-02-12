@@ -13,6 +13,7 @@
         :key="field.id"
         :field="field"
         :namespace="namespace"
+        :disabled="disableUserInput"
       />
     </div>
   </section>
@@ -25,6 +26,7 @@ import { useStore } from 'vuex';
 
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
 	namespace: {
@@ -32,6 +34,8 @@ const props = defineProps({
 		required: true,
 	},
 });
+
+const { disableUserInput } = useUserAccessControl();
 
 const store = useStore();
 

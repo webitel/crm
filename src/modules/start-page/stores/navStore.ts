@@ -24,10 +24,6 @@ export const useNavStore = defineStore('nav', () => {
 	const { hasAnyConfigurationAccess } = storeToRefs(configurationStore);
 	const { initializeConfiguration } = configurationStore;
 
-	const { hasReadAccess: hasCaseReadAccess } = useUserAccessControl({
-		resource: WtObject.Case,
-	});
-
 	const isInitialized = ref(false);
 
 	const nav = computed(() => {
@@ -60,7 +56,7 @@ export const useNavStore = defineStore('nav', () => {
 				route: '/configuration',
 				name: t(`startPage.configuration.name`),
 				text: t(`startPage.configuration.text`),
-				disabled: !hasAnyConfigurationAccess.value || !hasCaseReadAccess.value,
+				disabled: !hasAnyConfigurationAccess.value,
 				images: {
 					light: ConfigurationImgLight,
 					dark: ConfigurationImgDark,
@@ -71,7 +67,7 @@ export const useNavStore = defineStore('nav', () => {
 				route: casesRoutePath,
 				name: t(`startPage.${CrmSections.Cases}.name`),
 				text: t(`startPage.${CrmSections.Cases}.text`),
-				disabled: !hasCasesAccess || !hasCaseReadAccess.value,
+				disabled: !hasCasesAccess,
 				images: {
 					light: CasesLight,
 					dark: CasesDark,
