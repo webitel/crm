@@ -192,18 +192,19 @@
 <script setup>
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { WtDisplayChipItems,WtEmpty, WtTreeTable } from '@webitel/ui-sdk/components';
+import {
+	WtDisplayChipItems,
+	WtEmpty,
+	WtTreeTable,
+} from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { displayText } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -216,129 +217,149 @@ const { t } = useI18n();
 const router = useRouter();
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.serviceCatalogs.serviceCatalogs', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.lookups'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+	},
 ]);
 
 const { close } = useClose('configuration');
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+	useUserAccessControl();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const tableStore = useServiceCatalogsStore();
 
 const {
-  dataList,
-  selected,
-  isLoading,
-  shownHeaders,
-  page,
-  size,
-  next,
-  error,
-  filtersManager,
-  isFiltersRestoring,
+	dataList,
+	selected,
+	isLoading,
+	shownHeaders,
+	page,
+	size,
+	next,
+	error,
+	filtersManager,
+	isFiltersRestoring,
 } = storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  deleteEls,
-  addFilter,
-  updateFilter,
-  deleteFilter,
-  updatePage,
-  updateSize,
-  updateSort,
-  updateSelected,
+	initialize,
+	loadDataList,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+	updatePage,
+	updateSize,
+	updateSort,
+	updateSelected,
 } = tableStore;
 
 initialize();
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
-  dataList,
-  filters: computed(() => filtersManager.value.getAllValues()),
-  error,
-  isLoading,
+	dataList,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	error,
+	isLoading,
+});
+
+// Reset filters when component is unmounted to prevent search results from freezing
+onUnmounted(() => {
+	filtersManager.value.reset();
 });
 
 const addNewCatalog = () => {
-  router.push({
-    name: `${CrmSections.ServiceCatalogs}-card`,
-    params: { id: 'new' },
-  });
+	router.push({
+		name: `${CrmSections.ServiceCatalogs}-card`,
+		params: {
+			id: 'new',
+		},
+	});
 };
 
 const edit = (item) => {
-  if (isRootElement(item)) {
-    return router.push({
-      name: `${CrmSections.ServiceCatalogs}-card`,
-      params: { id: item.id },
-    });
-  } else {
-    return router.push({
-      name: `${CrmSections.ServiceCatalogs}-services-card`,
-      params: {
-        catalogId: item.catalogId,
-        rootId: item.rootId,
-        id: item.id,
-      },
-    });
-  }
+	if (isRootElement(item)) {
+		return router.push({
+			name: `${CrmSections.ServiceCatalogs}-card`,
+			params: {
+				id: item.id,
+			},
+		});
+	} else {
+		return router.push({
+			name: `${CrmSections.ServiceCatalogs}-services-card`,
+			params: {
+				catalogId: item.catalogId,
+				rootId: item.rootId,
+				id: item.id,
+			},
+		});
+	}
 };
 
 const isRootElement = (item) => !item.rootId;
 
 const getCatalog = (item) => {
-  return dataList.value.find((catalog) => catalog.id === item.catalogId);
+	return dataList.value.find((catalog) => catalog.id === item.catalogId);
 };
 
 // That computed property is used in the template with dynamic pass params, we can't get catalog inside because reactivity doesn't work correctly. For resolve issue with reactivity we need pass catalog py params
 const checkParentState = computed(() => ({ catalog, item }) => {
-  if (!catalog) {
-    return false;
-  }
+	if (!catalog) {
+		return false;
+	}
 
-  return checkDisableState(catalog, item);
+	return checkDisableState(catalog, item);
 });
 
 const changeState = async (item) => {
-  if (isRootElement(item)) {
-    await ServiceCatalogsAPI.update({
-      itemInstance: {
-        ...item,
-        state: !item.state,
-      },
-      itemId: item.id,
-    });
+	if (isRootElement(item)) {
+		await ServiceCatalogsAPI.update({
+			itemInstance: {
+				...item,
+				state: !item.state,
+			},
+			itemId: item.id,
+		});
 
-    item.state = !item.state;
-  } else {
-    await ServicesAPI.patch({
-      changes: {
-        state: !item.state,
-      },
-      id: item.id,
-    });
+		item.state = !item.state;
+	} else {
+		await ServicesAPI.patch({
+			changes: {
+				state: !item.state,
+			},
+			id: item.id,
+		});
 
-    item.state = !item.state;
-  }
+		item.state = !item.state;
+	}
 };
 </script>
 

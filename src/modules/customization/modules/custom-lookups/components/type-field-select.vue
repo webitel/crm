@@ -45,105 +45,118 @@ import ObjectsApi from '../api/objects';
 import { FieldType } from '../enums/FieldType';
 
 const props = defineProps({
-  value: {
-    type: Object,
-    required: true,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+	value: {
+		type: Object,
+		required: true,
+	},
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const { t, te } = useI18n();
 
 const v$ = useVuelidate(
-  computed(() => ({
-    value: {
-      kind: { required },
-      lookup: {
-        required: (value) => {
-          if (
-            props.value.kind === FieldType.Select ||
-            props.value.kind === FieldType.Multiselect
-          ) {
-            return value;
-          }
+	computed(() => ({
+		value: {
+			kind: {
+				required,
+			},
+			lookup: {
+				required: (value) => {
+					if (
+						props.value.kind === FieldType.Select ||
+						props.value.kind === FieldType.Multiselect
+					) {
+						return value;
+					}
 
-          return true;
-        },
-      },
-    },
-  })),
-  { value: props.value },
-  { $autoDirty: true },
+					return true;
+				},
+			},
+		},
+	})),
+	{
+		value: props.value,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 
 const options = [
-  {
-    name: t(`customization.customLookups.fieldType.${FieldType.Text}`),
-    type: FieldType.Text,
-  },
-  {
-    name: t(`customization.customLookups.fieldType.${FieldType.Number}`),
-    type: FieldType.Number,
-  },
-  {
-    name: t(`customization.customLookups.fieldType.${FieldType.Select}`),
-    type: FieldType.Select,
-  },
-  {
-    name: t(`customization.customLookups.fieldType.${FieldType.Multiselect}`),
-    type: FieldType.Multiselect,
-  },
-  {
-    name: t(`customization.customLookups.fieldType.${FieldType.Calendar}`),
-    type: FieldType.Calendar,
-  },
-  {
-    name: t(`customization.customLookups.fieldType.${FieldType.Boolean}`),
-    type: FieldType.Boolean,
-  },
+	{
+		name: t(`customization.customLookups.fieldType.${FieldType.Text}`),
+		type: FieldType.Text,
+	},
+	{
+		name: t(`customization.customLookups.fieldType.${FieldType.Number}`),
+		type: FieldType.Number,
+	},
+	{
+		name: t(`customization.customLookups.fieldType.${FieldType.Select}`),
+		type: FieldType.Select,
+	},
+	{
+		name: t(`customization.customLookups.fieldType.${FieldType.Multiselect}`),
+		type: FieldType.Multiselect,
+	},
+	{
+		name: t(`customization.customLookups.fieldType.${FieldType.Calendar}`),
+		type: FieldType.Calendar,
+	},
+	{
+		name: t(`customization.customLookups.fieldType.${FieldType.Boolean}`),
+		type: FieldType.Boolean,
+	},
 ];
 
 const changeType = (value) => {
-  if (value === FieldType.Select || value === FieldType.Multiselect) {
-    props.value.list = null;
-    props.value.lookup = null;
-  }
+	if (value === FieldType.Select || value === FieldType.Multiselect) {
+		props.value.list = null;
+		props.value.lookup = null;
+	}
 
-  props.value.default = value === FieldType.Boolean ? false : null;
+	props.value.default = value === FieldType.Boolean ? false : null;
+	props.value.required = false;
 
-  props.value.kind = value;
+	props.value.kind = value;
 };
 const selectObject = (value) => {
-  props.value.lookup = {
-    path: value.path,
-    name: value.name,
-    display: value.display,
-    primary: value.primary,
-  };
+	props.value.lookup = {
+		path: value.path,
+		name: value.name,
+		display: value.display,
+		primary: value.primary,
+	};
 };
 const loadLookupList = (params) => {
-  return ObjectsApi.getLookup(params);
+	return ObjectsApi.getLookup(params);
 };
 
 const getOptionLocale = (option) => {
-  if (!option) return '';
+	if (!option) return '';
 
-  const objectCode = snakeToCamel(option.repo || option.path);
+	const objectCode = snakeToCamel(option.repo || option.path);
 
-  // From backend got repo with 's' at the end of the word which means plural, so need to remove it to get the singular form translation
-  const singleObjectCode = objectCode.endsWith('s') ? objectCode.slice(0, -1) : objectCode;
+	// From backend got repo with 's' at the end of the word which means plural, so need to remove it to get the singular form translation
+	const singleObjectCode = objectCode.endsWith('s')
+		? objectCode.slice(0, -1)
+		: objectCode;
 
-  const hasTranslationInSameKeyByObject = te(`objects.${singleObjectCode}.${singleObjectCode}`);
+	const hasTranslationInSameKeyByObject = te(
+		`objects.${singleObjectCode}.${singleObjectCode}`,
+	);
 
-  if (hasTranslationInSameKeyByObject) {
-    return t(`objects.${singleObjectCode}.${singleObjectCode}`);
-  }
+	if (hasTranslationInSameKeyByObject) {
+		return t(`objects.${singleObjectCode}.${singleObjectCode}`);
+	}
 
-  return te(`objects.${singleObjectCode}`) ? t(`objects.${singleObjectCode}`) : option.name;
+	return te(`objects.${singleObjectCode}`)
+		? t(`objects.${singleObjectCode}`)
+		: option.name;
 };
 </script>

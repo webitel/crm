@@ -144,10 +144,10 @@ import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const { namespace: parentCardNamespace } = useCardStore(props.namespace);
@@ -160,131 +160,145 @@ const { t } = useI18n();
 const store = useStore();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl({
-    useUpdateAccessAsAllMutableChecksSource: true,
-  });
+	useUserAccessControl({
+		useUpdateAccessAsAllMutableChecksSource: true,
+	});
 
 const isStatusWarningPopupOpened = ref(false);
 const parentId = computed(
-  () => store.getters[`${cardNamespace}/table/PARENT_ID`],
+	() => store.getters[`${cardNamespace}/table/PARENT_ID`],
 );
 
 const {
-  namespace: tableNamespace,
+	namespace: tableNamespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
 } = useTableStore(cardNamespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
 
-  resetFilters,
-  subscribe,
-  flushSubscribers,
+	resetFilters,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(tableNamespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
-  resetFilters();
+	flushSubscribers();
+	resetFilters();
 });
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const add = () => {
-  return router.push({ ...route, params: { statusConditionId: 'new' } });
+	return router.push({
+		...route,
+		params: {
+			statusConditionId: 'new',
+		},
+	});
 };
 
 async function deleteCallbackWrapper() {
-  try {
-    await deleteCallback.value();
-  } catch (error) {
-    if (Array.isArray(error)) {
-      const isInitialOrFinalStatusDeleted = error.find(
-        (err) => err?.reason?.status === 400,
-      );
+	try {
+		await deleteCallback.value();
+	} catch (error) {
+		if (Array.isArray(error)) {
+			const isInitialOrFinalStatusDeleted = error.find(
+				(err) => err?.reason?.status === 400,
+			);
 
-      setWarningPopupState(!!isInitialOrFinalStatusDeleted);
-    } else {
-      setWarningPopupState(error.status === 400);
-    }
-  }
+			setWarningPopupState(!!isInitialOrFinalStatusDeleted);
+		} else {
+			setWarningPopupState(error.status === 400);
+		}
+	}
 }
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 
 async function setWarningPopupState(value) {
-  isStatusWarningPopupOpened.value = value;
+	isStatusWarningPopupOpened.value = value;
 
-  if (!value) {
-    await loadData();
-  }
+	if (!value) {
+		await loadData();
+	}
 }
 
 async function changeInitialStatus({ item, index, value }) {
-  try {
-    dataList.value.forEach((el) => {
-      el.initial = false;
-    });
-    dataList.value[index].initial = value;
-    await CaseStatusConditionsAPI.patch({
-      id: item.id,
-      parentId: parentId.value,
-      changes: { initial: value },
-    });
-  } catch (err) {
-    if (err.status !== 400) {
-      return;
-    }
-    setWarningPopupState(true);
-  }
+	try {
+		dataList.value.forEach((el) => {
+			el.initial = false;
+		});
+		dataList.value[index].initial = value;
+		await CaseStatusConditionsAPI.patch({
+			id: item.id,
+			parentId: parentId.value,
+			changes: {
+				initial: value,
+			},
+		});
+	} catch (err) {
+		if (err.status !== 400) {
+			return;
+		}
+		setWarningPopupState(true);
+	}
 }
 
 async function changeFinalStatus({ item, index, value }) {
-  try {
-    dataList.value[index].final = value;
-    await CaseStatusConditionsAPI.patch({
-      id: item.id,
-      parentId: parentId.value,
-      changes: { final: value },
-    });
-  } catch (err) {
-    if (err.status !== 400) {
-      return;
-    }
-    setWarningPopupState(true);
-  }
+	try {
+		dataList.value[index].final = value;
+		await CaseStatusConditionsAPI.patch({
+			id: item.id,
+			parentId: parentId.value,
+			changes: {
+				final: value,
+			},
+		});
+	} catch (err) {
+		if (err.status !== 400) {
+			return;
+		}
+		setWarningPopupState(true);
+	}
 }
 </script>
 

@@ -4,13 +4,11 @@ import { createTableStore } from '@webitel/ui-datalist';
 import { AddContactsInGroupNamespace } from '../namespace';
 import { headers } from './_internals/headers';
 
-export const createAddContactsInGroupComposableTableStore = () => createTableStore(
-  AddContactsInGroupNamespace,
-  {
-    apiModule: ContactsAPI,
-    headers,
-    isAppendDataList: true,
-    disablePersistence: true,
-    storeType: 'composable',
-  },
-);
+export const createAddContactsInGroupComposableTableStore = () =>
+	createTableStore(AddContactsInGroupNamespace, {
+		apiModule: ContactsAPI,
+		headers,
+		isAppendDataList: true,
+		disablePersistence: true,
+		storeType: 'composable',
+	});

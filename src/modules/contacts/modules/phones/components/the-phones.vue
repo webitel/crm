@@ -96,13 +96,15 @@ import dummyLight from '../assets/phone-dummy-light.svg';
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
 
-const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
+const isActionDisabled = computed(
+	() => !access.value.hasRbacEditAccess || isReadOnly,
+);
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const store = useStore();
@@ -111,71 +113,80 @@ const route = useRoute();
 const { t } = useI18n();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  isLoading,
-  headers,
-  error,
+	dataList,
+	isLoading,
+	headers,
+	error,
 
-  patchProperty,
-  deleteData,
-  sort,
-  onFilterEvent,
+	patchProperty,
+	deleteData,
+	sort,
+	onFilterEvent,
 } = useTableStore(props.namespace);
 
 const { subscribe, flushSubscribers, restoreFilters } =
-  useTableFilters(namespace);
+	useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const showDummy = computed(() => !dataList.value.length);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 function setAsPrimary({ item, index }) {
-  return store.dispatch(`${namespace}/SET_AS_PRIMARY`, { item, index });
+	return store.dispatch(`${namespace}/SET_AS_PRIMARY`, {
+		item,
+		index,
+	});
 }
 
 function addCommunication() {
-  return router.push({
-    ...route,
-    params: { commId: 'new' },
-  });
+	return router.push({
+		...route,
+		params: {
+			commId: 'new',
+		},
+	});
 }
 
 function editCommunication({ id }) {
-  return router.push({
-    ...route,
-    params: { commId: id },
-  });
+	return router.push({
+		...route,
+		params: {
+			commId: id,
+		},
+	});
 }
 
 function closeCommunicationPopup() {
-  const params = { ...route.params };
-  delete params.commId;
+	const params = {
+		...route.params,
+	};
+	delete params.commId;
 
-  return router.push({
-    ...route,
-    params,
-  });
+	return router.push({
+		...route,
+		params,
+	});
 }
 </script>
 

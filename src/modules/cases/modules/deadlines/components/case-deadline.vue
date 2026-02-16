@@ -29,30 +29,33 @@ import convertDurationWithDays from '../../../../../app/scripts/convertDurationW
 import prettifyDate from '../../../utils/prettifyDate.js';
 
 const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  time: {
-    type: String,
-    default: '',
-  },
-  timeDifference: {
-    type: String,
-    default: null,
-  },
-  timeZone: {
-    type: String,
-    default: undefined,
-  }
+	title: {
+		type: String,
+		required: true,
+	},
+	time: {
+		type: String,
+		default: '',
+	},
+	timeDifference: {
+		type: String,
+		default: null,
+	},
+	timeZone: {
+		type: String,
+		default: undefined,
+	},
 });
 
 const showTimeDifference = computed(() => {
-  return ['string', 'number'].includes(typeof props.timeDifference);
+	return [
+		'string',
+		'number',
+	].includes(typeof props.timeDifference);
 });
 
 const numberTimeDifference = computed(() => {
-  return Number(props.timeDifference);
+	return Number(props.timeDifference);
 });
 </script>
 

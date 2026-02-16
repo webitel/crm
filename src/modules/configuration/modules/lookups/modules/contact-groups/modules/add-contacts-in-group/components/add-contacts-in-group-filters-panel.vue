@@ -17,20 +17,30 @@ import { filtersOptions } from '../configs/filtersOptions';
 import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 
 const props = defineProps<{
-  useTableStore: ReturnType<typeof createAddContactsInGroupComposableTableStore>;
+	useTableStore: ReturnType<
+		typeof createAddContactsInGroupComposableTableStore
+	>;
 }>();
 
 const tableStore = props.useTableStore();
 
 const { filtersManager } = tableStore;
 
-const {
-  addFilter,
-  updateFilter,
-  deleteFilter,
-} = tableStore;
+const { addFilter, updateFilter, deleteFilter } = tableStore;
 
 const resetFilters = () => {
-  filtersManager.value.reset();
+	filtersManager.value.reset();
 };
 </script>
+
+<style lang="scss" scoped>
+
+.table-filters-panel {
+  &--static-wrapper {
+    :deep(.dynamic-filter-panel-wrapper__filters) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+</style>

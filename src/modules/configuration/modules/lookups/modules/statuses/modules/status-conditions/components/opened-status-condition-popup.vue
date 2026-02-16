@@ -16,13 +16,13 @@
 
     <template #main>
       <form class="opened-card-input-grid opened-card-input-grid--1-col">
-        <wt-input
-          :value="itemInstance.name"
+        <wt-input-text
+          :model-value="itemInstance.name"
           :label="t('reusable.name')"
           :v="v$.itemInstance.name"
           :disabled="disableUserInput"
           required
-          @input="setItemProp({ path: 'name', value: $event })"
+          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
 
         <wt-textarea
@@ -64,89 +64,105 @@ import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
-const emit = defineEmits(['load-data']);
+const emit = defineEmits([
+	'load-data',
+]);
 
 const route = useRoute();
 const { t } = useI18n();
 
-const { disableUserInput, hasSaveActionAccess } =
-  useUserAccessControl({
-    useUpdateAccessAsAllMutableChecksSource: true,
-  });
+const { disableUserInput, hasSaveActionAccess } = useUserAccessControl({
+	useUpdateAccessAsAllMutableChecksSource: true,
+});
 
 const {
-  itemInstance,
-  resetState,
-  addItem,
-  loadItem,
-  updateItem,
-  setId,
-  setItemProp,
-  id,
+	itemInstance,
+	resetState,
+	addItem,
+	loadItem,
+	updateItem,
+	setId,
+	setItemProp,
+	id,
 } = useCardStore(props.namespace);
 
 const statusConditionId = computed(() => route.params.statusConditionId);
 const isNew = computed(() => statusConditionId.value === 'new');
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      name: { required },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true, $stopPropagation: true },
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+		$stopPropagation: true,
+	},
 );
 
 v$.value.$touch();
 
 const { close } = useClose(`status-conditions`);
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
 );
 
 function loadDataList() {
-  emit('load-data');
+	emit('load-data');
 }
 
 const save = async () => {
-  if (isNew.value) {
-    await addItem({ itemInstance, parentId: id.value });
-  } else {
-    await updateItem({ itemInstance, itemId: id.value });
-  }
+	if (isNew.value) {
+		await addItem({
+			itemInstance,
+			parentId: id.value,
+		});
+	} else {
+		await updateItem({
+			itemInstance,
+			itemId: id.value,
+		});
+	}
 
-  close();
-  loadDataList();
+	close();
+	loadDataList();
 };
 
 async function initializePopup() {
-  try {
-    if (!isNew.value) {
-      await setId(statusConditionId.value);
-      await loadItem();
-    }
-  } catch (error) {
-    throw Error(error);
-  }
+	try {
+		if (!isNew.value) {
+			await setId(statusConditionId.value);
+			await loadItem();
+		}
+	} catch (error) {
+		throw Error(error);
+	}
 }
 
 watch(
-  () => statusConditionId.value,
-  (value) => {
-    if (value) {
-      initializePopup();
-    } else {
-      resetState();
-    }
-  },
-  { immediate: true },
+	() => statusConditionId.value,
+	(value) => {
+		if (value) {
+			initializePopup();
+		} else {
+			resetState();
+		}
+	},
+	{
+		immediate: true,
+	},
 );
 </script>
 

@@ -10,20 +10,21 @@
       />
     </header>
     <header class="contact-cases-header">
-      <h3 class="contact-cases-header__title">
+      <h3 class="contact-cases-header__title typo-heading-4">
         {{ $t('cases.case', 2) }}
       </h3>
 
       <cases-filter-search-bar
         :table-store="tableStore"
-        class="contact-cases__search-filter" />
+        class="contact-cases__search-filter"
+      />
 
       <wt-action-bar
         :include="[
-              IconAction.REFRESH,
-              IconAction.FILTERS,
-              IconAction.COLUMNS,
-            ]"
+          IconAction.REFRESH,
+          IconAction.FILTERS,
+          IconAction.COLUMNS,
+        ]"
         @click:refresh="loadDataList"
         @click:filters="showActionsPanel = !showActionsPanel"
       >
@@ -64,6 +65,10 @@
         :selectable="false"
         :grid-actions="false"
         sortable
+        resizable-columns
+        reorderable-columns
+        @column-resize="columnResize"
+        @column-reorder="columnReorder"
         @sort="updateSort"
       >
         <template #name="{ item }">
@@ -95,7 +100,7 @@
         </template>
         <template #priority="{ item }">
           <color-component-wrapper
-            :class="{ 'contact-cases__priority': !!item.priority?.color }"
+            :class="{ 'contact-cases__priority typo-body-1': !!item.priority?.color }"
             :color="item.priority?.color"
           >
             {{ item.priority?.name }}
@@ -175,19 +180,19 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script
+  lang="ts"
+  setup
+>
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
-import {
-  useTableEmpty,
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
-import CasesFilterSearchBar
-  from '../../../../cases/components/cases-filter-search-bar.vue';
+import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
@@ -203,67 +208,72 @@ const tableStore = useContactCasesStore();
 const showActionsPanel = ref(true);
 
 const {
-  dataList,
-  error,
-  isLoading,
-  page,
-  size,
-  next,
-  headers,
-  shownHeaders,
-  filtersManager,
+	dataList,
+	error,
+	isLoading,
+	page,
+	size,
+	next,
+	headers,
+	shownHeaders,
+	filtersManager,
 } = storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updatePage,
-  updateSize,
-  updateSort,
-  updateShownHeaders,
+	initialize,
+	loadDataList,
+	updatePage,
+	updateSize,
+	updateSort,
+	updateShownHeaders,
+	columnReorder,
+	columnResize,
 } = tableStore;
 
 const {
-  showEmpty,
-  image: emptyImage,
-  headline: emptyHeadline,
-  title: emptyTitle,
-  text: emptyText,
+	showEmpty,
+	image: emptyImage,
+	headline: emptyHeadline,
+	title: emptyTitle,
+	text: emptyText,
 } = useTableEmpty({
-  dataList,
-  error,
-  filters: computed(() => filtersManager.value.getAllValues()),
-  isLoading,
+	dataList,
+	error,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	isLoading,
 });
 
 const parentId = computed(() => store.state.contacts.card.itemId);
 
-initialize({ parentId: parentId.value });
+initialize({
+	parentId: parentId.value,
+});
 
 const contactCase = (caseItem: object) => {
-  if (isReadOnly) {
-    return `${import.meta.env.VITE_CRM_URL}/view/case_view/${caseItem.etag}`;
-  }
-  return `${import.meta.env.VITE_CRM_URL}/cases/${caseItem.id}`;
-}
+	if (isReadOnly) {
+		return `${import.meta.env.VITE_CRM_URL}/view/case_view/${caseItem.etag}`;
+	}
+	return `${import.meta.env.VITE_CRM_URL}/cases/${caseItem.id}`;
+};
 
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
 
 const anyFiltersOnFiltersPanel = computed(() => {
-  /*
-   * ...excluding search filters, which shown in other panel
-   * */
-  return filtersManager.value.getAllKeys().some((filterName) => {
-    return !Object.values(SearchMode).some((mode) => mode === filterName);
-  });
+	/*
+	 * ...excluding search filters, which shown in other panel
+	 * */
+	return filtersManager.value.getAllKeys().some((filterName) => {
+		return !Object.values(SearchMode).some((mode) => mode === filterName);
+	});
 });
-
 </script>
 
-<style lang="scss" scoped>
-
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .contact-cases {
@@ -278,9 +288,7 @@ const anyFiltersOnFiltersPanel = computed(() => {
     align-items: center;
   }
 
-  &-header__title {
-    @extend %typo-heading-3;
-  }
+  &-header__title {}
 
   &__search-filter {
     margin-left: auto;
@@ -301,7 +309,6 @@ const anyFiltersOnFiltersPanel = computed(() => {
   }
 
   &__priority {
-    @extend %typo-body-1;
     font-weight: bold;
   }
 }

@@ -28,7 +28,7 @@
                 deleted: selected,
                 callback: () => deleteData(selected),
               })
-            "
+              "
           >
             <template #search-bar>
               <filter-search
@@ -71,7 +71,7 @@
               <wt-item-link
                 class="the-catalog-service__service-name"
                 :link="{
-                  name: `${CrmSections.SERVICE_CATALOGS}-services`,
+                  name: `${CrmSections.ServiceCatalogs}-services`,
                   params: {
                     catalogId: route.params?.id,
                     rootId: item.id,
@@ -94,7 +94,7 @@
                 v-if="item.assignee?.id"
                 class="the-catalog-service__service-assignee"
                 :link="{
-                  name: `${CrmSections.CONTACTS}-card`,
+                  name: `${CrmSections.Contacts}-card`,
                   params: { id: item.assignee.id },
                 }"
               >
@@ -110,7 +110,7 @@
                 :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
                 @update:model-value="
                   patchProperty({ index, prop: 'state', value: $event })
-                "
+                  "
               />
             </template>
             <template #actions="{ item }">
@@ -127,7 +127,7 @@
                     deleted: [item],
                     callback: () => deleteData(item),
                   })
-                "
+                  "
               />
             </template>
           </wt-table>
@@ -146,8 +146,7 @@
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
-import { IconAction } from '@webitel/ui-sdk/enums';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
@@ -158,8 +157,7 @@ import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreM
 import { displayText } from '@webitel/ui-sdk/utils';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
@@ -167,8 +165,8 @@ import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 import ServicesAPI from '../api/services.js';
 import {
-  buildServiceCrumbs,
-  findServicePath,
+	buildServiceCrumbs,
+	findServicePath,
 } from '../utils/breadcrumbUtils.js';
 
 const route = useRoute();
@@ -180,175 +178,194 @@ const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl({
-    useUpdateAccessAsAllMutableChecksSource: true,
-  });
+	useUserAccessControl({
+		useUpdateAccessAsAllMutableChecksSource: true,
+	});
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const rootService = ref(null);
 const catalog = ref(null);
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
-  patchProperty,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
+	patchProperty,
 } = useTableStore(baseNamespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 const path = computed(() => {
-  const baseRoutes = [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    {
-      name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
-      route: '/configuration/lookups/service-catalogs',
-    },
-  ];
+	const baseRoutes = [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+			route: '/configuration/lookups/service-catalogs',
+		},
+	];
 
-  if (!catalog.value) return baseRoutes;
+	if (!catalog.value) return baseRoutes;
 
-  const servicePath = findServicePath(route.params.rootId, catalog.value);
+	const servicePath = findServicePath(route.params.rootId, catalog.value);
 
-  const routes = [
-    ...baseRoutes,
-    {
-      name: prettifyBreadcrumbName(catalog.value.name),
-      route: {
-        name: `${CrmSections.SERVICE_CATALOGS}-services`,
-        params: {
-          catalogId: catalog.value.id,
-          rootId: catalog.value.id,
-        },
-      },
-    },
-    ...buildServiceCrumbs(servicePath, route.params.catalogId),
-  ];
+	const routes = [
+		...baseRoutes,
+		{
+			name: prettifyBreadcrumbName(catalog.value.name),
+			route: {
+				name: `${CrmSections.ServiceCatalogs}-services`,
+				params: {
+					catalogId: catalog.value.id,
+					rootId: catalog.value.id,
+				},
+			},
+		},
+		...buildServiceCrumbs(servicePath, route.params.catalogId),
+	];
 
-  return routes;
+	return routes;
 });
 
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const { close } = useClose(CrmSections.ServiceCatalogs);
 
 function edit(item) {
-  return router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
-    params: {
-      catalogId: route.params?.id,
-      rootId: route.params?.rootId,
-      id: item.id,
-    },
-  });
+	return router.push({
+		name: `${CrmSections.ServiceCatalogs}-services-card`,
+		params: {
+			catalogId: route.params?.id,
+			rootId: route.params?.rootId,
+			id: item.id,
+		},
+	});
 }
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 
 const addNewService = () => {
-  router.push({
-    name: `${CrmSections.SERVICE_CATALOGS}-services-card`,
-    params: {
-      catalogId: route.params?.catalogId,
-      rootId: route.params?.rootId,
-      id: 'new',
-    },
-  });
+	router.push({
+		name: `${CrmSections.ServiceCatalogs}-services-card`,
+		params: {
+			catalogId: route.params?.catalogId,
+			rootId: route.params?.rootId,
+			id: 'new',
+		},
+	});
 };
 
 const loadRootService = async () => {
-  rootService.value = await ServicesAPI.get({
-    itemId: route.params.rootId,
-  });
+	rootService.value = await ServicesAPI.get({
+		itemId: route.params.rootId,
+	});
 };
 
 const loadCatalog = async () => {
-  catalog.value = await ServiceCatalogsAPI.get({
-    itemId: route.params.catalogId,
-  });
+	catalog.value = await ServiceCatalogsAPI.get({
+		itemId: route.params.catalogId,
+	});
 };
 
 const initializeBreadcrumbs = async () => {
-  rootService.value = null;
+	rootService.value = null;
 
-  try {
-    await loadCatalog();
+	try {
+		await loadCatalog();
 
-    if (route.params.rootId !== route.params.catalogId) {
-      await loadRootService();
-    }
-  } catch {
-    router.push({ name: CrmSections.SERVICE_CATALOGS });
-  }
+		if (route.params.rootId !== route.params.catalogId) {
+			await loadRootService();
+		}
+	} catch {
+		router.push({
+			name: CrmSections.ServiceCatalogs,
+		});
+	}
 };
 const setRootForServices = () => {
-  store.commit(`${baseNamespace}/table/SET`, {
-    path: 'rootId',
-    value: route.params.rootId,
-  });
+	store.commit(`${baseNamespace}/table/SET`, {
+		path: 'rootId',
+		value: route.params.rootId,
+	});
 };
 
 const loadServices = async () => {
-  await initializeBreadcrumbs();
-  setRootForServices();
-  await restoreFilters();
+	await initializeBreadcrumbs();
+	setRootForServices();
+	await restoreFilters();
 };
 
 const disableStateSwitcher = computed(() => (item) => {
-  return checkDisableState(catalog.value, item);
+	return checkDisableState(catalog.value, item);
 });
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 loadServices();
 
 watch(
-  () => route.params,
-  async () => {
-    await loadServices();
-  },
+	() => route.params,
+	async () => {
+		await loadServices();
+	},
 );
 </script>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .the-catalog-service {
   &__service-assignee {
     color: var(--text-link-color) !important;

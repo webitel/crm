@@ -8,64 +8,68 @@ import TheCustomLookups from '../modules/custom-lookups/components/the-custom-lo
 import TheDictionaryExtensions from '../modules/wt-type-extension/components/the-wt-type-extension.vue';
 
 const customizationRoutes: RouteRecordRaw[] = [
-  {
-    path: 'configuration/customization',
-    name: 'customization',
-    redirect: { name: 'configuration' },
-    children: [
-      {
-        path: 'custom-lookups',
-        name: CrmSections.CustomLookups,
-        component: TheCustomLookups,
-        meta: {
-          WtObject: WtObject.CustomLookup,
-          UiSection: CrmSections.CustomLookups,
-        },
-      },
-      {
-        path: 'custom-lookups/:id',
-        name: `${CrmSections.CustomLookups}-card`,
-        component: OpenedCustomLookup,
-        meta: {
-          WtObject: WtObject.CustomLookup,
-          UiSection: CrmSections.CustomLookups,
-        },
-        redirect: { name: `${CrmSections.CustomLookups}-general` },
-        children: [
-          {
-            path: 'general',
-            name: `${CrmSections.CustomLookups}-general`,
-            component: OpenedCustomLookupGeneral,
-          },
-          {
-            path: 'columns',
-            name: `${CrmSections.CustomLookups}-columns`,
-            component: OpenedCustomLookupColumns,
-          },
-        ],
-      },
-      {
-        path: 'types-extensions/:id',
-        name: 'types-extensions',
-        component: TheDictionaryExtensions,
-        meta: {
-          WtObject: WtObject.CustomLookup,
-          UiSection: (thisRoute) => {
-            const repo = thisRoute.params.id;
+	{
+		path: 'configuration/customization',
+		name: 'customization',
+		redirect: {
+			name: 'configuration',
+		},
+		children: [
+			{
+				path: 'custom-lookups',
+				name: CrmSections.CustomLookups,
+				component: TheCustomLookups,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: CrmSections.CustomLookups,
+				},
+			},
+			{
+				path: 'custom-lookups/:id',
+				name: `${CrmSections.CustomLookups}-card`,
+				component: OpenedCustomLookup,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: CrmSections.CustomLookups,
+				},
+				redirect: {
+					name: `${CrmSections.CustomLookups}-general`,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.CustomLookups}-general`,
+						component: OpenedCustomLookupGeneral,
+					},
+					{
+						path: 'columns',
+						name: `${CrmSections.CustomLookups}-columns`,
+						component: OpenedCustomLookupColumns,
+					},
+				],
+			},
+			{
+				path: 'types-extensions/:id',
+				name: 'types-extensions',
+				component: TheDictionaryExtensions,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: (thisRoute) => {
+						const repo = thisRoute.params.id;
 
-            switch (repo) {
-              case 'cases':
-                return CrmSections.CasesExtensions;
-              case 'contacts':
-                return CrmSections.ContactsExtensions;
-              default:
-                return `unknown type extension repo: ${repo}`;
-            }
-          },
-        },
-      },
-    ],
-  },
+						switch (repo) {
+							case 'cases':
+								return CrmSections.CasesExtensions;
+							case 'contacts':
+								return CrmSections.ContactsExtensions;
+							default:
+								return `unknown type extension repo: ${repo}`;
+						}
+					},
+				},
+			},
+		],
+	},
 ];
 
 export default customizationRoutes;

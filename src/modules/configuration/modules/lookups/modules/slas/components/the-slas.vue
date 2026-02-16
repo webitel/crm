@@ -44,9 +44,7 @@
           @close="closeDelete"
         />
 
-        <div
-          class="table-section__table-wrapper"
-        >
+        <div class="table-section__table-wrapper">
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -68,9 +66,7 @@
             @update:selected="setSelected"
           >
             <template #name="{ item }">
-              <wt-item-link
-                :link="{ name: `${CrmSections.SLAS}-card`, params: { id: item.id } }"
-              >
+              <wt-item-link :link="{ name: `${CrmSections.Slas}-card`, params: { id: item.id } }">
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -108,15 +104,12 @@
 </template>
 
 <script setup>
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
@@ -133,81 +126,106 @@ const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl();
+	useUserAccessControl();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
 } = useTableStore(SLANamespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const add = () => {
-  return router.push({ name: `${CrmSections.SLAS}-card`, params: { id: 'new' }});
+	return router.push({
+		name: `${CrmSections.Slas}-card`,
+		params: {
+			id: 'new',
+		},
+	});
 };
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: t('lookups.slas.slas', 2) },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.lookups'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.slas.slas', 2),
+	},
 ]);
 
 const { close } = useClose('configuration');
 
 function edit(item) {
-  return router.push({
-    name: `${CrmSections.SLAS}-card`,
-    params: { id: item.id },
-  });
-};
+	return router.push({
+		name: `${CrmSections.Slas}-card`,
+		params: {
+			id: item.id,
+		},
+	});
+}
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

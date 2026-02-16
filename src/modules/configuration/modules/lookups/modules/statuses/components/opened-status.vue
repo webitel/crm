@@ -51,14 +51,13 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
@@ -66,77 +65,97 @@ import { useErrorRedirectHandler } from '../../../../../../error-pages/composabl
 const namespace = 'configuration/lookups/statuses';
 
 const { t } = useI18n();
-const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
-} = useCardStore(namespace, { onLoadErrorHandler: handleError });
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	...restStore
+} = useCardStore(namespace, {
+	onLoadErrorHandler: handleError,
+});
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      name: { required },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true },
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-  onLoadErrorHandler: handleError
+	...restStore,
+	id,
+	itemInstance,
+	onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.STATUSES);
+const { close } = useClose(CrmSections.Statuses);
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
 );
 
 const tabs = computed(() => {
-  const general = {
-    text: t('reusable.general'),
-    value: 'general',
-    pathName: `${CrmSections.STATUSES}-general`,
-  };
-  const statusConditions = {
-    text: t('lookups.statuses.statuses', 2),
-    value: 'statuses',
-    pathName: `status-conditions`,
-  };
+	const general = {
+		text: t('reusable.general'),
+		value: 'general',
+		pathName: `${CrmSections.Statuses}-general`,
+	};
+	const statusConditions = {
+		text: t('lookups.statuses.statuses', 2),
+		value: 'statuses',
+		pathName: `status-conditions`,
+	};
 
-  const tabs = [general];
+	const tabs = [
+		general,
+	];
 
-  if (id.value) tabs.push(statusConditions);
-  return tabs;
+	if (id.value) tabs.push(statusConditions);
+	return tabs;
 });
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.statuses.statuses', 2), route: '/configuration/lookups/statuses' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-      route: {
-        name: currentTab.value.pathName,
-        query: route.query,
-      },
-    },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.statuses.statuses', 2),
+			route: '/configuration/lookups/statuses',
+		},
+		{
+			name: isNew.value ? t('reusable.new') : pathName.value,
+		},
+	];
 });
 initialize();
 </script>
 
-<style lang="scss" scoped></style>
+<style
+  lang="scss"
+  scoped
+></style>

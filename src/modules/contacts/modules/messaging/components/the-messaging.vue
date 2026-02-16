@@ -86,49 +86,49 @@ const access = inject('access');
 const isReadOnly = inject('isReadOnly');
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const store = useStore();
 const { t } = useI18n();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  isLoading,
-  headers,
-  error,
+	dataList,
+	isLoading,
+	headers,
+	error,
 
-  deleteData,
-  sort,
-  onFilterEvent,
+	deleteData,
+	sort,
+	onFilterEvent,
 } = useTableStore(props.namespace);
 
 const { subscribe, flushSubscribers, restoreFilters } =
-  useTableFilters(namespace);
+	useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const showDummy = computed(() => !dataList.value.length);
@@ -138,24 +138,27 @@ const isOpenChatPopup = ref(false);
 const selectItem = ref(null);
 
 const availableProviders = [
-  ChatGatewayProvider.TELEGRAM_BOT,
-  ChatGatewayProvider.VIBER,
-  ChatGatewayProvider.MESSENGER,
-  ChatGatewayProvider.PORTAL,
+	ChatGatewayProvider.TELEGRAM_BOT,
+	ChatGatewayProvider.VIBER,
+	ChatGatewayProvider.MESSENGER,
+	ChatGatewayProvider.PORTAL,
 ];
 
 const openChat = (item) => {
-  isOpenChatPopup.value = true;
-  selectItem.value = item
+	isOpenChatPopup.value = true;
+	selectItem.value = item;
 };
 
 const closeChat = () => {
-  isOpenChatPopup.value = false;
-  selectItem.value = null;
+	isOpenChatPopup.value = false;
+	selectItem.value = null;
 };
 
 const isDisabledChatAction = (item) => {
-  return !availableProviders.includes(item.protocol) && (!access.hasRbacEditAccess || isReadOnly);
+	return (
+		!availableProviders.includes(item.protocol) &&
+		(!access.hasRbacEditAccess || isReadOnly)
+	);
 };
 </script>
 

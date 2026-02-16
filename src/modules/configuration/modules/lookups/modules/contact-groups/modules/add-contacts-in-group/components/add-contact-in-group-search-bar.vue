@@ -16,7 +16,9 @@ import { computed } from 'vue';
 import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 
 const props = defineProps<{
-  useTableStore: ReturnType<typeof createAddContactsInGroupComposableTableStore>;
+	useTableStore: ReturnType<
+		typeof createAddContactsInGroupComposableTableStore
+	>;
 }>();
 
 const tableStore = props.useTableStore();
@@ -25,5 +27,7 @@ const { filtersManager, isFiltersRestoring } = tableStore;
 
 const { addFilter, updateFilter, deleteFilter } = tableStore;
 
-const searchValue = computed(() => filtersManager.value.filters.get('search')?.value || '');
+const searchValue = computed(
+	() => filtersManager.value.filters.get('search')?.value || '',
+);
 </script>

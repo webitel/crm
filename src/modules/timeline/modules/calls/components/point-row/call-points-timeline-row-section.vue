@@ -16,21 +16,26 @@ import { useTaskPoints } from '../../../../composables/useTaskPoints.js';
 import CallPointTimelineRow from './call-point-timeline-row.vue';
 
 const props = defineProps({
-  taskId: {
-    type: [String],
-    required: true,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	taskId: {
+		type: [
+			String,
+		],
+		required: true,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const timelineNamespace = inject('namespace');
 
 const namespace = `${timelineNamespace}/calls`;
 
-const { points } = useTaskPoints({ namespace, taskId: props.taskId });
+const { points } = useTaskPoints({
+	namespace,
+	taskId: props.taskId,
+});
 </script>
 
 <style scoped lang="scss">

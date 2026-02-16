@@ -19,16 +19,15 @@
           <add-contacts-in-group-filters-panel :use-table-store="useTableStore" />
         </div>
 
-        <div
-          class="add-contacts-in-group-popup__scroll-wrapper"
-        >
+        <div class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
           <wt-table
             :data="dataList"
             :headers="headers"
             :selected="selected"
-            sortable
             :lazy="true"
             :on-loading="handleIntersect"
+            data-key="id"
+            sortable
             @sort="updateSort"
             @update:selected="updateSelected"
           >
@@ -50,7 +49,10 @@
             </template>
 
             <template #groups="{ item }">
-              <wt-display-chip-items v-if="item.groups" :items="item.groups" />
+              <wt-display-chip-items
+                v-if="item.groups"
+                :items="item.groups"
+              />
             </template>
 
             <template #labels="{ item }">
@@ -89,7 +91,10 @@
   </wt-popup>
 </template>
 
-<script lang="ts" setup>
+<script
+  lang="ts"
+  setup
+>
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { ref } from 'vue';
@@ -100,60 +105,53 @@ import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
 
 const props = defineProps<{
-  groupIds: string[]
+	groupIds: string[];
 }>();
-const emit = defineEmits(['load-data', 'close']);
+const emit = defineEmits([
+	'load-data',
+	'close',
+]);
 
 const { t } = useI18n();
 
 const useTableStore = createAddContactsInGroupComposableTableStore();
 const tableStore = useTableStore();
-const isFirstLoad = ref(false)
+const isFirstLoad = ref(false);
 
-const {
-  dataList,
-  selected,
-  headers,
-  next,
-} = tableStore;
+const { dataList, selected, headers, next } = tableStore;
 
-const {
-  initialize,
-  updateSort,
-  updateSelected,
-  appendToDataList,
-} = tableStore;
+const { initialize, updateSort, updateSelected, appendToDataList } = tableStore;
 
 initialize();
 
-
 const handleIntersect = () => {
-  if (!next.value && isFirstLoad.value) return;
-  appendToDataList();
-  isFirstLoad.value = true;
-}
+	if (!next.value && isFirstLoad.value) return;
+	appendToDataList();
+	isFirstLoad.value = true;
+};
 
 const save = async () => {
-  await ContactGroupsAPI.addContactsToGroups({
-    groupIds: props.groupIds,
-    contactIds: selected.value.map(({ id }) => id),
-  });
-  close();
-  emit('load-data');
+	await ContactGroupsAPI.addContactsToGroups({
+		groupIds: props.groupIds,
+		contactIds: selected.value.map(({ id }) => id),
+	});
+	close();
+	emit('load-data');
 };
 
 function close() {
-  emit('close');
+	emit('close');
 }
-
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .add-contacts-in-group-popup {
   &__scroll-wrapper {
-    @extend %wt-scrollbar;
     height: 440px;
   }
 

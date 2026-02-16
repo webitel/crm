@@ -11,78 +11,79 @@ import ContactTimeline from '../modules/timeline/components/contact-timeline.vue
 import ContactVariables from '../modules/variables/components/the-variables.vue';
 
 const contactsRoutes: RouteRecordRaw[] = [
-  {
-    path: 'contacts',
-    name: CrmSections.Contacts,
-    component: TheContacts,
-    meta: {
-      UiSection: CrmSections.Contacts,
-      WtObject: WtObject.Contact,
-    },
-    // redirect: { name: `the-start-page` },
-  },
-  {
-    path: 'contacts/:id',
-    name: `${CrmSections.Contacts}-card`,
-    component: OpenedContact,
-    meta: {
-      UiSection: CrmSections.Contacts,
-      WtObject: WtObject.Contact,
-    },
-    redirect: { name: `${CrmSections.Contacts}-timeline` },
-    children: [
-      {
-        path: 'timeline',
-        name: `${CrmSections.Contacts}-timeline`,
-        component: ContactTimeline,
-      },
-      {
-        path: 'cases',
-        name: `${CrmSections.Contacts}-cases`,
-        component: ContactCases,
-      },
-      {
-        path: 'communications',
-        redirect: {
-          name: `${CrmSections.Contacts}-communications-phones`,
-        },
-        name: `${CrmSections.Contacts}-communications`,
-        component: ContactCommunications,
-        children: [
-          {
-            path: 'phones/:commId?',
-            name: `${CrmSections.Contacts}-communications-phones`,
-            component: ContactCommunications,
-          },
-          {
-            path: 'messaging/:commId?',
-            name: `${CrmSections.Contacts}-communications-messaging`,
-            component: ContactCommunications,
-          },
-          {
-            path: 'emails/:commId?',
-            name: `${CrmSections.Contacts}-communications-emails`,
-            component: ContactCommunications,
-          },
-        ],
-      },
-      {
-        path: 'variables/:variableId?',
-        name: `${CrmSections.Contacts}-variables`,
-        component: ContactVariables,
-      },
-      {
-        path: 'details',
-        name: `${CrmSections.Contacts}-details`,
-        component: ContactDetails,
-      },
-      {
-        path: 'permissions/:permissionId?',
-        name: `${CrmSections.Contacts}-permissions`,
-        component: ContactPermissions,
-      },
-    ],
-  },
+	{
+		path: 'contacts',
+		name: CrmSections.Contacts,
+		component: TheContacts,
+		meta: {
+			UiSection: CrmSections.Contacts,
+			WtObject: WtObject.Contact,
+		},
+	},
+	{
+		path: 'contacts/:id',
+		name: `${CrmSections.Contacts}-card`,
+		component: OpenedContact,
+		meta: {
+			UiSection: CrmSections.Contacts,
+			WtObject: WtObject.Contact,
+		},
+		redirect: {
+			name: `${CrmSections.Contacts}-timeline`,
+		},
+		children: [
+			{
+				path: 'timeline',
+				name: `${CrmSections.Contacts}-timeline`,
+				component: ContactTimeline,
+			},
+			{
+				path: 'cases',
+				name: `${CrmSections.Contacts}-cases`,
+				component: ContactCases,
+			},
+			{
+				path: 'communications',
+				redirect: {
+					name: `${CrmSections.Contacts}-communications-phones`,
+				},
+				name: `${CrmSections.Contacts}-communications`,
+				component: ContactCommunications,
+				children: [
+					{
+						path: 'phones/:commId?',
+						name: `${CrmSections.Contacts}-communications-phones`,
+						component: ContactCommunications,
+					},
+					{
+						path: 'messaging/:commId?',
+						name: `${CrmSections.Contacts}-communications-messaging`,
+						component: ContactCommunications,
+					},
+					{
+						path: 'emails/:commId?',
+						name: `${CrmSections.Contacts}-communications-emails`,
+						component: ContactCommunications,
+					},
+				],
+			},
+			{
+				path: 'variables/:variableId?',
+				name: `${CrmSections.Contacts}-variables`,
+				component: ContactVariables,
+			},
+			{
+				path: 'details',
+				name: `${CrmSections.Contacts}-details`,
+				component: ContactDetails,
+			},
+			{
+				path: 'permissions/:permissionId?',
+				name: `${CrmSections.Contacts}-permissions`,
+				component: ContactPermissions,
+			},
+		],
+	},
 ];
 
 export default contactsRoutes;

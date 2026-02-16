@@ -24,7 +24,7 @@
               deleted: selected,
               callback: () => deleteRelatedCases(selected),
             })
-          "
+            "
         />
       </header>
 
@@ -101,8 +101,8 @@
                 />
 
                 <span>
-                {{ getRevertedCase(item).name }}
-              </span>
+                  {{ getRevertedCase(item).name }}
+                </span>
               </div>
             </wt-item-link>
 
@@ -135,7 +135,7 @@
                   deleted: [item],
                   callback: () => deleteRelatedCases(item),
                 })
-              "
+                "
             />
           </template>
         </wt-table>
@@ -155,16 +155,11 @@
 
 <script setup>
 import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
-import CrmSections from '@webitel/ui-sdk/enums/WebitelApplications/CrmSections.enum.js';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { IconAction } from '@webitel/ui-sdk/src/enums/index';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import {
-  useTableEmpty,
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -178,10 +173,10 @@ import { useCaseRelatedCasesStore } from '../stores/relatedCases';
 import RelatedCaseItem from './related-case-item.vue';
 
 const props = defineProps({
-  parentId: {
-    type: String,
-    required: true,
-  },
+	parentId: {
+		type: String,
+		required: true,
+	},
 });
 
 const isReadOnly = inject('isReadOnly');
@@ -190,165 +185,195 @@ const editMode = inject('editMode');
 const { t } = useI18n();
 
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
+	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
 const tableStore = useCaseRelatedCasesStore();
 
 const { dataList, error, selected, isLoading, shownHeaders, next } =
-  storeToRefs(tableStore);
+	storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updateSelected,
-  updateSize,
-  updateSort,
-  updatePage,
-  deleteEls,
-  appendToDataList,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updateSize,
+	updateSort,
+	updatePage,
+	deleteEls,
+	appendToDataList,
 } = tableStore;
 
 updateSize(5);
 initialize({
-  parentId: props.parentId,
+	parentId: props.parentId,
 });
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-  askDeleteConfirmation,
-  closeDelete,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const { showEmpty } = useTableEmpty({ dataList, error, isLoading });
+const { showEmpty } = useTableEmpty({
+	dataList,
+	error,
+	isLoading,
+});
 
 const emptyText = computed(() => {
-  return t('cases.relatedCases.emptyText');
+	return t('cases.relatedCases.emptyText');
 });
 
 const defaultState = reactive({
-  createMode: false,
-  isAdding: false,
-  relatedCase: null,
-  relationType: null,
+	createMode: false,
+	isAdding: false,
+	relatedCase: null,
+	relationType: null,
 });
 
 const relatedTypesOptions = computed(() => {
-  const types = Object.values(WebitelCasesRelationType).map((type) => {
-    return {
-      id: type,
-      name: t(`cases.relatedCases.relationType.${type}`),
-    };
-  });
-  return types.filter((el) => el.id !== 'RELATION_TYPE_UNSPECIFIED');
+	const types = Object.values(WebitelCasesRelationType).map((type) => {
+		return {
+			id: type,
+			name: t(`cases.relatedCases.relationType.${type}`),
+		};
+	});
+	return types.filter((el) => el.id !== 'RELATION_TYPE_UNSPECIFIED');
 });
 
 const onRelatedCasesSearch = async (params) => {
-  return CasesAPI.getLookup({
-    ...params,
-    createdAtFrom: 0,
-  });
+	return CasesAPI.getLookup({
+		...params,
+		createdAtFrom: 0,
+	});
 };
 
 function startAddingRelatedCase() {
-  defaultState.createMode = true;
-  defaultState.editingComment = null;
-  defaultState.relationType = relatedTypesOptions.value[0].id;
+	defaultState.createMode = true;
+	defaultState.editingComment = null;
+	defaultState.relationType = relatedTypesOptions.value[0].id;
 }
 
 function resetForm() {
-  defaultState.createMode = false;
-  defaultState.relationType = null;
-  defaultState.relatedCase = null;
+	defaultState.createMode = false;
+	defaultState.relationType = null;
+	defaultState.relatedCase = null;
 }
 
 const isNeedToRevert = (item) => {
-  return item.relatedCase.id === props.parentId;
+	return item.relatedCase.id === props.parentId;
 };
 
 function getRevertedCase(item) {
-  return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
+	return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
 }
 
 const CASE_VIEW_NAME = 'case_view';
 const createRouteLinkParams = (name, id) => {
-  return {
-    name,
-    params: { id },
-  };
+	return {
+		name,
+		params: {
+			id,
+		},
+	};
 };
 
 function getCaseLink(item) {
-  const revertedCase = getRevertedCase(item);
-  if (isReadOnly) {
-    return createRouteLinkParams(CASE_VIEW_NAME, revertedCase.etag);
-  }
-  return createRouteLinkParams(`${CrmSections.CASES}-card`, revertedCase.id);
+	const revertedCase = getRevertedCase(item);
+	if (isReadOnly) {
+		return createRouteLinkParams(CASE_VIEW_NAME, revertedCase.etag);
+	}
+	return createRouteLinkParams(`${CrmSections.Cases}-card`, revertedCase.id);
 }
 
 // [https://webitel.atlassian.net/browse/WTEL-5492?focusedCommentId=655118]
 // this is where the inversion is done after linking the related cases
 const relationPairsMap = new Map([
-  ['BLOCKS', 'IS_BLOCKED_BY'],
-  ['CAUSES', 'IS_CAUSED_BY'],
-  ['IS_CHILD_OF', 'IS_PARENT_OF'],
-  ['DUPLICATES', 'IS_DUPLICATED_BY'],
+	[
+		'BLOCKS',
+		'IS_BLOCKED_BY',
+	],
+	[
+		'CAUSES',
+		'IS_CAUSED_BY',
+	],
+	[
+		'IS_CHILD_OF',
+		'IS_PARENT_OF',
+	],
+	[
+		'DUPLICATES',
+		'IS_DUPLICATED_BY',
+	],
 ]);
 
 function getRevertedCaseRelation(item) {
-  if (!isNeedToRevert(item)) {
-    return item.relationType;
-  }
+	if (!isNeedToRevert(item)) {
+		return item.relationType;
+	}
 
-  const inverseRelation = (type) =>
-    relationPairsMap.get(type) ||
-    [...relationPairsMap.entries()].find(([_, v]) => v === type)?.[0] ||
-    type;
+	const inverseRelation = (type) =>
+		relationPairsMap.get(type) ||
+		[
+			...relationPairsMap.entries(),
+		].find(([_, v]) => v === type)?.[0] ||
+		type;
 
-  return inverseRelation(item.relationType);
+	return inverseRelation(item.relationType);
 }
 
 async function submitCase() {
-  try {
-    await RelatedCasesAPI.add({
-      parentId: props.parentId,
-      input: {
-        relatedCase: {
-          id: defaultState.relatedCase.id,
-          name: defaultState.relatedCase.name,
-        },
-        relationType: defaultState.relationType,
-      },
-    });
-    updatePage(1);
-    await loadDataList();
-    resetForm();
-  } catch (error) {
-    console.error(error);
-  }
+	try {
+		await RelatedCasesAPI.add({
+			parentId: props.parentId,
+			input: {
+				relatedCase: {
+					id: defaultState.relatedCase.id,
+					name: defaultState.relatedCase.name,
+				},
+				relationType: defaultState.relationType,
+			},
+		});
+		updatePage(1);
+		await loadDataList();
+		resetForm();
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 function defineEtags(cases) {
-  if (Array.isArray(cases)) {
-    return cases.map(item => item?.etag);
-  }
-  return cases.etag ? [cases.etag] : [];
+	if (Array.isArray(cases)) {
+		return cases.map((item) => item?.etag);
+	}
+	return cases.etag
+		? [
+				cases.etag,
+			]
+		: [];
 }
 
 const deleteRelatedCases = async (items) => {
-  const etags = defineEtags(items);
+	const etags = defineEtags(items);
 
-  for (const etag of etags) {
-    await RelatedCasesAPI.delete({ parentId: props.parentId, id: etag });
-  }
-  updatePage(1);
-  await loadDataList();
+	for (const etag of etags) {
+		await RelatedCasesAPI.delete({
+			parentId: props.parentId,
+			id: etag,
+		});
+	}
+	updatePage(1);
+	await loadDataList();
 };
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .related-cases {
   .type-select {
     flex: 1;

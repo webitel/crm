@@ -6,13 +6,13 @@
       </h3>
     </header>
     <div class="opened-card-input-grid">
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
@@ -25,13 +25,13 @@
         @input="setItemProp({ path: 'status', value: $event })"
       />
 
-      <wt-input
+      <wt-input-text
         :label="t('lookups.serviceCatalogs.prefix')"
-        :value="itemInstance.prefix"
+        :model-value="itemInstance.prefix"
         :v="v.itemInstance.prefix"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'prefix', value: $event })"
+        @update:model-value="setItemProp({ path: 'prefix', value: $event })"
       />
 
       <wt-select
@@ -62,11 +62,11 @@
         @input="setItemProp({ path: 'teams', value: $event })"
       />
 
-      <wt-input
+      <wt-input-text
         :label="t('lookups.serviceCatalogs.code')"
         :disabled="disableUserInput"
-        :value="itemInstance.code"
-        @input="setItemProp({ path: 'code', value: $event })"
+        :model-value="itemInstance.code"
+        @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
       <wt-select
@@ -96,21 +96,27 @@
 </template>
 
 <script setup>
-import { CaseCloseReasonGroupsAPI,CaseStatusesAPI, SkillsAPI, SlasAPI, TeamsAPI } from '@webitel/api-services/api';
+import {
+	CaseCloseReasonGroupsAPI,
+	CaseStatusesAPI,
+	SkillsAPI,
+	SlasAPI,
+	TeamsAPI,
+} from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
@@ -120,22 +126,22 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStatusesList(params) {
-  return CaseStatusesAPI.getLookup(params);
+	return CaseStatusesAPI.getLookup(params);
 }
 
 function loadReasonList(params) {
-  return CaseCloseReasonGroupsAPI.getLookup(params);
+	return CaseCloseReasonGroupsAPI.getLookup(params);
 }
 
 function loadSlaList(params) {
-  return SlasAPI.getLookup(params);
+	return SlasAPI.getLookup(params);
 }
 
 function loadTeamsList(params) {
-  return TeamsAPI.getLookup(params);
+	return TeamsAPI.getLookup(params);
 }
 
 function loadSkillsList(params) {
-  return SkillsAPI.getLookup(params);
+	return SkillsAPI.getLookup(params);
 }
 </script>

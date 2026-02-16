@@ -11,29 +11,21 @@ import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreMod
 import CaseFiles from '../modules/files/components/case-files.vue';
 import CaseLinks from '../modules/links/components/case-links.vue';
 
-
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
-const {
-  itemInstance,
-  id,
-} = useCardStore(props.namespace);
+const { itemInstance, id } = useCardStore(props.namespace);
 
-const {
-  isNew,
-} = useCardComponent({
-  id,
-  itemInstance,
+const { isNew } = useCardComponent({
+	id,
+	itemInstance,
 });
 
 const linksNamespace = `${props.namespace}/links`;
 const filesNamespace = `${props.namespace}/files`;
-
-
 </script>
 <style lang="scss" scoped>
 </style>

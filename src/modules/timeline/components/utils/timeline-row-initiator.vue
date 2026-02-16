@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-row-initiator">
+  <div class="timeline-row-initiator typo-subtitle-1">
     <div
       v-if="type === TimelineInitiatorType.BOT"
       class="timeline-row-initiator__wrapper"
@@ -35,23 +35,25 @@
 import TimelineInitiatorType from '../../enums/TimelineInitiatorType.enum.js';
 
 const props = defineProps({
-  text: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: TimelineInitiatorType.CONTACT,
-    validator: (value) => Object.values(TimelineInitiatorType).includes(value),
-  },
+	text: {
+		type: String,
+		required: true,
+	},
+	type: {
+		type: String,
+		default: TimelineInitiatorType.CONTACT,
+		validator: (value) => Object.values(TimelineInitiatorType).includes(value),
+	},
 });
 </script>
 
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/ui-sdk/src/css/main' as *;
 
 .timeline-row-initiator {
-  @extend %typo-subtitle-1;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);

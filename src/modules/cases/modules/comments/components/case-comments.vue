@@ -25,11 +25,10 @@
         @reset="resetForm"
         @submit="submitComment"
       >
-        <wt-input
+        <wt-input-text
+          v-model:model-value="formState.commentText"
           :placeholder="t('cases.comments.yourCommentHere')"
-          :value="formState.commentText"
           class="comment-form__input"
-          @input="updateCommentText"
         />
       </table-top-row-bar>
 
@@ -95,11 +94,8 @@
 
 <script lang="ts" setup>
 import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
@@ -112,107 +108,114 @@ import { useCaseCommentsStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
 
 const props = defineProps({
-  parentId: {
-    type: String,
-    required: true,
-  },
+	parentId: {
+		type: String,
+		required: true,
+	},
 });
 
 const isReadOnly = inject('isReadOnly');
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl(WtObject.CaseComment);
+	useUserAccessControl(WtObject.CaseComment);
 
 const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
 const { dataList, selected, isLoading, next, shownHeaders } =
-  storeToRefs(tableStore);
+	storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updateSelected,
-  updateSize,
-  updatePage,
-  updateSort,
-  appendToDataList,
-  resetInfiniteScrollTableParamsToDefaults,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updateSize,
+	updatePage,
+	updateSort,
+	appendToDataList,
+	resetInfiniteScrollTableParamsToDefaults,
 } = tableStore;
 
-resetInfiniteScrollTableParamsToDefaults()
+resetInfiniteScrollTableParamsToDefaults();
 updateSize(5);
 initialize({
-  parentId: props.parentId,
+	parentId: props.parentId,
 });
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-  askDeleteConfirmation,
-  closeDelete,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const { showEmpty } = useTableEmpty({
+	dataList,
+	isLoading,
+});
 
 const emptyText = computed(() => {
-  return t('cases.comments.emptyText');
+	return t('cases.comments.emptyText');
 });
 
 const formState = reactive({
-  isAdding: false,
-  editingComment: null,
-  commentText: '',
+	isAdding: false,
+	editingComment: null,
+	commentText: '',
 });
 
 function startAddingComment() {
-  formState.isAdding = true;
-  formState.editingComment = null;
-  updateCommentText('');
+	formState.isAdding = true;
+	formState.editingComment = null;
+	updateCommentText('');
 }
 
 function startEditingComment(comment) {
-  formState.isAdding = false;
-  formState.editingComment = comment;
-  updateCommentText(comment.text);
+	formState.isAdding = false;
+	formState.editingComment = comment;
+	updateCommentText(comment.text);
 }
 
 function resetForm() {
-  formState.isAdding = false;
-  formState.editingComment = null;
-  updateCommentText('');
+	formState.isAdding = false;
+	formState.editingComment = null;
+	updateCommentText('');
 }
 
 function updateCommentText(value) {
-  formState.commentText = value;
+	formState.commentText = value;
 }
 
 async function submitComment() {
-  if (formState.editingComment) {
-    await CommentsAPI.patch({
-      commentId: formState.editingComment.etag,
-      changes: { text: formState.commentText },
-    });
-  } else {
-    await CommentsAPI.add({
-      parentId: props.parentId,
-      input: { text: formState.commentText },
-    });
-  }
-  updatePage(1);
-  await loadDataList();
-  resetForm();
+	if (formState.editingComment) {
+		await CommentsAPI.patch({
+			commentId: formState.editingComment.etag,
+			changes: {
+				text: formState.commentText,
+			},
+		});
+	} else {
+		await CommentsAPI.add({
+			parentId: props.parentId,
+			input: {
+				text: formState.commentText,
+			},
+		});
+	}
+	updatePage(1);
+	await loadDataList();
+	resetForm();
 }
 
 const deleteComment = async (item) => {
-  await CommentsAPI.delete({
-    etag: item?.etag,
-  });
-  updatePage(1);
-  await loadDataList();
+	await CommentsAPI.delete({
+		etag: item?.etag,
+	});
+	updatePage(1);
+	await loadDataList();
 };
 </script>
 

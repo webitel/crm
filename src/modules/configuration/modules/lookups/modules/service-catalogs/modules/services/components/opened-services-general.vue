@@ -6,13 +6,13 @@
       </h3>
     </header>
     <div class="opened-card-input-grid">
-      <wt-input
+      <wt-input-text
         :label="t('reusable.name')"
-        :value="itemInstance.name"
+        :model-value="itemInstance.name"
         :v="v.itemInstance.name"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'name', value: $event })"
+        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-select
@@ -42,11 +42,11 @@
         @input="setItemProp({ path: 'group', value: $event })"
       />
 
-      <wt-input
+      <wt-input-text
         :label="t('lookups.serviceCatalogs.code')"
-        :value="itemInstance.code"
+        :model-value="itemInstance.code"
         :disabled="disableUserInput"
-        @input="setItemProp({ path: 'code', value: $event })"
+        @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
       <wt-switcher
@@ -67,7 +67,11 @@
 </template>
 
 <script setup>
-import { ContactGroupsAPI, ContactsAPI, SlasAPI } from '@webitel/api-services/api';
+import {
+	ContactGroupsAPI,
+	ContactsAPI,
+	SlasAPI,
+} from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
@@ -75,35 +79,39 @@ import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl({
-  useUpdateAccessAsAllMutableChecksSource: true,
+	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const loadSlaList = (params) => {
-  return SlasAPI.getLookup(params);
+	return SlasAPI.getLookup(params);
 };
 
 const loadContactGroupsList = (params) => {
-  return ContactGroupsAPI.getLookup({
-    ...params,
-    fields: ['id', 'name', 'type'],
-  });
+	return ContactGroupsAPI.getLookup({
+		...params,
+		fields: [
+			'id',
+			'name',
+			'type',
+		],
+	});
 };
 
 const loadContact = (params) => {
-  return ContactsAPI.getLookup(params);
+	return ContactsAPI.getLookup(params);
 };
 </script>

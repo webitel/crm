@@ -11,27 +11,30 @@
 </template>
 
 <script lang="ts" setup>
-import {TableFiltersPanelComponent as TableFiltersPanel} from '@webitel/ui-datalist/filters';
+import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 
 import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsStore } from '../stores/contacts';
 
 const emit = defineEmits<{
-  hide: [];
+	hide: [];
 }>();
-
 
 const tableStore = useContactsStore();
 const { filtersManager } = storeToRefs(tableStore);
 
-const {
-  addFilter,
-  updateFilter,
-  deleteFilter,
-} = tableStore;
+const { addFilter, updateFilter, deleteFilter } = tableStore;
 
 const resetFilters = () => {
-  filtersManager.value.reset({ exclude: ['labels', 'name', 'about', 'variables', 'destination'] });
+	filtersManager.value.reset({
+		exclude: [
+			'labels',
+			'name',
+			'about',
+			'variables',
+			'destination',
+		],
+	});
 };
 </script>

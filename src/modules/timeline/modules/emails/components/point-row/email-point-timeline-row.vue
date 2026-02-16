@@ -39,18 +39,17 @@ import EmailPointTimelineRowContent from './email-point-timeline-row-content.vue
 import EmailPointTimelineRowFilesContainer from './email-point-timeline-row-files-container.vue';
 
 const props = defineProps({
-  task: {
-    type: Object,
-    required: true,
-  },
+	task: {
+		type: Object,
+		required: true,
+	},
 });
 
 const opened = ref(false);
 
 function toggle() {
-  opened.value = !opened.value;
+	opened.value = !opened.value;
 }
-
 </script>
 
 <style scoped lang="scss">

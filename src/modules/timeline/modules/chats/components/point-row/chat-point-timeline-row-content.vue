@@ -52,42 +52,48 @@ import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.
 import ChatPointTimelineRowFile from './chat-point-timeline-row-file.vue';
 
 const props = defineProps({
-  point: {
-    type: Object,
-    required: true,
-  },
+	point: {
+		type: Object,
+		required: true,
+	},
 });
 
 const collapsed = ref(true);
 
 const toggle = () => {
-  collapsed.value = !collapsed.value;
+	collapsed.value = !collapsed.value;
 };
 
 const initiator = computed(() => {
-  return props.point.peer?.name || '';
+	return props.point.peer?.name || '';
 });
 
 const isInitiatorBot = computed(() => {
-  return props.point.peer?.type === 'bot';
+	return props.point.peer?.type === 'bot';
 });
 
 const showFooter = computed(() => {
-  return !!props.point.file;
+	return !!props.point.file;
 });
 
 const text = computed(() => {
-  return props.point.text ? purify.sanitize(linkifyHtml(props.point.text, {
-    className: 'chat-point-row-content-text__link',
-  })) : '';
+	return props.point.text
+		? purify.sanitize(
+				linkifyHtml(props.point.text, {
+					className: 'chat-point-row-content-text__link',
+				}),
+			)
+		: '';
 });
 
 const textRequiresExpansion = computed(() => {
-  return props.point?.text?.length > 100;
+	return props.point?.text?.length > 100;
 });
 
 const collapsedText = computed(() => {
-  return textRequiresExpansion.value ? `${text.value.slice(0, 100)}...` : text.value;
+	return textRequiresExpansion.value
+		? `${text.value.slice(0, 100)}...`
+		: text.value;
 });
 </script>
 

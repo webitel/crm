@@ -60,8 +60,8 @@ import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';
 
 interface Props {
-  parentId: string;
-  mode: TimelineMode;
+	parentId: string;
+	mode: TimelineMode;
 }
 
 const props = defineProps<Props>();
@@ -75,34 +75,46 @@ const store = useStore();
 
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
-const dataList = computed(() => getNamespacedState(store.state, timelineNamespace).dataList);
-const isLoading = computed(() => getNamespacedState(store.state, timelineNamespace).isLoading);
-const next = computed(() => getNamespacedState(store.state, timelineNamespace).next);
+const dataList = computed(
+	() => getNamespacedState(store.state, timelineNamespace).dataList,
+);
+const isLoading = computed(
+	() => getNamespacedState(store.state, timelineNamespace).isLoading,
+);
+const next = computed(
+	() => getNamespacedState(store.state, timelineNamespace).next,
+);
 
 const setParentId = (parentId) => {
-  return store.commit(`${timelineNamespace}/SET`, { path: 'parentId', value: parentId });
-}
+	return store.commit(`${timelineNamespace}/SET`, {
+		path: 'parentId',
+		value: parentId,
+	});
+};
 const setMode = (mode) => {
-  return store.commit(`${timelineNamespace}/SET`, { path: 'mode', value: mode });
-}
+	return store.commit(`${timelineNamespace}/SET`, {
+		path: 'mode',
+		value: mode,
+	});
+};
 
 setParentId(props.parentId);
 setMode(props.mode);
 
 function initializeList() {
-  return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
+	return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
 }
 
 const {
-  namespace: filtersNamespace,
-  subscribe,
-  flushSubscribers,
-  restoreFilters,
+	namespace: filtersNamespace,
+	subscribe,
+	flushSubscribers,
+	restoreFilters,
 } = useTableFilters(timelineNamespace);
 
 subscribe({
-  event: '*',
-  callback: initializeList,
+	event: '*',
+	callback: initializeList,
 });
 
 restoreFilters();
@@ -110,19 +122,19 @@ restoreFilters();
 const nextLoading = ref(false);
 
 async function loadNext() {
-  nextLoading.value = true;
-  await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
-  nextLoading.value = false;
+	nextLoading.value = true;
+	await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
+	nextLoading.value = false;
 }
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 
-  /* https://webitel.atlassian.net/browse/WTEL-4843 */
-  /* Store must be reset to prevent multiple calls TimelineAPI */
-  /* Caching doesn't work because of this code, a fix later. See the task for more details */
+	/* https://webitel.atlassian.net/browse/WTEL-4843 */
+	/* Store must be reset to prevent multiple calls TimelineAPI */
+	/* Caching doesn't work because of this code, a fix later. See the task for more details */
 
-  store.dispatch(`${timelineNamespace}/RESET_STATE`);
+	store.dispatch(`${timelineNamespace}/RESET_STATE`);
 });
 </script>
 

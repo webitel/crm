@@ -1,22 +1,21 @@
 <template>
-  <wt-input
+  <wt-input-text
     v-if="field.kind === FieldType.Text"
-    :value="value"
+    :model-value="value"
     :v="validation"
     :label="label"
     :required="isRequired"
-    :disabled="props.disable"
-    @input="setValue($event)"
+    :disabled="props.disabled"
+    @update:model-value="setValue($event)"
   />
-  <wt-input
+  <wt-input-number
     v-else-if="field.kind === FieldType.Number"
-    :value="value"
+    :model-value="value"
     :v="validation"
     :label="label"
-    type="number"
     :required="isRequired"
-    :disabled="props.disable"
-    @input="setValue($event)"
+    :disabled="props.disabled"
+    @update:model-value="setValue($event)"
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
@@ -24,7 +23,7 @@
     :model-value="!!value"
     :v="validation"
     :required="isRequired"
-    :disabled="props.disable"
+    :disabled="props.disabled"
     @update:model-value="setValue($event)"
   />
   <wt-select
@@ -36,7 +35,7 @@
     track-by="id"
     clearable
     :required="isRequired"
-    :disabled="props.disable"
+    :disabled="props.disabled"
     @input="selectElement"
   />
   <wt-select
@@ -49,17 +48,17 @@
     clearable
     multiple
     :required="isRequired"
-    :disabled="props.disable"
+    :disabled="props.disabled"
     @input="selectElements"
   />
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
     :value="value"
-    :v="v$.itemInstance[field.id]"
+    :v="validation"
     mode="datetime"
     :required="isRequired"
-    :disabled="props.disable"
+    :disabled="props.disabled"
     @input="setValue(+$event)"
   />
 </template>
@@ -70,32 +69,30 @@ import { required } from '@vuelidate/validators';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import set from 'lodash/set';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import {
-  FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 import CustomLookupApi from '../api/custom-lookups.js';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  field: {
-    type: Object,
-    required: true,
-  },
-  // If the field is nested in the itemInstance object
-  // eslint-disable-next-line vue/require-default-prop
-  pathToField: {
-    type: String,
-  },
-  disable: {
-    type: Boolean,
-    default: false,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	field: {
+		type: Object,
+		required: true,
+	},
+	// If the field is nested in the itemInstance object
+	// eslint-disable-next-line vue/require-default-prop
+	pathToField: {
+		type: String,
+	},
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
@@ -103,113 +100,117 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 const { t } = useI18n();
 
 const v$ = useVuelidate(
-  computed(() => {
-    let rules;
+	computed(() => {
+		let rules;
 
-    if (props.pathToField) {
-      rules = {
-        itemInstance: {
-          [props.pathToField]: {},
-        },
-      };
-    } else {
-      rules = {
-        itemInstance: {},
-      };
-    }
+		if (props.pathToField) {
+			rules = {
+				itemInstance: {
+					[props.pathToField]: {},
+				},
+			};
+		} else {
+			rules = {
+				itemInstance: {},
+			};
+		}
 
-    if (
-      props.pathToField &&
-      !rules.itemInstance[props.pathToField][props.field.id]
-    ) {
-      rules.itemInstance[props.pathToField][props.field.id] = {};
-    }
+		if (
+			props.pathToField &&
+			!rules.itemInstance[props.pathToField][props.field.id]
+		) {
+			rules.itemInstance[props.pathToField][props.field.id] = {};
+		}
 
-    if (!props.pathToField && !rules.itemInstance[props.field.id]) {
-      rules.itemInstance[props.field.id] = {};
-    }
+		if (!props.pathToField && !rules.itemInstance[props.field.id]) {
+			rules.itemInstance[props.field.id] = {};
+		}
 
-    if (props.field.required) {
-      if (props.pathToField) {
-        set(
-          rules,
-          `itemInstance.${props.pathToField}.${props.field.id}.required`,
-          required,
-        );
-      } else {
-        set(rules, `itemInstance.${props.field.id}.required`, required);
-      }
-    }
+		if (props.field.required) {
+			if (props.pathToField) {
+				set(
+					rules,
+					`itemInstance.${props.pathToField}.${props.field.id}.required`,
+					required,
+				);
+			} else {
+				set(rules, `itemInstance.${props.field.id}.required`, required);
+			}
+		}
 
-    return rules;
-  }),
-  { itemInstance },
-  { $autoDirty: true },
+		return rules;
+	}),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 
 const value = computed(() => {
-  if (props.pathToField) {
-    return get(itemInstance.value, `${props.pathToField}.${props.field.id}`);
-  }
+	if (props.pathToField) {
+		return get(itemInstance.value, `${props.pathToField}.${props.field.id}`);
+	}
 
-  return itemInstance.value[props.field.id];
+	return itemInstance.value[props.field.id];
 });
 
 const validation = computed(() => {
-  if (props.pathToField) {
-    return v$.value.itemInstance[props.pathToField][props.field.id];
-  }
+	if (props.pathToField) {
+		return v$.value.itemInstance[props.pathToField][props.field.id];
+	}
 
-  return v$.value.itemInstance[props.field.id];
+	return v$.value.itemInstance[props.field.id];
 });
 
 const label = computed(() => {
-  return t(props.field?.name || 'vocabulary.labels');
+	return t(props.field?.name || 'vocabulary.labels');
 });
 
 const isRequired = computed(() => {
-  return props.field.required;
+	return props.field.required;
 });
 
 const setValue = (value) => {
-  setItemProp({
-    path: props.pathToField
-      ? `${props.pathToField}.${props.field.id}`
-      : props.field.id,
-    value,
-  });
+	setItemProp({
+		path: props.pathToField
+			? `${props.pathToField}.${props.field.id}`
+			: props.field.id,
+		value,
+	});
 };
 
 const loadLookupList = ({ path, display, primary }) => {
-  return (params) => {
-    return CustomLookupApi.getLookup({
-      ...params,
-      path,
-      display,
-      primary,
-    });
-  };
+	return (params) => {
+		return CustomLookupApi.getLookup({
+			...params,
+			path,
+			display,
+			primary,
+		});
+	};
 };
 
 const selectElement = (value) => {
-  if (Object.values(value).length === 0) {
-    return setValue(null);
-  }
+	if (Object.values(value).length === 0) {
+		return setValue(null);
+	}
 
-  setValue({
-    id: value.id,
-    name: value.name,
-  });
+	setValue({
+		id: value.id,
+		name: value.name,
+	});
 };
 
 const selectElements = (value) => {
-  setValue(
-    value.map((item) => ({
-      id: item.id,
-      name: item.name,
-    })),
-  );
+	setValue(
+		value.map((item) => ({
+			id: item.id,
+			name: item.name,
+		})),
+	);
 };
 </script>

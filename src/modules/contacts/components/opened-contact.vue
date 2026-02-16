@@ -81,31 +81,33 @@ const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-  namespace,
-  id,
-  itemInstance,
+	namespace,
+	id,
+	itemInstance,
 
-  loadItem,
-  setId,
-  resetState,
-  deleteItem,
-} = useCardStore(baseNamespace, { onLoadErrorHandler: handleError });
+	loadItem,
+	setId,
+	resetState,
+	deleteItem,
+} = useCardStore(baseNamespace, {
+	onLoadErrorHandler: handleError,
+});
 
 provide(
-  'access',
-  computed(() => ({
-    hasRbacEditAccess: itemInstance.value?.access?.edit,
-    hasRbacDeleteAccess: itemInstance.value?.access?.delete,
-  })),
+	'access',
+	computed(() => ({
+		hasRbacEditAccess: itemInstance.value?.access?.edit,
+		hasRbacDeleteAccess: itemInstance.value?.access?.delete,
+	})),
 );
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const isContactPopup = ref(false);
@@ -113,50 +115,56 @@ const isContactPopup = ref(false);
 const isLoading = ref(true);
 
 const path = computed(() => {
-  const baseUrl = '/contacts';
+	const baseUrl = '/contacts';
 
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('contacts.contact', 2), route: baseUrl },
-    {
-      name: itemInstance.value?.name || 'Contact',
-      route: `/contacts/${id.value}`,
-    },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('contacts.contact', 2),
+			route: baseUrl,
+		},
+		{
+			name: itemInstance.value?.name || 'Contact',
+			route: `/contacts/${id.value}`,
+		},
+	];
 });
 
 async function initializeCard() {
-  try {
-    isLoading.value = true;
+	try {
+		isLoading.value = true;
 
-    const { id: itemId } = route.params;
-    await setId(itemId);
-    await loadItem();
+		const { id: itemId } = route.params;
+		await setId(itemId);
+		await loadItem();
 
-    /**
-     * @author Oleksandr Palonnyi
-     *
-     * [WTEL-6929](https://webitel.atlassian.net/browse/WTEL-6929)
-     *
-     * we need to set parentId as itemInstance.id because in readOnly mode we have etag instead of id in route params
-     * and the rest of request do not work with etag
-     *
-     * */
-    if (isReadOnly) {
-      await setId(itemInstance.value?.id);
-    }
-  } finally {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 500);
-  }
+		/**
+		 * @author Oleksandr Palonnyi
+		 *
+		 * [WTEL-6929](https://webitel.atlassian.net/browse/WTEL-6929)
+		 *
+		 * we need to set parentId as itemInstance.id because in readOnly mode we have etag instead of id in route params
+		 * and the rest of request do not work with etag
+		 *
+		 * */
+		if (isReadOnly) {
+			await setId(itemInstance.value?.id);
+		}
+	} finally {
+		setTimeout(() => {
+			isLoading.value = false;
+		}, 500);
+	}
 }
 
 const { close } = useClose('contacts');
 
 async function deleteContact(item) {
-  await deleteItem(item);
-  close();
+	await deleteItem(item);
+	close();
 }
 
 onMounted(() => initializeCard());

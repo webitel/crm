@@ -84,13 +84,15 @@ import VariablePopup from './variable-popup.vue';
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
 
-const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
+const isActionDisabled = computed(
+	() => !access.value.hasRbacEditAccess || isReadOnly,
+);
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const store = useStore();
@@ -99,79 +101,92 @@ const route = useRoute();
 const variablesNamespace = `${props.namespace}/variables`;
 
 const {
-  namespace,
-  dataList,
-  isLoading,
-  headers,
-  isNext,
+	namespace,
+	dataList,
+	isLoading,
+	headers,
+	isNext,
 
-  sort,
-  deleteData,
-  onFilterEvent,
+	sort,
+	deleteData,
+	onFilterEvent,
 } = useTableStore(variablesNamespace);
 
 const {
-  namespace: filtersNamespace,
-  subscribe,
-  flushSubscribers,
-  restoreFilters,
+	namespace: filtersNamespace,
+	subscribe,
+	flushSubscribers,
+	restoreFilters,
 } = useTableFilters(`${variablesNamespace}/table`);
 
-subscribe({ event: '*', callback: onFilterEvent });
+subscribe({
+	event: '*',
+	callback: onFilterEvent,
+});
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const showDummy = computed(() => !dataList.value.length);
 const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
 
 async function save(item) {
-  if (item.id) {
-    await store.dispatch(`${variablesNamespace}/table/UPDATE_VARIABLE`, {
-      etag: item.etag,
-      itemInstance: { ...item },
-    });
-  } else {
-    await store.dispatch(`${variablesNamespace}/table/ADD_VARIABLE`, {
-      itemInstance: { ...item },
-    });
-  }
+	if (item.id) {
+		await store.dispatch(`${variablesNamespace}/table/UPDATE_VARIABLE`, {
+			etag: item.etag,
+			itemInstance: {
+				...item,
+			},
+		});
+	} else {
+		await store.dispatch(`${variablesNamespace}/table/ADD_VARIABLE`, {
+			itemInstance: {
+				...item,
+			},
+		});
+	}
 }
 
 function addItem() {
-  return router.push({
-    ...route,
-    params: { variableId: 'new' },
-  });
+	return router.push({
+		...route,
+		params: {
+			variableId: 'new',
+		},
+	});
 }
 
 function editItem({ id }) {
-  return router.push({
-    ...route,
-    params: { variableId: id },
-  });
+	return router.push({
+		...route,
+		params: {
+			variableId: id,
+		},
+	});
 }
 
 function closeItemPopup() {
-  const params = { ...route.params };
-  delete params.variableId;
+	const params = {
+		...route.params,
+	};
+	delete params.variableId;
 
-  return router.push({
-    ...route,
-    params,
-  });
+	return router.push({
+		...route,
+		params,
+	});
 }
 </script>
 

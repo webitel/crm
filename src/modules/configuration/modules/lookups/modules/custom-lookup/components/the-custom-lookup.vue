@@ -92,7 +92,7 @@
             <template #actions="{ item }">
               <wt-icon-action
                 action="edit"
-                :disabled="!hasEditAccess"
+                :disabled="!hasUpdateAccess"
                 @click="edit(item)"
               />
               <wt-icon-action
@@ -120,40 +120,26 @@
 
 <script setup>
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
-import {
-  useAccessControl,
-} from '@webitel/ui-sdk/src/composables/useAccessControl/useAccessControl.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import {
-  useTableFilters,
-} from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import {
-  useTableEmpty,
-} from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import {
-  useTableStore,
-} from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-import UploadFileIconBtn
-  from '../../../../../../_shared/modules/importCSV/components/upload-file-icon-btn.vue';
-import CustomLookupsApi
-  from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
-import {
-  FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
+import UploadFileIconBtn from '../../../../../../_shared/modules/importCSV/components/upload-file-icon-btn.vue';
+import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
 import UploadCustomLookupPopup from './upload-custom-lookup-popup.vue';
 
@@ -170,132 +156,151 @@ const dictionary = ref(null);
 const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
-  try {
-    dictionary.value = await CustomLookupsApi.get({ itemId: repo.value });
+	try {
+		dictionary.value = await CustomLookupsApi.get({
+			itemId: repo.value,
+		});
 
-    store.commit(`${baseNamespace}/table/SET`, {
-      path: 'headers',
-      value: dictionary.value.fields
-        .filter((field) => !field.hidden && field.id !== 'id')
-        .map((field) => ({
-          value: field.id,
-          locale: field.name,
-          show: true,
-          field: field.id,
-          kind: field.kind,
-          sort: field.kind === FieldType.Multiselect ? undefined : SortSymbols.NONE,
-        })),
-    });
-  } catch (e) {
-    console.error(e);
-  }
+		store.commit(`${baseNamespace}/table/SET`, {
+			path: 'headers',
+			value: dictionary.value.fields
+				.filter((field) => !field.hidden && field.id !== 'id')
+				.map((field) => ({
+					value: field.id,
+					locale: field.name,
+					show: true,
+					field: field.id,
+					kind: field.kind,
+					sort:
+						field.kind === FieldType.Multiselect ? undefined : SortSymbols.NONE,
+				})),
+		});
+	} catch (e) {
+		console.error(e);
+	}
 };
 
 store.commit(`${baseNamespace}/table/SET`, {
-  path: 'repo',
-  value: repo.value,
+	path: 'repo',
+	value: repo.value,
 });
 
-const { hasCreateAccess, hasEditAccess, hasDeleteAccess } = useAccessControl();
+const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
+	useUserAccessControl(WtObject.CustomLookup);
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  selected,
-  isLoading,
-  headers,
-  isNext,
-  error,
+	dataList,
+	selected,
+	isLoading,
+	headers,
+	isNext,
+	error,
 
-  loadData,
-  deleteData,
-  sort,
-  setSelected,
-  onFilterEvent,
+	loadData,
+	deleteData,
+	sort,
+	setSelected,
+	onFilterEvent,
 } = useTableStore(baseNamespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
 
-  subscribe,
-  flushSubscribers,
+	subscribe,
+	flushSubscribers,
 } = useTableFilters(namespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 onMounted(async () => {
-  await loadDictionary();
+	await loadDictionary();
 });
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const path = computed(() => [
-  { name: t('crm'), route: '/start-page' },
-  { name: t('startPage.configuration.name'), route: '/configuration' },
-  { name: t('lookups.lookups'), route: '/configuration' },
-  { name: dictionary.value?.name },
+	{
+		name: t('crm'),
+		route: '/start-page',
+	},
+	{
+		name: t('startPage.configuration.name'),
+		route: '/configuration',
+	},
+	{
+		name: t('lookups.lookups'),
+		route: '/configuration',
+	},
+	{
+		name: dictionary.value?.name,
+	},
 ]);
 
 const { close } = useClose('configuration');
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  headline: emptyHeadline,
-  title: emptyTitle,
-  primaryActionText: emptyPrimaryActionText,
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	headline: emptyHeadline,
+	title: emptyTitle,
+	primaryActionText: emptyPrimaryActionText,
 } = useTableEmpty({
-  dataList,
-  error,
-  filters: filtersValue,
-  isLoading,
+	dataList,
+	error,
+	filters: filtersValue,
+	isLoading,
 });
 
 const csvFile = ref(null);
 
 const processCSV = (files) => {
-  const file = files[0];
-  if (file) {
-    csvFile.value = file;
-  }
+	const file = files[0];
+	if (file) {
+		csvFile.value = file;
+	}
 };
 
 const closeCSVPopup = () => {
-  csvFile.value = null;
-  loadData();
+	csvFile.value = null;
+	loadData();
 };
 
 const add = () => {
-  router.push({
-    name: 'custom-lookup-record',
-    params: { id: 'new' },
-  });
+	router.push({
+		name: 'custom-lookup-record',
+		params: {
+			id: 'new',
+		},
+	});
 };
 
 const edit = (item) => {
-  router.push({
-    name: 'custom-lookup-record',
-    params: { id: item.id },
-  });
+	router.push({
+		name: 'custom-lookup-record',
+		params: {
+			id: item.id,
+		},
+	});
 };
 </script>

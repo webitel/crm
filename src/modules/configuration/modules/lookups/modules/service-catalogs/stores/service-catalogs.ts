@@ -5,9 +5,9 @@ import { ServiceCatalogsNamespace } from '../namespace';
 import { headers } from '../store/_internals/headers';
 
 export const useServiceCatalogsStore = createTableStore(
-  ServiceCatalogsNamespace,
-  {
-    apiModule: ServiceCatalogsAPI,
-    headers,
-  },
+	ServiceCatalogsNamespace,
+	{
+		apiModule: ServiceCatalogsAPI,
+		headers,
+	},
 );

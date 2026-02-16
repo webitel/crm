@@ -43,14 +43,14 @@ import { useStore } from 'vuex';
 import GranteeSelect from './grantee-select.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const emit = defineEmits([
-  'close',
+	'close',
 ]);
 
 const { t } = useI18n();
@@ -62,45 +62,66 @@ const shown = ref(false);
 const isSaving = ref(false);
 const grantee = ref({});
 
-const v$ = useVuelidate({
-  grantee: { required },
-}, { grantee }, { $autoDirty: true });
+const v$ = useVuelidate(
+	{
+		grantee: {
+			required,
+		},
+	},
+	{
+		grantee,
+	},
+	{
+		$autoDirty: true,
+	},
+);
 v$.value.$touch();
 
 const permissionId = computed(() => route.params.permissionId);
 
 function close() {
-  emit('close');
+	emit('close');
 }
 
 function grantPermissions(payload) {
-  return store.dispatch(`${props.namespace}/GRANT_PERMISSIONS`, payload);
+	return store.dispatch(`${props.namespace}/GRANT_PERMISSIONS`, payload);
 }
 
 async function save() {
-  isSaving.value = true;
-  await grantPermissions(grantee.value);
-  close();
+	isSaving.value = true;
+	await grantPermissions(grantee.value);
+	close();
 
-  isSaving.value = false;
+	isSaving.value = false;
 
-  setTimeout(() => {
-    close();
-  }, 1500);
+	setTimeout(() => {
+		close();
+	}, 1500);
 }
 
-watch(permissionId, async () => {
-  grantee.value = {};
-}, { immediate: true });
+watch(
+	permissionId,
+	async () => {
+		grantee.value = {};
+	},
+	{
+		immediate: true,
+	},
+);
 
-watch(permissionId, () => {
-  if (permissionId.value) {
-    setTimeout(() => shown.value = !!permissionId.value, 300);
-  } else {
-    shown.value = !!permissionId.value;
-  }
-}, { immediate: true });
-
+watch(
+	permissionId,
+	() => {
+		if (permissionId.value) {
+			setTimeout(() => (shown.value = !!permissionId.value), 300);
+		} else {
+			shown.value = !!permissionId.value;
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 </script>
 
 <style lang="scss" scoped>

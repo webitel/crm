@@ -30,59 +30,76 @@ import { useStore } from 'vuex';
 import { TimelineEventType } from '../../../enums/TimelineEventType';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  callsCount: {
-    type: [Number, String],
-    default: 0,
-  },
-  chatsCount: {
-    type: [Number, String],
-    default: 0,
-  },
-  emailsCount: {
-    type: [Number, String],
-    default: 0,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	callsCount: {
+		type: [
+			Number,
+			String,
+		],
+		default: 0,
+	},
+	chatsCount: {
+		type: [
+			Number,
+			String,
+		],
+		default: 0,
+	},
+	emailsCount: {
+		type: [
+			Number,
+			String,
+		],
+		default: 0,
+	},
 });
 
 const store = useStore();
 
-const filterValue = computed(() => store.getters[`${props.namespace}/GET_FILTER`]('type'));
+const filterValue = computed(() =>
+	store.getters[`${props.namespace}/GET_FILTER`]('type'),
+);
 
 function setFilter(payload) {
-  return store.dispatch(`${props.namespace}/SET_FILTER`, payload);
+	return store.dispatch(`${props.namespace}/SET_FILTER`, payload);
 }
 
 function toggleFilterValue(value) {
-  const newValue = filterValue.value.includes(value)
-    ? filterValue.value.filter((item) => item !== value)
-    : [...filterValue.value, value];
+	const newValue = filterValue.value.includes(value)
+		? filterValue.value.filter((item) => item !== value)
+		: [
+				...filterValue.value,
+				value,
+			];
 
-  return setFilter({ name: 'type', value: newValue });
+	return setFilter({
+		name: 'type',
+		value: newValue,
+	});
 }
 
 const filters = computed(() => [
-  {
-    icon: 'call',
-    selected: filterValue.value.includes(TimelineEventType.Call),
-    set: () => toggleFilterValue(TimelineEventType.Call),
-    count: props.callsCount,
-  },
-  {
-    icon: 'chat',
-    selected: filterValue.value.includes(TimelineEventType.Chat),
-    set: () => toggleFilterValue(TimelineEventType.Chat),
-    count: props.chatsCount,
-  },
-  {
-    icon: 'email',
-    selected: filterValue.value.includes(TimelineEventType.Email),
-    set: () => toggleFilterValue(TimelineEventType.Email),
-    count: props.emailsCount,
-  },
+	{
+		icon: 'call',
+		selected: filterValue.value.includes(TimelineEventType.Call),
+		set: () => toggleFilterValue(TimelineEventType.Call),
+		count: props.callsCount,
+	},
+	{
+		icon: 'chat',
+		selected: filterValue.value.includes(TimelineEventType.Chat),
+		set: () => toggleFilterValue(TimelineEventType.Chat),
+		count: props.chatsCount,
+	},
+	{
+		icon: 'email',
+		selected: filterValue.value.includes(TimelineEventType.Email),
+		set: () => toggleFilterValue(TimelineEventType.Email),
+		count: props.emailsCount,
+	},
 ]);
 </script>
 

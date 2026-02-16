@@ -45,10 +45,10 @@ import { inject, onMounted, onUnmounted, ref, useSlots } from 'vue';
 import TimelineRowDropdownTransition from './timeline-row-dropdown-transition.vue';
 
 const props = defineProps({
-  widthFitContent: {
-    type: Boolean,
-    default: false,
-  },
+	widthFitContent: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const slots = useSlots();
@@ -56,11 +56,11 @@ const slots = useSlots();
 const collapsed = ref(true);
 
 const toggle = () => {
-  collapsed.value = !collapsed.value;
+	collapsed.value = !collapsed.value;
 };
 
 const collapseRow = () => {
-  if (!collapsed.value) toggle();
+	if (!collapsed.value) toggle();
 };
 
 const eventBus = inject('$eventBus');

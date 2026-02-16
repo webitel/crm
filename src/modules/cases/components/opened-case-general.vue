@@ -1,7 +1,7 @@
 <template>
-  <article class="opened-case-general">
+  <article class="opened-case-general wt-scrollbar">
     <case-status />
-    <case-number v-if="!isNew"/>
+    <case-number v-if="!isNew" />
     <case-priority />
     <case-service />
     <case-deadlines />
@@ -20,18 +20,19 @@ import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
 
 const props = defineProps({
-  isNew: {
-    type: Boolean,
-    default: false,
-  },
+	isNew: {
+		type: Boolean,
+		default: false,
+	},
 });
-
 </script>
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 @use '@webitel/styleguide/scroll' as *;
 
 .opened-case-general {
-  @extend %wt-scrollbar;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);

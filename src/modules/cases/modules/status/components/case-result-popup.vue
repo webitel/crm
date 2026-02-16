@@ -8,25 +8,23 @@
       {{ t('cases.caseResult') }}
     </template>
     <template #main>
-      <div class="case-result-popup__main">
-        <wt-select
-          :label="t('cases.closureReason')"
-          :search-method="searchCloseReasons"
-          required
-          :v="v$.draft.reason"
-          :value="draft.reason"
-          @input="draft.reason = $event"
-        />
+      <wt-select
+        :value="draft.reason"
+        :label="t('cases.closureReason')"
+        :search-method="searchCloseReasons"
+        :v="v$.draft.reason"
+        required
+        @input="draft.reason = $event"
+      />
 
-        <wt-textarea
-          class="case-result-popup__textarea"
-          :label="t('cases.result')"
-          required
-          :v="v$.draft.result"
-          :model-value="draft.result"
-          @update:model-value="draft.result = $event"
-        />
-      </div>
+      <wt-textarea
+        :label="t('cases.result')"
+        :v="v$.draft.result"
+        :rows="10"
+        :model-value="draft.result"
+        required
+        @update:model-value="draft.result = $event"
+      />
     </template>
     <template #actions>
       <wt-button
@@ -56,24 +54,29 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 const createDraftData = () => ({
-  reason: null,
-  result: null,
+	reason: null,
+	result: null,
 });
 
 const props = defineProps({
-  shown: {
-    type: Boolean,
-    required: true,
-  },
-  namespace: {
-    type: String,
-    required: true,
-  },
+	shown: {
+		type: Boolean,
+		required: true,
+	},
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const emit = defineEmits<{
-  'save': [{ result: ReturnType<createDraftData>, reason?: string }],
-  'cancel': [],
+	save: [
+		{
+			result: ReturnType<createDraftData>;
+			reason?: string;
+		},
+	];
+	cancel: [];
 }>();
 
 const { namespace: cardNamespace } = useCardStore(props.namespace);
@@ -84,40 +87,63 @@ const { t } = useI18n();
 
 const draft = reactive(createDraftData());
 
-watch(() => props.shown, () => {
-  Object.assign(draft, createDraftData());
-});
+watch(
+	() => props.shown,
+	() => {
+		Object.assign(draft, createDraftData());
+	},
+);
 
-const v$ = useVuelidate(computed(() => {
-  return {
-    draft: {
-      reason: { required },
-      result: { required },
-    },
-  };
-}), { draft }, { $autoDirty: true, $stopPropagation: true });
+const v$ = useVuelidate(
+	computed(() => {
+		return {
+			draft: {
+				reason: {
+					required,
+				},
+				result: {
+					required,
+				},
+			},
+		};
+	}),
+	{
+		draft,
+	},
+	{
+		$autoDirty: true,
+		$stopPropagation: true,
+	},
+);
 
 v$.value.$touch();
 
-const closeReasonId = computed(() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`]);
+const closeReasonId = computed(
+	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
+);
 
 async function searchCloseReasons(params) {
-  if (!closeReasonId.value) {
-    return { items: [] };
-  }
-  return await CaseCloseReasonsAPI.getLookup({ parentId: closeReasonId.value, ...params });
+	if (!closeReasonId.value) {
+		return {
+			items: [],
+		};
+	}
+	return await CaseCloseReasonsAPI.getLookup({
+		parentId: closeReasonId.value,
+		...params,
+	});
 }
 
 function cancel() {
-  emit('cancel');
+	emit('cancel');
 }
 
 function save() {
-  const finalStatusData = {
-    reason: draft.reason,
-    result: draft.result,
-  };
-  emit('save', finalStatusData);
+	const finalStatusData = {
+		reason: draft.reason,
+		result: draft.result,
+	};
+	emit('save', finalStatusData);
 }
 </script>
 
@@ -127,7 +153,6 @@ function save() {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
-    height: 400px;
   }
 }
 </style>

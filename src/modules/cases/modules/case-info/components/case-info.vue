@@ -8,11 +8,11 @@
       @update:value="setItemProp({ path: 'subject', value: $event })"
     >
       <template #default="props">
-        <wt-input
+        <wt-input-text
           v-bind="props"
           :v="v$.value.itemInstance.subject"
           :disabled="disableUserInput"
-          @input="props.updateValue($event)"
+          @update:model-value="props.updateValue($event)"
         />
       </template>
     </editable-field>
@@ -62,10 +62,10 @@
         @update:value="setItemProp({ path: 'contactInfo', value: $event })"
       >
         <template #default="props">
-          <wt-input
+          <wt-input-text
             v-bind="props"
             :disabled="disableUserInput"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>
@@ -99,28 +99,24 @@ const editMode = inject('editMode');
 const v$ = inject('v$');
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
-const {
-  hasReadAccess: hasCaseCommentsReadAccess,
-} = useUserAccessControl({ resource: WtObject.CaseComment });
+const { hasReadAccess: hasCaseCommentsReadAccess } = useUserAccessControl({
+	resource: WtObject.CaseComment,
+});
 
-const {
-  itemInstance,
-  setItemProp,
-  id,
-} = useCardStore(props.namespace);
+const { itemInstance, setItemProp, id } = useCardStore(props.namespace);
 
 const { isNew } = useCardComponent({
-  id,
-  itemInstance,
+	id,
+	itemInstance,
 });
 </script>
 

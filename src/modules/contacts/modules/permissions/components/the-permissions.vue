@@ -107,13 +107,15 @@ import GranteePopup from './permissions-tab-grantee-popup.vue';
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
 
-const isActionDisabled = computed(() => !access.value.hasRbacEditAccess || isReadOnly)
+const isActionDisabled = computed(
+	() => !access.value.hasRbacEditAccess || isReadOnly,
+);
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
@@ -122,81 +124,91 @@ const router = useRouter();
 const route = useRoute();
 
 const {
-  namespace,
+	namespace,
 
-  dataList,
-  isLoading,
-  headers,
-  error,
-  isNext,
+	dataList,
+	isLoading,
+	headers,
+	error,
+	isNext,
 
-  loadData,
-  patchProperty,
-  deleteData,
-  sort,
-  onFilterEvent,
+	loadData,
+	patchProperty,
+	deleteData,
+	sort,
+	onFilterEvent,
 } = useTableStore(`${props.namespace}/permissions`);
 
 const {
-  namespace: filtersNamespace,
-  subscribe,
-  flushSubscribers,
-  restoreFilters,
+	namespace: filtersNamespace,
+	subscribe,
+	flushSubscribers,
+	restoreFilters,
 } = useTableFilters(namespace);
 
-subscribe({ event: '*', callback: onFilterEvent });
+subscribe({
+	event: '*',
+	callback: onFilterEvent,
+});
 
 restoreFilters();
 
 onUnmounted(() => {
-  flushSubscribers();
+	flushSubscribers();
 });
 
 const modifiedDataList = computed(() => {
-  return dataList.value.map((item) => {
-    const access = {};
-    Object.keys(item.access).forEach((rule) => {
-      access[rule] = {
-        ...item.access[rule],
-        name: t(`permissions.accessMode.${item.access[rule].id}`),
-      };
-    });
-    return { ...item, access };
-  });
+	return dataList.value.map((item) => {
+		const access = {};
+		Object.keys(item.access).forEach((rule) => {
+			access[rule] = {
+				...item.access[rule],
+				name: t(`permissions.accessMode.${item.access[rule].id}`),
+			};
+		});
+		return {
+			...item,
+			access,
+		};
+	});
 });
 
 const accessOptions = computed(() => {
-  return Object.values(AccessMode).map((mode) => ({
-    id: mode,
-    name: t(`permissions.accessMode.${mode}`),
-  }));
+	return Object.values(AccessMode).map((mode) => ({
+		id: mode,
+		name: t(`permissions.accessMode.${mode}`),
+	}));
 });
 
 function changeReadAccessMode(payload) {
-  return store.dispatch(`${namespace}/CHANGE_READ_ACCESS_MODE`, payload);
+	return store.dispatch(`${namespace}/CHANGE_READ_ACCESS_MODE`, payload);
 }
 function changeUpdateAccessMode(payload) {
-  return store.dispatch(`${namespace}/CHANGE_UPDATE_ACCESS_MODE`, payload);
+	return store.dispatch(`${namespace}/CHANGE_UPDATE_ACCESS_MODE`, payload);
 }
 function changeDeleteAccessMode(payload) {
-  return store.dispatch(`${namespace}/CHANGE_DELETE_ACCESS_MODE`, payload);
+	return store.dispatch(`${namespace}/CHANGE_DELETE_ACCESS_MODE`, payload);
 }
 
 function addItem() {
-  return router.push({
-    ...route,
-    params: { permissionId: 'new' },
-  });
+	return router.push({
+		...route,
+		params: {
+			permissionId: 'new',
+		},
+	});
 }
 
 function closeItemPopup() {
-  const params = { ...route.params };
-  delete params.permissionId;
+	const params = {
+		...route.params,
+	};
+	delete params.permissionId;
 
-  return router.push({
-    ...route,
-    params,
-  });
+	return router.push({
+		...route,
+		params,
+	});
 }
 </script>
 

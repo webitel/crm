@@ -23,9 +23,8 @@
           required
           @input="draft.type = $event"
         />
-        <wt-input
-          v-model="draft.destination"
-          :clearable="false"
+        <wt-input-text
+          v-model:model-value="draft.destination"
           :label="t('contacts.communications.destination')"
           :v="v$.draft.destination"
           required
@@ -61,17 +60,19 @@ import { useStore } from 'vuex';
 import { EngineCommunicationChannels } from 'webitel-sdk';
 
 const props = defineProps({
-  channel: {
-    type: String,
-    required: true,
-  },
-  namespace: {
-    type: String,
-    required: true,
-  },
+	channel: {
+		type: String,
+		required: true,
+	},
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits([
+	'close',
+]);
 
 const { t } = useI18n();
 const store = useStore();
@@ -84,110 +85,154 @@ const isSaving = ref(false);
 const TypeSelect = ref(null);
 
 const communicationOptions = [
-  {
-    value: 'email', // should be same as backend field for destination
-    addText: t('contacts.communications.emails.addTitle'),
-    updateText: t('contacts.communications.emails.editTitle'),
-    filterField: EngineCommunicationChannels.Email,
-    getNamespace: `${props.namespace}/GET_EMAIL`,
-    addNamespace: `${props.namespace}/ADD_EMAIL`,
-    updateNamespace: `${props.namespace}/UPDATE_EMAIL`,
-  },
-  {
-    value: 'number',
-    addText: t('contacts.communications.phones.addTitle'),
-    updateText: t('contacts.communications.phones.editTitle'),
-    filterField: EngineCommunicationChannels.Phone,
-    getNamespace: `${props.namespace}/GET_PHONE`,
-    addNamespace: `${props.namespace}/ADD_PHONE`,
-    updateNamespace: `${props.namespace}/UPDATE_PHONE`,
-  },
+	{
+		value: 'email', // should be same as backend field for destination
+		addText: t('contacts.communications.emails.addTitle'),
+		updateText: t('contacts.communications.emails.editTitle'),
+		filterField: EngineCommunicationChannels.Email,
+		getNamespace: `${props.namespace}/GET_EMAIL`,
+		addNamespace: `${props.namespace}/ADD_EMAIL`,
+		updateNamespace: `${props.namespace}/UPDATE_EMAIL`,
+	},
+	{
+		value: 'number',
+		addText: t('contacts.communications.phones.addTitle'),
+		updateText: t('contacts.communications.phones.editTitle'),
+		filterField: EngineCommunicationChannels.Phone,
+		getNamespace: `${props.namespace}/GET_PHONE`,
+		addNamespace: `${props.namespace}/ADD_PHONE`,
+		updateNamespace: `${props.namespace}/UPDATE_PHONE`,
+	},
 ];
 
 const generateNewDraft = () => ({
-  channel: props.channel,
-  type: {},
-  destination: '',
+	channel: props.channel,
+	type: {},
+	destination: '',
 });
 
 const draft = reactive(generateNewDraft());
 
 const currentCommunication = computed(() => {
-  return communicationOptions.find((option) => option.value === props.channel);
+	return communicationOptions.find((option) => option.value === props.channel);
 });
 
 const commId = computed(() => route.params.commId);
 
-const v$ = useVuelidate(computed(() => {
-  const destination = props.channel === 'email' ? { required, email } : { required };
-  return {
-    draft: {
-      channel: { required },
-      type: { required },
-      destination,
-    },
-  };
-}), { draft }, { $autoDirty: true });
+const v$ = useVuelidate(
+	computed(() => {
+		const destination =
+			props.channel === 'email'
+				? {
+						required,
+						email,
+					}
+				: {
+						required,
+					};
+		return {
+			draft: {
+				channel: {
+					required,
+				},
+				type: {
+					required,
+				},
+				destination,
+			},
+		};
+	}),
+	{
+		draft,
+	},
+	{
+		$autoDirty: true,
+	},
+);
 
 async function initDraft() {
-  const comm = await getItem({ id: commId.value });
-  Object.assign(draft, comm);
-  draft.destination = comm[props.channel];
+	const comm = await getItem({
+		id: commId.value,
+	});
+	Object.assign(draft, comm);
+	draft.destination = comm[props.channel];
 }
 
 v$.value.$touch();
 
 async function save() {
-  isSaving.value = true;
-  if (commId.value !== 'new') {
-    await updateItem(draft);
-  } else {
-    await addItem(draft);
-  }
+	isSaving.value = true;
+	if (commId.value !== 'new') {
+		await updateItem(draft);
+	} else {
+		await addItem(draft);
+	}
 
-  isSaving.value = false;
+	isSaving.value = false;
 
-  setTimeout(() => {
-    close();
-  }, 1500);
+	setTimeout(() => {
+		close();
+	}, 1500);
 }
 
 function getItem() {
-  return store.dispatch(`${currentCommunication.value.getNamespace}`, { id: commId.value });
+	return store.dispatch(`${currentCommunication.value.getNamespace}`, {
+		id: commId.value,
+	});
 }
 
 function addItem({ type, destination }) {
-  const itemInstance = { type, [props.channel]: destination };
-  return store.dispatch(`${currentCommunication.value.addNamespace}`, { itemInstance });
+	const itemInstance = {
+		type,
+		[props.channel]: destination,
+	};
+	return store.dispatch(`${currentCommunication.value.addNamespace}`, {
+		itemInstance,
+	});
 }
 
 function updateItem({ channel, destination, ...rest }) {
-  const itemInstance = { ...rest, [props.channel]: destination };
-  return store.dispatch(`${currentCommunication.value.updateNamespace}`, {
-    itemInstance,
-    etag: draft.etag,
-  });
+	const itemInstance = {
+		...rest,
+		[props.channel]: destination,
+	};
+	return store.dispatch(`${currentCommunication.value.updateNamespace}`, {
+		itemInstance,
+		etag: draft.etag,
+	});
 }
 
 function close() {
-  emit('close');
+	emit('close');
 }
 
-watch(commId, () => {
-  if (commId.value === 'new') {
-    Object.assign(draft, generateNewDraft());
-  } else if (commId.value) {
-    initDraft();
-  }
-}, { immediate: true });
+watch(
+	commId,
+	() => {
+		if (commId.value === 'new') {
+			Object.assign(draft, generateNewDraft());
+		} else if (commId.value) {
+			initDraft();
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 
-watch(commId, () => {
-  if (commId.value) {
-    setTimeout(() => shown.value = !!commId.value, 300);
-  } else {
-    shown.value = !!commId.value;
-  }
-}, { immediate: true });
+watch(
+	commId,
+	() => {
+		if (commId.value) {
+			setTimeout(() => (shown.value = !!commId.value), 300);
+		} else {
+			shown.value = !!commId.value;
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 </script>
 
 <style lang="scss" scoped>
