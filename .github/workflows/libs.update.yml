@@ -11,6 +11,7 @@ on:
           - '@webitel/ui-sdk'
           - '@webitel/api-services'
           - '@webitel/ui-datalist'
+          - '@webitel/styleguide'
 #      version:
 #        description: 'Target version (optional: latest or x.y.z)'
 #        required: false
