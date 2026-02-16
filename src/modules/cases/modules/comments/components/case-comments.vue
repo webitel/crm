@@ -12,12 +12,17 @@
         <h3 class="table-title__title">
           {{ t('cases.comments.comments') }}
         </h3>
-        <wt-action-bar
-          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
-          :include="[IconAction.ADD]"
-          @click:add="startAddingComment"
-        >
-        </wt-action-bar>
+        <div class="table-title__actions">
+          <wt-icon-btn
+            :icon="sortIcon"
+            @click="toggleSort"
+          />
+          <wt-action-bar
+            :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
+            :include="[IconAction.ADD]"
+            @click:add="startAddingComment"
+          />
+        </div>
       </header>
 
       <table-top-row-bar
@@ -100,6 +105,7 @@ import {
   useDeleteConfirmationPopup,
 } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -127,7 +133,7 @@ const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
-const { dataList, selected, isLoading, next, shownHeaders } =
+const { headers, dataList, selected, isLoading, next, shownHeaders } =
   storeToRefs(tableStore);
 
 const {
@@ -140,6 +146,30 @@ const {
   appendToDataList,
   resetInfiniteScrollTableParamsToDefaults,
 } = tableStore;
+
+const createdAtHeader = computed(() =>
+  headers.value.find((header) => header.field === 'created_at'),
+);
+
+const isNewestFirst = computed(() =>
+  createdAtHeader.value?.sort === SortSymbols.DESC,
+);
+
+const sortIcon = computed(() =>
+  isNewestFirst.value ? 'sort-asc' : 'sort-desc',
+);
+
+const toggleSort = () => {
+  const header = createdAtHeader.value;
+  if (!header) return;
+
+  const newSort =
+    header.sort === SortSymbols.DESC ? SortSymbols.ASC : SortSymbols.DESC;
+
+  headers.value = headers.value.map((header) =>
+    header.field === 'created_at' ? { ...header, sort: newSort } : header,
+  );
+};
 
 resetInfiniteScrollTableParamsToDefaults()
 updateSize(5);
@@ -222,6 +252,12 @@ const deleteComment = async (item) => {
       flex: 1;
     }
   }
+}
+
+.table-title__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .table-section-footer {

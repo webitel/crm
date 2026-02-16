@@ -7,4 +7,10 @@ export const headers = [
     sort: SortSymbols.NONE,
     field: 'text',
   },
+  {
+    value: 'createdAt',
+    show: false,
+    sort: SortSymbols.DESC,
+    field: 'created_at',
+  },
 ];
