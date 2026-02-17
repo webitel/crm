@@ -1,0 +1,91 @@
+@import "@webitel/ui-sdk/src/css/main";
+
+/* 
+	@author HlukhovYe
+	layer needed beacuse of manipulating primevue's default typography
+	https://webitel.atlassian.net/browse/WTEL-8775?focusedCommentId=723773
+*/
+@layer wt-default {
+	* {
+		box-sizing: border-box;
+	}
+
+	/* reset ul styles */
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+	}
+
+	iframe {
+		outline: none;
+		border: none;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p {
+		margin: 0;
+	}
+
+	a {
+		color: #000;
+		text-decoration: none;
+	}
+}
+
+/* disables scrollbar on 100vh auth on small laptops */
+body {
+	display: flex;
+	background: var(--wt-page-wrapper-background-color);
+	min-width: 100%;
+	min-height: 100%;
+	color: var(--text-main-color);
+}
+
+#app {
+	min-width: 100%;
+	min-height: 100%;
+}
+
+.table-wrapper {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	gap: var(--spacing-xs);
+	padding-top: var(--spacing-xs);
+	min-width: 0;
+	min-height: 0;
+	max-height: 100%;
+}
+
+.wt-dummy {
+	flex-grow: 1;
+}
+
+.wt-page-wrapper {
+	width: 100%;
+}
+
+.wt-page-wrapper__main {
+	display: flex;
+	flex-grow: 1;
+	min-height: 0;
+	max-height: 100%;
+}
+
+.wt-page-wrapper .main-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.wt-page-wrapper .main-container > section {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
