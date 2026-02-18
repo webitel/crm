@@ -182,8 +182,8 @@ async function save() {
 function setDefaultManager() {
 	draft.value.managers[0] = {
 		user: {
-			id: userinfo.value.userId,
-			name: userinfo.value.name,
+			id: userinfo.value?.userId,
+			name: userinfo.value?.name,
 		},
 	};
 }
