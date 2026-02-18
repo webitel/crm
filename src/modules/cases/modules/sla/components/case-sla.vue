@@ -32,67 +32,79 @@ import ConditionsAPI from '../../../../configuration/modules/lookups/modules/sla
 const namespace = inject('namespace');
 
 const {
-  namespace: cardNamespace,
+	namespace: cardNamespace,
 
-  itemInstance,
-  setItemProp,
+	itemInstance,
+	setItemProp,
 } = useCardStore(namespace);
 
 const { t } = useI18n();
 
 const store = useStore();
 const serviceSLA = computed(
-  () => store.getters[`${cardNamespace}/service/SLA`],
+	() => store.getters[`${cardNamespace}/service/SLA`],
 );
 
 const slaConditionName = computed(
-  () => itemInstance?.value?.slaCondition?.name || '',
+	() => itemInstance?.value?.slaCondition?.name || '',
 );
 
 const updateSlaCondition = async (slaId, priorityId) => {
-  if (!slaId || !priorityId) {
-    await resetSlaCondition();
-    return;
-  }
-  try {
-    const response = await ConditionsAPI.getList({
-      parentId: slaId,
-      priorityId,
-    });
-    //NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
-    await setItemProp({ path: 'slaCondition', value: response.items[0] });
-  } catch (err) {
-    await resetSlaCondition();
-    throw err;
-  }
+	if (!slaId || !priorityId) {
+		await resetSlaCondition();
+		return;
+	}
+	try {
+		const response = await ConditionsAPI.getList({
+			parentId: slaId,
+			priorityId,
+		});
+		//NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
+		await setItemProp({
+			path: 'slaCondition',
+			value: response.items[0],
+		});
+	} catch (err) {
+		await resetSlaCondition();
+		throw err;
+	}
 };
 
 const resetSlaCondition = async () => {
-  await setItemProp({ path: 'slaCondition', value: null });
+	await setItemProp({
+		path: 'slaCondition',
+		value: null,
+	});
 };
 
 const resetSla = async () => {
-  await setItemProp({ path: 'sla', value: null });
+	await setItemProp({
+		path: 'sla',
+		value: null,
+	});
 };
 
 watch(
-  () => serviceSLA.value?.id,
-  async (newSlaId) => {
-    if (!newSlaId) {
-      await resetSla();
-      return;
-    }
+	() => serviceSLA.value?.id,
+	async (newSlaId) => {
+		if (!newSlaId) {
+			await resetSla();
+			return;
+		}
 
-    await setItemProp({ path: 'sla', value: serviceSLA.value });
-    await updateSlaCondition(newSlaId, itemInstance.value.priority?.id);
-  },
+		await setItemProp({
+			path: 'sla',
+			value: serviceSLA.value,
+		});
+		await updateSlaCondition(newSlaId, itemInstance.value.priority?.id);
+	},
 );
 
 watch(
-  () => itemInstance.value.priority?.id,
-  async (newPriorityId) => {
-    await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
-  },
+	() => itemInstance.value.priority?.id,
+	async (newPriorityId) => {
+		await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
+	},
 );
 </script>
 

@@ -44,10 +44,10 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -63,81 +63,111 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  resetState,
-  ...restStore
-} = useCardStore(namespace, { onLoadErrorHandler: handleError });
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	resetState,
+	...restStore
+} = useCardStore(namespace, {
+	onLoadErrorHandler: handleError,
+});
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      name: { required },
-      sla: { required },
-      prefix: { required },
-      closeReasonGroup: { required },
-      status: { required },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true },
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+			sla: {
+				required,
+			},
+			prefix: {
+				required,
+			},
+			closeReasonGroup: {
+				required,
+			},
+			status: {
+				required,
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-  resetState,
-  onLoadErrorHandler: handleError,
+	...restStore,
+	id,
+	itemInstance,
+	resetState,
+	onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.SERVICE_CATALOGS);
+const { close } = useClose(CrmSections.ServiceCatalogs);
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
 );
 
 const tabs = computed(() => {
-  const general = {
-    text: t('reusable.general'),
-    value: 'general',
-    pathName: `${CrmSections.SERVICE_CATALOGS}-general`,
-  };
+	const general = {
+		text: t('reusable.general'),
+		value: 'general',
+		pathName: `${CrmSections.ServiceCatalogs}-general`,
+	};
 
-  const tabs = [general];
+	const tabs = [
+		general,
+	];
 
-  return tabs;
+	return tabs;
 });
 
 const { currentTab } = useCardTabs(tabs);
 
 const path = computed(() => {
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    {
-      name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
-      route: '/configuration/lookups/service-catalogs',
-    },
-    {
-      name: isNew.value
-        ? t('reusable.new')
-        : prettifyBreadcrumbName(pathName.value),
-    },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.serviceCatalogs.serviceCatalogs', 2),
+			route: '/configuration/lookups/service-catalogs',
+		},
+		{
+			name: isNew.value
+				? t('reusable.new')
+				: prettifyBreadcrumbName(pathName.value),
+		},
+	];
 });
 
 initialize();
 
 onMounted(() => {
-  if (isNew.value) {
-    resetState();
-  }
+	if (isNew.value) {
+		resetState();
+	}
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style
+  scoped
+  lang="scss"
+></style>

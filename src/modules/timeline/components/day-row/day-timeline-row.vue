@@ -54,38 +54,37 @@ import TimelineRowInfo from '../utils/timeline-row-info.vue';
 import DayTimelineRowCounters from './day-timeline-row-counters.vue';
 
 const props = defineProps({
-  timestamp: {
-    type: Number,
-    required: true,
-  },
-  callsCount: {
-    type: Number,
-    default: 0,
-  },
-  chatsCount: {
-    type: Number,
-    default: 0,
-  },
-  emailsCount: {
-    type: Number,
-    default: 0,
-  },
-  tasks: {
-    type: Array,
-    default: () => [],
-  },
-  first: {
-    type: Boolean,
-    default: false,
-  },
-  last: {
-    type: Boolean,
-    default: false,
-  },
+	timestamp: {
+		type: Number,
+		required: true,
+	},
+	callsCount: {
+		type: Number,
+		default: 0,
+	},
+	chatsCount: {
+		type: Number,
+		default: 0,
+	},
+	emailsCount: {
+		type: Number,
+		default: 0,
+	},
+	tasks: {
+		type: Array,
+		default: () => [],
+	},
+	first: {
+		type: Boolean,
+		default: false,
+	},
+	last: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const dayNumber = computed(() => `${new Date(+props.timestamp).getDate()}`);
-
 </script>
 
 <style lang="scss" scoped>

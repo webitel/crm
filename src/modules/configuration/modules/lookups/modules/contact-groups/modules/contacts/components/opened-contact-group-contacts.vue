@@ -64,75 +64,71 @@
 <script setup lang="ts">
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { useAccessControl } from '@webitel/ui-sdk/composables/useAccessControl/useAccessControl';
-import { IconAction } from '@webitel/ui-sdk/enums';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 import { useContactsGroupContactsStore } from '../stores/contacts';
 
 const props = defineProps<{
-  namespace: string,
+	namespace: string;
 }>();
 
 const { t } = useI18n();
-const { hasCreateAccess, hasDeleteAccess } = useAccessControl('contacts');
-const { itemInstance } = useCardStore(
-  props.namespace,
+const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl(
+	WtObject.Contact,
 );
+const { itemInstance } = useCardStore(props.namespace);
 
 const isShowPopup = ref(false);
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
 
-  askDeleteConfirmation,
-  closeDelete,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const tableStore = useContactsGroupContactsStore();
 
-const {
-  selected,
-  filtersManager,
-  isFiltersRestoring,
-} = storeToRefs(tableStore);
+const { selected, filtersManager, isFiltersRestoring } =
+	storeToRefs(tableStore);
 
-const {
-  addFilter,
-  updateFilter,
-  deleteFilter,
-  initialize,
-  loadDataList,
-} = tableStore;
+const { addFilter, updateFilter, deleteFilter, initialize, loadDataList } =
+	tableStore;
 
 const deleteEls = async (ids: string[]) => {
-  await ContactGroupsAPI.removeContactsFromGroup({id: itemInstance.value?.id, contactIds: ids })
-  await loadDataList()
-}
+	await ContactGroupsAPI.removeContactsFromGroup({
+		id: itemInstance.value?.id,
+		contactIds: ids,
+	});
+	await loadDataList();
+};
 
-watch(() => itemInstance.value?.id, (val) => {
-  if (!val) {
-    return;
-  }
+watch(
+	() => itemInstance.value?.id,
+	(val) => {
+		if (!val) {
+			return;
+		}
 
-  initialize({
-    parentId: val,
-  });
-}, {
-  immediate: true,
-});
+		initialize({
+			parentId: val,
+		});
+	},
+	{
+		immediate: true,
+	},
+);
 </script>
 
 <style lang="scss" scoped>

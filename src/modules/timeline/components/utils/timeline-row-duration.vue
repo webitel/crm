@@ -19,14 +19,14 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  duration: {
-    type: Number,
-    required: true,
-  },
-  isTotalDuration: {
-    type: Boolean,
-    default: false,
-  },
+	duration: {
+		type: Number,
+		required: true,
+	},
+	isTotalDuration: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const { t } = useI18n();

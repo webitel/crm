@@ -28,33 +28,31 @@ import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
 import prettifyDate from '../../../../../../cases/utils/prettifyDate';
-import {
-  FieldType,
-} from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 
 const props = defineProps({
-  field: {
-    type: Object,
-    required: true,
-  },
-  value: {
-    type: Object,
-    required: true,
-  },
+	field: {
+		type: Object,
+		required: true,
+	},
+	value: {
+		type: Object,
+		required: true,
+	},
 });
 
 const showText = computed(() => {
-  if (!props.value) {
-    return '';
-  }
+	if (!props.value) {
+		return '';
+	}
 
-  const value = props.value[props.field.value];
+	const value = props.value[props.field.value];
 
-  if (props.field.kind === FieldType.Calendar) {
-    return displayText(prettifyDate(value));
-  }
+	if (props.field.kind === FieldType.Calendar) {
+		return displayText(prettifyDate(value));
+	}
 
-  return displayText(value);
+	return displayText(value);
 });
 </script>
 

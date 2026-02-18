@@ -20,20 +20,23 @@
 import { defineEmits } from 'vue';
 
 const props = defineProps({
-  disabledAddAction: {
-    type: Boolean,
-    default: false,
-  },
+	disabledAddAction: {
+		type: Boolean,
+		default: false,
+	},
 });
 
-const emit = defineEmits(['submit', 'reset']);
+const emit = defineEmits([
+	'submit',
+	'reset',
+]);
 
 function submit() {
-  emit('submit');
+	emit('submit');
 }
 
 function reset() {
-  emit('reset');
+	emit('reset');
 }
 </script>
 

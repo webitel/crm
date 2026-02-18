@@ -28,10 +28,10 @@ import getFileIcon from '../../../../../../app/utils/fileTypeIcon.js';
 import openFileInNewTab from '../../../../../../app/utils/openFileInNewTab.js';
 
 const props = defineProps({
-  file: {
-    type: Array,
-    required: true,
-  },
+	file: {
+		type: Array,
+		required: true,
+	},
 });
 
 const icon = computed(() => getFileIcon(props.file.mime));

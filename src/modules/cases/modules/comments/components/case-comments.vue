@@ -10,15 +10,14 @@
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
-          {{ t('cases.comments.comments') }}
+          {{ t("cases.comments.comments") }}
         </h3>
         <div class="table-title__actions">
-          <wt-icon-btn
-            :icon="sortIcon"
-            @click="toggleSort"
-          />
+          <wt-icon-btn :icon="sortIcon" @click="toggleSort" />
           <wt-action-bar
-            :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
+            :disabled:add="
+              !hasCreateAccess || formState.isAdding || formState.editingComment
+            "
             :include="[IconAction.ADD]"
             @click:add="startAddingComment"
           />
@@ -37,10 +36,7 @@
         />
       </table-top-row-bar>
 
-      <wt-empty
-        v-show="showEmpty"
-        :text="emptyText"
-      />
+      <wt-empty v-show="showEmpty" :text="emptyText" />
 
       <wt-loader v-show="isLoading" />
       <div
@@ -58,9 +54,7 @@
           @update:selected="updateSelected"
         >
           <template #content="{ item }">
-            <case-comment-row
-              :comment="item"
-            />
+            <case-comment-row :comment="item" />
           </template>
           <template #actions="{ item }">
             <template v-if="showActions(item)">
@@ -83,14 +77,10 @@
           </template>
         </wt-table>
 
-        <div
-          v-if="next"
-          class="table-section-footer"
-        >
-          <a
-            class="table-section-footer__link"
-            @click="appendToDataList"
-          >{{ t('reusable.more') }}</a>
+        <div v-if="next" class="table-section-footer">
+          <a class="table-section-footer__link" @click="appendToDataList">{{
+            t("reusable.more")
+          }}</a>
         </div>
       </div>
     </section>
@@ -99,11 +89,8 @@
 
 <script lang="ts" setup>
 import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
-import DeleteConfirmationPopup
-  from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import {
-  useDeleteConfirmationPopup,
-} from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 import { storeToRefs } from 'pinia';
@@ -117,131 +104,143 @@ import { useCaseCommentsStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
 
 const props = defineProps({
-  parentId: {
-    type: String,
-    required: true,
-  },
+	parentId: {
+		type: String,
+		required: true,
+	},
 });
 
 const isReadOnly = inject('isReadOnly');
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl(WtObject.CaseComment);
+	useUserAccessControl(WtObject.CaseComment);
 
 const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
 const { headers, dataList, selected, isLoading, next, shownHeaders } =
-  storeToRefs(tableStore);
+	storeToRefs(tableStore);
 
 const {
-  initialize,
-  loadDataList,
-  updateSelected,
-  updateSize,
-  updatePage,
-  updateSort,
-  appendToDataList,
-  resetInfiniteScrollTableParamsToDefaults,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updateSize,
+	updatePage,
+	updateSort,
+	appendToDataList,
+	resetInfiniteScrollTableParamsToDefaults,
 } = tableStore;
 
 const createdAtHeader = computed(() =>
-  headers.value.find((header) => header.field === 'created_at'),
+	headers.value.find((header) => header.field === 'created_at'),
 );
 
-const isNewestFirst = computed(() =>
-  createdAtHeader.value?.sort === SortSymbols.DESC,
+const isNewestFirst = computed(
+	() => createdAtHeader.value?.sort === SortSymbols.DESC,
 );
 
 const sortIcon = computed(() =>
-  isNewestFirst.value ? 'sort-asc' : 'sort-desc',
+	isNewestFirst.value ? 'sort-asc' : 'sort-desc',
 );
 
 const toggleSort = () => {
-  const header = createdAtHeader.value;
-  if (!header) return;
+	const header = createdAtHeader.value;
+	if (!header) return;
 
-  const newSort =
-    header.sort === SortSymbols.DESC ? SortSymbols.ASC : SortSymbols.DESC;
+	const newSort =
+		header.sort === SortSymbols.DESC ? SortSymbols.ASC : SortSymbols.DESC;
 
-  headers.value = headers.value.map((header) =>
-    header.field === 'created_at' ? { ...header, sort: newSort } : header,
-  );
+	headers.value = headers.value.map((header) =>
+		header.field === 'created_at'
+			? {
+					...header,
+					sort: newSort,
+				}
+			: header,
+	);
 };
 
-resetInfiniteScrollTableParamsToDefaults()
+resetInfiniteScrollTableParamsToDefaults();
 updateSize(5);
 initialize({
-  parentId: props.parentId,
+	parentId: props.parentId,
 });
 
 const {
-  isVisible: isConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-  askDeleteConfirmation,
-  closeDelete,
+	isVisible: isConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const { showEmpty } = useTableEmpty({ dataList, isLoading });
+const { showEmpty } = useTableEmpty({
+	dataList,
+	isLoading,
+});
 
 const emptyText = computed(() => {
-  return t('cases.comments.emptyText');
+	return t('cases.comments.emptyText');
 });
 
 const formState = reactive({
-  isAdding: false,
-  editingComment: null,
-  commentText: '',
+	isAdding: false,
+	editingComment: null,
+	commentText: '',
 });
 
 function startAddingComment() {
-  formState.isAdding = true;
-  formState.editingComment = null;
-  updateCommentText('');
+	formState.isAdding = true;
+	formState.editingComment = null;
+	updateCommentText('');
 }
 
 function startEditingComment(comment) {
-  formState.isAdding = false;
-  formState.editingComment = comment;
-  updateCommentText(comment.text);
+	formState.isAdding = false;
+	formState.editingComment = comment;
+	updateCommentText(comment.text);
 }
 
 function resetForm() {
-  formState.isAdding = false;
-  formState.editingComment = null;
-  updateCommentText('');
+	formState.isAdding = false;
+	formState.editingComment = null;
+	updateCommentText('');
 }
 
 function updateCommentText(value) {
-  formState.commentText = value;
+	formState.commentText = value;
 }
 
 async function submitComment() {
-  if (formState.editingComment) {
-    await CommentsAPI.patch({
-      commentId: formState.editingComment.etag,
-      changes: { text: formState.commentText },
-    });
-  } else {
-    await CommentsAPI.add({
-      parentId: props.parentId,
-      input: { text: formState.commentText },
-    });
-  }
-  updatePage(1);
-  await loadDataList();
-  resetForm();
+	if (formState.editingComment) {
+		await CommentsAPI.patch({
+			commentId: formState.editingComment.etag,
+			changes: {
+				text: formState.commentText,
+			},
+		});
+	} else {
+		await CommentsAPI.add({
+			parentId: props.parentId,
+			input: {
+				text: formState.commentText,
+			},
+		});
+	}
+	updatePage(1);
+	await loadDataList();
+	resetForm();
 }
 
 const deleteComment = async (item) => {
-  await CommentsAPI.delete({
-    etag: item?.etag,
-  });
-  updatePage(1);
-  await loadDataList();
+	await CommentsAPI.delete({
+		etag: item?.etag,
+	});
+	updatePage(1);
+	await loadDataList();
 };
 </script>
 

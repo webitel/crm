@@ -8,19 +8,20 @@
 <script setup>
 // TODO HELP ME!
 const props = defineProps({
-  color: {
-    type: String,
-    validator: (v) => [
-      'default', // divider color
-      'success',
-      'primary',
-      'error',
-      'secondary',
-      'chat',
-      'transfer',
-      'email',
-    ].includes(v),
-  },
+	color: {
+		type: String,
+		validator: (v) =>
+			[
+				'default', // divider color
+				'success',
+				'primary',
+				'error',
+				'secondary',
+				'chat',
+				'transfer',
+				'email',
+			].includes(v),
+	},
 });
 </script>
 

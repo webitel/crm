@@ -16,18 +16,18 @@ import { computed } from 'vue';
 import downloadFile from '../../../../../../app/utils/downloadFile.js';
 
 const props = defineProps({
-  file: {
-    type: Object,
-    required: true,
-  },
+	file: {
+		type: Object,
+		required: true,
+	},
 });
 
 const icon = computed(() => {
-  if (props.file.type.includes('image')) return 'preview-tag-image';
-  if (props.file.type.includes('video')) return 'preview-tag-video';
-  if (props.file.type.includes('audio')) return 'preview-tag-audio';
-  return 'attach';
-})
+	if (props.file.type.includes('image')) return 'preview-tag-image';
+	if (props.file.type.includes('video')) return 'preview-tag-video';
+	if (props.file.type.includes('audio')) return 'preview-tag-audio';
+	return 'attach';
+});
 </script>
 
 <style scoped lang="scss">

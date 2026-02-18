@@ -83,14 +83,14 @@ import { useUserAccessControl } from '../../../../../../../app/composables/useUs
 import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
@@ -99,20 +99,23 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const prioritiesColorsOptions = computed(() =>
-  Object.values(PrioritiesColors).map((type) => {
-    return {
-      id: type,
-      name: type,
-    };
-  }),
+	Object.values(PrioritiesColors).map((type) => {
+		return {
+			id: type,
+			name: type,
+		};
+	}),
 );
 
 function setDefaultColorOption() {
-  if (itemInstance.value?.color) {
-    return;
-  }
+	if (itemInstance.value?.color) {
+		return;
+	}
 
-  setItemProp({ path: 'color', value: prioritiesColorsOptions.value[0].id });
+	setItemProp({
+		path: 'color',
+		value: prioritiesColorsOptions.value[0].id,
+	});
 }
 setDefaultColorOption();
 </script>

@@ -66,79 +66,91 @@ import { onMounted, ref, watch } from 'vue';
 import ServiceAPI from '../api/ServiceAPI.js';
 
 const props = defineProps({
-  value: {
-    type: Object,
-    required: true,
-  },
-  shown: {
-    type: Boolean,
-    required: true,
-  },
+	value: {
+		type: Object,
+		required: true,
+	},
+	shown: {
+		type: Boolean,
+		required: true,
+	},
 });
 
-const emit = defineEmits(['save', 'close']);
+const emit = defineEmits([
+	'save',
+	'close',
+]);
 
 const selectedElement = ref(props.value?.id ?? null);
 const search = ref('');
 const loading = ref(false);
 
 const save = async () => {
-  const service = await ServiceAPI.get({ itemId: selectedElement.value });
-  const catalog = await ServiceCatalogsAPI.get({
-    itemId: service.catalogId,
-  });
+	const service = await ServiceAPI.get({
+		itemId: selectedElement.value,
+	});
+	const catalog = await ServiceCatalogsAPI.get({
+		itemId: service.catalogId,
+	});
 
-  emit('save', {
-    service: service,
-    catalog: catalog,
-  });
-  close();
+	emit('save', {
+		service: service,
+		catalog: catalog,
+	});
+	close();
 };
 
 function close() {
-  emit('close');
+	emit('close');
 }
 
 const catalogData = ref([]);
 
 const loadCatalogs = async () => {
-  try {
-    loading.value = true;
+	try {
+		loading.value = true;
 
-    const { items } = await ServiceCatalogsAPI.getList({
-      size: -1, // It this case for get all catalogs with services we need to pass size -1
-      search: search.value,
-      fields: ['id', 'name', 'closeReasonGroup', 'status', 'service', 'description'],
-      hasSubservices: true,
-      state: true,
-    });
+		const { items } = await ServiceCatalogsAPI.getList({
+			size: -1, // It this case for get all catalogs with services we need to pass size -1
+			search: search.value,
+			fields: [
+				'id',
+				'name',
+				'closeReasonGroup',
+				'status',
+				'service',
+				'description',
+			],
+			hasSubservices: true,
+			state: true,
+		});
 
-    catalogData.value = deepCopy(items);
-  } finally {
-    loading.value = false;
-  }
+		catalogData.value = deepCopy(items);
+	} finally {
+		loading.value = false;
+	}
 };
 
 watch(
-  () => props.value,
-  () => {
-    selectedElement.value = props.value?.id;
-  },
+	() => props.value,
+	() => {
+		selectedElement.value = props.value?.id;
+	},
 );
 
 watch(
-  () => props.shown,
-  (newVal) => {
-    if (newVal) {
-      search.value = '';
-      selectedElement.value = props.value?.id;
-      loadCatalogs();
-    }
-  },
+	() => props.shown,
+	(newVal) => {
+		if (newVal) {
+			search.value = '';
+			selectedElement.value = props.value?.id;
+			loadCatalogs();
+		}
+	},
 );
 
 onMounted(() => {
-  loadCatalogs();
+	loadCatalogs();
 });
 </script>
 

@@ -69,59 +69,64 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  editMode: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: String,
-    default: '',
-  },
-  label: {
-    type: String,
-    default: '',
-  },
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  horizontalView: {
-    type: Boolean,
-    default: false,
-  },
-  icon: {
-    type: String,
-    default: '',
-  },
-  color: {
-    type: String,
-    default: '',
-  },
-  link: {
-    type: Object,
-    default: null,
-  },
-  disableLink: {
-    type: Boolean,
-    default: false,
-  },
+	editMode: {
+		type: Boolean,
+		default: false,
+	},
+	value: {
+		type: String,
+		default: '',
+	},
+	label: {
+		type: String,
+		default: '',
+	},
+	required: {
+		type: Boolean,
+		default: false,
+	},
+	horizontalView: {
+		type: Boolean,
+		default: false,
+	},
+	icon: {
+		type: String,
+		default: '',
+	},
+	color: {
+		type: String,
+		default: '',
+	},
+	link: {
+		type: Object,
+		default: null,
+	},
+	disableLink: {
+		type: Boolean,
+		default: false,
+	},
 });
 
-const emit = defineEmits(['update:value', 'open-link']);
+const emit = defineEmits([
+	'update:value',
+	'open-link',
+]);
 
 const updateValue = (newValue) => {
-  emit('update:value', newValue);
+	emit('update:value', newValue);
 };
 
 const valueWithDefault = computed(() => {
-  if (typeof props.value === 'object' && props.value !== null) {
-    return props.value?.name ?? '-';
-  }
+	if (typeof props.value === 'object' && props.value !== null) {
+		return props.value?.name ?? '-';
+	}
 
-  return props.horizontalView ? props.value : props.value || '-';
+	return props.horizontalView ? props.value : props.value || '-';
 });
 
-const showLinkIcon = computed(() => props.link && props.value?.name && !props.disableLink)
+const showLinkIcon = computed(
+	() => props.link && props.value?.name && !props.disableLink,
+);
 
 /**
  * @author @Oleksandr Palonnyi
@@ -133,8 +138,8 @@ const showLinkIcon = computed(() => props.link && props.value?.name && !props.di
  * that get with API by clicking on the link.
  * */
 const openLink = () => {
-  return !props.disableLink && emit('open-link')
-}
+	return !props.disableLink && emit('open-link');
+};
 </script>
 
 <style

@@ -101,14 +101,14 @@ import ConditionsAPI from '../api/conditions.js';
 import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
 
 const { namespace: parentCardNamespace, id: parentId } = useCardStore(
-  props.namespace,
+	props.namespace,
 );
 
 const namespace = `${parentCardNamespace}/conditions`;
@@ -118,93 +118,105 @@ const route = useRoute();
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-  useUserAccessControl({
-    useUpdateAccessAsAllMutableChecksSource: true,
-  });
+	useUserAccessControl({
+		useUpdateAccessAsAllMutableChecksSource: true,
+	});
 
 const {
-  namespace: tableNamespace,
-  dataList,
-  isLoading,
-  headers,
-  isNext,
-  error,
-  loadData,
-  deleteData,
-  onFilterEvent,
+	namespace: tableNamespace,
+	dataList,
+	isLoading,
+	headers,
+	isNext,
+	error,
+	loadData,
+	deleteData,
+	onFilterEvent,
 } = useTableStore(namespace);
 
 const {
-  namespace: filtersNamespace,
-  restoreFilters,
-  filtersValue,
+	namespace: filtersNamespace,
+	restoreFilters,
+	filtersValue,
 
-  subscribe,
-  flushSubscribers,
-  resetFilters,
+	subscribe,
+	flushSubscribers,
+	resetFilters,
 } = useTableFilters(tableNamespace);
 
 subscribe({
-  event: '*',
-  callback: onFilterEvent,
+	event: '*',
+	callback: onFilterEvent,
 });
 
 restoreFilters();
 
 const {
-  isVisible: isDeleteConfirmationPopup,
-  deleteCount,
-  deleteCallback,
-  askDeleteConfirmation,
-  closeDelete,
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+	askDeleteConfirmation,
+	closeDelete,
 } = useDeleteConfirmationPopup();
 
 const {
-  showEmpty,
-  image: imageEmpty,
-  text: textEmpty,
-  primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({ dataList, filters: filtersValue, error, isLoading });
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 
 const add = () => {
-  return router.push({ ...route, params: { conditionId: 'new' } });
+	return router.push({
+		...route,
+		params: {
+			conditionId: 'new',
+		},
+	});
 };
 
 function setPosition(newIndex, list) {
-  if (newIndex === 0)
-    return {
-      condDown: dataList.value[0].id,
-      condUp: 0,
-    };
+	if (newIndex === 0)
+		return {
+			condDown: dataList.value[0].id,
+			condUp: 0,
+		};
 
-  if (newIndex === list.length - 1)
-    return {
-      condDown: 0,
-      condUp: dataList.value[dataList.value.length - 1].id,
-    };
+	if (newIndex === list.length - 1)
+		return {
+			condDown: 0,
+			condUp: dataList.value[dataList.value.length - 1].id,
+		};
 
-  return {
-    condDown: list[newIndex - 1].id,
-    condUp: list[newIndex + 1].id,
-  };
+	return {
+		condDown: list[newIndex - 1].id,
+		condUp: list[newIndex + 1].id,
+	};
 }
 const handleReorder = async ({ oldIndex, newIndex }) => {
-  const updatedDataList = [...dataList.value];
+	const updatedDataList = [
+		...dataList.value,
+	];
 
-  const [movedItem] = updatedDataList.splice(oldIndex, 1);
-  updatedDataList.splice(newIndex, 0, movedItem);
+	const [movedItem] = updatedDataList.splice(oldIndex, 1);
+	updatedDataList.splice(newIndex, 0, movedItem);
 
-  await ConditionsAPI.patch({
-    parentId: dataList.value[oldIndex].id,
-    changes: {
-      position: setPosition(newIndex, updatedDataList),
-    },
-  });
-  await loadData();
+	await ConditionsAPI.patch({
+		parentId: dataList.value[oldIndex].id,
+		changes: {
+			position: setPosition(newIndex, updatedDataList),
+		},
+	});
+	await loadData();
 };
 
 onUnmounted(() => {
-  flushSubscribers();
-  resetFilters();
+	flushSubscribers();
+	resetFilters();
 });
 </script>

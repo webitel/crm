@@ -36,17 +36,27 @@ import { useI18n } from 'vue-i18n';
 import RolesAPI from '../api/RolesAPI';
 
 const props = defineProps({
-  value: {
-    required: true,
-    type: Object,
-  },
+	value: {
+		required: true,
+		type: Object,
+	},
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits([
+	'input',
+]);
 
 const { t } = useI18n();
 
-const loadRoles = (params) => RolesAPI.getList({ ...params, fields: ['id', 'name', 'user'] });
+const loadRoles = (params) =>
+	RolesAPI.getList({
+		...params,
+		fields: [
+			'id',
+			'name',
+			'user',
+		],
+	});
 </script>
 
 <style lang="scss" scoped>

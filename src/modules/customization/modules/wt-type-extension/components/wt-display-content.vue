@@ -26,24 +26,24 @@ import { FieldType } from '../../custom-lookups/enums/FieldType';
 import DisplayDynamicFieldExtension from './display-dynamic-field-extension.vue';
 
 const props = defineProps({
-  value: {
-    type: String,
-    required: true,
-  },
-  field: {
-    type: Object,
-    required: true,
-  },
+	value: {
+		type: String,
+		required: true,
+	},
+	field: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
 
 const showLabel = computed(() => {
-  return props.field.kind !== FieldType.Boolean;
+	return props.field.kind !== FieldType.Boolean;
 });
 
 const label = computed(() => {
-  return t(props.field?.name || 'vocabulary.labels');
+	return t(props.field?.name || 'vocabulary.labels');
 });
 </script>
 

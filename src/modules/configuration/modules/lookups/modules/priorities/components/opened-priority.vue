@@ -1,7 +1,5 @@
 <template>
-  <wt-page-wrapper
-    :actions-panel="false"
-  >
+  <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -38,9 +36,9 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -57,45 +55,74 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
-} = useCardStore(namespace, { onLoadErrorHandler: handleError });
-
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-  onLoadErrorHandler: handleError,
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	...restStore
+} = useCardStore(namespace, {
+	onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.PRIORITIES);
+const { isNew, pathName, saveText, save, initialize } = useCardComponent({
+	...restStore,
+	id,
+	itemInstance,
+	onLoadErrorHandler: handleError,
+});
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-    color: { required },
-  },
-})), { itemInstance }, { $autoDirty: true });
+const { close } = useClose(CrmSections.Priorities);
+
+const v$ = useVuelidate(
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+			color: {
+				required,
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
+);
 v$.value.$touch();
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const disabledSave = computed(
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 const path = computed(() => {
-
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('vocabulary.priority', 2), route: '/configuration/lookups/priorities' },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-    },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('vocabulary.priority', 2),
+			route: '/configuration/lookups/priorities',
+		},
+		{
+			name: isNew.value ? t('reusable.new') : pathName.value,
+		},
+	];
 });
 
 initialize();
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

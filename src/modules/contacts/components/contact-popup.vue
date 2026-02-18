@@ -83,23 +83,35 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { CalendarsAPI, ContactGroupsAPI, ContactsAPI, LabelsAPI,UsersAPI } from '@webitel/api-services/api';
+import {
+	CalendarsAPI,
+	ContactGroupsAPI,
+	ContactsAPI,
+	LabelsAPI,
+	UsersAPI,
+} from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 const props = defineProps({
-  id: {
-    // if id is passed, that's an edit
-    type: [String, null],
-  },
-  shown: {
-    type: Boolean,
-    default: false,
-  },
+	id: {
+		// if id is passed, that's an edit
+		type: [
+			String,
+			null,
+		],
+	},
+	shown: {
+		type: Boolean,
+		default: false,
+	},
 });
-const emit = defineEmits(['saved', 'close']);
+const emit = defineEmits([
+	'saved',
+	'close',
+]);
 
 const { t } = useI18n();
 const store = useStore();
@@ -107,25 +119,31 @@ const store = useStore();
 const userinfo = computed(() => store.state.userinfo);
 
 const generateNewDraft = () => ({
-  name: '',
-  timezones: [],
-  managers: [],
-  labels: [],
-  groups: [],
-  about: '',
-  createdBy: '',
+	name: '',
+	timezones: [],
+	managers: [],
+	labels: [],
+	groups: [],
+	about: '',
+	createdBy: '',
 });
 
 const draft = ref(generateNewDraft());
 
 const v$ = useVuelidate(
-  computed(() => ({
-    draft: {
-      name: { required },
-    },
-  })),
-  { draft },
-  { $autoDirty: true },
+	computed(() => ({
+		draft: {
+			name: {
+				required,
+			},
+		},
+	})),
+	{
+		draft,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
@@ -133,62 +151,67 @@ v$.value.$touch();
 const isSaving = ref(false);
 
 function close() {
-  emit('close');
+	emit('close');
 }
 
 async function save() {
-  let newContact = '';
-  try {
-    isSaving.value = false;
-    if (props.id) {
-      await ContactsAPI.update({
-        itemInstance: { ...draft.value, id: props.id },
-      });
-    } else {
-      newContact = await ContactsAPI.add({
-        itemInstance: {
-          ...draft.value,
-        },
-      });
-    }
-    emit('saved', props.id || newContact.id);
-    close();
-  } finally {
-    isSaving.value = false;
-  }
+	let newContact = '';
+	try {
+		isSaving.value = false;
+		if (props.id) {
+			await ContactsAPI.update({
+				itemInstance: {
+					...draft.value,
+					id: props.id,
+				},
+			});
+		} else {
+			newContact = await ContactsAPI.add({
+				itemInstance: {
+					...draft.value,
+				},
+			});
+		}
+		emit('saved', props.id || newContact.id);
+		close();
+	} finally {
+		isSaving.value = false;
+	}
 }
 
 function setDefaultManager() {
-  draft.value.managers[0] = {
-    user: {
-      id: userinfo.value.userId,
-      name: userinfo.value.name,
-    },
-  };
+	draft.value.managers[0] = {
+		user: {
+			id: userinfo.value?.userId,
+			name: userinfo.value?.name,
+		},
+	};
 }
 
 async function loadItem(id = props.id) {
-  draft.value = await ContactsAPI.get({ itemId: id });
+	draft.value = await ContactsAPI.get({
+		itemId: id,
+	});
 }
 
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({
-    ...params,
-    type: ContactsGroupType.Static,
-  });
+	return ContactGroupsAPI.getLookup({
+		...params,
+		type: ContactsGroupType.Static,
+	});
 }
 
 watch(
-  () => props.shown,
-  (value) => {
-    if (value) {
-      if (props.id) loadItem(props.id);
-      else {
-        draft.value = generateNewDraft();
-        setDefaultManager();
-      }
-    }
-  },
+	() => props.shown,
+	(value) => {
+		if (value) {
+			if (props.id) loadItem(props.id);
+			else {
+				draft.value = generateNewDraft();
+				setDefaultManager();
+			}
+		}
+	},
 );
 </script>
 

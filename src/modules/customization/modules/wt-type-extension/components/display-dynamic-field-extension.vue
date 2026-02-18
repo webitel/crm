@@ -26,26 +26,26 @@ import prettifyDate from '../../../../cases/utils/prettifyDate';
 import { FieldType } from '../../custom-lookups/enums/FieldType';
 
 const props = defineProps({
-  field: {
-    type: Object,
-    required: true,
-  },
-  value: {
-    type: Object,
-    required: true,
-  },
-  label: {
-    type: String,
-    default: '',
-  },
+	field: {
+		type: Object,
+		required: true,
+	},
+	value: {
+		type: Object,
+		required: true,
+	},
+	label: {
+		type: String,
+		default: '',
+	},
 });
 
 const showText = computed(() => {
-  if (props?.field?.kind === FieldType.Calendar) {
-    return displayText(prettifyDate(props?.value));
-  }
+	if (props?.field?.kind === FieldType.Calendar) {
+		return displayText(prettifyDate(props?.value));
+	}
 
-  return displayText(props?.value);
+	return displayText(props?.value);
 });
 </script>
 

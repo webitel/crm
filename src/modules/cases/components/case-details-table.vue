@@ -30,42 +30,55 @@ import { computed } from 'vue';
 import prettifyDate from '../utils/prettifyDate';
 
 const props = defineProps({
-  item: {
-    type: Object,
-    default: () => ({}),
-  },
+	item: {
+		type: Object,
+		default: () => ({}),
+	},
 });
 
 const headers = [
-  { value: 'description', locale: 'vocabulary.description'},
-  { value: 'comments', locale: 'cases.comments.comments'},
-  { value: 'author', locale: 'cases.author' },
-  { value: 'createdAt', locale: 'reusable.createdAt'},
+	{
+		value: 'description',
+		locale: 'vocabulary.description',
+	},
+	{
+		value: 'comments',
+		locale: 'cases.comments.comments',
+	},
+	{
+		value: 'author',
+		locale: 'cases.author',
+	},
+	{
+		value: 'createdAt',
+		locale: 'reusable.createdAt',
+	},
 ];
 
 const details = computed(() => {
-  let items = [];
+	let items = [];
 
-  const commentItems = props.item?.comments?.items || [];
-  if (commentItems.length) {
-    items = commentItems.map(comment => ({
-      text: comment.text || '',
-      createdAt: comment.createdAt || '',
-      author: comment.createdBy?.name || '',
-    }));
-  }
+	const commentItems = props.item?.comments?.items || [];
+	if (commentItems.length) {
+		items = commentItems.map((comment) => ({
+			text: comment.text || '',
+			createdAt: comment.createdAt || '',
+			author: comment.createdBy?.name || '',
+		}));
+	}
 
-  if (props.item?.description) {
-    if (items.length) {
-      items[0].description = props.item.description;
-    } else {
-      items.push({ description: props.item.description });
-    }
-  }
+	if (props.item?.description) {
+		if (items.length) {
+			items[0].description = props.item.description;
+		} else {
+			items.push({
+				description: props.item.description,
+			});
+		}
+	}
 
-  return items;
+	return items;
 });
-
 </script>
 
 <style lang="scss" scoped>

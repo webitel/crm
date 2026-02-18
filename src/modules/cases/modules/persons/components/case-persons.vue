@@ -4,7 +4,7 @@
     <div class="case-persons__wrapper">
       <editable-field
         :label="t('cases.author')"
-        :value="itemInstance.createdBy?.name || userinfo.name"
+        :value="itemInstance.createdBy?.name || userinfo?.name"
         color="info"
         icon="case-author"
         horizontal-view
@@ -110,8 +110,8 @@
 <script setup>
 import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, ref, watch } from 'vue';
@@ -134,102 +134,120 @@ const v$ = inject('v$');
 const { disableUserInput } = useUserAccessControl();
 
 const {
-  namespace: cardNamespace,
-  itemInstance,
-  setItemProp,
+	namespace: cardNamespace,
+	itemInstance,
+	setItemProp,
 } = useCardStore(namespace);
 
 const { isNew } = useCardComponent({
-  itemInstance,
+	itemInstance,
 });
 
 function loadStaticContactGroupsList(params) {
-  return ContactGroupsAPI.getLookup({
-    ...params,
-    type: ContactsGroupType.Static,
-    enabled: true,
-  });
+	return ContactGroupsAPI.getLookup({
+		...params,
+		type: ContactsGroupType.Static,
+		enabled: true,
+	});
 }
 
 const userinfo = computed(() => store.state.userinfo);
 
 const serviceGroup = computed(
-  () => store.getters[`${cardNamespace}/service/GROUP`],
+	() => store.getters[`${cardNamespace}/service/GROUP`],
 );
 const serviceAssignee = computed(
-  () => store.getters[`${cardNamespace}/service/ASSIGNEE`],
+	() => store.getters[`${cardNamespace}/service/ASSIGNEE`],
 );
 
 const serviceId = computed(
-  () => store.getters[`${cardNamespace}/service/SERVICE_ID`],
+	() => store.getters[`${cardNamespace}/service/SERVICE_ID`],
 );
 
 function handleReporterInput(value) {
-  setItemProp({
-    path: 'reporter',
-    value: value,
-  });
+	setItemProp({
+		path: 'reporter',
+		value: value,
+	});
 
-  if (isEmpty(itemInstance.value.impacted)) {
-    setItemProp({
-      path: 'impacted',
-      value: value,
-    });
-  }
+	if (isEmpty(itemInstance.value.impacted)) {
+		setItemProp({
+			path: 'impacted',
+			value: value,
+		});
+	}
 }
 
 const isAssignMeDisabled = ref(false);
 
 function resetAssignee(value) {
-  setItemProp({ path: 'assignee', value });
+	setItemProp({
+		path: 'assignee',
+		value,
+	});
 }
 
 watch(
-  [serviceId, serviceGroup, serviceAssignee],
-  ([newServiceId, newGroup, newAssignee], [oldServiceId]) => {
-    // this if statement needed so when we enter old case we don't reset assignee and group
-    if ((oldServiceId && newServiceId !== oldServiceId) || isNew.value) {
+	[
+		serviceId,
+		serviceGroup,
+		serviceAssignee,
+	],
+	([newServiceId, newGroup, newAssignee], [oldServiceId]) => {
+		// this if statement needed so when we enter old case we don't reset assignee and group
+		if ((oldServiceId && newServiceId !== oldServiceId) || isNew.value) {
+			// @author @Lera24
+			// [WTEL-7279] (https://webitel.atlassian.net/browse/WTEL-7279)
+			if (itemInstance.value.statusCondition.final) return;
 
-      // @author @Lera24
-      // [WTEL-7279] (https://webitel.atlassian.net/browse/WTEL-7279)
-      if (itemInstance.value.statusCondition.final) return;
-
-      setItemProp({ path: 'group', value: newGroup });
-      setItemProp({ path: 'assignee', value: newAssignee });
-    }
-  },
-  { deep: true },
+			setItemProp({
+				path: 'group',
+				value: newGroup,
+			});
+			setItemProp({
+				path: 'assignee',
+				value: newAssignee,
+			});
+		}
+	},
+	{
+		deep: true,
+	},
 );
 
 watch(
-  () => itemInstance.value.group,
-  (newValue) => {
-    const isDynamicGroup = newValue?.type === ContactsGroupType.Dynamic;
+	() => itemInstance.value.group,
+	(newValue) => {
+		const isDynamicGroup = newValue?.type === ContactsGroupType.Dynamic;
 
-    if (isDynamicGroup) {
-      resetAssignee();
-      isAssignMeDisabled.value = true;
-    } else {
-      isAssignMeDisabled.value = false;
-    }
-  },
-  { deep: true },
+		if (isDynamicGroup) {
+			resetAssignee();
+			isAssignMeDisabled.value = true;
+		} else {
+			isAssignMeDisabled.value = false;
+		}
+	},
+	{
+		deep: true,
+	},
 );
 
 const CONTACT_VIEW_NAME = 'contact_view';
 const createRouteLinkParams = (name, id) => {
-  return {
-    name,
-    params: { id },
-  };
+	return {
+		name,
+		params: {
+			id,
+		},
+	};
 };
 
 const getContactLinkPreview = (id) => {
-  if (!isReadOnly) {
-    return createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id);
-  }
+	if (!isReadOnly) {
+		return createRouteLinkParams(`${CrmSections.Contacts}-card`, id);
+	}
 
-  return createRouteLinkParams(CONTACT_VIEW_NAME, ':etag');
+	return createRouteLinkParams(CONTACT_VIEW_NAME, ':etag');
 };
 
 /**
@@ -241,20 +259,27 @@ const getContactLinkPreview = (id) => {
  * in which we must pass etag instead of id, and etag we can get only from the API while clicking on link.
  * */
 const getContactLink = async (id) => {
-  let url;
+	let url;
 
-  if (!isReadOnly) {
-    url = router.resolve(createRouteLinkParams(`${CrmSections.CONTACTS}-card`, id)).href;
-  } else {
-    const { etag } = await ContactsAPI.get({ itemId: id });
-    url = router.resolve(createRouteLinkParams(CONTACT_VIEW_NAME, etag)).href;
-  }
+	if (!isReadOnly) {
+		url = router.resolve(
+			createRouteLinkParams(`${CrmSections.Contacts}-card`, id),
+		).href;
+	} else {
+		const { etag } = await ContactsAPI.get({
+			itemId: id,
+		});
+		url = router.resolve(createRouteLinkParams(CONTACT_VIEW_NAME, etag)).href;
+	}
 
-  window.open(url, '_blank', 'noopener');
+	window.open(url, '_blank', 'noopener');
 };
 
 const getContactsLookup = async (params) => {
-  return await ContactsAPI.getLookup({ ...params, qin: 'name,phones,emails' });
+	return await ContactsAPI.getLookup({
+		...params,
+		qin: 'name,phones,emails',
+	});
 };
 </script>
 

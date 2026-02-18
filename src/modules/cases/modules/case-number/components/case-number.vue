@@ -18,10 +18,10 @@ import { useI18n } from 'vue-i18n';
 const namespace = inject('namespace');
 
 const {
-  namespace: cardNamespace,
+	namespace: cardNamespace,
 
-  id,
-  itemInstance,
+	id,
+	itemInstance,
 } = useCardStore(namespace);
 
 const { t } = useI18n();

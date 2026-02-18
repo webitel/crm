@@ -30,16 +30,16 @@
 import { WtPopover } from '@webitel/ui-sdk/components';
 
 const props = defineProps({
-  title: {
-    type: String,
-  },
-  name: {
-    type: String,
-  },
-  hiddenParticipants: {
-    type: Array,
-    default: () => [],
-  },
+	title: {
+		type: String,
+	},
+	name: {
+		type: String,
+	},
+	hiddenParticipants: {
+		type: Array,
+		default: () => [],
+	},
 });
 </script>
 

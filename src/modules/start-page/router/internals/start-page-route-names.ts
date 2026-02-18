@@ -1,5 +1,5 @@
 const RouteNames = {
-  TheStartPage: 'the-start-page',
+	TheStartPage: 'the-start-page',
 } as const;
 
 export default RouteNames;

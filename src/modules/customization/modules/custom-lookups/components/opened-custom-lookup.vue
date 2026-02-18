@@ -1,6 +1,5 @@
 <template>
-  <wt-page-wrapper
-    :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -56,10 +55,10 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -70,85 +69,105 @@ const namespace = 'customization/customLookups';
 const { t } = useI18n();
 
 const checkRepo = (repo) => {
-  const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
-  return regex.test(repo);
+	const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+	return regex.test(repo);
 };
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	...restStore
 } = useCardStore(namespace);
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      name: { required },
-      repo: {
-        checkRepo: helpers.withMessage(
-          t('validation.latinWithNumber'),
-          checkRepo,
-        ),
-      },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true },
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+			repo: {
+				checkRepo: helpers.withMessage(
+					t('validation.latinWithNumber'),
+					checkRepo,
+				),
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
 );
 
 v$.value.$touch();
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
+	...restStore,
+	id,
+	itemInstance,
 });
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { close } = useClose(CrmSections.CUSTOM_LOOKUPS);
+const { close } = useClose(CrmSections.CustomLookups);
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
 );
 
 const tabs = computed(() => {
-  const general = {
-    text: t('reusable.general'),
-    value: 'general',
-    pathName: `${CrmSections.CUSTOM_LOOKUPS}-general`,
-  };
-  const columns = {
-    text: t('customization.customLookups.columns', 2),
-    value: 'columns',
-    pathName: `${CrmSections.CUSTOM_LOOKUPS}-columns`,
-  };
+	const general = {
+		text: t('reusable.general'),
+		value: 'general',
+		pathName: `${CrmSections.CustomLookups}-general`,
+	};
+	const columns = {
+		text: t('customization.customLookups.columns', 2),
+		value: 'columns',
+		pathName: `${CrmSections.CustomLookups}-columns`,
+	};
 
-  const tabs = [general];
+	const tabs = [
+		general,
+	];
 
-  if (id.value) tabs.push(columns);
-  return tabs;
+	if (id.value) tabs.push(columns);
+	return tabs;
 });
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('objects.customization.customization'), route: '/configuration' },
-    {
-      name: t('objects.customLookup.customLookup', 2),
-      route: {
-        name: CrmSections.CUSTOM_LOOKUPS,
-      },
-    },
-    {
-      name: isNew.value ? t('reusable.new') : pathName.value,
-    },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('objects.customization.customization'),
+			route: '/configuration',
+		},
+		{
+			name: t('objects.customLookup.customLookup', 2),
+			route: {
+				name: CrmSections.CustomLookups,
+			},
+		},
+		{
+			name: isNew.value ? t('reusable.new') : pathName.value,
+		},
+	];
 });
 
 initialize();
 </script>
 
-<style lang="scss" scoped></style>
+<style
+  lang="scss"
+  scoped
+></style>

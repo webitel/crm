@@ -17,10 +17,10 @@
 import EmailPointTimelineRowFile from './email-point-timeline-row-file.vue';
 
 const props = defineProps({
-  files: {
-    type: Array,
-    required: true,
-  },
+	files: {
+		type: Array,
+		required: true,
+	},
 });
 </script>
 

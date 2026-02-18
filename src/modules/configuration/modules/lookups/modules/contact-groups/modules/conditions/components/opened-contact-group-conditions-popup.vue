@@ -60,10 +60,10 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { ContactGroupsAPI,ContactsAPI } from '@webitel/api-services/api';
+import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty.js';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
@@ -71,103 +71,133 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
 });
-const emit = defineEmits(['load-data']);
+const emit = defineEmits([
+	'load-data',
+]);
 const route = useRoute();
 const { t } = useI18n();
 
 const {
-  namespace: cardNamespace,
-  itemInstance,
-  resetState,
-  addItem,
-  loadItem,
-  updateItem,
-  setId,
-  setItemProp,
-  id,
+	namespace: cardNamespace,
+	itemInstance,
+	resetState,
+	addItem,
+	loadItem,
+	updateItem,
+	setId,
+	setItemProp,
+	id,
 } = useCardStore(props.namespace);
 
 const v$ = useVuelidate(
-  computed(() => ({
-    itemInstance: {
-      expression: { required },
-      group: { required },
-    },
-  })),
-  { itemInstance },
-  { $autoDirty: true, $stopPropagation: true },
+	computed(() => ({
+		itemInstance: {
+			expression: {
+				required,
+			},
+			group: {
+				required,
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+		$stopPropagation: true,
+	},
 );
 v$.value.$touch();
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
 
-const { close } = useClose(`${CrmSections.CONTACT_GROUPS}-conditions`);
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const { close } = useClose(`${CrmSections.ContactGroups}-conditions`);
+const disabledSave = computed(
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 function loadDataList() {
-  emit('load-data');
+	emit('load-data');
 }
 
 const save = async () => {
-  if (isNew.value) {
-    await addItem({ itemInstance, parentId: id.value });
-  } else {
-    await updateItem({ itemInstance, itemId: id.value });
-  }
+	if (isNew.value) {
+		await addItem({
+			itemInstance,
+			parentId: id.value,
+		});
+	} else {
+		await updateItem({
+			itemInstance,
+			itemId: id.value,
+		});
+	}
 
-  close();
-  loadDataList();
+	close();
+	loadDataList();
 };
 
 async function loadStaticContactGroupsList(params) {
-  return await ContactGroupsAPI.getLookup({
-    ...params,
-    type: ContactsGroupType.Static,
-    enabled: true,
-  });
+	return await ContactGroupsAPI.getLookup({
+		...params,
+		type: ContactsGroupType.Static,
+		enabled: true,
+	});
 }
 
 async function loadContacts(params) {
-  return await ContactsAPI.getLookup({
-    ...params,
-    group: itemInstance.value.group?.id,
-  });
+	return await ContactsAPI.getLookup({
+		...params,
+		group: itemInstance.value.group?.id,
+	});
 }
 
 async function setGroups(value) {
-  await setItemProp({ path: 'group', value });
+	await setItemProp({
+		path: 'group',
+		value,
+	});
 
-  if (!IsEmpty(itemInstance.value.assignee)) {
-    await setItemProp({ path: 'assignee', value: null });
-  }
+	if (!IsEmpty(itemInstance.value.assignee)) {
+		await setItemProp({
+			path: 'assignee',
+			value: null,
+		});
+	}
 }
 
 async function initializePopup() {
-  if (!isNew.value) {
-    await setId(conditionId.value);
-    await loadItem();
-  }
+	if (!isNew.value) {
+		await setId(conditionId.value);
+		await loadItem();
+	}
 }
 
 watch(
-  () => conditionId.value,
-  (value) => {
-    if (value) {
-      initializePopup();
-    } else {
-      resetState();
-    }
-  },
-  { immediate: true },
+	() => conditionId.value,
+	(value) => {
+		if (value) {
+			initializePopup();
+		} else {
+			resetState();
+		}
+	},
+	{
+		immediate: true,
+	},
 );
 </script>
-<style lang="scss" scoped>
+<style
+  lang="scss"
+  scoped
+>
 .opened-contact-group-conditions-popup__wrapper {
   display: flex;
   flex-direction: column;

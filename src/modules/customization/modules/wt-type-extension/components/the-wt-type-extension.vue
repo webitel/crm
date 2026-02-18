@@ -39,8 +39,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
-import OpenedCustomLookupColumns
-  from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
+import OpenedCustomLookupColumns from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
 
 const namespace = 'customization/wtTypeExtension';
 
@@ -50,27 +49,35 @@ const route = useRoute();
 const repo = computed(() => route.params.id);
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	...restStore
 } = useCardStore(namespace);
 
 const { isNew, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
+	...restStore,
+	id,
+	itemInstance,
 });
 
 const { close } = useClose('customization');
 
 // This case need to get validation from child fields
-const v$ = useVuelidate({}, { itemInstance }, { $autoDirty: true });
+const v$ = useVuelidate(
+	{},
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
+);
 
 v$.value.$touch();
 
 const disabledSave = computed(
-  () => v$.value?.$invalid || !itemInstance.value?._dirty,
+	() => v$.value?.$invalid || !itemInstance.value?._dirty,
 );
 
 /**
@@ -81,17 +88,23 @@ const disabledSave = computed(
  * link for description https://webitel.atlassian.net/browse/WTEL-7510?focusedCommentId=693399
  * */
 const path = computed(() => {
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    {
-      name: t('objects.customization.customization'),
-      route: '/configuration',
-    },
-    {
-      name: repo.value && t(`customization.extensions.${repo.value}`),
-    },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('objects.customization.customization'),
+			route: '/configuration',
+		},
+		{
+			name: repo.value && t(`customization.extensions.${repo.value}`),
+		},
+	];
 });
 
 initialize();

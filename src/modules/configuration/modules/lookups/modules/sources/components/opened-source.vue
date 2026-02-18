@@ -48,6 +48,7 @@ import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseSourcesCardStore } from '../stores';
+
 // import {WebitelCasesSource} from "@webitel/api-services/gen";
 
 const { t } = useI18n();
@@ -55,34 +56,50 @@ const { t } = useI18n();
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const {
-  // models
-  modelValue,
+	// models
+	modelValue,
 
-  // state
-  debouncedIsLoading,
-  originalItemInstance,
+	// state
+	debouncedIsLoading,
+	originalItemInstance,
 
-  // computed
-  isNew,
-  saveText,
-  hasValidationErrors,
-  isAnyFieldEdited,
-  validationFields,
+	// computed
+	isNew,
+	saveText,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	validationFields,
 
-  // actions
-  save,
-} = useCardComponent/*<WebitelCasesSource>*/({
-  useCardStore: useCaseSourcesCardStore,
-});
+	// actions
+	save,
+} = useCardComponent(
+	/*<WebitelCasesSource>*/ {
+		useCardStore: useCaseSourcesCardStore,
+	},
+);
 
 const path = computed(() => {
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.sources.sources', 2), route: '/configuration/lookups/sources' },
-    { name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.sources.sources', 2),
+			route: '/configuration/lookups/sources',
+		},
+		{
+			name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name,
+		},
+	];
 });
 
 const { close } = useClose(CrmSections.Sources);

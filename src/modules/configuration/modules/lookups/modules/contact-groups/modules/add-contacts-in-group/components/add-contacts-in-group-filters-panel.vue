@@ -17,21 +17,19 @@ import { filtersOptions } from '../configs/filtersOptions';
 import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 
 const props = defineProps<{
-  useTableStore: ReturnType<typeof createAddContactsInGroupComposableTableStore>;
+	useTableStore: ReturnType<
+		typeof createAddContactsInGroupComposableTableStore
+	>;
 }>();
 
 const tableStore = props.useTableStore();
 
 const { filtersManager } = tableStore;
 
-const {
-  addFilter,
-  updateFilter,
-  deleteFilter,
-} = tableStore;
+const { addFilter, updateFilter, deleteFilter } = tableStore;
 
 const resetFilters = () => {
-  filtersManager.value.reset();
+	filtersManager.value.reset();
 };
 </script>
 

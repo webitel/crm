@@ -13,22 +13,32 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  icon: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    default: 'secondary',
-    validator: (value) => ['primary', 'success', 'error', 'chat', 'secondary', 'email'].includes(value),
-  },
+	icon: {
+		type: String,
+		required: true,
+	},
+	color: {
+		type: String,
+		default: 'secondary',
+		validator: (value) =>
+			[
+				'primary',
+				'success',
+				'error',
+				'chat',
+				'secondary',
+				'email',
+			].includes(value),
+	},
 });
 
 const emit = defineEmits([
-  'click',
+	'click',
 ]);
 
-const iColor = computed(() => (props.color === 'secondary') ? 'default' : 'on-dark');
+const iColor = computed(() =>
+	props.color === 'secondary' ? 'default' : 'on-dark',
+);
 </script>
 
 <style lang="scss" scoped>

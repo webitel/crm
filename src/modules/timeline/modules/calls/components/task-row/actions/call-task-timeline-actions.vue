@@ -22,12 +22,11 @@ import CallTaskTimelineActionPlayRecording from './call-task-timeline-action-pla
 import CallTaskTimelineActionTranscription from './call-task-timeline-action-transcription.vue';
 
 const props = defineProps({
-  task: {
-    type: Object,
-    required: true,
-  },
+	task: {
+		type: Object,
+		required: true,
+	},
 });
-
 </script>
 
 <style lang="scss" scoped>

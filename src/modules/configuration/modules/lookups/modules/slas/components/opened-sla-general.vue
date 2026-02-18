@@ -80,20 +80,20 @@
 <script setup>
 import { CalendarsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
-import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
@@ -103,17 +103,21 @@ const { disableUserInput } = useUserAccessControl();
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadCalendarsList(search) {
-  return CalendarsAPI.getLookup(search);
+	return CalendarsAPI.getLookup(search);
 }
 
 const customValidation = computed(() => {
-  if (!itemInstance.value.validTo) return [];
+	if (!itemInstance.value.validTo) return [];
 
-  return [{
-    name: 'maxValue',
-    text: t('validation.maxValue', { max: new Date(itemInstance.value.validTo).toLocaleString() }),
-  }]
-})
+	return [
+		{
+			name: 'maxValue',
+			text: t('validation.maxValue', {
+				max: new Date(itemInstance.value.validTo).toLocaleString(),
+			}),
+		},
+	];
+});
 </script>
 
 <style lang="scss" scoped>

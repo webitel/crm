@@ -10,16 +10,16 @@ import slas from '../modules/slas/store/slas.js';
 import statuses from '../modules/statuses/store/statuses.js';
 
 const lookups = createBaseStoreModule({
-  modules: {
-    slas,
-    catalogs,
-    contactGroups,
-    priorities,
-    services,
-    closeReasonGroups,
-    statuses,
-    customLookup,
-  },
+	modules: {
+		slas,
+		catalogs,
+		contactGroups,
+		priorities,
+		services,
+		closeReasonGroups,
+		statuses,
+		customLookup,
+	},
 });
 
 export default lookups;

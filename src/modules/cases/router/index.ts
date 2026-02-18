@@ -11,57 +11,59 @@ import CaseResult from '../modules/result/components/case-result.vue';
 import CaseTimeline from '../modules/timeline/components/case-timeline.vue';
 
 const casesRoutes: RouteRecordRaw[] = [
-  {
-    path: 'cases',
-    name: CrmSections.Cases,
-    component: TheCases,
-    meta: {
-      WtObject: WtObject.Case,
-      UiSection: CrmSections.Cases,
-    },
-  },
-  {
-    path: 'cases/:id',
-    name: `${CrmSections.Cases}-card`,
-    component: OpenedCase,
-    redirect: { name: `${CrmSections.Cases}-case-info` },
-    meta: {
-      WtObject: WtObject.Case,
-      UiSection: CrmSections.Cases,
-    },
-    children: [
-      {
-        path: 'case-info',
-        name: `${CrmSections.Cases}-case-info`,
-        component: CaseInfo,
-      },
-      {
-        path: 'result',
-        name: `${CrmSections.Cases}-result`,
-        component: CaseResult,
-      },
-      {
-        path: 'attachments',
-        name: `${CrmSections.Cases}-attachments`,
-        component: CaseAttachments,
-      },
-      {
-        path: 'details',
-        name: `${CrmSections.Cases}-details`,
-        component: CaseDetails,
-      },
-      {
-        path: 'timeline',
-        name: `${CrmSections.Cases}-timeline`,
-        component: CaseTimeline,
-      },
-      {
-        path: 'permissions/:permissionId?',
-        name: `${CrmSections.Cases}-permissions`,
-        component: PermissionsTab,
-      },
-    ],
-  },
+	{
+		path: 'cases',
+		name: CrmSections.Cases,
+		component: TheCases,
+		meta: {
+			WtObject: WtObject.Case,
+			UiSection: CrmSections.Cases,
+		},
+	},
+	{
+		path: 'cases/:id',
+		name: `${CrmSections.Cases}-card`,
+		component: OpenedCase,
+		redirect: {
+			name: `${CrmSections.Cases}-case-info`,
+		},
+		meta: {
+			WtObject: WtObject.Case,
+			UiSection: CrmSections.Cases,
+		},
+		children: [
+			{
+				path: 'case-info',
+				name: `${CrmSections.Cases}-case-info`,
+				component: CaseInfo,
+			},
+			{
+				path: 'result',
+				name: `${CrmSections.Cases}-result`,
+				component: CaseResult,
+			},
+			{
+				path: 'attachments',
+				name: `${CrmSections.Cases}-attachments`,
+				component: CaseAttachments,
+			},
+			{
+				path: 'details',
+				name: `${CrmSections.Cases}-details`,
+				component: CaseDetails,
+			},
+			{
+				path: 'timeline',
+				name: `${CrmSections.Cases}-timeline`,
+				component: CaseTimeline,
+			},
+			{
+				path: 'permissions/:permissionId?',
+				name: `${CrmSections.Cases}-permissions`,
+				component: PermissionsTab,
+			},
+		],
+	},
 ];
 
 export default casesRoutes;

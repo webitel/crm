@@ -1,7 +1,5 @@
 <template>
-  <wt-page-wrapper
-    :actions-panel="!!currentTab.filters"
-  >
+  <wt-page-wrapper :actions-panel="!!currentTab.filters">
     <template #header>
       <wt-page-header
         :primary-action="save"
@@ -49,11 +47,11 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { minValue, required, maxValue } from '@vuelidate/validators';
+import { maxValue, minValue, required } from '@vuelidate/validators';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import CrmSections from '@webitel/ui-sdk/src/enums/WebitelApplications/CrmSections.enum.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -68,70 +66,111 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-  namespace: cardNamespace,
-  id,
-  itemInstance,
-  ...restStore
-} = useCardStore(SLANamespace, { onLoadErrorHandler: handleError });
+	namespace: cardNamespace,
+	id,
+	itemInstance,
+	...restStore
+} = useCardStore(SLANamespace, {
+	onLoadErrorHandler: handleError,
+});
 
-const v$ = useVuelidate(computed(() => ({
-  itemInstance: {
-    name: { required },
-    calendar: { required },
-    reactionTime: { required, minValue: minValue(1) },
-    resolutionTime: { required, minValue: minValue(1) },
-    // The values can't be equal, so I subtract 1 minute for that.
-    // @author @Lera24
-    // https://webitel.atlassian.net/browse/WTEL-8635
-    validFrom: { maxValue: maxValue(itemInstance.value.validTo - 60000) }
-  },
-})), { itemInstance }, { $autoDirty: true });
+const v$ = useVuelidate(
+	computed(() => ({
+		itemInstance: {
+			name: {
+				required,
+			},
+			calendar: {
+				required,
+			},
+			reactionTime: {
+				required,
+				minValue: minValue(1),
+			},
+			resolutionTime: {
+				required,
+				minValue: minValue(1),
+			},
+			// The values can't be equal, so I subtract 1 minute for that.
+			// @author @Lera24
+			// https://webitel.atlassian.net/browse/WTEL-8635
+			validFrom: {
+				maxValue: maxValue(itemInstance.value.validTo - 60000),
+			},
+		},
+	})),
+	{
+		itemInstance,
+	},
+	{
+		$autoDirty: true,
+	},
+);
 
 v$.value.$touch();
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-  ...restStore,
-  id,
-  itemInstance,
-  onLoadErrorHandler: handleError,
+	...restStore,
+	id,
+	itemInstance,
+	onLoadErrorHandler: handleError,
 });
 
-const { close } = useClose(CrmSections.SLAS);
-const disabledSave = computed(() => v$.value?.$invalid || !itemInstance.value._dirty);
+const { close } = useClose(CrmSections.Slas);
+const disabledSave = computed(
+	() => v$.value?.$invalid || !itemInstance.value._dirty,
+);
 
 const tabs = computed(() => {
-  const general = {
-    text: t('reusable.general'),
-    value: 'general',
-    pathName: `${CrmSections.SLAS}-general`,
-  };
-  const conditions = {
-    text: t('lookups.slas.conditions', 2),
-    value: 'conditions',
-    pathName: `${CrmSections.SLAS}-conditions`,
-  };
+	const general = {
+		text: t('reusable.general'),
+		value: 'general',
+		pathName: `${CrmSections.Slas}-general`,
+	};
+	const conditions = {
+		text: t('lookups.slas.conditions', 2),
+		value: 'conditions',
+		pathName: `${CrmSections.Slas}-conditions`,
+	};
 
-  const tabs = [general];
+	const tabs = [
+		general,
+	];
 
-  if (id.value) tabs.push(conditions);
-  return tabs;
+	if (id.value) tabs.push(conditions);
+	return tabs;
 });
 
 const { currentTab, changeTab } = useCardTabs(tabs);
 
 const path = computed(() => {
-
-  return [
-    { name: t('crm'), route: '/start-page' },
-    { name: t('startPage.configuration.name'), route: '/configuration' },
-    { name: t('lookups.lookups'), route: '/configuration' },
-    { name: t('lookups.slas.slas', 2), route: '/configuration/lookups/slas' },
-    { name: isNew.value ? t('reusable.new') : pathName.value },
-  ];
+	return [
+		{
+			name: t('crm'),
+			route: '/start-page',
+		},
+		{
+			name: t('startPage.configuration.name'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.lookups'),
+			route: '/configuration',
+		},
+		{
+			name: t('lookups.slas.slas', 2),
+			route: '/configuration/lookups/slas',
+		},
+		{
+			name: isNew.value ? t('reusable.new') : pathName.value,
+		},
+	];
 });
 
 initialize();
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

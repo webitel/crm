@@ -55,18 +55,18 @@ import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
-  namespace: {
-    type: String,
-    required: true,
-  },
-  v: {
-    type: Object,
-    required: true,
-  },
-  isNew: {
-    type: Boolean,
-    required: true,
-  },
+	namespace: {
+		type: String,
+		required: true,
+	},
+	v: {
+		type: Object,
+		required: true,
+	},
+	isNew: {
+		type: Boolean,
+		required: true,
+	},
 });
 
 const { t } = useI18n();
