@@ -13,7 +13,9 @@
     </template>
     <template #main>
       <upload-custom-lookup-popup
+        v-if="headers.length"
         :file="csvFile"
+        :fields="headers"
         @close="closeCSVPopup"
       />
       <section class="table-section">
