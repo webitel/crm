@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import WtUploadCsvPopup from '@webitel/ui-sdk/src/components/on-demand/wt-upload-csv-popup/components/wt-upload-csv-popup.vue';
+import WtUploadCsvPopup from '@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue';
 import { ref } from 'vue';
 
 import CustomLookupApi from '../api/custom-lookups';
@@ -17,6 +17,7 @@ import CustomLookupApi from '../api/custom-lookups';
 const props = defineProps<{
 	file: File | null;
 	fields: never[];
+	repo: string;
 }>();
 
 const emit = defineEmits<{
@@ -43,6 +44,8 @@ const close = () => {
 const addItem = (itemInstance) => {
 	return CustomLookupApi.add({
 		itemInstance,
+		fieldsToSend: props.fields?.map((field) => field.value),
+		repo: props.repo,
 	});
 };
 

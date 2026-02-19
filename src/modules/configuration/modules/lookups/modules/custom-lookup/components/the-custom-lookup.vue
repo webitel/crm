@@ -16,6 +16,7 @@
         v-if="headers.length"
         :file="csvFile"
         :fields="headers"
+        :repo="repo"
         @close="closeCSVPopup"
       />
       <section class="table-section">
