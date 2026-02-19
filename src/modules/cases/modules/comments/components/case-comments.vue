@@ -147,20 +147,9 @@ const sortIcon = computed(() =>
 );
 
 const toggleSort = () => {
-	const header = createdAtHeader.value;
-	if (!header) return;
-
-	const newSort =
-		header.sort === SortSymbols.DESC ? SortSymbols.ASC : SortSymbols.DESC;
-
-	headers.value = headers.value.map((header) =>
-		header.field === 'created_at'
-			? {
-					...header,
-					sort: newSort,
-				}
-			: header,
-	);
+	if (createdAtHeader.value) {
+		updateSort(createdAtHeader.value);
+	}
 };
 
 resetInfiniteScrollTableParamsToDefaults();
