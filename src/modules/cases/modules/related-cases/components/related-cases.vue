@@ -16,7 +16,7 @@
         <wt-action-bar
           v-if="!isReadOnly"
           :include="[IconAction.ADD, IconAction.DELETE]"
-          :disabled:add="!hasCreateAccess || !editMode"
+          :disabled:add="!hasCreateAccess || !editMode || defaultState.isAdding || defaultState.createMode"
           :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
           @click:add="startAddingRelatedCase"
           @click:delete="
