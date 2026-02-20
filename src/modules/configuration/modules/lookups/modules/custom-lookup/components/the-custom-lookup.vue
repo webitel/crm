@@ -12,11 +12,19 @@
       </wt-page-header>
     </template>
     <template #main>
+      <upload-custom-lookup-popup
+        v-if="headers.length"
+        :file="csvFile"
+        :fields="headers"
+        :repo="repo"
+        @close="closeCSVPopup"
+      />
       <section class="table-section">
         <header class="table-title">
           <h3 class="table-title__title">
             {{ t('customization.customLookups.allValues') }}
           </h3>
+
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
@@ -34,6 +42,12 @@
               <filter-search
                 :namespace="filtersNamespace"
                 name="search"
+              />
+              <wt-upload-file-icon-btn
+                v-if="hasCreateAccess"
+                accept=".csv"
+                class="icon-action"
+                @change="processCSV"
               />
             </template>
           </wt-action-bar>
@@ -126,9 +140,11 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
+import WtUploadFileIconBtn from '@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue';
 import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
+import UploadCustomLookupPopup from './upload-custom-lookup-popup.vue';
 
 const baseNamespace = 'configuration/lookups/customLookup';
 
@@ -258,6 +274,20 @@ const {
 	filters: filtersValue,
 	isLoading,
 });
+
+const csvFile = ref(null);
+
+const processCSV = (files) => {
+	const file = files[0];
+	if (file) {
+		csvFile.value = file;
+	}
+};
+
+const closeCSVPopup = () => {
+	csvFile.value = null;
+	loadData();
+};
 
 const add = () => {
 	router.push({
