@@ -24,8 +24,6 @@ const emit = defineEmits<{
 	(e: 'close'): void;
 }>();
 
-console.log('props.fields', props.fields);
-
 const mappingFields = ref(
 	props.fields
 		? props.fields.map((field) => ({

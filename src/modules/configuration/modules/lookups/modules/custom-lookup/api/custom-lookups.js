@@ -86,10 +86,6 @@ const addCustomLookupRecord = async ({ itemInstance, fieldsToSend, repo }) => {
 		camelToSnake(),
 		sanitize(fieldsToSend),
 	]);
-
-	console.log('item', item);
-	console.log('fieldsToSend', fieldsToSend);
-	console.log('repo', repo);
 	try {
 		const response = await dictionariesService.createData(repo, item);
 		return applyTransform(response.data, [

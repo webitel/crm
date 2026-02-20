@@ -43,7 +43,7 @@
                 :namespace="filtersNamespace"
                 name="search"
               />
-              <upload-file-icon-btn
+              <wt-upload-file-icon-btn
                 v-if="hasCreateAccess"
                 accept=".csv"
                 class="icon-action"
@@ -140,7 +140,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-import UploadFileIconBtn from '../../../../../../_shared/modules/importCSV/components/upload-file-icon-btn.vue';
+import WtUploadFileIconBtn from '@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue';
 import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
