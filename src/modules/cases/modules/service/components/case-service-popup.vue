@@ -158,6 +158,7 @@ onMounted(() => {
 .case-service-popup {
   &__search-bar {
     margin-bottom: var(--spacing-sm);
+    width: 100%;
   }
 
   &__description-icon {
