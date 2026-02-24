@@ -94,6 +94,7 @@
 </template>
 
 <script lang="ts" setup>
+import { WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
@@ -106,7 +107,7 @@ import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
-import { useCaseCommentsStore } from '../stores/comments';
+import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
 
 const props = defineProps({
@@ -124,10 +125,11 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 
 const showActions = (item) => item.canEdit && !isReadOnly;
 
-const tableStore = useCaseCommentsStore();
+const useTableStore = createCaseCommentsComposableTableStore();
+const tableStore = useTableStore();
 
 const { dataList, selected, isLoading, next, shownHeaders, headers } =
-	storeToRefs(tableStore);
+	tableStore;
 
 const {
 	initialize,

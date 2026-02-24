@@ -4,9 +4,11 @@ import { CommentsAPI } from '../api/CommentsAPI';
 import { CaseCommentsNamespace } from '../namespace';
 import { headers } from './headers/headers';
 
-export const useCaseCommentsStore = createTableStore(CaseCommentsNamespace, {
-	apiModule: CommentsAPI,
-	headers,
-	disablePersistence: true,
-	isAppendDataList: true,
-});
+export const createCaseCommentsComposableTableStore = () =>
+	createTableStore(CaseCommentsNamespace, {
+		apiModule: CommentsAPI,
+		headers,
+		disablePersistence: true,
+		isAppendDataList: true,
+		storeType: 'composable',
+	});
