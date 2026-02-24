@@ -12,6 +12,7 @@
         <h3 class="table-title__title">
           {{ t('cases.comments.comments') }}
         </h3>
+        <wt-icon-btn :icon="sortIcon" @click="toggleSort" />
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
           :include="[IconAction.ADD]"
@@ -93,13 +94,14 @@
 </template>
 
 <script lang="ts" setup>
-import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
+import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../components/table-top-row-bar.vue';
@@ -124,7 +126,7 @@ const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
-const { dataList, selected, isLoading, next, shownHeaders } =
+const { dataList, selected, isLoading, next, shownHeaders, headers } =
 	storeToRefs(tableStore);
 
 const {
@@ -160,6 +162,27 @@ const { showEmpty } = useTableEmpty({
 const emptyText = computed(() => {
 	return t('cases.comments.emptyText');
 });
+
+const createdAtHeader = computed(() =>
+	headers.value.find((header) => header.field === 'created_at'),
+);
+
+const sortIcon = computed(() => {
+	return createdAtHeader.value?.sort === SortSymbols.DESC
+		? 'sort-asc'
+		: 'sort-desc';
+});
+
+const toggleSort = () => {
+	const nextOrder =
+		createdAtHeader.value?.sort === SortSymbols.DESC
+			? SortSymbols.ASC
+			: SortSymbols.DESC;
+
+	updateSort(createdAtHeader.value, {
+		order: nextOrder,
+	});
+};
 
 const formState = reactive({
 	isAdding: false,
