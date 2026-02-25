@@ -12,12 +12,17 @@
         <h3 class="table-title__title">
           {{ t('cases.comments.comments') }}
         </h3>
-        <wt-icon-btn :icon="sortIcon" @click="toggleSort" />
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
           :include="[IconAction.ADD]"
           @click:add="startAddingComment"
         >
+          <template #default { size }>
+            <wt-icon-btn 
+              :icon="sortIcon"
+              :size="size"
+              @click="toggleSort" />
+          </template>
         </wt-action-bar>
       </header>
 
@@ -99,7 +104,6 @@ import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
@@ -109,6 +113,7 @@ import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
 import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
+import { size } from 'zod/v4';
 
 const props = defineProps({
 	parentId: {
