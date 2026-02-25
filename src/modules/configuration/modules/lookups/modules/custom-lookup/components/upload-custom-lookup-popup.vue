@@ -26,12 +26,14 @@ const emit = defineEmits<{
 
 const mappingFields = ref(
 	props.fields
-		? props.fields.map((field) => ({
-				name: field?.value,
-				required: field?.required,
-				locale: field?.locale,
-				csv: '',
-			}))
+		? props.fields
+				.filter((field) => !field.readonly)
+				.map((field) => ({
+					name: field?.value,
+					required: field?.required,
+					locale: field?.locale,
+					csv: '',
+				}))
 		: [],
 );
 
