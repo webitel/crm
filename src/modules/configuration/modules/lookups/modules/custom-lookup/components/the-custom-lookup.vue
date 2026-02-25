@@ -14,6 +14,7 @@
     <template #main>
       <upload-custom-lookup-popup
         v-if="headers.length"
+        :key="repo"
         :file="csvFile"
         :fields="headers"
         :repo="repo"
@@ -171,6 +172,7 @@ const loadDictionary = async () => {
 				.map((field) => ({
 					value: field.id,
 					locale: field.name,
+					readonly: field.readonly,
 					show: true,
 					field: field.id,
 					kind: field.kind,
