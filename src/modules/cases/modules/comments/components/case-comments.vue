@@ -14,10 +14,11 @@
         </h3>
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
-          :include="[IconAction.ADD]"
+          :include="[IconAction.ADD, sortAction]"
           @click:add="startAddingComment"
-        >
-        </wt-action-bar>
+          @click:sortAsc="toggleSort"
+          @click:sortDesc="toggleSort"
+        />
       </header>
 
       <table-top-row-bar
@@ -93,18 +94,19 @@
 </template>
 
 <script lang="ts" setup>
-import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
+import { WtTable } from '@webitel/ui-sdk/components';
+import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
-import { useCaseCommentsStore } from '../stores/comments';
+import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
 
 const props = defineProps({
@@ -122,10 +124,11 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 
 const showActions = (item) => item.canEdit && !isReadOnly;
 
-const tableStore = useCaseCommentsStore();
+const useTableStore = createCaseCommentsComposableTableStore();
+const tableStore = useTableStore();
 
-const { dataList, selected, isLoading, next, shownHeaders } =
-	storeToRefs(tableStore);
+const { dataList, selected, isLoading, next, shownHeaders, headers } =
+	tableStore;
 
 const {
 	initialize,
@@ -160,6 +163,27 @@ const { showEmpty } = useTableEmpty({
 const emptyText = computed(() => {
 	return t('cases.comments.emptyText');
 });
+
+const createdAtHeader = computed(() =>
+	headers.value.find((header) => header.field === 'created_at'),
+);
+
+const sortAction = computed(() => {
+	return createdAtHeader.value?.sort === SortSymbols.DESC
+		? IconAction.SORT_ASC
+		: IconAction.SORT_DESC;
+});
+
+const toggleSort = () => {
+	const nextOrder =
+		createdAtHeader.value?.sort === SortSymbols.DESC
+			? SortSymbols.ASC
+			: SortSymbols.DESC;
+
+	updateSort(createdAtHeader.value, {
+		order: nextOrder,
+	});
+};
 
 const formState = reactive({
 	isAdding: false,
