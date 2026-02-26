@@ -14,16 +14,11 @@
         </h3>
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
-          :include="[IconAction.ADD]"
+          :include="[IconAction.ADD, sortAction]"
           @click:add="startAddingComment"
-        >
-          <template #default { size }>
-            <wt-icon-btn 
-              :icon="sortIcon"
-              :size="size"
-              @click="toggleSort" />
-          </template>
-        </wt-action-bar>
+          @click:sortAsc="toggleSort"
+          @click:sortDesc="toggleSort"
+        />
       </header>
 
       <table-top-row-bar
@@ -99,7 +94,7 @@
 </template>
 
 <script lang="ts" setup>
-import { WtTable } from '@webitel/ui-sdk/components';
+import { WtTable, WtActionBar } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
@@ -113,7 +108,6 @@ import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
 import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
-import { size } from 'zod/v4';
 
 const props = defineProps({
 	parentId: {
@@ -174,10 +168,10 @@ const createdAtHeader = computed(() =>
 	headers.value.find((header) => header.field === 'created_at'),
 );
 
-const sortIcon = computed(() => {
+const sortAction = computed(() => {
 	return createdAtHeader.value?.sort === SortSymbols.DESC
-		? 'sort-asc'
-		: 'sort-desc';
+		? IconAction.SORT_ASC
+		: IconAction.SORT_DESC;
 });
 
 const toggleSort = () => {
