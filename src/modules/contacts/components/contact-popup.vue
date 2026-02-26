@@ -91,9 +91,10 @@ import {
 	UsersAPI,
 } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
 const props = defineProps({
 	id: {
@@ -114,9 +115,9 @@ const emit = defineEmits([
 ]);
 
 const { t } = useI18n();
-const store = useStore();
 
-const userinfo = computed(() => store.state.userinfo);
+const userInfoStore = useUserinfoStore();
+const { userInfo } = storeToRefs(userInfoStore);
 
 const generateNewDraft = () => ({
 	name: '',
@@ -182,8 +183,8 @@ async function save() {
 function setDefaultManager() {
 	draft.value.managers[0] = {
 		user: {
-			id: userinfo.value?.userId,
-			name: userinfo.value?.name,
+			id: userInfo.value?.userId,
+			name: userInfo.value?.name,
 		},
 	};
 }
