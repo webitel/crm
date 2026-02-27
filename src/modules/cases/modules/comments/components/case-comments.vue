@@ -10,14 +10,18 @@
     <section class="table-section">
       <header class="table-title">
         <h3 class="table-title__title">
-          {{ t('cases.comments.comments') }}
+          {{ t("cases.comments.comments") }}
         </h3>
-        <wt-action-bar
-          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
-          :include="[IconAction.ADD]"
-          @click:add="startAddingComment"
-        >
-        </wt-action-bar>
+        <div class="table-title__actions">
+          <wt-icon-btn :icon="sortIcon" @click="toggleSort" />
+          <wt-action-bar
+            :disabled:add="
+              !hasCreateAccess || formState.isAdding || formState.editingComment
+            "
+            :include="[IconAction.ADD]"
+            @click:add="startAddingComment"
+          />
+        </div>
       </header>
 
       <table-top-row-bar
@@ -32,10 +36,7 @@
         />
       </table-top-row-bar>
 
-      <wt-empty
-        v-show="showEmpty"
-        :text="emptyText"
-      />
+      <wt-empty v-show="showEmpty" :text="emptyText" />
 
       <wt-loader v-show="isLoading" />
       <div
@@ -53,9 +54,7 @@
           @update:selected="updateSelected"
         >
           <template #content="{ item }">
-            <case-comment-row
-              :comment="item"
-            />
+            <case-comment-row :comment="item" />
           </template>
           <template #actions="{ item }">
             <template v-if="showActions(item)">
@@ -78,14 +77,10 @@
           </template>
         </wt-table>
 
-        <div
-          v-if="next"
-          class="table-section-footer"
-        >
-          <a
-            class="table-section-footer__link"
-            @click="appendToDataList"
-          >{{ t('reusable.more') }}</a>
+        <div v-if="next" class="table-section-footer">
+          <a class="table-section-footer__link" @click="appendToDataList">{{
+            t("reusable.more")
+          }}</a>
         </div>
       </div>
     </section>
@@ -97,6 +92,7 @@ import { IconAction, WtObject } from '@webitel/ui-sdk/src/enums/index';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 import { storeToRefs } from 'pinia';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -124,7 +120,7 @@ const showActions = (item) => item.canEdit && !isReadOnly;
 
 const tableStore = useCaseCommentsStore();
 
-const { dataList, selected, isLoading, next, shownHeaders } =
+const { headers, dataList, selected, isLoading, next, shownHeaders } =
 	storeToRefs(tableStore);
 
 const {
@@ -137,6 +133,24 @@ const {
 	appendToDataList,
 	resetInfiniteScrollTableParamsToDefaults,
 } = tableStore;
+
+const createdAtHeader = computed(() =>
+	headers.value.find((header) => header.field === 'created_at'),
+);
+
+const isNewestFirst = computed(
+	() => createdAtHeader.value?.sort === SortSymbols.DESC,
+);
+
+const sortIcon = computed(() =>
+	isNewestFirst.value ? 'sort-asc' : 'sort-desc',
+);
+
+const toggleSort = () => {
+	if (createdAtHeader.value) {
+		updateSort(createdAtHeader.value);
+	}
+};
 
 resetInfiniteScrollTableParamsToDefaults();
 updateSize(5);
@@ -226,6 +240,12 @@ const deleteComment = async (item) => {
       flex: 1;
     }
   }
+}
+
+.table-title__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .table-section-footer {
