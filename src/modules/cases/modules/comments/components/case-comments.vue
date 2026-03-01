@@ -14,10 +14,10 @@
         </h3>
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
-          :include="[IconAction.ADD, sortAction]"
+          :include="[IconAction.ADD, IconAction.SORT]"
+          :sortOrder="nextSortOrder"
           @click:add="startAddingComment"
-          @click:sortAsc="toggleSort"
-          @click:sortDesc="toggleSort"
+          @click:sort="toggleSort"
         />
       </header>
 
@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts" setup>
-import { WtTable } from '@webitel/ui-sdk/components';
+import { WtTable, WtActionBar } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
@@ -168,20 +168,15 @@ const createdAtHeader = computed(() =>
 	headers.value.find((header) => header.field === 'created_at'),
 );
 
-const sortAction = computed(() => {
+const nextSortOrder = computed(() => {
 	return createdAtHeader.value?.sort === SortSymbols.DESC
-		? IconAction.SORT_ASC
-		: IconAction.SORT_DESC;
+		? SortSymbols.ASC
+		: SortSymbols.DESC;
 });
 
 const toggleSort = () => {
-	const nextOrder =
-		createdAtHeader.value?.sort === SortSymbols.DESC
-			? SortSymbols.ASC
-			: SortSymbols.DESC;
-
 	updateSort(createdAtHeader.value, {
-		order: nextOrder,
+		order: nextSortOrder,
 	});
 };
 
