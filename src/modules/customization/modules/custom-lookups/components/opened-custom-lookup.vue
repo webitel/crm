@@ -64,9 +64,12 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../error-pages/composable/useErrorRedirectHandler.ts';
 
 const namespace = 'customization/customLookups';
 const { t } = useI18n();
+
+const { handleError } = useErrorRedirectHandler();
 
 const checkRepo = (repo) => {
 	const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
@@ -78,7 +81,9 @@ const {
 	id,
 	itemInstance,
 	...restStore
-} = useCardStore(namespace);
+} = useCardStore(namespace, {
+  onLoadErrorHandler: handleError,
+});
 
 const v$ = useVuelidate(
 	computed(() => ({
