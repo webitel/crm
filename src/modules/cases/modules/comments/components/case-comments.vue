@@ -15,7 +15,7 @@
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
           :include="[IconAction.ADD, IconAction.SORT]"
-          :sortOrder="nextSortOrder"
+          :sort:order="nextSortOrder"
           @click:add="startAddingComment"
           @click:sort="toggleSort"
         />
