@@ -17,6 +17,7 @@
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :value="itemInstance?.statusCondition"
+		:clearable="false"
         class="case-status__select"
         @input="handleSelect"
       >
