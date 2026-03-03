@@ -58,8 +58,11 @@
           </div>
 
             <wt-player
-              v-if="isShowPlayer"
-              :src="'https://cdn6.sefon.pro/files/prev/1/The%20Eagles%20-%20Hotel%20California%20%28192kbps%29.mp3' || audioURL"
+              v-if="showPlayer"
+              :src="{
+                src: audioURL,
+                type: audioFile.mimeType,
+              }"
               position="relative"
               @close="closePlayer"
             />
@@ -76,7 +79,7 @@
   </timeline-row>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { WtDisplayChipItems, WtPlayer } from '@webitel/ui-sdk/components';
 import {
 	computed,
@@ -87,6 +90,7 @@ import {
 	ref,
 	toRefs,
 } from 'vue';
+import { EngineCallFile } from '@webitel/api-services/gen/models';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
@@ -118,10 +122,13 @@ const props = defineProps({
 });
 
 const audioURL = ref(null);
-const audioId = ref('');
+const audioFile = ref<EngineCallFile | null>(null);
 const eventBus = inject('$eventBus');
 
-provide('audioId', audioId);
+provide(
+	'audioId',
+	computed(() => audioFile.value?.id),
+);
 
 const {
 	createdAt,
@@ -186,14 +193,14 @@ const hiddenParticipants = computed(() =>
 function closePlayer() {
 	eventBus.$emit('close-player');
 	audioURL.value = '';
-	audioId.value = '';
+	audioFile.value = null;
 }
 
 onMounted(() => {
-	eventBus.$on('audio-handler', ({ url, id }) => {
-		if (!url || !id) return closePlayer();
+	eventBus.$on('audio-handler', ({ url, file }) => {
+		if (!url || !file) return closePlayer();
 		audioURL.value = url;
-		audioId.value = id;
+		audioFile.value = file;
 	});
 });
 
@@ -201,8 +208,8 @@ onUnmounted(() => {
 	eventBus.$off('audio-handler');
 });
 
-const isShowPlayer = computed(() =>
-	props.task.files?.find((file) => file.id === audioId.value),
+const showPlayer = computed(() =>
+	props.task.files?.find((file) => file.id === audioFile.value?.id),
 );
 </script>
 

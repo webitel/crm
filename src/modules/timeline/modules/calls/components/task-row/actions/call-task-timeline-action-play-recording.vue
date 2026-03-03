@@ -1,31 +1,30 @@
 <template>
-  <wt-context-menu
-    class="call-task-timeline-action-play-recording"
-    :options="contextOptions"
-    max-width="400px"
-    @click="handleOptionSelect"
-  >
-    <template #activator="{ toggle }">
-      <wt-icon-btn
-        v-tooltip="$t('timeline.actions.playRecording')"
-        :icon="isAnyFilesPlaying ? 'stop': 'play'"
-        @click="toggle"
-      />
-    </template>
+	<wt-context-menu
+		class="call-task-timeline-action-play-recording"
+		:options="contextOptions"
+		max-width="400px"
+		@click="handleOptionSelect"
+	>
+		<template #activator="{ toggle }">
+			<wt-icon-btn
+				v-tooltip="$t('timeline.actions.playRecording')"
+				:icon="isAnyFilesPlaying ? 'stop' : 'play'"
+				@click="toggle"
+			/>
+		</template>
 
-    <template #option="{ text, id }">
-      <div class="call-task-timeline-action-play-recording__option">
-        <wt-icon
-          :icon="id === audioId ? 'stop' : 'play'"
-        />
-        {{ text }}
-      </div>
-    </template>
-  </wt-context-menu>
+		<template #option="{ text, id }">
+			<div class="call-task-timeline-action-play-recording__option">
+				<wt-icon :icon="id === audioId ? 'stop' : 'play'" />
+				{{ text }}
+			</div>
+		</template>
+	</wt-context-menu>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { getCallMediaUrl } from '@webitel/api-services/api';
+import { EngineCallFile } from '@webitel/api-services/gen/models';
 import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 
 const eventBus = inject('$eventBus');
@@ -39,43 +38,36 @@ const props = defineProps({
 	},
 });
 
-const currentFileId = ref(''); // local value
-const audioURL = ref('');
+const selectedRecording = ref<EngineCallFile | null>(null);
+
+const currentFileId = computed(() => {
+	return selectedRecording.value?.id || '';
+});
 
 const isAnyFilesPlaying = computed(() => {
 	return props.files.some((file) => file.id === audioId.value);
 });
 
 const contextOptions = computed(() => {
-	return props.files.map(({ name, id }) => ({
-		text: name,
-		id,
+	return props.files.map((file) => ({
+		...file,
+		text: file.name,
 	}));
 });
 
 const closePlayer = () => {
-	currentFileId.value = '';
-	audioURL.value = '';
+	selectedRecording.value = null;
 };
 
-const openPlayer = (id) => {
-	if (id) {
-		currentFileId.value = id;
-		audioURL.value = getCallMediaUrl(id);
-	} else {
-		closePlayer();
-	}
-};
-
-const handleOptionSelect = ({ option }) => {
-	if (audioId.value === option.id) {
+const handleOptionSelect = ({ option: file }: { option: EngineCallFile }) => {
+	if (currentFileId.value === file.id) {
 		closePlayer();
 	} else {
-		openPlayer(option.id);
+		selectedRecording.value = file;
 	}
 	eventBus.$emit('audio-handler', {
-		url: audioURL.value,
-		id: currentFileId.value,
+		url: getCallMediaUrl(file.id),
+		file,
 	});
 };
 
@@ -83,10 +75,13 @@ onMounted(() => eventBus.$on('close-player', closePlayer));
 
 onUnmounted(() => eventBus.$off('close-player', closePlayer));
 </script>
-<style lang="scss" scoped>
+<style
+	lang="scss"
+	scoped
+>
 .call-task-timeline-action-play-recording__option {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
 }
 </style>
