@@ -253,6 +253,7 @@ import prettifyDate from '../utils/prettifyDate.js';
 import CaseDetailsTable from './case-details-table.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
+import { headers as baseHeadersConfig } from '../store/_internals/headers';
 
 const baseNamespace = 'cases';
 
@@ -456,6 +457,30 @@ const fetchCustomHeadersFromAPI = async () => {
 	return response?.fields || [];
 };
 
+const removeOutdatedCustomHeaders = () => {
+	if (!customHeadersLoaded.value) return;
+
+	const validFields = new Set([
+		...baseHeadersConfig.map((header) => header.field),
+		...customHeaders.value.map((header) => header.field),
+	]);
+
+	const currentHeaders = headers?.value;
+
+	// Check if any current headers reference fields no longer in base or custom config
+	const hasOutdated = currentHeaders.some(
+		(header) => !validFields.has(header.field),
+	);
+
+	if (hasOutdated) {
+		// Keep only headers that still exist in base or custom config
+		const cleanedHeaders = currentHeaders.filter((header) =>
+			validFields.has(header.field),
+		);
+		updateShownHeaders(cleanedHeaders);
+	}
+};
+
 // Helper function to merge headers and update store
 const updateHeaders = (headersToAdd, baseHeaders) => {
 	const existingHeaders = baseHeaders || headers.value || [];
@@ -512,6 +537,7 @@ onMounted(async () => {
 	// Order is important
 	await loadCustomHeaders();
 	await initialize();
+	removeOutdatedCustomHeaders();
 	isInitializedTableStore.value = true;
 });
 
