@@ -457,6 +457,7 @@ const fetchCustomHeadersFromAPI = async () => {
 	return response?.fields || [];
 };
 
+//https://webitel.atlassian.net/browse/WTEL-9014
 const removeOutdatedCustomHeaders = () => {
 	if (!customHeadersLoaded.value) return;
 
@@ -537,6 +538,7 @@ onMounted(async () => {
 	// Order is important
 	await loadCustomHeaders();
 	await initialize();
+	// https://webitel.atlassian.net/browse/WTEL-9014
 	removeOutdatedCustomHeaders();
 	isInitializedTableStore.value = true;
 });
