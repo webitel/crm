@@ -15,7 +15,7 @@
         <wt-action-bar
           :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
           :include="[IconAction.ADD, IconAction.SORT]"
-          :sort:order="nextSortOrder"
+          :sort:order="currentSortOrder"
           @click:add="startAddingComment"
           @click:sort="toggleSort"
         />
@@ -168,15 +168,14 @@ const createdAtHeader = computed(() =>
 	headers.value.find((header) => header.field === 'created_at'),
 );
 
-const nextSortOrder = computed(() => {
-	return createdAtHeader.value?.sort === SortSymbols.DESC
-		? SortSymbols.ASC
-		: SortSymbols.DESC;
-});
+const currentSortOrder = computed(() => createdAtHeader.value?.sort);
 
 const toggleSort = () => {
 	updateSort(createdAtHeader.value, {
-		order: nextSortOrder,
+		order:
+			currentSortOrder.value === SortSymbols.DESC
+				? SortSymbols.ASC
+				: SortSymbols.DESC,
 	});
 };
 
