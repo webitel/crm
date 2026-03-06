@@ -20,7 +20,7 @@
           :dark-mode="darkMode"
         />
         <wt-header-actions
-          :build-info="{ release, build, timestamp }"
+          :build-info="{ release, build }"
           :user="userInfo"
           @logout="logoutUser"
           @settings="settings"
@@ -50,7 +50,6 @@ import { useUserinfoStore } from '../../modules/userinfo/store/userinfoStore';
 const route = useRoute();
 const release = packageJson.version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
-const timestamp = import.meta.env.VITE_BUILD_TIMESTAMP;
 
 const store = useStore();
 const navStore = useNavStore();
