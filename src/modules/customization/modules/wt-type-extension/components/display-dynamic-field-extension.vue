@@ -12,6 +12,12 @@
     disabled
     :model-value="value"
   ></wt-switcher>
+  <wt-datetime-text
+    v-else-if="field.kind === FieldType.Calendar && value"
+    mode="datetimeShort"
+    timezone="utc"
+    :datetime="value"
+  />
   <template v-else>
     {{ showText }}
   </template>
@@ -22,7 +28,6 @@ import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
-import prettifyDate from '../../../../cases/utils/prettifyDate';
 import { FieldType } from '../../custom-lookups/enums/FieldType';
 
 const props = defineProps({
@@ -40,13 +45,7 @@ const props = defineProps({
 	},
 });
 
-const showText = computed(() => {
-	if (props?.field?.kind === FieldType.Calendar) {
-		return displayText(prettifyDate(props?.value));
-	}
-
-	return displayText(props?.value);
-});
+const showText = computed(() => displayText(props?.value));
 </script>
 
 <style lang="scss" scoped>

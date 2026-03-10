@@ -10,6 +10,7 @@
         :field="field"
         :namespace="namespace"
         path-to-field="custom"
+        timezone="utc"
       />
     </div>
     <div
