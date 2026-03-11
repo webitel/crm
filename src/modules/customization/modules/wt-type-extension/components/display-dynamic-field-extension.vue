@@ -14,7 +14,7 @@
   ></wt-switcher>
   <wt-datetime-text
     v-else-if="field.kind === FieldType.Calendar && value"
-    mode="datetimeShort"
+    :mode="FormatDateMode.DATETIME_SHORT"
     timezone="utc"
     :datetime="value"
   />
@@ -25,6 +25,7 @@
 
 <script setup>
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { FormatDateMode } from '@webitel/ui-sdk/enums';
 import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
