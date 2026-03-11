@@ -44,12 +44,17 @@
                 :namespace="filtersNamespace"
                 name="search"
               />
-              <wt-upload-file-icon-btn
+              <!--
+                @author: YeHlukhov
+                hide icon until functionality will be implemented
+                https://webitel.atlassian.net/browse/WTEL-9154
+              --> 
+              <!-- <wt-upload-file-icon-btn
                 v-if="hasCreateAccess"
                 accept=".csv"
                 class="icon-action"
                 @change="processCSV"
-              />
+              /> -->
             </template>
           </wt-action-bar>
         </header>
