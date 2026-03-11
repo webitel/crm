@@ -57,6 +57,7 @@
     :value="value"
     :v="validation"
     mode="datetime"
+	:timezone="timezone"
     :required="isRequired"
     :disabled="props.disabled"
     @input="setValue(+$event)"
@@ -92,6 +93,10 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 		default: false,
+	},
+	timezone: {
+		type: String,
+		default: undefined,
 	},
 });
 
