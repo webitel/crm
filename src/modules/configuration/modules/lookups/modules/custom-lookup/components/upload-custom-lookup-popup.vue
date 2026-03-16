@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import WtUploadCsvPopup from '@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import CustomLookupApi from '../api/custom-lookups';
 
@@ -24,18 +24,7 @@ const emit = defineEmits<{
 	(e: 'close'): void;
 }>();
 
-const mappingFields = ref(
-	props.fields
-		? props.fields
-				.filter((field) => !field.readonly)
-				.map((field) => ({
-					name: field?.value,
-					required: field?.required,
-					locale: field?.locale,
-					csv: '',
-				}))
-		: [],
-);
+const mappingFields = ref([]);
 
 const close = () => {
 	emit('close');
@@ -60,4 +49,23 @@ const saveBulkData = async (data) => {
 		throw `An error occurred during saving ${processedChunkIndex} record: ${JSON.stringify(err)}`;
 	}
 };
+
+watch(
+	() => props.fields,
+	() => {
+		mappingFields.value = props.fields
+			? props.fields
+					.filter((field) => !field.readonly)
+					.map((field) => ({
+						name: field?.value,
+						required: field?.required,
+						locale: field?.locale,
+						csv: '',
+					}))
+			: [];
+	},
+	{
+		immediate: true,
+	},
+);
 </script>

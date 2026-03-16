@@ -14,7 +14,6 @@
     <template #main>
       <upload-custom-lookup-popup
         v-if="headers.length"
-        :key="repo"
         :file="csvFile"
         :fields="headers"
         :repo="repo"
