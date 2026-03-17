@@ -1,5 +1,6 @@
 <template>
   <wt-indicator
+		class="timeline-task-status__indicator"
     :color="statusColor"
     :text="t(`timeline.status.${ status }`)"
     size="sm"
@@ -38,6 +39,8 @@ const statusColor = computed(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.timeline-task-status__indicator {
+	word-break: break-all;
+}
 </style>
