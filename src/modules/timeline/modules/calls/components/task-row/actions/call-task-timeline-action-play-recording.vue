@@ -1,30 +1,31 @@
 <template>
-	<wt-context-menu
-		class="call-task-timeline-action-play-recording"
-		:options="contextOptions"
-		max-width="400px"
-		@click="handleOptionSelect"
-	>
-		<template #activator="{ toggle }">
-			<wt-icon-btn
-				v-tooltip="$t('timeline.actions.playRecording')"
-				:icon="isAnyFilesPlaying ? 'stop' : 'play'"
-				@click="toggle"
-			/>
-		</template>
+  <wt-context-menu
+    :options="contextOptions"
+    class="call-task-timeline-action-play-recording"
+    max-width="400px"
+    @click="handleOptionSelect"
+  >
+    <template #activator="{ toggle }">
+      <wt-icon-btn
+        v-tooltip="$t('timeline.actions.playRecording')"
+        :icon="isAnyFilesPlaying ? 'stop' : recordingTypeIcon"
+        @click="toggle"
+      />
+    </template>
 
-		<template #option="{ text, id }">
-			<div class="call-task-timeline-action-play-recording__option">
-				<wt-icon :icon="id === audioId ? 'stop' : 'play'" />
-				{{ text }}
-			</div>
-		</template>
-	</wt-context-menu>
+    <template #option="{ text, id }">
+      <div class="call-task-timeline-action-play-recording__option">
+        <wt-icon :icon="id === audioId ? 'stop' : recordingTypeIcon" />
+        {{ text }}
+      </div>
+    </template>
+  </wt-context-menu>
 </template>
 
 <script lang="ts" setup>
 import { getCallMediaUrl } from '@webitel/api-services/api';
 import { EngineCallFile } from '@webitel/api-services/gen/models';
+import { isVideoSrc } from 'vidstack';
 import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 
 const eventBus = inject('$eventBus');
@@ -55,6 +56,16 @@ const contextOptions = computed(() => {
 	}));
 });
 
+const recordingTypeIcon = computed(() => {
+	const isVideoFile = props.files?.find((file) =>
+		isVideoSrc({
+			src: '',
+			type: file.mimeType,
+		}),
+	);
+	return isVideoFile ? 'preview-tag-video' : 'play';
+});
+
 const closePlayer = () => {
 	selectedRecording.value = null;
 };
@@ -65,7 +76,7 @@ const handleOptionSelect = ({ option: file }: { option: EngineCallFile }) => {
 	} else {
 		selectedRecording.value = file;
 	}
-	eventBus.$emit('audio-handler', {
+	eventBus.$emit('media-source-handler', {
 		url: getCallMediaUrl(file.id),
 		file,
 	});
@@ -76,12 +87,12 @@ onMounted(() => eventBus.$on('close-player', closePlayer));
 onUnmounted(() => eventBus.$off('close-player', closePlayer));
 </script>
 <style
-	lang="scss"
-	scoped
+  lang="scss"
+  scoped
 >
 .call-task-timeline-action-play-recording__option {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 </style>
