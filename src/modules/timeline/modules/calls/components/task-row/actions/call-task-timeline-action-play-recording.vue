@@ -8,14 +8,14 @@
     <template #activator="{ toggle }">
       <wt-icon-btn
         v-tooltip="$t('timeline.actions.playRecording')"
-        :icon="isAnyFilesPlaying ? 'stop' : getRecordingTypeIcon"
+        :icon="isAnyFilesPlaying ? 'stop' : recordingTypeIcon"
         @click="toggle"
       />
     </template>
 
     <template #option="{ text, id }">
       <div class="call-task-timeline-action-play-recording__option">
-        <wt-icon :icon="id === audioId ? 'stop' : getRecordingTypeIcon" />
+        <wt-icon :icon="id === audioId ? 'stop' : recordingTypeIcon" />
         {{ text }}
       </div>
     </template>
@@ -56,7 +56,7 @@ const contextOptions = computed(() => {
 	}));
 });
 
-const getRecordingTypeIcon = computed(() => {
+const recordingTypeIcon = computed(() => {
 	const isVideoFile = props.files?.find((file) =>
 		isVideoSrc({
 			src: '',
