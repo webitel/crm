@@ -60,14 +60,18 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+// import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../error-pages/composable/useErrorRedirectHandler';
 
 const namespace = 'customization/customLookups';
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
+console.log('AAAAAAAAAAAAA');
 const checkRepo = (repo) => {
 	const regex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 	return regex.test(repo);
@@ -108,6 +112,7 @@ const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 	...restStore,
 	id,
 	itemInstance,
+	onLoadErrorHandler: handleError,
 });
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
