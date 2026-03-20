@@ -15,7 +15,7 @@
     </template>
 
     <template #main>
-      <form class="opened-card-input-grid opened-card-input-grid--1-col">
+      <form class="opened-card-input-grid opened-card-input-grid--1-col" @submit.prevent="save">
         <wt-input-text
           :model-value="itemInstance.name"
           :label="t('reusable.name')"
