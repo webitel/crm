@@ -58,14 +58,23 @@
           </div>
 
             <wt-player
-              v-if="showPlayer"
+              v-if="showAudioPlayer"
               :src="{
-                src: audioURL,
-                type: audioFile.mimeType,
+                src: mediaSource.url,
+                type: mediaSource.file?.mimeType,
               }"
               position="relative"
               @close="closePlayer"
             />
+
+          <wt-vidstack-player
+            v-if="showVideoPlayer"
+            :title="mediaSource.file?.name"
+            :src="mediaSource.url"
+            :mime="mediaSource.file?.mimeType"
+            closable
+            @close="closePlayer"
+          />
         </task-timeline-row-content-wrapper>
 
     </template>
@@ -80,17 +89,23 @@
 </template>
 
 <script lang="ts" setup>
-import { WtDisplayChipItems, WtPlayer } from '@webitel/ui-sdk/components';
+import {
+	WtDisplayChipItems,
+	WtPlayer,
+	WtVidstackPlayer,
+} from '@webitel/ui-sdk/components';
 import {
 	computed,
 	inject,
 	onMounted,
 	onUnmounted,
 	provide,
+	reactive,
 	ref,
 	toRefs,
 } from 'vue';
 import { EngineCallFile } from '@webitel/api-services/gen/models';
+import { isAudioSrc, isVideoSrc } from 'vidstack';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
@@ -121,13 +136,18 @@ const props = defineProps({
 	},
 });
 
-const audioURL = ref(null);
-const audioFile = ref<EngineCallFile | null>(null);
+const mediaSource = reactive<{
+	url: string;
+	file: EngineCallFile;
+}>({
+	url: null,
+	file: null,
+});
 const eventBus = inject('$eventBus');
 
 provide(
 	'audioId',
-	computed(() => audioFile.value?.id),
+	computed(() => mediaSource.file?.id),
 );
 
 const {
@@ -192,24 +212,42 @@ const hiddenParticipants = computed(() =>
 
 function closePlayer() {
 	eventBus.$emit('close-player');
-	audioURL.value = '';
-	audioFile.value = null;
+	mediaSource.url = '';
+	mediaSource.file = null;
 }
 
 onMounted(() => {
-	eventBus.$on('audio-handler', ({ url, file }) => {
+	eventBus.$on('media-source-handler', ({ url, file }) => {
 		if (!url || !file) return closePlayer();
-		audioURL.value = url;
-		audioFile.value = file;
+		mediaSource.url = url;
+		mediaSource.file = file;
 	});
 });
 
 onUnmounted(() => {
-	eventBus.$off('audio-handler');
+	eventBus.$off('media-source-handler');
 });
 
-const showPlayer = computed(() =>
-	props.task.files?.find((file) => file.id === audioFile.value?.id),
+const currentFile = computed(() =>
+	props.task.files?.find((file) => file.id === mediaSource.file?.id),
+);
+
+const showAudioPlayer = computed(
+	() =>
+		currentFile.value &&
+		isAudioSrc({
+			src: mediaSource.url,
+			type: currentFile.value.mimeType,
+		}),
+);
+
+const showVideoPlayer = computed(
+	() =>
+		currentFile.value &&
+		isVideoSrc({
+			src: mediaSource.url,
+			type: currentFile.value.mimeType,
+		}),
 );
 </script>
 
