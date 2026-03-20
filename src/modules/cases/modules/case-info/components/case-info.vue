@@ -9,7 +9,9 @@
     >
       <template #default="props">
         <wt-input-text
-          v-bind="props"
+          :label="props.label"
+          :required="props.required"
+          :model-value="props.value"
           :v="v$.value.itemInstance.subject"
           :disabled="disableUserInput"
           @update:model-value="props.updateValue($event)"
@@ -63,7 +65,9 @@
       >
         <template #default="props">
           <wt-input-text
-            v-bind="props"
+            :label="props.label"
+            :required="props.required"
+            :model-value="props.value"
             :disabled="disableUserInput"
             @update:model-value="props.updateValue($event)"
           />
