@@ -8,7 +8,7 @@
       {{ !isNew ? t('lookups.closeReasonGroups.editReason') : t('lookups.closeReasonGroups.addReason') }}
     </template>
     <template #main>
-      <form>
+      <form @submit.prevent="save">
         <wt-input-text
           :label="t('reusable.name')"
           :model-value="itemInstance.name"
