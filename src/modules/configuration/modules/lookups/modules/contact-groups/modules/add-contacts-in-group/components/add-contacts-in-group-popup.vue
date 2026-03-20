@@ -104,13 +104,12 @@
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
-import { AddContactsInGroupNamespace } from '../namespace';
 
 const props = defineProps<{
 	groupIds: string[];
@@ -135,10 +134,9 @@ const {
 	showEmpty,
 	image: imageEmpty,
 	text: textEmpty,
-	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
 	dataList,
-	filters: filtersManager,
+	filters: computed(() => filtersManager.value.getAllValues()),
 	error,
 	isLoading,
 });
