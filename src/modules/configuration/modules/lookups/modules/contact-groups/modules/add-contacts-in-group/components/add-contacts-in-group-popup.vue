@@ -19,7 +19,13 @@
           <add-contacts-in-group-filters-panel :use-table-store="useTableStore" />
         </div>
 
-        <div class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
+        <wt-empty
+          v-show="showEmpty"
+          :image="imageEmpty"
+          :text="textEmpty"
+        />
+
+        <div v-show="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
           <wt-table
             :data="dataList"
             :headers="headers"
@@ -97,12 +103,14 @@
 >
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
+import { AddContactsInGroupNamespace } from '../namespace';
 
 const props = defineProps<{
 	groupIds: string[];
@@ -118,9 +126,22 @@ const useTableStore = createAddContactsInGroupComposableTableStore();
 const tableStore = useTableStore();
 const isFirstLoad = ref(false);
 
-const { dataList, selected, headers, next } = tableStore;
+const { dataList, selected, headers, next, error, isLoading, filtersManager } =
+	tableStore;
 
 const { initialize, updateSort, updateSelected, appendToDataList } = tableStore;
+
+const {
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersManager,
+	error,
+	isLoading,
+});
 
 initialize();
 
