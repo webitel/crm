@@ -70,9 +70,7 @@ const {
 	id,
 	itemInstance,
 	...restStore
-} = useCardStore(SLANamespace, {
-	onLoadErrorHandler: handleError,
-});
+} = useCardStore(SLANamespace);
 
 const v$ = useVuelidate(
 	computed(() => ({

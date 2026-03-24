@@ -47,11 +47,13 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCaseSourcesCardStore } from '../stores';
 
 // import {WebitelCasesSource} from "@webitel/api-services/gen";
 
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
@@ -75,6 +77,7 @@ const {
 } = useCardComponent(
 	/*<WebitelCasesSource>*/ {
 		useCardStore: useCaseSourcesCardStore,
+		onLoadErrorHandler: handleError,
 	},
 );
 
