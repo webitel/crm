@@ -539,6 +539,8 @@ onMounted(async () => {
 	const instance = getCurrentInstance();
 
 	await loadCustomHeaders();
+	// @author @lera24
+	// https://webitel.atlassian.net/browse/WTEL-9202?focusedCommentId=739545
 	await instance.appContext.app.runWithContext(async () => {
 		await initialize();
 	});
