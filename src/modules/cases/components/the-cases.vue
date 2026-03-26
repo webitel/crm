@@ -237,7 +237,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import get from 'lodash/get';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch, getCurrentInstance } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -536,8 +536,14 @@ const isRowExpansionDisabled = (row) => {
 onMounted(async () => {
 	// @author @stanislav-kozak
 	// Order is important
+	const instance = getCurrentInstance();
+
 	await loadCustomHeaders();
-	await initialize();
+	// @author @lera24
+	// https://webitel.atlassian.net/browse/WTEL-9202?focusedCommentId=739545
+	await instance.appContext.app.runWithContext(async () => {
+		await initialize();
+	});
 	// https://webitel.atlassian.net/browse/WTEL-9014
 	removeOutdatedCustomHeaders();
 	isInitializedTableStore.value = true;
