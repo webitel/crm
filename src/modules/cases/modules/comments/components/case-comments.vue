@@ -9,7 +9,7 @@
   <div class="case-comments table-page">
     <section class="table-section">
       <header class="table-title">
-        <h3 class="table-title__title">
+        <h3 class="case-section-title">
           {{ t('cases.comments.comments') }}
         </h3>
         <wt-action-bar

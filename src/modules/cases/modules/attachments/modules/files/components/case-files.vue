@@ -8,7 +8,7 @@
   <div class="case-files table-page">
     <section class="table-section">
       <header class="table-title">
-        <h3 class="table-title__title">
+        <h3 class="case-section-title">
           {{ t('cases.attachments.files') }}
         </h3>
         <wt-action-bar

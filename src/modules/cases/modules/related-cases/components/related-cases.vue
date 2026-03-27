@@ -9,7 +9,7 @@
 
     <section class="table-section">
       <header class="table-title">
-        <h3 class="table-title__title">
+        <h3 class="case-section-title">
           {{ t('cases.relatedCases.relatedCases') }}
         </h3>
 
