@@ -14,7 +14,7 @@
     />
 
     <div class="case-service__wrapper">
-      <span class="case-service__title typo-heading-4">
+      <span class="case-service__title case-section-title">
         {{ t('cases.service') }}
 
         <wt-icon

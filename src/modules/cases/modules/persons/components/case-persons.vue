@@ -1,6 +1,6 @@
 <template>
   <div class="case-persons">
-    <span class="case-persons__title typo-heading-4">{{ t('cases.persons') }}</span>
+    <span class="case-persons__title case-section-title">{{ t('cases.persons') }}</span>
     <div class="case-persons__wrapper">
       <editable-field
         :label="t('cases.author')"

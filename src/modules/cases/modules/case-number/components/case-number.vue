@@ -1,7 +1,7 @@
 <template>
   <template>
     <div class="case-number">
-      <span class="case-number__title typo-heading-4">{{ t('cases.caseNumber') }}</span>
+      <span class="case-number__title case-section-title">{{ t('cases.caseNumber') }}</span>
       <div class="case-number__wrapper">
         <p>{{ itemInstance.name }}</p>
         <wt-copy-action :value="itemInstance.name" />

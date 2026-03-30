@@ -1,6 +1,6 @@
 <template>
   <div class="case-deadline-list">
-    <span class="case-deadline-list__title typo-heading-4">{{ t('cases.deadlines') }}</span>
+    <span class="case-deadline-list__title case-section-title">{{ t('cases.deadlines') }}</span>
     <div class="case-deadline-list__wrapper">
       <case-deadline
         :time="itemInstance?.createdAt"

@@ -17,9 +17,9 @@
           :color="color"
           :icon="icon"
         />
-        <wt-label :class="horizontalView ? 'typo-body-1' : 'typo-heading-4'">
+        <span :class="horizontalView ? 'typo-body-1' : 'case-section-title'">
           {{ label }}
-        </wt-label>
+        </span>
       </div>
       <div class="editable-field__value-wrapper">
         <wt-icon

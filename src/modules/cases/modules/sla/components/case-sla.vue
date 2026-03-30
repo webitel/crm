@@ -1,6 +1,6 @@
 <template>
   <div class="case-sla">
-    <span class="case-sla__title typo-heading-4">{{ t('cases.appliedSLA') }}</span>
+    <span class="case-sla__title case-section-title">{{ t('cases.appliedSLA') }}</span>
     <div
       v-if="itemInstance.sla"
       class="case-sla__content"

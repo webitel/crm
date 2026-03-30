@@ -9,7 +9,7 @@
   <div class="case-links table-page">
     <section class="table-section">
       <header class="table-title">
-        <h3 class="table-title__title">
+        <h3 class="case-section-title">
           {{ t('cases.attachments.links') }}
         </h3>
         <wt-action-bar

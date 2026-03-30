@@ -6,7 +6,7 @@
     @cancel="cancelChangingStatusToFinal"
   />
   <div class="case-status">
-    <span class="case-status__title typo-heading-4">{{ t('cases.status') }}</span>
+    <span class="case-status__title case-section-title">{{ t('cases.status') }}</span>
 
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->

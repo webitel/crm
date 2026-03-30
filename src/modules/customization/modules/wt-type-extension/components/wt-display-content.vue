@@ -2,7 +2,7 @@
   <div class="wt-display-content">
     <span
       v-if="showLabel"
-      class="wt-display-content__title typo-heading-4"
+      class="wt-display-content__title case-section-title"
     >
       {{ label }}
     </span>

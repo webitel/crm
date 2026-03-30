@@ -1,0 +1,16 @@
+/*
+ * @author volodymyr
+ * TEMPORARY SOLUTION (need to be refactored)
+ * This class decouples the case module section heading typography from the global
+ * `typo-heading-4` utility class, so it can be adjusted independently for case module headings
+ * without affecting other consumers of `typo-heading-4`.
+ *
+ * To add or change this typography, consult with the head of design first.
+ */
+.case-section-title {
+	font-family: "Montserrat", monospace;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 24px;
+	text-transform: none;
+}
