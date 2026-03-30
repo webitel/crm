@@ -142,6 +142,7 @@ const availableProviders = [
 	ChatGatewayProvider.VIBER,
 	ChatGatewayProvider.MESSENGER,
 	ChatGatewayProvider.PORTAL,
+	ChatGatewayProvider.CUSTOM,
 ];
 
 const openChat = (item) => {
