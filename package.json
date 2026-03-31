@@ -27,7 +27,7 @@
 		"@webitel/styleguide": "~26.2",
 		"@webitel/ui-datalist": "^1.1.16",
 		"@webitel/ui-sdk": "~26.2",
-		"axios": "^1.13",
+		"axios": "1.13.2",
 		"clipboard-copy": "^4.0.1",
 		"date-fns": "^4.1.x",
 		"deep-equal": "^2.x",
