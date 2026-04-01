@@ -19,6 +19,7 @@ const resetCardState = {
 		status: {},
 		prefix: '',
 		closeReasonGroup: {},
+		defaultPriority: {},
 		description: '',
 		services: [],
 		state: true,

@@ -53,6 +53,17 @@
         required
         @input="setItemProp({ path: 'sla', value: $event })"
       />
+
+      <wt-select
+        :label="t('lookups.serviceCatalogs.defaultPriority')"
+        :search-method="loadPrioritiesList"
+        :value="itemInstance.defaultPriority"
+        :v="v.itemInstance.defaultPriority"
+        :disabled="disableUserInput"
+        required
+        @input="setItemProp({ path: 'defaultPriority', value: $event })"
+      />
+
       <wt-select
         :label="t('objects.team', 2)"
         :search-method="loadTeamsList"
@@ -69,15 +80,6 @@
         @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
-      <wt-select
-        :label="t('lookups.serviceCatalogs.skills')"
-        :search-method="loadSkillsList"
-        :value="itemInstance.skills"
-        :disabled="disableUserInput"
-        multiple
-        @input="setItemProp({ path: 'skills', value: $event })"
-      />
-
       <wt-textarea
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
@@ -85,12 +87,23 @@
         @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
 
-      <wt-switcher
-        :disabled="disableUserInput"
-        :label="t('reusable.state')"
-        :model-value="itemInstance.state"
-        @update:model-value="setItemProp({ path: 'state', value: $event })"
-      />
+      <div class="opened-card-input-grid__skills-wrapper">
+        <wt-select
+          :label="t('lookups.serviceCatalogs.skills')"
+          :search-method="loadSkillsList"
+          :value="itemInstance.skills"
+          :disabled="disableUserInput"
+          multiple
+          @input="setItemProp({ path: 'skills', value: $event })"
+        />
+
+        <wt-switcher
+          :disabled="disableUserInput"
+          :label="t('reusable.state')"
+          :model-value="itemInstance.state"
+          @update:model-value="setItemProp({ path: 'state', value: $event })"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -98,6 +111,7 @@
 <script setup>
 import {
 	CaseCloseReasonGroupsAPI,
+	CasePrioritiesAPI,
 	CaseStatusesAPI,
 	SkillsAPI,
 	SlasAPI,
@@ -137,6 +151,10 @@ function loadSlaList(params) {
 	return SlasAPI.getLookup(params);
 }
 
+function loadPrioritiesList(params) {
+	return CasePrioritiesAPI.getLookup(params);
+}
+
 function loadTeamsList(params) {
 	return TeamsAPI.getLookup(params);
 }
@@ -145,3 +163,11 @@ function loadSkillsList(params) {
 	return SkillsAPI.getLookup(params);
 }
 </script>
+
+<style scoped>
+.opened-card-input-grid__skills-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+</style>

@@ -148,6 +148,9 @@
                   <wt-display-chip-items :items="item.teams" />
                 </template>
               </template>
+              <template #defaultPriority="{ item }">
+                {{ displayText(item.default_priority?.name) }}
+              </template>
               <template #skills="{ item }">
                 <template v-if="!isRootElement(item)"> -</template>
                 <template v-else>

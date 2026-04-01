@@ -81,6 +81,9 @@ const v$ = useVuelidate(
 			sla: {
 				required,
 			},
+			defaultPriority: {
+				required,
+			},
 			prefix: {
 				required,
 			},

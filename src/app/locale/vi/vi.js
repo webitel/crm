@@ -148,6 +148,7 @@ export default {
 			code: 'Mã',
 			statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
 			skills: 'Kỹ năng',
+			defaultPriority: 'Ưu tiên mặc định',
 		},
 
 		service: {

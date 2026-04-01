@@ -27,6 +27,7 @@ const resetCardState = {
 		state: true,
 		description: '',
 		assignee: {},
+		defaultPriority: {},
 		sla: {},
 		group: {},
 	},

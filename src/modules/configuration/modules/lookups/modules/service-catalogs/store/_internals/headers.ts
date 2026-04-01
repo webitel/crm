@@ -35,7 +35,14 @@ export const headers: WtTableHeader[] = [
 		value: 'closeReasonGroup',
 		locale: 'lookups.closeReasonGroups.closeReasonGroups',
 		show: true,
-		field: 'close_reason_group',
+		field: 'default_priority',
+		sort: SortSymbols.NONE,
+	},
+	{
+		value: 'defaultPriority',
+		locale: 'lookups.serviceCatalogs.defaultPriority',
+		show: true,
+		field: 'default_priority',
 		sort: SortSymbols.NONE,
 	},
 	{
