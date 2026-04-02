@@ -89,6 +89,9 @@
             <template #group="{ item }">
               {{ displayText(item.group?.name) }}
             </template>
+            <template #defaultPriority="{ item }">
+              {{ displayText(item.default_priority?.name) }}
+            </template>
             <template #assignee="{ item }">
               <wt-item-link
                 v-if="item.assignee?.id"

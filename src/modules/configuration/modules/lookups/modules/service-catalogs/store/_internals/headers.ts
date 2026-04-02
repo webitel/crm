@@ -39,6 +39,13 @@ export const headers: WtTableHeader[] = [
 		sort: SortSymbols.NONE,
 	},
 	{
+		value: 'defaultPriority',
+		locale: 'lookups.serviceCatalogs.defaultPriority',
+		show: true,
+		field: 'default_priority',
+		sort: SortSymbols.NONE,
+	},
+	{
 		value: 'description',
 		locale: 'vocabulary.description',
 		show: true,

@@ -149,6 +149,7 @@ export default {
 			code: 'Код',
 			statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
 			skills: 'Навички',
+			defaultPriority: 'Пріоритет за замовчуванням',
 		},
 
 		service: {

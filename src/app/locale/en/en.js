@@ -148,6 +148,7 @@ export default {
 			code: 'Code',
 			statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
 			skills: 'Skills',
+			defaultPriority: 'Default priority',
 		},
 
 		service: {

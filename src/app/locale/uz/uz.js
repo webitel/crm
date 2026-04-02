@@ -145,6 +145,7 @@ export default {
 			code: 'Kod',
 			statuses: ({ linked }) => linked(`lookups.statuses.statuses`, 2),
 			skills: "Ko'nikmalar",
+			defaultPriority: 'Standart ustuvorlik',
 		},
 		service: {
 			service: 'Xizmat | Xizmatlar',

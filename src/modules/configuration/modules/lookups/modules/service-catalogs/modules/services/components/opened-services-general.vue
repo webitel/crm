@@ -35,6 +35,16 @@
       />
 
       <wt-select
+        :label="t('lookups.serviceCatalogs.defaultPriority')"
+        :search-method="loadPrioritiesList"
+        :value="itemInstance.defaultPriority"
+        :v="v.itemInstance.defaultPriority"
+        :disabled="disableUserInput"
+        required
+        @input="setItemProp({ path: 'defaultPriority', value: $event })"
+      />
+
+      <wt-select
         :label="t('lookups.contactGroups.contactGroups')"
         :search-method="loadContactGroupsList"
         :value="itemInstance.group"
@@ -68,6 +78,7 @@
 
 <script setup>
 import {
+	CasePrioritiesAPI,
 	ContactGroupsAPI,
 	ContactsAPI,
 	SlasAPI,
@@ -98,6 +109,10 @@ const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const loadSlaList = (params) => {
 	return SlasAPI.getLookup(params);
+};
+
+const loadPrioritiesList = (params) => {
+	return CasePrioritiesAPI.getLookup(params);
 };
 
 const loadContactGroupsList = (params) => {

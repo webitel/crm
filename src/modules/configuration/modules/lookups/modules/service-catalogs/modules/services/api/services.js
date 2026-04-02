@@ -28,6 +28,7 @@ const fieldsToSend = [
 	'state',
 	'description',
 	'group',
+	'default_priority',
 	'assignee',
 	'services',
 	'root_id',
@@ -88,6 +89,7 @@ const getService = async ({ itemId: id }) => {
 		'group',
 		'assignee',
 		'description',
+		'default_priority',
 		'catalog_id',
 		'root_id',
 	];
