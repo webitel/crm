@@ -46,18 +46,6 @@ const { itemInstance, setItemProp } = useCardStore(namespace);
 const { isNew } = useCardComponent({
 	itemInstance,
 });
-
-async function setDefaultPriority() {
-	const defaultPriority = (await CasePrioritiesAPI.getLookup({})).items[0];
-	await setItemProp({
-		path: 'priority',
-		value: defaultPriority,
-	});
-}
-
-if (isNew.value) {
-	setDefaultPriority();
-}
 </script>
 
 <style

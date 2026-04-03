@@ -107,6 +107,17 @@ async function addServiceToStore(serviceCatalogData) {
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
 
+	console.log('catalog', catalog);
+	console.log('service', service);
+
+	// TODO implement get default Priority from service first and after check each parent services to catalog
+	await setItemProp({
+		path: 'priority',
+		value: {
+			id: catalog.defaultPriority,
+		},
+	});
+
 	await setItemProp({
 		path: 'close_reason_group',
 		value: {
