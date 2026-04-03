@@ -91,8 +91,14 @@ onUnmounted(() => eventBus.$off('close-player', closePlayer));
   scoped
 >
 .call-task-timeline-action-play-recording__option {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: var(--spacing-xs);
+  word-break: break-all;
+
+  .wt-icon {
+    flex: 1 0 auto;
+  }
 }
 </style>
