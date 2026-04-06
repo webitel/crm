@@ -110,8 +110,8 @@ const getDefaultPriority = (catalog, selectedService) => {
 		for (const service of services || []) {
 			if (service.id === id) return service;
 
-			const found = findServiceById(service.service, id);
-			if (found) return found;
+			const foundService = findServiceById(service.service, id);
+			if (foundService) return foundService;
 		}
 		return null;
 	};
@@ -119,15 +119,15 @@ const getDefaultPriority = (catalog, selectedService) => {
 	let current = selectedService;
 
 	while (current?.rootId) {
-		const parent = findServiceById(catalog.service, current.rootId);
+		const parentService = findServiceById(catalog.service, current.rootId);
 
-		if (!parent) break;
+		if (!parentService) break;
 
-		if (hasPriority(parent)) {
-			return parent.defaultPriority;
+		if (hasPriority(parentService)) {
+			return parentService.defaultPriority;
 		}
 
-		current = parent;
+		current = parentService;
 	}
 
 	if (hasPriority(catalog)) {
