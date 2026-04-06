@@ -95,6 +95,9 @@ function setCatalogToStore(catalog) {
 	return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
+// This function returns the defaultPriority for a selected service by traversing up the service hierarchy.
+// It first checks the selected service, then its parent services using rootId,
+// and finally falls back to the catalog-level defaultPriority if none is found.
 const getDefaultPriority = (catalog, selectedService) => {
 	const hasPriority = (obj) =>
 		obj?.defaultPriority && Object.keys(obj.defaultPriority).length;
