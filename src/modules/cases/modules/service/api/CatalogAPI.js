@@ -31,6 +31,7 @@ const fieldsToSend = [
 	'state',
 	'prefix',
 	'close_reason_group',
+	'default_priority',
 	'reason',
 	'description',
 	'services',

@@ -95,6 +95,45 @@ function setCatalogToStore(catalog) {
 	return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
+const getDefaultPriority = (catalog, selectedService) => {
+	const hasPriority = (obj) =>
+		obj?.defaultPriority && Object.keys(obj.defaultPriority).length;
+
+	if (hasPriority(selectedService)) {
+		return selectedService.defaultPriority;
+	}
+
+	const findServiceById = (services, id) => {
+		for (const service of services || []) {
+			if (service.id === id) return service;
+
+			const found = findServiceById(service.service, id);
+			if (found) return found;
+		}
+		return null;
+	};
+
+	let current = selectedService;
+
+	while (current?.rootId) {
+		const parent = findServiceById(catalog.service, current.rootId);
+
+		if (!parent) break;
+
+		if (hasPriority(parent)) {
+			return parent.defaultPriority;
+		}
+
+		current = parent;
+	}
+
+	if (hasPriority(catalog)) {
+		return catalog.defaultPriority;
+	}
+
+	return null;
+};
+
 // Updates the store and component state with service and catalog data.
 async function addServiceToStore(serviceCatalogData) {
 	if (!serviceCatalogData)
@@ -107,15 +146,12 @@ async function addServiceToStore(serviceCatalogData) {
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
 
-	console.log('catalog', catalog);
-	console.log('service', service);
+	const defaultPriority = getDefaultPriority(catalog, service);
 
-	// TODO implement get default Priority from service first and after check each parent services to catalog
+	// Set default priority from selected Service
 	await setItemProp({
 		path: 'priority',
-		value: {
-			id: catalog.defaultPriority,
-		},
+		value: defaultPriority,
 	});
 
 	await setItemProp({
