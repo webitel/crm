@@ -89,6 +89,7 @@ const getService = async ({ itemId: id }) => {
 		'status',
 		'state',
 		'close_reason',
+		'default_priority',
 		'reason',
 		'description',
 		'services',

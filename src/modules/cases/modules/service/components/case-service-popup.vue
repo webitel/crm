@@ -118,6 +118,7 @@ const loadCatalogs = async () => {
 				'name',
 				'closeReasonGroup',
 				'status',
+				'defaultPriority',
 				'service',
 				'description',
 			],

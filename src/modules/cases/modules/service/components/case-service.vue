@@ -95,6 +95,48 @@ function setCatalogToStore(catalog) {
 	return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
 }
 
+// This function returns the defaultPriority for a selected service by traversing up the service hierarchy.
+// It first checks the selected service, then its parent services using rootId,
+// and finally falls back to the catalog-level defaultPriority if none is found.
+const getDefaultPriority = (catalog, selectedService) => {
+	const hasPriority = (obj) =>
+		obj?.defaultPriority && Object.keys(obj.defaultPriority).length;
+
+	if (hasPriority(selectedService)) {
+		return selectedService.defaultPriority;
+	}
+
+	const findServiceById = (services, id) => {
+		for (const service of services || []) {
+			if (service.id === id) return service;
+
+			const foundService = findServiceById(service.service, id);
+			if (foundService) return foundService;
+		}
+		return null;
+	};
+
+	let current = selectedService;
+
+	while (current?.rootId) {
+		const parentService = findServiceById(catalog.service, current.rootId);
+
+		if (!parentService) break;
+
+		if (hasPriority(parentService)) {
+			return parentService.defaultPriority;
+		}
+
+		current = parentService;
+	}
+
+	if (hasPriority(catalog)) {
+		return catalog.defaultPriority;
+	}
+
+	return null;
+};
+
 // Updates the store and component state with service and catalog data.
 async function addServiceToStore(serviceCatalogData) {
 	if (!serviceCatalogData)
@@ -106,6 +148,14 @@ async function addServiceToStore(serviceCatalogData) {
 
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
+
+	const defaultPriority = getDefaultPriority(catalog, service);
+
+	// Set default priority from selected Service
+	await setItemProp({
+		path: 'priority',
+		value: defaultPriority,
+	});
 
 	await setItemProp({
 		path: 'close_reason_group',
