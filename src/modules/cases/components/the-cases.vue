@@ -15,6 +15,12 @@
         @close="closeDelete"
       />
 
+      <cases-export-type-popup
+        :shown="isExportTypePopup"
+        @close="closeExport"
+        @save="exportCases($event)"
+      />
+
       <section class="table-section">
         <header class="table-title">
           <wt-breadcrumb :path="path" />
@@ -23,6 +29,7 @@
             v-if="!isInitialEmpty"
             class="cases__search-filter"
           />
+
 
           <wt-action-bar
             :include="displayIncludeActions"
@@ -33,6 +40,17 @@
             @click:delete="deleteSelectedItems"
             @click:filters="showActionsPanel = !showActionsPanel"
           >
+            <template #add="{ action, onClick }">
+              <wt-icon-action
+                :action="action"
+                @click="onClick"
+              />
+              <wt-icon-btn
+                v-tooltip.right="t('reusable.export')"
+                icon="export-exel"
+                @click="isExportTypePopup = true"
+              />
+            </template>
             <template #filters="{ action, onClick }">
               <wt-badge :hidden="!anyFiltersOnFiltersPanel">
                 <wt-icon-action
@@ -229,7 +247,6 @@
 import { WtTypeExtensionAPI } from '@webitel/api-services/api';
 import { snakeToCamel } from '@webitel/api-services/utils';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
-import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import { EmptyCause } from '@webitel/ui-sdk/enums/EmptyCause/EmptyCause';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -244,7 +261,6 @@ import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { FieldType } from '../../customization/modules/custom-lookups/enums/FieldType';
 import DisplayDynamicFieldExtension from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
@@ -254,6 +270,8 @@ import CaseDetailsTable from './case-details-table.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
 import { headers as baseHeadersConfig } from '../store/_internals/headers';
+import { CasesAPI } from '@webitel/api-services/api';
+import CasesExportTypePopup from './cases-export-type-popup.vue';
 
 const baseNamespace = 'cases';
 
@@ -274,6 +292,7 @@ const {
 	isLoading,
 	page,
 	size,
+	fields,
 	next,
 	headers,
 	shownHeaders,
@@ -392,6 +411,22 @@ function deleteSelectedItems() {
 			]),
 	});
 }
+
+const exportCases = (format) => {
+	CasesAPI.exportData({
+		page: page.value,
+		size: size.value,
+		fields: fields.value,
+		format,
+		ids: dataList.value?.map((item) => item.id),
+		...filtersManager.value.getAllValues(),
+	});
+};
+
+const isExportTypePopup = ref(false);
+const closeExport = () => {
+	isExportTypePopup.value = false;
+};
 
 // Reactive reference for custom headers from API
 const customHeaders = ref([]);
