@@ -6,6 +6,7 @@
     :options="options"
     :label="t('customization.customLookups.defaultValue')"
     required
+    :disabled="disabledDefaultValue"
     :v="v.value.default"
     :track-by="lookup?.primary || 'id'"
     :search-method="loadLookupList"
@@ -20,6 +21,7 @@
       :value="value.default"
       required
       :v="v.value.default"
+      :disabled="disabledDefaultValue"
       mode="datetime"
       @input="value.default = +$event"
     />
@@ -27,6 +29,7 @@
       v-else-if="kind === FieldType.Number"
       :key="kind"
       v-model:model-value="value.default"
+      :disabled="disabledDefaultValue"
       :label="t('customization.customLookups.defaultValue')"
       required
       :v="v.value.default"
@@ -34,6 +37,7 @@
     <wt-input-text
       v-else
       :key="kind"
+      :disabled="disabledDefaultValue"
       v-model:model-value="value.default"
       :label="t('customization.customLookups.defaultValue')"
       required
@@ -57,6 +61,7 @@ import {
 
 const props = defineProps<{
 	value: CustomLookupField;
+	disabledDefaultValue: boolean;
 	v: any;
 }>();
 
@@ -68,7 +73,6 @@ const displaySelect = computed(
 	() => kind.value === FieldType.Select || kind.value === FieldType.Multiselect,
 );
 const displayInput = computed(() => kind.value !== FieldType.Boolean);
-const displayDatePicker = computed(() => kind.value !== FieldType.Boolean);
 const multiple = computed(() => kind.value === FieldType.Multiselect);
 
 const getLoadLookupList = (lookup: CustomLookupLookup) => {
