@@ -44,6 +44,7 @@
         <default-value-input
           v-if="value.required"
           :value="value"
+          :disabledDefaultValue="disabledDefaultValue"
           :is-new="isNew"
           :v="v$"
         />
@@ -121,6 +122,8 @@ const checkId = (repo) => {
 const value = ref(Object.assign(deepCopy(draft), deepCopy(props.field)));
 const isNew = computed(() => !props.field);
 
+const disabledDefaultValue = ref(!isNew.value);
+
 const updateValue = (newValue) => {
 	Object.assign(value.value, deepCopy(newValue));
 };
@@ -159,6 +162,7 @@ const changeDirty = (dirty) => {
 const changeRequired = (event) => {
 	value.value.required = event;
 	value.value.default = null;
+	disabledDefaultValue.value = false;
 
 	nextTick(() => {
 		v$.value.$touch();
