@@ -270,8 +270,11 @@ import CaseDetailsTable from './case-details-table.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
 import { headers as baseHeadersConfig } from '../store/_internals/headers';
-import { CasesAPI } from '@webitel/api-services/api';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
+import casesAPI from '../api/CasesAPI.js';
+import { downloadFile } from '@webitel/ui-sdk/scripts';
+import { formatDate } from '@webitel/ui-sdk/utils';
+import { FormatDateMode } from '@webitel/ui-sdk/enums';
 
 const baseNamespace = 'cases';
 
@@ -412,14 +415,22 @@ function deleteSelectedItems() {
 	});
 }
 
-const exportCases = (format) => {
-	CasesAPI.exportData({
+const exportCases = async (format) => {
+	const { response } = await casesAPI.exportData({
 		page: page.value,
 		size: size.value,
 		fields: fields.value,
 		format,
 		ids: dataList.value?.map((item) => item.id),
 		...filtersManager.value.getAllValues(),
+	});
+
+	const filename = `Cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
+
+	downloadFile({
+		response,
+		filename,
+		fileFormat: format,
 	});
 };
 
