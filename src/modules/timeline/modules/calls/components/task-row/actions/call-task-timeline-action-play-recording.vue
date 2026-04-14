@@ -13,9 +13,10 @@
       />
     </template>
 
-    <template #option="{ text, id }">
+    <template #option="{ text, id, mimeType }">
       <div class="call-task-timeline-action-play-recording__option">
-        <wt-icon :icon="id === audioId ? 'stop' : recordingTypeIcon" />
+        <wt-icon :icon="id === audioId ? 'stop' : getFileIcon(mimeType)" />
+
         {{ text }}
       </div>
     </template>
@@ -25,7 +26,7 @@
 <script lang="ts" setup>
 import { getCallMediaUrl } from '@webitel/api-services/api';
 import { EngineCallFile } from '@webitel/api-services/gen/models';
-import { isVideoSrc } from 'vidstack';
+import { isAudioSrc, isVideoSrc } from 'vidstack';
 import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 
 const eventBus = inject('$eventBus');
@@ -56,14 +57,32 @@ const contextOptions = computed(() => {
 	}));
 });
 
+const getFileIcon = (mimeType: string) => {
+	if (
+		isVideoSrc({
+			src: '',
+			type: mimeType,
+		})
+	)
+		return 'preview-tag-video';
+	if (
+		isAudioSrc({
+			src: '',
+			type: mimeType,
+		})
+	)
+		return 'preview-tag-audio';
+	return 'play';
+};
+
 const recordingTypeIcon = computed(() => {
-	const isVideoFile = props.files?.find((file) =>
+	const hasVideoFile = props.files?.some((file) =>
 		isVideoSrc({
 			src: '',
 			type: file.mimeType,
 		}),
 	);
-	return isVideoFile ? 'preview-tag-video' : 'play';
+	return hasVideoFile ? 'preview-tag-video' : 'play';
 });
 
 const closePlayer = () => {
