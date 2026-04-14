@@ -15,6 +15,7 @@ import {
 } from '@webitel/api-services/api/transformers';
 import { snakeToKebab } from '@webitel/ui-sdk/scripts';
 import { CasesApiFactory } from 'webitel-sdk';
+import { getCases } from '@webitel/api-services/gen';
 
 import ftsServiceAPI from './FTSServiceAPI.js';
 import { stringifyCaseFilters } from './stringifyCaseFilters.js';
@@ -297,6 +298,51 @@ const patchCase = async ({ changes, etag }) => {
 	}
 };
 
+const exportCase = async (params) => {
+	const casesService = getCases();
+
+	const { page, size, q, ids, sort, fields, options, format, ...filters } =
+		applyTransform(
+			{
+				...params,
+			},
+			[
+				merge(getDefaultGetParams()),
+				(params) => ({
+					...params,
+					q: params.search,
+				}),
+			],
+		);
+
+	try {
+		const response = await casesService.exportCases(
+			{
+				page,
+				size,
+				q,
+				ids,
+				sort,
+				fields,
+				format,
+				filters: stringifyCaseFilters(filters),
+			},
+			{
+				...options,
+				responseType: 'blob',
+			},
+		);
+
+		return {
+			response,
+		};
+	} catch (err) {
+		throw applyTransform(err, [
+			notify,
+		]);
+	}
+};
+
 const getCasesLookup = (params) =>
 	getCasesList({
 		...params,
@@ -316,6 +362,7 @@ const casesAPI = {
 	update: updateCase,
 	add: addCase,
 	patch: patchCase,
+	exportData: exportCase,
 
 	...generatePermissionsApi(baseUrl),
 };
