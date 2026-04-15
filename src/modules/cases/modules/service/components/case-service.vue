@@ -56,6 +56,7 @@ import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
 import ServicePath from './service-path.vue';
 import SlaRecalculationPopup from './sla-recalculation-popup.vue';
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
@@ -149,13 +150,26 @@ async function addServiceToStore(serviceCatalogData) {
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
 
-	const defaultPriority = getDefaultPriority(catalog, service);
+	if (!itemInstance.value.priority?.id) {
+		const defaultPriority = getDefaultPriority(catalog, service);
 
-	// Set default priority from selected Service
-	await setItemProp({
-		path: 'priority',
-		value: defaultPriority,
-	});
+		if (defaultPriority) {
+			// Set default priority from selected Service
+			await setItemProp({
+				path: 'priority',
+				value: defaultPriority,
+			});
+		} else {
+			const firstDefaultPriority = (await CasePrioritiesAPI.getLookup({}))
+				.items[0];
+
+			// Set first priority from get list case priorities
+			await setItemProp({
+				path: 'priority',
+				value: firstDefaultPriority,
+			});
+		}
+	}
 
 	await setItemProp({
 		path: 'close_reason_group',

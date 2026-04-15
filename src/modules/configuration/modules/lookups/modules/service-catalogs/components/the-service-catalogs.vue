@@ -149,7 +149,7 @@
                 </template>
               </template>
               <template #defaultPriority="{ item }">
-                {{ displayText(item.default_priority?.name) }}
+                {{ displayText(item.defaultPriority?.name) }}
               </template>
               <template #skills="{ item }">
                 <template v-if="!isRootElement(item)"> -</template>
