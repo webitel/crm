@@ -304,6 +304,10 @@ export default {
 			message:
 				'Після зміни сервісу та збереження звернення SLA буде перераховано.',
 		},
+		serviceRecalculationPopup: {
+			title: 'Зміна сервісу',
+			message: 'Статус, пріоритет, виконавець і група можуть бути змінені.',
+		},
 	},
 	filters: {
 		search: {

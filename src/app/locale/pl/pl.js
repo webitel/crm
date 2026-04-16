@@ -303,6 +303,10 @@ export default {
 			message:
 				'Po zmianie usługi i zapisaniu, SLA Sprawy zostanie przeliczone.',
 		},
+		serviceRecalculationPopup: {
+			title: 'Zmiana usługi',
+			message: 'Status, priorytet, osoba przypisana i grupa mogą ulec zmianie.',
+		},
 	},
 	filters: {
 		search: {

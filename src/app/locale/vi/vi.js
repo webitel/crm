@@ -303,6 +303,11 @@ export default {
 			message:
 				'Sau khi thay đổi dịch vụ và lưu, SLA của Vụ việc sẽ được tính toán lại.',
 		},
+		serviceRecalculationPopup: {
+			title: 'Thay đổi dịch vụ',
+			message:
+				'Trạng thái, độ ưu tiên, người được giao và nhóm có thể thay đổi.',
+		},
 	},
 	filters: {
 		search: {
