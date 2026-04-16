@@ -303,6 +303,11 @@ export default {
 			message:
 				'După modificarea serviciului și salvare, SLA-ul Cazului va fi recalculat.',
 		},
+		serviceRecalculationPopup: {
+			title: 'Schimbare serviciu',
+			message:
+				'Statusul, prioritatea, responsabilul și grupul se pot modifica.',
+		},
 	},
 	filters: {
 		search: {

@@ -190,12 +190,12 @@ const groupsList = computed(() => props.groups.map((el) => el.name).join(', '));
 
 .opened-contact-general-options {
   align-self: flex-end;
+}
 
-  .opened-contact-general-option {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-  }
+.opened-contact-general-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .opened-contact-general-name {

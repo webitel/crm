@@ -43,6 +43,7 @@ const servicesFieldsToSend = [
 	'assignee',
 	'assignee.name',
 	'description',
+	'default_priority',
 	'code',
 	'prefix',
 	'state',

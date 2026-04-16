@@ -56,6 +56,7 @@ import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
 import ServicePath from './service-path.vue';
 import SlaRecalculationPopup from './sla-recalculation-popup.vue';
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');
@@ -137,6 +138,27 @@ const getDefaultPriority = (catalog, selectedService) => {
 	return null;
 };
 
+const setDefaultPriority = async ({ catalog, service }) => {
+	const defaultPriority = getDefaultPriority(catalog, service);
+
+	if (defaultPriority) {
+		// Set default priority from selected Service
+		await setItemProp({
+			path: 'priority',
+			value: defaultPriority,
+		});
+	} else {
+		const firstDefaultPriority = (await CasePrioritiesAPI.getLookup({}))
+			.items[0];
+
+		// Set first priority from get list case priorities
+		await setItemProp({
+			path: 'priority',
+			value: firstDefaultPriority,
+		});
+	}
+};
+
 // Updates the store and component state with service and catalog data.
 async function addServiceToStore(serviceCatalogData) {
 	if (!serviceCatalogData)
@@ -148,14 +170,6 @@ async function addServiceToStore(serviceCatalogData) {
 
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
-
-	const defaultPriority = getDefaultPriority(catalog, service);
-
-	// Set default priority from selected Service
-	await setItemProp({
-		path: 'priority',
-		value: defaultPriority,
-	});
 
 	await setItemProp({
 		path: 'close_reason_group',
@@ -189,6 +203,7 @@ function onServicePopupSave(serviceCatalogData) {
 
 	if (isNew.value) {
 		addServiceToStore(serviceCatalogData);
+		setDefaultPriority(serviceCatalogData);
 	} else {
 		isSlaRecalculationPopup.value = true;
 	}
@@ -198,6 +213,7 @@ async function onSlaRecalculationSave() {
 	if (!pendingServiceData.value) return;
 
 	await addServiceToStore(pendingServiceData.value);
+	await setDefaultPriority(pendingServiceData.value);
 	pendingServiceData.value = null;
 	isSlaRecalculationPopup.value = false;
 }

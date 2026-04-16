@@ -297,6 +297,10 @@ export default {
 			message:
 				'After changing the service and saving, the SLA of the Case will be recalculated.',
 		},
+		serviceRecalculationPopup: {
+			title: 'Service change',
+			message: 'Status, priority, assignee and group may be changed.',
+		},
 	},
 	filters: {
 		search: {

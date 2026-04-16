@@ -40,7 +40,6 @@
         :value="itemInstance.defaultPriority"
         :v="v.itemInstance.defaultPriority"
         :disabled="disableUserInput"
-        required
         @input="setItemProp({ path: 'defaultPriority', value: $event })"
       />
 

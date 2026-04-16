@@ -6,12 +6,12 @@
     @close="close"
   >
     <template #header>
-      {{ t('cases.slaRecalculationPopup.title') }}
+      {{ t('cases.serviceRecalculationPopup.title') }}
     </template>
     <template #main>
       <div class="sla-recalculation-popup__content">
         <span class="sla-recalculation-popup__message">
-          {{ t('cases.slaRecalculationPopup.message') }}
+          {{ t('cases.serviceRecalculationPopup.message') }}
         </span>
       </div>
     </template>
