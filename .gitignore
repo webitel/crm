@@ -24,3 +24,7 @@ pnpm-debug.log*
 *.sw?
 .run
 *.xml
+
+.cursor
+
+.cursor
