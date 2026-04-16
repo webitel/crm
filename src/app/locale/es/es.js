@@ -303,6 +303,11 @@ export default {
 			message:
 				'Después de cambiar el servicio y guardar, el SLA del Caso será recalculado.',
 		},
+		serviceRecalculationPopup: {
+			title: 'Cambio de servicio',
+			message:
+				'El estado, la prioridad, el asignado y el grupo pueden cambiar.',
+		},
 	},
 	filters: {
 		search: {

@@ -296,6 +296,10 @@ export default {
 			message:
 				"Xizmatni o'zgartirgandan va saqlagandan so'ng, Murojaatning SLA qayta hisoblanadi.",
 		},
+		serviceRecalculationPopup: {
+			title: "Xizmatni o'zgartirish",
+			message: "Status, muhimlik, mas'ul va guruh o'zgarishi mumkin.",
+		},
 	},
 	filters: {
 		search: {
