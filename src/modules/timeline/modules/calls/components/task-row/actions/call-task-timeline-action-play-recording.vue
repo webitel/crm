@@ -57,30 +57,26 @@ const contextOptions = computed(() => {
 	}));
 });
 
+const isMimeTypeVideo = (mimeType: string) =>
+	isVideoSrc({
+		src: '',
+		type: mimeType,
+	});
+const isMimeTypeAudio = (mimeType: string) =>
+	isAudioSrc({
+		src: '',
+		type: mimeType,
+	});
+
 const getFileIcon = (mimeType: string) => {
-	if (
-		isVideoSrc({
-			src: '',
-			type: mimeType,
-		})
-	)
-		return 'preview-tag-video';
-	if (
-		isAudioSrc({
-			src: '',
-			type: mimeType,
-		})
-	)
-		return 'preview-tag-audio';
+	if (isMimeTypeVideo(mimeType)) return 'preview-tag-video';
+	if (isMimeTypeAudio(mimeType)) return 'preview-tag-audio';
 	return 'play';
 };
 
 const recordingTypeIcon = computed(() => {
 	const hasVideoFile = props.files?.some((file) =>
-		isVideoSrc({
-			src: '',
-			type: file.mimeType,
-		}),
+		isMimeTypeVideo(file.mimeType),
 	);
 	return hasVideoFile ? 'preview-tag-video' : 'play';
 });
