@@ -12,10 +12,13 @@ import caseViewRoute from '../../modules/cases/router/case-view';
 import configurationRoutes from '../../modules/configuration/router';
 import contactsRoutes from '../../modules/contacts/router';
 import contactViewRoute from '../../modules/contacts/router/contact-view';
-import NotFound from '../../modules/error-pages/components/the-not-found-component.vue';
 import startPageRoutes from '../../modules/start-page/router';
-import TheCrmWorkspace from '../components/the-crm-workspace.vue';
-import AccessDenied from '../components/utils/access-denied-component.vue';
+
+const TheCrmWorkspace = () => import('../components/the-crm-workspace.vue');
+const AccessDenied = () =>
+	import('../components/utils/access-denied-component.vue');
+const NotFound = () =>
+	import('../../modules/error-pages/components/the-not-found-component.vue');
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -70,7 +73,7 @@ const routes: Array<RouteRecordRaw> = [
 
 export let router = null;
 
-export const initRouter = async ({ beforeEach = [] } = {}) => {
+export const initRouter = async ({ beforeEach = [], afterEach = [] } = {}) => {
 	router = createRouter({
 		history: createWebHistory(import.meta.env.BASE_URL),
 		scrollBehavior() {
@@ -112,5 +115,8 @@ export const initRouter = async ({ beforeEach = [] } = {}) => {
 		router.beforeEach(guard);
 	});
 
+	afterEach.forEach((guard) => {
+		router.afterEach(guard);
+	});
 	return router;
 };
