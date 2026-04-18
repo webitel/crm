@@ -1,4 +1,5 @@
 <template>
+  <wt-notifications-bar />
   <router-view />
 </template>
 
@@ -6,6 +7,7 @@
 import { computed, onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { WtNotificationsBar } from '@webitel/ui-sdk/components';
 
 const { locale, fallbackLocale } = useI18n();
 
