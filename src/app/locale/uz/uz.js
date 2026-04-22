@@ -298,7 +298,8 @@ export default {
 		},
 		serviceRecalculationPopup: {
 			title: "Xizmatni o'zgartirish",
-			message: "Status, muhimlik, mas'ul va guruh o'zgarishi mumkin.",
+			message:
+				'Xizmat o‘zgartirilgandan va saqlangandan so‘ng, Case SLA qayta hisoblanishi mumkin. Holat, ustuvorlik, mas’ul shaxs va guruh o‘zgarishi mumkin.',
 		},
 	},
 	filters: {

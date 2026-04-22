@@ -306,7 +306,7 @@ export default {
 		serviceRecalculationPopup: {
 			title: 'Thay đổi dịch vụ',
 			message:
-				'Trạng thái, độ ưu tiên, người được giao và nhóm có thể thay đổi.',
+				'Sau khi thay đổi dịch vụ và lưu, SLA của Case có thể được tính lại. Trạng thái, mức ưu tiên, người phụ trách và nhóm có thể thay đổi.',
 		},
 	},
 	filters: {

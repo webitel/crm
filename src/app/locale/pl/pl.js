@@ -305,7 +305,8 @@ export default {
 		},
 		serviceRecalculationPopup: {
 			title: 'Zmiana usługi',
-			message: 'Status, priorytet, osoba przypisana i grupa mogą ulec zmianie.',
+			message:
+				'Po zmianie usługi i zapisaniu SLA sprawy może zostać przeliczone. Status, priorytet, przypisany użytkownik oraz grupa mogą ulec zmianie.',
 		},
 	},
 	filters: {

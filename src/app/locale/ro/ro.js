@@ -306,7 +306,7 @@ export default {
 		serviceRecalculationPopup: {
 			title: 'Schimbare serviciu',
 			message:
-				'Statusul, prioritatea, responsabilul și grupul se pot modifica.',
+				'După schimbarea serviciului și salvare, SLA-ul cazului poate fi recalculat. Statusul, prioritatea, responsabilul și grupul se pot modifica.',
 		},
 	},
 	filters: {
