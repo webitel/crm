@@ -103,5 +103,9 @@ const close = () => {
   :deep(.wt-popup__main) {
     overflow-y: initial !important;
   }
+
+  :deep(.wt-popup__popup) {
+    max-width: 500px;
+  }
 }
 </style>
