@@ -72,6 +72,7 @@
             :title="mediaSource.file?.name"
             :src="mediaSource.url"
             :mime="mediaSource.file?.mimeType"
+            :size="ComponentSize.MD"
             closable
             @close="closePlayer"
           />
@@ -94,6 +95,7 @@ import {
 	WtPlayer,
 	WtVidstackPlayer,
 } from '@webitel/ui-sdk/components';
+import { ComponentSize } from '@webitel/ui-sdk/enums';
 import {
 	computed,
 	inject,
