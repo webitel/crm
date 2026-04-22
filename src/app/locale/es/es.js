@@ -306,7 +306,7 @@ export default {
 		serviceRecalculationPopup: {
 			title: 'Cambio de servicio',
 			message:
-				'El estado, la prioridad, el asignado y el grupo pueden cambiar.',
+				'Después de cambiar el servicio y guardar, el SLA del caso puede recalcularse. El estado, la prioridad, el responsable y el grupo pueden cambiar.',
 		},
 	},
 	filters: {
