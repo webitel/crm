@@ -28,12 +28,13 @@
         </wt-action-bar>
       </header>
 
-      <table-top-row-bar
+      <wt-inline-add-panel
         v-if="isFormVisible"
         :disabled-add-action="isFormAddActionDisabled"
         @reset="resetForm"
         @submit="submitLink"
       >
+        <template>
         <wt-input-text
           :placeholder="t('cases.attachments.url')"
           :model-value="formState.linkUrl"
@@ -47,7 +48,8 @@
           class="link-form__input"
           @update:model-value="updateLinkText"
         />
-      </table-top-row-bar>
+          </template>
+      </wt-inline-add-panel>
 
       <wt-empty
         v-show="showEmpty && !isPendingItemsLoading"
@@ -126,7 +128,7 @@ import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import TableTopRowBar from '../../../../../components/table-top-row-bar.vue';
+import { WtInlineAddPanel } from '@webitel/ui-sdk/components';
 import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
 import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
 import LinksAPI from '../api/LinksAPI.js';
