@@ -421,10 +421,8 @@ async function handleBulkDelete(links) {
     flex-shrink: 0;
   }
 
-  .link-form {
-    &__input {
-      flex: 1;
-    }
+  .link-form__input {
+    flex: 1;
   }
 }
 </style>
