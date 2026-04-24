@@ -21,17 +21,19 @@
         />
       </header>
 
-      <table-top-row-bar
+      <wt-inline-add-panel
         v-if="formState.isAdding || formState.editingComment"
         @reset="resetForm"
         @submit="submitComment"
       >
-        <wt-input-text
-          v-model:model-value="formState.commentText"
-          :placeholder="t('cases.comments.yourCommentHere')"
-          class="comment-form__input"
-        />
-      </table-top-row-bar>
+        <template>
+          <wt-input-text
+            v-model:model-value="formState.commentText"
+            :placeholder="t('cases.comments.yourCommentHere')"
+            class="comment-form__input"
+          />
+          </template>
+      </wt-inline-add-panel>
 
       <wt-empty
         v-show="showEmpty"
@@ -104,7 +106,6 @@ import { useI18n } from 'vue-i18n';
 import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import CommentsAPI from '../api/CommentsAPI';
 import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
