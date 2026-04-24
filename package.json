@@ -60,7 +60,7 @@
 		"@vue/tsconfig": "^0.8.x",
 		"csv-parse": "^6.1.0",
 		"globals": "^17.x",
-		"happy-dom": "^15.7.3",
+		"happy-dom": "^20.9.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.x",
 		"sass": "^1.77.2",
