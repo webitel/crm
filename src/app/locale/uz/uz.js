@@ -61,7 +61,6 @@ export default {
 		timeline: "Vaqt chizig'i",
 		totalDuration: 'Umumiy davomiyligi',
 		actions: {
-			openInHistory: 'Tarixda ochish',
 			playRecording: 'Yozuvni ijro etish',
 			transcription: 'Transkripsiya',
 		},

@@ -1,7 +1,7 @@
 <template>
   <div class="call-task-timeline-actions-history-link">
     <a
-      v-tooltip="$t('timeline.actions.openInHistory')"
+      v-tooltip="$t('reusable.openInHistory')"
       :href="historyLink"
       target="_blank"
     >

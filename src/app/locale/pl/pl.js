@@ -61,7 +61,6 @@ export default {
 		timeline: 'Oś czasu',
 		totalDuration: 'Całkowity czas trwania',
 		actions: {
-			openInHistory: 'Otwórz w historii',
 			playRecording: 'Odtwórz nagranie',
 			transcription: 'Transkrypcja',
 		},

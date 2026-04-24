@@ -61,7 +61,6 @@ export default {
 		timeline: 'Línea de tiempo',
 		totalDuration: 'Duración total',
 		actions: {
-			openInHistory: 'Abrir en historial',
 			playRecording: 'Reproducir grabación',
 			transcription: 'Transcripción',
 		},

@@ -61,7 +61,6 @@ export default {
 		timeline: 'Хронологія',
 		totalDuration: 'Загальна тривалість',
 		actions: {
-			openInHistory: 'Відкрити в історії',
 			playRecording: 'Програти запис',
 			transcription: 'Транскрипція',
 		},

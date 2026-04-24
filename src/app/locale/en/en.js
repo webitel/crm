@@ -61,7 +61,6 @@ export default {
 		timeline: 'Timeline',
 		totalDuration: 'Total duration',
 		actions: {
-			openInHistory: 'Open in history',
 			playRecording: 'Play recording',
 			transcription: 'Transcription',
 		},
