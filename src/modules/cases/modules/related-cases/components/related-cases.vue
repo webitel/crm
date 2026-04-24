@@ -28,11 +28,12 @@
         />
       </header>
 
-      <table-top-row-bar
+      <wt-inline-add-panel
         v-if="hasCreateAccess && defaultState.createMode"
         @reset="resetForm"
         @submit="submitCase"
       >
+        <template>
         <wt-select
           :value="defaultState.relationType"
           :options="relatedTypesOptions"
@@ -63,7 +64,8 @@
             />
           </template>
         </wt-select>
-      </table-top-row-bar>
+        </template>
+      </wt-inline-add-panel>
 
       <wt-empty
         v-show="showEmpty"
@@ -167,7 +169,6 @@ import { useI18n } from 'vue-i18n';
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CasesAPI from '../../../api/CasesAPI';
-import TableTopRowBar from '../../../components/table-top-row-bar.vue';
 import { RelatedCasesAPI } from '../api/RelatedCasesAPI';
 import { useCaseRelatedCasesStore } from '../stores/relatedCases';
 import RelatedCaseItem from './related-case-item.vue';
