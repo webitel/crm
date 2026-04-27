@@ -65,7 +65,7 @@
 		"lint-staged": "^16.x",
 		"sass": "^1.77.2",
 		"tslib": "^2.7.0",
-		"typescript": "^5.9.x",
+		"typescript": "^6.0.x",
 		"vite": "npm:rolldown-vite@^7.3.x",
 		"vite-plugin-checker": "^0.12.x",
 		"vite-plugin-node-polyfills": "^0.x",
