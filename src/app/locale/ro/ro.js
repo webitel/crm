@@ -61,7 +61,6 @@ export default {
 		timeline: 'Cronologie',
 		totalDuration: 'Durată totală',
 		actions: {
-			openInHistory: 'Deschide în istoric',
 			playRecording: 'Redă înregistrarea',
 			transcription: 'Transcriere',
 		},

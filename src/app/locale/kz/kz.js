@@ -61,7 +61,6 @@ export default {
 		timeline: 'Хронология',
 		totalDuration: 'Жалпы ұзақтығы',
 		actions: {
-			openInHistory: 'Тарихта ашу',
 			playRecording: 'Жазбаны ойнату',
 			transcription: 'Транскрипция',
 		},

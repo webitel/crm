@@ -61,7 +61,6 @@ export default {
 		timeline: 'Dòng thời gian',
 		totalDuration: 'Tổng thời gian',
 		actions: {
-			openInHistory: 'Mở trong lịch sử',
 			playRecording: 'Phát bản ghi',
 			transcription: 'Bản ghi âm',
 		},
