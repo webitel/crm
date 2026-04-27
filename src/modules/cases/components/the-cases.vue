@@ -62,6 +62,7 @@
             <template #columns>
               <wt-table-column-select
                 :headers="mergedHeaders"
+                enable-search
                 @change="updateShownHeaders"
               />
             </template>
