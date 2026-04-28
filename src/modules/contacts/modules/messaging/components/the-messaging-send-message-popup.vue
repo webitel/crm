@@ -18,14 +18,15 @@
     </template>
     <template #actions>
       <wt-chat-emoji
+        filled
+        :rounded="false"
         class="contact-send-message__emoji"
         @insert-emoji="insertEmoji"
       />
 
-      <wt-rounded-action
+      <wt-button
         icon="chat-send"
-        color="accent"
-        rounded
+        color="secondary"
         :disabled="!draft.message"
         wide
         @click="sendMessage"
@@ -122,12 +123,6 @@ onMounted(async () => await getAgentId());
 </script>
 
 <style lang="scss" scoped>
-.contact-send-message__gateway {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
 .contact-send-message__emoji {
   :deep(.wt-chat-emoji__wrapper emoji-picker) {
     position: absolute;
