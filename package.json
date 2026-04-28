@@ -16,7 +16,8 @@
 		"utils:ls-libs": "npm ls @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist @webitel/styleguide",
 		"prepare": "husky || true",
 		"biome:ci:gh": "biome ci ./src --reporter=github",
-		"test:unit:ci": "vitest run --coverage"
+		"test:unit:ci": "vitest run --coverage",
+		"typecheck:ci": "true"
 	},
 	"type": "module",
 	"dependencies": {
