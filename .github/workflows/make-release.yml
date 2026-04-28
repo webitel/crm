@@ -68,7 +68,7 @@ jobs:
           fi
           
           git commit -m "chore: bump version to ${{ steps.version.outputs.next_full_version }}"
-          git push -u origin "${{ steps.version.outputs.version_tag }}"
+          git push origin ${{ github.event.repository.default_branch }}
 
       - name: Create and push tag
         run: |
