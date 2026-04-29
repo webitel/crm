@@ -68,6 +68,7 @@ import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
+import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
@@ -223,7 +224,7 @@ const path = computed(() => {
 	];
 });
 
-const userinfo = computed(() => store.state.userinfo);
+const { userId } = useUserinfoStore();
 const userContact = ref({});
 
 const isCaseAssignable = computed(() => {
@@ -245,7 +246,7 @@ async function fetchUserContact(userId) {
 }
 
 watch(
-	() => userinfo.value?.userId,
+	() => userId,
 	async (newVal, oldVal) => {
 		if (newVal !== oldVal) {
 			await fetchUserContact(newVal);
