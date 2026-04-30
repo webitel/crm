@@ -142,7 +142,7 @@ const store = useStore();
 
 const { t } = useI18n();
 
-const client = computed(() => store.getters['CLIENT']);
+const client = computed(() => store.getters.CLIENT);
 
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,

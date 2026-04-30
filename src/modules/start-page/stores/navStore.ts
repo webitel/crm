@@ -1,10 +1,9 @@
-import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useConfigurationStore } from '../../configuration/store/configurationStore';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import CasesDark from '../assets/cases-section-dark.svg';

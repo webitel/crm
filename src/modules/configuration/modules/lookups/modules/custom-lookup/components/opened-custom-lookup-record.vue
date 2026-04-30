@@ -161,41 +161,37 @@ const dictionary = ref(null);
 const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
-	try {
-		dictionary.value = await CustomLookupsApi.get({
-			itemId: repo.value,
-		});
+	dictionary.value = await CustomLookupsApi.get({
+		itemId: repo.value,
+	});
 
-		store.commit(`${namespace}/card/SET`, {
-			path: 'repo',
-			value: repo.value,
-		});
-		store.commit(`${namespace}/card/SET`, {
-			path: 'fields',
-			value: dictionary.value.fields,
-		});
+	store.commit(`${namespace}/card/SET`, {
+		path: 'repo',
+		value: repo.value,
+	});
+	store.commit(`${namespace}/card/SET`, {
+		path: 'fields',
+		value: dictionary.value.fields,
+	});
 
-		store.commit(`${namespace}/card/SET`, {
-			path: 'fieldsToSend',
-			value: dictionary.value.fields
-				.filter((field) => !field.hidden && !field.default && !field.always)
-				.map((field) => field.id),
-		});
+	store.commit(`${namespace}/card/SET`, {
+		path: 'fieldsToSend',
+		value: dictionary.value.fields
+			.filter((field) => !field.hidden && !field.default && !field.always)
+			.map((field) => field.id),
+	});
 
-		store.commit(`${namespace}/card/SET`, {
-			path: 'itemInstance',
-			value: dictionary.value.fields.reduce((acc, field) => {
-				if (field.hidden || field.default || field.always) {
-					return acc;
-				}
-
-				acc[field.id] = null;
+	store.commit(`${namespace}/card/SET`, {
+		path: 'itemInstance',
+		value: dictionary.value.fields.reduce((acc, field) => {
+			if (field.hidden || field.default || field.always) {
 				return acc;
-			}, {}),
-		});
-	} catch (e) {
-		throw e;
-	}
+			}
+
+			acc[field.id] = null;
+			return acc;
+		}, {}),
+	});
 };
 
 onMounted(async () => {
