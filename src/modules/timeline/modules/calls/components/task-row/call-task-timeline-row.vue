@@ -90,12 +90,14 @@
 </template>
 
 <script lang="ts" setup>
+import { EngineCallFile } from '@webitel/api-services/gen/models';
 import {
 	WtDisplayChipItems,
 	WtPlayer,
 	WtVidstackPlayer,
 } from '@webitel/ui-sdk/components';
 import { ComponentSize } from '@webitel/ui-sdk/enums';
+import { isAudioSrc, isVideoSrc } from 'vidstack';
 import {
 	computed,
 	inject,
@@ -106,8 +108,6 @@ import {
 	ref,
 	toRefs,
 } from 'vue';
-import { EngineCallFile } from '@webitel/api-services/gen/models';
-import { isAudioSrc, isVideoSrc } from 'vidstack';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';

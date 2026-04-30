@@ -13,7 +13,7 @@ import ConfigurationImgDark from '../assets/configuration-section-img-dark.svg';
 import ConfigurationImgLight from '../assets/configuration-section-img-light.svg';
 import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
 import ContactsImgLight from '../assets/contacts-section-img-light.svg';
-import { StartPageNavigation } from '../types/start-page.types';
+import type { StartPageNavigation } from '../types/start-page.types';
 
 export const useNavStore = defineStore('nav', () => {
 	const { t } = useI18n();

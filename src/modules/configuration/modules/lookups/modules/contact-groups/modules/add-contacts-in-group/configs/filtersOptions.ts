@@ -1,6 +1,6 @@
 import {
 	createFilterConfig,
-	FilterConfigDefinition,
+	type FilterConfigDefinition,
 	FilterOption,
 } from '@webitel/ui-datalist/filters';
 

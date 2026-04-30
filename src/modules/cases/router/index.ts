@@ -1,6 +1,6 @@
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedCase from '../components/opened-case.vue';
 import TheCases from '../components/the-cases.vue';

@@ -13,9 +13,9 @@ import {
 	sanitize,
 	snakeToCamel,
 } from '@webitel/api-services/api/transformers';
+import { getCases } from '@webitel/api-services/gen';
 import { snakeToKebab } from '@webitel/ui-sdk/scripts';
 import { CasesApiFactory } from 'webitel-sdk';
-import { getCases } from '@webitel/api-services/gen';
 
 import ftsServiceAPI from './FTSServiceAPI.js';
 import { stringifyCaseFilters } from './stringifyCaseFilters.js';

@@ -23,10 +23,9 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
 	namespace: {

@@ -1,5 +1,5 @@
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedCustomLookup from '../modules/custom-lookups/components/opened-custom-lookup.vue';
 import OpenedCustomLookupColumns from '../modules/custom-lookups/components/opened-custom-lookup-columns.vue';
