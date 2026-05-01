@@ -13,8 +13,38 @@ config.global.plugins = [
 
 window.scrollTo = () => {};
 
+/*
+ * Global axios mock.
+ *
+ * Issue: components mounted in tests (e.g. `the-contacts.vue`) trigger API
+ * calls via `@webitel/api-services` -> `webitel-sdk` `*ApiFactory(...)` ->
+ * a real axios instance built by `getDefaultInstance()` (api-services
+ * internal `generateInstance` -> `axios.create()`). Axios v1 in Node uses
+ * the `node:net` http adapter, so requests escape happy-dom and hit the
+ * network, yielding `ECONNREFUSED localhost:3000` (happy-dom origin +
+ * `VITE_API_URL=/api`). These rejections are unhandled and surface as
+ * vitest "Errors" in CI even when assertions pass.
+ *
+ * Fix: doMock the `axios` package itself so every `axios.create(...)` and
+ * direct method call returns the ui-sdk axios mock. This catches
+ * api-services' internal `generateInstance`, ui-sdk's wrapper, and any
+ * other axios consumer regardless of the import path they take.
+ */
+const mockAxiosInstance = axiosMock()().default;
+vi.doMock('axios', () => ({
+	default: {
+		...mockAxiosInstance,
+		create: vi.fn(() => mockAxiosInstance),
+	},
+	...mockAxiosInstance,
+	create: vi.fn(() => mockAxiosInstance),
+}));
+
 const axios = axiosMock();
 vi.doMock('@webitel/ui-sdk/src/api/axios/generateInstance.js', () => ({
+	default: () => axios().default,
+}));
+vi.doMock('@aliasedDeps/api-services/axios', () => ({
 	default: () => axios().default,
 }));
 

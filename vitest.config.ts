@@ -21,7 +21,7 @@ export default defineConfig({
 			vue: 'vue',
 			'@aliasedDeps/api-services/axios': resolve(
 				__dirname,
-				'src/app/api/instance',
+				'tests/mocks/axios-instance.js',
 			),
 		},
 		server: {
@@ -29,6 +29,7 @@ export default defineConfig({
 				inline: [
 					'@webitel/ui-sdk',
 					'@webitel/ui-datalist',
+					'@webitel/api-services',
 				],
 			},
 		},
