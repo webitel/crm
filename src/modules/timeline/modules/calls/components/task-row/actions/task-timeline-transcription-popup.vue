@@ -149,7 +149,7 @@ watch(
 	() => activeTranscript.value,
 	(value) => {
 		if (value) return loadCallTranscript();
-		return (phrases.value = []);
+		phrases.value = [];
 	},
 );
 </script>

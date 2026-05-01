@@ -224,7 +224,9 @@ watch(
 	commId,
 	() => {
 		if (commId.value) {
-			setTimeout(() => (shown.value = !!commId.value), 300);
+			setTimeout(() => {
+				shown.value = !!commId.value;
+			}, 300);
 		} else {
 			shown.value = !!commId.value;
 		}

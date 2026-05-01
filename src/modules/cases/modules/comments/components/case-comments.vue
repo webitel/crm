@@ -96,14 +96,14 @@
 </template>
 
 <script lang="ts" setup>
-import { WtTable, WtActionBar } from '@webitel/ui-sdk/components';
+import { WtActionBar, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
+import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CommentsAPI from '../api/CommentsAPI';

@@ -113,7 +113,9 @@ watch(
 	permissionId,
 	() => {
 		if (permissionId.value) {
-			setTimeout(() => (shown.value = !!permissionId.value), 300);
+			setTimeout(() => {
+				shown.value = !!permissionId.value;
+			}, 300);
 		} else {
 			shown.value = !!permissionId.value;
 		}

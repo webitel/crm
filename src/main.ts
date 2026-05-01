@@ -83,7 +83,7 @@ const initApp = async () => {
 };
 
 (async () => {
-	let config;
+	let config: unknown;
 	try {
 		setTokenFromUrl();
 		config = await fetchConfig();

@@ -62,7 +62,7 @@ import {
 const props = defineProps<{
 	value: CustomLookupField;
 	disabledDefaultValue: boolean;
-	v: any;
+	v: unknown;
 }>();
 
 const { lookup, kind } = toRefs(props.value);
@@ -88,7 +88,8 @@ const loadLookupList = ref(getLoadLookupList(lookup.value));
 
 const selectValue = (event: CustomLookupValue) => {
 	if (!Object.keys(event).length) {
-		return (props.value.default = null);
+		props.value.default = null;
+		return;
 	}
 
 	props.value.default = deepCopy(event);
