@@ -41,7 +41,6 @@ export default {
 				provider: 'Провайдер',
 				username: "Ім'я користувача",
 				dummy: 'Поки ще не було текстових діалогів',
-				sendMessage: 'Надіслати повідомлення',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Застосунок',

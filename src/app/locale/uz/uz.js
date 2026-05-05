@@ -41,7 +41,6 @@ export default {
 				provider: 'Provider',
 				username: 'Foydalanuvchi nomi',
 				dummy: "Hali xabar almashish variantlari yo'q",
-				sendMessage: 'Xabar yuborish',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Ilova',
