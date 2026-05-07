@@ -41,7 +41,6 @@ export default {
 				provider: 'Provider ',
 				username: 'Username',
 				dummy: 'There are no messaging options yet',
-				sendMessage: 'Send message',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
