@@ -41,7 +41,6 @@ export default {
 				provider: 'Dostawca ',
 				username: 'Nazwa użytkownika',
 				dummy: 'Nie ma jeszcze opcji wiadomości',
-				sendMessage: 'Хабар жіберу',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Bot Telegram',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Aplikacja Telegram',

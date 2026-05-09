@@ -41,7 +41,6 @@ export default {
 				provider: 'Furnizor ',
 				username: 'Nume utilizator',
 				dummy: 'Nu există opțiuni de mesagerie încă',
-				sendMessage: 'Trimite mesaj',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',

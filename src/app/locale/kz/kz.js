@@ -41,7 +41,6 @@ export default {
 				provider: 'Провайдер',
 				username: 'Пайдаланушы аты',
 				dummy: 'Әзірге хабарлама опциялары жоқ',
-				sendMessage: 'Хабар жіберу',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Қосымшасы',
