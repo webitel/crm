@@ -57,7 +57,7 @@
     :value="value"
     :v="validation"
     mode="datetime"
-	:timezone="timezone"
+    :timezone="timezone"
     :required="isRequired"
     :disabled="props.disabled"
     @input="setValue(+$event)"
