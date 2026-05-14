@@ -41,7 +41,6 @@ export default {
 				provider: 'Nhà cung cấp ',
 				username: 'Tên người dùng',
 				dummy: 'Chưa có tùy chọn nhắn tin nào',
-				sendMessage: 'Gửi tin nhắn',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Ứng dụng Telegram',

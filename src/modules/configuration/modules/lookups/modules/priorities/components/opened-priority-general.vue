@@ -124,7 +124,7 @@ setDefaultColorOption();
 .opened-priority-general {
   &__wrapper {
     display: flex;
-    align-items: center;
+    align-items: end;
     gap: var(--spacing-xs);
 
     .case-priority-color-component {
