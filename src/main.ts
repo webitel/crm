@@ -56,7 +56,7 @@ setApiServicesConfig({
 const initApp = async () => {
 	const app = createApp(App).use(store).use(i18n).use(pinia);
 
-	const { initialize, routeAccessGuard, showUserNotifications } =
+	const { initialize, routeAccessGuard, clearStorageNotifications } =
 		useUserinfoStore();
 	try {
 		await initialize();
@@ -65,9 +65,7 @@ const initApp = async () => {
 			beforeEach: [
 				routeAccessGuard,
 			],
-			afterEach: [
-				showUserNotifications,
-			],
+			onUnauthorized: clearStorageNotifications,
 		});
 	} catch (err) {
 		console.error('Error initializing app', err);
