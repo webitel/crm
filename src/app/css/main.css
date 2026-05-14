@@ -90,3 +90,16 @@ body {
 	flex-direction: column;
 	height: 100%;
 }
+
+/* Keep card tab section headers aligned with editable fields. */
+.opened-card-tabs .table-title,
+.opened-contact-tab .table-title,
+.opened-card-tabs .permissions-header,
+.opened-contact-tab .permissions-header {
+	padding: var(--spacing-xs);
+}
+
+/* Align case details tab rows with other card fields. */
+.opened-card-tabs .case-details-container > * {
+	padding: var(--spacing-xs);
+}
