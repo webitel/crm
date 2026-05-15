@@ -103,11 +103,13 @@ import {
 	onUnmounted,
 	provide,
 	reactive,
-	ref,
 	toRefs,
 } from 'vue';
 import { EngineCallFile } from '@webitel/api-services/gen/models';
-import { isAudioSrc, isVideoSrc } from 'vidstack';
+import {
+	assumeVidstackSupportedAudioType,
+	assumeVidstackSupportedVideoType,
+} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
@@ -237,7 +239,7 @@ const currentFile = computed(() =>
 const showAudioPlayer = computed(
 	() =>
 		currentFile.value &&
-		isAudioSrc({
+		assumeVidstackSupportedAudioType({
 			src: mediaSource.url,
 			type: currentFile.value.mimeType,
 		}),
@@ -246,7 +248,7 @@ const showAudioPlayer = computed(
 const showVideoPlayer = computed(
 	() =>
 		currentFile.value &&
-		isVideoSrc({
+		assumeVidstackSupportedVideoType({
 			src: mediaSource.url,
 			type: currentFile.value.mimeType,
 		}),
