@@ -20,7 +20,7 @@
       <wt-input-text
         v-if="isExportSettingsFormatCSV"
         v-model:model-value="separator"
-        :label="$t('objects.CSV.separator')"
+        :label="t('objects.CSV.separator')"
         :v="v$.separator"
         required
       />
