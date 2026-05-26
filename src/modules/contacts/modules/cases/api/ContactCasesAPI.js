@@ -79,6 +79,7 @@ const getContactCasesList = async (params) => {
 				...params.fields,
 				'etag',
 				'id',
+				'custom',
 			],
 		},
 		[
@@ -102,7 +103,9 @@ const getContactCasesList = async (params) => {
 		]);
 		return {
 			items: applyTransform(items, [
-				snakeToCamel(),
+				snakeToCamel([
+					'custom',
+				]),
 				transformSourceType,
 			]),
 			next,
