@@ -27,6 +27,7 @@
 
         <div v-show="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
           <wt-table
+            :key="filtersManager.toString()"
             :data="dataList"
             :headers="headers"
             :selected="selected"
@@ -128,7 +129,13 @@ const isFirstLoad = ref(false);
 const { dataList, selected, headers, next, error, isLoading, filtersManager } =
 	tableStore;
 
-const { initialize, updateSort, updateSelected, appendToDataList } = tableStore;
+const {
+	initialize,
+	updateSort,
+	updateSelected,
+	appendToDataList,
+	resetInfiniteScrollTableParamsToDefaults,
+} = tableStore;
 
 const {
 	showEmpty,
@@ -159,6 +166,8 @@ const save = async () => {
 };
 
 function close() {
+	resetInfiniteScrollTableParamsToDefaults();
+	isFirstLoad.value = false;
 	emit('close');
 }
 </script>
