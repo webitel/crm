@@ -246,7 +246,11 @@ async function updateStatusCondition(isValidationRequired = true) {
 watch(
 	() => status.value?.id,
 	async (newStatusId, oldStatusId) => {
-		if (!newStatusId || itemInstance.value.statusCondition.final) return;
+		if (
+			!newStatusId ||
+			(itemInstance.value.statusCondition.final && !isNew.value)
+		)
+			return;
 
 		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a stat usCondition.id, on any subsequent status‐change we force the reset
 		const validationRequired = oldStatusId === undefined;
