@@ -19,16 +19,14 @@
           required
           @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
-        <wt-select
-          :value="itemInstance.priorities"
+        <wt-multi-select
+          :model-value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
           :search-method="id ? getConditionPriorities : getFreePriorities"
-          :close-on-select="false"
           :disabled="disableUserInput"
           :v="v$.itemInstance.priorities"
-          multiple
           required
-          @input="setItemProp({ path: 'priorities', value: $event })"
+          @update:model-value="setItemProp({ path: 'priorities', value: $event })"
         />
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"

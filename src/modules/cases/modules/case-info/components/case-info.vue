@@ -47,12 +47,13 @@
         @update:value="setItemProp({ path: 'source', value: $event })"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             v-bind="props"
+            :model-value="props.value"
             :v="v$.value.itemInstance.source"
             :disabled="disableUserInput"
             :search-method="CaseSourcesAPI.getLookup"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>

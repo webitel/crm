@@ -22,21 +22,21 @@
           required
           @update:model-value="setItemProp({ path: 'expression', value: $event })"
         />
-        <wt-select
-          :value="itemInstance.group"
+        <wt-single-select
+          :model-value="itemInstance.group"
           :v="v$.itemInstance.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
           :search-method="loadStaticContactGroupsList"
           required
-          @input="setGroups"
+          @update:model-value="setGroups"
         />
-        <wt-select
+        <wt-single-select
           :key="itemInstance.group?.id"
           :disabled="!itemInstance.group?.id"
-          :value="itemInstance.assignee"
+          :model-value="itemInstance.assignee"
           :label="t('lookups.contactGroups.assignee')"
           :search-method="loadContacts"
-          @input="setItemProp({ path: 'assignee', value: $event })"
+          @update:model-value="setItemProp({ path: 'assignee', value: $event })"
         />
       </form>
     </template>

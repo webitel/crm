@@ -10,21 +10,21 @@
 
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
-      <wt-select
+      <wt-single-select
         :key="status?.id"
         :disabled="disableStatusSelect"
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
-        :value="itemInstance?.statusCondition"
-		:clearable="false"
+        :model-value="itemInstance?.statusCondition"
+				:show-clear="false"
         class="case-status__select"
-        @input="handleSelect"
+        @update:model-value="handleSelect"
       >
-        <template #singleLabel="{ option }">
+        <template #value="{ value }">
           <wt-indicator
-            :color="getIndicatorColor(option)"
-            :text="option.name"
+            :color="getIndicatorColor(value)"
+            :text="value.name"
           />
         </template>
 
@@ -34,7 +34,7 @@
             :text="option.name"
           />
         </template>
-      </wt-select>
+      </wt-single-select>
     </div>
   </div>
 </template>

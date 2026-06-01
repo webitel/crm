@@ -10,14 +10,13 @@
     </template>
     <template #main>
       <div class="task-timeline-transcription-popup__options">
-        <wt-select
-          :value="activeTranscript"
-          :clearable="false"
+        <wt-single-select
+          v-model:model-value="activeTranscript"
+          :show-clear="false"
           :label="$t('vocabulary.file')"
           :options="transcriptData"
           option-label="fileName"
-          track-by="fileId"
-          @input="activeTranscript = $event"
+          data-key="fileId"
         />
         <wt-icon-btn
           icon="stt-download"

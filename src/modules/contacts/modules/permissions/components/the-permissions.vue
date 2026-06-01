@@ -40,37 +40,37 @@
         </template>
 
         <template #read="{ item }">
-          <wt-select
+          <wt-single-select
             v-if="access.hasRbacEditAccess"
-            :value="item.access.r"
+            :model-value="item.access.r"
             :options="accessOptions"
-            :clearable="false"
+            :show-clear="false"
             :disabled="isReadOnly"
-            @input="changeReadAccessMode({ item, mode: $event })"
+            @update:model-value="changeReadAccessMode({ item, mode: $event })"
           />
           <span v-else>{{ item.access.r.name }}</span>
         </template>
 
         <template #edit="{ item }">
-          <wt-select
+          <wt-single-select
             v-if="access.hasRbacEditAccess"
-            :value="item.access.w"
+            :model-value="item.access.w"
             :options="accessOptions"
-            :clearable="false"
+            :show-clear="false"
             :disabled="isReadOnly"
-            @input="changeUpdateAccessMode({ item, mode: $event })"
+            @update:model-value="changeUpdateAccessMode({ item, mode: $event })"
           />
           <span v-else>{{ item.access.w.name }}</span>
         </template>
 
         <template #delete="{ item }">
-          <wt-select
+          <wt-single-select
             v-if="access.hasRbacEditAccess"
-            :value="item.access.d"
+            :model-value="item.access.d"
             :options="accessOptions"
-            :clearable="false"
+            :show-clear="false"
             :disabled="isReadOnly"
-            @input="changeDeleteAccessMode({ item, mode: $event })"
+            @update:model-value="changeDeleteAccessMode({ item, mode: $event })"
           />
           <span v-else>{{ item.access.d.name }}</span>
         </template>

@@ -151,6 +151,7 @@ const openLink = () => {
 .editable-field {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 
   &__content {
     display: flex;

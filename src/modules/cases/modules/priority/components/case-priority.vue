@@ -8,14 +8,15 @@
         @update:value="setItemProp({ path: 'priority', value: $event })"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             v-bind="props"
+            :model-value="props.value"
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.priority"
             :placeholder="t('cases.priority')"
             :search-method="CasePrioritiesAPI.getLookup"
             class="case-priority__select"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>

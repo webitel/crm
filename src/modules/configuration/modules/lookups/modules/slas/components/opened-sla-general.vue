@@ -15,14 +15,14 @@
         @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('objects.calendar')"
         :search-method="loadCalendarsList"
-        :value="itemInstance.calendar"
+        :model-value="itemInstance.calendar"
         :v="v.itemInstance.calendar"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'calendar', value: $event })"
+        @update:model-value="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea

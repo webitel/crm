@@ -21,36 +21,34 @@
           @update:model-value="draft.name = $event"
         />
 
-        <wt-select
-          :value="draft.groups"
+        <wt-multi-select
+          v-model:model-value="draft.groups"
           :label="t('cases.groupPerformers')"
           :search-method="loadStaticContactGroupsList"
-          multiple
-          @input="draft.groups = $event"
         />
 
-        <wt-select
-          :value="draft.timezones[0]?.timezone"
+        <wt-single-select
+          :model-value="draft.timezones[0]?.timezone"
           :label="t('date.timezone', 1)"
           :search-method="CalendarsAPI.getTimezonesLookup"
-          @input="draft.timezones[0] = { timezone: $event }"
+          @update:model-value="draft.timezones[0] = { timezone: $event }"
         />
 
-        <wt-select
-          :value="draft.managers[0]?.user"
+        <wt-single-select
+          :model-value="draft.managers[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @input="draft.managers[0] = { user: $event }"
+          @update:model-value="draft.managers[0] = { user: $event }"
         />
 
-        <wt-tags-input
-          :value="draft.labels"
+        <wt-multi-select
+          v-model:model-value="draft.labels"
           :label="t('vocabulary.labels', 1)"
           :search-method="LabelsAPI.getList"
           option-label="label"
-          track-by="label"
-          taggable
-          @input="draft.labels = $event"
+					chips-view
+          data-key="label"
+          allow-custom-values
         />
 
         <wt-textarea

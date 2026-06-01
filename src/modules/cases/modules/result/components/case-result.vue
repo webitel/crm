@@ -8,14 +8,15 @@
         @update:value="setItemProp({ path: 'closeReason', value: $event })"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             v-bind="props"
+            :model-value="props.value"
             :key="closeReasonId"
             :disabled="disableUserInput || !itemInstance.statusCondition.final"
             required
             :v="v$.value.itemInstance.closeReason"
             :search-method="searchCloseReasons"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>

@@ -8,14 +8,13 @@
       {{ t('reusable.export') }}
     </template>
     <template #main>
-      <wt-select
-        :value="type"
+      <wt-single-select
+        v-model:model-value="type"
         :label="t('vocabulary.format')"
         required
         :v="v$.type"
-        track-by="name"
+        data-key="name"
         :options="options"
-        @input="type = $event"
       />
       <wt-input-text
         v-if="isExportSettingsFormatCSV"

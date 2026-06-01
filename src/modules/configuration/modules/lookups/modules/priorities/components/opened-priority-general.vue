@@ -24,18 +24,31 @@
           size="xl"
         />
 
-        <wt-select
-          :value="itemInstance.color"
+        <wt-single-select
+          :model-value="itemInstance.color"
           :options="prioritiesColorsOptions"
           :label="t('vocabulary.color')"
           :v="v.itemInstance.color"
           :disabled="disableUserInput"
-          use-value-from-options-by-prop="id"
           required
+          option-value="id"
           option-label="name"
-          @input="setItemProp({ path: 'color', value: $event })"
+          @update:model-value="setItemProp({ path: 'color', value: $event })"
         >
-          <template #singleLabel="{ option, optionLabel }">
+          <template #value="{ value, getOptionLabel }">
+            <div class="opened-priority-general__wrapper">
+              <color-component-wrapper
+                :color="value.id"
+                component="wt-indicator"
+              />
+
+              <span class="opened-priority-general__color-name">
+                {{ getOptionLabel(value) }}
+              </span>
+            </div>
+          </template>
+
+          <template #option="{ option, getOptionLabel }">
             <div class="opened-priority-general__wrapper">
               <color-component-wrapper
                 :color="option.id"
@@ -43,24 +56,11 @@
               />
 
               <span class="opened-priority-general__color-name">
-                {{ option[optionLabel] }}
+                {{ getOptionLabel(option) }}
               </span>
             </div>
           </template>
-
-          <template #option="{ option, optionLabel }">
-            <div class="opened-priority-general__wrapper">
-              <color-component-wrapper
-                :color="option.id"
-                component="wt-indicator"
-              />
-
-              <span class="opened-priority-general__color-name">
-                {{ option[optionLabel] }}
-              </span>
-            </div>
-          </template>
-        </wt-select>
+        </wt-single-select>
       </div>
 
       <wt-textarea

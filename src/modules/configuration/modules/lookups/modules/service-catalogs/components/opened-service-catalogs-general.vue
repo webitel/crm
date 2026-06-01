@@ -15,14 +15,14 @@
         @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.serviceCatalogs.statuses')"
         :search-method="loadStatusesList"
-        :value="itemInstance.status"
+        :model-value="itemInstance.status"
         :disabled="disableUserInput"
         :v="v.itemInstance.status"
         required
-        @input="setItemProp({ path: 'status', value: $event })"
+        @update:model-value="setItemProp({ path: 'status', value: $event })"
       />
 
       <wt-input-text
@@ -34,43 +34,42 @@
         @update:model-value="setItemProp({ path: 'prefix', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.closeReasonGroups.closeReasonGroups')"
         :search-method="loadReasonList"
-        :value="itemInstance.closeReasonGroup"
+        :model-value="itemInstance.closeReasonGroup"
         :v="v.itemInstance.closeReasonGroup"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'closeReasonGroup', value: $event })"
+        @update:model-value="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.slas.slas')"
         :search-method="loadSlaList"
-        :value="itemInstance.sla"
+        :model-value="itemInstance.sla"
         :v="v.itemInstance.sla"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'sla', value: $event })"
+        @update:model-value="setItemProp({ path: 'sla', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.serviceCatalogs.defaultPriority')"
         :search-method="loadPrioritiesList"
-        :value="itemInstance.defaultPriority"
+        :model-value="itemInstance.defaultPriority"
         :v="v.itemInstance.defaultPriority"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'defaultPriority', value: $event })"
+        @update:model-value="setItemProp({ path: 'defaultPriority', value: $event })"
       />
 
-      <wt-select
+      <wt-multi-select
         :label="t('objects.team', 2)"
         :search-method="loadTeamsList"
-        :value="itemInstance.teams"
+        :model-value="itemInstance.teams"
         :disabled="disableUserInput"
-        multiple
-        @input="setItemProp({ path: 'teams', value: $event })"
+        @update:model-value="setItemProp({ path: 'teams', value: $event })"
       />
 
       <wt-input-text
@@ -88,13 +87,12 @@
       />
 
       <div class="opened-card-input-grid__skills-wrapper">
-        <wt-select
+        <wt-multi-select
           :label="t('lookups.serviceCatalogs.skills')"
           :search-method="loadSkillsList"
-          :value="itemInstance.skills"
+          :model-value="itemInstance.skills"
           :disabled="disableUserInput"
-          multiple
-          @input="setItemProp({ path: 'skills', value: $event })"
+          @update:model-value="setItemProp({ path: 'skills', value: $event })"
         />
 
         <wt-switcher
