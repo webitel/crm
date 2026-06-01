@@ -31,15 +31,15 @@
         />
       </div>
 
-      <wt-select
+      <wt-single-select
         v-if="itemInstance.type === ContactsGroupType.Dynamic"
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
-        :value="itemInstance.defaultGroup"
+        :model-value="itemInstance.defaultGroup"
         :v="v.itemInstance.defaultGroup"
         :disabled="disableUserInput"
         required
-        @input="setItemProp({ path: 'defaultGroup', value: $event })"
+        @update:model-value="setItemProp({ path: 'defaultGroup', value: $event })"
       />
     </div>
   </section>

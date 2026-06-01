@@ -14,13 +14,13 @@
         required
       />
 
-      <wt-select
-        v-model="modelValue.type"
+      <wt-single-select
+        v-model:model-value="modelValue.type"
         :label="t('vocabulary.type')"
         :options="typesSourcesOptions"
         :regle-validation="validationFields?.type"
         :disabled="disableUserInput"
-        use-value-from-options-by-prop="id"
+        option-value="id"
         required
       />
 

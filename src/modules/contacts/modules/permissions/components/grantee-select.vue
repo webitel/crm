@@ -1,33 +1,33 @@
 <template>
-  <wt-select
+  <wt-single-select
     v-bind="$attrs"
-    :clearable="false"
+    :filterable="false"
     :label="t('objects.grantee', 1)"
     :search-method="loadRoles"
-    :value="value"
+    :model-value="value"
     class="grantee-select"
     option-label="name"
-    @input="emit('input', $event)"
+    @update:model-value="emit('input', $event)"
   >
-    <template #singleLabel="{ option, optionLabel }">
+    <template #value="{ value, getOptionLabel }">
+      <span class="grantee-select-option">
+        <wt-icon
+          :icon="value.user ? 'user' : 'role'"
+          color="active"
+        />
+        {{ getOptionLabel(value) || value }}
+      </span>
+    </template>
+    <template #option="{ option, getOptionLabel }">
       <span class="grantee-select-option">
         <wt-icon
           :icon="option.user ? 'user' : 'role'"
           color="active"
         />
-        {{ option[optionLabel] || option }}
+        {{ getOptionLabel(option) || option }}
       </span>
     </template>
-    <template #option="{ option, optionLabel }">
-      <span class="grantee-select-option">
-        <wt-icon
-          :icon="option.user ? 'user' : 'role'"
-          color="active"
-        />
-        {{ option[optionLabel] || option }}
-      </span>
-    </template>
-  </wt-select>
+  </wt-single-select>
 </template>
 
 <script setup>
@@ -59,9 +59,8 @@ const loadRoles = (params) =>
 	});
 </script>
 
-<style lang="scss" scoped>
-//  elevating specificity
-.wt-select.grantee-select .grantee-select-option {
+<style scoped>
+.grantee-select-option {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);

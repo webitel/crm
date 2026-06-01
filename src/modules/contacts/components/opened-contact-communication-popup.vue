@@ -13,15 +13,14 @@
       <form
         class="opened-contact-communication-popup-form"
       >
-        <wt-select
+        <wt-single-select
           ref="TypeSelect"
-          :clearable="false"
+          v-model:model-value="draft.type"
+          :filterable="false"
           :label="t('objects.communicationType', 1)"
           :search-method="(params) => CommunicationsAPI.getLookup({...params, channel: currentCommunication.filterField })"
           :v="v$.draft.type"
-          :value="draft.type"
           required
-          @input="draft.type = $event"
         />
         <wt-input-text
           v-model:model-value="draft.destination"

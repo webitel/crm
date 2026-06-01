@@ -34,27 +34,25 @@
         @submit="submitCase"
       >
         <template>
-        <wt-select
-          :value="defaultState.relationType"
+        <wt-single-select
+          v-model:model-value="defaultState.relationType"
           :options="relatedTypesOptions"
-          :clearable="false"
+          :show-clear="false"
           :disabled="!hasCreateAccess"
-          :searchable="false"
-          use-value-from-options-by-prop="id"
+          :filterable="false"
+          option-value="id"
           option-label="name"
           class="type-select"
-          @input="defaultState.relationType = $event"
         />
 
-        <wt-select
-          :value="defaultState.relatedCase"
+        <wt-single-select
+          v-model:model-value="defaultState.relatedCase"
           :disabled="!hasCreateAccess"
-          :clearable="false"
+          :filterable="false"
           :search-method="onRelatedCasesSearch"
           :placeholder="t('cases.relatedCases.searchCasesPlaceholder')"
           class="case-select"
           option-label="name"
-          @input="defaultState.relatedCase = $event"
         >
           <template #option="{ option }">
             <related-case-item
@@ -63,7 +61,7 @@
               :subject="option.subject"
             />
           </template>
-        </wt-select>
+        </wt-single-select>
         </template>
       </wt-inline-add-panel>
 

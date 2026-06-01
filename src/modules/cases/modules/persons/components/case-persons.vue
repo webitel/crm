@@ -23,13 +23,14 @@
         @open-link="getContactLink(itemInstance.reporter?.id)"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             v-bind="props"
+            :model-value="props.value"
             :search-method="getContactsLookup"
             :disabled="disableUserInput"
             :v="v$.value.itemInstance.reporter"
             class="case-persons__select"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>
@@ -45,12 +46,13 @@
         @open-link="getContactLink(itemInstance.impacted?.id)"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             v-bind="props"
+            :model-value="props.value"
             :disabled="disableUserInput"
             :search-method="ContactsAPI.getLookup"
             class="case-persons__select"
-            @input="props.updateValue($event)"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>
@@ -72,12 +74,13 @@
         @open-link="getContactLink(itemInstance.assignee?.id)"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             :search-method="ContactsAPI.getLookup"
             :disabled="disableUserInput || isAssignMeDisabled"
             class="case-persons__select"
             v-bind="props"
-            @input="props.updateValue($event)"
+            :model-value="props.value"
+            @update:model-value="props.updateValue($event)"
             @reset="resetAssignee"
           />
         </template>
@@ -94,12 +97,13 @@
         @update:value="setItemProp({ path: 'group', value: $event })"
       >
         <template #default="props">
-          <wt-select
+          <wt-single-select
             :disabled="disableUserInput"
             :search-method="loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"
-            @input="props.updateValue($event)"
+            :model-value="props.value"
+            @update:model-value="props.updateValue($event)"
           />
         </template>
       </editable-field>
