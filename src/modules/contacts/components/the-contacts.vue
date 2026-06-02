@@ -56,6 +56,14 @@
                   @update:search-mode="updateSearchMode"
                 />
               </template>
+              <template #filters="{ action, onClick }">
+                <wt-badge :hidden="!anyFiltersOnFiltersPanel">
+                  <wt-icon-action
+                    :action="action"
+                    @click="onClick"
+                  />
+                </wt-badge>
+              </template>
             </wt-action-bar>
           </template>
 
@@ -97,6 +105,7 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
+import { SearchMode } from '../../cases/enums/SearchMode';
 import { ContactsNamespace } from '../namespace';
 import { useContactsStore } from '../stores/contacts';
 import ContactPopup from './contact-popup.vue';
@@ -135,6 +144,18 @@ const {
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
+
+/*
+ * show "toggle filters panel" badge if any filters are applied...
+ * */
+const anyFiltersOnFiltersPanel = computed(() => {
+	/*
+	 * ...excluding search filters, which shown in other panel
+	 * */
+	return filtersManager.value.getAllKeys().some((filterName) => {
+		return !Object.values(SearchMode).some((mode) => mode === filterName);
+	});
+});
 
 const path = computed(() => [
 	{

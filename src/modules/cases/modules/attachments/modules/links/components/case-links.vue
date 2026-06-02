@@ -118,6 +118,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required, url } from '@vuelidate/validators';
+import { WtInlineAddPanel } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
@@ -126,9 +127,7 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore.js';
 import { computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { WtInlineAddPanel } from '@webitel/ui-sdk/components';
 import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
 import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
 import LinksAPI from '../api/LinksAPI.js';

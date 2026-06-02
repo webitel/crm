@@ -205,13 +205,13 @@ import { useStore } from 'vuex';
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
+import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 import DisplayDynamicFieldExtension from '../../../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { ContactCasesNamespace } from '../namespace';
 import { useContactCasesStore } from '../stores/cases';
 import { useContactCaseFilterPresetsStore } from '../stores/useContactCaseFilterPresetsStore';
-import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 
 const isReadOnly = inject('isReadOnly');
 const store = useStore();

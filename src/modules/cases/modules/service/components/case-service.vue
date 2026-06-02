@@ -44,19 +44,18 @@
 </template>
 
 <script setup>
+import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
 import { computed, inject, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CatalogAPI from '../api/CatalogAPI.js';
 import ServiceAPI from '../api/ServiceAPI.js';
 import CaseServicePopup from './case-service-popup.vue';
 import ServicePath from './service-path.vue';
 import SlaRecalculationPopup from './sla-recalculation-popup.vue';
-import { CasePrioritiesAPI } from '@webitel/api-services/api';
 
 const namespace = inject('namespace');
 const editMode = inject('editMode');

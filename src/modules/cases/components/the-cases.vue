@@ -248,35 +248,33 @@
 import { WtTypeExtensionAPI } from '@webitel/api-services/api';
 import { snakeToCamel } from '@webitel/api-services/utils';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
-import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
+import { CrmSections, FormatDateMode, IconAction } from '@webitel/ui-sdk/enums';
 import { EmptyCause } from '@webitel/ui-sdk/enums/EmptyCause/EmptyCause';
+import { downloadFile } from '@webitel/ui-sdk/scripts';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { formatDate } from '@webitel/ui-sdk/utils';
 import get from 'lodash/get';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref, watch, getCurrentInstance } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import DisplayDynamicFieldExtension from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
+import casesAPI from '../api/CasesAPI.js';
+import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
+import { headers as baseHeadersConfig } from '../store/_internals/headers';
 import { useCasesStore } from '../stores/cases.ts';
 import prettifyDate from '../utils/prettifyDate.js';
 import CaseDetailsTable from './case-details-table.vue';
+import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
-import { headers as baseHeadersConfig } from '../store/_internals/headers';
-import CasesExportTypePopup from './cases-export-type-popup.vue';
-import casesAPI from '../api/CasesAPI.js';
-import { downloadFile } from '@webitel/ui-sdk/scripts';
-import { formatDate } from '@webitel/ui-sdk/utils';
-import { FormatDateMode } from '@webitel/ui-sdk/enums';
-import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 
 const baseNamespace = 'cases';
 

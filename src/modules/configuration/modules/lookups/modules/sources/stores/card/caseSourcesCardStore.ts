@@ -1,7 +1,7 @@
 import { CaseSourcesAPI } from '@webitel/api-services/api';
 import {
-	WebitelCasesSource,
 	CreateSourceBody as standardValidationSchema,
+	WebitelCasesSource,
 } from '@webitel/api-services/gen';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
