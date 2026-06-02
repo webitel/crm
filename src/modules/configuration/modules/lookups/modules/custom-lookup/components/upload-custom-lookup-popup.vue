@@ -20,9 +20,7 @@ const props = defineProps<{
 	repo: string;
 }>();
 
-const emit = defineEmits<{
-	(e: 'close'): void;
-}>();
+const emit = defineEmits<(e: 'close') => void>();
 
 const mappingFields = ref([]);
 
