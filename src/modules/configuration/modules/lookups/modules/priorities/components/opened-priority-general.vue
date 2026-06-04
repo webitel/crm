@@ -92,7 +92,7 @@ const modelValue = defineModel<WebitelCasesPriority>();
 
 defineProps<{
 	validationFields: {
-		/* keys as in CaseSource, but values are Regle schema objects */
+		/* keys as in CasePriority, but values are Regle schema objects */
 		[K in keyof WebitelCasesPriority]: RegleSchemaFieldStatus<
 			WebitelCasesPriority[K]
 		>;
@@ -119,7 +119,7 @@ watch(
 		}
 	},
 	{
-		immediate: true,
+		once: true,
 	},
 );
 </script>
