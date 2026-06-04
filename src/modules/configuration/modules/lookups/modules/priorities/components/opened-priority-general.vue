@@ -9,41 +9,39 @@
     <div class="opened-card-input-grid">
       <wt-input-text
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        v-model:model-value="modelValue.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <div class="opened-priority-general__wrapper">
         <color-component-wrapper
-          :color="itemInstance.color"
+          :color="modelValue.color"
           component="wt-icon"
           icon="cases"
-          size="xl"
+          :size="ComponentSize.XL"
         />
 
         <wt-single-select
-          :model-value="itemInstance.color"
+          v-model:model-value="modelValue.color"
           :options="prioritiesColorsOptions"
           :label="t('vocabulary.color')"
-          :v="v.itemInstance.color"
+          :regle-validation="validationFields?.color"
           :disabled="disableUserInput"
           required
           option-value="id"
           option-label="name"
-          @update:model-value="setItemProp({ path: 'color', value: $event })"
         >
-          <template #value="{ value, getOptionLabel }">
+          <template #value="{ value }">
             <div class="opened-priority-general__wrapper">
               <color-component-wrapper
-                :color="value.id"
+                :color="value"
                 component="wt-indicator"
               />
 
               <span class="opened-priority-general__color-name">
-                {{ getOptionLabel(value) }}
+                {{ value }}
               </span>
             </div>
           </template>
@@ -66,37 +64,43 @@
       <wt-textarea
         :disabled="disableUserInput"
         :label="t('vocabulary.description')"
-        :model-value="itemInstance.description"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
+        :model-value="modelValue.description"
+        @update:model-value="modelValue.description = $event"
       />
     </div>
   </section>
 </template>
 
-<script setup>
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed } from 'vue';
+<script lang="ts" setup>
+import { RegleSchemaFieldStatus } from '@regle/schemas';
+import { WebitelCasesPriority } from '@webitel/api-services/gen/models';
+import {
+	WtInputText,
+	WtSingleSelect,
+	WtTextarea,
+} from '@webitel/ui-sdk/components';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import PrioritiesColors from '../enums/PrioritiesColors.enum.js';
+import { PrioritiesColors } from '../enums/PrioritiesColors';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+import { ComponentSize } from '@webitel/ui-sdk/enums';
+
+const modelValue = defineModel<WebitelCasesPriority>();
+
+defineProps<{
+	validationFields: {
+		/* keys as in CasePriority, but values are Regle schema objects */
+		[K in keyof WebitelCasesPriority]: RegleSchemaFieldStatus<
+			WebitelCasesPriority[K]
+		>;
+	};
+}>();
 
 const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl();
-
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const prioritiesColorsOptions = computed(() =>
 	Object.values(PrioritiesColors).map((type) => {
@@ -107,17 +111,17 @@ const prioritiesColorsOptions = computed(() =>
 	}),
 );
 
-function setDefaultColorOption() {
-	if (itemInstance.value?.color) {
-		return;
-	}
-
-	setItemProp({
-		path: 'color',
-		value: prioritiesColorsOptions.value[0].id,
-	});
-}
-setDefaultColorOption();
+watch(
+	modelValue,
+	(val) => {
+		if (val && !val.color) {
+			modelValue.value.color = prioritiesColorsOptions.value[0].id;
+		}
+	},
+	{
+		once: true,
+	},
+);
 </script>
 
 <style lang="scss" scoped>
