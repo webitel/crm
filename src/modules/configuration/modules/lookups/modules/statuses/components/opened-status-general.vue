@@ -16,10 +16,9 @@
       />
 
       <wt-textarea
+        v-model="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :model-value="modelValue.description"
-        @update:model-value="modelValue.description = $event"
       />
     </div>
   </section>

@@ -44,16 +44,15 @@
 
 <script lang="ts" setup>
 import { useCardComponent } from '@webitel/ui-datalist/card';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
+import { WebitelCasesStatus } from '@webitel/api-services/gen';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCaseStatusesCardStore } from '../stores';
-import { WebitelCasesStatus } from '@webitel/api-services/gen';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();

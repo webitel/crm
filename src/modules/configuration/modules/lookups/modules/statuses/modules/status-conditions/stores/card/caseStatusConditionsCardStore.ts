@@ -3,11 +3,11 @@ import { WebitelCasesStatusCondition } from '@webitel/api-services/gen';
 import { caseStatusConditionSchema as standardValidationSchema } from '@webitel/api-services/validations';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
-import { CaseStatusConditionsCardNamespace } from '../../namespace';
+import { CaseStatusConditionsNamespace } from '../../namespace';
 
 export const useCaseStatusConditionsCardStore =
 	createCardStore<WebitelCasesStatusCondition>({
-		namespace: CaseStatusConditionsCardNamespace,
+		namespace: `${CaseStatusConditionsNamespace}/card`,
 		apiModule: CaseStatusConditionsAPI,
 		standardValidationSchema,
 	});

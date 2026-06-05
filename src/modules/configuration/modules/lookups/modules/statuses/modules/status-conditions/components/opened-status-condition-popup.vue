@@ -20,26 +20,24 @@
         @submit.prevent="save"
       >
         <wt-input-text
-          :model-value="draftItemInstance.name"
+          v-model="draftItemInstance.name"
           :label="t('reusable.name')"
           :regle-validation="validationSchema.r$.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="draftItemInstance.name = $event"
         />
 
         <wt-textarea
+          v-model="draftItemInstance.description"
           :label="t('vocabulary.description')"
-          :model-value="draftItemInstance.description"
           :disabled="disableUserInput"
-          @update:model-value="draftItemInstance.description = $event"
         />
       </form>
     </template>
 
     <template #actions>
       <wt-button
-        :disabled="!hasSaveActionAccess || isSaveDisabled"
+        :disabled="!hasSaveActionAccess || hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -56,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -78,8 +76,7 @@ const { disableUserInput, hasSaveActionAccess } = useUserAccessControl({
 
 const cardStore = useCaseStatusConditionsCardStore();
 
-const { draftItemInstance, validationSchema, isLoading, isSaving } =
-	storeToRefs(cardStore);
+const { draftItemInstance, validationSchema } = storeToRefs(cardStore);
 const { initialize, saveItem, $reset } = cardStore;
 
 const statusConditionId = computed(() => route.params.statusConditionId);
@@ -88,22 +85,20 @@ const parentId = computed(() => route.params.id);
 
 const { close } = useClose('status-conditions');
 
-const isSaveDisabled = computed(
-	() => validationSchema.value.r$.$invalid || isSaving.value || isLoading.value,
-);
+const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 
 const save = async () => {
-	const { valid } = await validationSchema.value.r$.$validate();
+	const { valid, data } = await validationSchema.value.r$.$validate();
 	if (!valid) return;
 
-	await saveItem(draftItemInstance.value);
+	await saveItem(data);
 	close();
 	emit('load-data');
 };
 
 async function initializePopup() {
 	await initialize({
-		itemId: isNew.value ? undefined : statusConditionId.value,
+		itemId: isNew.value ? null : statusConditionId.value,
 		parentId: parentId.value,
 	});
 }

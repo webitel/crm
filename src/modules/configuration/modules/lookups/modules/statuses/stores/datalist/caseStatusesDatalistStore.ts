@@ -5,7 +5,7 @@ import { CaseStatusesNamespace } from '../../namespace';
 import { headers } from './_internals/headers';
 
 export const useCaseStatusesDatalistStore = createTableStore(
-	`crm/${CaseStatusesNamespace}/datalist`,
+	`${CaseStatusesNamespace}/datalist`,
 	{
 		apiModule: CaseStatusesAPI,
 		headers,
