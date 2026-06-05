@@ -15,28 +15,31 @@
     </template>
 
     <template #main>
-      <form class="opened-card-input-grid opened-card-input-grid--1-col" @submit.prevent="save">
+      <form
+        class="opened-card-input-grid opened-card-input-grid--1-col"
+        @submit.prevent="save"
+      >
         <wt-input-text
-          :model-value="itemInstance.name"
+          :model-value="draftItemInstance.name"
           :label="t('reusable.name')"
-          :v="v$.itemInstance.name"
+          :regle-validation="validationSchema.r$.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="setItemProp({ path: 'name', value: $event })"
+          @update:model-value="draftItemInstance.name = $event"
         />
 
         <wt-textarea
           :label="t('vocabulary.description')"
-          :model-value="itemInstance.description"
+          :model-value="draftItemInstance.description"
           :disabled="disableUserInput"
-          @update:model-value="setItemProp({ path: 'description', value: $event })"
+          @update:model-value="draftItemInstance.description = $event"
         />
       </form>
     </template>
 
     <template #actions>
       <wt-button
-        :disabled="!hasSaveActionAccess || disabledSave"
+        :disabled="!hasSaveActionAccess || isSaveDisabled"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -52,23 +55,15 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
+<script lang="ts" setup>
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useCaseStatusConditionsCardStore } from '../stores';
 
 const emit = defineEmits([
 	'load-data',
@@ -81,83 +76,45 @@ const { disableUserInput, hasSaveActionAccess } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
-const {
-	itemInstance,
-	resetState,
-	addItem,
-	loadItem,
-	updateItem,
-	setId,
-	setItemProp,
-	id,
-} = useCardStore(props.namespace);
+const cardStore = useCaseStatusConditionsCardStore();
+
+const { draftItemInstance, validationSchema, isLoading, isSaving } =
+	storeToRefs(cardStore);
+const { initialize, saveItem, $reset } = cardStore;
 
 const statusConditionId = computed(() => route.params.statusConditionId);
 const isNew = computed(() => statusConditionId.value === 'new');
+const parentId = computed(() => route.params.id);
 
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
+const { close } = useClose('status-conditions');
+
+const isSaveDisabled = computed(
+	() => validationSchema.value.r$.$invalid || isSaving.value || isLoading.value,
 );
-
-v$.value.$touch();
-
-const { close } = useClose(`status-conditions`);
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
-
-function loadDataList() {
-	emit('load-data');
-}
 
 const save = async () => {
-	if (isNew.value) {
-		await addItem({
-			itemInstance,
-			parentId: id.value,
-		});
-	} else {
-		await updateItem({
-			itemInstance,
-			itemId: id.value,
-		});
-	}
+	const { valid } = await validationSchema.value.r$.$validate();
+	if (!valid) return;
 
+	await saveItem(draftItemInstance.value);
 	close();
-	loadDataList();
+	emit('load-data');
 };
 
 async function initializePopup() {
-	try {
-		if (!isNew.value) {
-			await setId(statusConditionId.value);
-			await loadItem();
-		}
-	} catch (error) {
-		throw Error(error);
-	}
+	await initialize({
+		itemId: isNew.value ? undefined : statusConditionId.value,
+		parentId: parentId.value,
+	});
 }
 
 watch(
-	() => statusConditionId.value,
+	statusConditionId,
 	(value) => {
 		if (value) {
 			initializePopup();
 		} else {
-			resetState();
+			$reset();
 		}
 	},
 	{
