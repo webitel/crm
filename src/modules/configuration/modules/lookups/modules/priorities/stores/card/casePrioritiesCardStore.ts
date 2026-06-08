@@ -1,7 +1,7 @@
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import {
 	CreatePriorityBody as standardValidationSchema,
-	WebitelCasesPriority,
+	type WebitelCasesPriority,
 } from '@webitel/api-services/gen';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
