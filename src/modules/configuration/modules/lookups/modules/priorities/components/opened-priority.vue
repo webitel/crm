@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -19,8 +19,8 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
+            v-model="modelValue"
+            :validation-fields="validationFields"
             :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
@@ -34,20 +34,17 @@
 </template>
 
 <script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { useCasePrioritiesCardStore } from '../stores/card/casePrioritiesCardStore';
 
-const namespace = 'configuration/lookups/priorities';
 const { t } = useI18n();
 const route = useRoute();
 
@@ -55,45 +52,18 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-	...restStore
-} = useCardStore(namespace, {
+	modelValue,
+	isNew,
+	saveText,
+	isAnyFieldEdited,
+	validationFields,
+	hasValidationErrors,
+	originalItemInstance,
+	save,
+} = useCardComponent({
+	useCardStore: useCasePrioritiesCardStore,
 	onLoadErrorHandler: handleError,
 });
-
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-	...restStore,
-	id,
-	itemInstance,
-	onLoadErrorHandler: handleError,
-});
-
-const { close } = useClose(CrmSections.Priorities);
-
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-			color: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
-v$.value.$touch();
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
 
 const path = computed(() => {
 	return [
@@ -114,15 +84,10 @@ const path = computed(() => {
 			route: '/configuration/lookups/priorities',
 		},
 		{
-			name: isNew.value ? t('reusable.new') : pathName.value,
+			name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name,
 		},
 	];
 });
 
-initialize();
+const { close } = useClose(CrmSections.Priorities);
 </script>
-
-<style
-  lang="scss"
-  scoped
-></style>

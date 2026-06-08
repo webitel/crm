@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 import { vite as vidstack } from 'vidstack/plugins';
 
 // https://vitejs.dev/config/
-export default ({ mode }) => {
+export default () => {
 	return defineConfig({
 		base: '/crm',
 		build: {

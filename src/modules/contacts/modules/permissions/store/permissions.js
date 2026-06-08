@@ -69,8 +69,6 @@ const actions = {
 				item,
 				changes,
 			});
-		} catch (err) {
-			throw err;
 		} finally {
 			await context.dispatch('LOAD_DATA_LIST');
 		}
