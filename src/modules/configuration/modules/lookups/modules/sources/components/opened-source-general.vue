@@ -40,7 +40,7 @@ import {
 	WebitelCasesSource,
 	WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
-import { WtInput, WtSelect } from '@webitel/ui-sdk/components';
+import { WtInputText, WtSingleSelect } from '@webitel/ui-sdk/components';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
