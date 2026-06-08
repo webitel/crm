@@ -62,6 +62,7 @@ import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { useCaseStatusConditionsCardStore } from '../stores';
+import { useCardIsNew, useCardValidation } from '@webitel/ui-datalist/card';
 
 const emit = defineEmits([
 	'load-data',
@@ -77,18 +78,23 @@ const { disableUserInput, hasSaveActionAccess } = useUserAccessControl({
 const cardStore = useCaseStatusConditionsCardStore();
 
 const { draftItemInstance, validationSchema } = storeToRefs(cardStore);
+const { hasValidationErrors, validate } = useCardValidation({
+	validationSchema,
+});
 const { initialize, saveItem, $reset } = cardStore;
 
 const statusConditionId = computed(() => route.params.statusConditionId);
-const isNew = computed(() => statusConditionId.value === 'new');
+
+const { isNew } = useCardIsNew({
+	itemId: statusConditionId.value,
+});
+
 const parentId = computed(() => route.params.id);
 
 const { close } = useClose('status-conditions');
 
-const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
-
 const save = async () => {
-	const { valid, data } = await validationSchema.value.r$.$validate();
+	const { valid, data } = await validate();
 	if (!valid) return;
 
 	await saveItem(data);
