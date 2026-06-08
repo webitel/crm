@@ -10,49 +10,49 @@
       {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
     <template #main>
-      <form class="opened-card-input-grid opened-card-input-grid--1-col">
+      <form
+        class="opened-card-input-grid opened-card-input-grid--1-col"
+        @submit.prevent="save"
+      >
         <wt-input-text
-          :model-value="itemInstance.name"
+          v-model="draftItemInstance.name"
           :label="t('reusable.name')"
-          :v="v$.itemInstance.name"
+          :regle-validation="validationSchema.r$.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
         <wt-multi-select
-          :model-value="itemInstance.priorities"
+          v-model="draftItemInstance.priorities"
           :label="t('vocabulary.priority')"
-          :search-method="id ? getConditionPriorities : getFreePriorities"
+          :search-method="isNew ? getFreePriorities : getConditionPriorities"
           :disabled="disableUserInput"
-          :v="v$.itemInstance.priorities"
+          :regle-validation="validationSchema.r$.priorities"
           required
-          @update:model-value="setItemProp({ path: 'priorities', value: $event })"
         />
         <wt-timepicker
+          :model-value="draftItemInstance.reactionTime"
           :label="t('lookups.slas.reactionTime')"
-          :model-value="itemInstance.reactionTime"
-          :v="v$.itemInstance.reactionTime"
+          :regle-validation="validationSchema.r$.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
+          @update:model-value="draftItemInstance.reactionTime = +$event"
         />
 
         <wt-timepicker
+          :model-value="draftItemInstance.resolutionTime"
           :label="t('lookups.slas.resolutionTime')"
-          :model-value="itemInstance.resolutionTime"
-          :v="v$.itemInstance.resolutionTime"
+          :regle-validation="validationSchema.r$.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
+          @update:model-value="draftItemInstance.resolutionTime = +$event"
         />
-
       </form>
     </template>
     <template #actions>
       <wt-button
-        :disabled="!hasSaveActionAccess || disabledSave"
+        :disabled="!hasSaveActionAccess || hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -67,25 +67,17 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { minValue, required } from '@vuelidate/validators';
+<script lang="ts" setup>
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useSLAConditionsCardStore } from '../stores';
 
 const emit = defineEmits([
 	'load-data',
@@ -98,109 +90,56 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
-const {
-	namespace: cardNamespace,
-	itemInstance,
-	resetState,
-	addItem,
-	loadItem,
-	updateItem,
-	setId,
-	setItemProp,
-	id,
-} = useCardStore(props.namespace);
+const cardStore = useSLAConditionsCardStore();
+
+const { draftItemInstance, validationSchema } = storeToRefs(cardStore);
+const { initialize, saveItem, $reset } = cardStore;
 
 const conditionId = computed(() => route.params.conditionId);
 const isNew = computed(() => conditionId.value === 'new');
-
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-			priorities: {
-				required,
-			},
-			reactionTime: {
-				required,
-				minValue: minValue(1),
-			},
-			resolutionTime: {
-				required,
-				minValue: minValue(1),
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
-);
-
-v$.value.$touch();
+const slaId = computed(() => route.params.id);
 
 const { close } = useClose(`${CrmSections.Slas}-conditions`);
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
 
-function loadDataList() {
-	emit('load-data');
-}
+const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 
 function getFreePriorities(params) {
 	return CasePrioritiesAPI.getLookup({
 		...params,
-		notInSla: route.params.id,
+		notInSla: slaId.value,
 	});
 }
 
 function getConditionPriorities(params) {
 	return CasePrioritiesAPI.getLookup({
 		...params,
-		inSlaCond: id.value,
+		inSlaCond: conditionId.value,
 	});
 }
 
 const save = async () => {
-	if (isNew.value) {
-		await addItem({
-			itemInstance,
-			parentId: id.value,
-		});
-	} else {
-		await updateItem({
-			itemInstance,
-			itemId: id.value,
-		});
-	}
+	const { valid, data } = await validationSchema.value.r$.$validate();
+	if (!valid) return;
 
+	await saveItem(data);
 	close();
-	loadDataList();
+	emit('load-data');
 };
 
 async function initializePopup() {
-	try {
-		if (!isNew.value) {
-			await setId(conditionId.value);
-			await loadItem();
-		}
-	} catch (error) {
-		throw error;
-	}
+	await initialize({
+		itemId: isNew.value ? null : conditionId.value,
+		parentId: slaId.value,
+	});
 }
 
 watch(
-	() => conditionId.value,
+	conditionId,
 	(value) => {
 		if (value) {
 			initializePopup();
 		} else {
-			resetState();
+			$reset();
 		}
 	},
 	{

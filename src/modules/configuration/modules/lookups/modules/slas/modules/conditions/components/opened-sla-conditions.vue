@@ -1,7 +1,6 @@
 <template>
   <section class="table-page opened-sla-conditions">
     <condition-popup
-      :namespace="SLAConditionsCardNamespace"
       @load-data="loadDataList"
     />
     <delete-confirmation-popup
@@ -55,7 +54,7 @@
       <wt-table
         v-show="dataList.length && !isLoading"
         :data="dataList"
-        :headers="headers"
+        :headers="shownHeaders"
         :selected="selected"
         sortable
         @sort="updateSort"
@@ -111,7 +110,7 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import {
 	WtDisplayChipItems,
@@ -121,7 +120,6 @@ import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js'
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -129,29 +127,19 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
-import { SLAConditionsCardNamespace } from '../namespace';
-import { useSLAConditionsStore } from '../stores/conditions';
+import { useSLAConditionsDatalistStore } from '../stores';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+const router = useRouter();
+const route = useRoute();
+const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl({
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
-const { id: parentId } = useCardStore(props.namespace);
-
-const router = useRouter();
-const route = useRoute();
-const { t } = useI18n();
-
-const tableStore = useSLAConditionsStore();
+const tableStore = useSLAConditionsDatalistStore();
 
 const {
 	dataList,
@@ -161,7 +149,7 @@ const {
 	page,
 	size,
 	next,
-	headers,
+	shownHeaders,
 	filtersManager,
 	isFiltersRestoring,
 } = storeToRefs(tableStore);
@@ -200,17 +188,16 @@ const {
 	isLoading,
 });
 
-const add = () => {
-	return router.push({
+const add = () =>
+	router.push({
 		...route,
 		params: {
 			conditionId: 'new',
 		},
 	});
-};
 
 initialize({
-	parentId: parentId.value,
+	parentId: route.params.id,
 });
 </script>
 

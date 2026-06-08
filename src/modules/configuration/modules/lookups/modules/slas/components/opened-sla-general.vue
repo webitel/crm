@@ -7,113 +7,102 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input-text
+        v-model="modelValue.name"
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-single-select
+        v-model="modelValue.calendar"
         :label="t('objects.calendar')"
         :search-method="loadCalendarsList"
-        :model-value="itemInstance.calendar"
-        :v="v.itemInstance.calendar"
+        :regle-validation="validationFields?.calendar"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
+        v-model="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :model-value="itemInstance.description"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
 
       <div class="opened-card-input-grid opened-sla-general__wrapper">
         <wt-timepicker
+          :model-value="modelValue.reactionTime"
           :label="t('lookups.slas.reactionTime')"
-          :model-value="itemInstance.reactionTime"
-          :v="v.itemInstance.reactionTime"
+          :regle-validation="validationFields?.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
+          @update:model-value="modelValue.reactionTime = +$event"
         />
 
         <wt-timepicker
+          :model-value="modelValue.resolutionTime"
           :label="t('lookups.slas.resolutionTime')"
-          :model-value="itemInstance.resolutionTime"
-          :v="v.itemInstance.resolutionTime"
+          :regle-validation="validationFields?.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
+          @update:model-value="modelValue.resolutionTime = +$event"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
-          :value="itemInstance.validFrom"
+          :value="modelValue.validFrom"
           :disabled="disableUserInput"
-          :v="v.itemInstance.validFrom"
           :custom-validators="customValidation"
           mode="datetime"
           clearable
-          @input="setItemProp({ path: 'validFrom', value: +$event })"
+          @input="modelValue.validFrom = +$event || null"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
-          :value="itemInstance.validTo"
+          :value="modelValue.validTo"
           :disabled="disableUserInput"
           mode="datetime"
           clearable
-          @input="setItemProp({ path: 'validTo', value: +$event })"
+          @input="modelValue.validTo = +$event || null"
         />
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { CalendarsAPI } from '@webitel/api-services/api';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import { WebitelCasesSLA } from '@webitel/api-services/gen';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<WebitelCasesSLA>();
+
+defineProps<{
+	validationFields?: CardValidationFields<WebitelCasesSLA>;
+}>();
 
 const { t } = useI18n();
-
 const { disableUserInput } = useUserAccessControl();
-
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadCalendarsList(search) {
 	return CalendarsAPI.getLookup(search);
 }
 
 const customValidation = computed(() => {
-	if (!itemInstance.value.validTo) return [];
+	if (!modelValue.value?.validTo) return [];
 
 	return [
 		{
 			name: 'maxValue',
 			text: t('validation.maxValue', {
-				max: new Date(itemInstance.value.validTo).toLocaleString(),
+				max: new Date(modelValue.value.validTo).toLocaleString(),
 			}),
 		},
 	];
