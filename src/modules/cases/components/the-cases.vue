@@ -428,15 +428,20 @@ function deleteSelectedItems() {
 }
 
 const exportCases = async ({ format, separator }) => {
-	const { response } = await casesAPI.exportData({
+	const exportParams = {
 		page: page.value,
 		size: size.value,
 		fields: fields.value,
 		format,
 		separator,
-		ids: dataList.value?.map((item) => item.id),
 		...filtersManager.value.getAllValues(),
-	});
+	};
+
+	if (selected.value.length) {
+		exportParams.ids = selected.value.map((item) => item.id);
+	}
+
+	const { response } = await casesAPI.exportData(exportParams);
 
 	const filename = `cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
 
