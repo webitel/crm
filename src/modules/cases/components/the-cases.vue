@@ -525,7 +525,7 @@ watch(
     gap: var(--spacing-xs);
 
     .cases-icon {
-      flex: 0 0 24px;
+      flex: 0 0 var(--icon-md-size);
     }
   }
 }
