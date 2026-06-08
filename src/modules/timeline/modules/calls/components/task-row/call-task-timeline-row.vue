@@ -101,6 +101,7 @@ import {
 	assumeVidstackSupportedVideoType,
 } from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
 import { ComponentSize } from '@webitel/ui-sdk/enums';
+import { isAudioSrc, isVideoSrc } from 'vidstack';
 import {
 	computed,
 	inject,

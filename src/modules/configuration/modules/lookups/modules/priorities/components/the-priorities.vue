@@ -119,22 +119,20 @@
 </template>
 
 <script setup>
-import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-
 import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-
 import { useCasePrioritiesDatalistStore } from '../stores';
-import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
 const router = useRouter();

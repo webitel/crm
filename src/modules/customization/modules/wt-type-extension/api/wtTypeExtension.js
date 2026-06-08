@@ -62,9 +62,9 @@ const getExtension = async ({ itemId: itemRepo }) => {
 			fields: [],
 			isNew: true,
 		};
-		throw applyTransform(err, [
-			notify,
-		]);
+		// throw applyTransform(err, [
+		// 	notify,
+		// ]);
 	}
 };
 

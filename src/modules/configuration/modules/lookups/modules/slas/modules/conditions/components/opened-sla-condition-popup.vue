@@ -184,13 +184,9 @@ const save = async () => {
 };
 
 async function initializePopup() {
-	try {
-		if (!isNew.value) {
-			await setId(conditionId.value);
-			await loadItem();
-		}
-	} catch (error) {
-		throw error;
+	if (!isNew.value) {
+		await setId(conditionId.value);
+		await loadItem();
 	}
 }
 
