@@ -144,6 +144,7 @@
               <div class="cases-source">
                 <wt-icon
                   color="info"
+                  class="cases-source-icon"
                   :icon="item?.source?.type"
                 />
                 <span>{{ item?.source?.name }}</span>
@@ -527,6 +528,10 @@ watch(
   .cases-source {
     display: flex;
     gap: var(--spacing-xs);
+
+    .cases-source-icon {
+      flex: 0 0 var(--icon-md-size);
+    }
   }
 }
 </style>
