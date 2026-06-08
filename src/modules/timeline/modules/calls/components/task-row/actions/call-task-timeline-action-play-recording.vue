@@ -26,7 +26,10 @@
 <script lang="ts" setup>
 import { getCallMediaUrl } from '@webitel/api-services/api';
 import { EngineCallFile } from '@webitel/api-services/gen/models';
-import { isAudioSrc, isVideoSrc } from 'vidstack';
+import {
+	assumeVidstackSupportedAudioType,
+	assumeVidstackSupportedVideoType,
+} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
 import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 
 const eventBus = inject('$eventBus');
@@ -58,12 +61,12 @@ const contextOptions = computed(() => {
 });
 
 const isMimeTypeVideo = (mimeType: string) =>
-	isVideoSrc({
+	assumeVidstackSupportedVideoType({
 		src: '',
 		type: mimeType,
 	});
 const isMimeTypeAudio = (mimeType: string) =>
-	isAudioSrc({
+	assumeVidstackSupportedAudioType({
 		src: '',
 		type: mimeType,
 	});

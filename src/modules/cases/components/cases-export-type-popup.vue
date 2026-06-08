@@ -8,14 +8,20 @@
       {{ t('reusable.export') }}
     </template>
     <template #main>
-      <wt-select
-        :value="type"
+      <wt-single-select
+        v-model:model-value="type"
         :label="t('vocabulary.format')"
         required
         :v="v$.type"
-        track-by="name"
+        data-key="name"
         :options="options"
-        @input="type = $event"
+      />
+      <wt-input-text
+        v-if="isExportSettingsFormatCSV"
+        v-model:model-value="separator"
+        :label="t('objects.CSV.separator')"
+        :v="v$.separator"
+        required
       />
     </template>
     <template #actions>
@@ -37,7 +43,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, requiredIf } from '@vuelidate/validators';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -56,6 +62,8 @@ const emit = defineEmits([
 const { t } = useI18n();
 
 const type = ref(null);
+const separator = ref(',');
+const isExportSettingsFormatCSV = computed(() => type.value?.value === 'csv');
 const options = ref([
 	{
 		name: 'csv',
@@ -73,10 +81,14 @@ const v$ = useVuelidate(
 			type: {
 				required,
 			},
+			separator: {
+				requiredIfRef: requiredIf(isExportSettingsFormatCSV.value),
+			},
 		};
 	}),
 	{
 		type,
+		separator,
 	},
 	{
 		$autoDirty: true,
@@ -87,7 +99,10 @@ const v$ = useVuelidate(
 v$.value.$touch();
 
 const save = async () => {
-	emit('save', type.value?.value);
+	emit('save', {
+		format: type.value?.value,
+		separator: separator.value,
+	});
 	close();
 };
 

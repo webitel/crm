@@ -15,40 +15,40 @@
         @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.contactGroups.assignee')"
         :search-method="loadContact"
-        :value="itemInstance.assignee"
+        :model-value="itemInstance.assignee"
         :disabled="
           disableUserInput || itemInstance.group?.type === ContactsGroupType.Dynamic
         "
-        @input="setItemProp({ path: 'assignee', value: $event })"
+        @update:model-value="setItemProp({ path: 'assignee', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.slas.slas')"
         :search-method="loadSlaList"
-        :value="itemInstance.sla"
+        :model-value="itemInstance.sla"
         :disabled="disableUserInput"
         :v="v.itemInstance.sla"
-        @input="setItemProp({ path: 'sla', value: $event })"
+        @update:model-value="setItemProp({ path: 'sla', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.serviceCatalogs.defaultPriority')"
         :search-method="loadPrioritiesList"
-        :value="itemInstance.defaultPriority"
+        :model-value="itemInstance.defaultPriority"
         :v="v.itemInstance.defaultPriority"
         :disabled="disableUserInput"
-        @input="setItemProp({ path: 'defaultPriority', value: $event })"
+        @update:model-value="setItemProp({ path: 'defaultPriority', value: $event })"
       />
 
-      <wt-select
+      <wt-single-select
         :label="t('lookups.contactGroups.contactGroups')"
         :search-method="loadContactGroupsList"
-        :value="itemInstance.group"
+        :model-value="itemInstance.group"
         :disabled="disableUserInput"
-        @input="setItemProp({ path: 'group', value: $event })"
+        @update:model-value="setItemProp({ path: 'group', value: $event })"
       />
 
       <wt-input-text

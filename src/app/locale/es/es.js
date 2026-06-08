@@ -41,7 +41,6 @@ export default {
 				provider: 'Proveedor ',
 				username: 'Nombre de usuario',
 				dummy: 'No hay opciones de mensajería todavía',
-				sendMessage: 'Enviar mensaje',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Bot de Telegram',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Aplicación de Telegram',

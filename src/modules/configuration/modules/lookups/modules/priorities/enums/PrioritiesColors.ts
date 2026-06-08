@@ -1,4 +1,4 @@
-const PrioritiesColors = Object.freeze({
+export const PrioritiesColors = {
 	RED: 'red',
 	PINK: 'pink',
 	PURPLE: 'purple',
@@ -15,6 +15,7 @@ const PrioritiesColors = Object.freeze({
 	AMBER: 'amber',
 	ORANGE: 'orange',
 	DEEP_ORANGE: 'deep-orange',
-});
+} as const;
 
-export default PrioritiesColors;
+export type PrioritiesColors =
+	(typeof PrioritiesColors)[keyof typeof PrioritiesColors];

@@ -1,6 +1,6 @@
 {
 	"name": "@webitel/crm",
-	"version": "26.4.0",
+	"version": "26.6.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite --force",
@@ -29,7 +29,7 @@
 		"@webitel/api-services": "^0.1.26",
 		"@webitel/styleguide": "~26.2",
 		"@webitel/ui-datalist": "^1.1.22",
-		"@webitel/ui-sdk": "~26.4",
+		"@webitel/ui-sdk": "~26.6",
 		"axios": "1.13.2",
 		"clipboard-copy": "^4.0.1",
 		"date-fns": "^4.1.x",

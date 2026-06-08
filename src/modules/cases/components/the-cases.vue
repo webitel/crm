@@ -265,6 +265,7 @@ import ColorComponentWrapper from '../../../app/components/utils/color-component
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import DisplayDynamicFieldExtension from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import casesAPI from '../api/CasesAPI.js';
+import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { headers as baseHeadersConfig } from '../store/_internals/headers';
@@ -313,6 +314,18 @@ const {
 	columnResize,
 	columnReorder,
 } = tableStore;
+
+const {
+	customHeaders,
+	customHeadersLoaded,
+	mergedHeaders,
+	loadCustomHeaders,
+	removeOutdatedCustomHeaders,
+	getCustomValues,
+} = useCasesCustomHeaders({
+	headers,
+	updateShownHeaders,
+});
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -414,17 +427,18 @@ function deleteSelectedItems() {
 	});
 }
 
-const exportCases = async (format) => {
+const exportCases = async ({ format, separator }) => {
 	const { response } = await casesAPI.exportData({
 		page: page.value,
 		size: size.value,
 		fields: fields.value,
 		format,
+		separator,
 		ids: dataList.value?.map((item) => item.id),
 		...filtersManager.value.getAllValues(),
 	});
 
-	const filename = `Cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
+	const filename = `cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
 
 	downloadFile({
 		response,
@@ -436,133 +450,6 @@ const exportCases = async (format) => {
 const isExportTypePopup = ref(false);
 const closeExport = () => {
 	isExportTypePopup.value = false;
-};
-
-// Reactive reference for custom headers from API
-const customHeaders = ref([]);
-const customHeadersLoaded = ref(false);
-
-// Computed property that combines base headers with custom headers
-const mergedHeaders = computed(() => {
-	const baseHeaders = headers.value || [];
-
-	// Return only base headers if custom headers aren't loaded yet
-	if (!customHeadersLoaded.value) {
-		return baseHeaders;
-	}
-
-	// Get unique custom headers that don't conflict with base headers
-	const uniqueCustomHeaders = filterUniqueHeaders(
-		customHeaders.value,
-		baseHeaders,
-	);
-
-	return [
-		...baseHeaders,
-		...uniqueCustomHeaders,
-	];
-});
-
-// Helper function to filter out duplicate headers based on field property
-const filterUniqueHeaders = (headersToFilter, existingHeaders) => {
-	const existingFields = new Set(existingHeaders.map((header) => header.field));
-	return headersToFilter.filter((header) => !existingFields.has(header.field));
-};
-
-// Helper function to transform API field objects into table header format
-const transformFieldsToHeaders = (fields) => {
-	if (!Array.isArray(fields)) return [];
-
-	return fields.map((field) => createHeaderFromField(field));
-};
-
-// Helper function to create a single header object from API field data
-const createHeaderFromField = (field) => ({
-	value: snakeToCamel(field?.name),
-	show: false,
-	kind: field.kind,
-	field: field.id,
-	locale: field.name,
-});
-
-// Helper function to extract custom field value from item data
-const getCustomValues = (item, header) => {
-	// Boolean fields are stored by field ID, other fields by field (camelCase)
-	return get(item, [
-		'custom',
-		header.field,
-	]);
-};
-
-// Helper function to fetch custom headers from API
-const fetchCustomHeadersFromAPI = async () => {
-	const response = await WtTypeExtensionAPI.getList({
-		itemId: 'cases',
-	});
-	return response?.fields || [];
-};
-
-//https://webitel.atlassian.net/browse/WTEL-9014
-const removeOutdatedCustomHeaders = () => {
-	if (!customHeadersLoaded.value) return;
-
-	const validFields = new Set([
-		...baseHeadersConfig.map((header) => header.field),
-		...customHeaders.value.map((header) => header.field),
-	]);
-
-	const currentHeaders = headers?.value;
-
-	// Check if any current headers reference fields no longer in base or custom config
-	const hasOutdated = currentHeaders.some(
-		(header) => !validFields.has(header.field),
-	);
-
-	if (hasOutdated) {
-		// Keep only headers that still exist in base or custom config
-		const cleanedHeaders = currentHeaders.filter((header) =>
-			validFields.has(header.field),
-		);
-		updateShownHeaders(cleanedHeaders);
-	}
-};
-
-// Helper function to merge headers and update store
-const updateHeaders = (headersToAdd, baseHeaders) => {
-	const existingHeaders = baseHeaders || headers.value || [];
-	const uniqueHeaders = filterUniqueHeaders(headersToAdd, existingHeaders);
-
-	if (uniqueHeaders.length) {
-		const mergedHeaders = [
-			...existingHeaders,
-			...uniqueHeaders,
-		];
-		updateShownHeaders(mergedHeaders);
-	}
-};
-
-// Main function to load and integrate custom headers
-const loadCustomHeaders = async () => {
-	// Fetch fields from API
-	const fields = await fetchCustomHeadersFromAPI();
-
-	// Transform API fields to header format
-	const transformedHeaders = transformFieldsToHeaders(fields);
-	customHeaders.value = transformedHeaders;
-	customHeadersLoaded.value = true;
-
-	// Merge with existing headers and update store if we have any custom headers
-	if (transformedHeaders.length) {
-		updateHeaders(transformedHeaders);
-	}
-};
-
-// Helper function to sync missing custom headers
-const syncMissingCustomHeaders = (newHeaders) => {
-	if (!customHeadersLoaded.value || !newHeaders) return;
-
-	// Use the same merge function but with reversed parameters
-	updateHeaders(customHeaders.value, newHeaders);
 };
 
 const rowClass = (item) => {
@@ -594,11 +481,6 @@ onMounted(async () => {
 	isInitializedTableStore.value = true;
 });
 
-// Keep custom headers in sync when base headers change
-watch(() => headers.value, syncMissingCustomHeaders, {
-	deep: true,
-});
-
 watch(
 	() => emptyCause.value,
 	(newCause, oldCause) => {
@@ -607,28 +489,6 @@ watch(
 		}
 	},
 );
-
-watch(customHeadersLoaded, (isLoaded) => {
-	if (!isLoaded) return;
-
-	// "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
-	const notInitializedHeaders = headers.value.filter(
-		(header) => header.shouldBeInitialized,
-	);
-	if (!notInitializedHeaders.length) return;
-
-	// ... so, we can just extend those restored (but not initialized yet) headers with custom headers
-	notInitializedHeaders.forEach((header) => {
-		const customHeader = customHeaders.value.find(
-			(customHeader) => customHeader.field === header.field,
-		);
-		Object.assign(header, {
-			...customHeader,
-			shouldBeInitialized: false,
-			show: true,
-		});
-	});
-});
 </script>
 
 <style

@@ -26,30 +26,27 @@
     :disabled="props.disabled"
     @update:model-value="setValue($event)"
   />
-  <wt-select
+  <wt-single-select
     v-else-if="field.kind === FieldType.Select"
     :label="label"
-    :value="value"
+    :model-value="value"
     :v="validation"
     :search-method="loadLookupList(field.lookup)"
-    track-by="id"
-    clearable
+    data-key="id"
     :required="isRequired"
     :disabled="props.disabled"
-    @input="selectElement"
+    @update:model-value="selectElement"
   />
-  <wt-select
+  <wt-multi-select
     v-else-if="field.kind === FieldType.Multiselect"
     :label="label"
-    :value="value"
+    :model-value="value"
     :v="validation"
     :search-method="loadLookupList(field.lookup)"
-    track-by="id"
-    clearable
-    multiple
+    data-key="id"
     :required="isRequired"
     :disabled="props.disabled"
-    @input="selectElements"
+    @update:model-value="selectElements"
   />
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
@@ -57,7 +54,7 @@
     :value="value"
     :v="validation"
     mode="datetime"
-	:timezone="timezone"
+    :timezone="timezone"
     :required="isRequired"
     :disabled="props.disabled"
     @input="setValue(+$event)"

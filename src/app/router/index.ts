@@ -73,7 +73,10 @@ const routes: Array<RouteRecordRaw> = [
 
 export let router = null;
 
-export const initRouter = async ({ beforeEach = [], afterEach = [] } = {}) => {
+export const initRouter = async ({
+	beforeEach = [],
+	onUnauthorized = () => {},
+} = {}) => {
 	router = createRouter({
 		history: createWebHistory(import.meta.env.BASE_URL),
 		scrollBehavior() {
@@ -92,6 +95,9 @@ export const initRouter = async ({ beforeEach = [], afterEach = [] } = {}) => {
 			next: NavigationGuardNext,
 		) => {
 			if (!localStorage.getItem('access-token') && !to.query.accessToken) {
+				// @author @Lear24
+				// remove flag about shown notifications from localStorage
+				onUnauthorized();
 				const desiredUrl = encodeURIComponent(window.location.href);
 				const authUrl = import.meta.env.VITE_AUTH_URL;
 				window.location.href = `${authUrl}?redirectTo=${desiredUrl}`;
@@ -115,8 +121,5 @@ export const initRouter = async ({ beforeEach = [], afterEach = [] } = {}) => {
 		router.beforeEach(guard);
 	});
 
-	afterEach.forEach((guard) => {
-		router.afterEach(guard);
-	});
 	return router;
 };

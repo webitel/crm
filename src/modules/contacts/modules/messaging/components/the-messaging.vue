@@ -7,9 +7,10 @@
       @close="closeDelete"
     />
 
-    <the-messaging-send-message-popup
+    <wt-send-message-popup
       v-if="isOpenChatPopup"
-      :item="selectItem"
+      :chat-item="selectItem"
+      :user-id="userId"
       @close="closeChat" />
 
     <wt-loader v-show="isLoading" />
@@ -69,6 +70,7 @@
 
 <script setup>
 import { ChatGatewayProvider } from '@webitel/api-services/enums';
+import { WtSendMessagePopup } from '@webitel/ui-sdk/components';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -77,10 +79,10 @@ import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/comp
 import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserinfoStore } from '../../../../userinfo/store/userinfoStore';
 
 import dummyDark from '../assets/messaging-dummy-dark.svg';
 import dummyLight from '../assets/messaging-dummy-light.svg';
-import TheMessagingSendMessagePopup from './the-messaging-send-message-popup.vue';
 
 const access = inject('access');
 const isReadOnly = inject('isReadOnly');
@@ -94,6 +96,8 @@ const props = defineProps({
 
 const store = useStore();
 const { t } = useI18n();
+
+const { userId } = useUserinfoStore();
 
 const {
 	namespace,

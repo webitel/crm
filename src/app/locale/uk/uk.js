@@ -41,7 +41,6 @@ export default {
 				provider: 'Провайдер',
 				username: "Ім'я користувача",
 				dummy: 'Поки ще не було текстових діалогів',
-				sendMessage: 'Надіслати повідомлення',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Застосунок',
@@ -306,7 +305,7 @@ export default {
 		serviceRecalculationPopup: {
 			title: 'Зміна сервісу',
 			message:
-				'Після зміни сервісу та збереження SLA звернення може бути перераховано. Статус, пріоритет, відповідальний та група можуть змінитися.',
+				'Після зміни сервісу та збереження звернення SLA може бути перераховано. Статус, пріоритет, виконавець і група можуть бути змінені.',
 		},
 	},
 	filters: {

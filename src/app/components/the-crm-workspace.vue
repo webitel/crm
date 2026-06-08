@@ -2,7 +2,6 @@
   <main class="object-wrap">
     <section class="object">
       <wt-app-header v-if="!shouldHideHeader">
-        <wt-notifications-bar />
         <wt-navigation-bar
           :current-app="currentApp"
           :nav="accessibleNav"

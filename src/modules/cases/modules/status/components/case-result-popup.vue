@@ -8,13 +8,12 @@
       {{ t('cases.caseResult') }}
     </template>
     <template #main>
-      <wt-select
-        :value="draft.reason"
+      <wt-single-select
+        v-model:model-value="draft.reason"
         :label="t('cases.closureReason')"
         :search-method="searchCloseReasons"
         :v="v$.draft.reason"
         required
-        @input="draft.reason = $event"
       />
 
       <wt-textarea

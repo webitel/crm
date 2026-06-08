@@ -301,7 +301,7 @@ const patchCase = async ({ changes, etag }) => {
 const exportCase = async (params) => {
 	const casesService = getCases();
 
-	const { page, size, q, ids, sort, fields, options, format, ...filters } =
+	const { q, sort, fields, options, format, separator, ...filters } =
 		applyTransform(
 			{
 				...params,
@@ -315,16 +315,18 @@ const exportCase = async (params) => {
 			],
 		);
 
+	delete filters.page;
+	delete filters.size;
+	delete filters.ids;
+
 	try {
 		const response = await casesService.exportCases(
 			{
-				page,
-				size,
 				q,
-				ids,
 				sort,
 				fields,
 				format,
+				separator,
 				filters: stringifyCaseFilters(filters),
 			},
 			{

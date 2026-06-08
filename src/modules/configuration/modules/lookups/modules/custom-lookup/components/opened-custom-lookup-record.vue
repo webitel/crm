@@ -177,7 +177,7 @@ const loadDictionary = async () => {
 	store.commit(`${namespace}/card/SET`, {
 		path: 'fieldsToSend',
 		value: dictionary.value.fields
-			.filter((field) => !field.hidden && !field.default && !field.always)
+			.filter((field) => !field.hidden && !field.always)
 			.map((field) => field.id),
 	});
 

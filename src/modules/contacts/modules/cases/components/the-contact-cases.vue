@@ -38,7 +38,7 @@
         </template>
         <template #columns>
           <wt-table-column-select
-            :headers="headers"
+            :headers="mergedHeaders"
             enable-search
             @change="updateShownHeaders"
           />
@@ -164,6 +164,16 @@
         <template #rating="{ item }">
           {{ item.rating }}
         </template>
+        <template
+          v-for="header in customHeaders"
+          #[header.value]="{ item }"
+          :key="header.field"
+        >
+          <display-dynamic-field-extension
+            :field="header"
+            :value="getCustomValues(item, header)"
+          />
+        </template>
       </wt-table>
 
       <wt-pagination
@@ -189,14 +199,16 @@ import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
-import { computed, inject, ref } from 'vue';
+import { computed, getCurrentInstance, inject, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
+import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
 import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import DisplayDynamicFieldExtension from '../../../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { ContactCasesNamespace } from '../namespace';
 import { useContactCasesStore } from '../stores/cases';
 import { useContactCaseFilterPresetsStore } from '../stores/useContactCaseFilterPresetsStore';
@@ -232,6 +244,17 @@ const {
 } = tableStore;
 
 const {
+	customHeaders,
+	mergedHeaders,
+	loadCustomHeaders,
+	removeOutdatedCustomHeaders,
+	getCustomValues,
+} = useCasesCustomHeaders({
+	headers,
+	updateShownHeaders,
+});
+
+const {
 	showEmpty,
 	image: emptyImage,
 	headline: emptyHeadline,
@@ -246,8 +269,16 @@ const {
 
 const parentId = computed(() => store.state.contacts.card.itemId);
 
-initialize({
-	parentId: parentId.value,
+onMounted(async () => {
+	const instance = getCurrentInstance();
+
+	await loadCustomHeaders();
+	await instance.appContext.app.runWithContext(async () => {
+		await initialize({
+			parentId: parentId.value,
+		});
+	});
+	removeOutdatedCustomHeaders();
 });
 
 const contactCase = (caseItem: object) => {

@@ -1,17 +1,29 @@
 <template>
-  <wt-select
-    v-if="displaySelect"
+  <wt-single-select
+    v-if="displaySelect && !multiple"
     :key="lookup?.path + value.kind"
-    :value="value.default"
+    :model-value="value.default"
     :options="options"
     :label="t('customization.customLookups.defaultValue')"
     required
     :disabled="disabledDefaultValue"
     :v="v.value.default"
-    :track-by="lookup?.primary || 'id'"
+    :data-key="lookup?.primary || 'id'"
     :search-method="loadLookupList"
-    :multiple="multiple"
-    @input="selectValue($event)"
+    @update:model-value="selectValue($event)"
+  />
+  <wt-multi-select
+    v-if="displaySelect && multiple"
+    :key="lookup?.path + value.kind"
+    :model-value="value.default"
+    :options="options"
+    :label="t('customization.customLookups.defaultValue')"
+    required
+    :disabled="disabledDefaultValue"
+    :v="v.value.default"
+    :data-key="lookup?.primary || 'id'"
+    :search-method="loadLookupList"
+    @update:model-value="selectValue($event)"
   />
   <template v-else-if="displayInput">
     <wt-datepicker

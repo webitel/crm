@@ -1,29 +1,29 @@
 <template>
-  <wt-select
-    :value="value.kind"
+  <wt-single-select
+    :model-value="value.kind"
     :options="options"
     :label="$t('vocabulary.type')"
     :v="v$.value.kind"
     :disabled="disabled"
     required
-    track-by="name"
-    use-value-from-options-by-prop="type"
-    @input="changeType"
+    data-key="name"
+    option-value="type"
+    @update:model-value="changeType"
   />
-  <wt-select
+  <wt-single-select
     v-if="
       value.kind === FieldType.Select || value.kind === FieldType.Multiselect
     "
-    :value="value.lookup"
+    :model-value="value.lookup"
     required
     :disabled="disabled"
     :label="$t('reusable.object')"
     :search-method="loadLookupList"
     :v="v$.value.lookup"
-    track-by="name"
-    :clearable="false"
-    @input="selectObject($event)"
-  >
+    data-key="name"
+    :show-clear="false"
+    @update:model-value="selectObject($event)"
+  />
     <!--    We need comment this part of template https://webitel.atlassian.net/browse/WTEL-6697-->
     <!--    <template #option="{ option }">-->
     <!--      {{ getOptionLocale(option) }}-->
@@ -31,7 +31,6 @@
     <!--    <template #singleLabel="{ option }">-->
     <!--      {{ getOptionLocale(option) }}-->
     <!--    </template>-->
-  </wt-select>
 </template>
 
 <script setup>

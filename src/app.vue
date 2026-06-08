@@ -8,8 +8,10 @@ import { WtNotificationsBar } from '@webitel/ui-sdk/components';
 import { computed, onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
 const { locale, fallbackLocale } = useI18n();
+const { showUserNotifications } = useUserinfoStore();
 
 const store = useStore();
 
@@ -26,6 +28,7 @@ function setLanguage() {
 
 onMounted(() => {
 	setLanguage();
+	showUserNotifications();
 });
 </script>
 

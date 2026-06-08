@@ -96,6 +96,10 @@ import {
 	WtPlayer,
 	WtVidstackPlayer,
 } from '@webitel/ui-sdk/components';
+import {
+	assumeVidstackSupportedAudioType,
+	assumeVidstackSupportedVideoType,
+} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
 import { ComponentSize } from '@webitel/ui-sdk/enums';
 import { isAudioSrc, isVideoSrc } from 'vidstack';
 import {
@@ -105,7 +109,6 @@ import {
 	onUnmounted,
 	provide,
 	reactive,
-	ref,
 	toRefs,
 } from 'vue';
 
@@ -237,7 +240,7 @@ const currentFile = computed(() =>
 const showAudioPlayer = computed(
 	() =>
 		currentFile.value &&
-		isAudioSrc({
+		assumeVidstackSupportedAudioType({
 			src: mediaSource.url,
 			type: currentFile.value.mimeType,
 		}),
@@ -246,7 +249,7 @@ const showAudioPlayer = computed(
 const showVideoPlayer = computed(
 	() =>
 		currentFile.value &&
-		isVideoSrc({
+		assumeVidstackSupportedVideoType({
 			src: mediaSource.url,
 			type: currentFile.value.mimeType,
 		}),
