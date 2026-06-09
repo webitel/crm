@@ -54,13 +54,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useCardComponent } from '@webitel/ui-datalist/card';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { WtTextarea } from '@webitel/ui-sdk/components';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
@@ -80,17 +79,18 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 const { handleError } = useErrorRedirectHandler();
 
 const {
-	modelValue,
 	isNew,
 	hasValidationErrors,
 	save: saveItem,
-} = useCardComponent({
+} = useNestedCardComponent({
 	useCardStore: useCaseStatusConditionsCardStore,
 	routeParamName: 'statusConditionId',
 	onLoadErrorHandler: handleError,
 });
 
-const { validationSchema } = storeToRefs(useCaseStatusConditionsCardStore());
+const { modelValue, validationSchema } = storeToRefs(
+	useCaseStatusConditionsCardStore(),
+);
 
 const statusConditionId = computed(() => route.params.statusConditionId);
 
