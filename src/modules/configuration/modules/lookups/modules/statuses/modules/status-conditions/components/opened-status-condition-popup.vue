@@ -85,6 +85,7 @@ const {
 } = useNestedCardComponent({
 	useCardStore: useCaseStatusConditionsCardStore,
 	routeParamName: 'statusConditionId',
+	parentId: route.params.id,
 	onLoadErrorHandler: handleError,
 });
 
