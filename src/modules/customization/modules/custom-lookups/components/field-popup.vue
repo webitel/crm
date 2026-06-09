@@ -2,7 +2,6 @@
   <wt-popup
     :shown="shown"
     class="field-popup"
-    overflow
     size="sm"
     @close="close"
   >
