@@ -18,8 +18,17 @@
 
     <wt-loader v-show="isLoading" />
 
+    <wt-empty
+      v-show="showEmpty"
+      :image="imageEmpty"
+      :text="textEmpty"
+      :primary-action-text="primaryActionTextEmpty"
+      :disabled-primary-action="isActionDisabled"
+      @click:primary="addItem"
+    />
+
     <div
-      v-show="!isLoading"
+      v-show="dataList.length && !isLoading"
       class="table-wrapper"
     >
       <wt-table
@@ -95,6 +104,7 @@
 <script setup>
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import { computed, inject, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -141,10 +151,23 @@ const {
 
 const {
 	namespace: filtersNamespace,
+	filtersValue,
 	subscribe,
 	flushSubscribers,
 	restoreFilters,
 } = useTableFilters(namespace);
+
+const {
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: filtersValue,
+	error,
+	isLoading,
+});
 
 subscribe({
 	event: '*',
