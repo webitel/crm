@@ -20,7 +20,7 @@
         @submit.prevent="save"
       >
         <wt-input-text
-          v-model="draftItemInstance.name"
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
           :regle-validation="validationSchema.r$.name"
           :disabled="disableUserInput"
@@ -28,7 +28,7 @@
         />
 
         <wt-textarea
-          v-model="draftItemInstance.description"
+          v-model:model-value="modelValue.description"
           :label="t('vocabulary.description')"
           :disabled="disableUserInput"
         />
@@ -54,13 +54,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { storeToRefs } from 'pinia';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCaseStatusConditionsCardStore } from '../stores';
 
 const emit = defineEmits([
@@ -70,52 +72,36 @@ const emit = defineEmits([
 const route = useRoute();
 const { t } = useI18n();
 
-const { disableUserInput, hasSaveActionAccess } = useUserAccessControl({
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
-const cardStore = useCaseStatusConditionsCardStore();
+const { handleError } = useErrorRedirectHandler();
 
-const { draftItemInstance, validationSchema } = storeToRefs(cardStore);
-const { initialize, saveItem, $reset } = cardStore;
+const {
+	isNew,
+	hasValidationErrors,
+	save: saveItem,
+} = useNestedCardComponent({
+	useCardStore: useCaseStatusConditionsCardStore,
+	routeParamName: 'statusConditionId',
+	parentId: route.params.id,
+	onLoadErrorHandler: handleError,
+});
+
+const { modelValue, validationSchema } = storeToRefs(
+	useCaseStatusConditionsCardStore(),
+);
 
 const statusConditionId = computed(() => route.params.statusConditionId);
-const isNew = computed(() => statusConditionId.value === 'new');
-const parentId = computed(() => route.params.id);
 
 const { close } = useClose('status-conditions');
 
-const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
-
 const save = async () => {
-	const { valid, data } = await validationSchema.value.r$.$validate();
-	if (!valid) return;
-
-	await saveItem(data);
+	await saveItem();
 	close();
 	emit('load-data');
 };
-
-async function initializePopup() {
-	await initialize({
-		itemId: isNew.value ? null : statusConditionId.value,
-		parentId: parentId.value,
-	});
-}
-
-watch(
-	statusConditionId,
-	(value) => {
-		if (value) {
-			initializePopup();
-		} else {
-			$reset();
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 </script>
 
 <style lang="scss" scoped></style>
