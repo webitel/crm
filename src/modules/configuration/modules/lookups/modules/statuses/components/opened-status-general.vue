@@ -25,11 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-import { WebitelCasesStatus } from '@webitel/api-services/gen/models';
-import { useI18n } from 'vue-i18n';
-
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import type { WebitelCasesStatus } from '@webitel/api-services/gen/models';
 import type { CardValidationFields } from '@webitel/ui-datalist/card';
+import { useI18n } from 'vue-i18n';
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const modelValue = defineModel<WebitelCasesStatus>();
 

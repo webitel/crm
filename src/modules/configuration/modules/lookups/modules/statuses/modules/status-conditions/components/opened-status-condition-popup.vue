@@ -22,7 +22,7 @@
         <wt-input-text
           v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :regle-validation="validationSchema.r$.name"
+          :regle-validation="validationFields?.name"
           :disabled="disableUserInput"
           required
         />
@@ -54,13 +54,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { WebitelCasesStatusCondition } from '@webitel/api-services/gen/models';
 import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCaseStatusConditionsCardStore } from '../stores';
@@ -79,19 +78,17 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 const { handleError } = useErrorRedirectHandler();
 
 const {
+	modelValue,
+	validationFields,
 	isNew,
 	hasValidationErrors,
 	save: saveItem,
-} = useNestedCardComponent({
+} = useNestedCardComponent<WebitelCasesStatusCondition>({
 	useCardStore: useCaseStatusConditionsCardStore,
 	routeParamName: 'statusConditionId',
 	parentId: route.params.id,
 	onLoadErrorHandler: handleError,
 });
-
-const { modelValue, validationSchema } = storeToRefs(
-	useCaseStatusConditionsCardStore(),
-);
 
 const statusConditionId = computed(() => route.params.statusConditionId);
 
