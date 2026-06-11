@@ -1,9 +1,9 @@
 <template>
-  <wt-page-wrapper :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -11,15 +11,10 @@
       </wt-page-header>
     </template>
 
-    <template #actions-panel>
-      <component
-        :is="currentTab.filters"
-        :namespace="namespace"
-      />
-    </template>
-
     <template #main>
+      <wt-loader v-if="debouncedIsLoading" />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
@@ -32,80 +27,57 @@
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
-            :namespace="cardNamespace"
+            v-model="modelValue"
+            :validation-fields="validationFields"
+            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
 
         <input
           hidden
           type="submit"
-        />
-        <!--  submit form on Enter  -->
+        > <!--  submit form on Enter  -->
       </form>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+<script lang="ts" setup>
+import type { WebitelCasesStatus } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-
-const namespace = 'configuration/lookups/statuses';
+import { useCaseStatusesCardStore } from '../stores';
 
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
-const { handleError } = useErrorRedirectHandler();
+
 const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-	...restStore
-} = useCardStore(namespace, {
-	onLoadErrorHandler: handleError,
-});
+	modelValue,
 
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
+	debouncedIsLoading,
+	originalItemInstance,
 
-v$.value.$touch();
+	isNew,
+	saveText,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	validationFields,
 
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-	...restStore,
-	id,
-	itemInstance,
+	save,
+} = useCardComponent<WebitelCasesStatus>({
+	useCardStore: useCaseStatusesCardStore,
 	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.Statuses);
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
 
 const tabs = computed(() => {
 	const general = {
@@ -123,7 +95,7 @@ const tabs = computed(() => {
 		general,
 	];
 
-	if (id.value) tabs.push(statusConditions);
+	if (!isNew.value) tabs.push(statusConditions);
 	return tabs;
 });
 
@@ -148,14 +120,10 @@ const path = computed(() => {
 			route: '/configuration/lookups/statuses',
 		},
 		{
-			name: isNew.value ? t('reusable.new') : pathName.value,
+			name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name,
 		},
 	];
 });
-initialize();
 </script>
 
-<style
-  lang="scss"
-  scoped
-></style>
+<style lang="scss" scoped></style>
