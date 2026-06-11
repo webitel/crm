@@ -1,4 +1,4 @@
-import { FilterName } from '@webitel/ui-datalist/filters';
+import type { FilterName } from '@webitel/ui-datalist/filters';
 
 export const SearchMode = {
 	Search: 'search',

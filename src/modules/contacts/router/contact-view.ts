@@ -1,4 +1,4 @@
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 import ContactCommunications from '../components/opened-contact-communications.vue';
 import OpenedContactView from '../components/opened-contact-view.vue';
