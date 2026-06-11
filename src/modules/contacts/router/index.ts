@@ -1,5 +1,5 @@
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedContact from '../components/opened-contact.vue';
 import ContactCommunications from '../components/opened-contact-communications.vue';

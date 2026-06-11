@@ -160,7 +160,9 @@ watch(
 	variableId,
 	() => {
 		if (variableId.value) {
-			setTimeout(() => (shown.value = !!variableId.value), 300);
+			setTimeout(() => {
+				shown.value = !!variableId.value;
+			}, 300);
 		} else {
 			shown.value = !!variableId.value;
 		}

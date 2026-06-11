@@ -5,7 +5,7 @@ import { CasePrioritiesNamespace } from '../../namespace';
 import { headers } from './_internals/headers';
 
 export const useCasePrioritiesDatalistStore = createTableStore(
-	`crm/${CasePrioritiesNamespace}/datalist`,
+	`${CasePrioritiesNamespace}/datalist`,
 	{
 		apiModule: CasePrioritiesAPI,
 		headers,

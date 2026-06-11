@@ -1,6 +1,6 @@
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
-import { RouteLocationNormalized, type RouteRecordRaw } from 'vue-router';
+import type { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
 import OpenedCloseReasonGroups from '../modules/close-reason-groups/components/opened-close-reason-groups.vue';
 import OpenedCloseReasonGroupsGeneral from '../modules/close-reason-groups/components/opened-close-reason-groups-general.vue';

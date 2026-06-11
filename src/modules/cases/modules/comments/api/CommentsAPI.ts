@@ -14,7 +14,7 @@ import {
 	starToSearch,
 } from '@webitel/api-services/api/transformers';
 import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule';
-import { CaseCommentsApiFactory, CasesCaseComment } from 'webitel-sdk';
+import { CaseCommentsApiFactory, type CasesCaseComment } from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();

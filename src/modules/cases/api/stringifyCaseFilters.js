@@ -78,12 +78,9 @@ const filterTransformersMap = {
 	hasAttachment: (value) => `attachments=${value}`,
 	others: (value, key) => {
 		const makeArrWithStringValuesFromObjectValue = (value, key) => {
-			return Object.entries(value).reduce((strValue, [propKey, propValue]) => {
-				return [
-					...strValue,
-					`${key}.${propKey}=${propValue}`,
-				];
-			}, []);
+			return Object.entries(value).map(
+				([propKey, propValue]) => `${key}.${propKey}=${propValue}`,
+			);
 		};
 
 		/* then value is magic datetime string */

@@ -1,4 +1,4 @@
-import { useRouter } from 'vue-router';
+import { type Router, useRouter } from 'vue-router';
 import { ErrorRedirectMap } from '../enems/ErrorRedirectMap.enum';
 
 const HTTP_METHODS = {
@@ -8,23 +8,37 @@ const HTTP_METHODS = {
 //@author o.chorpita https://webitel.atlassian.net/browse/WTEL-8133
 // Checks if this is an error loading an item
 //onLoadErrorHandler is called only for loadItem() errors (GET request)
-function isItemLoadRequest(err: any): boolean {
-	const method = (err?.config?.method ?? err?.request?.method).toLowerCase();
+function isItemLoadRequest(err: unknown): boolean {
+	const e = err as {
+		config?: {
+			method?: string;
+		};
+		request?: {
+			method?: string;
+		};
+	};
+	const method = (e?.config?.method ?? e?.request?.method ?? '').toLowerCase();
 	return method === HTTP_METHODS.GET;
 }
 
-function getErrorStatus(err: any): number | undefined {
-	return err?.status ?? err?.response?.status;
+function getErrorStatus(err: unknown): number | undefined {
+	const e = err as {
+		status?: number;
+		response?: {
+			status?: number;
+		};
+	};
+	return e?.status ?? e?.response?.status;
 }
 
-function redirectToErrorPage(router: any, path: string) {
+function redirectToErrorPage(router: Router, path: string) {
 	router.replace(path);
 }
 
 export function useErrorRedirectHandler() {
 	const router = useRouter();
 
-	const handleError = (err: any) => {
+	const handleError = (err: unknown) => {
 		if (!err) return;
 
 		const status = getErrorStatus(err);

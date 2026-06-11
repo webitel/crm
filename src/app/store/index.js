@@ -7,7 +7,6 @@ import configuration from '../../modules/configuration/store/configuration';
 import contacts from '../../modules/contacts/store/contacts';
 import customization from '../../modules/customization/store/customization';
 import timeline from '../../modules/timeline/store/timeline';
-import instance from '../api/instance';
 
 export default createStore({
 	state: {

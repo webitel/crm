@@ -71,6 +71,7 @@ const pinType = computed(() => {
 
 // transfer is not implemented
 const pointStatus = computed(() => {
+	// biome-ignore lint/correctness/noConstantCondition: transfer is not implemented
 	if (false) return TimelineTaskStatusEnum.TRANSFERRED;
 	return false;
 });

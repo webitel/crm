@@ -1,7 +1,6 @@
 import {
 	createApiStoreModule,
 	createBaseStoreModule,
-	createCardStoreModule,
 	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 

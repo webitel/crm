@@ -1,5 +1,5 @@
 import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedCaseWrapper from '../components/opened-case-wrapper.vue';
 import CaseAttachments from '../modules/attachments/components/case-attachments.vue';

@@ -40,17 +40,15 @@
 </template>
 
 <script lang="ts" setup>
+import type { WebitelCasesSource } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCaseSourcesCardStore } from '../stores';
-
-// import {WebitelCasesSource} from "@webitel/api-services/gen";
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
@@ -74,12 +72,10 @@ const {
 
 	// actions
 	save,
-} = useCardComponent(
-	/*<WebitelCasesSource>*/ {
-		useCardStore: useCaseSourcesCardStore,
-		onLoadErrorHandler: handleError,
-	},
-);
+} = useCardComponent<WebitelCasesSource>({
+	useCardStore: useCaseSourcesCardStore,
+	onLoadErrorHandler: handleError,
+});
 
 const path = computed(() => {
 	return [

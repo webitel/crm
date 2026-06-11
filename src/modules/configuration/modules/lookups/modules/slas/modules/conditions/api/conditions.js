@@ -141,18 +141,13 @@ const addCondition = async ({ itemInstance, parentId }) => {
 		camelToSnake(),
 		sanitize(fieldsToSend),
 	]);
-
-	try {
-		const response = await slaConditionsService.createSLACondition(
-			parentId,
-			item,
-		);
-		return applyTransform(response.data, [
-			snakeToCamel(),
-		]);
-	} catch (err) {
-		throw err;
-	}
+	const response = await slaConditionsService.createSLACondition(
+		parentId,
+		item,
+	);
+	return applyTransform(response.data, [
+		snakeToCamel(),
+	]);
 };
 
 const deleteCondition = async ({ id, parentId }) => {

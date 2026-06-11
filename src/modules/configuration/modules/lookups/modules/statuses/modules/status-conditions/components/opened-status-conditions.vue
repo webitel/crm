@@ -1,8 +1,7 @@
 <template>
   <section class="table-page opened-status-conditions">
     <condition-popup
-      :namespace="cardNamespace"
-      @load-data="loadData"
+      @load-data="loadDataList"
     />
 
     <opened-status-condition-warning-popup
@@ -27,18 +26,20 @@
         :disabled:add="!hasCreateAccess"
         :disabled:delete="!hasDeleteAccess || !selected.length"
         @click:add="add"
-        @click:refresh="loadData"
+        @click:refresh="loadDataList"
         @click:delete="
           askDeleteConfirmation({
             deleted: selected,
-            callback: () => deleteData(selected),
+            callback: () => deleteEls(selected),
           })
         "
       >
         <template #search-bar>
-          <filter-search
-            :namespace="filtersNamespace"
-            name="search"
+          <dynamic-filter-search
+            :filters-manager="filtersManager"
+            @filter:add="addFilter"
+            @filter:update="updateFilter"
+            @filter:delete="deleteFilter"
           />
         </template>
       </wt-action-bar>
@@ -59,11 +60,11 @@
       <wt-table
         v-show="dataList.length && !isLoading"
         :data="dataList"
-        :headers="headers"
+        :headers="shownHeaders"
         :selected="selected"
         sortable
-        @sort="sort"
-        @update:selected="setSelected"
+        @sort="updateSort"
+        @update:selected="updateSelected"
       >
         <template #name="{ item }">
           {{ item.name }}
@@ -107,105 +108,86 @@
             @click="
               askDeleteConfirmation({
                 deleted: [item],
-                callback: () => deleteData(item),
+                callback: () => deleteEls(item),
               })
             "
           />
         </template>
       </wt-table>
 
-      <filter-pagination
-        :namespace="filtersNamespace"
-        :next="isNext"
+      <wt-pagination
+        :next="next"
+        :prev="page > 1"
+        :size="size"
+        debounce
+        @change="updateSize"
+        @next="updatePage(page + 1)"
+        @prev="updatePage(page - 1)"
       />
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, onUnmounted, ref } from 'vue';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import { useCaseStatusConditionsDatalistStore } from '../stores';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
-
-const { namespace: parentCardNamespace } = useCardStore(props.namespace);
-
-const cardNamespace = `${parentCardNamespace}/statusConditions`;
 
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
-const store = useStore();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl({
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
+const parentId = computed(() => route.params.id);
+
 const isStatusWarningPopupOpened = ref(false);
-const parentId = computed(
-	() => store.getters[`${cardNamespace}/table/PARENT_ID`],
-);
+
+const tableStore = useCaseStatusConditionsDatalistStore();
 
 const {
-	namespace: tableNamespace,
-
 	dataList,
 	selected,
-	isLoading,
-	headers,
-	isNext,
 	error,
-
-	loadData,
-	deleteData,
-	sort,
-	setSelected,
-	onFilterEvent,
-} = useTableStore(cardNamespace);
+	isLoading,
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-	namespace: filtersNamespace,
-	restoreFilters,
-	filtersValue,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+} = tableStore;
 
-	resetFilters,
-	subscribe,
-	flushSubscribers,
-} = useTableFilters(tableNamespace);
-
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-	flushSubscribers();
-	resetFilters();
+initialize({
+	parentId: parentId.value,
 });
 
 const {
@@ -249,7 +231,7 @@ const {
 	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
 	dataList,
-	filters: filtersValue,
+	filters: computed(() => filtersManager.value.getAllValues()),
 	error,
 	isLoading,
 });
@@ -258,7 +240,7 @@ async function setWarningPopupState(value) {
 	isStatusWarningPopupOpened.value = value;
 
 	if (!value) {
-		await loadData();
+		await loadDataList();
 	}
 }
 
@@ -276,9 +258,7 @@ async function changeInitialStatus({ item, index, value }) {
 			},
 		});
 	} catch (err) {
-		if (err.status !== 400) {
-			return;
-		}
+		if (err.status !== 400) return;
 		setWarningPopupState(true);
 	}
 }
@@ -294,9 +274,7 @@ async function changeFinalStatus({ item, index, value }) {
 			},
 		});
 	} catch (err) {
-		if (err.status !== 400) {
-			return;
-		}
+		if (err.status !== 400) return;
 		setWarningPopupState(true);
 	}
 }

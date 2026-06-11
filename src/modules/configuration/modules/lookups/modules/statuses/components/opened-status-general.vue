@@ -6,50 +6,38 @@
       </h3>
     </header>
 
-    <div
-      class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50"
-    >
+    <div class="opened-card-input-grid opened-card-input-grid--1-col opened-card-input-grid--w50">
       <wt-input-text
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-textarea
+        v-model="modelValue.description"
         :label="t('vocabulary.description')"
-        :model-value="itemInstance.description"
         :disabled="disableUserInput"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
     </div>
   </section>
 </template>
 
-<script setup>
-import { useCardStore } from '@webitel/ui-sdk/store';
+<script lang="ts" setup>
+import type { WebitelCasesStatus } from '@webitel/api-services/gen/models';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
 import { useI18n } from 'vue-i18n';
-
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<WebitelCasesStatus>();
+
+defineProps<{
+	validationFields: CardValidationFields<WebitelCasesStatus>;
+}>();
 
 const { t } = useI18n();
-
 const { disableUserInput } = useUserAccessControl();
-
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
 </script>
 
 <style lang="scss" scoped>

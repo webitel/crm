@@ -2,12 +2,12 @@ import deepCopy from 'deep-copy';
 
 interface SortableField {
 	position: number;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 interface SortableItem {
 	fields: SortableField[];
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 const sortFields = (item: SortableItem) => {

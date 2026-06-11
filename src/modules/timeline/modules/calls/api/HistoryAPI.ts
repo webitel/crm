@@ -62,19 +62,15 @@ const getList =
 			contact,
 		} = applyTransform(params, paramsTransformers);
 		try {
-			const variables =
-				variable &&
-				variable.split('&').reduce((vars, currVar) => {
-					const [key, value] = currVar.split('=');
-					return {
-						...vars,
-						/*
-           This if else statement is needed for sending ''
-            to backend when user writes not valid variableSearch, so we can display dummy image.
-           */
-						[key]: value !== undefined ? value : '',
-					};
-				}, {});
+			const variables = variable?.split('&').reduce((vars, currVar) => {
+				const [key, value] = currVar.split('=');
+				/*
+				 This if else statement is needed for sending ''
+				  to backend when user writes not valid variableSearch, so we can display dummy image.
+				 */
+				vars[key] = value !== undefined ? value : '';
+				return vars;
+			}, {});
 
 			const response = await callService.searchHistoryCallPost({
 				page,

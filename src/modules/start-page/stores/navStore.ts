@@ -1,10 +1,9 @@
-import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useConfigurationStore } from '../../configuration/store/configurationStore';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import CasesDark from '../assets/cases-section-dark.svg';
@@ -13,7 +12,7 @@ import ConfigurationImgDark from '../assets/configuration-section-img-dark.svg';
 import ConfigurationImgLight from '../assets/configuration-section-img-light.svg';
 import ContactsImgDark from '../assets/contacts-section-img-dark.svg';
 import ContactsImgLight from '../assets/contacts-section-img-light.svg';
-import { StartPageNavigation } from '../types/start-page.types';
+import type { StartPageNavigation } from '../types/start-page.types';
 
 export const useNavStore = defineStore('nav', () => {
 	const { t } = useI18n();

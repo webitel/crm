@@ -15,28 +15,29 @@
     </template>
 
     <template #main>
-      <form class="opened-card-input-grid opened-card-input-grid--1-col" @submit.prevent="save">
+      <form
+        class="opened-card-input-grid opened-card-input-grid--1-col"
+        @submit.prevent="save"
+      >
         <wt-input-text
-          :model-value="itemInstance.name"
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :v="v$.itemInstance.name"
+          :regle-validation="validationFields?.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
 
         <wt-textarea
+          v-model:model-value="modelValue.description"
           :label="t('vocabulary.description')"
-          :model-value="itemInstance.description"
           :disabled="disableUserInput"
-          @update:model-value="setItemProp({ path: 'description', value: $event })"
         />
       </form>
     </template>
 
     <template #actions>
       <wt-button
-        :disabled="!hasSaveActionAccess || disabledSave"
+        :disabled="!hasSaveActionAccess || hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -52,23 +53,16 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, watch } from 'vue';
+<script lang="ts" setup>
+import type { WebitelCasesStatusCondition } from '@webitel/api-services/gen/models';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { useCaseStatusConditionsCardStore } from '../stores';
 
 const emit = defineEmits([
 	'load-data',
@@ -77,93 +71,34 @@ const emit = defineEmits([
 const route = useRoute();
 const { t } = useI18n();
 
-const { disableUserInput, hasSaveActionAccess } = useUserAccessControl({
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
+const { handleError } = useErrorRedirectHandler();
+
 const {
-	itemInstance,
-	resetState,
-	addItem,
-	loadItem,
-	updateItem,
-	setId,
-	setItemProp,
-	id,
-} = useCardStore(props.namespace);
+	modelValue,
+	validationFields,
+	isNew,
+	hasValidationErrors,
+	save: saveItem,
+} = useNestedCardComponent<WebitelCasesStatusCondition>({
+	useCardStore: useCaseStatusConditionsCardStore,
+	routeParamName: 'statusConditionId',
+	parentId: route.params.id,
+	onLoadErrorHandler: handleError,
+});
 
 const statusConditionId = computed(() => route.params.statusConditionId);
-const isNew = computed(() => statusConditionId.value === 'new');
 
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
-);
-
-v$.value.$touch();
-
-const { close } = useClose(`status-conditions`);
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
-
-function loadDataList() {
-	emit('load-data');
-}
+const { close } = useClose('status-conditions');
 
 const save = async () => {
-	if (isNew.value) {
-		await addItem({
-			itemInstance,
-			parentId: id.value,
-		});
-	} else {
-		await updateItem({
-			itemInstance,
-			itemId: id.value,
-		});
-	}
-
+	await saveItem();
 	close();
-	loadDataList();
+	emit('load-data');
 };
-
-async function initializePopup() {
-	try {
-		if (!isNew.value) {
-			await setId(statusConditionId.value);
-			await loadItem();
-		}
-	} catch (error) {
-		throw Error(error);
-	}
-}
-
-watch(
-	() => statusConditionId.value,
-	(value) => {
-		if (value) {
-			initializePopup();
-		} else {
-			resetState();
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 </script>
 
 <style lang="scss" scoped></style>

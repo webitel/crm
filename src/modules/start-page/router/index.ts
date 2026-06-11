@@ -1,4 +1,4 @@
-import { type RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 import TheStartPage from '../components/the-start-page.vue';
 import RouteNames from './internals/start-page-route-names';
