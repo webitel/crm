@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Đến',
 			cc: 'CC',
 			subject: 'Chủ đề',
-		},
-	},
-	permissions: {
-		read: 'Đọc',
-		edit: 'Sửa',
-		delete: 'Xóa',
-		granteePopup: {
-			title: 'Thêm người được cấp quyền',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Cho phép',
-			[AccessMode.FORBIDDEN]: 'Cấm',
-			[AccessMode.MANAGE]: 'Cho phép với ủy quyền',
 		},
 	},
 	startPage: {

@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Кому',
 			cc: 'CC',
 			subject: 'Тема',
-		},
-	},
-	permissions: {
-		read: 'Читати',
-		edit: 'Редагувати',
-		delete: 'Видаляти',
-		granteePopup: {
-			title: 'Додати власника прав',
-		},
-		accessMode: {
-			[AccessMode.FORBIDDEN]: 'Заборонено',
-			[AccessMode.ALLOW]: 'Дозволено',
-			[AccessMode.MANAGE]: 'Управління',
 		},
 	},
 	startPage: {
