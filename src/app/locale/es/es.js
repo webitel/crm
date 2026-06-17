@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Para',
 			cc: 'CC',
 			subject: 'Asunto',
-		},
-	},
-	permissions: {
-		read: 'Leer',
-		edit: 'Editar',
-		delete: 'Eliminar',
-		granteePopup: {
-			title: 'Agregar beneficiario',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Permitir',
-			[AccessMode.FORBIDDEN]: 'Prohibido',
-			[AccessMode.MANAGE]: 'Permitir con delegación',
 		},
 	},
 	startPage: {

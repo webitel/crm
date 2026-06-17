@@ -8,6 +8,12 @@
     <router-view
       class="opened-contact-tab"
       :namespace="namespace"
+      :access="/*is used by permissions tab*/{
+        read: true,
+        edit: actionAllow,
+        delete: actionAllow,
+        add: actionAllow,
+      }"
       :fields="customFields"
     />
   </article>
@@ -15,7 +21,7 @@
 
 <script setup>
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -28,6 +34,13 @@ defineProps({
 		required: true,
 	},
 });
+
+const access = inject('access');
+const isReadOnly = inject('isReadOnly');
+
+const actionAllow = computed(
+	() => !!access.value?.hasRbacEditAccess && !isReadOnly,
+);
 
 const { t } = useI18n();
 const router = useRouter();
@@ -124,6 +137,7 @@ function changeTab(tab) {
   .opened-contact-tab {
     flex-grow: 1;
     display: flex;
+    flex-direction: column;
     min-height: 0;
   }
 }

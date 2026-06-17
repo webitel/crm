@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Do',
 			cc: 'DW',
 			subject: 'Temat',
-		},
-	},
-	permissions: {
-		read: 'Odczyt',
-		edit: 'Edycja',
-		delete: 'Usuń',
-		granteePopup: {
-			title: 'Dodaj uprawnienia',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Zezwól',
-			[AccessMode.FORBIDDEN]: 'Zabronione',
-			[AccessMode.MANAGE]: 'Zezwól z delegowaniem',
 		},
 	},
 	startPage: {
