@@ -40,8 +40,7 @@ import {
 	WebitelCasesSource,
 	WebitelCasesSourceType,
 } from '@webitel/api-services/gen/models';
-import { WtInputText, WtSingleSelect } from '@webitel/ui-sdk/components';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -70,6 +69,18 @@ const typesSourcesOptions = computed(() =>
 				name: t(`lookups.sources.types.${type}`),
 			};
 		}),
+);
+
+watch(
+	modelValue,
+	(val) => {
+		if (val && !val.type) {
+			modelValue.value.type = WebitelCasesSourceType.Call;
+		}
+	},
+	{
+		once: true,
+	},
 );
 </script>
 

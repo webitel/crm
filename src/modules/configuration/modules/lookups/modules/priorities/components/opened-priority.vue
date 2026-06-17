@@ -33,14 +33,14 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { WebitelCasesPriority } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCasePrioritiesCardStore } from '../stores/card/casePrioritiesCardStore';
@@ -60,7 +60,7 @@ const {
 	hasValidationErrors,
 	originalItemInstance,
 	save,
-} = useCardComponent({
+} = useCardComponent<WebitelCasesPriority>({
 	useCardStore: useCasePrioritiesCardStore,
 	onLoadErrorHandler: handleError,
 });
