@@ -10,20 +10,12 @@
   />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
 import { computed, ref, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
 
 const emit = defineEmits([
 	'close',
@@ -32,8 +24,6 @@ const emit = defineEmits([
 const { t } = useI18n();
 const router = useRouter();
 const attrs = useAttrs();
-
-const { setItemProp } = useCardStore(`${props.namespace}/card`);
 
 const options = computed(() =>
 	Object.values(ContactsGroupType)
@@ -56,13 +46,9 @@ function createGroup() {
 			type: selected.value.value.toLowerCase(),
 		},
 	});
-	setItemProp({
-		path: 'type',
-		value: selected.value.value,
-	});
 }
 
-function changeGroupType(option) {
+function changeGroupType(option: (typeof options.value)[number]) {
 	selected.value = option;
 }
 
@@ -71,7 +57,4 @@ function close() {
 }
 </script>
 
-<style
-  lang="scss"
-  scoped
-></style>
+<style lang="scss" scoped></style>
