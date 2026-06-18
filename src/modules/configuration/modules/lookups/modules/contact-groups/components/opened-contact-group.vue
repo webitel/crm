@@ -30,6 +30,7 @@
             v-model="modelValue"
             :validation-fields="validationFields"
             :group-id="itemId"
+            :namespace="permissionsCardNamespace"
             :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
           />
         </router-view>
@@ -50,12 +51,13 @@ import { useCardComponent } from '@webitel/ui-datalist/card';
 import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { ContactGroupsNamespace } from '../namespace';
 import { useContactGroupsCardStore } from '../stores';
 import { useRoute } from 'vue-router';
 import { DynamicGroupsAPI } from '@webitel/api-services/api';
@@ -68,6 +70,20 @@ const route = useRoute();
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const { itemId } = storeToRefs(useContactGroupsCardStore());
+const permissionsCardNamespace = `${ContactGroupsNamespace}/card`;
+
+watch(
+	itemId,
+	(newId) => {
+		store.commit(`${permissionsCardNamespace}/SET`, {
+			path: 'parentId',
+			value: newId || null,
+		});
+	},
+	{
+		immediate: true,
+	},
+);
 
 const customSaveItem = async (
 	data: ContactsGroup,
