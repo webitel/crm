@@ -17,7 +17,7 @@ const permissions = createObjectPermissionsStoreModule({
 		table: {
 			getters: {
 				PARENT_ID: (s, g, rootState) =>
-					rootState.configuration.lookups['contact-groups'].card.parentId,
+					rootState.configuration.lookups.contactGroups.card.parentId,
 			},
 			modules: {
 				api,

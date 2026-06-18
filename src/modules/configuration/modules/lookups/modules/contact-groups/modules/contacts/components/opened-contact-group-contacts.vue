@@ -69,6 +69,7 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationP
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';

@@ -12,7 +12,7 @@ const lookups = createBaseStoreModule({
 		slas,
 		catalogs,
 		services,
-		'contact-groups': contactGroups,
+		contactGroups,
 		closeReasonGroups,
 		customLookup,
 	},

@@ -57,7 +57,7 @@ import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-import { ContactGroupsNamespace } from '../namespace';
+import { ContactGroupsPermissionsNamespace } from '../namespace';
 import { useContactGroupsCardStore } from '../stores';
 import { useRoute } from 'vue-router';
 import { DynamicGroupsAPI } from '@webitel/api-services/api';
@@ -70,7 +70,7 @@ const route = useRoute();
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const { itemId } = storeToRefs(useContactGroupsCardStore());
-const permissionsCardNamespace = `${ContactGroupsNamespace}/card`;
+const permissionsCardNamespace = `${ContactGroupsPermissionsNamespace}/card`;
 
 watch(
 	itemId,
