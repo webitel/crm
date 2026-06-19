@@ -11,8 +11,8 @@ export default () => {
 	return defineConfig({
 		base: '/crm',
 		build: {
-			// sourcemap: true,
-			// minify: false, // Disable minification for readable debugging
+			sourcemap: import.meta.env.VITE_STAGING_ENV,
+			minify: !import.meta.env.VITE_STAGING_ENV, // Disable minification for readable debugging
 		},
 		css: {
 			preprocessorOptions: {
