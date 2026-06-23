@@ -23,6 +23,8 @@ export default defineConfig({
 				__dirname,
 				'tests/mocks/axios-instance.js',
 			),
+			'lodash/fp': 'lodash-es',
+			lodash: 'lodash-es',
 		},
 		server: {
 			deps: {
