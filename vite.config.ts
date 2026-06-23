@@ -33,18 +33,40 @@ export default ({ mode }) => {
 			],
 		},
 		resolve: {
-			alias: {
-				vue: '@vue/compat',
-				'lodash/fp': 'lodash-es',
-				lodash: 'lodash-es',
-				'@aliasedDeps/api-services/axios': resolve(
-					__dirname,
-					'src/app/api/instance',
-				),
+			alias: [
+				{
+					// Force the main @webitel/ui-sdk import to use source instead of
+					// dist/ui-sdk.js, which bundles its own primevue Symbol that differs
+					// from the one used by the @webitel/ui-sdk/components source export.
+					find: /^@webitel\/ui-sdk$/,
+					replacement: resolve(
+						__dirname,
+						'node_modules/@webitel/ui-sdk/src/install.ts',
+					),
+				},
+				{
+					find: 'vue',
+					replacement: '@vue/compat',
+				},
+				{
+					find: 'lodash/fp',
+					replacement: 'lodash-es',
+				},
+				{
+					find: 'lodash',
+					replacement: 'lodash-es',
+				},
+				{
+					find: '@aliasedDeps/api-services/axios',
+					replacement: resolve(__dirname, 'src/app/api/instance'),
+				},
 				/* vue-datepicker v4 relies on date-fns v2
        where "/esm" dir still exists. need to update vue-datepicker to v8 at least */
-				'date-fns/esm': 'date-fns',
-			},
+				{
+					find: 'date-fns/esm',
+					replacement: 'date-fns',
+				},
+			],
 			dedupe: [
 				'vue',
 				'@vue/compat',
