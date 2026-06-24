@@ -50,59 +50,22 @@ import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { storeToRefs } from 'pinia';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { ContactGroupsPermissionsNamespace } from '../namespace';
 import { useContactGroupsCardStore } from '../stores';
-import { useRoute } from 'vue-router';
-import { DynamicGroupsAPI } from '@webitel/api-services/api';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
-const store = useStore();
-const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const { itemId } = storeToRefs(useContactGroupsCardStore());
 const permissionsCardNamespace = `${ContactGroupsPermissionsNamespace}/card`;
-
-watch(
-	itemId,
-	(newId) => {
-		store.commit(`${permissionsCardNamespace}/SET`, {
-			path: 'parentId',
-			value: newId || null,
-		});
-	},
-	{
-		immediate: true,
-	},
-);
-
-const customSaveItem = async (
-	data: ContactsGroup,
-): Promise<ContactsGroup | null> => {
-	if (data.type !== ContactsGroupType.Dynamic) {
-		return null;
-	}
-
-	if (!itemId.value) {
-		return DynamicGroupsAPI.add({
-			itemInstance: data,
-		});
-	} else {
-		return DynamicGroupsAPI.update({
-			itemInstance: data,
-			itemId: itemId.value,
-		});
-	}
-};
 
 const {
 	modelValue,
@@ -120,13 +83,6 @@ const {
 } = useCardComponent<ContactsGroup>({
 	useCardStore: useContactGroupsCardStore,
 	onLoadErrorHandler: handleError,
-	initialData:
-		route.params.id === 'new'
-			? {
-					type: route.query.type?.toString().toUpperCase() as ContactsGroupType,
-				}
-			: undefined,
-	customSaveItem,
 });
 
 const { close } = useClose(CrmSections.ContactGroups);
