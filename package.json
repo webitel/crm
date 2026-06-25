@@ -83,7 +83,6 @@
 	"overrides": {
 		"vue": "^3.5.x",
 		"pinia": "^3.0.4",
-		"vite": "npm:rolldown-vite@^7.3.x",
-		"axios": "^1.18.1"
+		"vite": "npm:rolldown-vite@^7.3.x"
 	}
 }
