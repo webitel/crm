@@ -9,50 +9,52 @@
     <template #title>
       {{ !isNew ? t('lookups.slas.editCondition') : t('lookups.slas.addCondition') }}
     </template>
+
     <template #main>
-      <form class="opened-card-input-grid opened-card-input-grid--1-col">
+      <form
+        class="opened-card-input-grid opened-card-input-grid--1-col"
+        @submit.prevent="save"
+      >
         <wt-input-text
-          :model-value="itemInstance.name"
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :v="v$.itemInstance.name"
+          :regle-validation="validationFields?.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
+
         <wt-multi-select
-          :model-value="itemInstance.priorities"
+          v-model:model-value="modelValue.priorities"
           :label="t('vocabulary.priority')"
-          :search-method="id ? getConditionPriorities : getFreePriorities"
+          :regle-validation="validationFields?.priorities"
+          :search-method="modelValue.id ? getConditionPriorities : getFreePriorities"
           :disabled="disableUserInput"
-          :v="v$.itemInstance.priorities"
           required
-          @update:model-value="setItemProp({ path: 'priorities', value: $event })"
         />
+
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
-          :model-value="itemInstance.reactionTime"
-          :v="v$.itemInstance.reactionTime"
+          v-model:model-value="modelValue.reactionTime"
+          :regle-validation="validationFields?.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
-          :model-value="itemInstance.resolutionTime"
-          :v="v$.itemInstance.resolutionTime"
+          v-model:="modelValue.resolutionTime"
+          :regle-validation="validationFields?.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
-
       </form>
     </template>
+
     <template #actions>
       <wt-button
-        :disabled="!hasSaveActionAccess || disabledSave"
+        :disabled="!hasSaveActionAccess || hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.save') }}
@@ -67,25 +69,19 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { minValue, required } from '@vuelidate/validators';
+<script setup lang="ts">
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesSLACondition } from '@webitel/api-services/gen/models';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { useSLAConditionsCardStore } from '../stores';
 
 const emit = defineEmits([
 	'load-data',
@@ -98,59 +94,30 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
+const { handleError } = useErrorRedirectHandler();
+
 const {
-	namespace: cardNamespace,
-	itemInstance,
-	resetState,
-	addItem,
-	loadItem,
-	updateItem,
-	setId,
-	setItemProp,
-	id,
-} = useCardStore(props.namespace);
+	modelValue,
+	validationFields,
+	isNew,
+	hasValidationErrors,
+	save: saveItem,
+} = useNestedCardComponent<WebitelCasesSLACondition>({
+	useCardStore: useSLAConditionsCardStore,
+	routeParamName: 'conditionId',
+	parentId: route.params.id,
+	onLoadErrorHandler: handleError,
+});
 
 const conditionId = computed(() => route.params.conditionId);
-const isNew = computed(() => conditionId.value === 'new');
-
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-			priorities: {
-				required,
-			},
-			reactionTime: {
-				required,
-				minValue: minValue(1),
-			},
-			resolutionTime: {
-				required,
-				minValue: minValue(1),
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
-);
-
-v$.value.$touch();
 
 const { close } = useClose(`${CrmSections.Slas}-conditions`);
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
 
-function loadDataList() {
+const save = async () => {
+	await saveItem();
+	close();
 	emit('load-data');
-}
+};
 
 function getFreePriorities(params) {
 	return CasePrioritiesAPI.getLookup({
@@ -162,50 +129,9 @@ function getFreePriorities(params) {
 function getConditionPriorities(params) {
 	return CasePrioritiesAPI.getLookup({
 		...params,
-		inSlaCond: id.value,
+		inSlaCond: modelValue.value?.id,
 	});
 }
-
-const save = async () => {
-	if (isNew.value) {
-		await addItem({
-			itemInstance,
-			parentId: id.value,
-		});
-	} else {
-		await updateItem({
-			itemInstance,
-			itemId: id.value,
-		});
-	}
-
-	close();
-	loadDataList();
-};
-
-async function initializePopup() {
-	if (!isNew.value) {
-		await setId(conditionId.value);
-		await loadItem();
-	}
-}
-
-watch(
-	() => conditionId.value,
-	(value) => {
-		if (value) {
-			initializePopup();
-		} else {
-			resetState();
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 </script>
 
-<style
-  lang="scss"
-  scoped
-></style>
+<style lang="scss" scoped></style>

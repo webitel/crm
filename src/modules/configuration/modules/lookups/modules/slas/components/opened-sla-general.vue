@@ -7,121 +7,91 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input-text
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-single-select
         :label="t('objects.calendar')"
         :search-method="loadCalendarsList"
-        :model-value="itemInstance.calendar"
-        :v="v.itemInstance.calendar"
+        v-model:model-value="modelValue.calendar"
+        :regle-validation="validationFields?.calendar"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
+        v-model="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :model-value="itemInstance.description"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
 
       <div class="opened-card-input-grid opened-sla-general__wrapper">
         <wt-timepicker
           :label="t('lookups.slas.reactionTime')"
-          :model-value="itemInstance.reactionTime"
-          :v="v.itemInstance.reactionTime"
+          v-model:model-value="modelValue.reactionTime"
           :disabled="disableUserInput"
+          :regle-validation="validationFields?.reactionTime"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
         />
 
         <wt-timepicker
           :label="t('lookups.slas.resolutionTime')"
-          :model-value="itemInstance.resolutionTime"
-          :v="v.itemInstance.resolutionTime"
+          v-model:model-value="modelValue.resolutionTime"
           :disabled="disableUserInput"
+          :regle-validation="validationFields?.resolutionTime"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
-          :value="itemInstance.validFrom"
+          v-model="modelValue.validFrom"
           :disabled="disableUserInput"
-          :v="v.itemInstance.validFrom"
-          :custom-validators="customValidation"
+          :regle-validation="validationFields?.validFrom"
           mode="datetime"
           clearable
-          @input="setItemProp({ path: 'validFrom', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
-          :value="itemInstance.validTo"
+          v-model="modelValue.validTo"
           :disabled="disableUserInput"
           mode="datetime"
           clearable
-          @input="setItemProp({ path: 'validTo', value: +$event })"
         />
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CalendarsAPI } from '@webitel/api-services/api';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed } from 'vue';
+import type { WebitelCasesSLA } from '@webitel/api-services/gen/models';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<WebitelCasesSLA>();
+
+defineProps<{
+	validationFields?: CardValidationFields<WebitelCasesSLA>;
+}>();
 
 const { t } = useI18n();
-
 const { disableUserInput } = useUserAccessControl();
-
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadCalendarsList(search) {
 	return CalendarsAPI.getLookup(search);
 }
-
-const customValidation = computed(() => {
-	if (!itemInstance.value.validTo) return [];
-
-	return [
-		{
-			name: 'maxValue',
-			text: t('validation.maxValue', {
-				max: new Date(itemInstance.value.validTo).toLocaleString(),
-			}),
-		},
-	];
-});
 </script>
 
 <style lang="scss" scoped>
-// TODO: temporary solution. Will be fixed with typography
 .opened-sla-general {
   :deep(.wt-textarea__textarea) {
     min-height: 120px;

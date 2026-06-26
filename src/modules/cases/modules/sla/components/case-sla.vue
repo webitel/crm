@@ -27,7 +27,7 @@ import { computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
-import ConditionsAPI from '../../../../configuration/modules/lookups/modules/slas/modules/conditions/api/conditions.js';
+import { SLAConditionsAPI } from '@webitel/api-services/api';
 
 const namespace = inject('namespace');
 
@@ -55,7 +55,7 @@ const updateSlaCondition = async (slaId, priorityId) => {
 		return;
 	}
 	try {
-		const response = await ConditionsAPI.getList({
+		const response = await SLAConditionsAPI.getList({
 			parentId: slaId,
 			priorityId,
 		});

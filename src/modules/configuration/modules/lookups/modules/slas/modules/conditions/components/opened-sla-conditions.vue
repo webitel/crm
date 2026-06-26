@@ -1,7 +1,6 @@
 <template>
   <section class="table-page opened-sla-conditions">
     <condition-popup
-      :namespace="SLAConditionsCardNamespace"
       @load-data="loadDataList"
     />
     <delete-confirmation-popup
@@ -31,7 +30,6 @@
         <template #search-bar>
           <dynamic-filter-search
             :filters-manager="filtersManager"
-            :is-filters-restoring="isFiltersRestoring"
             @filter:add="addFilter"
             @filter:update="updateFilter"
             @filter:delete="deleteFilter"
@@ -55,7 +53,7 @@
       <wt-table
         v-show="dataList.length && !isLoading"
         :data="dataList"
-        :headers="headers"
+        :headers="shownHeaders"
         :selected="selected"
         sortable
         @sort="updateSort"
@@ -81,9 +79,7 @@
           <wt-icon-action
             :disabled="!hasUpdateAccess"
             action="edit"
-            @click="
-              router.push({ ...route, params: { conditionId: item.id } })
-            "
+            @click="router.push({ ...route, params: { conditionId: item.id } })"
           />
           <wt-icon-action
             :disabled="!hasDeleteAccess"
@@ -113,15 +109,11 @@
 
 <script setup lang="ts">
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import {
-	WtDisplayChipItems,
-	WtEmpty,
-} from '@webitel/ui-sdk/src/components/index';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -129,29 +121,21 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays.js';
-import { SLAConditionsCardNamespace } from '../namespace';
-import { useSLAConditionsStore } from '../stores/conditions';
+import { useSLAConditionsDatalistStore } from '../stores';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+const router = useRouter();
+const route = useRoute();
+const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl({
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
-const { id: parentId } = useCardStore(props.namespace);
+const parentId = computed(() => route.params.id as string);
 
-const router = useRouter();
-const route = useRoute();
-const { t } = useI18n();
-
-const tableStore = useSLAConditionsStore();
+const tableStore = useSLAConditionsDatalistStore();
 
 const {
 	dataList,
@@ -161,9 +145,8 @@ const {
 	page,
 	size,
 	next,
-	headers,
+	shownHeaders,
 	filtersManager,
-	isFiltersRestoring,
 } = storeToRefs(tableStore);
 
 const {
@@ -179,11 +162,14 @@ const {
 	deleteFilter,
 } = tableStore;
 
+initialize({
+	parentId: parentId.value,
+});
+
 const {
 	isVisible: isDeleteConfirmationPopup,
 	deleteCount,
 	deleteCallback,
-
 	askDeleteConfirmation,
 	closeDelete,
 } = useDeleteConfirmationPopup();
@@ -208,10 +194,6 @@ const add = () => {
 		},
 	});
 };
-
-initialize({
-	parentId: parentId.value,
-});
 </script>
 
 <style lang="scss" scoped>
