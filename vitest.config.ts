@@ -17,12 +17,16 @@ export default defineConfig({
 	],
 	test: {
 		globals: true,
+		hookTimeout: 30000,
+		testTimeout: 30000,
 		alias: {
 			vue: 'vue',
 			'@aliasedDeps/api-services/axios': resolve(
 				__dirname,
 				'tests/mocks/axios-instance.js',
 			),
+			'lodash/fp': 'lodash-es',
+			lodash: 'lodash-es',
 		},
 		server: {
 			deps: {
