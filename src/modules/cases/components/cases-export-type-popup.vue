@@ -8,21 +8,23 @@
       {{ t('reusable.export') }}
     </template>
     <template #main>
-      <wt-single-select
-        v-model:model-value="type"
-        :label="t('vocabulary.format')"
-        required
-        :v="v$.type"
-        data-key="name"
-        :options="options"
-      />
-      <wt-input-text
-        v-if="isExportSettingsFormatCSV"
-        v-model:model-value="separator"
-        :label="t('objects.CSV.separator')"
-        :v="v$.separator"
-        required
-      />
+      <div class="wt-cases-export-type-popup__form">
+        <wt-single-select
+          v-model:model-value="type"
+          :label="t('vocabulary.format')"
+          required
+          :v="v$.type"
+          data-key="name"
+          :options="options"
+        />
+        <wt-input-text
+          v-if="isExportSettingsFormatCSV"
+          v-model:model-value="separator"
+          :label="t('objects.CSV.separator')"
+          :v="v$.separator"
+          required
+        />
+      </div>
     </template>
     <template #actions>
       <wt-button
@@ -121,6 +123,12 @@ const close = () => {
 
   :deep(.wt-popup__popup) {
     max-width: 500px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
   }
 }
 </style>
