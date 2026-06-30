@@ -30,12 +30,11 @@
       v-if="kind === FieldType.Calendar"
       :key="kind"
       :label="t('customization.customLookups.defaultValue')"
-      :value="value.default"
+      v-model:model-value="value.default"
       required
       :v="v.value.default"
       :disabled="disabledDefaultValue"
-      mode="datetime"
-      @input="value.default = +$event"
+      show-time
     />
     <wt-input-number
       v-else-if="kind === FieldType.Number"

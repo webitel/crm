@@ -51,13 +51,13 @@
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
-    :value="value"
+    :model-value="value"
     :v="validation"
-    mode="datetime"
+    show-time
     :timezone="timezone"
     :required="isRequired"
     :disabled="props.disabled"
-    @input="setValue(+$event)"
+    @update:model-value="setValue(+$event)"
   />
 </template>
 
