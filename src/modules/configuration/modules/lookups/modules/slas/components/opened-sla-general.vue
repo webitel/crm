@@ -55,22 +55,22 @@
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
-          :value="itemInstance.validFrom"
+          :model-value="itemInstance.validFrom"
           :disabled="disableUserInput"
           :v="v.itemInstance.validFrom"
           :custom-validators="customValidation"
-          mode="datetime"
+          show-time
           clearable
-          @input="setItemProp({ path: 'validFrom', value: +$event })"
+          @update:model-value="setItemProp({ path: 'validFrom', value: +$event })"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
-          :value="itemInstance.validTo"
+          :model-value="itemInstance.validTo"
           :disabled="disableUserInput"
-          mode="datetime"
+          show-time
           clearable
-          @input="setItemProp({ path: 'validTo', value: +$event })"
+          @update:model-value="setItemProp({ path: 'validTo', value: +$event })"
         />
       </div>
     </div>
