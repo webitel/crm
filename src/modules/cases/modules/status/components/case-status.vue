@@ -17,6 +17,7 @@
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :model-value="itemInstance?.statusCondition"
+        :disabled-options="staleStatusCondition ? [staleStatusCondition] : false"
 				:show-clear="false"
         class="case-status__select"
         @update:model-value="handleSelect"
@@ -91,6 +92,7 @@ const { isNew } = useCardComponent({
 
 const isResultPopup = ref(false);
 const prevStatusCondition = ref(itemInstance.value.statusCondition);
+const staleStatusCondition = ref(null);
 
 const openCaseResultPopup = () => {
 	isResultPopup.value = true;
@@ -221,6 +223,7 @@ async function handleSelect(selectedStatusCondition) {
 		const initialStatusCondition = items.find(({ initial }) => initial);
 		handleSelect(initialStatusCondition);
 	} else {
+		staleStatusCondition.value = null;
 		await patchStatusCondition(selectedStatusCondition);
 		prevStatusCondition.value = selectedStatusCondition;
 	}
@@ -232,6 +235,13 @@ async function updateStatusCondition(isValidationRequired = true) {
 	}
 
 	if (isValidationRequired && itemInstance.value.statusCondition.id) return;
+
+	if (!isValidationRequired && itemInstance.value.statusCondition.initial) {
+		await setItemProp({
+			path: 'statusCondition',
+			value: {},
+		});
+	}
 
 	const { items } = await CaseStatusConditionsAPI.getList({
 		statusId: status.value.id,
@@ -246,14 +256,21 @@ async function updateStatusCondition(isValidationRequired = true) {
 watch(
 	() => status.value?.id,
 	async (newStatusId, oldStatusId) => {
-		if (
-			!newStatusId ||
-			(itemInstance.value.statusCondition.final && !isNew.value)
-		)
-			return;
+		if (!newStatusId) return;
 
-		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a stat usCondition.id, on any subsequent status‐change we force the reset
-		const validationRequired = oldStatusId === undefined;
+		const isServiceChange = oldStatusId !== undefined;
+
+		if (
+			isServiceChange &&
+			itemInstance.value.statusCondition.final &&
+			!isNew.value
+		) {
+			staleStatusCondition.value = itemInstance.value.statusCondition;
+			return;
+		}
+
+		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a statusCondition.id, on any subsequent status-change we force the reset
+		const validationRequired = !isServiceChange;
 
 		await updateStatusCondition(validationRequired);
 	},
