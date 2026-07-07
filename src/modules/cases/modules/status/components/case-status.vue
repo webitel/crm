@@ -11,7 +11,7 @@
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-single-select
-        :key="status?.id"
+        :key="`${status?.id}-${staleStatusCondition?.id ?? 'none'}`"
         :disabled="disableStatusSelect"
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
@@ -217,8 +217,10 @@ async function patchRemoteChanges(condition) {
 
 async function handleSelect(selectedStatusCondition) {
 	if (selectedStatusCondition.final) {
+		staleStatusCondition.value = null;
 		startChangingStatusToFinal(selectedStatusCondition);
 	} else if (/* at reset */ isEmpty(selectedStatusCondition)) {
+		staleStatusCondition.value = null;
 		const { items } = await fetchStatusConditions();
 		const initialStatusCondition = items.find(({ initial }) => initial);
 		handleSelect(initialStatusCondition);
