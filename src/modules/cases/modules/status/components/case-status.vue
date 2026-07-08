@@ -93,6 +93,7 @@ const { isNew } = useCardComponent({
 const isResultPopup = ref(false);
 const prevStatusCondition = ref(itemInstance.value.statusCondition);
 const staleStatusCondition = ref(null);
+const prevStaleStatusCondition = ref(null);
 
 const openCaseResultPopup = () => {
 	isResultPopup.value = true;
@@ -103,6 +104,7 @@ const closeCaseResultPopup = () => {
 };
 
 const startChangingStatusToFinal = (statusCondition) => {
+	prevStaleStatusCondition.value = staleStatusCondition.value;
 	itemInstance.value.statusCondition = statusCondition;
 	openCaseResultPopup();
 };
@@ -138,6 +140,8 @@ const confirmChangingStatusToFinal = async ({ reason, result }) => {
 const cancelChangingStatusToFinal = () => {
 	closeCaseResultPopup();
 	itemInstance.value.statusCondition = prevStatusCondition.value;
+	staleStatusCondition.value = prevStaleStatusCondition.value;
+	prevStaleStatusCondition.value = null;
 };
 
 const getIndicatorColor = (option) => {
@@ -223,10 +227,10 @@ async function handleSelect(selectedStatusCondition) {
 		const initialStatusCondition = items.find(({ initial }) => initial);
 		handleSelect(initialStatusCondition);
 	} else {
-		staleStatusCondition.value = null;
 		await patchStatusCondition(selectedStatusCondition);
 		prevStatusCondition.value = selectedStatusCondition;
 	}
+	staleStatusCondition.value = null;
 }
 
 async function updateStatusCondition(isValidationRequired = true) {
