@@ -217,10 +217,8 @@ async function patchRemoteChanges(condition) {
 
 async function handleSelect(selectedStatusCondition) {
 	if (selectedStatusCondition.final) {
-		staleStatusCondition.value = null;
 		startChangingStatusToFinal(selectedStatusCondition);
 	} else if (/* at reset */ isEmpty(selectedStatusCondition)) {
-		staleStatusCondition.value = null;
 		const { items } = await fetchStatusConditions();
 		const initialStatusCondition = items.find(({ initial }) => initial);
 		handleSelect(initialStatusCondition);
