@@ -11,13 +11,13 @@
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-single-select
-        :key="`${status?.id}-${staleStatusCondition?.id ?? 'none'}`"
+        :key="status?.id"
         :disabled="disableStatusSelect"
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :model-value="itemInstance?.statusCondition"
-        :disabled-options="staleStatusCondition ? [staleStatusCondition] : false"
+        strict-api-options
 				:show-clear="false"
         class="case-status__select"
         @update:model-value="handleSelect"
@@ -92,8 +92,6 @@ const { isNew } = useCardComponent({
 
 const isResultPopup = ref(false);
 const prevStatusCondition = ref(itemInstance.value.statusCondition);
-const staleStatusCondition = ref(null);
-const prevStaleStatusCondition = ref(null);
 
 const openCaseResultPopup = () => {
 	isResultPopup.value = true;
@@ -104,7 +102,6 @@ const closeCaseResultPopup = () => {
 };
 
 const startChangingStatusToFinal = (statusCondition) => {
-	prevStaleStatusCondition.value = staleStatusCondition.value;
 	itemInstance.value.statusCondition = statusCondition;
 	openCaseResultPopup();
 };
@@ -140,8 +137,6 @@ const confirmChangingStatusToFinal = async ({ reason, result }) => {
 const cancelChangingStatusToFinal = () => {
 	closeCaseResultPopup();
 	itemInstance.value.statusCondition = prevStatusCondition.value;
-	staleStatusCondition.value = prevStaleStatusCondition.value;
-	prevStaleStatusCondition.value = null;
 };
 
 const getIndicatorColor = (option) => {
@@ -230,7 +225,6 @@ async function handleSelect(selectedStatusCondition) {
 		await patchStatusCondition(selectedStatusCondition);
 		prevStatusCondition.value = selectedStatusCondition;
 	}
-	staleStatusCondition.value = null;
 }
 
 async function updateStatusCondition(isValidationRequired = true) {
@@ -260,21 +254,14 @@ async function updateStatusCondition(isValidationRequired = true) {
 watch(
 	() => status.value?.id,
 	async (newStatusId, oldStatusId) => {
-		if (!newStatusId) return;
-
-		const isServiceChange = oldStatusId !== undefined;
-
 		if (
-			isServiceChange &&
-			itemInstance.value.statusCondition.final &&
-			!isNew.value
-		) {
-			staleStatusCondition.value = itemInstance.value.statusCondition;
+			!newStatusId ||
+			(itemInstance.value.statusCondition.final && !isNew.value)
+		)
 			return;
-		}
 
-		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a statusCondition.id, on any subsequent status-change we force the reset
-		const validationRequired = !isServiceChange;
+		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there's already a statusCondition.id, on any subsequent status-change we force the reset
+		const validationRequired = oldStatusId === undefined;
 
 		await updateStatusCondition(validationRequired);
 	},
