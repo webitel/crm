@@ -27,7 +27,12 @@ export const checkDisableState = (catalog, targetItem) => {
 	};
 
 	if (!catalog.state) return true;
-	const path = findServicePath(catalog.service, targetItem.id);
+
+	const services = catalog.service;
+
+	if (!Array.isArray(services)) return false;
+
+	const path = findServicePath(services, targetItem.id);
 
 	if (!path) return false;
 
