@@ -7,6 +7,7 @@
   >
     <template #activator="{ toggle }">
       <wt-icon-btn
+        v-if="recordingFiles.length"
         v-tooltip="$t('timeline.actions.playRecording')"
         :icon="isAnyFilesPlaying ? 'stop' : recordingTypeIcon"
         @click="toggle"
@@ -25,7 +26,10 @@
 
 <script lang="ts" setup>
 import { getCallMediaUrl } from '@webitel/api-services/api';
-import { EngineCallFile } from '@webitel/api-services/gen/models';
+import {
+	EngineCallFile,
+	EngineCallFileType,
+} from '@webitel/api-services/gen/models';
 import {
 	assumeVidstackSupportedAudioType,
 	assumeVidstackSupportedVideoType,
@@ -50,11 +54,11 @@ const currentFileId = computed(() => {
 });
 
 const isAnyFilesPlaying = computed(() => {
-	return props.files.some((file) => file.id === audioId.value);
+	return recordingFiles.value.some((file) => file.id === audioId.value);
 });
 
 const contextOptions = computed(() => {
-	return props.files.map((file) => ({
+	return recordingFiles.value.map((file) => ({
 		...file,
 		text: file.name,
 	}));
@@ -78,11 +82,24 @@ const getFileIcon = (mimeType: string) => {
 };
 
 const recordingTypeIcon = computed(() => {
-	const hasVideoFile = props.files?.some((file) =>
+	const hasVideoFile = recordingFiles.value.some((file) =>
 		isMimeTypeVideo(file.mimeType),
 	);
 	return hasVideoFile ? 'preview-tag-video' : 'play';
 });
+
+const isPlayableRecording = (file: EngineCallFile) => {
+	if (file.type) {
+		return (
+			file.type === EngineCallFileType.FileTypeAudio ||
+			file.type === EngineCallFileType.FileTypeVideo
+		);
+	}
+
+	return isMimeTypeAudio(file.mimeType) || isMimeTypeVideo(file.mimeType);
+};
+
+const recordingFiles = computed(() => props.files.filter(isPlayableRecording));
 
 const closePlayer = () => {
 	selectedRecording.value = null;
