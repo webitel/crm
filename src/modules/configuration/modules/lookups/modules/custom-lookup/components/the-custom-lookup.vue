@@ -171,6 +171,7 @@ const loadDictionary = async () => {
 					value: field.id,
 					locale: field.name,
 					readonly: field.readonly,
+					required: field.required,
 					show: true,
 					field: field.id,
 					kind: field.kind,

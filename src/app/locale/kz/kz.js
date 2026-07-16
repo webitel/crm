@@ -182,6 +182,22 @@ export default {
 			confirmDeleteColumn:
 				'Бағанды жойғаннан және сақтағаннан кейін, тиісті өрістегі барлық енгізілген деректер де жойылады.',
 			controlPermissions: 'Рұқсаттарды басқару',
+			import: {
+				rowError:
+					'{record} жазбасын жасау мүмкін болмады, себебі {field} өрісінде {value} мәнімен қате пайда болды ({code})',
+				moreErrors: 'Тағы {count} жазбаны жасау кезінде қате пайда болды',
+				summary: '{total} жазбаның {imported} импортталды ({failed} сәтсіз)',
+				codes: {
+					lookup: {
+						not_found: 'Мәні байланысты жүйелік нысанда табылмады',
+						ambiguous:
+							'Байланысты анықтамалықта бірдей атаумен бірнеше жазба табылды',
+					},
+					validation: {
+						failed: 'Жазбаны тексеру сәтсіз аяқталды',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

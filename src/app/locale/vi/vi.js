@@ -188,6 +188,23 @@ export default {
 			confirmDeleteColumn:
 				'Sau khi xóa cột và lưu, tất cả dữ liệu đã nhập trong trường tương ứng cũng sẽ bị xóa.',
 			controlPermissions: 'Kiểm soát quyền',
+			import: {
+				rowError:
+					'Không thể tạo bản ghi {record} vì có lỗi ở trường {field} với giá trị {value} ({code})',
+				moreErrors: 'Đã xảy ra lỗi khi tạo thêm {count} bản ghi',
+				summary: 'Đã nhập {imported}/{total} bản ghi ({failed} thất bại)',
+				codes: {
+					lookup: {
+						not_found:
+							'Không tìm thấy giá trị trong đối tượng hệ thống liên quan',
+						ambiguous:
+							'Tìm thấy nhiều bản ghi cùng tên trong danh mục liên quan',
+					},
+					validation: {
+						failed: 'Xác thực bản ghi thất bại',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

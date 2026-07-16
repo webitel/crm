@@ -181,6 +181,23 @@ export default {
 			confirmDeleteColumn:
 				"Ustunni o'chirgandan va saqlagandan so'ng, tegishli maydondagi barcha kiritilgan ma'lumotlar ham o'chiriladi.",
 			controlPermissions: 'Huquqlarni boshqarish',
+			import: {
+				rowError:
+					"{record} yozuvini yaratib bo'lmadi, chunki {field} maydonida {value} qiymati bilan xatolik yuz berdi ({code})",
+				moreErrors: 'Yana {count} ta yozuvni yaratishda xatolik yuz berdi',
+				summary:
+					'{total} ta yozuvdan {imported} tasi import qilindi ({failed} tasi muvaffaqiyatsiz)',
+				codes: {
+					lookup: {
+						not_found: "Qiymat bog'langan tizim obyektida topilmadi",
+						ambiguous:
+							"Bog'langan ma'lumotnomada bir xil nomli bir nechta yozuv topildi",
+					},
+					validation: {
+						failed: 'Yozuv validatsiyasi muvaffaqiyatsiz tugadi',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

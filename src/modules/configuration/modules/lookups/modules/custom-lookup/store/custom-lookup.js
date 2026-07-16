@@ -5,7 +5,7 @@ import {
 	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import CustomLookupApi from '../api/custom-lookups.js';
+import CustomLookupApi from '../api/custom-lookups';
 import filters from '../modules/filters/store/filters';
 
 const resetTableState = {

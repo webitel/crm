@@ -1,203 +1,47 @@
-import { generatePermissionsApi } from '@webitel/api-services/api';
 import {
-	getDefaultGetListResponse,
-	getDefaultGetParams,
-	getDefaultInstance,
-	getDefaultOpenAPIConfig,
-} from '@webitel/api-services/api/defaults';
-import {
-	applyTransform,
-	camelToSnake,
-	merge,
-	notify,
-	sanitize,
-	snakeToCamel,
-	starToSearch,
-} from '@webitel/api-services/api/transformers';
-import { DictionariesApiFactory } from 'webitel-sdk';
+	DictionariesAPI,
+	generatePermissionsApi,
+} from '@webitel/api-services/api';
 
 import sortFields from '../../wt-type-extension/utils/sortDynamicField';
 
-const instance = getDefaultInstance();
-const configuration = getDefaultOpenAPIConfig();
-
 const baseUrl = '/types/dictionaries';
 
-const dictionariesService = new DictionariesApiFactory(
-	configuration,
-	'',
-	instance,
-);
+const getCustomLookupsList = DictionariesAPI.getTypesList;
 
-const fieldsToSend = [
-	'name',
-	'about',
-	'dictionary',
-	'fields',
-	'repo',
-	'administered',
-	'primary',
-	'display',
-];
-
-const getCustomLookupsList = async (params) => {
-	const fieldsToSend = [
-		'page',
-		'size',
-		'q',
-		'sort',
-		'fields',
-		'id',
-	];
-
-	const { page, size, fields, sort, id, q } = applyTransform(params, [
-		merge(getDefaultGetParams()),
-		starToSearch('search'),
-		(params) => ({
-			...params,
-			q: params.search,
-		}),
-		sanitize(fieldsToSend),
-		camelToSnake(),
-	]);
-	try {
-		const response = await dictionariesService.searchType(
-			q,
-			id,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			size,
-			page,
-			sort,
-			fields,
-		);
-		const { data, next } = applyTransform(response.data, [
-			merge(getDefaultGetListResponse()),
-		]);
-
-		const itemResponseHandler = (items) =>
-			(items || []).map((item) => ({
-				...item,
-				id: item.repo,
-			}));
-
-		return {
-			items: applyTransform(data, [
-				snakeToCamel(),
-				itemResponseHandler,
-			]),
-			next,
-		};
-	} catch (err) {
-		throw applyTransform(err, [
-			notify,
-		]);
-	}
-};
-
-const getCustomLookup = async ({ itemId: itemRepo }) => {
+const getCustomLookup = async ({ itemId }) => {
 	const createPositionGenerator = () => {
 		let position = 1;
 		return (item) => (item.readonly ? null : position++);
 	};
 	const getPosition = createPositionGenerator();
 
-	const itemResponseHandler = (item) => ({
+	const item = await DictionariesAPI.getType({
+		itemId,
+	});
+
+	return {
 		...item,
-		id: item.repo,
-		fields: item.fields.map((field) => ({
+		fields: (item.fields || []).map((field) => ({
 			...field,
 			position: getPosition(field),
 		})),
+	};
+};
+
+const addCustomLookup = DictionariesAPI.addType;
+
+const updateCustomLookup = async ({ itemInstance, itemId }) => {
+	const item = sortFields(itemInstance);
+	return DictionariesAPI.updateType({
+		itemInstance: item,
+		itemId,
 	});
-
-	try {
-		const response = await dictionariesService.locateType(
-			itemRepo,
-			fieldsToSend,
-		);
-
-		return applyTransform(response.data, [
-			snakeToCamel(),
-			itemResponseHandler,
-		]);
-	} catch (err) {
-		throw applyTransform(err, [
-			notify,
-		]);
-	}
 };
 
-const itemResponseHandler = (item) => ({
-	...item,
-	id: item.repo,
-});
+const deleteCustomLookup = DictionariesAPI.deleteType;
 
-const addCustomLookup = async ({ itemInstance }) => {
-	const repo = itemInstance.repo;
-	const item = applyTransform(itemInstance, [
-		camelToSnake(),
-		sanitize(fieldsToSend),
-	]);
-	try {
-		const response = await dictionariesService.createType(repo, item);
-		return applyTransform(response.data, [
-			snakeToCamel(),
-			itemResponseHandler,
-		]);
-	} catch (err) {
-		throw applyTransform(err, [
-			notify,
-		]);
-	}
-};
-
-const updateCustomLookup = async ({ itemInstance, itemId: id }) => {
-	const repo = id;
-
-	const item = applyTransform(itemInstance, [
-		sortFields,
-		camelToSnake(),
-		sanitize(fieldsToSend),
-	]);
-	try {
-		const response = await dictionariesService.updateType(repo, item);
-		return applyTransform(response.data, [
-			snakeToCamel(),
-			itemResponseHandler,
-		]);
-	} catch (err) {
-		throw applyTransform(err, [
-			notify,
-		]);
-	}
-};
-
-const deleteCustomLookup = async ({ id }) => {
-	try {
-		const response = await dictionariesService.deleteType(id);
-		return applyTransform(response.data, []);
-	} catch (err) {
-		throw applyTransform(err, [
-			notify,
-		]);
-	}
-};
-
-const getCustomLookupLookup = async (params) =>
-	getCustomLookupsList({
-		...params,
-		fields: params.fields || [
-			'id',
-			'name',
-		],
-	});
+const getCustomLookupLookup = DictionariesAPI.getTypeLookup;
 
 const CustomLookupsApi = {
 	getList: getCustomLookupsList,

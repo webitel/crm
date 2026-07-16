@@ -188,6 +188,24 @@ export default {
 			confirmDeleteColumn:
 				'Después de eliminar la columna y guardar, todos los datos ingresados en el campo correspondiente también se eliminarán.',
 			controlPermissions: 'Controlar permisos',
+			import: {
+				rowError:
+					'No se pudo crear el registro {record} debido a un error en el campo {field} con el valor {value} ({code})',
+				moreErrors: 'Error al crear {count} registros más',
+				summary:
+					'Se importaron {imported} de {total} registros ({failed} fallidos)',
+				codes: {
+					lookup: {
+						not_found:
+							'Valor no encontrado en el objeto del sistema relacionado',
+						ambiguous:
+							'Se encontraron varios registros con el mismo nombre en el catálogo relacionado',
+					},
+					validation: {
+						failed: 'Error de validación del registro',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

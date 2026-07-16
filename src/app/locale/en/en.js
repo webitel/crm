@@ -182,6 +182,22 @@ export default {
 			confirmDeleteColumn:
 				'After deleting the column and saving, all the entered data in the corresponding field will be deleted as well.',
 			controlPermissions: 'Control permissions',
+			import: {
+				rowError:
+					'Failed to create record {record} because of an error in field {field} with value {value} ({code})',
+				moreErrors: 'Failed to create {count} more records',
+				summary: 'Imported {imported} of {total} records ({failed} failed)',
+				codes: {
+					lookup: {
+						not_found: 'Value not found in the related system object',
+						ambiguous:
+							'Multiple records with the same name found in the related lookup',
+					},
+					validation: {
+						failed: 'Record validation failed',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),
