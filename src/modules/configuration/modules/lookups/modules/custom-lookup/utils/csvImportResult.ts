@@ -13,7 +13,7 @@ export type CsvImportNotification = {
 	type: 'info' | 'error';
 	messageKey: string;
 	messageParams: Record<string, unknown>;
-	// raw BE code, e.g. "lookup.not_found"
+	// raw BE code, e.g. "lookup.not_found" -> locale "lookup.notFound"
 	errorCode?: string;
 };
 

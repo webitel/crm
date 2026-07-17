@@ -196,8 +196,7 @@ export default {
 					'Importate {importedCount} din {totalCount} înregistrări ({failedCount} eșuate)',
 				codes: {
 					lookup: {
-						not_found:
-							'Valoarea nu a fost găsită în obiectul de sistem asociat',
+						notFound: 'Valoarea nu a fost găsită în obiectul de sistem asociat',
 						ambiguous:
 							'În dicționarul asociat au fost găsite mai multe înregistrări cu același nume',
 					},

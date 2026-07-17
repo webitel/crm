@@ -197,7 +197,7 @@ export default {
 					'Zaimportowano {importedCount} z {totalCount} rekordów (błędów: {failedCount})',
 				codes: {
 					lookup: {
-						not_found:
+						notFound:
 							'Nie znaleziono wartości w powiązanym obiekcie systemowym',
 						ambiguous:
 							'W powiązanym słowniku znaleziono kilka rekordów o tej samej nazwie',

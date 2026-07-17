@@ -1,4 +1,5 @@
 import type { DataBatchCreateDatasetResponse } from '@webitel/api-services/gen/models';
+import { snakeToCamel } from '@webitel/api-services/utils';
 import type { EventBus } from '@webitel/ui-sdk/composables';
 import { inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -29,10 +30,10 @@ export const useCsvImportResult = () => {
 		rowOffset.value += rowsCount;
 	};
 
-	// BE code -> translation, or raw code if missing
+	// BE snake_case code -> camelCase locale key, or raw code if missing
 	const translateErrorCode = (code = '') => {
 		if (!code) return '';
-		const key = `customization.customLookups.import.codes.${code}`;
+		const key = `customization.customLookups.import.codes.${snakeToCamel(code)}`;
 		return te(key) ? t(key) : code;
 	};
 

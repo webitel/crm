@@ -190,7 +190,7 @@ export default {
 					'Imported {importedCount} of {totalCount} records ({failedCount} failed)',
 				codes: {
 					lookup: {
-						not_found: 'Value not found in the related system object',
+						notFound: 'Value not found in the related system object',
 						ambiguous:
 							'Multiple records with the same name found in the related lookup',
 					},

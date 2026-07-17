@@ -196,7 +196,7 @@ export default {
 					'Se importaron {importedCount} de {totalCount} registros ({failedCount} fallidos)',
 				codes: {
 					lookup: {
-						not_found:
+						notFound:
 							'Valor no encontrado en el objeto del sistema relacionado',
 						ambiguous:
 							'Se encontraron varios registros con el mismo nombre en el catálogo relacionado',

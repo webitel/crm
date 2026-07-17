@@ -189,7 +189,7 @@ export default {
 					'{totalCount} ta yozuvdan {importedCount} tasi import qilindi ({failedCount} tasi muvaffaqiyatsiz)',
 				codes: {
 					lookup: {
-						not_found: "Qiymat bog'langan tizim obyektida topilmadi",
+						notFound: "Qiymat bog'langan tizim obyektida topilmadi",
 						ambiguous:
 							"Bog'langan ma'lumotnomada bir xil nomli bir nechta yozuv topildi",
 					},

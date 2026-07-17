@@ -196,7 +196,7 @@ export default {
 					'Đã nhập {importedCount}/{totalCount} bản ghi ({failedCount} thất bại)',
 				codes: {
 					lookup: {
-						not_found:
+						notFound:
 							'Không tìm thấy giá trị trong đối tượng hệ thống liên quan',
 						ambiguous:
 							'Tìm thấy nhiều bản ghi cùng tên trong danh mục liên quan',
