@@ -122,6 +122,7 @@
 </template>
 
 <script setup>
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import WtUploadFileIconBtn from '@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue';
 import { WtObject } from '@webitel/ui-sdk/enums';
@@ -140,7 +141,6 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
 import UploadCustomLookupPopup from './upload-custom-lookup-popup.vue';
@@ -159,7 +159,7 @@ const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
 	try {
-		dictionary.value = await CustomLookupsApi.get({
+		dictionary.value = await AdjunctTypesAPI.get({
 			itemId: repo.value,
 		});
 
@@ -171,6 +171,7 @@ const loadDictionary = async () => {
 					value: field.id,
 					locale: field.name,
 					readonly: field.readonly,
+					required: field.required,
 					show: true,
 					field: field.id,
 					kind: field.kind,

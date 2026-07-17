@@ -1,4 +1,8 @@
 import {
+	AdjunctTypesAPI,
+	generatePermissionsApi,
+} from '@webitel/api-services/api';
+import {
 	createApiStoreModule,
 	createBaseStoreModule,
 	createCardStoreModule,
@@ -6,7 +10,7 @@ import {
 } from '@webitel/ui-sdk/store';
 import deepCopy from 'deep-copy';
 
-import CustomLookupsApi from '../api/custom-lookups.js';
+import sortFields from '../../wt-type-extension/utils/sortDynamicField';
 import filters from '../modules/filters/store/filters';
 import headers from './_internals/headers';
 
@@ -89,7 +93,28 @@ const resetCardState = {
 
 const api = createApiStoreModule({
 	state: {
-		api: CustomLookupsApi,
+		api: {
+			...AdjunctTypesAPI,
+			get: async (params) => {
+				const item = await AdjunctTypesAPI.get(params);
+				let position = 1;
+
+				return {
+					...item,
+					fields: (item.fields || []).map((field) => ({
+						...field,
+						position: field.readonly ? null : position++,
+					})),
+				};
+			},
+			update: ({ itemInstance, itemId }) =>
+				AdjunctTypesAPI.update({
+					itemInstance: sortFields(itemInstance),
+					itemId,
+				}),
+
+			...generatePermissionsApi('/types/dictionaries'),
+		},
 	},
 });
 

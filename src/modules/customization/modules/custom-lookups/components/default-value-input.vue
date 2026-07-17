@@ -58,11 +58,10 @@
 </template>
 
 <script setup lang="ts">
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import deepCopy from 'deep-copy';
 import { computed, defineProps, ref, toRefs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import CustomLookupApi from '../../../../configuration/modules/lookups/modules/custom-lookup/api/custom-lookups';
 import { FieldType } from '../enums/FieldType';
 import {
 	CustomLookupField,
@@ -88,7 +87,7 @@ const multiple = computed(() => kind.value === FieldType.Multiselect);
 
 const getLoadLookupList = (lookup: CustomLookupLookup) => {
 	return (params) =>
-		CustomLookupApi.getLookup({
+		AdjunctTypeRecordsAPI.getLookup({
 			...params,
 			path: lookup?.path,
 			display: lookup?.display || 'name',

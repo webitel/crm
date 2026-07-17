@@ -182,6 +182,23 @@ export default {
 			confirmDeleteColumn:
 				'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
 			controlPermissions: 'Контролировать права доступа',
+			import: {
+				rowError:
+					'Не удалось создать запись {record}, так как возникла ошибка в поле {field} со значением {value} ({code})',
+				moreErrors: 'Произошла ошибка при создании ещё {count} записей',
+				summary:
+					'Импортировано {importedCount} из {totalCount} записей (ошибок: {failedCount})',
+				codes: {
+					lookup: {
+						notFound: 'Значение не найдено в связанном системном объекте',
+						ambiguous:
+							'В связанном справочнике найдено несколько записей с одинаковым именем',
+					},
+					validation: {
+						failed: 'Ошибка валидации записи',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

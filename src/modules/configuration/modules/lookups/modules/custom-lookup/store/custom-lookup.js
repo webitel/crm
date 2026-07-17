@@ -1,3 +1,4 @@
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import {
 	createApiStoreModule,
 	createBaseStoreModule,
@@ -5,7 +6,6 @@ import {
 	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
 
-import CustomLookupApi from '../api/custom-lookups.js';
 import filters from '../modules/filters/store/filters';
 
 const resetTableState = {
@@ -22,7 +22,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
 	state: {
-		api: CustomLookupApi,
+		api: AdjunctTypeRecordsAPI,
 	},
 });
 
