@@ -139,9 +139,10 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
+import { assignFieldPositions } from '../../../../../../customization/modules/custom-lookups/utils/assignFieldPositions';
 import DisplayDynamicField from './display-dynamic-field.vue';
 import UploadCustomLookupPopup from './upload-custom-lookup-popup.vue';
 
@@ -159,9 +160,11 @@ const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
 	try {
-		dictionary.value = await CustomLookupsApi.get({
-			itemId: repo.value,
-		});
+		dictionary.value = assignFieldPositions(
+			await AdjunctTypesAPI.get({
+				itemId: repo.value,
+			}),
+		);
 
 		store.commit(`${baseNamespace}/table/SET`, {
 			path: 'headers',

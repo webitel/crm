@@ -64,7 +64,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { DictionariesAPI } from '@webitel/api-services/api';
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import set from 'lodash/set';
@@ -187,7 +187,7 @@ const setValue = (value) => {
 
 const loadLookupList = ({ path, display, primary }) => {
 	return (params) => {
-		return DictionariesAPI.getLookup({
+		return AdjunctTypeRecordsAPI.getLookup({
 			...params,
 			path,
 			display,

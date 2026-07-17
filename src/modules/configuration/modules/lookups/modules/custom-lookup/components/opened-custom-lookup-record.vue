@@ -61,8 +61,9 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
+import { assignFieldPositions } from '../../../../../../customization/modules/custom-lookups/utils/assignFieldPositions';
 
 const store = useStore();
 
@@ -161,9 +162,11 @@ const dictionary = ref(null);
 const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
-	dictionary.value = await CustomLookupsApi.get({
-		itemId: repo.value,
-	});
+	dictionary.value = assignFieldPositions(
+		await AdjunctTypesAPI.get({
+			itemId: repo.value,
+		}),
+	);
 
 	store.commit(`${namespace}/card/SET`, {
 		path: 'repo',

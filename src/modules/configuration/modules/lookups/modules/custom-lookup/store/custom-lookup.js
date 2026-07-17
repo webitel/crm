@@ -4,7 +4,7 @@ import {
 	createCardStoreModule,
 	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import { DictionariesAPI } from '@webitel/api-services/api';
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 
 import filters from '../modules/filters/store/filters';
 
@@ -22,7 +22,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
 	state: {
-		api: DictionariesAPI,
+		api: AdjunctTypeRecordsAPI,
 	},
 });
 

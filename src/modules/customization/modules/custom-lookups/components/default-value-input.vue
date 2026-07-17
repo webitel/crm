@@ -62,7 +62,7 @@ import deepCopy from 'deep-copy';
 import { computed, defineProps, ref, toRefs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { DictionariesAPI } from '@webitel/api-services/api';
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import { FieldType } from '../enums/FieldType';
 import {
 	CustomLookupField,
@@ -88,7 +88,7 @@ const multiple = computed(() => kind.value === FieldType.Multiselect);
 
 const getLoadLookupList = (lookup: CustomLookupLookup) => {
 	return (params) =>
-		DictionariesAPI.getLookup({
+		AdjunctTypeRecordsAPI.getLookup({
 			...params,
 			path: lookup?.path,
 			display: lookup?.display || 'name',

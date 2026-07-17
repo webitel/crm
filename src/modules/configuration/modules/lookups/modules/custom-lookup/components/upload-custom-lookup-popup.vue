@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { DictionariesAPI } from '@webitel/api-services/api';
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import WtUploadCsvPopup from '@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue';
 import { ref, watch } from 'vue';
 
@@ -36,7 +36,7 @@ const close = () => {
 
 const saveBulkData = async (data: Record<string, unknown>[]) => {
 	const rows = prepareCsvLookupRows(data, props.fields);
-	const chunk = await DictionariesAPI.batchCreate({
+	const chunk = await AdjunctTypeRecordsAPI.batchCreate({
 		repo: props.repo,
 		rows,
 	});
