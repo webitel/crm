@@ -186,7 +186,8 @@ export default {
 				rowError:
 					'Failed to create record {record} because of an error in field {field} with value {value} ({code})',
 				moreErrors: 'Failed to create {count} more records',
-				summary: 'Imported {imported} of {total} records ({failed} failed)',
+				summary:
+					'Imported {importedCount} of {totalCount} records ({failedCount} failed)',
 				codes: {
 					lookup: {
 						not_found: 'Value not found in the related system object',

@@ -193,7 +193,8 @@ export default {
 				rowError:
 					'Не вдалося створити запис {record}, оскільки виникла помилка в полі {field} зі значенням {value} ({code})',
 				moreErrors: 'Сталася помилка при створенні ще {count} записів',
-				summary: 'Імпортовано {imported} з {total} записів (помилок: {failed})',
+				summary:
+					'Імпортовано {importedCount} з {totalCount} записів (помилок: {failedCount})',
 				codes: {
 					lookup: {
 						not_found: 'Значення не знайдено у повʼязаному системному обʼєкті',

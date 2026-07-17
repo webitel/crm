@@ -186,7 +186,7 @@ export default {
 					"{record} yozuvini yaratib bo'lmadi, chunki {field} maydonida {value} qiymati bilan xatolik yuz berdi ({code})",
 				moreErrors: 'Yana {count} ta yozuvni yaratishda xatolik yuz berdi',
 				summary:
-					'{total} ta yozuvdan {imported} tasi import qilindi ({failed} tasi muvaffaqiyatsiz)',
+					'{totalCount} ta yozuvdan {importedCount} tasi import qilindi ({failedCount} tasi muvaffaqiyatsiz)',
 				codes: {
 					lookup: {
 						not_found: "Qiymat bog'langan tizim obyektida topilmadi",

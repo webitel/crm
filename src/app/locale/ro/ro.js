@@ -193,7 +193,7 @@ export default {
 					'Nu s-a putut crea înregistrarea {record} din cauza unei erori în câmpul {field} cu valoarea {value} ({code})',
 				moreErrors: 'A apărut o eroare la crearea a încă {count} înregistrări',
 				summary:
-					'Importate {imported} din {total} înregistrări ({failed} eșuate)',
+					'Importate {importedCount} din {totalCount} înregistrări ({failedCount} eșuate)',
 				codes: {
 					lookup: {
 						not_found:

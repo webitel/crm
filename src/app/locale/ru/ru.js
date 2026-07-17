@@ -187,7 +187,7 @@ export default {
 					'Не удалось создать запись {record}, так как возникла ошибка в поле {field} со значением {value} ({code})',
 				moreErrors: 'Произошла ошибка при создании ещё {count} записей',
 				summary:
-					'Импортировано {imported} из {total} записей (ошибок: {failed})',
+					'Импортировано {importedCount} из {totalCount} записей (ошибок: {failedCount})',
 				codes: {
 					lookup: {
 						not_found: 'Значение не найдено в связанном системном объекте',

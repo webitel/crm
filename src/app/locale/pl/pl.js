@@ -194,7 +194,7 @@ export default {
 				moreErrors:
 					'Wystąpił błąd podczas tworzenia kolejnych {count} rekordów',
 				summary:
-					'Zaimportowano {imported} z {total} rekordów (błędów: {failed})',
+					'Zaimportowano {importedCount} z {totalCount} rekordów (błędów: {failedCount})',
 				codes: {
 					lookup: {
 						not_found:

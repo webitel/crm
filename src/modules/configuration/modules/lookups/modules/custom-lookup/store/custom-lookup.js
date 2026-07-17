@@ -4,8 +4,8 @@ import {
 	createCardStoreModule,
 	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
+import { DictionariesAPI } from '@webitel/api-services/api';
 
-import CustomLookupApi from '../api/custom-lookups';
 import filters from '../modules/filters/store/filters';
 
 const resetTableState = {
@@ -22,7 +22,7 @@ const resetCardState = {
 
 const api = createApiStoreModule({
 	state: {
-		api: CustomLookupApi,
+		api: DictionariesAPI,
 	},
 });
 

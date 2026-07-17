@@ -193,7 +193,7 @@ export default {
 					'No se pudo crear el registro {record} debido a un error en el campo {field} con el valor {value} ({code})',
 				moreErrors: 'Error al crear {count} registros más',
 				summary:
-					'Se importaron {imported} de {total} registros ({failed} fallidos)',
+					'Se importaron {importedCount} de {totalCount} registros ({failedCount} fallidos)',
 				codes: {
 					lookup: {
 						not_found:

@@ -1,23 +1,12 @@
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
-
-export type LookupCsvField = {
-	value?: string;
-	kind?: string;
-	required?: boolean;
-	locale?: string;
-	readonly?: boolean;
-};
+import type { LookupCsvField } from '../types/csvImport';
 
 const toValuesList = (value: unknown): string[] => {
 	const values = Array.isArray(value) ? value : String(value).split(';');
 	return values.map((item) => String(item).trim()).filter(Boolean);
 };
 
-/**
- * Multiselect columns come from CSV as a single string: "Lviv;Kyiv".
- * The batch API expects an array of names instead: ["Lviv", "Kyiv"].
- * All other columns are sent as is.
- */
+// Multiselect: "Lviv;Kyiv" -> ["Lviv", "Kyiv"]; other columns as is
 export const prepareCsvLookupRows = (
 	rows: Record<string, unknown>[],
 	fields: LookupCsvField[] = [],

@@ -33,7 +33,7 @@ const addCustomLookup = DictionariesAPI.addType;
 
 const updateCustomLookup = async ({ itemInstance, itemId }) => {
 	const item = sortFields(itemInstance);
-	return DictionariesAPI.updateType({
+	return await DictionariesAPI.updateType({
 		itemInstance: item,
 		itemId,
 	});

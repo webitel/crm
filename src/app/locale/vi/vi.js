@@ -192,7 +192,8 @@ export default {
 				rowError:
 					'Không thể tạo bản ghi {record} vì có lỗi ở trường {field} với giá trị {value} ({code})',
 				moreErrors: 'Đã xảy ra lỗi khi tạo thêm {count} bản ghi',
-				summary: 'Đã nhập {imported}/{total} bản ghi ({failed} thất bại)',
+				summary:
+					'Đã nhập {importedCount}/{totalCount} bản ghi ({failedCount} thất bại)',
 				codes: {
 					lookup: {
 						not_found:
