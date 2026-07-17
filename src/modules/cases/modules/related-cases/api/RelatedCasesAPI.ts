@@ -13,7 +13,10 @@ import {
 	starToSearch,
 } from '@webitel/api-services/api/transformers';
 import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule.d.ts';
-import { type CasesRelatedCase, RelatedCasesApiFactory } from 'webitel-sdk';
+import {
+	type WebitelCasesRelatedCase as CasesRelatedCase,
+	RelatedCasesApiFactory,
+} from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();

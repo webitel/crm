@@ -96,8 +96,9 @@
             :disabled="!hasUpdateAccess"
             @click="
               router.push({
-                ...route,
-                params: { statusConditionId: item.id },
+                name: route.name,
+                params: { ...route.params, statusConditionId: item.id },
+                query: route.query,
               })
             "
           />
@@ -134,8 +135,8 @@ import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -155,7 +156,7 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
-const parentId = computed(() => route.params.id);
+const parentId = computed(() => route.params.id as string);
 
 const isStatusWarningPopupOpened = ref(false);
 
@@ -201,10 +202,12 @@ const {
 
 const add = () => {
 	return router.push({
-		...route,
+		name: route.name,
 		params: {
+			...route.params,
 			statusConditionId: 'new',
 		},
+		query: route.query,
 	});
 };
 

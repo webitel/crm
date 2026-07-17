@@ -33,19 +33,25 @@ import {
 import {
 	assumeVidstackSupportedAudioType,
 	assumeVidstackSupportedVideoType,
-} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
-import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
+} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc.js';
+import type { eventBus as EventBus } from '@webitel/ui-sdk/scripts';
+import {
+	type ComputedRef,
+	computed,
+	inject,
+	onMounted,
+	onUnmounted,
+	ref,
+} from 'vue';
 
-const eventBus = inject('$eventBus');
-const audioId = inject('audioId'); // value from the-timeline.vue component
+const eventBus = inject<typeof EventBus>('$eventBus');
+// value from call-task-timeline-row.vue component
 // [https://webitel.atlassian.net/browse/WTEL-4931]
+const audioId = inject<ComputedRef<EngineCallFile['id']>>('audioId');
 
-const props = defineProps({
-	files: {
-		type: Array,
-		required: true,
-	},
-});
+const props = defineProps<{
+	files: EngineCallFile[];
+}>();
 
 const selectedRecording = ref<EngineCallFile | null>(null);
 

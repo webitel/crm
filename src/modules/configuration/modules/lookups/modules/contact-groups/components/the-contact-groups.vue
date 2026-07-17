@@ -151,8 +151,8 @@
 
 <script setup>
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { WtEmpty } from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';

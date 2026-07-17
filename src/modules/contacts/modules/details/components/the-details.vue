@@ -44,17 +44,22 @@
 >
 import { useVuelidate } from '@vuelidate/core';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
+import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
-import { computed, inject, watch } from 'vue';
+import { type ComputedRef, computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 
-const access = inject('access');
-const isReadOnly = inject('isReadOnly');
+const access =
+	inject<
+		ComputedRef<{
+			hasRbacEditAccess?: boolean;
+		}>
+	>('access');
+const isReadOnly = inject<boolean>('isReadOnly');
 
 const props = defineProps({
 	namespace: {
@@ -92,7 +97,7 @@ const disabledSave = computed(
 
 const saveDetails = () => {
 	updateItem({
-		custom: itemInstance.custom,
+		custom: itemInstance.value.custom,
 	});
 };
 

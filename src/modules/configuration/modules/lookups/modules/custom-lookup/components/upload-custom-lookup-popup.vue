@@ -14,15 +14,29 @@ import { ref, watch } from 'vue';
 
 import CustomLookupApi from '../api/custom-lookups';
 
+interface UploadableField {
+	value: string;
+	locale?: string;
+	required?: boolean;
+	readonly?: boolean;
+}
+
+interface MappingField {
+	name: string;
+	required?: boolean;
+	locale?: string;
+	csv: string;
+}
+
 const props = defineProps<{
 	file: File | null;
-	fields: never[];
+	fields: UploadableField[];
 	repo: string;
 }>();
 
 const emit = defineEmits<(e: 'close') => void>();
 
-const mappingFields = ref([]);
+const mappingFields = ref<MappingField[]>([]);
 
 const close = () => {
 	emit('close');

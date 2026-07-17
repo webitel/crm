@@ -98,14 +98,14 @@
 <script lang="ts" setup>
 import { WtActionBar, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
-import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
+import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import type { TableHeader } from '../../../../../app/types/tableHeaders.types';
 import CommentsAPI from '../api/CommentsAPI';
 import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
@@ -158,6 +158,8 @@ const {
 
 const { showEmpty } = useTableEmpty({
 	dataList,
+	filters: undefined,
+	error: undefined,
 	isLoading,
 });
 
@@ -166,7 +168,9 @@ const emptyText = computed(() => {
 });
 
 const createdAtHeader = computed(() =>
-	headers.value.find((header) => header.field === 'created_at'),
+	(headers.value as TableHeader[]).find(
+		(header) => header.field === 'created_at',
+	),
 );
 
 const currentSortOrder = computed(() => createdAtHeader.value?.sort);

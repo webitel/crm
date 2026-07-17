@@ -1,7 +1,7 @@
-import type { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtTable';
-import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters.js';
+import type { TableHeader } from '../../../../../../app/types/tableHeaders.types';
 
-export const headers: WtTableHeader[] = [
+export const headers: TableHeader[] = [
 	{
 		value: 'name',
 		locale: 'cases.id',

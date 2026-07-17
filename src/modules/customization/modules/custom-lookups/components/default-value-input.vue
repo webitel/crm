@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import deepCopy from 'deep-copy';
-import { computed, defineProps, ref, toRefs, watch } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import CustomLookupApi from '../../../../configuration/modules/lookups/modules/custom-lookup/api/custom-lookups';
@@ -73,7 +73,13 @@ import {
 const props = defineProps<{
 	value: CustomLookupField;
 	disabledDefaultValue: boolean;
-	v: unknown;
+	// TODO(types): Vuelidate validation node; only the fields used in the
+	// template are typed here.
+	v: {
+		value: {
+			default: unknown;
+		};
+	};
 }>();
 
 const { lookup, kind } = toRefs(props.value);

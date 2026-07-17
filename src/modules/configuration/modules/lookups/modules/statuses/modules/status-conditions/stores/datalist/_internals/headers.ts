@@ -1,4 +1,4 @@
-import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters.js';
 
 export const headers = [
 	{

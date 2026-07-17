@@ -43,7 +43,7 @@
 import type { WebitelCasesSource } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';

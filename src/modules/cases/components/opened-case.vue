@@ -224,7 +224,10 @@ const path = computed(() => {
 });
 
 const { userId } = useUserinfoStore();
-const userContact = ref({});
+const userContact = ref<{
+	id?: string;
+	name?: string;
+}>({});
 
 const isCaseAssignable = computed(() => {
 	return (
@@ -300,7 +303,7 @@ async function assignCaseToMe() {
 				etag: itemInstance.value.etag,
 			});
 		} finally {
-			await loadItem();
+			await loadItem(undefined);
 		}
 	}
 }

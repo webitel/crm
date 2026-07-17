@@ -49,12 +49,13 @@
 
 <script lang="ts" setup>
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState.js';
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
+import type { TimelineMode } from '../enums/TimelineMode';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';
@@ -117,7 +118,7 @@ subscribe({
 	callback: initializeList,
 });
 
-restoreFilters();
+restoreFilters(undefined);
 
 const nextLoading = ref(false);
 
@@ -128,7 +129,7 @@ async function loadNext() {
 }
 
 onUnmounted(() => {
-	flushSubscribers();
+	flushSubscribers(undefined);
 
 	/* https://webitel.atlassian.net/browse/WTEL-4843 */
 	/* Store must be reset to prevent multiple calls TimelineAPI */
