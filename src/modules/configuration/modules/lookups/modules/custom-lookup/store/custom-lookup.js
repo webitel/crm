@@ -1,10 +1,10 @@
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import {
 	createApiStoreModule,
 	createBaseStoreModule,
 	createCardStoreModule,
 	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 
 import filters from '../modules/filters/store/filters';
 

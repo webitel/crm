@@ -122,6 +122,7 @@
 </template>
 
 <script setup>
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import WtUploadFileIconBtn from '@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue';
 import { WtObject } from '@webitel/ui-sdk/enums';
@@ -139,7 +140,6 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import DisplayDynamicField from './display-dynamic-field.vue';

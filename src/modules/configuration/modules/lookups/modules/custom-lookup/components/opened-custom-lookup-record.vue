@@ -53,6 +53,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
@@ -61,7 +62,6 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const store = useStore();

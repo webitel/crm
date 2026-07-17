@@ -58,11 +58,10 @@
 </template>
 
 <script setup lang="ts">
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import deepCopy from 'deep-copy';
 import { computed, defineProps, ref, toRefs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import { FieldType } from '../enums/FieldType';
 import {
 	CustomLookupField,
