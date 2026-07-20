@@ -189,6 +189,23 @@ export default {
 			confirmDeleteColumn:
 				'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
 			controlPermissions: 'Контролювати права доступу',
+			import: {
+				rowError:
+					'Не вдалося створити запис {record}, оскільки виникла помилка в полі {field} зі значенням {value} ({code})',
+				moreErrors: 'Сталася помилка при створенні ще {count} записів',
+				summary:
+					'Імпортовано {importedCount} з {totalCount} записів (помилок: {failedCount})',
+				codes: {
+					lookup: {
+						notFound: 'Значення не знайдено у повʼязаному системному обʼєкті',
+						ambiguous:
+							'У повʼязаному довіднику знайдено кілька записів з однаковою назвою',
+					},
+					validation: {
+						failed: 'Помилка валідації запису',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

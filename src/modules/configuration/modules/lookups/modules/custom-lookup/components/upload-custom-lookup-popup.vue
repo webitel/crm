@@ -9,57 +9,39 @@
 </template>
 
 <script setup lang="ts">
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import WtUploadCsvPopup from '@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue';
 import { ref, watch } from 'vue';
 
-import CustomLookupApi from '../api/custom-lookups';
-
-interface UploadableField {
-	value: string;
-	locale?: string;
-	required?: boolean;
-	readonly?: boolean;
-}
-
-interface MappingField {
-	name: string;
-	required?: boolean;
-	locale?: string;
-	csv: string;
-}
+import { useCsvImportResult } from '../composables/useCsvImportResult';
+import { type CsvMappingField, type LookupCsvField } from '../types/csvImport';
+import { prepareCsvLookupRows } from '../utils/prepareCsvLookupRows';
 
 const props = defineProps<{
 	file: File | null;
-	fields: UploadableField[];
+	fields: LookupCsvField[];
 	repo: string;
 }>();
 
 const emit = defineEmits<(e: 'close') => void>();
 
-const mappingFields = ref<MappingField[]>([]);
+const mappingFields = ref<CsvMappingField[]>([]);
+const { addChunk, notify, reset } = useCsvImportResult();
 
 const close = () => {
+	notify();
+	reset();
 	emit('close');
 };
 
-const addItem = (itemInstance) => {
-	return CustomLookupApi.add({
-		itemInstance,
-		fieldsToSend: props.fields?.map((field) => field.value),
+const saveBulkData = async (data: Record<string, unknown>[]) => {
+	const rows = prepareCsvLookupRows(data, props.fields);
+	const chunk = await AdjunctTypeRecordsAPI.batchCreate({
 		repo: props.repo,
+		rows,
 	});
-};
 
-const saveBulkData = async (data) => {
-	let processedChunkIndex = 1;
-	try {
-		for (const item of data) {
-			await addItem(item);
-			processedChunkIndex += 1;
-		}
-	} catch (err) {
-		throw `An error occurred during saving ${processedChunkIndex} record: ${JSON.stringify(err)}`;
-	}
+	addChunk(chunk, rows.length);
 };
 
 watch(
@@ -72,6 +54,7 @@ watch(
 						name: field?.value,
 						required: field?.required,
 						locale: field?.locale,
+						kind: field?.kind,
 						csv: '',
 					}))
 			: [];

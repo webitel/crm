@@ -53,6 +53,7 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
@@ -62,7 +63,6 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 
 const store = useStore();
 
@@ -161,7 +161,7 @@ const dictionary = ref(null);
 const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
-	dictionary.value = await CustomLookupsApi.get({
+	dictionary.value = await AdjunctTypesAPI.get({
 		itemId: repo.value,
 	});
 
