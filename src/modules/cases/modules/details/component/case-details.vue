@@ -32,9 +32,9 @@
   lang="ts"
 >
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import get from 'lodash/get';
-import { inject, onMounted, watch } from 'vue';
+import { inject, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';

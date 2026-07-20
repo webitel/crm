@@ -12,13 +12,13 @@
         v-model:model-value="draft.reason"
         :label="t('cases.closureReason')"
         :search-method="searchCloseReasons"
-        :v="v$.draft.reason"
+        :v="reasonValidation"
         required
       />
 
       <wt-textarea
         :label="t('cases.result')"
-        :v="v$.draft.result"
+        :v="resultValidation"
         :rows="10"
         :model-value="draft.result"
         required
@@ -43,11 +43,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useVuelidate } from '@vuelidate/core';
+import { type BaseValidation, useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 import { WtTextarea } from '@webitel/ui-sdk/components';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -71,7 +71,7 @@ const props = defineProps({
 const emit = defineEmits<{
 	save: [
 		{
-			result: ReturnType<createDraftData>;
+			result: ReturnType<typeof createDraftData>;
 			reason?: string;
 		},
 	];
@@ -116,6 +116,20 @@ const v$ = useVuelidate(
 );
 
 v$.value.$touch();
+
+// TODO(types): vuelidate cannot infer nested rule keys when rules are
+// passed as a computed, so v$.draft is typed as plain `undefined`.
+const draftValidation = computed(
+	() =>
+		v$.value.draft as
+			| {
+					reason: BaseValidation;
+					result: BaseValidation;
+			  }
+			| undefined,
+);
+const reasonValidation = computed(() => draftValidation.value?.reason);
+const resultValidation = computed(() => draftValidation.value?.result);
 
 const closeReasonId = computed(
 	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],

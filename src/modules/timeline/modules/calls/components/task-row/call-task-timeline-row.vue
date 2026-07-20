@@ -96,12 +96,12 @@ import {
 	WtPlayer,
 	WtVidstackPlayer,
 } from '@webitel/ui-sdk/components';
+import { ComponentSize } from '@webitel/ui-sdk/enums';
+import type { eventBus as EventBus } from '@webitel/ui-sdk/scripts';
 import {
 	assumeVidstackSupportedAudioType,
 	assumeVidstackSupportedVideoType,
-} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
-import { ComponentSize } from '@webitel/ui-sdk/enums';
-import { isAudioSrc, isVideoSrc } from 'vidstack';
+} from '@webitel/ui-sdk/src/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
 import {
 	computed,
 	inject,
@@ -148,7 +148,7 @@ const mediaSource = reactive<{
 	url: null,
 	file: null,
 });
-const eventBus = inject('$eventBus');
+const eventBus = inject<typeof EventBus>('$eventBus');
 
 provide(
 	'audioId',

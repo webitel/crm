@@ -106,9 +106,8 @@
 
 <script setup lang="ts">
 import { createTableStore } from '@webitel/ui-datalist';
-import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { WtEmpty } from '@webitel/ui-sdk/src/components/index';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
 import { storeToRefs } from 'pinia';
@@ -116,7 +115,7 @@ import { computed, isRef } from 'vue';
 
 interface Props {
 	header: string;
-	tableStore: ReturnType<createTableStore>;
+	tableStore: ReturnType<ReturnType<typeof createTableStore>>;
 	emptyData?: {
 		primaryActionText?: string | boolean;
 		disabledPrimaryAction?: boolean;
@@ -164,7 +163,7 @@ const defaultEmptyProps = useTableEmpty({
  * then vue will not be able to unwrap all the necessary props itself through v-bind=“emptyProps”
  * and the component will not work correctly
  */
-function unwrapProps(obj) {
+function unwrapProps(obj: Record<string, unknown>) {
 	return Object.fromEntries(
 		Object.entries(obj).map(([key, val]) => [
 			key,
@@ -173,15 +172,20 @@ function unwrapProps(obj) {
 	);
 }
 
-const emptyProps = computed(() => {
+type EmptyProps = Record<string, unknown> & {
+	showEmpty?: boolean;
+	primaryAction?: () => void;
+};
+
+const emptyProps = computed<EmptyProps>(() => {
 	if (!props.emptyData) {
-		return unwrapProps(defaultEmptyProps);
+		return unwrapProps(defaultEmptyProps) as EmptyProps;
 	}
 
 	return deepmerge.all([
 		unwrapProps(defaultEmptyProps),
 		props.emptyData,
-	]);
+	]) as EmptyProps;
 });
 </script>
 

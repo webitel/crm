@@ -1,4 +1,4 @@
-import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index.js';
+import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index';
 
 import lookups from '../modules/lookups/store/lookups.js';
 

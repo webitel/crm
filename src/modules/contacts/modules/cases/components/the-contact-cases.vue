@@ -281,7 +281,7 @@ onMounted(async () => {
 	removeOutdatedCustomHeaders();
 });
 
-const contactCase = (caseItem: object) => {
+const contactCase = (caseItem: { id?: string; etag?: string }) => {
 	if (isReadOnly) {
 		return `${import.meta.env.VITE_CRM_URL}/view/case_view/${caseItem.etag}`;
 	}

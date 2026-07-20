@@ -10,6 +10,7 @@
 		"lint:fix": "npx biome check --write ./src",
 		"lint:fix-staged": "npx lint-staged",
 		"tsc": "vue-tsc -p tsconfig.json",
+		"typecheck": "vue-tsc --noEmit -p ./tsconfig.json",
 		"utils:i": "npm i --install-links",
 		"utils:up-lib": "npm up @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist && npm run utils:ls-libs",
 		"utils:link-libs": "npm link @webitel/api-services @webitel/ui-sdk @webitel/ui-datalist @webitel/styleguide && npm run utils:ls-libs",
@@ -17,7 +18,7 @@
 		"prepare": "husky || true",
 		"biome:ci:gh": "biome ci ./src --reporter=github",
 		"test:unit:ci": "vitest run --coverage",
-		"typecheck:ci": "true"
+		"typecheck:ci": "npm run typecheck"
 	},
 	"type": "module",
 	"dependencies": {
@@ -56,6 +57,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
 		"@tsconfig/node22": "^22.x",
+		"@types/lodash": "^4.17.24",
 		"@types/node": "^24.x",
 		"@vitejs/plugin-vue": "^6.x",
 		"@vitest/coverage-v8": "^4.x",
