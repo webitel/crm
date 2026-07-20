@@ -131,7 +131,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
 		try {
 			const { items } = await AdjunctTypesAPI.getList(
 				{
-					repo: undefined,
 					size: -1,
 				},
 				{
