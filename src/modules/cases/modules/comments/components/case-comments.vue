@@ -158,8 +158,6 @@ const {
 
 const { showEmpty } = useTableEmpty({
 	dataList,
-	filters: undefined,
-	error: undefined,
 	isLoading,
 });
 
