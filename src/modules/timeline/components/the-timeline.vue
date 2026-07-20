@@ -118,7 +118,7 @@ subscribe({
 	callback: initializeList,
 });
 
-restoreFilters(undefined);
+restoreFilters();
 
 const nextLoading = ref(false);
 
@@ -129,7 +129,7 @@ async function loadNext() {
 }
 
 onUnmounted(() => {
-	flushSubscribers(undefined);
+	flushSubscribers();
 
 	/* https://webitel.atlassian.net/browse/WTEL-4843 */
 	/* Store must be reset to prevent multiple calls TimelineAPI */
