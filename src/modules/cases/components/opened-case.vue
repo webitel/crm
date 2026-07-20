@@ -303,7 +303,7 @@ async function assignCaseToMe() {
 				etag: itemInstance.value.etag,
 			});
 		} finally {
-			await loadItem(undefined);
+			await loadItem();
 		}
 	}
 }
