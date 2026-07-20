@@ -32,7 +32,7 @@
   lang="ts"
 >
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import get from 'lodash/get';
 import { inject, watch } from 'vue';
 import { useRouter } from 'vue-router';

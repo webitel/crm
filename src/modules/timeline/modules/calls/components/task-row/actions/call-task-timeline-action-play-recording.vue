@@ -30,11 +30,11 @@ import {
 	EngineCallFile,
 	EngineCallFileType,
 } from '@webitel/api-services/gen/models';
+import type { eventBus as EventBus } from '@webitel/ui-sdk/scripts';
 import {
 	assumeVidstackSupportedAudioType,
 	assumeVidstackSupportedVideoType,
-} from '@webitel/ui-sdk/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc.js';
-import type { eventBus as EventBus } from '@webitel/ui-sdk/scripts';
+} from '@webitel/ui-sdk/src/components/wt-vidstack-player/utils/normalizeVidstackMediaSrc';
 import {
 	type ComputedRef,
 	computed,

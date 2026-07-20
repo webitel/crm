@@ -18,15 +18,23 @@
 		"skipLibCheck": true,
 
 		"moduleResolution": "Bundler",
-		// TODO(types): ui-sdk ships these components as source .vue only (no compiled
-		// dist), so their "types" export condition is dangling and vue-tsc would
-		// type-check the SDK sources. Point TS at the shipped .vue.d.ts instead.
+		"baseUrl": ".",
+		// ui-sdk serves its `types` export condition from ./types/*, which
+		// vue-tsc can't reach from an extensionless `/src/*` specifier. Map
+		// them to the shipped declarations (falling back to source).
 		"paths": {
+			// TODO(types): these components ship as source .vue only (no compiled
+			// dist), so the wildcard's source fallback would make vue-tsc check
+			// the SDK sources. Pin them to the shipped .vue.d.ts instead.
 			"@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue": [
 				"./node_modules/@webitel/ui-sdk/types/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue.d.ts"
 			],
 			"@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue": [
 				"./node_modules/@webitel/ui-sdk/types/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue.d.ts"
+			],
+			"@webitel/ui-sdk/src/*": [
+				"./node_modules/@webitel/ui-sdk/types/*",
+				"./node_modules/@webitel/ui-sdk/src/*"
 			]
 		},
 		"isolatedModules": true,

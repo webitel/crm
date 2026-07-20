@@ -13,7 +13,7 @@
 <script setup>
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, ref, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';

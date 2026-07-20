@@ -54,9 +54,9 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
+import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';

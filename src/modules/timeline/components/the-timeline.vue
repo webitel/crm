@@ -48,8 +48,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 

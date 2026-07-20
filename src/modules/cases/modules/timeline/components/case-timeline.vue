@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState.js';
+import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
