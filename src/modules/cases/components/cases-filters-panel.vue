@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import type { PropType } from 'vue';
 
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
@@ -44,7 +44,7 @@ const props = defineProps({
 		default: () => useCasesStore(),
 	},
 	presetsStore: {
-		type: Object as PropType<() => StoreGeneric>,
+		type: Object as PropType<typeof useCaseFilterPresetsStore>,
 		default: () => useCaseFilterPresetsStore,
 	},
 });

@@ -96,6 +96,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { WtActionBar, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
@@ -105,7 +106,6 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import type { TableHeader } from '../../../../../app/types/tableHeaders.types';
 import CommentsAPI from '../api/CommentsAPI';
 import { createCaseCommentsComposableTableStore } from '../stores/comments';
 import CaseCommentRow from './case-comment-row.vue';
@@ -168,7 +168,7 @@ const emptyText = computed(() => {
 });
 
 const createdAtHeader = computed(() =>
-	(headers.value as TableHeader[]).find(
+	(headers.value as DatalistTableHeader[]).find(
 		(header) => header.field === 'created_at',
 	),
 );

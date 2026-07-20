@@ -1,7 +1,7 @@
+import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters.js';
-import type { TableHeader } from '../../../../../../../../app/types/tableHeaders.types';
 
-export const headers: TableHeader[] = [
+export const headers: DatalistTableHeader[] = [
 	{
 		value: 'name',
 		locale: 'reusable.name',

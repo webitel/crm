@@ -13,7 +13,7 @@ import {
 	snakeToCamel,
 	starToSearch,
 } from '@webitel/api-services/api/transformers';
-import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule.d.ts';
+import type { ApiModule } from '@webitel/ui-sdk/api/types/ApiModule.js';
 import {
 	CaseCommentsApiFactory,
 	type WebitelCasesCaseComment as CasesCaseComment,

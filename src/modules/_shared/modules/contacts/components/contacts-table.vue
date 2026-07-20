@@ -110,12 +110,12 @@ import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
 import deepmerge from 'deepmerge';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, isRef } from 'vue';
 
 interface Props {
 	header: string;
-	tableStore: ReturnType<ReturnType<typeof createTableStore>> & StoreGeneric;
+	tableStore: ReturnType<ReturnType<typeof createTableStore>>;
 	emptyData?: {
 		primaryActionText?: string | boolean;
 		disabledPrimaryAction?: boolean;
