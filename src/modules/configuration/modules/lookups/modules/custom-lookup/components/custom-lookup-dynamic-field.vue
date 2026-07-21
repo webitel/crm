@@ -54,10 +54,11 @@
     :model-value="value"
     :v="validation"
     show-time
+		clearable
     :timezone="timezone"
     :required="isRequired"
     :disabled="props.disabled"
-    @update:model-value="setValue(+$event)"
+    @update:model-value="setValue($event)"
   />
 </template>
 
