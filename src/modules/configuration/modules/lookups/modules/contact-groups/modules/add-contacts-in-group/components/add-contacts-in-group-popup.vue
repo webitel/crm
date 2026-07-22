@@ -107,7 +107,7 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
+import { createAddContactsInGroupDatalistStore } from '../stores';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
 
@@ -121,7 +121,7 @@ const emit = defineEmits([
 
 const { t } = useI18n();
 
-const useTableStore = createAddContactsInGroupComposableTableStore();
+const useTableStore = createAddContactsInGroupDatalistStore();
 const tableStore = useTableStore();
 const isFirstLoad = ref(false);
 
