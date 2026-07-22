@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Đến',
 			cc: 'CC',
 			subject: 'Chủ đề',
-		},
-	},
-	permissions: {
-		read: 'Đọc',
-		edit: 'Sửa',
-		delete: 'Xóa',
-		granteePopup: {
-			title: 'Thêm người được cấp quyền',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Cho phép',
-			[AccessMode.FORBIDDEN]: 'Cấm',
-			[AccessMode.MANAGE]: 'Cho phép với ủy quyền',
 		},
 	},
 	startPage: {
@@ -202,6 +188,24 @@ export default {
 			confirmDeleteColumn:
 				'Sau khi xóa cột và lưu, tất cả dữ liệu đã nhập trong trường tương ứng cũng sẽ bị xóa.',
 			controlPermissions: 'Kiểm soát quyền',
+			import: {
+				rowError:
+					'Không thể tạo bản ghi {record} vì có lỗi ở trường {field} với giá trị {value} ({code})',
+				moreErrors: 'Đã xảy ra lỗi khi tạo thêm {count} bản ghi',
+				summary:
+					'Đã nhập {importedCount}/{totalCount} bản ghi ({failedCount} thất bại)',
+				codes: {
+					lookup: {
+						notFound:
+							'Không tìm thấy giá trị trong đối tượng hệ thống liên quan',
+						ambiguous:
+							'Tìm thấy nhiều bản ghi cùng tên trong danh mục liên quan',
+					},
+					validation: {
+						failed: 'Xác thực bản ghi thất bại',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Kimga',
 			cc: 'CC',
 			subject: 'Mavzu',
-		},
-	},
-	permissions: {
-		read: "O'qish",
-		edit: 'Tahrirlash',
-		delete: "O'chirish",
-		granteePopup: {
-			title: "Huquq oluvchini qo'shish",
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Ruxsat berish',
-			[AccessMode.FORBIDDEN]: 'Taqiqlangan',
-			[AccessMode.MANAGE]: 'Delegatsiya bilan ruxsat berish',
 		},
 	},
 	startPage: {
@@ -195,6 +181,23 @@ export default {
 			confirmDeleteColumn:
 				"Ustunni o'chirgandan va saqlagandan so'ng, tegishli maydondagi barcha kiritilgan ma'lumotlar ham o'chiriladi.",
 			controlPermissions: 'Huquqlarni boshqarish',
+			import: {
+				rowError:
+					"{record} yozuvini yaratib bo'lmadi, chunki {field} maydonida {value} qiymati bilan xatolik yuz berdi ({code})",
+				moreErrors: 'Yana {count} ta yozuvni yaratishda xatolik yuz berdi',
+				summary:
+					'{totalCount} ta yozuvdan {importedCount} tasi import qilindi ({failedCount} tasi muvaffaqiyatsiz)',
+				codes: {
+					lookup: {
+						notFound: "Qiymat bog'langan tizim obyektida topilmadi",
+						ambiguous:
+							"Bog'langan ma'lumotnomada bir xil nomli bir nechta yozuv topildi",
+					},
+					validation: {
+						failed: 'Yozuv validatsiyasi muvaffaqiyatsiz tugadi',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

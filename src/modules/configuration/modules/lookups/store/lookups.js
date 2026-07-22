@@ -1,4 +1,4 @@
-import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index.js';
+import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index';
 
 import closeReasonGroups from '../modules/close-reason-groups/store/close-reason-groups.js';
 import customLookup from '../modules/custom-lookup/store/custom-lookup.js';

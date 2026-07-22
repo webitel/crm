@@ -1,18 +1,21 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vueDevTools from 'vite-plugin-vue-devtools';
 import { vite as vidstack } from 'vidstack/plugins';
 
 // https://vitejs.dev/config/
-export default () => {
+export default ({ mode }) => {
+	const env = loadEnv(mode, process.cwd(), '');
+	const isStagingEnv = !!env.VITE_STAGING_ENV;
+
 	return defineConfig({
 		base: '/crm',
 		build: {
-			// sourcemap: true,
-			// minify: false, // Disable minification for readable debugging
+			sourcemap: isStagingEnv,
+			minify: !isStagingEnv, // Disable minification for readable debugging
 		},
 		css: {
 			preprocessorOptions: {

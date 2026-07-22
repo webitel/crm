@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Кімге',
 			cc: 'Көшірме',
 			subject: 'Тақырып',
-		},
-	},
-	permissions: {
-		read: 'Оқу',
-		edit: 'Редакциялау',
-		delete: 'Жою',
-		granteePopup: {
-			title: 'Алушыны қосу',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Рұқсат берілген',
-			[AccessMode.FORBIDDEN]: 'Тыйым салынған',
-			[AccessMode.MANAGE]: 'Делегациямен рұқсат ету',
 		},
 	},
 	startPage: {
@@ -196,6 +182,23 @@ export default {
 			confirmDeleteColumn:
 				'Бағанды жойғаннан және сақтағаннан кейін, тиісті өрістегі барлық енгізілген деректер де жойылады.',
 			controlPermissions: 'Рұқсаттарды басқару',
+			import: {
+				rowError:
+					'{record} жазбасын жасау мүмкін болмады, себебі {field} өрісінде {value} мәнімен қате пайда болды ({code})',
+				moreErrors: 'Тағы {count} жазбаны жасау кезінде қате пайда болды',
+				summary:
+					'{totalCount} жазбаның {importedCount} импортталды ({failedCount} сәтсіз)',
+				codes: {
+					lookup: {
+						notFound: 'Мәні байланысты жүйелік нысанда табылмады',
+						ambiguous:
+							'Байланысты анықтамалықта бірдей атаумен бірнеше жазба табылды',
+					},
+					validation: {
+						failed: 'Жазбаны тексеру сәтсіз аяқталды',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

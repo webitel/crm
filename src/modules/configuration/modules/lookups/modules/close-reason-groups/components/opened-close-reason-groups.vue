@@ -50,10 +50,10 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
+import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 

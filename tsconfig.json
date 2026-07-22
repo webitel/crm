@@ -1,29 +1,55 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["esnext", "DOM"],
-    "plugins": [{ "name": "typescript-plugin-css-modules" }],
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"lib": [
+			"esnext",
+			"DOM"
+		],
+		"plugins": [
+			{
+				"name": "typescript-plugin-css-modules"
+			}
+		],
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
 
-    "allowJs": false,
-    "skipLibCheck": true,
+		"allowJs": false,
+		"skipLibCheck": true,
 
-    "moduleResolution": "Bundler",
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "noEmitOnError": false,
+		"moduleResolution": "Bundler",
+		"baseUrl": ".",
+		// ui-sdk serves its `types` export condition from ./types/*, which
+		// vue-tsc can't reach from an extensionless `/src/*` specifier. Map
+		// them to the shipped declarations (falling back to source).
+		"paths": {
+			// TODO(types): these components ship as source .vue only (no compiled
+			// dist), so the wildcard's source fallback would make vue-tsc check
+			// the SDK sources. Pin them to the shipped .vue.d.ts instead.
+			"@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue": [
+				"./node_modules/@webitel/ui-sdk/types/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue.d.ts"
+			],
+			"@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue": [
+				"./node_modules/@webitel/ui-sdk/types/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue.d.ts"
+			],
+			"@webitel/ui-sdk/src/*": [
+				"./node_modules/@webitel/ui-sdk/types/*",
+				"./node_modules/@webitel/ui-sdk/src/*"
+			]
+		},
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noEmit": true,
+		"noEmitOnError": false,
 
-    "strict": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
-  },
-  "include": [
-    "src",
-    "node_modules/vite-plugin-checker/dist/esm/checkers/vueTsc/typescript-vue-tsc/lib/lib.dom.d.ts"
-  ]
+		"strict": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true
+	},
+	"include": [
+		"src",
+		"node_modules/vite-plugin-checker/dist/esm/checkers/vueTsc/typescript-vue-tsc/lib/lib.dom.d.ts"
+	]
 }

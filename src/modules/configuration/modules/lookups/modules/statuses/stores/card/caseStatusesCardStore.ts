@@ -1,5 +1,5 @@
 import { CaseStatusesAPI } from '@webitel/api-services/api';
-import { WebitelCasesStatus } from '@webitel/api-services/gen';
+import type { WebitelCasesStatus } from '@webitel/api-services/gen';
 import { caseStatusSchema as standardValidationSchema } from '@webitel/api-services/validations';
 import { createCardStore } from '@webitel/ui-datalist/card';
 

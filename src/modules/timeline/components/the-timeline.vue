@@ -48,13 +48,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
 import { computed, onUnmounted, provide, ref } from 'vue';
 import { useStore } from 'vuex';
 
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
+import type { TimelineMode } from '../enums/TimelineMode';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';

@@ -82,7 +82,11 @@
             :disabled="!hasUpdateAccess"
             action="edit"
             @click="
-              router.push({ ...route, params: { conditionId: item.id } })
+              router.push({
+                name: route.name,
+                params: { ...route.params, conditionId: item.id },
+                query: route.query,
+              })
             "
           />
           <wt-icon-action
@@ -113,14 +117,11 @@
 
 <script setup lang="ts">
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import {
-	WtDisplayChipItems,
-	WtEmpty,
-} from '@webitel/ui-sdk/src/components/index';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
@@ -202,10 +203,12 @@ const {
 
 const add = () => {
 	return router.push({
-		...route,
+		name: route.name,
 		params: {
+			...route.params,
 			conditionId: 'new',
 		},
+		query: route.query,
 	});
 };
 

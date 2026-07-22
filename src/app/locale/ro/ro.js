@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Către',
 			cc: 'CC',
 			subject: 'Subiect',
-		},
-	},
-	permissions: {
-		read: 'Citire',
-		edit: 'Editare',
-		delete: 'Ștergere',
-		granteePopup: {
-			title: 'Adaugă beneficiar',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Permite',
-			[AccessMode.FORBIDDEN]: 'Interzis',
-			[AccessMode.MANAGE]: 'Permite cu delegare',
 		},
 	},
 	startPage: {
@@ -202,6 +188,23 @@ export default {
 			confirmDeleteColumn:
 				'După ștergerea coloanei și salvare, toate datele introduse în câmpul corespunzător vor fi șterse de asemenea.',
 			controlPermissions: 'Control permisiuni',
+			import: {
+				rowError:
+					'Nu s-a putut crea înregistrarea {record} din cauza unei erori în câmpul {field} cu valoarea {value} ({code})',
+				moreErrors: 'A apărut o eroare la crearea a încă {count} înregistrări',
+				summary:
+					'Importate {importedCount} din {totalCount} înregistrări ({failedCount} eșuate)',
+				codes: {
+					lookup: {
+						notFound: 'Valoarea nu a fost găsită în obiectul de sistem asociat',
+						ambiguous:
+							'În dicționarul asociat au fost găsite mai multe înregistrări cu același nume',
+					},
+					validation: {
+						failed: 'Validarea înregistrării a eșuat',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

@@ -103,7 +103,7 @@
 >
 import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 

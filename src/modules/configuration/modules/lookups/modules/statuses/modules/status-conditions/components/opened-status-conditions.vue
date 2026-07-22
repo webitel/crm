@@ -96,8 +96,9 @@
             :disabled="!hasUpdateAccess"
             @click="
               router.push({
-                ...route,
-                params: { statusConditionId: item.id },
+                name: route.name,
+                params: { ...route.params, statusConditionId: item.id },
+                query: route.query,
               })
             "
           />
@@ -155,7 +156,7 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
-const parentId = computed(() => route.params.id);
+const parentId = computed(() => route.params.id as string);
 
 const isStatusWarningPopupOpened = ref(false);
 
@@ -201,10 +202,12 @@ const {
 
 const add = () => {
 	return router.push({
-		...route,
+		name: route.name,
 		params: {
+			...route.params,
 			statusConditionId: 'new',
 		},
+		query: route.query,
 	});
 };
 

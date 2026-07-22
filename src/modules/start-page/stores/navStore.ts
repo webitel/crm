@@ -2,7 +2,7 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { type RouteLocationNormalized, useRouter } from 'vue-router';
 
 import { useConfigurationStore } from '../../configuration/store/configurationStore';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
@@ -19,6 +19,12 @@ export const useNavStore = defineStore('nav', () => {
 	const router = useRouter();
 
 	const { routeAccessGuard } = useUserinfoStore();
+	// TODO(types): ui-sdk types routeAccessGuard as a full vue-router
+	// NavigationGuard, but its implementation only reads `to` and returns
+	// a boolean-like verdict.
+	const canAccessRoute = routeAccessGuard as (
+		to: RouteLocationNormalized,
+	) => boolean;
 	const configurationStore = useConfigurationStore();
 	const { hasAnyConfigurationAccess } = storeToRefs(configurationStore);
 	const { initializeConfiguration } = configurationStore;
@@ -30,13 +36,13 @@ export const useNavStore = defineStore('nav', () => {
 		const contactsRoute = router.resolve({
 			path: contactsRoutePath,
 		});
-		const hasContactsAccess = routeAccessGuard(contactsRoute) === true;
+		const hasContactsAccess = canAccessRoute(contactsRoute) === true;
 
 		const casesRoutePath = '/cases';
 		const casesRoute = router.resolve({
 			path: casesRoutePath,
 		});
-		const hasCasesAccess = routeAccessGuard(casesRoute) === true;
+		const hasCasesAccess = canAccessRoute(casesRoute) === true;
 
 		const navigation: StartPageNavigation[] = [
 			{

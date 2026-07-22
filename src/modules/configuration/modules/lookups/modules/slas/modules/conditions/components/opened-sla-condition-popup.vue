@@ -72,7 +72,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { minValue, required } from '@vuelidate/validators';
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
