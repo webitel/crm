@@ -33,53 +33,57 @@
 
       <wt-loader v-show="isLoading" />
 
-      <wt-table
-        v-show="dataList.length && !isLoading"
-        :data="dataList"
-        :headers="shownHeaders"
-        :selectable="false"
-        :row-reorder="hasUpdateAccess"
-        @reorder:row="handleReorder"
+      <div
+        v-show="!isLoading && dataList.length"
+        class="table-wrapper"
       >
-        <template #expression="{ item }">
-          {{ item.expression }}
-        </template>
-        <template #group="{ item }">
-          {{ item.group.name }}
-        </template>
-        <template #assignee="{ item }">
-          {{ item.assignee?.name }}
-        </template>
-        <template #actions="{ item }">
-          <wt-icon-action
-            :disabled="!hasUpdateAccess"
-            action="edit"
-            @click="
-              router.push({ ...route, params: { conditionId: item.id } })
-            "
-          />
-          <wt-icon-action
-            :disabled="!hasDeleteAccess"
-            action="delete"
-            @click="
-              askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteEls(item),
-              })
-            "
-          />
-        </template>
-      </wt-table>
+        <wt-table
+          :data="dataList"
+          :headers="shownHeaders"
+          :selectable="false"
+          :row-reorder="hasUpdateAccess"
+          @reorder:row="handleReorder"
+        >
+          <template #expression="{ item }">
+            {{ item.expression }}
+          </template>
+          <template #group="{ item }">
+            {{ item.group.name }}
+          </template>
+          <template #assignee="{ item }">
+            {{ item.assignee?.name }}
+          </template>
+          <template #actions="{ item }">
+            <wt-icon-action
+              :disabled="!hasUpdateAccess"
+              action="edit"
+              @click="
+                router.push({ ...route, params: { conditionId: item.id } })
+              "
+            />
+            <wt-icon-action
+              :disabled="!hasDeleteAccess"
+              action="delete"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
+            />
+          </template>
+        </wt-table>
 
-      <wt-pagination
-        :next="next"
-        :prev="page > 1"
-        :size="size"
-        debounce
-        @change="updateSize"
-        @next="updatePage(page + 1)"
-        @prev="updatePage(page - 1)"
-      />
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -196,7 +200,7 @@ const handleReorder = async ({
 	updatedDataList.splice(newIndex, 0, movedItem);
 
 	await DynamicConditionsAPI.patch({
-		parentId: dataList.value[oldIndex].id as string,
+		itemId: dataList.value[oldIndex].id as string,
 		changes: {
 			position: setPosition(newIndex, updatedDataList),
 		},

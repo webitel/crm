@@ -70,7 +70,7 @@ import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { WtSingleSelect } from '@webitel/ui-sdk/components';
@@ -101,6 +101,20 @@ const {
 
 const conditionId = computed(() => route.params.conditionId);
 const { close } = useClose(`${CrmSections.ContactGroups}-conditions`);
+
+watch(
+	conditionId,
+	(value) => {
+		if (value !== 'new') return;
+
+		modelValue.value.expression = '';
+		modelValue.value.group = null;
+		modelValue.value.assignee = null;
+	},
+	{
+		immediate: true,
+	},
+);
 
 async function loadStaticContactGroupsList(params: Record<string, unknown>) {
 	return ContactGroupsAPI.getLookup({

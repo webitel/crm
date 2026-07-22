@@ -114,9 +114,8 @@
                 :model-value="item.enabled"
                 @update:model-value="
                   patchItemProperty({
-                    item,
                     index,
-                    prop: 'enabled',
+                    path: 'enabled',
                     value: $event,
                   })
                 "

@@ -30,8 +30,7 @@
             v-model="modelValue"
             :validation-fields="validationFields"
             :group-id="itemId"
-            :namespace="permissionsCardNamespace"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            v-bind="permissionsStoreData"
           />
         </router-view>
 
@@ -56,16 +55,34 @@ import { storeToRefs } from 'pinia';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-import { ContactGroupsPermissionsNamespace } from '../namespace';
-import { useContactGroupsCardStore } from '../stores';
+import {
+	useContactGroupsCardStore,
+	useContactGroupsPermissionsStore,
+} from '../stores';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
 
-const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const {
+	hasSaveActionAccess,
+	hasReadAccess,
+	hasCreateAccess,
+	hasUpdateAccess,
+	hasDeleteAccess,
+} = useUserAccessControl();
 
 const { itemId } = storeToRefs(useContactGroupsCardStore());
-const permissionsCardNamespace = `${ContactGroupsPermissionsNamespace}/card`;
+
+const permissionsStoreData = computed(() => ({
+	store: useContactGroupsPermissionsStore,
+	access: {
+		create: hasCreateAccess.value,
+		update: hasUpdateAccess.value,
+		read: hasReadAccess.value,
+		delete: hasDeleteAccess.value,
+	},
+	parentId: itemId.value,
+}));
 
 const {
 	modelValue,
