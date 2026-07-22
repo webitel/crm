@@ -14,12 +14,10 @@
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 
 import { filtersOptions } from '../configs/filtersOptions';
-import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
+import { createAddContactsInGroupDatalistStore } from '../stores';
 
 const props = defineProps<{
-	useTableStore: ReturnType<
-		typeof createAddContactsInGroupComposableTableStore
-	>;
+	useTableStore: ReturnType<typeof createAddContactsInGroupDatalistStore>;
 }>();
 
 const tableStore = props.useTableStore();

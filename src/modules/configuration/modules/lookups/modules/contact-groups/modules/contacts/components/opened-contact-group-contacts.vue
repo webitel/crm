@@ -66,15 +66,15 @@ import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { storeToRefs } from 'pinia';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
-import { useContactsGroupContactsStore } from '../stores/contacts';
+import { useContactGroupContactsDatalistStore } from '../stores';
 
 const props = defineProps<{
 	groupId?: string;
@@ -96,7 +96,7 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const tableStore = useContactsGroupContactsStore();
+const tableStore = useContactGroupContactsDatalistStore();
 
 const { selected, filtersManager, isFiltersRestoring } =
 	storeToRefs(tableStore);
