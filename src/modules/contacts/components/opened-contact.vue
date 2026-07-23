@@ -173,6 +173,8 @@ onUnmounted(() => resetState());
 
 <style lang="scss" scoped>
 .opened-contact {
+  height: 100%;
+
   &-content {
     flex-grow: 1;
     display: flex;
