@@ -25,5 +25,7 @@
 
 .timeline-content {
   height: 100%;
+  overflow-y: auto;
+  padding-right: var(--spacing-2xs);
 }
 </style>
