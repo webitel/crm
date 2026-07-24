@@ -53,7 +53,7 @@ import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCar
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -89,12 +89,14 @@ const v$ = useVuelidate(
 				required,
 				minValue: minValue(1),
 			},
-			// The values can't be equal, so I subtract 1 minute for that.
-			// @author @Lera24
-			// https://webitel.atlassian.net/browse/WTEL-8635
-			validFrom: {
-				maxValue: maxValue(itemInstance.value.validTo - 60000),
-			},
+			validFrom: itemInstance.value.validTo
+				? {
+						// The values can't be equal, so I subtract 1 minute for that.
+						// @author @Lera24
+						// https://webitel.atlassian.net/browse/WTEL-8635
+						maxValue: maxValue(itemInstance.value.validTo - 60000),
+					}
+				: {},
 		},
 	})),
 	{
@@ -106,6 +108,17 @@ const v$ = useVuelidate(
 );
 
 v$.value.$touch();
+
+watch(
+	() => itemInstance.value.validTo,
+	(validTo) => {
+		/* 
+	  validFrom is always valid if no validTo. So, we need
+	  to trigger validation in this case: set validFrom then set ValidTo
+	*/
+		v$.value.itemInstance.validFrom.$touch();
+	},
+);
 
 const { isNew, pathName, saveText, save, initialize } = useCardComponent({
 	...restStore,
