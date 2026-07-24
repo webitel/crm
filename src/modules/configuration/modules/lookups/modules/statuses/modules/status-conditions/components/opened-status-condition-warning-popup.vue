@@ -1,6 +1,7 @@
 <template>
   <wt-popup
     class="opened-status-condition-warning-popup"
+    :shown="shown"
     size="sm"
     overflow
     @close="close"
@@ -30,6 +31,13 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+
+defineProps({
+	shown: {
+		type: Boolean,
+		default: false,
+	},
+});
 
 const emit = defineEmits([
 	'close',
