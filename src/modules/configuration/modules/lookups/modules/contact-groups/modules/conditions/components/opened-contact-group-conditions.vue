@@ -1,9 +1,7 @@
 <template>
   <section class="table-page opened-contact-group-conditions">
-    <condition-popup
-      :namespace="namespace"
-      @load-data="loadData"
-    />
+    <condition-popup @load-data="loadDataList" />
+
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
       :delete-count="deleteCount"
@@ -19,9 +17,8 @@
         :include="[IconAction.ADD, IconAction.REFRESH]"
         :disabled:add="!hasCreateAccess"
         @click:add="add"
-        @click:refresh="loadData"
-      >
-      </wt-action-bar>
+        @click:refresh="loadDataList"
+      />
     </header>
 
     <div class="table-section__table-wrapper">
@@ -36,82 +33,76 @@
 
       <wt-loader v-show="isLoading" />
 
-      <wt-table
-        v-show="dataList.length && !isLoading"
-        :data="dataList"
-        :headers="headers"
-        :selectable="false"
-        :row-reorder="hasUpdateAccess"
-        @reorder:row="handleReorder"
+      <div
+        v-show="!isLoading && dataList.length"
+        class="table-wrapper"
       >
-        <template #expression="{ item }">
-          {{ item.expression }}
-        </template>
-        <template #group="{ item }">
-          {{ item.group.name }}
-        </template>
-        <template #assignee="{ item }">
-          {{ item.assignee.name }}
-        </template>
-        <template #actions="{ item }">
-          <wt-icon-action
-            :disabled="!hasUpdateAccess"
-            action="edit"
-            @click="
-              router.push({ ...route, params: { conditionId: item.id } })
-            "
-          />
-          <wt-icon-action
-            :disabled="!hasDeleteAccess"
-            action="delete"
-            @click="
-              askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })
-            "
-          />
-        </template>
-      </wt-table>
+        <wt-table
+          :data="dataList"
+          :headers="shownHeaders"
+          :selectable="false"
+          :row-reorder="hasUpdateAccess"
+          @reorder:row="handleReorder"
+        >
+          <template #expression="{ item }">
+            {{ item.expression }}
+          </template>
+          <template #group="{ item }">
+            {{ item.group.name }}
+          </template>
+          <template #assignee="{ item }">
+            {{ item.assignee?.name }}
+          </template>
+          <template #actions="{ item }">
+            <wt-icon-action
+              :disabled="!hasUpdateAccess"
+              action="edit"
+              @click="
+                router.push({ ...route, params: { conditionId: item.id } })
+              "
+            />
+            <wt-icon-action
+              :disabled="!hasDeleteAccess"
+              action="delete"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
+            />
+          </template>
+        </wt-table>
 
-      <filter-pagination
-        :namespace="filtersNamespace"
-        :next="isNext"
-      />
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
+        />
+      </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { DynamicConditionsAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { onUnmounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import ConditionsAPI from '../api/conditions.js';
+import { useContactGroupConditionsDatalistStore } from '../stores';
 import ConditionPopup from './opened-contact-group-conditions-popup.vue';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
-
-const { namespace: parentCardNamespace, id: parentId } = useCardStore(
-	props.namespace,
-);
-
-const namespace = `${parentCardNamespace}/conditions`;
 
 const router = useRouter();
 const route = useRoute();
@@ -122,34 +113,27 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
+const parentId = computed(() => route.params.id as string);
+
+const tableStore = useContactGroupConditionsDatalistStore();
+
 const {
-	namespace: tableNamespace,
 	dataList,
-	isLoading,
-	headers,
-	isNext,
 	error,
-	loadData,
-	deleteData,
-	onFilterEvent,
-} = useTableStore(namespace);
+	isLoading,
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
 
-const {
-	namespace: filtersNamespace,
-	restoreFilters,
-	filtersValue,
+const { initialize, loadDataList, updatePage, updateSize, deleteEls } =
+	tableStore;
 
-	subscribe,
-	flushSubscribers,
-	resetFilters,
-} = useTableFilters(tableNamespace);
-
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
+initialize({
+	parentId: parentId.value,
 });
-
-restoreFilters();
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -166,7 +150,7 @@ const {
 	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
 	dataList,
-	filters: filtersValue,
+	filters: computed(() => filtersManager.value.getAllValues()),
 	error,
 	isLoading,
 });
@@ -180,25 +164,34 @@ const add = () => {
 	});
 };
 
-function setPosition(newIndex, list) {
-	if (newIndex === 0)
+function setPosition(newIndex: number, list: typeof dataList.value) {
+	if (newIndex === 0) {
 		return {
 			condDown: dataList.value[0].id,
 			condUp: 0,
 		};
+	}
 
-	if (newIndex === list.length - 1)
+	if (newIndex === list.length - 1) {
 		return {
 			condDown: 0,
 			condUp: dataList.value[dataList.value.length - 1].id,
 		};
+	}
 
 	return {
 		condDown: list[newIndex - 1].id,
 		condUp: list[newIndex + 1].id,
 	};
 }
-const handleReorder = async ({ oldIndex, newIndex }) => {
+
+const handleReorder = async ({
+	oldIndex,
+	newIndex,
+}: {
+	oldIndex: number;
+	newIndex: number;
+}) => {
 	const updatedDataList = [
 		...dataList.value,
 	];
@@ -206,17 +199,12 @@ const handleReorder = async ({ oldIndex, newIndex }) => {
 	const [movedItem] = updatedDataList.splice(oldIndex, 1);
 	updatedDataList.splice(newIndex, 0, movedItem);
 
-	await ConditionsAPI.patch({
-		parentId: dataList.value[oldIndex].id,
+	await DynamicConditionsAPI.patch({
+		itemId: dataList.value[oldIndex].id as string,
 		changes: {
 			position: setPosition(newIndex, updatedDataList),
 		},
 	});
-	await loadData();
+	await loadDataList();
 };
-
-onUnmounted(() => {
-	flushSubscribers();
-	resetFilters();
-});
 </script>

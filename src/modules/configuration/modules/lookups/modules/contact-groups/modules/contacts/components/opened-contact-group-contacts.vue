@@ -2,7 +2,7 @@
   <section class="table-page">
     <add-contacts-in-group-popup
       :shown="isShowPopup"
-      :group-ids="[itemInstance?.id]"
+      :group-ids="[groupId]"
       @load-data="loadDataList"
       @close="isShowPopup = false"
     />
@@ -66,26 +66,24 @@ import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { storeToRefs } from 'pinia';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
-import { useContactsGroupContactsStore } from '../stores/contacts';
+import { useContactGroupContactsDatalistStore } from '../stores';
 
 const props = defineProps<{
-	namespace: string;
+	groupId?: string;
 }>();
 
 const { t } = useI18n();
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl(
 	WtObject.Contact,
 );
-const { itemInstance } = useCardStore(props.namespace);
 
 const isShowPopup = ref(false);
 
@@ -98,7 +96,7 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const tableStore = useContactsGroupContactsStore();
+const tableStore = useContactGroupContactsDatalistStore();
 
 const { selected, filtersManager, isFiltersRestoring } =
 	storeToRefs(tableStore);
@@ -108,14 +106,14 @@ const { addFilter, updateFilter, deleteFilter, initialize, loadDataList } =
 
 const deleteEls = async (ids: string[]) => {
 	await ContactGroupsAPI.removeContactsFromGroup({
-		id: itemInstance.value?.id,
+		id: props.groupId,
 		contactIds: ids,
 	});
 	await loadDataList();
 };
 
 watch(
-	() => itemInstance.value?.id,
+	() => props.groupId,
 	(val) => {
 		if (!val) {
 			return;

@@ -21,28 +21,27 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.ADD_CONTACT, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
+            :disabled:add-contact="!selectedStaticGroups.length"
             :disabled:delete="!hasDeleteAccess || !selected.length"
+            @click:add-contact="isShowAddContactInGroupPopup = true"
             @click:add="addGroup"
-            @click:refresh="loadData"
-            @click:delete="askDeleteConfirmation({
-              deleted: selected,
-              callback: () => deleteData(selected),
-            })"
+            @click:refresh="loadDataList"
+            @click:delete="
+              askDeleteConfirmation({
+                deleted: selected,
+                callback: () => deleteEls(selected),
+              })
+            "
           >
             <template #search-bar>
-              <filter-search
-                :namespace="filtersNamespace"
-                name="search"
+              <dynamic-filter-search
+                :filters-manager="filtersManager"
+                @filter:add="addFilter"
+                @filter:update="updateFilter"
+                @filter:delete="deleteFilter"
               />
             </template>
 
-            <template #add-contact>
-              <wt-icon-action
-                :disabled="!selectedStaticGroups.length"
-                action="add-contact"
-                @click="isShowAddContactInGroupPopup = true"
-              />
-            </template>
           </wt-action-bar>
         </header>
 
@@ -55,20 +54,17 @@
 
         <create-contact-group-popup
           :shown="isCreateGroupPopup"
-          :namespace="baseNamespace"
           @close="closeCreateGroupPopup"
         />
 
         <add-contacts-in-group-popup
           :group-ids="staticGroupIds"
-          :namespace="namespace"
           :shown="isShowAddContactInGroupPopup"
           @close="isShowAddContactInGroupPopup = false"
-          @load-data="loadData"
+          @load-data="loadDataList"
         />
 
         <div class="table-section__table-wrapper">
-
           <wt-empty
             v-show="showEmpty"
             :image="imageEmpty"
@@ -83,14 +79,19 @@
           <wt-table
             v-show="dataList.length && !isLoading"
             :data="dataList"
-            :headers="headers"
+            :headers="shownHeaders"
             :selected="selected"
             sortable
-            @sort="sort"
-            @update:selected="setSelected"
+            @sort="updateSort"
+            @update:selected="updateSelected"
           >
             <template #name="{ item }">
-              <wt-item-link :link="{ name: `${CrmSections.ContactGroups}-card`, params: { id: item.id } }">
+              <wt-item-link
+                :link="{
+                  name: `${CrmSections.ContactGroups}-card`,
+                  params: { id: item.id },
+                }"
+              >
                 {{ item.name }}
               </wt-item-link>
             </template>
@@ -112,13 +113,12 @@
                 :disabled="!hasUpdateAccess"
                 :model-value="item.enabled"
                 @update:model-value="
-                  patchProperty({
-                    item,
+                  patchItemProperty({
                     index,
-                    prop: 'enabled',
+                    path: 'enabled',
                     value: $event,
                   })
-                  "
+                "
               />
             </template>
 
@@ -131,17 +131,24 @@
               <wt-icon-action
                 :disabled="!hasDeleteAccess"
                 action="delete"
-                @click="askDeleteConfirmation({
-                  deleted: [item],
-                  callback: () => deleteData(item),
-                })"
+                @click="
+                  askDeleteConfirmation({
+                    deleted: [item],
+                    callback: () => deleteEls(item),
+                  })
+                "
               />
             </template>
           </wt-table>
 
-          <filter-pagination
-            :namespace="filtersNamespace"
-            :is-next="isNext"
+          <wt-pagination
+            :next="next"
+            :prev="page > 1"
+            :size="size"
+            debounce
+            @change="updateSize"
+            @next="updatePage(page + 1)"
+            @prev="updatePage(page - 1)"
           />
         </div>
       </section>
@@ -149,34 +156,60 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
-import { computed, onUnmounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import AddContactsInGroupPopup from '../modules/add-contacts-in-group/components/add-contacts-in-group-popup.vue';
+import { useContactGroupsDatalistStore } from '../stores';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
-
-const baseNamespace = 'configuration/lookups/contactGroups';
 
 const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl();
+
+const tableStore = useContactGroupsDatalistStore();
+
+const {
+	dataList,
+	selected,
+	error,
+	isLoading,
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
+
+const {
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+	patchItemProperty,
+} = tableStore;
+
+initialize();
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -187,65 +220,15 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-	namespace,
-
-	dataList,
-	selected,
-	isLoading,
-	headers,
-	isNext,
-	error,
-
-	loadData,
-	deleteData,
-	sort,
-	setSelected,
-	onFilterEvent,
-	patchProperty,
-} = useTableStore(baseNamespace);
-
-const {
-	namespace: filtersNamespace,
-	restoreFilters,
-	filtersValue,
-
-	subscribe,
-	flushSubscribers,
-} = useTableFilters(namespace);
-
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-	flushSubscribers();
-});
-
-const { close } = useClose('configuration');
-
-const {
-	showEmpty,
-	image: imageEmpty,
-	text: textEmpty,
-	primaryActionText: primaryActionTextEmpty,
-} = useTableEmpty({
-	dataList,
-	filters: filtersValue,
-	error,
-	isLoading,
-});
-
 const isCreateGroupPopup = ref(false);
 const isShowAddContactInGroupPopup = ref(false);
+
 const selectedStaticGroups = computed(() =>
-	selected.value.filter((el) => el.type === ContactsGroupType.Static),
+	selected.value.filter((item) => item.type === ContactsGroupType.Static),
 );
+
 const staticGroupIds = computed(() =>
-	selectedStaticGroups.value.map((el) => el.id),
+	selectedStaticGroups.value.map((item) => item.id),
 );
 
 const path = computed(() => [
@@ -266,7 +249,21 @@ const path = computed(() => [
 	},
 ]);
 
-function edit(item) {
+const { close } = useClose('configuration');
+
+const {
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	error,
+	isLoading,
+});
+
+function edit(item: { id: string }) {
 	return router.push({
 		name: `${CrmSections.ContactGroups}-card`,
 		params: {
@@ -284,7 +281,4 @@ function closeCreateGroupPopup() {
 }
 </script>
 
-<style
-  lang="scss"
-  scoped
-></style>
+<style lang="scss" scoped></style>

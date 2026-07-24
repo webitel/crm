@@ -1,26 +1,20 @@
 <template>
-  <wt-page-wrapper :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="disabledSave"
+        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
         :primary-text="saveText"
-        :hide-primary="!hasSaveActionAccess"
         :secondary-action="close"
       >
         <wt-breadcrumb :path="path" />
       </wt-page-header>
     </template>
 
-    <template #actions-panel>
-      <component
-        :is="currentTab.filters"
-        :namespace="namespace"
-      />
-    </template>
-
     <template #main>
+      <wt-loader v-if="debouncedIsLoading" />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
@@ -29,100 +23,89 @@
           :tabs="tabs"
           @change="changeTab"
         />
+
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
+            v-model="modelValue"
+            :validation-fields="validationFields"
+            :group-id="itemId"
+            v-bind="permissionsStoreData"
           />
         </router-view>
+
         <input
           hidden
           type="submit"
         />
-        <!--  submit form on Enter  -->
       </form>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required, requiredIf } from '@vuelidate/validators';
+<script lang="ts" setup>
+import type { ContactsGroup } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-import dynamicContactGroupsAPI from '../api/dynamicGroups.js';
+import {
+	useContactGroupsCardStore,
+	useContactGroupsPermissionsStore,
+} from '../stores';
 
-const namespace = 'configuration/lookups/contactGroups';
 const { t } = useI18n();
-const route = useRoute();
-const router = useRouter();
-
-const { hasSaveActionAccess } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-	addItem,
-	updateItem,
-	loadItem,
-	setId,
-	...restStore
-} = useCardStore(namespace, {
-	onLoadErrorHandler: handleError,
-});
+	hasSaveActionAccess,
+	hasReadAccess,
+	hasCreateAccess,
+	hasUpdateAccess,
+	hasDeleteAccess,
+} = useUserAccessControl();
 
-const { isNew, pathName, saveText, initialize } = useCardComponent({
-	...restStore,
-	id,
-	itemInstance,
-	addItem,
-	updateItem,
-	loadItem,
-	setId,
+const { itemId } = storeToRefs(useContactGroupsCardStore());
+
+const permissionsStoreData = computed(() => ({
+	store: useContactGroupsPermissionsStore,
+	access: {
+		create: hasCreateAccess.value,
+		update: hasUpdateAccess.value,
+		read: hasReadAccess.value,
+		delete: hasDeleteAccess.value,
+	},
+	parentId: itemId.value,
+}));
+
+const {
+	modelValue,
+
+	debouncedIsLoading,
+	originalItemInstance,
+
+	isNew,
+	saveText,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	validationFields,
+
+	save,
+} = useCardComponent<ContactsGroup>({
+	useCardStore: useContactGroupsCardStore,
 	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.ContactGroups);
 
 const isDynamicGroup = computed(
-	() => itemInstance.value.type === ContactsGroupType.Dynamic,
-);
-
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-			defaultGroup: {
-				required: requiredIf(isDynamicGroup),
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
-v$.value.$touch();
-
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
+	() => modelValue.value?.type === ContactsGroupType.Dynamic,
 );
 
 const tabs = computed(() => {
@@ -133,7 +116,7 @@ const tabs = computed(() => {
 	};
 
 	const contacts = {
-		text: t(`vocabulary.contact`, 2),
+		text: t('vocabulary.contact', 2),
 		value: 'contacts',
 		pathName: `${CrmSections.ContactGroups}-contacts`,
 	};
@@ -154,7 +137,7 @@ const tabs = computed(() => {
 		general,
 	];
 
-	if (id.value) {
+	if (!isNew.value) {
 		tabs.push(isDynamicGroup.value ? conditions : contacts);
 		tabs.push(permissions);
 	}
@@ -183,45 +166,10 @@ const path = computed(() => {
 			route: '/configuration/lookups/contact-groups',
 		},
 		{
-			name: isNew.value ? t('reusable.new') : pathName.value,
+			name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name,
 		},
 	];
 });
-
-const redirectToEdit = () => {
-	return router.replace({
-		...route,
-		params: {
-			id: id?.value,
-		},
-	});
-};
-
-const save = async () => {
-	if (isNew.value) {
-		if (isDynamicGroup.value) {
-			const { id } = await dynamicContactGroupsAPI.add(itemInstance.value);
-			await setId(id);
-			await loadItem();
-		} else {
-			await addItem();
-		}
-	} else {
-		if (isDynamicGroup.value) {
-			await dynamicContactGroupsAPI.update({
-				itemInstance: itemInstance.value,
-				itemId: id.value,
-			});
-			await loadItem();
-		} else {
-			await updateItem();
-		}
-	}
-
-	if (id?.value) {
-		await redirectToEdit();
-	}
-};
-
-initialize();
 </script>
+
+<style lang="scss" scoped></style>

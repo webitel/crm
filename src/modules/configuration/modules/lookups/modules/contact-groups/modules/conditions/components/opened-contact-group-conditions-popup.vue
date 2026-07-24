@@ -13,40 +13,46 @@
           : t('lookups.slas.addCondition')
       }}
     </template>
+
     <template #main>
-      <form class="opened-contact-group-conditions-popup__wrapper">
+      <form
+        class="opened-contact-group-conditions-popup__wrapper"
+        @submit.prevent="save"
+      >
         <wt-input-text
-          :model-value="itemInstance.expression"
+          v-model:model-value="modelValue.expression"
           :label="t('lookups.slas.conditions', 1)"
-          :v="v$.itemInstance.expression"
+          :regle-validation="validationFields?.expression"
           required
-          @update:model-value="setItemProp({ path: 'expression', value: $event })"
         />
+
         <wt-single-select
-          :model-value="itemInstance.group"
-          :v="v$.itemInstance.group"
+          :model-value="modelValue.group"
+          :regle-validation="validationFields?.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
           :search-method="loadStaticContactGroupsList"
           required
-          @update:model-value="setGroups"
+          @update:model-value="handleGroupChange"
         />
+
         <wt-single-select
-          :key="itemInstance.group?.id"
-          :disabled="!itemInstance.group?.id"
-          :model-value="itemInstance.assignee"
+          :key="modelValue.group?.id"
+          v-model:model-value="modelValue.assignee"
+          :disabled="!modelValue?.group?.id"
           :label="t('lookups.contactGroups.assignee')"
           :search-method="loadContacts"
-          @update:model-value="setItemProp({ path: 'assignee', value: $event })"
         />
       </form>
     </template>
+
     <template #actions>
       <wt-button
-        :disabled="disabledSave"
+        :disabled="hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.save') }}
       </wt-button>
+
       <wt-button
         color="secondary"
         @click="close"
@@ -57,147 +63,87 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+<script lang="ts" setup>
 import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
+import type { ContactsDynamicCondition } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import { WtSingleSelect } from '@webitel/ui-sdk/components';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { useContactGroupConditionsCardStore } from '../stores';
+
 const emit = defineEmits([
 	'load-data',
 ]);
+
 const route = useRoute();
 const { t } = useI18n();
+const { handleError } = useErrorRedirectHandler();
 
 const {
-	namespace: cardNamespace,
-	itemInstance,
-	resetState,
-	addItem,
-	loadItem,
-	updateItem,
-	setId,
-	setItemProp,
-	id,
-} = useCardStore(props.namespace);
-
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			expression: {
-				required,
-			},
-			group: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
-);
-v$.value.$touch();
+	modelValue,
+	validationFields,
+	isNew,
+	hasValidationErrors,
+	save: saveItem,
+} = useNestedCardComponent<ContactsDynamicCondition>({
+	useCardStore: useContactGroupConditionsCardStore,
+	routeParamName: 'conditionId',
+	parentId: route.params.id as string,
+	onLoadErrorHandler: handleError,
+});
 
 const conditionId = computed(() => route.params.conditionId);
-const isNew = computed(() => conditionId.value === 'new');
-
 const { close } = useClose(`${CrmSections.ContactGroups}-conditions`);
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
+
+watch(
+	conditionId,
+	(value) => {
+		if (value !== 'new') return;
+
+		modelValue.value.expression = '';
+		modelValue.value.group = null;
+		modelValue.value.assignee = null;
+	},
+	{
+		immediate: true,
+	},
 );
 
-function loadDataList() {
-	emit('load-data');
-}
-
-const save = async () => {
-	if (isNew.value) {
-		await addItem({
-			itemInstance,
-			parentId: id.value,
-		});
-	} else {
-		await updateItem({
-			itemInstance,
-			itemId: id.value,
-		});
-	}
-
-	close();
-	loadDataList();
-};
-
-async function loadStaticContactGroupsList(params) {
-	return await ContactGroupsAPI.getLookup({
+async function loadStaticContactGroupsList(params: Record<string, unknown>) {
+	return ContactGroupsAPI.getLookup({
 		...params,
 		type: ContactsGroupType.Static,
 		enabled: true,
 	});
 }
 
-async function loadContacts(params) {
-	return await ContactsAPI.getLookup({
+async function loadContacts(params: Record<string, unknown>) {
+	return ContactsAPI.getLookup({
 		...params,
-		group: itemInstance.value.group?.id,
+		group: modelValue.value?.group?.id,
 	});
 }
 
-async function setGroups(value) {
-	await setItemProp({
-		path: 'group',
-		value,
-	});
-
-	if (!IsEmpty(itemInstance.value.assignee)) {
-		await setItemProp({
-			path: 'assignee',
-			value: null,
-		});
-	}
+async function handleGroupChange(value: ContactsDynamicCondition['group']) {
+	modelValue.value.group = value;
+	modelValue.value.assignee = null;
 }
 
-async function initializePopup() {
-	if (!isNew.value) {
-		await setId(conditionId.value);
-		await loadItem();
-	}
-}
-
-watch(
-	() => conditionId.value,
-	(value) => {
-		if (value) {
-			initializePopup();
-		} else {
-			resetState();
-		}
-	},
-	{
-		immediate: true,
-	},
-);
+const save = async () => {
+	await saveItem();
+	close();
+	emit('load-data');
+};
 </script>
-<style
-  lang="scss"
-  scoped
->
+
+<style lang="scss" scoped>
 .opened-contact-group-conditions-popup__wrapper {
   display: flex;
   flex-direction: column;
