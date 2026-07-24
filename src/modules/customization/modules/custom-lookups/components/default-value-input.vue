@@ -1,30 +1,32 @@
 <template>
-  <wt-single-select
-    v-if="displaySelect && !multiple"
-    :key="lookup?.path + value.kind"
-    :model-value="value.default"
-    :options="options"
-    :label="t('customization.customLookups.defaultValue')"
-    required
-    :disabled="disabledDefaultValue"
-    :v="v.value.default"
-    :data-key="lookup?.primary || 'id'"
-    :search-method="loadLookupList"
-    @update:model-value="selectValue($event)"
-  />
-  <wt-multi-select
-    v-if="displaySelect && multiple"
-    :key="lookup?.path + value.kind"
-    :model-value="value.default"
-    :options="options"
-    :label="t('customization.customLookups.defaultValue')"
-    required
-    :disabled="disabledDefaultValue"
-    :v="v.value.default"
-    :data-key="lookup?.primary || 'id'"
-    :search-method="loadLookupList"
-    @update:model-value="selectValue($event)"
-  />
+  <template v-if="displaySelect">
+    <wt-single-select
+      v-if="!multiple"
+      :key="lookup?.path + value.kind"
+      :model-value="value.default"
+      :options="options"
+      :label="t('customization.customLookups.defaultValue')"
+      required
+      :disabled="disabledDefaultValue"
+      :v="v.value.default"
+      :data-key="lookup?.primary || 'id'"
+      :search-method="loadLookupList"
+      @update:model-value="selectValue($event)"
+    />
+    <wt-multi-select
+      v-if="multiple"
+      :key="lookup?.path + value.kind"
+      :model-value="value.default"
+      :options="options"
+      :label="t('customization.customLookups.defaultValue')"
+      required
+      :disabled="disabledDefaultValue"
+      :v="v.value.default"
+      :data-key="lookup?.primary || 'id'"
+      :search-method="loadLookupList"
+      @update:model-value="selectValue($event)"
+    />
+  </template>
   <template v-else-if="displayInput">
     <wt-datepicker
       v-if="kind === FieldType.Calendar"
@@ -57,7 +59,10 @@
   </template>
 </template>
 
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import deepCopy from 'deep-copy';
 import { computed, ref, toRefs, watch } from 'vue';
