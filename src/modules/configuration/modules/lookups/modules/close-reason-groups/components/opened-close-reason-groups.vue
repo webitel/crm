@@ -34,7 +34,7 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
-            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :access="/*is used by permissions tab*/{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
           />
         </router-view>
         <input

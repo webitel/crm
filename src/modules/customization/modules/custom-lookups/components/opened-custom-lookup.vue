@@ -36,9 +36,9 @@
             :namespace="cardNamespace"
             :access="{
               read: true,
-              edit: !disableUserInput,
+              update: !disableUserInput,
               delete: !disableUserInput,
-              add: !disableUserInput,
+              create: !disableUserInput,
             }"
           />
         </router-view>

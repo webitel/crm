@@ -34,6 +34,12 @@
             :is="Component"
             :v="v$"
             :namespace="cardNamespace"
+            :access="/*is used by permissions tab*/{
+              read: true,
+              update: !disableUserInput,
+              delete: !disableUserInput,
+              create: !disableUserInput,
+            }"
           />
         </router-view>
         <input
@@ -68,7 +74,7 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 
-const { hasSaveActionAccess } = useUserAccessControl();
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
 const {
