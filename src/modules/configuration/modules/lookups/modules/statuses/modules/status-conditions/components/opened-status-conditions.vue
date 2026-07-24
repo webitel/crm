@@ -247,39 +247,51 @@ async function setWarningPopupState(value) {
 	}
 }
 
-async function changeInitialStatus({ item, index, value }) {
+async function patchStatusCondition(id, changes) {
 	try {
-		dataList.value.forEach((el) => {
-			el.initial = false;
-		});
-		dataList.value[index].initial = value;
 		await CaseStatusConditionsAPI.patch({
-			id: item.id,
+			id,
 			parentId: parentId.value,
-			changes: {
-				initial: value,
-			},
+			changes,
 		});
-	} catch (err) {
-		if (err.status !== 400) return;
-		setWarningPopupState(true);
+	} catch {
+		await loadDataList();
 	}
 }
 
-async function changeFinalStatus({ item, index, value }) {
-	try {
-		dataList.value[index].final = value;
-		await CaseStatusConditionsAPI.patch({
-			id: item.id,
-			parentId: parentId.value,
-			changes: {
-				final: value,
-			},
-		});
-	} catch (err) {
-		if (err.status !== 400) return;
-		setWarningPopupState(true);
+async function changeInitialStatus({ item, index, value }) {
+	const turningOffOnlyInitial =
+		!value && dataList.value.filter((el) => el.initial).length === 1;
+
+	dataList.value.forEach((el) => {
+		el.initial = false;
+	});
+	dataList.value[index].initial = value;
+
+	if (turningOffOnlyInitial) {
+		await setWarningPopupState(true);
+		return;
 	}
+
+	await patchStatusCondition(item.id, {
+		initial: value,
+	});
+}
+
+async function changeFinalStatus({ item, index, value }) {
+	const turningOffLastFinal =
+		!value && dataList.value.filter((el) => el.final).length === 1;
+
+	dataList.value[index].final = value;
+
+	if (turningOffLastFinal) {
+		await setWarningPopupState(true);
+		return;
+	}
+
+	await patchStatusCondition(item.id, {
+		final: value,
+	});
 }
 </script>
 
