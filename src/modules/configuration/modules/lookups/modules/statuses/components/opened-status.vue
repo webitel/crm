@@ -29,7 +29,7 @@
             :is="Component"
             v-model="modelValue"
             :validation-fields="validationFields"
-            :access="{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :access="{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
           />
         </router-view>
 
