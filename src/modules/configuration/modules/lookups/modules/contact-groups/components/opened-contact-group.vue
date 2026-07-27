@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
+        :primary-disabled="isPrimaryActionDisabled"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -103,6 +103,13 @@ const {
 });
 
 const { close } = useClose(CrmSections.ContactGroups);
+
+const isPrimaryActionDisabled = computed(
+	() =>
+		!hasSaveActionAccess.value ||
+		!isAnyFieldEdited.value ||
+		hasValidationErrors.value,
+);
 
 const isDynamicGroup = computed(
 	() => modelValue.value?.type === ContactsGroupType.Dynamic,
