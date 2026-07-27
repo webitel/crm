@@ -13,7 +13,7 @@
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { computed } from 'vue';
 
-import { createAddContactsInGroupDatalistStore } from '../stores';
+import { createAddContactsInGroupDatalistStore } from '../stores/datalist/addContactsInGroupDatalistStore';
 
 const props = defineProps<{
 	useTableStore: ReturnType<typeof createAddContactsInGroupDatalistStore>;

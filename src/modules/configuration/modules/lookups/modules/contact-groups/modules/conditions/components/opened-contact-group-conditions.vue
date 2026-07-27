@@ -101,7 +101,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import { useContactGroupConditionsDatalistStore } from '../stores';
+import { useContactGroupConditionsDatalistStore } from '../stores/datalist/contactGroupConditionsDatalistStore';
 import ConditionPopup from './opened-contact-group-conditions-popup.vue';
 
 const router = useRouter();

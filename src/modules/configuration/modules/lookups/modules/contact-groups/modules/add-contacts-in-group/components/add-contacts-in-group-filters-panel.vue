@@ -14,7 +14,7 @@
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 
 import { filtersOptions } from '../configs/filtersOptions';
-import { createAddContactsInGroupDatalistStore } from '../stores';
+import { createAddContactsInGroupDatalistStore } from '../stores/datalist/addContactsInGroupDatalistStore';
 
 const props = defineProps<{
 	useTableStore: ReturnType<typeof createAddContactsInGroupDatalistStore>;

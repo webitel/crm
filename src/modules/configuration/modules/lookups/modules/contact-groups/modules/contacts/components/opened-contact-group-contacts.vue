@@ -67,14 +67,14 @@ import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
-import { useContactGroupContactsDatalistStore } from '../stores';
+import { useContactGroupContactsDatalistStore } from '../stores/datalist/contactGroupContactsDatalistStore';
 
 const props = defineProps<{
 	groupId?: string;

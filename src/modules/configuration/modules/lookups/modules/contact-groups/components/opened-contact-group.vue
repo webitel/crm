@@ -49,16 +49,14 @@ import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-import {
-	useContactGroupsCardStore,
-	useContactGroupsPermissionsStore,
-} from '../stores';
+import { useContactGroupsCardStore } from '../stores/card/contactGroupsCardStore';
+import { useContactGroupsPermissionsStore } from '../stores/permissions/contactGroupsPermissionsStore';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();

@@ -68,15 +68,15 @@ import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import type { ContactsDynamicCondition } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useNestedCardComponent } from '@webitel/ui-datalist/card';
+import { WtSingleSelect } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { WtSingleSelect } from '@webitel/ui-sdk/components';
 
 import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
-import { useContactGroupConditionsCardStore } from '../stores';
+import { useContactGroupConditionsCardStore } from '../stores/card/contactGroupConditionsCardStore';
 
 const emit = defineEmits([
 	'load-data',

@@ -172,7 +172,7 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import AddContactsInGroupPopup from '../modules/add-contacts-in-group/components/add-contacts-in-group-popup.vue';
-import { useContactGroupsDatalistStore } from '../stores';
+import { useContactGroupsDatalistStore } from '../stores/datalist/contactGroupsDatalistStore';
 import CreateContactGroupPopup from './create-contact-group-popup.vue';
 
 const { t } = useI18n();
