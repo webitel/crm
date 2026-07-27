@@ -25,9 +25,9 @@
             :namespace="cardNamespace"
             :access="/*is used by permissions tab*/ {
               read: true,
-              edit: !disableUserInput,
+              update: !disableUserInput,
               delete: !disableUserInput,
-              add: !disableUserInput,
+              create: !disableUserInput,
             }"
           />
         </router-view>

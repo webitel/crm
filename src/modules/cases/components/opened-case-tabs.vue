@@ -15,9 +15,9 @@
           :namespace="cardNamespace"
           :access="/*is used by permissions tab*/{
             read: true,
-            edit: actionAllow,
+            update: actionAllow,
             delete: actionAllow,
-            add: actionAllow,
+            create: actionAllow,
           }"
           :fields="customFields"
         />
