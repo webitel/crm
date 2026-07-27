@@ -1,4 +1,4 @@
-import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index';
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/modules/ObjectPermissions';
 import {
 	createApiStoreModule,
 	createBaseStoreModule,

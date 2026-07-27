@@ -115,8 +115,8 @@
 import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';

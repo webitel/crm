@@ -15,9 +15,9 @@
           :namespace="cardNamespace"
           :access="/*is used by permissions tab*/{
             read: true,
-            edit: actionAllow,
+            update: actionAllow,
             delete: actionAllow,
-            add: actionAllow,
+            create: actionAllow,
           }"
           :fields="customFields"
         />
@@ -28,7 +28,7 @@
 
 <script setup>
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs.js';
+import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';

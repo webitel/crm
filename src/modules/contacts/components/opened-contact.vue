@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -173,6 +173,8 @@ onUnmounted(() => resetState());
 
 <style lang="scss" scoped>
 .opened-contact {
+  height: 100%;
+
   &-content {
     flex-grow: 1;
     display: flex;

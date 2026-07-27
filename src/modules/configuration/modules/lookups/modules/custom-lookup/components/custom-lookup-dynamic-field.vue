@@ -51,19 +51,21 @@
   <wt-datepicker
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
-    :value="value"
+    :model-value="value"
     :v="validation"
-    mode="datetime"
+    show-time
+		clearable
     :timezone="timezone"
     :required="isRequired"
     :disabled="props.disabled"
-    @input="setValue(+$event)"
+    @update:model-value="setValue($event)"
   />
 </template>
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import set from 'lodash/set';
@@ -71,7 +73,6 @@ import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
-import CustomLookupApi from '../api/custom-lookups.js';
 
 const props = defineProps({
 	namespace: {
@@ -187,7 +188,7 @@ const setValue = (value) => {
 
 const loadLookupList = ({ path, display, primary }) => {
 	return (params) => {
-		return CustomLookupApi.getLookup({
+		return AdjunctTypeRecordsAPI.getLookup({
 			...params,
 			path,
 			display,

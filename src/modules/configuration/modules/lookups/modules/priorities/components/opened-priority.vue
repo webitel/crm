@@ -21,7 +21,7 @@
             :is="Component"
             v-model="modelValue"
             :validation-fields="validationFields"
-            :access="/*is used by permissions tab*/{ read: true, edit: !disableUserInput, delete: !disableUserInput, add: !disableUserInput }"
+            :access="/*is used by permissions tab*/{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
           />
         </router-view>
         <input
@@ -40,13 +40,11 @@ import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCasePrioritiesCardStore } from '../stores/card/casePrioritiesCardStore';
 
 const { t } = useI18n();
-const route = useRoute();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();

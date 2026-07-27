@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Кому',
 			cc: 'CC',
 			subject: 'Тема',
-		},
-	},
-	permissions: {
-		read: 'Читать',
-		edit: 'Редактировать',
-		delete: 'Удалить',
-		granteePopup: {
-			title: 'Добавить владельца прав',
-		},
-		accessMode: {
-			[AccessMode.FORBIDDEN]: 'Запрещено',
-			[AccessMode.ALLOW]: 'Разрешено',
-			[AccessMode.MANAGE]: 'Управление',
 		},
 	},
 	startPage: {
@@ -196,6 +182,23 @@ export default {
 			confirmDeleteColumn:
 				'После удаления колонки и сохранения все заполненные данные будут тоже удалены.',
 			controlPermissions: 'Контролировать права доступа',
+			import: {
+				rowError:
+					'Не удалось создать запись {record}, так как возникла ошибка в поле {field} со значением {value} ({code})',
+				moreErrors: 'Произошла ошибка при создании ещё {count} записей',
+				summary:
+					'Импортировано {importedCount} из {totalCount} записей (ошибок: {failedCount})',
+				codes: {
+					lookup: {
+						notFound: 'Значение не найдено в связанном системном объекте',
+						ambiguous:
+							'В связанном справочнике найдено несколько записей с одинаковым именем',
+					},
+					validation: {
+						failed: 'Ошибка валидации записи',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

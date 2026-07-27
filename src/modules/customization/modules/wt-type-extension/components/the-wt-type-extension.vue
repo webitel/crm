@@ -32,9 +32,9 @@
 
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';

@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Do',
 			cc: 'DW',
 			subject: 'Temat',
-		},
-	},
-	permissions: {
-		read: 'Odczyt',
-		edit: 'Edycja',
-		delete: 'Usuń',
-		granteePopup: {
-			title: 'Dodaj uprawnienia',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Zezwól',
-			[AccessMode.FORBIDDEN]: 'Zabronione',
-			[AccessMode.MANAGE]: 'Zezwól z delegowaniem',
 		},
 	},
 	startPage: {
@@ -202,6 +188,25 @@ export default {
 			confirmDeleteColumn:
 				'Po usunięciu kolumny i zapisaniu, wszystkie wprowadzone dane w odpowiednim polu zostaną również usunięte.',
 			controlPermissions: 'Kontroluj uprawnienia',
+			import: {
+				rowError:
+					'Nie udało się utworzyć rekordu {record}, ponieważ wystąpił błąd w polu {field} z wartością {value} ({code})',
+				moreErrors:
+					'Wystąpił błąd podczas tworzenia kolejnych {count} rekordów',
+				summary:
+					'Zaimportowano {importedCount} z {totalCount} rekordów (błędów: {failedCount})',
+				codes: {
+					lookup: {
+						notFound:
+							'Nie znaleziono wartości w powiązanym obiekcie systemowym',
+						ambiguous:
+							'W powiązanym słowniku znaleziono kilka rekordów o tej samej nazwie',
+					},
+					validation: {
+						failed: 'Błąd walidacji rekordu',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

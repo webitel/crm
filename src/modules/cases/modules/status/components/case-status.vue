@@ -16,7 +16,8 @@
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
-        :model-value="itemInstance?.statusCondition"
+        :model-value="displayedStatusCondition"
+        strict-api-options
 				:show-clear="false"
         class="case-status__select"
         @update:model-value="handleSelect"
@@ -42,8 +43,8 @@
 <script setup>
 import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
 import { isEmpty } from '@webitel/ui-sdk/scripts';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
+import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -90,7 +91,13 @@ const { isNew } = useCardComponent({
 });
 
 const isResultPopup = ref(false);
-const prevStatusCondition = ref(itemInstance.value.statusCondition);
+
+const pendingFinalStatusCondition = ref(null);
+
+const displayedStatusCondition = computed(
+	() =>
+		pendingFinalStatusCondition.value ?? itemInstance.value?.statusCondition,
+);
 
 const openCaseResultPopup = () => {
 	isResultPopup.value = true;
@@ -101,7 +108,7 @@ const closeCaseResultPopup = () => {
 };
 
 const startChangingStatusToFinal = (statusCondition) => {
-	itemInstance.value.statusCondition = statusCondition;
+	pendingFinalStatusCondition.value = statusCondition;
 	openCaseResultPopup();
 };
 
@@ -115,9 +122,9 @@ const confirmChangingStatusToFinal = async ({ reason, result }) => {
 		value: result,
 	});
 
-	if (!editMode.value) {
-		await patchStatusCondition(itemInstance.value.statusCondition);
+	await patchStatusCondition(pendingFinalStatusCondition.value);
 
+	if (!editMode.value) {
 		await CasesAPI.patch({
 			changes: {
 				closeReason: reason,
@@ -130,12 +137,13 @@ const confirmChangingStatusToFinal = async ({ reason, result }) => {
 		await loadItem();
 	}
 
+	pendingFinalStatusCondition.value = null;
 	closeCaseResultPopup();
 };
 
 const cancelChangingStatusToFinal = () => {
+	pendingFinalStatusCondition.value = null;
 	closeCaseResultPopup();
-	itemInstance.value.statusCondition = prevStatusCondition.value;
 };
 
 const getIndicatorColor = (option) => {
@@ -219,10 +227,9 @@ async function handleSelect(selectedStatusCondition) {
 	} else if (/* at reset */ isEmpty(selectedStatusCondition)) {
 		const { items } = await fetchStatusConditions();
 		const initialStatusCondition = items.find(({ initial }) => initial);
-		handleSelect(initialStatusCondition);
+		await handleSelect(initialStatusCondition);
 	} else {
 		await patchStatusCondition(selectedStatusCondition);
-		prevStatusCondition.value = selectedStatusCondition;
 	}
 }
 
@@ -232,6 +239,13 @@ async function updateStatusCondition(isValidationRequired = true) {
 	}
 
 	if (isValidationRequired && itemInstance.value.statusCondition.id) return;
+
+	if (!isValidationRequired && itemInstance.value.statusCondition.initial) {
+		await setItemProp({
+			path: 'statusCondition',
+			value: {},
+		});
+	}
 
 	const { items } = await CaseStatusConditionsAPI.getList({
 		statusId: status.value.id,
@@ -252,7 +266,7 @@ watch(
 		)
 			return;
 
-		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there’s already a stat usCondition.id, on any subsequent status‐change we force the reset
+		// NOTE: on initial mount (oldStatusId === undefined) we want to skip only if there's already a statusCondition.id, on any subsequent status-change we force the reset
 		const validationRequired = oldStatusId === undefined;
 
 		await updateStatusCondition(validationRequired);

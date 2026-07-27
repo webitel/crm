@@ -1,41 +1,42 @@
 <template>
-  <wt-single-select
-    v-if="displaySelect && !multiple"
-    :key="lookup?.path + value.kind"
-    :model-value="value.default"
-    :options="options"
-    :label="t('customization.customLookups.defaultValue')"
-    required
-    :disabled="disabledDefaultValue"
-    :v="v.value.default"
-    :data-key="lookup?.primary || 'id'"
-    :search-method="loadLookupList"
-    @update:model-value="selectValue($event)"
-  />
-  <wt-multi-select
-    v-if="displaySelect && multiple"
-    :key="lookup?.path + value.kind"
-    :model-value="value.default"
-    :options="options"
-    :label="t('customization.customLookups.defaultValue')"
-    required
-    :disabled="disabledDefaultValue"
-    :v="v.value.default"
-    :data-key="lookup?.primary || 'id'"
-    :search-method="loadLookupList"
-    @update:model-value="selectValue($event)"
-  />
+  <template v-if="displaySelect">
+    <wt-single-select
+      v-if="!multiple"
+      :key="lookup?.path + value.kind"
+      :model-value="value.default"
+      :options="options"
+      :label="t('customization.customLookups.defaultValue')"
+      required
+      :disabled="disabledDefaultValue"
+      :v="v.value.default"
+      :data-key="lookup?.primary || 'id'"
+      :search-method="loadLookupList"
+      @update:model-value="selectValue($event)"
+    />
+    <wt-multi-select
+      v-if="multiple"
+      :key="lookup?.path + value.kind"
+      :model-value="value.default"
+      :options="options"
+      :label="t('customization.customLookups.defaultValue')"
+      required
+      :disabled="disabledDefaultValue"
+      :v="v.value.default"
+      :data-key="lookup?.primary || 'id'"
+      :search-method="loadLookupList"
+      @update:model-value="selectValue($event)"
+    />
+  </template>
   <template v-else-if="displayInput">
     <wt-datepicker
       v-if="kind === FieldType.Calendar"
       :key="kind"
       :label="t('customization.customLookups.defaultValue')"
-      :value="value.default"
+      v-model:model-value="value.default"
       required
       :v="v.value.default"
       :disabled="disabledDefaultValue"
-      mode="datetime"
-      @input="value.default = +$event"
+      show-time
     />
     <wt-input-number
       v-else-if="kind === FieldType.Number"
@@ -58,12 +59,14 @@
   </template>
 </template>
 
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
+import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import deepCopy from 'deep-copy';
-import { computed, defineProps, ref, toRefs, watch } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import CustomLookupApi from '../../../../configuration/modules/lookups/modules/custom-lookup/api/custom-lookups';
 import { FieldType } from '../enums/FieldType';
 import {
 	CustomLookupField,
@@ -74,7 +77,13 @@ import {
 const props = defineProps<{
 	value: CustomLookupField;
 	disabledDefaultValue: boolean;
-	v: unknown;
+	// TODO(types): Vuelidate validation node; only the fields used in the
+	// template are typed here.
+	v: {
+		value: {
+			default: unknown;
+		};
+	};
 }>();
 
 const { lookup, kind } = toRefs(props.value);
@@ -89,7 +98,7 @@ const multiple = computed(() => kind.value === FieldType.Multiselect);
 
 const getLoadLookupList = (lookup: CustomLookupLookup) => {
 	return (params) =>
-		CustomLookupApi.getLookup({
+		AdjunctTypeRecordsAPI.getLookup({
 			...params,
 			path: lookup?.path,
 			display: lookup?.display || 'name',

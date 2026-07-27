@@ -25,9 +25,9 @@
             :namespace="cardNamespace"
             :access="/*is used by permissions tab*/ {
               read: true,
-              edit: !disableUserInput,
+              update: !disableUserInput,
               delete: !disableUserInput,
-              add: !disableUserInput,
+              create: !disableUserInput,
             }"
           />
         </router-view>
@@ -46,7 +46,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent.js';
+import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';

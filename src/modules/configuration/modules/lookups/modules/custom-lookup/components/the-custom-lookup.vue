@@ -122,25 +122,25 @@
 </template>
 
 <script setup>
+import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import WtUploadFileIconBtn from '@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters.js';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
 import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore.js';
+import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import CustomLookupsApi from '../../../../../../customization/modules/custom-lookups/api/custom-lookups.js';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
 import DisplayDynamicField from './display-dynamic-field.vue';
 import UploadCustomLookupPopup from './upload-custom-lookup-popup.vue';
@@ -159,7 +159,7 @@ const repo = ref(route.params.repo);
 
 const loadDictionary = async () => {
 	try {
-		dictionary.value = await CustomLookupsApi.get({
+		dictionary.value = await AdjunctTypesAPI.get({
 			itemId: repo.value,
 		});
 
@@ -171,6 +171,7 @@ const loadDictionary = async () => {
 					value: field.id,
 					locale: field.name,
 					readonly: field.readonly,
+					required: field.required,
 					show: true,
 					field: field.id,
 					kind: field.kind,

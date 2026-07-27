@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Para',
 			cc: 'CC',
 			subject: 'Asunto',
-		},
-	},
-	permissions: {
-		read: 'Leer',
-		edit: 'Editar',
-		delete: 'Eliminar',
-		granteePopup: {
-			title: 'Agregar beneficiario',
-		},
-		accessMode: {
-			[AccessMode.ALLOW]: 'Permitir',
-			[AccessMode.FORBIDDEN]: 'Prohibido',
-			[AccessMode.MANAGE]: 'Permitir con delegación',
 		},
 	},
 	startPage: {
@@ -202,6 +188,24 @@ export default {
 			confirmDeleteColumn:
 				'Después de eliminar la columna y guardar, todos los datos ingresados en el campo correspondiente también se eliminarán.',
 			controlPermissions: 'Controlar permisos',
+			import: {
+				rowError:
+					'No se pudo crear el registro {record} debido a un error en el campo {field} con el valor {value} ({code})',
+				moreErrors: 'Error al crear {count} registros más',
+				summary:
+					'Se importaron {importedCount} de {totalCount} registros ({failedCount} fallidos)',
+				codes: {
+					lookup: {
+						notFound:
+							'Valor no encontrado en el objeto del sistema relacionado',
+						ambiguous:
+							'Se encontraron varios registros con el mismo nombre en el catálogo relacionado',
+					},
+					validation: {
+						failed: 'Error de validación del registro',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

@@ -96,15 +96,15 @@
 </template>
 
 <script lang="ts" setup>
+import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { WtActionBar, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
-import { SortSymbols } from '@webitel/ui-sdk/scripts/sortQueryAdapters';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
-import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import CommentsAPI from '../api/CommentsAPI';
 import { createCaseCommentsComposableTableStore } from '../stores/comments';
@@ -166,7 +166,9 @@ const emptyText = computed(() => {
 });
 
 const createdAtHeader = computed(() =>
-	headers.value.find((header) => header.field === 'created_at'),
+	(headers.value as DatalistTableHeader[]).find(
+		(header) => header.field === 'created_at',
+	),
 );
 
 const currentSortOrder = computed(() => createdAtHeader.value?.sort);

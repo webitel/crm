@@ -1,4 +1,5 @@
 import { ContactsAPI } from '@webitel/api-services/api';
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/modules/ObjectPermissions';
 import {
 	createApiStoreModule,
 	createBaseStoreModule,
@@ -11,7 +12,6 @@ import cases from '../modules/cases/store/cases';
 import emails from '../modules/emails/store/emails';
 import filters from '../modules/filters/store/filters';
 import messaging from '../modules/messaging/store/messaging';
-import permissions from '../modules/permissions/store/permissions';
 import phones from '../modules/phones/store/phones';
 import variables from '../modules/variables/store/variables';
 
@@ -34,6 +34,19 @@ const tableGetters = {
 const api = createApiStoreModule({
 	state: {
 		api: ContactsAPI,
+	},
+});
+
+const permissions = createObjectPermissionsStoreModule({
+	modules: {
+		table: {
+			getters: {
+				PARENT_ID: (s, g, rootState) => rootState.contacts.card.itemId,
+			},
+			modules: {
+				api,
+			},
+		},
 	},
 });
 

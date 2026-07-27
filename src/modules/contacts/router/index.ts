@@ -1,4 +1,5 @@
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
+import ContactPermissions from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedContact from '../components/opened-contact.vue';
@@ -6,7 +7,6 @@ import ContactCommunications from '../components/opened-contact-communications.v
 import TheContacts from '../components/the-contacts.vue';
 import ContactCases from '../modules/cases/components/the-contact-cases.vue';
 import ContactDetails from '../modules/details/components/the-details.vue';
-import ContactPermissions from '../modules/permissions/components/the-permissions.vue';
 import ContactTimeline from '../modules/timeline/components/contact-timeline.vue';
 import ContactVariables from '../modules/variables/components/the-variables.vue';
 

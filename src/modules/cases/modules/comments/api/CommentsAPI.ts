@@ -14,7 +14,10 @@ import {
 	starToSearch,
 } from '@webitel/api-services/api/transformers';
 import type { ApiModule } from '@webitel/ui-sdk/src/api/types/ApiModule';
-import { CaseCommentsApiFactory, type CasesCaseComment } from 'webitel-sdk';
+import {
+	CaseCommentsApiFactory,
+	type WebitelCasesCaseComment as CasesCaseComment,
+} from 'webitel-sdk';
 
 const instance = getDefaultInstance();
 const configuration = getDefaultOpenAPIConfig();
@@ -117,7 +120,12 @@ const deleteComment = async ({ etag }) => {
 	}
 };
 
-export const CommentsAPI: ApiModule<CasesCaseComment> = {
+// add/patch take module-specific params ({ parentId, input } / { commentId }),
+// so their signatures override the generic ApiModule ones.
+export const CommentsAPI: Omit<ApiModule<CasesCaseComment>, 'add' | 'patch'> & {
+	add: typeof addComment;
+	patch: typeof patchComment;
+} = {
 	getList: getCommentsList,
 	delete: deleteComment,
 	add: addComment,

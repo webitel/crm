@@ -3,7 +3,7 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { type RouteLocationNormalized, useRouter } from 'vue-router';
 
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
@@ -13,6 +13,12 @@ export const useConfigurationStore = defineStore('configuration', () => {
 	const router = useRouter();
 
 	const { routeAccessGuard } = useUserinfoStore();
+	// TODO(types): ui-sdk types routeAccessGuard as a full vue-router
+	// NavigationGuard, but its implementation only reads `to` and returns
+	// a boolean-like verdict.
+	const canAccessRoute = routeAccessGuard as (
+		to: RouteLocationNormalized,
+	) => boolean;
 
 	const isCustomLookupsLoaded = ref(false);
 	const customLookups = ref([]);
@@ -29,7 +35,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
 		const route = router.resolve({
 			path: currentNav.route,
 		});
-		return routeAccessGuard(route) === true
+		return canAccessRoute(route) === true
 			? [
 					...reducedNav,
 					currentNav,

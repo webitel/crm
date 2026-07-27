@@ -1,5 +1,5 @@
 import { ContactGroupsAPI } from '@webitel/api-services/api';
-import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index.js';
+import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/src/modules/ObjectPermissions/store/index';
 import {
 	createApiStoreModule,
 	createBaseStoreModule,

@@ -16,7 +16,7 @@
 import { ConfigurationsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, type PropType, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EngineSystemSettingName } from 'webitel-sdk';
 
@@ -29,7 +29,7 @@ const props = defineProps({
  * Description why data is thrown props and have a default value */
 
 	tableStore: {
-		type: Object,
+		type: Object as PropType<ReturnType<typeof useCasesStore>>,
 		default: () => useCasesStore(),
 	},
 });
@@ -48,7 +48,11 @@ const isFTSConfigLoaded = ref(false);
 
 const searchModeOptions = computed(() => {
 	const options = Object.values(SearchMode).map((mode) => {
-		const opt = {
+		const opt: {
+			value: SearchMode;
+			text: string;
+			icon?: string;
+		} = {
 			value: mode,
 			text: t(`filters.search.${mode}`),
 		};

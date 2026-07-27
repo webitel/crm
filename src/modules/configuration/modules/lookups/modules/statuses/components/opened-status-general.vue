@@ -16,7 +16,7 @@
       />
 
       <wt-textarea
-        v-model="modelValue.description"
+        v-model:model-value="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
       />

@@ -59,7 +59,7 @@
 
 <script setup>
 import { ServiceCatalogsAPI } from '@webitel/api-services/api';
-import { ComponentSize } from '@webitel/ui-sdk/enums/ComponentSize/ComponentSize.js';
+import { ComponentSize } from '@webitel/ui-sdk/enums/ComponentSize/ComponentSize';
 import deepCopy from 'deep-copy';
 import { onMounted, ref, watch } from 'vue';
 

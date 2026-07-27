@@ -6,7 +6,6 @@ import {
 import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
-import AccessMode from '../../../modules/contacts/modules/permissions/enums/AccessMode.enum.js';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
 import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
 
@@ -80,19 +79,6 @@ export default {
 			to: 'Кому',
 			cc: 'CC',
 			subject: 'Тема',
-		},
-	},
-	permissions: {
-		read: 'Читати',
-		edit: 'Редагувати',
-		delete: 'Видаляти',
-		granteePopup: {
-			title: 'Додати власника прав',
-		},
-		accessMode: {
-			[AccessMode.FORBIDDEN]: 'Заборонено',
-			[AccessMode.ALLOW]: 'Дозволено',
-			[AccessMode.MANAGE]: 'Управління',
 		},
 	},
 	startPage: {
@@ -203,6 +189,23 @@ export default {
 			confirmDeleteColumn:
 				'Після видалення колонки та збереження всі введені дані у відповідних полях будуть також видалені.',
 			controlPermissions: 'Контролювати права доступу',
+			import: {
+				rowError:
+					'Не вдалося створити запис {record}, оскільки виникла помилка в полі {field} зі значенням {value} ({code})',
+				moreErrors: 'Сталася помилка при створенні ще {count} записів',
+				summary:
+					'Імпортовано {importedCount} з {totalCount} записів (помилок: {failedCount})',
+				codes: {
+					lookup: {
+						notFound: 'Значення не знайдено у повʼязаному системному обʼєкті',
+						ambiguous:
+							'У повʼязаному довіднику знайдено кілька записів з однаковою назвою',
+					},
+					validation: {
+						failed: 'Помилка валідації запису',
+					},
+				},
+			},
 			field: {
 				id: 'ID',
 				name: ({ linked }) => linked('reusable.name'),

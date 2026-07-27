@@ -15,8 +15,9 @@
         required
       />
 
-      <div class="opened-priority-general__wrapper">
+      <div class="opened-priority-general__color">
         <color-component-wrapper
+          class="opened-priority-general__color-icon"
           :color="modelValue.color"
           component="wt-icon"
           icon="cases"
@@ -124,14 +125,28 @@ watch(
 
 <style lang="scss" scoped>
 .opened-priority-general {
+  // The icon is taken out of flow and pinned next to the select input.
+  // Otherwise it shifts down when the validation message appears below the
+  // select and stretches its height.
+  &__color {
+    position: relative;
+    padding-left: calc(var(--icon-xl-size) + var(--spacing-xs));
+  }
+
+  &__color-icon {
+    position: absolute;
+    left: 0;
+    top: calc(var(--spacing-2xs) * 2 + 16px); // wt-label height above the input
+
+    &.case-priority-color-component {
+      display: flex;
+    }
+  }
+
   &__wrapper {
     display: flex;
     align-items: end;
     gap: var(--spacing-xs);
-
-    .case-priority-color-component {
-      display: flex;
-    }
   }
 
   &__color-name {

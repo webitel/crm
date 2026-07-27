@@ -1,4 +1,4 @@
-import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index.js';
+import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index';
 
 import customLookups from '../modules/custom-lookups/store/custom-lookups.js';
 import wtTypeExtension from '../modules/wt-type-extension/store/wtTypeExtension.js';

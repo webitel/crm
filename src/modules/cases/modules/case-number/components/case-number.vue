@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { useCardStore } from '@webitel/ui-sdk/modules/CardStoreModule/composables/useCardStore.js';
+import { useCardStore } from '@webitel/ui-sdk/modules/CardStoreModule/composables/useCardStore';
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 

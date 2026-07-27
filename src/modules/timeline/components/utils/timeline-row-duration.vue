@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import convertDuration from '@webitel/ui-sdk/src/scripts/convertDuration.js';
+import convertDuration from '@webitel/ui-sdk/src/scripts/convertDuration';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 

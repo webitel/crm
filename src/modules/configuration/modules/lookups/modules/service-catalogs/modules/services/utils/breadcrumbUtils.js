@@ -3,7 +3,11 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
 
 export function findServicePath(currentServiceId, catalog, path = []) {
-	for (const service of catalog.service) {
+	const services = catalog?.service;
+
+	if (!Array.isArray(services)) return null;
+
+	for (const service of services) {
 		const newPath = [
 			...path,
 			service,

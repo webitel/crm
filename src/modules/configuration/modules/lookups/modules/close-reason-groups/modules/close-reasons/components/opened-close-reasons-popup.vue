@@ -46,7 +46,7 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose.js';
+import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
