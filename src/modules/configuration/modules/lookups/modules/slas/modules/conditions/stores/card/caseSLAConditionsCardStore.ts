@@ -1,7 +1,5 @@
-import {
-	CreateSLAConditionBody as standardValidationSchema,
-	WebitelCasesSLACondition,
-} from '@webitel/api-services/gen';
+import type { WebitelCasesSLACondition } from '@webitel/api-services/gen/models';
+import { slaConditionSchema as standardValidationSchema } from '@webitel/api-services/validations';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
 import ConditionsAPI from '../../api/conditions';

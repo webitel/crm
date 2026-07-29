@@ -7,7 +7,7 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input-text
-        v-model="modelValue.name"
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
         :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
@@ -15,7 +15,7 @@
       />
 
       <wt-single-select
-        v-model="modelValue.calendar"
+        v-model:model-value="modelValue.calendar"
         :label="t('objects.calendar')"
         :search-method="loadCalendarsList"
         :regle-validation="validationFields?.calendar"
@@ -24,7 +24,7 @@
       />
 
       <wt-textarea
-        v-model="modelValue.description"
+        v-model:model-value="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
       />
@@ -52,21 +52,22 @@
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
-          :value="modelValue.validFrom"
+          :model-value="modelValue.validFrom"
           :disabled="disableUserInput"
-          :custom-validators="customValidation"
-          mode="datetime"
+          :regle-validation="validationFields?.validFrom"
+          show-time
           clearable
-          @input="modelValue.validFrom = +$event || null"
+          @update:model-value="modelValue.validFrom = +$event"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
-          :value="modelValue.validTo"
+          :model-value="modelValue.validTo"
           :disabled="disableUserInput"
-          mode="datetime"
+          :regle-validation="validationFields?.validTo"
+          show-time
           clearable
-          @input="modelValue.validTo = +$event || null"
+          @update:model-value="onValidToChange"
         />
       </div>
     </div>
@@ -75,16 +76,15 @@
 
 <script lang="ts" setup>
 import { CalendarsAPI } from '@webitel/api-services/api';
-import { WebitelCasesSLA } from '@webitel/api-services/gen';
+import type { WebitelCasesSLA } from '@webitel/api-services/gen/models';
 import type { CardValidationFields } from '@webitel/ui-datalist/card';
-import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
 const modelValue = defineModel<WebitelCasesSLA>();
 
-defineProps<{
+const props = defineProps<{
 	validationFields?: CardValidationFields<WebitelCasesSLA>;
 }>();
 
@@ -95,18 +95,10 @@ function loadCalendarsList(search) {
 	return CalendarsAPI.getLookup(search);
 }
 
-const customValidation = computed(() => {
-	if (!modelValue.value?.validTo) return [];
-
-	return [
-		{
-			name: 'maxValue',
-			text: t('validation.maxValue', {
-				max: new Date(modelValue.value.validTo).toLocaleString(),
-			}),
-		},
-	];
-});
+function onValidToChange(value?: number) {
+	modelValue.value.validTo = +value;
+	props.validationFields?.validFrom?.$touch();
+}
 </script>
 
 <style lang="scss" scoped>

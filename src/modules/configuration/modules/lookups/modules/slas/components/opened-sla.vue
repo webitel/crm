@@ -43,8 +43,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { WebitelCasesSLA } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
-import { WebitelCasesSLA } from '@webitel/api-services/gen';
 import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';

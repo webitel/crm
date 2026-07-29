@@ -15,38 +15,38 @@
         @submit.prevent="save"
       >
         <wt-input-text
-          v-model="draftItemInstance.name"
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :regle-validation="validationSchema.r$.name"
+          :regle-validation="validationFields?.name"
           :disabled="disableUserInput"
           required
         />
         <wt-multi-select
-          v-model="draftItemInstance.priorities"
+          v-model:model-value="modelValue.priorities"
           :label="t('vocabulary.priority')"
           :search-method="isNew ? getFreePriorities : getConditionPriorities"
           :disabled="disableUserInput"
-          :regle-validation="validationSchema.r$.priorities"
+          :regle-validation="validationFields?.priorities"
           required
         />
         <wt-timepicker
-          :model-value="draftItemInstance.reactionTime"
+          :model-value="modelValue.reactionTime"
           :label="t('lookups.slas.reactionTime')"
-          :regle-validation="validationSchema.r$.reactionTime"
+          :regle-validation="validationFields?.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="draftItemInstance.reactionTime = +$event"
+          @update:model-value="modelValue.reactionTime = +$event"
         />
 
         <wt-timepicker
-          :model-value="draftItemInstance.resolutionTime"
+          :model-value="modelValue.resolutionTime"
           :label="t('lookups.slas.resolutionTime')"
-          :regle-validation="validationSchema.r$.resolutionTime"
+          :regle-validation="validationFields?.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="draftItemInstance.resolutionTime = +$event"
+          @update:model-value="modelValue.resolutionTime = +$event"
         />
       </form>
     </template>
@@ -69,14 +69,16 @@
 
 <script lang="ts" setup>
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesSLACondition } from '@webitel/api-services/gen/models';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { storeToRefs } from 'pinia';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useSLAConditionsCardStore } from '../stores';
 
 const emit = defineEmits([
@@ -90,18 +92,25 @@ const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
-const cardStore = useSLAConditionsCardStore();
+const { handleError } = useErrorRedirectHandler();
 
-const { draftItemInstance, validationSchema } = storeToRefs(cardStore);
-const { initialize, saveItem, $reset } = cardStore;
+const {
+	modelValue,
+	validationFields,
+	isNew,
+	hasValidationErrors,
+	save: saveItem,
+} = useNestedCardComponent<WebitelCasesSLACondition>({
+	useCardStore: useSLAConditionsCardStore,
+	routeParamName: 'conditionId',
+	parentId: route.params.id as string,
+	onLoadErrorHandler: handleError,
+});
 
 const conditionId = computed(() => route.params.conditionId);
-const isNew = computed(() => conditionId.value === 'new');
 const slaId = computed(() => route.params.id);
 
 const { close } = useClose(`${CrmSections.Slas}-conditions`);
-
-const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 
 function getFreePriorities(params) {
 	return CasePrioritiesAPI.getLookup({
@@ -118,34 +127,10 @@ function getConditionPriorities(params) {
 }
 
 const save = async () => {
-	const { valid, data } = await validationSchema.value.r$.$validate();
-	if (!valid) return;
-
-	await saveItem(data);
+	await saveItem();
 	close();
 	emit('load-data');
 };
-
-async function initializePopup() {
-	await initialize({
-		itemId: isNew.value ? null : conditionId.value,
-		parentId: slaId.value,
-	});
-}
-
-watch(
-	conditionId,
-	(value) => {
-		if (value) {
-			initializePopup();
-		} else {
-			$reset();
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 </script>
 
 <style
