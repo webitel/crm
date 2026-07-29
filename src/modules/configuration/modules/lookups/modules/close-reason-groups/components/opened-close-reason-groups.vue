@@ -1,9 +1,9 @@
 <template>
-  <wt-page-wrapper :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="isPrimaryDisabled"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -11,16 +11,10 @@
       </wt-page-header>
     </template>
 
-    <template #actions-panel>
-      <component
-        :is="currentTab.filters"
-        :v="v$"
-        :namespace="namespace"
-      />
-    </template>
-
     <template #main>
+      <wt-loader v-if="debouncedIsLoading" />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
@@ -29,14 +23,16 @@
           :tabs="tabs"
           @change="changeTab"
         />
+
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
-            :access="/*is used by permissions tab*/{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
+            v-model="modelValue"
+            :validation-fields="validationFields"
+            :access="{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
           />
         </router-view>
+
         <input
           hidden
           type="submit"
@@ -46,73 +42,48 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+<script lang="ts" setup>
+import type { WebitelCasesCloseReasonGroup } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-
-const namespace = 'configuration/lookups/closeReasonGroups';
+import { useCaseCloseReasonGroupsCardStore } from '../stores';
 
 const { t } = useI18n();
-
-const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
-const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-	addItem,
-	updateItem,
-	loadItem,
-	setId,
-	...restStore
-} = useCardStore(namespace, {
-	onLoadErrorHandler: handleError,
-});
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-	...restStore,
-	id,
-	itemInstance,
-	addItem,
-	updateItem,
-	loadItem,
-	setId,
+const {
+	modelValue,
+
+	debouncedIsLoading,
+	originalItemInstance,
+
+	isNew,
+	saveText,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	validationFields,
+
+	save,
+} = useCardComponent<WebitelCasesCloseReasonGroup>({
+	useCardStore: useCaseCloseReasonGroupsCardStore,
 	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.CloseReasonGroups);
 
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
-
-v$.value.$touch();
-
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
+const isPrimaryDisabled = computed(
+	() =>
+		!hasSaveActionAccess.value ||
+		!isAnyFieldEdited.value ||
+		hasValidationErrors.value,
 );
 
 const tabs = computed(() => {
@@ -131,7 +102,7 @@ const tabs = computed(() => {
 		general,
 	];
 
-	if (id.value) tabs.push(closeReasons);
+	if (!isNew.value) tabs.push(closeReasons);
 	return tabs;
 });
 
@@ -156,12 +127,10 @@ const path = computed(() => {
 			route: '/configuration/lookups/close-reason-groups',
 		},
 		{
-			name: isNew.value ? t('reusable.new') : pathName.value,
+			name: isNew.value ? t('reusable.new') : originalItemInstance.value?.name,
 		},
 	];
 });
-
-initialize();
 </script>
 
 <style

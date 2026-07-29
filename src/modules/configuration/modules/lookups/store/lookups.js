@@ -1,6 +1,5 @@
 import { createBaseStoreModule } from '@webitel/ui-sdk/src/store/new/index';
 
-import closeReasonGroups from '../modules/close-reason-groups/store/close-reason-groups.js';
 import contactGroups from '../modules/contact-groups/store/contactGroups.js';
 import customLookup from '../modules/custom-lookup/store/custom-lookup.js';
 import services from '../modules/service-catalogs/modules/services/store/services.js';
@@ -13,7 +12,6 @@ const lookups = createBaseStoreModule({
 		catalogs,
 		contactGroups,
 		services,
-		closeReasonGroups,
 		customLookup,
 	},
 });
