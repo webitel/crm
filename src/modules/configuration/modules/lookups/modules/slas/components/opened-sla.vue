@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
+        :primary-disabled="isPrimaryDisabled"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -78,6 +78,13 @@ const {
 });
 
 const { close } = useClose(CrmSections.Slas);
+
+const isPrimaryDisabled = computed(
+	() =>
+		!hasSaveActionAccess.value ||
+		!isAnyFieldEdited.value ||
+		hasValidationErrors.value,
+);
 
 const tabs = computed(() => {
 	const general = {
