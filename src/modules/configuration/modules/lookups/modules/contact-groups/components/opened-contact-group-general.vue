@@ -8,89 +8,64 @@
     <div class="opened-card-input-grid">
       <div class="opened-contact-group-general__wrapper">
         <wt-input-text
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :model-value="itemInstance.name"
-          :v="v.itemInstance.name"
+          :regle-validation="validationFields?.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
 
         <wt-textarea
+          v-model:model-value="modelValue.description"
           :label="t('vocabulary.description')"
-          :model-value="itemInstance.description"
           :disabled="disableUserInput"
-          @update:model-value="setItemProp({ path: 'description', value: $event })"
         />
 
         <wt-switcher
+          v-model:model-value="modelValue.enabled"
           :label="t('reusable.state')"
-          :model-value="itemInstance.enabled"
           :disabled="disableUserInput"
-          @update:model-value="setItemProp({ path: 'enabled', value: $event })"
         />
       </div>
 
       <wt-single-select
-        v-if="itemInstance.type === ContactsGroupType.Dynamic"
+        v-if="modelValue.type === ContactsGroupType.Dynamic"
+        v-model:model-value="modelValue.defaultGroup"
         :label="t('lookups.contactGroups.defaultGroup')"
         :search-method="loadStaticContactGroupsList"
-        :model-value="itemInstance.defaultGroup"
-        :v="v.itemInstance.defaultGroup"
+        :regle-validation="validationFields?.defaultGroup"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'defaultGroup', value: $event })"
       />
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ContactGroupsAPI } from '@webitel/api-services/api';
+import type { ContactsGroup } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { onMounted } from 'vue';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<ContactsGroup>();
+
+defineProps<{
+	validationFields: CardValidationFields<ContactsGroup>;
+}>();
 
 const { t } = useI18n();
-const route = useRoute();
-
 const { disableUserInput } = useUserAccessControl();
 
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
-
-function loadStaticContactGroupsList(params) {
+function loadStaticContactGroupsList(params: Record<string, unknown>) {
 	return ContactGroupsAPI.getLookup({
 		...params,
 		type: ContactsGroupType.Static,
 		enabled: true,
 	});
 }
-
-function setContactGroupType() {
-	if (route.query.type) {
-		setItemProp({
-			path: 'type',
-			value: route.query.type.toUpperCase(),
-		});
-	}
-}
-
-onMounted(() => setContactGroupType());
 </script>
 
 <style lang="scss" scoped>
