@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="opened-service-catalogs-general">
     <header class="opened-card-header">
       <h3 class="opened-card-header__title">
         {{ t('reusable.generalInfo') }}
@@ -7,106 +7,95 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input-text
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.status"
         :label="t('lookups.serviceCatalogs.statuses')"
         :search-method="loadStatusesList"
-        :model-value="itemInstance.status"
+        :regle-validation="validationFields?.status"
         :disabled="disableUserInput"
-        :v="v.itemInstance.status"
         required
-        @update:model-value="setItemProp({ path: 'status', value: $event })"
       />
 
       <wt-input-text
+        v-model:model-value="modelValue.prefix"
         :label="t('lookups.serviceCatalogs.prefix')"
-        :model-value="itemInstance.prefix"
-        :v="v.itemInstance.prefix"
+        :regle-validation="validationFields?.prefix"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'prefix', value: $event })"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.closeReasonGroup"
         :label="t('lookups.closeReasonGroups.closeReasonGroups')"
         :search-method="loadReasonList"
-        :model-value="itemInstance.closeReasonGroup"
-        :v="v.itemInstance.closeReasonGroup"
+        :regle-validation="validationFields?.closeReasonGroup"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.sla"
         :label="t('lookups.slas.slas')"
         :search-method="loadSlaList"
-        :model-value="itemInstance.sla"
-        :v="v.itemInstance.sla"
+        :regle-validation="validationFields?.sla"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'sla', value: $event })"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.defaultPriority"
         :label="t('lookups.serviceCatalogs.defaultPriority')"
         :search-method="loadPrioritiesList"
-        :model-value="itemInstance.defaultPriority"
-        :v="v.itemInstance.defaultPriority"
+        :regle-validation="validationFields?.defaultPriority"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'defaultPriority', value: $event })"
       />
 
       <wt-multi-select
+        v-model:model-value="modelValue.teams"
         :label="t('objects.team', 2)"
         :search-method="loadTeamsList"
-        :model-value="itemInstance.teams"
         :disabled="disableUserInput"
-        @update:model-value="setItemProp({ path: 'teams', value: $event })"
       />
 
       <wt-input-text
+        v-model:model-value="modelValue.code"
         :label="t('lookups.serviceCatalogs.code')"
         :disabled="disableUserInput"
-        :model-value="itemInstance.code"
-        @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
       <wt-textarea
+        v-model:model-value="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :model-value="itemInstance.description"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
 
       <div class="opened-card-input-grid__skills-wrapper">
         <wt-multi-select
+          v-model:model-value="modelValue.skills"
           :label="t('lookups.serviceCatalogs.skills')"
           :search-method="loadSkillsList"
-          :model-value="itemInstance.skills"
           :disabled="disableUserInput"
-          @update:model-value="setItemProp({ path: 'skills', value: $event })"
         />
 
         <wt-switcher
-          :disabled="disableUserInput"
+          v-model:model-value="modelValue.state"
           :label="t('reusable.state')"
-          :model-value="itemInstance.state"
-          @update:model-value="setItemProp({ path: 'state', value: $event })"
+          :disabled="disableUserInput"
         />
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
 	CaseCloseReasonGroupsAPI,
 	CasePrioritiesAPI,
@@ -115,27 +104,21 @@ import {
 	SlasAPI,
 	TeamsAPI,
 } from '@webitel/api-services/api';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import type { WebitelCasesCatalog } from '@webitel/api-services/gen/models';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<WebitelCasesCatalog>();
+
+defineProps<{
+	validationFields: CardValidationFields<WebitelCasesCatalog>;
+}>();
 
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
-
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 function loadStatusesList(params) {
 	return CaseStatusesAPI.getLookup(params);
