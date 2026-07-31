@@ -8,7 +8,7 @@
       @click="saveDetails"
     >{{ t('reusable.save') }}</wt-button>
   </teleport>
-  <div class="opened-card">
+  <div class="opened-card wt-scrollbar">
     <div class="opened-card-form">
       <div
         v-if="hasEditAccess"
@@ -116,4 +116,10 @@ watch(
 <style
   scoped
   lang="scss"
-></style>
+>
+.opened-card {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: var(--spacing-2xs);
+}
+</style>
