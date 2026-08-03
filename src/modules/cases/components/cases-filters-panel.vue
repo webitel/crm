@@ -72,15 +72,15 @@ const resetFilters = () => {
 	});
 };
 
+const applyPreset = (snapshot: string) => {
+	resetFilters();
+	filtersManager.value.fromString(snapshot);
+};
+
 /**
  * preset cached in localStorage – filters must survive, so no reset here
  */
 const restorePreset = (snapshot: string) => {
 	filtersManager.value.fromString(snapshot);
-};
-
-const applyPreset = (snapshot: string) => {
-	resetFilters();
-	restorePreset(snapshot);
 };
 </script>
