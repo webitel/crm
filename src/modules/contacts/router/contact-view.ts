@@ -1,9 +1,9 @@
 import ContactPermissions from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
 import type { RouteRecordRaw } from 'vue-router';
 
-import ContactCommunications from '../components/opened-contact-communications.vue';
 import OpenedContactView from '../components/opened-contact-view.vue';
 import ContactCases from '../modules/cases/components/the-contact-cases.vue';
+import ContactCommunications from '../modules/communications/components/the-communications.vue';
 import ContactDetails from '../modules/details/components/the-details.vue';
 import ContactTimeline from '../modules/timeline/components/contact-timeline.vue';
 import ContactVariables from '../modules/variables/components/the-variables.vue';
