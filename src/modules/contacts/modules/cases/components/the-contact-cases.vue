@@ -11,7 +11,7 @@
     </header>
     <header class="contact-cases-header">
       <h3 class="contact-cases-header__title typo-heading-4">
-        {{ $t('cases.case', 2) }}
+        {{ t('cases.case', 2) }}
       </h3>
 
       <cases-filter-search-bar
@@ -198,25 +198,31 @@
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { storeToRefs } from 'pinia';
+import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, inject, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
-import prettifyDate from '../../../../cases/utils/prettifyDate.js';
+import prettifyDate from '../../../../cases/utils/prettifyDate';
 import DisplayDynamicFieldExtension from '../../../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
+import { useContactCardStore } from '../../../stores/card/contactCardStore';
 import { ContactCasesNamespace } from '../namespace';
-import { useContactCasesStore } from '../stores/cases';
-import { useContactCaseFilterPresetsStore } from '../stores/useContactCaseFilterPresetsStore';
+import { useContactCasesDatalistStore } from '../stores/datalist/contactCasesDatalistStore';
+import { useContactCaseFilterPresetsStore } from '../stores/presets/contactCaseFilterPresetsStore';
 
+const { t } = useI18n();
 const isReadOnly = inject('isReadOnly');
-const store = useStore();
 
-const tableStore = useContactCasesStore();
+const contactCardStore = useContactCardStore();
+const { itemId: parentId } = storeToRefs(
+	contactCardStore as unknown as StoreGeneric,
+);
+
+const tableStore = useContactCasesDatalistStore();
 
 const showActionsPanel = ref(true);
 
@@ -266,8 +272,6 @@ const {
 	filters: computed(() => filtersManager.value.getAllValues()),
 	isLoading,
 });
-
-const parentId = computed(() => store.state.contacts.card.itemId);
 
 onMounted(async () => {
 	const instance = getCurrentInstance();

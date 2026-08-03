@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Электрондық поштаны қосу',
 				editTitle: 'Электрондық поштаны өңдеу',
-				dummy: 'Әзірге электрондық пошта мекенжайлары жоқ',
+				empty: 'Әзірге электрондық пошта мекенжайлары жоқ',
 			},
 			phones: {
 				addTitle: 'Телефон нөмірін қосу',
 				editTitle: 'Телефон нөмірін өңдеу',
-				dummy: 'Әзірге телефон нөмірлері жоқ',
+				empty: 'Әзірге телефон нөмірлері жоқ',
 			},
 			messaging: {
 				gateway: 'Шлюз',
 				provider: 'Провайдер',
 				username: 'Пайдаланушы аты',
-				dummy: 'Әзірге хабарлама опциялары жоқ',
+				empty: 'Әзірге хабарлама опциялары жоқ',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Қосымшасы',
