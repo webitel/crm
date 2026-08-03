@@ -68,7 +68,7 @@
           </template>
 
           <template #managers="{ item }">
-            {{ item.managers[0]?.user.name }}
+            {{ item.managers[0]?.user?.name }}
           </template>
 
           <template #labels="{ item }">

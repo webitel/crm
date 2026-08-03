@@ -1,14 +1,12 @@
-import ContactPermissions from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
+import { PermissionsTab as ContactPermissions } from '@webitel/ui-datalist/permissions-page';
 import type { RouteRecordRaw } from 'vue-router';
-
-import ContactCommunications from '../components/opened-contact-communications.vue';
 import OpenedContactView from '../components/opened-contact-view.vue';
+import { CONTACT_VIEW_NAME } from './contactViewName';
 import ContactCases from '../modules/cases/components/the-contact-cases.vue';
+import ContactCommunications from '../modules/communications/components/the-communications.vue';
 import ContactDetails from '../modules/details/components/the-details.vue';
 import ContactTimeline from '../modules/timeline/components/contact-timeline.vue';
 import ContactVariables from '../modules/variables/components/the-variables.vue';
-
-const CONTACT_VIEW_NAME = 'contact_view';
 
 const contactsChildrenRoutes: RouteRecordRaw[] = [
 	{

@@ -1,37 +1,38 @@
 <template>
   <wt-popup
     :shown="shown"
-    size="sm"
+    :size="ComponentSize.SM"
     overflow
     @close="close"
   >
     <template #header>
-      {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
-      {{ t('contacts.attributes', 1).toLowerCase() }}
+      {{ popupTitle }}
     </template>
     <template #main>
-      <form>
+      <form
+        class="variable-popup__form"
+        @submit.prevent="save"
+      >
         <wt-input-text
-          v-model:model-value="draft.key"
-          :v="v$.draft.key"
-          :label="t('vocabulary.keys',1)"
+          v-model:model-value="modelValue.key"
+          :label="t('vocabulary.keys', 1)"
+          :regle-validation="validationFields.key"
           required
         />
         <wt-input-text
-          v-model:model-value="draft.value"
-          :v="v$.draft.value"
-          :label="t('vocabulary.values',1)"
+          v-model:model-value="modelValue.value"
+          :label="t('vocabulary.values', 1)"
+          :regle-validation="validationFields.value"
           required
         />
       </form>
     </template>
     <template #actions>
       <wt-button
-        :loading="isSaving"
-        :disabled="v$.$invalid"
+        :disabled="hasValidationErrors"
         @click="save"
       >
-        {{ mode === 'update' ? t('reusable.edit') : t('reusable.add') }}
+        {{ isNew ? t('reusable.add') : t('reusable.edit') }}
       </wt-button>
       <wt-button
         color="secondary"
@@ -43,118 +44,59 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { computed, reactive, ref, useAttrs, watch } from 'vue';
+<script setup lang="ts">
+import type { ContactsVariable } from '@webitel/api-services/gen/models';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
+import { ComponentSize } from '@webitel/ui-sdk/enums';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useVariablesCardStore } from '../stores/card/variablesCardStore';
 
-const emit = defineEmits([
-	'close',
-]);
+const props = defineProps<{
+	parentId: string;
+}>();
 
-const route = useRoute();
-const store = useStore();
+const emit = defineEmits<{
+	close: [];
+	saved: [];
+}>();
+
 const { t } = useI18n();
+const route = useRoute();
 
 // animate popup appearance after f5 with popup opened
 const shown = ref(false);
-const isSaving = ref(false);
 
-const getDefaultDraft = () => ({
-	id: '',
-	etag: '',
-	key: '',
-	value: '',
+const variableId = computed(() => route.params.variableId as string);
+
+const {
+	modelValue,
+	validationFields,
+	hasValidationErrors,
+	isNew,
+	save: saveItem,
+} = useNestedCardComponent<ContactsVariable>({
+	useCardStore: useVariablesCardStore,
+	routeParamName: 'variableId',
+	parentId: props.parentId,
 });
 
-const draft = reactive(getDefaultDraft());
-
-const v$ = useVuelidate(
-	computed(() => ({
-		draft: {
-			key: {
-				required,
-			},
-			value: {
-				required,
-			},
-		},
-	})),
-	{
-		draft,
-	},
-	{
-		$autoDirty: true,
-	},
+const popupTitle = computed(
+	() =>
+		`${isNew.value ? t('reusable.add') : t('reusable.edit')} ${t('contacts.attributes', 1).toLowerCase()}`,
 );
 
-v$.value.$touch();
-
-const variableId = computed(() => route.params.variableId);
-
-const mode = computed(() => (variableId.value === 'new' ? 'create' : 'update'));
+const save = async () => {
+	await saveItem();
+	emit('saved');
+	close();
+};
 
 function close() {
 	emit('close');
 }
-
-function getItem() {
-	return store.dispatch(`${props.namespace}/GET_VARIABLE`, {
-		id: variableId.value,
-	});
-}
-
-function addItem(payload) {
-	return store.dispatch(`${props.namespace}/ADD_VARIABLE`, {
-		itemInstance: payload,
-	});
-}
-
-function updateItem(payload) {
-	return store.dispatch(`${props.namespace}/UPDATE_VARIABLE`, {
-		itemInstance: payload,
-		etag: payload.etag,
-	});
-}
-
-async function save() {
-	isSaving.value = true;
-	if (variableId.value !== 'new') {
-		await updateItem(draft);
-	} else {
-		await addItem(draft);
-	}
-
-	isSaving.value = false;
-
-	setTimeout(() => {
-		close();
-	}, 1500);
-}
-
-watch(
-	variableId,
-	async () => {
-		if (variableId.value === 'new') {
-			Object.assign(draft, getDefaultDraft());
-		} else if (variableId.value) {
-			Object.assign(draft, await getItem());
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 
 watch(
 	variableId,
@@ -172,3 +114,11 @@ watch(
 	},
 );
 </script>
+
+<style lang="scss" scoped>
+.variable-popup__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+</style>

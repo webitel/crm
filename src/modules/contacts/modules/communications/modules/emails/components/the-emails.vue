@@ -1,0 +1,202 @@
+<template>
+  <div class="emails">
+    <communication-popup
+      :store="useEmailsCardStore"
+      :parent-id="parentId"
+      :channel="CommunicationChannel.Email"
+      :is-first-record="!dataList.length"
+      @close="close"
+      @saved="loadDataList"
+    />
+
+    <delete-confirmation-popup
+      :shown="isDeleteConfirmationPopup"
+      :callback="deleteCallback"
+      :delete-count="deleteCount"
+      @close="closeDelete"
+    />
+
+    <section class="table-section">
+      <header class="table-title">
+        <h3 class="table-title__title">
+          {{ t('vocabulary.emails', 2) }}
+        </h3>
+        <wt-action-bar
+          :include="[IconAction.ADD]"
+          :disabled:add="disabledAdd"
+          @click:add="open"
+        />
+      </header>
+
+      <div class="table-section__table-wrapper">
+        <wt-empty
+          v-show="showEmpty"
+          :image="imageEmpty"
+          :text="textEmpty"
+          :primary-action-text="primaryActionTextEmpty"
+          :disabled-primary-action="disabledAdd"
+          @click:primary="open()"
+        />
+
+        <wt-loader v-show="isLoading" />
+
+        <wt-table
+          v-show="dataList.length && !isLoading"
+          :data="dataList"
+          :headers="shownHeaders"
+          :selectable="false"
+          sortable
+          @sort="updateSort"
+        >
+          <template #primary="{ item }">
+            <wt-icon
+              v-if="item.primary"
+              icon="tick"
+              color="success"
+            />
+            <wt-icon-btn
+              v-else
+              :disabled="disabledUpdate"
+              class="emails__set-primary-btn"
+              icon="tick"
+              @click="setAsPrimary(item)"
+            />
+          </template>
+
+          <template #type="{ item }">
+            {{ item.type.name }}
+          </template>
+
+          <template #actions="{ item }">
+            <wt-icon-action
+              :disabled="disabledUpdate"
+              action="edit"
+              @click="open(item.id)"
+            />
+            <wt-icon-action
+              :disabled="disabledDelete"
+              action="delete"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
+            />
+          </template>
+        </wt-table>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { EmailsAPI } from '@webitel/api-services/api';
+import { useCardListNavigation } from '@webitel/ui-datalist/card';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { IconAction } from '@webitel/ui-sdk/enums';
+import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+
+import { useContactEditAccessControl } from '../../../../../composables/useContactEditAccessControl';
+import { useContactCardStore } from '../../../../../stores/card/contactCardStore';
+import CommunicationPopup from '../../../components/communications-popup.vue';
+import { CommunicationChannel } from '../../../enums/CommunicationChannel';
+import dummyDark from '../assets/email-dummy-dark.svg';
+import dummyLight from '../assets/email-dummy-light.svg';
+import { useEmailsCardStore } from '../stores/card/emailsCardStore';
+import { useEmailsDatalistStore } from '../stores/datalist/emailsDatalistStore';
+
+const { t } = useI18n();
+const route = useRoute();
+
+const { disabledAdd, disabledUpdate, disabledDelete } =
+	useContactEditAccessControl();
+
+const { open } = useCardListNavigation({
+	routeParamName: 'commId',
+});
+const { close } = useClose(route.name);
+
+const contactCardStore = useContactCardStore();
+const { itemId: parentId } = storeToRefs(
+	contactCardStore as unknown as StoreGeneric,
+);
+
+const tableStore = useEmailsDatalistStore();
+
+const { dataList, error, isLoading, shownHeaders, filtersManager } =
+	storeToRefs(tableStore);
+
+const { initialize, loadDataList, updateSize, updateSort, deleteEls } =
+	tableStore;
+
+updateSize(1000);
+initialize({
+	parentId: parentId.value,
+});
+
+const {
+	isVisible: isDeleteConfirmationPopup,
+	deleteCount,
+	deleteCallback,
+
+	askDeleteConfirmation,
+	closeDelete,
+} = useDeleteConfirmationPopup();
+
+const {
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty(
+	{
+		dataList,
+		error,
+		filters: computed(() => filtersManager.value.getAllValues()),
+		isLoading,
+	},
+	computed(() => ({
+		image: {
+			empty: {
+				dark: dummyDark,
+				light: dummyLight,
+			},
+		},
+		text: {
+			empty: t('contacts.communications.emails.empty'),
+		},
+	})),
+);
+
+async function setAsPrimary(item) {
+	await EmailsAPI.patch({
+		parentId: parentId.value,
+		etag: item.etag,
+		changes: {
+			primary: true,
+		},
+	});
+	await loadDataList();
+}
+</script>
+
+<style lang="scss" scoped>
+.emails__set-primary-btn {
+  opacity: 0;
+  transition: var(--transition);
+  pointer-events: none;
+}
+
+.wt-table tr:hover .emails__set-primary-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+</style>

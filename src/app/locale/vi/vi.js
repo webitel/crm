@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Thêm email',
 				editTitle: 'Sửa email',
-				dummy: 'Chưa có địa chỉ email nào',
+				empty: 'Chưa có địa chỉ email nào',
 			},
 			phones: {
 				addTitle: 'Thêm số điện thoại',
 				editTitle: 'Sửa số điện thoại',
-				dummy: 'Chưa có số điện thoại nào',
+				empty: 'Chưa có số điện thoại nào',
 			},
 			messaging: {
 				gateway: 'Cổng kết nối',
 				provider: 'Nhà cung cấp ',
 				username: 'Tên người dùng',
-				dummy: 'Chưa có tùy chọn nhắn tin nào',
+				empty: 'Chưa có tùy chọn nhắn tin nào',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Ứng dụng Telegram',

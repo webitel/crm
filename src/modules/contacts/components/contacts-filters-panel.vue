@@ -18,13 +18,13 @@ import { storeToRefs } from 'pinia';
 
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { filtersOptions } from '../configs/filtersOptions';
-import { useContactsStore } from '../stores/contacts';
+import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 
 const emit = defineEmits<{
 	hide: [];
 }>();
 
-const tableStore = useContactsStore();
+const tableStore = useContactsDatalistStore();
 const { filtersManager } = storeToRefs(tableStore);
 
 const { addFilter, updateFilter, deleteFilter } = tableStore;

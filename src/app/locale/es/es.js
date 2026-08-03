@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Agregar el correo electrónico',
 				editTitle: 'Editar el correo electrónico',
-				dummy: 'No hay direcciones de correo electrónico todavía',
+				empty: 'No hay direcciones de correo electrónico todavía',
 			},
 			phones: {
 				addTitle: 'Agregar el número de teléfono',
 				editTitle: 'Editar el número de teléfono',
-				dummy: 'No hay números de teléfono todavía',
+				empty: 'No hay números de teléfono todavía',
 			},
 			messaging: {
 				gateway: 'Pasarela',
 				provider: 'Proveedor ',
 				username: 'Nombre de usuario',
-				dummy: 'No hay opciones de mensajería todavía',
+				empty: 'No hay opciones de mensajería todavía',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Bot de Telegram',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Aplicación de Telegram',
