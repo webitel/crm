@@ -1,7 +1,7 @@
 <template>
   <div
     class="case-priority-color-component"
-    :class="[`case-priority-color-component-${color}`]"
+    :class="{ 'case-priority-color-component--colored': color }"
   >
     <slot>
       <component
@@ -45,7 +45,7 @@ const colorVariable = computed(
 </style>
 
 <style scoped lang="scss">
-.case-priority-color-component {
+.case-priority-color-component--colored {
   color: v-bind(colorVariable);
 
   :deep(.wt-indicator__indicator) {
