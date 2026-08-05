@@ -1,11 +1,7 @@
-// ContactsTimelineEventType is missing from the types barrel of '@webitel/api-services/gen'
-
-import { WebitelCasesCaseTimelineEventType } from '@webitel/api-services/gen';
-import { ContactsTimelineEventType } from '@webitel/api-services/gen/models';
-
 export const TimelineEventType = {
-	...ContactsTimelineEventType,
-	...WebitelCasesCaseTimelineEventType,
+	Chat: 'chat',
+	Call: 'call',
+	Email: 'email',
 } as const;
 
 export type TimelineEventType =

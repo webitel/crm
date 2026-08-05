@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import dompurify from 'dompurify';
 import MarkdownIt from 'markdown-it';
 import { computed } from 'vue';

@@ -119,10 +119,10 @@ import TimelineRowDuration from '../../../../components/utils/timeline-row-durat
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
-import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
-import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
-import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import { TimelineInitiatorType } from '../../../../enums/TimelineInitiatorType.enum';
+import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
+import { TimelineTaskKind } from '../../../../enums/TimelineTaskKind.enum';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 import CallPointsTimelineRowSection from '../point-row/call-points-timeline-row-section.vue';
 import CallTaskTimelineActions from './actions/call-task-timeline-actions.vue';
 
@@ -168,43 +168,43 @@ const {
 } = toRefs(props.task);
 
 const taskType = computed(() => {
-	if (isMissed?.value) return TimelineTaskKind.CALL_MISSED;
-	if (isInbound?.value) return TimelineTaskKind.CALL_INBOUND;
-	return TimelineTaskKind.CALL_OUTBOUND;
+	if (isMissed?.value) return TimelineTaskKind.CallMissed;
+	if (isInbound?.value) return TimelineTaskKind.CallInbound;
+	return TimelineTaskKind.CallOutbound;
 });
 
 const pinType = computed(() => {
 	switch (taskType.value) {
-		case TimelineTaskKind.CALL_MISSED:
-			return TimelinePinType.CALL_MISSED;
-		case TimelineTaskKind.CALL_INBOUND:
-			return TimelinePinType.CALL_INBOUND;
-		case TimelineTaskKind.CALL_OUTBOUND:
-			return TimelinePinType.CALL_OUTBOUND;
+		case TimelineTaskKind.CallMissed:
+			return TimelinePinType.CallMissed;
+		case TimelineTaskKind.CallInbound:
+			return TimelinePinType.CallInbound;
+		case TimelineTaskKind.CallOutbound:
+			return TimelinePinType.CallOutbound;
 		default:
 			throw new Error('Unknown task type for pin');
 	}
 });
 
 const taskStatus = computed(() => {
-	if (taskType.value === TimelineTaskKind.CALL_MISSED)
-		return TimelineTaskStatusEnum.MISSED;
-	return TimelineTaskStatusEnum.STARTED;
+	if (taskType.value === TimelineTaskKind.CallMissed)
+		return TimelineTaskStatusEnum.Missed;
+	return TimelineTaskStatusEnum.Started;
 });
 
 const initiatorType = computed(() => {
-	if (!isInbound?.value) return TimelineInitiatorType.CONTACT; // agent
-	if (participants?.value) return TimelineInitiatorType.CONTACT;
-	if (queue?.value) return TimelineInitiatorType.BOT;
-	if (flowScheme?.value) return TimelineInitiatorType.FLOW;
-	return TimelineInitiatorType.CONTACT;
+	if (!isInbound?.value) return TimelineInitiatorType.Contact; // agent
+	if (participants?.value) return TimelineInitiatorType.Contact;
+	if (queue?.value) return TimelineInitiatorType.Bot;
+	if (flowScheme?.value) return TimelineInitiatorType.Flow;
+	return TimelineInitiatorType.Contact;
 });
 
 const initiator = computed(() => {
 	switch (initiatorType.value) {
-		case TimelineInitiatorType.FLOW:
+		case TimelineInitiatorType.Flow:
 			return flowScheme?.value;
-		case TimelineInitiatorType.BOT:
+		case TimelineInitiatorType.Bot:
 			return queue?.value;
 		default:
 			return participants?.value.at(0);

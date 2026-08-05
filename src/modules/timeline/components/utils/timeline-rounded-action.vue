@@ -1,49 +1,38 @@
 <template>
-  <wt-rounded-action
-    :color="iColor"
+  <wt-button
+    :color="ButtonColor.SECONDARY"
     :icon="icon"
     class="timeline-rounded-action"
     :class="[`timeline-rounded-action--${color}`]"
-    rounded
     @click="emit('click')"
   />
 </template>
 
-<script setup>
-import { computed } from 'vue';
+<script setup lang="ts">
+import { ButtonColor } from '@webitel/ui-sdk/enums';
 
-const props = defineProps({
-	icon: {
-		type: String,
-		required: true,
-	},
-	color: {
-		type: String,
-		default: 'secondary',
-		validator: (value) =>
-			[
-				'primary',
-				'success',
-				'error',
-				'chat',
-				'secondary',
-				'email',
-			].includes(value),
-	},
+interface Props {
+	icon: string;
+	color?: 'primary' | 'success' | 'error' | 'chat' | 'secondary' | 'email';
+}
+
+withDefaults(defineProps<Props>(), {
+	color: 'secondary',
 });
 
-const emit = defineEmits([
-	'click',
-]);
-
-const iColor = computed(() =>
-	props.color === 'secondary' ? 'default' : 'on-dark',
-);
+const emit = defineEmits<{
+	click: [];
+}>();
 </script>
 
 <style lang="scss" scoped>
 .timeline-rounded-action {
-  &--primary.wt-rounded-action {
+  &.wt-button {
+    border-radius: 50%;
+    border: 2px solid;
+  }
+
+  &--primary.wt-button {
     border-color: var(--primary-color);
     background-color: var(--primary-color);
 
@@ -52,9 +41,15 @@ const iColor = computed(() =>
       border-color: var(--primary-hover-color);
       background-color: var(--primary-hover-color);
     }
+
+    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
+       !important guarantees this override wins regardless of stylesheet load order */
+    :deep(.wt-icon) {
+      fill: var(--icon-on-dark-color) !important;
+    }
   }
 
-  &--secondary.wt-rounded-action {
+  &--secondary.wt-button {
     border-color: var(--secondary-color);
     background-color: var(--secondary-color);
 
@@ -65,7 +60,7 @@ const iColor = computed(() =>
     }
   }
 
-  &--success.wt-rounded-action {
+  &--success.wt-button {
     border-color: var(--success-color);
     background-color: var(--success-color);
 
@@ -74,9 +69,15 @@ const iColor = computed(() =>
       border-color: var(--success-hover-color);
       background-color: var(--success-hover-color);
     }
+
+    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
+       !important guarantees this override wins regardless of stylesheet load order */
+    :deep(.wt-icon) {
+      fill: var(--icon-on-dark-color) !important;
+    }
   }
 
-  &--error.wt-rounded-action {
+  &--error.wt-button {
     border-color: var(--error-color);
     background-color: var(--error-color);
 
@@ -85,9 +86,15 @@ const iColor = computed(() =>
       border-color: var(--error-hover-color);
       background-color: var(--error-hover-color);
     }
+
+    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
+       !important guarantees this override wins regardless of stylesheet load order */
+    :deep(.wt-icon) {
+      fill: var(--icon-on-dark-color) !important;
+    }
   }
 
-  &--chat.wt-rounded-action {
+  &--chat.wt-button {
     border-color: var(--chat-color);
     background-color: var(--chat-color);
 
@@ -96,9 +103,15 @@ const iColor = computed(() =>
       border-color: var(--chat-hover-color);
       background-color: var(--chat-hover-color);
     }
+
+    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
+       !important guarantees this override wins regardless of stylesheet load order */
+    :deep(.wt-icon) {
+      fill: var(--icon-on-dark-color) !important;
+    }
   }
 
-  &--email.wt-rounded-action {
+  &--email.wt-button {
     border-color: var(--email-color);
     background-color: var(--email-color);
 
@@ -106,6 +119,12 @@ const iColor = computed(() =>
     &:active {
       border-color: var(--email-hover-color);
       background-color: var(--email-hover-color);
+    }
+
+    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
+       !important guarantees this override wins regardless of stylesheet load order */
+    :deep(.wt-icon) {
+      fill: var(--icon-on-dark-color) !important;
     }
   }
 }
