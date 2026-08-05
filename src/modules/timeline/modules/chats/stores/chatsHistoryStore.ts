@@ -1,5 +1,5 @@
 import { ChatMessagesHistoryAPI } from '@webitel/api-services/api';
-import { TimelineMode } from '@webitel/ui-sdk/enums';
+import { TimelineMode } from '../../../enums/TimelineMode';
 
 import { createTaskPointsHistoryStore } from '../../../stores/createTaskPointsHistoryStore';
 

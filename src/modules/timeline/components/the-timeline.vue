@@ -50,12 +50,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { TimelineMode } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref } from 'vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
+import type { TimelineMode } from '../enums/TimelineMode';
 import { useTimelineStore } from '../stores/timelineStore';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';

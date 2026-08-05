@@ -1,12 +1,11 @@
 import { CaseTimelineAPI, ContactTimelineAPI } from '@webitel/api-services/api';
 import { createTableStore } from '@webitel/ui-datalist';
-import { TimelineMode } from '@webitel/ui-sdk/enums';
 import deepCopy from 'deep-copy';
 import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref, toRaw } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
 import { TimelineEventType } from '../enums/TimelineEventType';
+import { TimelineMode } from '../enums/TimelineMode';
 import { headers } from './_internals/headers';
 
 export interface TimelineDay {
