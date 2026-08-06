@@ -193,7 +193,7 @@
 </template>
 
 <script setup>
-import { ServiceCatalogsAPI } from '@webitel/api-services/api';
+import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import {
 	WtDisplayChipItems,
@@ -212,8 +212,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import ServicesAPI from '../modules/services/api/services';
-import { useServiceCatalogsStore } from '../stores/service-catalogs';
+import { useCaseServiceCatalogsDatalistStore } from '../stores';
 import { checkDisableState } from '../utils/checkDisableState';
 
 const { t } = useI18n();
@@ -251,7 +250,7 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const tableStore = useServiceCatalogsStore();
+const tableStore = useCaseServiceCatalogsDatalistStore();
 
 const {
 	dataList,

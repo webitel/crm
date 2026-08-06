@@ -1,9 +1,9 @@
 <template>
-  <wt-page-wrapper :actions-panel="!!currentTab.filters">
+  <wt-page-wrapper :actions-panel="false">
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="isPrimaryDisabled"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -11,129 +11,75 @@
       </wt-page-header>
     </template>
 
-    <template #actions-panel>
-      <component
-        :is="currentTab.filters"
-        :namespace="namespace"
-      />
-    </template>
-
     <template #main>
+      <wt-loader v-if="debouncedIsLoading" />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
-            :access="/*is used by permissions tab*/{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
+            v-model="modelValue"
+            :validation-fields="validationFields"
+            :access="{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
           />
         </router-view>
+
         <input
           hidden
           type="submit"
-        />
-        <!--  submit form on Enter  -->
+        > <!--  submit form on Enter  -->
       </form>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+<script lang="ts" setup>
+import type { WebitelCasesCatalog } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { useCaseServiceCatalogsCardStore } from '../stores';
 import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
 
-const namespace = 'configuration/lookups/catalogs';
 const { t } = useI18n();
-
-const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 const { handleError } = useErrorRedirectHandler();
 
+const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+
 const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-	resetState,
-	...restStore
-} = useCardStore(namespace, {
-	onLoadErrorHandler: handleError,
-});
+	modelValue,
 
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-			sla: {
-				required,
-			},
-			defaultPriority: {
-				required,
-			},
-			prefix: {
-				required,
-			},
-			closeReasonGroup: {
-				required,
-			},
-			status: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
+	debouncedIsLoading,
+	originalItemInstance,
 
-v$.value.$touch();
+	isNew,
+	saveText,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	validationFields,
 
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-	...restStore,
-	id,
-	itemInstance,
-	resetState,
+	save,
+} = useCardComponent<WebitelCasesCatalog>({
+	useCardStore: useCaseServiceCatalogsCardStore,
 	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.ServiceCatalogs);
 
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
+const isPrimaryDisabled = computed(
+	() =>
+		!hasSaveActionAccess.value ||
+		!isAnyFieldEdited.value ||
+		hasValidationErrors.value,
 );
-
-const tabs = computed(() => {
-	const general = {
-		text: t('reusable.general'),
-		value: 'general',
-		pathName: `${CrmSections.ServiceCatalogs}-general`,
-	};
-
-	const tabs = [
-		general,
-	];
-
-	return tabs;
-});
-
-const { currentTab } = useCardTabs(tabs);
 
 const path = computed(() => {
 	return [
@@ -156,17 +102,9 @@ const path = computed(() => {
 		{
 			name: isNew.value
 				? t('reusable.new')
-				: prettifyBreadcrumbName(pathName.value),
+				: prettifyBreadcrumbName(originalItemInstance.value?.name),
 		},
 	];
-});
-
-initialize();
-
-onMounted(() => {
-	if (isNew.value) {
-		resetState();
-	}
 });
 </script>
 

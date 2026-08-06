@@ -6,7 +6,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="isPrimaryDisabled"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -14,94 +14,84 @@
       </wt-page-header>
     </template>
     <template #main>
+      <wt-loader v-if="debouncedIsLoading" />
       <form
+        v-else
         class="main-container"
         @submit.prevent="save"
       >
         <router-view v-slot="{ Component }">
           <component
             :is="Component"
-            :v="v$"
-            :namespace="cardNamespace"
-            :access="/*is used by permissions tab*/ {
-              read: true,
-              update: !disableUserInput,
-              delete: !disableUserInput,
-              create: !disableUserInput,
-            }"
+            v-model="modelValue"
+            :validation-fields="validationFields"
+            :access="{ read: true, update: !disableUserInput, delete: !disableUserInput, create: !disableUserInput }"
           />
         </router-view>
+
         <input
           hidden
           type="submit"
-        />
-        <!--  submit form on Enter  -->
+        > <!--  submit form on Enter  -->
       </form>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { ServiceCatalogsAPI } from '@webitel/api-services/api';
+<script lang="ts" setup>
+import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesService } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { type RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
-import ServicesAPI from '../api/services.js';
+import { useCaseServicesCardStore } from '../stores';
 
 const { t } = useI18n();
-const store = useStore();
 const route = useRoute();
 const router = useRouter();
-
-const baseNamespace = 'configuration/lookups/services';
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
 const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
+	modelValue,
 
-	...restStore
-} = useCardStore(baseNamespace);
+	debouncedIsLoading,
+	originalItemInstance,
 
-const v$ = useVuelidate(
-	{
-		itemInstance: {
-			name: {
-				required,
-			},
-		},
-	},
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
+	isNew,
+	saveText,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	validationFields,
 
-v$.value.$touch();
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
-
-const { isNew, pathName, saveText, save, initialize } = useCardComponent({
-	...restStore,
-	id,
-	itemInstance,
+	save: saveCard,
+} = useCardComponent<WebitelCasesService>({
+	useCardStore: useCaseServicesCardStore,
 });
+
+const rootId = computed(() => route.params.rootId as string);
+const catalogId = computed(() => route.params.catalogId as string);
+
+const isPrimaryDisabled = computed(
+	() =>
+		!hasSaveActionAccess.value ||
+		!isAnyFieldEdited.value ||
+		hasValidationErrors.value,
+);
+
+const save = async () => {
+	modelValue.value.rootId = rootId.value;
+	modelValue.value.catalogId = catalogId.value;
+
+	await saveCard();
+};
 
 const rootService = ref(null);
 const catalog = ref(null);
@@ -119,7 +109,10 @@ const loadCatalog = async () => {
 };
 
 const path = computed(() => {
-	const routes = [
+	const routes: {
+		name?: string;
+		route?: RouteLocationRaw;
+	}[] = [
 		{
 			name: t('crm'),
 			route: '/start-page',
@@ -153,7 +146,7 @@ const path = computed(() => {
 		routes.push({
 			name: isNew.value
 				? t('reusable.new')
-				: prettifyBreadcrumbName(pathName.value),
+				: prettifyBreadcrumbName(originalItemInstance.value?.name),
 		});
 
 		return routes;
@@ -179,7 +172,7 @@ const path = computed(() => {
 	routes.push({
 		name: isNew.value
 			? t('reusable.new')
-			: prettifyBreadcrumbName(pathName.value),
+			: prettifyBreadcrumbName(originalItemInstance.value?.name),
 	});
 
 	return routes;
@@ -196,9 +189,6 @@ const close = () => {
 	});
 };
 
-const rootId = computed(() => route.params.rootId);
-const catalogId = computed(() => route.params.catalogId);
-
 const initializeBreadcrumbs = async () => {
 	rootService.value = null;
 
@@ -214,21 +204,7 @@ const initializeBreadcrumbs = async () => {
 	}
 };
 
-const setCatalogAndRootService = () => {
-	store.commit(`${baseNamespace}/card/SET`, {
-		path: 'rootId',
-		value: rootId.value,
-	});
-	store.commit(`${baseNamespace}/card/SET`, {
-		path: 'catalogId',
-		value: catalogId.value,
-	});
-};
-
-initialize();
-
 onMounted(async () => {
 	await initializeBreadcrumbs();
-	setCatalogAndRootService();
 });
 </script>
