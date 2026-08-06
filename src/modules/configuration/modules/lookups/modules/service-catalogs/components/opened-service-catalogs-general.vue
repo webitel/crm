@@ -17,9 +17,9 @@
 
       <wt-single-select
         :label="t('lookups.serviceCatalogs.statuses')"
-        :search-method="loadStatusesList"
+        :search-method="hasStatusesReadAccess && loadStatusesList"
         :model-value="itemInstance.status"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasStatusesReadAccess"
         :v="v.itemInstance.status"
         required
         @update:model-value="setItemProp({ path: 'status', value: $event })"
@@ -36,39 +36,39 @@
 
       <wt-single-select
         :label="t('lookups.closeReasonGroups.closeReasonGroups')"
-        :search-method="loadReasonList"
+        :search-method="hasCloseReasonGroupsReadAccess && loadReasonList"
         :model-value="itemInstance.closeReasonGroup"
         :v="v.itemInstance.closeReasonGroup"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasCloseReasonGroupsReadAccess"
         required
         @update:model-value="setItemProp({ path: 'closeReasonGroup', value: $event })"
       />
 
       <wt-single-select
         :label="t('lookups.slas.slas')"
-        :search-method="loadSlaList"
+        :search-method="hasSlasReadAccess && loadSlaList"
         :model-value="itemInstance.sla"
         :v="v.itemInstance.sla"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasSlasReadAccess"
         required
         @update:model-value="setItemProp({ path: 'sla', value: $event })"
       />
 
       <wt-single-select
         :label="t('lookups.serviceCatalogs.defaultPriority')"
-        :search-method="loadPrioritiesList"
+        :search-method="hasPrioritiesReadAccess && loadPrioritiesList"
         :model-value="itemInstance.defaultPriority"
         :v="v.itemInstance.defaultPriority"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasPrioritiesReadAccess"
         required
         @update:model-value="setItemProp({ path: 'defaultPriority', value: $event })"
       />
 
       <wt-multi-select
         :label="t('objects.team', 2)"
-        :search-method="loadTeamsList"
+        :search-method="hasTeamsReadAccess && loadTeamsList"
         :model-value="itemInstance.teams"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasTeamsReadAccess"
         @update:model-value="setItemProp({ path: 'teams', value: $event })"
       />
 
@@ -89,9 +89,9 @@
       <div class="opened-card-input-grid__skills-wrapper">
         <wt-multi-select
           :label="t('lookups.serviceCatalogs.skills')"
-          :search-method="loadSkillsList"
+          :search-method="hasSkillsReadAccess && loadSkillsList"
           :model-value="itemInstance.skills"
-          :disabled="disableUserInput"
+          :disabled="disableUserInput || !hasSkillsReadAccess"
           @update:model-value="setItemProp({ path: 'skills', value: $event })"
         />
 
@@ -115,6 +115,7 @@ import {
 	SlasAPI,
 	TeamsAPI,
 } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { useI18n } from 'vue-i18n';
 
@@ -134,6 +135,24 @@ const props = defineProps({
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasStatusesReadAccess } = useUserAccessControl(
+	WtObject.Status,
+);
+const { hasReadAccess: hasCloseReasonGroupsReadAccess } = useUserAccessControl(
+	WtObject.CloseReasonGroup,
+);
+const { hasReadAccess: hasSlasReadAccess } = useUserAccessControl(
+	WtObject.Slas,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
+const { hasReadAccess: hasTeamsReadAccess } = useUserAccessControl(
+	WtObject.Team,
+);
+const { hasReadAccess: hasSkillsReadAccess } = useUserAccessControl(
+	WtObject.Skill,
+);
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

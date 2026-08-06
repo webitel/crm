@@ -17,10 +17,10 @@
 
       <wt-single-select
         :label="t('objects.calendar')"
-        :search-method="loadCalendarsList"
+        :search-method="hasCalendarsReadAccess && loadCalendarsList"
         :model-value="itemInstance.calendar"
         :v="v.itemInstance.calendar"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasCalendarsReadAccess"
         required
         @update:model-value="setItemProp({ path: 'calendar', value: $event })"
       />
@@ -79,6 +79,7 @@
 
 <script setup>
 import { CalendarsAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -99,6 +100,9 @@ const props = defineProps({
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasCalendarsReadAccess } = useUserAccessControl(
+	WtObject.Calendar,
+);
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 

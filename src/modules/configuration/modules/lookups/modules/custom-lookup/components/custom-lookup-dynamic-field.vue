@@ -31,10 +31,10 @@
     :label="label"
     :model-value="value"
     :v="validation"
-    :search-method="loadLookupList(field.lookup)"
+    :search-method="hasLookupReadAccess && loadLookupList(field.lookup)"
     data-key="id"
     :required="isRequired"
-    :disabled="props.disabled"
+    :disabled="props.disabled || !hasLookupReadAccess"
     @update:model-value="selectElement"
   />
   <wt-multi-select
@@ -42,10 +42,10 @@
     :label="label"
     :model-value="value"
     :v="validation"
-    :search-method="loadLookupList(field.lookup)"
+    :search-method="hasLookupReadAccess && loadLookupList(field.lookup)"
     data-key="id"
     :required="isRequired"
-    :disabled="props.disabled"
+    :disabled="props.disabled || !hasLookupReadAccess"
     @update:model-value="selectElements"
   />
   <wt-datepicker
@@ -66,12 +66,15 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import { getWtObjectByLookupPath } from '../../../../../../../app/scripts/getWtObjectByLookupPath';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 
 const props = defineProps({
@@ -101,6 +104,11 @@ const props = defineProps({
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
 
 const { t } = useI18n();
+
+// Check read access for lookup target object
+const { hasReadAccess: hasLookupReadAccess } = useUserAccessControl(
+	getWtObjectByLookupPath(props.field.lookup?.path) ?? WtObject.CustomLookup,
+);
 
 const v$ = useVuelidate(
 	computed(() => {
