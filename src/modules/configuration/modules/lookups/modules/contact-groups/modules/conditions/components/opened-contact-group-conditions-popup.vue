@@ -26,16 +26,17 @@
           :model-value="itemInstance.group"
           :v="v$.itemInstance.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
-          :search-method="loadStaticContactGroupsList"
+          :search-method="hasContactGroupsReadAccess && loadStaticContactGroupsList"
+          :disabled="!hasContactGroupsReadAccess"
           required
           @update:model-value="setGroups"
         />
         <wt-single-select
           :key="itemInstance.group?.id"
-          :disabled="!itemInstance.group?.id"
+          :disabled="!hasContactsReadAccess || !itemInstance.group?.id"
           :model-value="itemInstance.assignee"
           :label="t('lookups.contactGroups.assignee')"
-          :search-method="loadContacts"
+          :search-method="hasContactsReadAccess && loadContacts"
           @update:model-value="setItemProp({ path: 'assignee', value: $event })"
         />
       </form>
@@ -62,13 +63,15 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import IsEmpty from '@webitel/ui-sdk/src/scripts/isEmpty';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps({
 	namespace: {
@@ -81,6 +84,13 @@ const emit = defineEmits([
 ]);
 const route = useRoute();
 const { t } = useI18n();
+
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
 
 const {
 	namespace: cardNamespace,

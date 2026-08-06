@@ -56,7 +56,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
@@ -75,6 +75,9 @@ const route = useRoute();
 const router = useRouter();
 
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
 const { handleError } = useErrorRedirectHandler();
 
 const {
@@ -160,10 +163,17 @@ const tabs = computed(() => {
 		general,
 	];
 
-	if (id.value) {
-		tabs.push(isDynamicGroup.value ? conditions : contacts);
-		tabs.push(permissions);
+	if (!id.value) return tabs;
+
+	if (isDynamicGroup.value) {
+		tabs.push(conditions);
 	}
+
+	if (!isDynamicGroup.value && hasContactsReadAccess.value) {
+		tabs.push(contacts);
+	}
+
+	tabs.push(permissions);
 
 	return tabs;
 });
