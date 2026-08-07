@@ -14,39 +14,34 @@
   </div>
 </template>
 
-<script setup>
-import { inject } from 'vue';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
 
-import { useTaskPoints } from '../../../../composables/useTaskPoints.js';
+import { useTaskPoints } from '../../../../composables/useTaskPoints';
+import { useChatsHistoryStore } from '../../stores/chatsHistoryStore';
 import ChatEndedPointTimelineRow from './chat-ended-point-timeline-row.vue';
 import ChatPointTimelineRow from './chat-point-timeline-row.vue';
 
-const props = defineProps({
-	taskId: {
-		type: String,
-		required: true,
-	},
-	/**
-	 * @type {Object}
-	 * @description Task object is needed to display "ended" stub with task.closedAt
-	 */
+interface Props {
+	taskId: string;
 	task: {
-		type: Object,
-		required: true,
-	},
-	last: {
-		type: Boolean,
-		default: false,
-	},
+		closedAt?: string | number;
+	};
+	last?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+	last: false,
 });
 
-const timelineNamespace = inject('namespace');
-
-const namespace = `${timelineNamespace}/chats`;
+const chatsHistoryStore = useChatsHistoryStore();
+const { historyById } = storeToRefs(chatsHistoryStore);
+const { loadHistory } = chatsHistoryStore;
 
 const { points } = useTaskPoints({
 	taskId: props.taskId,
-	namespace,
+	historyById,
+	loadHistory,
 });
 </script>
 

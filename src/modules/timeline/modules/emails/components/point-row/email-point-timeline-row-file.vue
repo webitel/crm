@@ -19,17 +19,24 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
-import { computed } from 'vue';
+import { computed, type PropType } from 'vue';
 
 import downloadFile from '../../../../../../app/utils/downloadFile.js';
 import getFileIcon from '../../../../../../app/utils/fileTypeIcon.js';
 import openFileInNewTab from '../../../../../../app/utils/openFileInNewTab.js';
 
+export interface EmailFile {
+	id: string;
+	name: string;
+	size: number;
+	mime: string;
+}
+
 const props = defineProps({
 	file: {
-		type: Array,
+		type: Object as PropType<EmailFile>,
 		required: true,
 	},
 });

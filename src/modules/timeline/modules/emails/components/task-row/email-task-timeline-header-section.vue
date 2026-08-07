@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { WtPopover } from '@webitel/ui-sdk/components';
 
 const props = defineProps({

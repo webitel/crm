@@ -8,7 +8,6 @@
 
 <script setup lang="ts">
 import { type StoreGeneric, storeToRefs } from 'pinia';
-
 import TheTimeline from '../../../../timeline/components/the-timeline.vue';
 import { TimelineMode } from '../../../../timeline/enums/TimelineMode';
 import { useContactCardStore } from '../../../stores/card/contactCardStore';

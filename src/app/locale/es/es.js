@@ -7,7 +7,7 @@ import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
-import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../modules/timeline/enums/TimelineTaskStatus.enum';
 
 export default {
 	crm: 'CRM',
@@ -63,12 +63,12 @@ export default {
 			transcription: 'Transcripción',
 		},
 		status: {
-			[TimelineTaskStatusEnum.STARTED]: 'Iniciado',
-			[TimelineTaskStatusEnum.MISSED]: 'Perdido',
-			[TimelineTaskStatusEnum.TRANSFERRED]: 'Transferido',
-			[TimelineTaskStatusEnum.ENDED]: 'Finalizado',
-			[TimelineTaskStatusEnum.SENT]: 'Enviado',
-			[TimelineTaskStatusEnum.RECEIVED]: 'Recibido',
+			[TimelineTaskStatusEnum.Started]: 'Iniciado',
+			[TimelineTaskStatusEnum.Missed]: 'Perdido',
+			[TimelineTaskStatusEnum.Transferred]: 'Transferido',
+			[TimelineTaskStatusEnum.Ended]: 'Finalizado',
+			[TimelineTaskStatusEnum.Sent]: 'Enviado',
+			[TimelineTaskStatusEnum.Received]: 'Recibido',
 		},
 		eventType: {
 			[TimelineEventType.Call]: 'Llamada | Llamadas',
