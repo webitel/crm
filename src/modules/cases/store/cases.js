@@ -1,17 +1,9 @@
-import { createObjectPermissionsStoreModule } from '@webitel/ui-sdk/modules/ObjectPermissions';
+import { CasesAPI } from '@webitel/api-services/api';
 import {
 	createApiStoreModule,
 	createBaseStoreModule,
 	createCardStoreModule,
-	createTableStoreModule,
 } from '@webitel/ui-sdk/store';
-
-import CasesAPI from '../api/CasesAPI.js';
-import files from '../modules/attachments/modules/files/store/files.js';
-import links from '../modules/attachments/modules/links/store/links.js';
-import filters from '../modules/filters/store/filters.js';
-import service from '../modules/service/store/service.js';
-import { headers } from './_internals/headers';
 
 const resetCardState = {
 	itemId: 0,
@@ -50,71 +42,24 @@ const resetCardState = {
 	},
 };
 
-const state = {
-	editMode: false,
-};
-
-const getters = {
-	EDIT_MODE: (state) => state.editMode,
-};
-
-const actions = {
-	TOGGLE_EDIT_MODE: (context, payload) => {
-		context.commit('SET', {
-			path: 'editMode',
-			value: payload,
-		});
-	},
-};
-
 const api = createApiStoreModule({
 	state: {
 		api: CasesAPI,
 	},
 });
 
-const permissions = createObjectPermissionsStoreModule({
-	modules: {
-		table: {
-			getters: {
-				PARENT_ID: (s, g, rootState) => rootState.cases.card.itemId,
-			},
-			modules: {
-				api,
-			},
-		},
-	},
-});
-
-const table = createTableStoreModule({
-	state: {
-		headers,
-	},
-	modules: {
-		api,
-		filters,
-	},
-});
 const card = createCardStoreModule({
 	state: {
 		_resettable: resetCardState,
 		itemInstance: resetCardState.itemInstance,
-		...state,
 	},
 	modules: {
 		api,
-		service,
-		links,
-		files,
-		permissions,
 	},
-	actions,
-	getters,
 });
 
 const cases = createBaseStoreModule({
 	modules: {
-		table,
 		card,
 	},
 });

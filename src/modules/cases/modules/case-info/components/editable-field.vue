@@ -42,7 +42,7 @@
               class="editable-field__link typo-subtitle-1"
               target="_blank"
             >
-              {{ value?.name }}
+              {{ modelValue?.name }}
             </wt-item-link>
           </div>
           <wt-icon
@@ -59,73 +59,61 @@
         :label="label"
         :required="required"
         :update-value="updateValue"
-        :value="value"
+        :model-value="modelValue"
       />
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 
-const props = defineProps({
-	editMode: {
-		type: Boolean,
-		default: false,
+const props = withDefaults(
+	defineProps<{
+		editMode?: boolean;
+		modelValue?: any;
+		label?: string;
+		required?: boolean;
+		horizontalView?: boolean;
+		icon?: string;
+		color?: string;
+		link?: Record<string, any> | null;
+		disableLink?: boolean;
+	}>(),
+	{
+		editMode: false,
+		modelValue: '',
+		label: '',
+		required: false,
+		horizontalView: false,
+		icon: '',
+		color: '',
+		link: null,
+		disableLink: false,
 	},
-	value: {
-		type: String,
-		default: '',
-	},
-	label: {
-		type: String,
-		default: '',
-	},
-	required: {
-		type: Boolean,
-		default: false,
-	},
-	horizontalView: {
-		type: Boolean,
-		default: false,
-	},
-	icon: {
-		type: String,
-		default: '',
-	},
-	color: {
-		type: String,
-		default: '',
-	},
-	link: {
-		type: Object,
-		default: null,
-	},
-	disableLink: {
-		type: Boolean,
-		default: false,
-	},
-});
+);
 
-const emit = defineEmits([
-	'update:value',
-	'open-link',
-]);
+const emit = defineEmits<{
+	'update:modelValue': [
+		any,
+	];
+	'open-link': [];
+}>();
 
 const updateValue = (newValue) => {
-	emit('update:value', newValue);
+	emit('update:modelValue', newValue);
 };
 
 const valueWithDefault = computed(() => {
-	if (typeof props.value === 'object' && props.value !== null) {
-		return props.value?.name ?? '-';
+	if (typeof props.modelValue === 'object' && props.modelValue !== null) {
+		return props.modelValue?.name ?? '-';
 	}
 
-	return props.horizontalView ? props.value : props.value || '-';
+	return props.horizontalView ? props.modelValue : props.modelValue || '-';
 });
 
 const showLinkIcon = computed(
-	() => props.link && props.value?.name && !props.disableLink,
+	() => props.link && props.modelValue?.name && !props.disableLink,
 );
 
 /**

@@ -198,6 +198,7 @@
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, inject, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -207,7 +208,6 @@ import CasesFilterSearchBar from '../../../../cases/components/cases-filter-sear
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
-import prettifyDate from '../../../../cases/utils/prettifyDate';
 import DisplayDynamicFieldExtension from '../../../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
 import { useContactCardStore } from '../../../stores/card/contactCardStore';
 import { ContactCasesNamespace } from '../namespace';

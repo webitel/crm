@@ -3,44 +3,59 @@
     <span class="case-deadline-list__title case-section-title">{{ t('cases.deadlines') }}</span>
     <div class="case-deadline-list__wrapper">
       <case-deadline
-        :time="itemInstance?.createdAt"
+        :time="modelValue?.createdAt"
         :title="t('reusable.createdAt')"
       />
       <case-deadline
-        :time="itemInstance?.plannedReactionAt"
+        :time="modelValue?.plannedReactionAt"
         :title="t('cases.reactionTime')"
       />
       <case-deadline
-        :time-difference="itemInstance?.reactedAt ? (itemInstance?.differenceInReaction || 0) : null"
-        :time="itemInstance?.reactedAt"
+        :time-difference="reactionTimeDifference"
+        :time="modelValue?.reactedAt"
         :title="t('cases.actualReactionTime')"
       />
 
       <case-deadline
-        :time="itemInstance?.plannedResolveAt"
+        :time="modelValue?.plannedResolveAt"
         :title="t('cases.resolutionTime')"
       />
 
       <case-deadline
-        :time-difference="itemInstance?.resolvedAt ? (itemInstance.differenceInResolve || 0) : null"
-        :time="itemInstance.resolvedAt"
+        :time-difference="resolutionTimeDifference"
+        :time="modelValue.resolvedAt"
         :title="t('cases.actualResolutionTime')"
       />
     </div>
   </div>
 </template>
-<script setup>
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { inject } from 'vue';
+<script setup lang="ts">
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import CaseDeadline from './case-deadline.vue';
 
 const { t } = useI18n();
 
-const namespace = inject('namespace');
+const { modelValue } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
+});
 
-const { itemInstance } = useCardStore(namespace);
+const reactionTimeDifference = computed(() =>
+	modelValue.value?.reactedAt
+		? modelValue.value.differenceInReaction || 0
+		: null,
+);
+
+const resolutionTimeDifference = computed(() =>
+	modelValue.value?.resolvedAt
+		? modelValue.value.differenceInResolve || 0
+		: null,
+);
 </script>
 
 <style

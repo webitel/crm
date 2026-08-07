@@ -3,26 +3,24 @@
     <div class="case-number">
       <span class="case-number__title case-section-title">{{ t('cases.caseNumber') }}</span>
       <div class="case-number__wrapper">
-        <p>{{ itemInstance.name }}</p>
-        <wt-copy-action :value="itemInstance.name" />
+        <p>{{ modelValue.name }}</p>
+        <wt-copy-action :value="modelValue.name" />
       </div>
     </div>
   </template>
 </template>
 
-<script setup>
-import { useCardStore } from '@webitel/ui-sdk/modules/CardStoreModule/composables/useCardStore';
-import { inject } from 'vue';
+<script setup lang="ts">
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { useI18n } from 'vue-i18n';
 
-const namespace = inject('namespace');
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 
-const {
-	namespace: cardNamespace,
-
-	id,
-	itemInstance,
-} = useCardStore(namespace);
+const { modelValue } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
+});
 
 const { t } = useI18n();
 </script>

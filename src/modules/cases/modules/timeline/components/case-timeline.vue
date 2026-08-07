@@ -1,29 +1,19 @@
 <template>
   <the-timeline
-    v-if="parentId"
-    :parent-id="parentId"
+    v-if="itemId"
+    :parent-id="itemId"
     :mode="TimelineMode.Case"
   />
 </template>
 
 <script setup lang="ts">
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { type StoreGeneric, storeToRefs } from 'pinia';
 import TheTimeline from '../../../../timeline/components/the-timeline.vue';
 import { TimelineMode } from '../../../../timeline/enums/TimelineMode';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 
-interface Props {
-	namespace: string;
-}
-
-const props = defineProps<Props>();
-
-const store = useStore();
-
-const parentId = computed(() => {
-	return getNamespacedState(store.state, props.namespace).itemId;
-});
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
 </script>
 
 <style scoped lang="scss">

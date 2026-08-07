@@ -8,7 +8,7 @@
         v-for="field in fields"
         :key="field.id"
         :field="field"
-        :namespace="namespace"
+        :namespace="CasesCardNamespace"
         path-to-field="custom"
         timezone="utc"
       />
@@ -32,29 +32,24 @@
   lang="ts"
 >
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
+import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
-import { inject, watch } from 'vue';
+import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { CasesCardNamespace } from '../../../namespace';
 
 const router = useRouter();
 
-const editMode = inject('editMode');
+const { editMode } = useCaseAccessState();
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	fields: {
-		type: Object,
-		required: true,
-	},
-});
-const { itemInstance } = useCardStore(props.namespace);
+const props = defineProps<{
+	fields: Array<Record<string, any>>;
+}>();
+const { itemInstance } = useCardStore(CasesCardNamespace);
 
 watch(
 	() => props.fields,

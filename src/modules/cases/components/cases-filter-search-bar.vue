@@ -16,23 +16,24 @@
 import { ConfigurationsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
-import { computed, type PropType, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { EngineSystemSettingName } from 'webitel-sdk';
 
 import { SearchMode } from '../enums/SearchMode';
-import { useCasesStore } from '../stores/cases';
+import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 
-const props = defineProps({
-	/* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
+const props = withDefaults(
+	defineProps<{
+		/* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
 
- * Description why data is thrown props and have a default value */
-
-	tableStore: {
-		type: Object as PropType<ReturnType<typeof useCasesStore>>,
-		default: () => useCasesStore(),
+		 * Description why data is thrown props and have a default value */
+		tableStore?: ReturnType<typeof useCasesDatalistStore>;
+	}>(),
+	{
+		tableStore: () => useCasesDatalistStore(),
 	},
-});
+);
 
 const { t } = useI18n();
 
