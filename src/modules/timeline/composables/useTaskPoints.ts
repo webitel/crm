@@ -1,21 +1,17 @@
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
+import type { Ref } from 'vue';
 
-import type { createTaskPointsHistoryStore } from '../stores/createTaskPointsHistoryStore';
-
-type HistoryStore = ReturnType<ReturnType<typeof createTaskPointsHistoryStore>>;
+import type { TaskPoint } from '../stores/createTaskPointsHistoryStore';
 
 export const useTaskPoints = ({
 	taskId,
-	useHistoryStore,
+	historyById,
+	loadHistory,
 }: {
 	taskId: string;
-	useHistoryStore: () => HistoryStore;
+	historyById: Ref<Record<string, TaskPoint[]>>;
+	loadHistory: (taskId: string) => Promise<void>;
 }) => {
-	const historyStore = useHistoryStore();
-	const { historyById } = storeToRefs(historyStore);
-	const { loadHistory } = historyById;
-
 	const points = computed(() => historyById.value[taskId]);
 
 	if (!points.value) {

@@ -2,6 +2,7 @@
   <wt-button
     :color="ButtonColor.SECONDARY"
     :icon="icon"
+    :icon-color="iconColor"
     class="timeline-rounded-action"
     :class="[`timeline-rounded-action--${color}`]"
     @click="emit('click')"
@@ -9,16 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import { ButtonColor } from '@webitel/ui-sdk/enums';
+import { ButtonColor, IconColor } from '@webitel/ui-sdk/enums';
+import { computed } from 'vue';
 
 interface Props {
 	icon: string;
 	color?: 'primary' | 'success' | 'error' | 'chat' | 'secondary' | 'email';
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
 	color: 'secondary',
 });
+
+const iconColor = computed(() =>
+	props.color === 'secondary' ? undefined : IconColor.ON_DARK,
+);
 
 const emit = defineEmits<{
 	click: [];
@@ -40,12 +46,6 @@ const emit = defineEmits<{
     &:active {
       border-color: var(--primary-hover-color);
       background-color: var(--primary-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
     }
   }
 
@@ -69,12 +69,6 @@ const emit = defineEmits<{
       border-color: var(--success-hover-color);
       background-color: var(--success-hover-color);
     }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
-    }
   }
 
   &--error.wt-button {
@@ -85,12 +79,6 @@ const emit = defineEmits<{
     &:active {
       border-color: var(--error-hover-color);
       background-color: var(--error-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
     }
   }
 
@@ -103,12 +91,6 @@ const emit = defineEmits<{
       border-color: var(--chat-hover-color);
       background-color: var(--chat-hover-color);
     }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
-    }
   }
 
   &--email.wt-button {
@@ -119,12 +101,6 @@ const emit = defineEmits<{
     &:active {
       border-color: var(--email-hover-color);
       background-color: var(--email-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
     }
   }
 }

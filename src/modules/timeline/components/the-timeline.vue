@@ -56,7 +56,7 @@ import { computed, onUnmounted, ref } from 'vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
 import type { TimelineMode } from '../enums/TimelineMode';
-import { useTimelineStore } from '../stores/timelineStore';
+import { useTimelineStore } from '../stores/timeline';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';

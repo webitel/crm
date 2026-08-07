@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import { useTimelineStore } from './timelineStore';
+import { useTimelineStore } from './timeline';
 
 export interface TaskPoint {
 	id: string;
