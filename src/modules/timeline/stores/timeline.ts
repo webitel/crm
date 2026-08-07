@@ -1,11 +1,11 @@
-import { CaseTimelineAPI, ContactTimelineAPI } from '@webitel/api-services/api';
+import { TimelineAPI } from '@webitel/api-services/api';
 import { createTableStore } from '@webitel/ui-datalist';
 import deepCopy from 'deep-copy';
 import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref, toRaw } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { TimelineEventType } from '../enums/TimelineEventType';
-import { TimelineMode } from '../enums/TimelineMode';
+import type { TimelineMode } from '../enums/TimelineMode';
 import { headers } from './_internals/headers';
 
 export interface TimelineDay {
@@ -16,11 +16,6 @@ export interface TimelineDay {
 	emailsCount: number;
 	items: unknown[];
 }
-
-const ApiModeMap = {
-	[TimelineMode.Contact]: ContactTimelineAPI,
-	[TimelineMode.Case]: CaseTimelineAPI,
-};
 
 function listHandler(days) {
 	const copy = deepCopy(days);
@@ -40,7 +35,8 @@ const timelineApiModule = {
 	// is a reactive array proxy, not a plain array — strip that before it
 	// leaves the store (axios params / deepmerge in the api client don't expect it).
 	getList: async ({ mode, parentId, page, size, type }) => {
-		const { days, next } = await ApiModeMap[mode].getList({
+		const { days, next } = await TimelineAPI.getList({
+			entity: mode,
 			parentId,
 			page,
 			size,
@@ -123,7 +119,8 @@ export const useTimelineStore = defineStore('timeline', () => {
 	}
 
 	function getCounters(counterParentId: string) {
-		return ApiModeMap[mode.value].getCounters({
+		return TimelineAPI.getCounters({
+			entity: mode.value,
 			parentId: counterParentId,
 		});
 	}
