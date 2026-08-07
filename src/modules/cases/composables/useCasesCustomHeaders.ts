@@ -3,7 +3,7 @@ import { snakeToCamel } from '@webitel/api-services/utils';
 import get from 'lodash-es/get';
 import { computed, ref, watch } from 'vue';
 
-import { headers as baseHeadersConfig } from '../store/_internals/headers';
+import { headers as baseHeadersConfig } from '../stores/datalist/_internals/headers';
 
 export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 	// Reactive reference for custom headers from API

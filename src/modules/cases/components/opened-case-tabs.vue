@@ -12,7 +12,6 @@
       <keep-alive>
         <component
           :is="Component"
-          :namespace="cardNamespace"
           :access="/*is used by permissions tab*/{
             read: true,
             update: actionAllow,
@@ -20,51 +19,50 @@
             create: actionAllow,
           }"
           :fields="customFields"
+          :store="useCasePermissionsStore"
+          :parent-id="itemId"
         />
       </keep-alive>
     </router-view>
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { type CardTab, useCardTabs } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
-import { computed, inject } from 'vue';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { type ComputedRef, computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { useCaseAccessState } from '../composables/useCaseAccessState';
+import { CASE_VIEW_NAME } from '../router/caseViewName';
+import { useCasesCardStore } from '../stores/card/casesCardStore';
+import { useCasePermissionsStore } from '../stores/permissions/casePermissionsStore';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
-
-const isReadOnly = inject('isReadOnly');
-const editMode = inject('editMode');
-const customFields = inject('customFields');
+const { editMode, isReadOnly } = useCaseAccessState();
+const customFields =
+	inject<ComputedRef<Array<Record<string, any>>>>('customFields');
 
 const { t } = useI18n();
 const route = useRoute();
 
 const { disableUserInput } = useUserAccessControl();
-const { namespace: cardNamespace, id } = useCardStore(props.namespace);
+
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
 
 const actionAllow = computed(
 	() => !disableUserInput.value && editMode.value && !isReadOnly,
 );
 
-const CASE_VIEW_NAME = 'case_view';
 const currentCardRoute = computed(() => {
 	return typeof route.name === 'string' && route.name.includes(CASE_VIEW_NAME)
 		? CASE_VIEW_NAME
 		: CrmSections.Cases;
 });
 
-const tabs = computed(() => {
+const tabs = computed<CardTab[]>(() => {
 	const tabs = [
 		{
 			text: t('cases.caseInfo.caseInfo'),
@@ -89,7 +87,7 @@ const tabs = computed(() => {
 		pathName: `${currentCardRoute.value}-timeline`,
 	};
 
-	if (id.value) tabs.push(timeline);
+	if (itemId.value) tabs.push(timeline);
 
 	if (customFields.value.length) {
 		tabs.push({
@@ -105,7 +103,7 @@ const tabs = computed(() => {
 		pathName: `${currentCardRoute.value}-permissions`,
 	};
 
-	if (id.value) tabs.push(permissions);
+	if (itemId.value) tabs.push(permissions);
 
 	return tabs;
 });

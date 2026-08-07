@@ -245,49 +245,45 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { WtTypeExtensionAPI } from '@webitel/api-services/api';
-import { snakeToCamel } from '@webitel/api-services/utils';
+<script setup lang="ts">
+import { CasesAPI } from '@webitel/api-services/api';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
-import { CrmSections, FormatDateMode, IconAction } from '@webitel/ui-sdk/enums';
-import { EmptyCause } from '@webitel/ui-sdk/enums/EmptyCause/EmptyCause';
+import {
+	CrmSections,
+	EmptyCause,
+	FormatDateMode,
+	IconAction,
+} from '@webitel/ui-sdk/enums';
 import { downloadFile } from '@webitel/ui-sdk/scripts';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { formatDate } from '@webitel/ui-sdk/utils';
-import get from 'lodash/get';
+import { formatDate, prettifyDate } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import DisplayDynamicFieldExtension from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
-import casesAPI from '../api/CasesAPI.js';
 import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
-import { headers as baseHeadersConfig } from '../store/_internals/headers';
-import { useCasesStore } from '../stores/cases.ts';
-import prettifyDate from '../utils/prettifyDate.js';
+import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
+import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import CaseDetailsTable from './case-details-table.vue';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
 
-const baseNamespace = 'cases';
-
 const { t } = useI18n();
 const router = useRouter();
-
-const store = useStore();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl();
 
-const tableStore = useCasesStore();
+const tableStore = useCasesDatalistStore();
+const { setEditMode } = useCasesEditModeStore();
 
 const {
 	dataList,
@@ -318,7 +314,6 @@ const {
 
 const {
 	customHeaders,
-	customHeadersLoaded,
 	mergedHeaders,
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
@@ -405,11 +400,7 @@ function add() {
 }
 
 function edit(item) {
-	/*
-  at "edit", only(!) store state is used to determine read/edit mode
-  because store is much reliable as the state source, comparing to url query
-   */
-	store.dispatch(`${baseNamespace}/card/TOGGLE_EDIT_MODE`, true);
+	setEditMode(true);
 	return router.push({
 		name: `${CrmSections.Cases}-card`,
 		params: {
@@ -428,7 +419,13 @@ function deleteSelectedItems() {
 	});
 }
 
-const exportCases = async ({ format, separator }) => {
+const exportCases = async ({
+	format,
+	separator,
+}: {
+	format?: string;
+	separator?: string | null;
+}) => {
 	const exportParams = {
 		page: page.value,
 		size: size.value,
@@ -442,7 +439,7 @@ const exportCases = async ({ format, separator }) => {
 		exportParams.ids = selected.value.map((item) => item.id);
 	}
 
-	const { response } = await casesAPI.exportData(exportParams);
+	const { response } = await CasesAPI.exportData(exportParams);
 
 	const filename = `cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
 

@@ -18,36 +18,32 @@
 <script lang="ts" setup>
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
-import type { PropType } from 'vue';
 
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { filtersOptions } from '../configs/filtersOptions';
 import { CasesNamespace } from '../namespace';
-import { useCasesStore } from '../stores/cases';
-import { useCaseFilterPresetsStore } from '../stores/useCaseFilterPresetsStore';
+import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
+import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 
 const emit = defineEmits<{
 	hide: [];
 }>();
 
-const props = defineProps({
-	/* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
+const props = withDefaults(
+	defineProps<{
+		/* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
 
-   * Description why data is thrown props and have a default value */
-
-	namespace: {
-		type: String,
-		default: CasesNamespace,
+		 * Description why data is thrown props and have a default value */
+		namespace?: string;
+		tableStore?: ReturnType<typeof useCasesDatalistStore>;
+		presetsStore?: typeof useCaseFilterPresetsStore;
+	}>(),
+	{
+		namespace: CasesNamespace,
+		tableStore: () => useCasesDatalistStore(),
+		presetsStore: () => useCaseFilterPresetsStore,
 	},
-	tableStore: {
-		type: Object as PropType<ReturnType<typeof useCasesStore>>,
-		default: () => useCasesStore(),
-	},
-	presetsStore: {
-		type: Object as PropType<typeof useCaseFilterPresetsStore>,
-		default: () => useCaseFilterPresetsStore,
-	},
-});
+);
 
 const { filtersManager } = storeToRefs(props.tableStore);
 

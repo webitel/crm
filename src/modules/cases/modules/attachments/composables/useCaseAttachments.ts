@@ -1,23 +1,26 @@
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import { computed, ref, watch } from 'vue';
 
 export function useCaseAttachments({
-	cardNamespace,
-	itemId,
+	itemInstance,
+	isNew,
 	storePath,
 	loadData,
 	transformStoreItemToPending,
 	processItemToAPI,
 	deleteData,
+}: {
+	itemInstance: {
+		value: Record<string, any>;
+	};
+	isNew: {
+		value: boolean;
+	};
+	storePath: string;
+	loadData?: () => Promise<unknown>;
+	transformStoreItemToPending?: (item: any) => any;
+	processItemToAPI: (item: any) => Promise<unknown>;
+	deleteData: (items: any) => Promise<unknown>;
 }) {
-	const { itemInstance, setItemProp } = useCardStore(cardNamespace);
-
-	const { isNew } = useCardComponent({
-		itemInstance,
-		itemId,
-	});
-
 	const pendingItems = ref([]);
 	const isPendingItemsLoading = ref(false);
 
@@ -75,16 +78,11 @@ export function useCaseAttachments({
 	}
 
 	async function handleNewCaseItem(itemData, storeData) {
-		// Add to pending items for UI
 		pendingItems.value.push(itemData);
-		// Add to store for persistence
-		await setItemProp({
-			path: storePath,
-			value: [
-				...currentStoreItems.value,
-				storeData,
-			],
-		});
+		itemInstance.value[storePath] = [
+			...currentStoreItems.value,
+			storeData,
+		];
 	}
 
 	async function handleExistingCaseItem(itemData) {
@@ -121,14 +119,10 @@ export function useCaseAttachments({
 		});
 	}
 
-	// Helper method to save current state to store
-	async function saveToStore() {
-		await setItemProp({
-			path: storePath,
-			value: [
-				...currentStoreItems.value,
-			],
-		});
+	function saveToStore() {
+		itemInstance.value[storePath] = [
+			...currentStoreItems.value,
+		];
 	}
 
 	// Helper method to find and validate item index
@@ -146,7 +140,7 @@ export function useCaseAttachments({
 		pendingItems.value.splice(index, 1);
 		currentStoreItems.value.splice(index, 1);
 
-		await saveToStore();
+		saveToStore();
 	}
 
 	// Updates existing item data
@@ -160,7 +154,7 @@ export function useCaseAttachments({
 			input: newItemData,
 		};
 
-		await saveToStore();
+		saveToStore();
 	}
 
 	// deletes multiple items at once
@@ -187,11 +181,10 @@ export function useCaseAttachments({
 			currentStoreItems.value.splice(index, 1);
 		});
 
-		await saveToStore();
+		saveToStore();
 	}
 
 	return {
-		isNew,
 		pendingItems,
 		isPendingItemsLoading,
 

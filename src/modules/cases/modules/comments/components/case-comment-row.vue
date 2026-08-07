@@ -20,18 +20,13 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { useI18n } from 'vue-i18n';
 
-import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
-import prettifyDate from '../../../utils/prettifyDate.js';
-
-const props = defineProps({
-	comment: {
-		type: Object,
-		required: true,
-	},
-});
+defineProps<{
+	comment: Record<string, any>;
+}>();
 
 const { t } = useI18n();
 </script>
