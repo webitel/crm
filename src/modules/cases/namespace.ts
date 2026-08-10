@@ -1,1 +1,1 @@
-export const CasesNamespace = 'crm/cases';
+export const CasesNamespace = 'cases';

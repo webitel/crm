@@ -1,1 +1,1 @@
-export const ContactCasesNamespace = 'crm/contacts/card/cases';
+export const ContactCasesNamespace = 'contacts/card/cases';
