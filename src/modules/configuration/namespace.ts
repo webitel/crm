@@ -1,1 +1,1 @@
-export const ConfigurationNamespace = `configuration`;
+export const ConfigurationNamespace = `crm/configuration`;
