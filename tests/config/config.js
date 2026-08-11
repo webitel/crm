@@ -44,9 +44,6 @@ const axios = axiosMock();
 vi.doMock('@webitel/ui-sdk/src/api/axios/generateInstance.js', () => ({
 	default: () => axios().default,
 }));
-vi.doMock('@aliasedDeps/api-services/axios', () => ({
-	default: () => axios().default,
-}));
 
 beforeAll(async () => {
 	const store = (await import('../../src/app/store/index.js')).default;
