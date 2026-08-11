@@ -1,5 +1,4 @@
 import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -21,10 +20,6 @@ export default defineConfig({
 		testTimeout: 30000,
 		alias: {
 			vue: 'vue',
-			'@aliasedDeps/api-services/axios': resolve(
-				__dirname,
-				'tests/mocks/axios-instance.js',
-			),
 			'lodash/fp': 'lodash-es',
 			lodash: 'lodash-es',
 		},
