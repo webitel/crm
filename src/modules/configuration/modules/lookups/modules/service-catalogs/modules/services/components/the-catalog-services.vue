@@ -302,13 +302,13 @@ const addNewService = () => {
 
 const loadRootService = async () => {
 	rootService.value = await ServicesAPI.get({
-		itemId: route.params.rootId,
+		itemId: route.params.rootId as string,
 	});
 };
 
 const loadCatalog = async () => {
 	catalog.value = await ServiceCatalogsAPI.get({
-		itemId: route.params.catalogId,
+		itemId: route.params.catalogId as string,
 	});
 };
 
