@@ -50,7 +50,9 @@ import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const modelValue = defineModel<ContactsGroup>();
+const modelValue = defineModel<ContactsGroup>({
+	required: true,
+});
 
 defineProps<{
 	validationFields: CardValidationFields<ContactsGroup>;

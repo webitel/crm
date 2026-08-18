@@ -21,8 +21,8 @@
     >
       <template #action-bar>
         <wt-action-bar
-          :disabled:add="!hasCreateAccess"
-          :disabled:delete="!hasDeleteAccess || !selected.length"
+          :disabled:add="!hasCreateAccess || !groupId"
+          :disabled:delete="!hasDeleteAccess || !selected.length || !groupId"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
           @click:add="isShowPopup = true"
           @click:refresh="loadDataList"
@@ -101,8 +101,14 @@ const tableStore = useContactGroupContactsDatalistStore();
 const { selected, filtersManager, isFiltersRestoring } =
 	storeToRefs(tableStore);
 
-const { addFilter, updateFilter, deleteFilter, initialize, loadDataList } =
-	tableStore;
+const {
+	addFilter,
+	updateFilter,
+	deleteFilter,
+	initialize,
+	loadDataList,
+	updateSelected,
+} = tableStore;
 
 const deleteEls = async (ids: string[]) => {
 	await ContactGroupsAPI.removeContactsFromGroup({
@@ -118,6 +124,8 @@ watch(
 		if (!val) {
 			return;
 		}
+
+		updateSelected([]);
 
 		initialize({
 			parentId: val,

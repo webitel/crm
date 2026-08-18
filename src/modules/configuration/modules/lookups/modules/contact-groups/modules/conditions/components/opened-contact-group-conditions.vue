@@ -167,7 +167,7 @@ const add = () => {
 function setPosition(newIndex: number, list: typeof dataList.value) {
 	if (newIndex === 0) {
 		return {
-			condDown: dataList.value[0].id,
+			condDown: list[1]?.id || 0,
 			condUp: 0,
 		};
 	}
@@ -175,13 +175,13 @@ function setPosition(newIndex: number, list: typeof dataList.value) {
 	if (newIndex === list.length - 1) {
 		return {
 			condDown: 0,
-			condUp: dataList.value[dataList.value.length - 1].id,
+			condUp: list[newIndex - 1]?.id || 0,
 		};
 	}
 
 	return {
-		condDown: list[newIndex - 1].id,
-		condUp: list[newIndex + 1].id,
+		condDown: list[newIndex + 1].id,
+		condUp: list[newIndex - 1].id,
 	};
 }
 

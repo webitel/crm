@@ -134,7 +134,7 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteEls(item),
+                    callback: () => deleteEls([item]),
                   })
                 "
               />

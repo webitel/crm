@@ -48,11 +48,10 @@ import type { ContactsGroup } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { WtObject } from '@webitel/ui-sdk/enums';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
@@ -147,7 +146,7 @@ const tabs = computed(() => {
 		general,
 	];
 
-	if (!modelValue.itemId.value) return tabs;
+	if (!itemId.value) return tabs;
 
 	if (isDynamicGroup.value) {
 		tabs.push(conditions);

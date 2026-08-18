@@ -8,6 +8,15 @@ import { ContactGroupsNamespace } from '../../namespace';
 
 const wrappedApiModule = {
 	...ContactGroupsAPI,
+	get: async (params) => {
+		const item = await ContactGroupsAPI.get(params);
+
+		if (item?.type === ContactsGroupType.Dynamic) {
+			return DynamicGroupsAPI.get(params);
+		}
+
+		return item;
+	},
 	add: async (params) => {
 		if (params?.itemInstance?.type === ContactsGroupType.Dynamic) {
 			return DynamicGroupsAPI.add(params);
@@ -33,9 +42,14 @@ const useBaseContactGroupsCardStore = createCardStore({
 const getInitialGroupType = () => {
 	const route = useRoute();
 
-	return route.params.id === 'new'
-		? (route.query.type?.toString().toUpperCase() as ContactsGroupType)
-		: null;
+	if (route.params.id !== 'new') return null;
+
+	const normalizedType = route.query.type?.toString().toUpperCase();
+	const isValidType = Object.values(ContactsGroupType).includes(
+		normalizedType as ContactsGroupType,
+	);
+
+	return isValidType ? (normalizedType as ContactsGroupType) : null;
 };
 
 export const createContactGroupsCardStoreWrapper =

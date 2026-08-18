@@ -39,7 +39,7 @@
         <wt-single-select
           :key="modelValue.group?.id"
           v-model:model-value="modelValue.assignee"
-          :disabled="!hasContactsReadAccess || !itemInstance.group?.id"
+          :disabled="!hasContactsReadAccess || !modelValue.group?.id"
           :label="t('lookups.contactGroups.assignee')"
           :search-method="hasContactsReadAccess && loadContacts"
         />
@@ -76,9 +76,9 @@ import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useContactGroupConditionsCardStore } from '../stores/card/contactGroupConditionsCardStore';
-import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const emit = defineEmits([
 	'load-data',
