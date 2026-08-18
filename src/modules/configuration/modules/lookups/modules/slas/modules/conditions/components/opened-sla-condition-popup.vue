@@ -22,8 +22,8 @@
         <wt-multi-select
           :model-value="itemInstance.priorities"
           :label="t('vocabulary.priority')"
-          :search-method="id ? getConditionPriorities : getFreePriorities"
-          :disabled="disableUserInput"
+          :search-method="prioritiesSearchMethod"
+          :disabled="disableUserInput || !hasPrioritiesReadAccess"
           :v="v$.itemInstance.priorities"
           required
           @update:model-value="setItemProp({ path: 'priorities', value: $event })"
@@ -71,7 +71,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { minValue, required } from '@vuelidate/validators';
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { computed, watch } from 'vue';
@@ -97,6 +97,9 @@ const { t } = useI18n();
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
 
 const {
 	namespace: cardNamespace,
@@ -165,6 +168,11 @@ function getConditionPriorities(params) {
 		inSlaCond: id.value,
 	});
 }
+
+const prioritiesSearchMethod = computed(() => {
+	if (!hasPrioritiesReadAccess.value) return false;
+	return id.value ? getConditionPriorities : getFreePriorities;
+});
 
 const save = async () => {
 	if (isNew.value) {
