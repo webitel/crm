@@ -37,7 +37,7 @@
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="modelValue.reactionTime = +$event"
+          @update:model-value="modelValue.reactionTime = String($event)"
         />
 
         <wt-timepicker
@@ -47,7 +47,7 @@
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="modelValue.resolutionTime = +$event"
+          @update:model-value="modelValue.resolutionTime = String($event)"
         />
 
         <wt-datepicker
@@ -57,7 +57,7 @@
           :regle-validation="validationFields?.validFrom"
           show-time
           clearable
-          @update:model-value="modelValue.validFrom = +$event"
+          @update:model-value="modelValue.validFrom = String($event)"
         />
 
         <wt-datepicker
@@ -100,7 +100,7 @@ function loadCalendarsList(search) {
 }
 
 function onValidToChange(value?: number) {
-	modelValue.value.validTo = +value;
+	modelValue.value.validTo = String(value);
 	props.validationFields?.validFrom?.$touch();
 }
 </script>

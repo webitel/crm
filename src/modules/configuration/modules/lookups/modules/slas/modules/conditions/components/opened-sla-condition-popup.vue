@@ -36,7 +36,7 @@
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="modelValue.reactionTime = +$event"
+          @update:model-value="modelValue.reactionTime = String($event)"
         />
 
         <wt-timepicker
@@ -46,7 +46,7 @@
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="modelValue.resolutionTime = +$event"
+          @update:model-value="modelValue.resolutionTime = String($event)"
         />
       </form>
     </template>
