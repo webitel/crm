@@ -24,8 +24,8 @@
         <wt-multi-select
           v-model:model-value="modelValue.priorities"
           :label="t('vocabulary.priority')"
-          :search-method="isNew ? getFreePriorities : getConditionPriorities"
-          :disabled="disableUserInput"
+          :search-method="prioritiesSearchMethod"
+          :disabled="disableUserInput || !hasPrioritiesReadAccess"
           :regle-validation="validationFields?.priorities"
           required
         />
@@ -72,7 +72,7 @@ import { CasePrioritiesAPI } from '@webitel/api-services/api';
 import type { WebitelCasesSLACondition } from '@webitel/api-services/gen/models';
 import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { useClose } from '@webitel/ui-sdk/composables';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -91,6 +91,9 @@ const { t } = useI18n();
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
 
 const { handleError } = useErrorRedirectHandler();
 
@@ -125,6 +128,11 @@ function getConditionPriorities(params) {
 		inSlaCond: conditionId.value,
 	});
 }
+
+const prioritiesSearchMethod = computed(() => {
+	if (!hasPrioritiesReadAccess.value) return false;
+	return isNew.value ? getFreePriorities : getConditionPriorities;
+});
 
 const save = async () => {
 	await saveItem();

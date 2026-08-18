@@ -17,9 +17,9 @@
       <wt-single-select
         v-model:model-value="modelValue.calendar"
         :label="t('objects.calendar')"
-        :search-method="loadCalendarsList"
+        :search-method="hasCalendarsReadAccess && loadCalendarsList"
         :regle-validation="validationFields?.calendar"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasCalendarsReadAccess"
         required
       />
 
@@ -78,6 +78,7 @@
 import { CalendarsAPI } from '@webitel/api-services/api';
 import type { WebitelCasesSLA } from '@webitel/api-services/gen/models';
 import type { CardValidationFields } from '@webitel/ui-datalist/card';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -90,6 +91,9 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasCalendarsReadAccess } = useUserAccessControl(
+	WtObject.Calendar,
+);
 
 function loadCalendarsList(search) {
 	return CalendarsAPI.getLookup(search);

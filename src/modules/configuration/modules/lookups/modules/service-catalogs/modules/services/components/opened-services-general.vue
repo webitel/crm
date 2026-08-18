@@ -17,37 +17,35 @@
 
       <wt-single-select
         :label="t('lookups.contactGroups.assignee')"
-        :search-method="loadContact"
+        :search-method="hasContactsReadAccess && loadContact"
         :model-value="itemInstance.assignee"
-        :disabled="
-          disableUserInput || itemInstance.group?.type === ContactsGroupType.Dynamic
-        "
+        :disabled="disableAssigneeInput"
         @update:model-value="setItemProp({ path: 'assignee', value: $event })"
       />
 
       <wt-single-select
         :label="t('lookups.slas.slas')"
-        :search-method="loadSlaList"
+        :search-method="hasSlasReadAccess && loadSlaList"
         :model-value="itemInstance.sla"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasSlasReadAccess"
         :v="v.itemInstance.sla"
         @update:model-value="setItemProp({ path: 'sla', value: $event })"
       />
 
       <wt-single-select
         :label="t('lookups.serviceCatalogs.defaultPriority')"
-        :search-method="loadPrioritiesList"
+        :search-method="hasPrioritiesReadAccess && loadPrioritiesList"
         :model-value="itemInstance.defaultPriority"
         :v="v.itemInstance.defaultPriority"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasPrioritiesReadAccess"
         @update:model-value="setItemProp({ path: 'defaultPriority', value: $event })"
       />
 
       <wt-single-select
         :label="t('lookups.contactGroups.contactGroups')"
-        :search-method="loadContactGroupsList"
+        :search-method="hasContactGroupsReadAccess && loadContactGroupsList"
         :model-value="itemInstance.group"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasContactGroupsReadAccess"
         @update:model-value="setItemProp({ path: 'group', value: $event })"
       />
 
@@ -83,7 +81,9 @@ import {
 	SlasAPI,
 } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/store';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
@@ -103,8 +103,27 @@ const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
+const { hasReadAccess: hasSlasReadAccess } = useUserAccessControl(
+	WtObject.Slas,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
 
 const { itemInstance, setItemProp } = useCardStore(props.namespace);
+
+const disableAssigneeInput = computed(
+	() =>
+		disableUserInput.value ||
+		!hasContactsReadAccess.value ||
+		itemInstance.value.group?.type === ContactsGroupType.Dynamic,
+);
 
 const loadSlaList = (params) => {
 	return SlasAPI.getLookup(params);
