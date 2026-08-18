@@ -27,13 +27,13 @@
         />
 
         <wt-single-select
-          :model-value="modelValue.group"
+          v-model:model-value="modelValue.group"
           :regle-validation="validationFields?.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
           :disabled="!hasContactGroupsReadAccess"
           :search-method="hasContactGroupsReadAccess && loadStaticContactGroupsList"
           required
-          @update:model-value="handleGroupChange"
+          @update:model-value="modelValue.assignee = null"
         />
 
         <wt-single-select
@@ -138,11 +138,6 @@ async function loadContacts(params: Record<string, unknown>) {
 		...params,
 		group: modelValue.value?.group?.id,
 	});
-}
-
-async function handleGroupChange(value: ContactsDynamicCondition['group']) {
-	modelValue.value.group = value;
-	modelValue.value.assignee = null;
 }
 
 const save = async () => {

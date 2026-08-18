@@ -58,7 +58,10 @@
               :disabled="!hasUpdateAccess"
               action="edit"
               @click="
-                router.push({ ...route, params: { conditionId: item.id } })
+                router.push({
+                  name: route.name,
+                  params: { ...route.params, conditionId: item.id },
+                })
               "
             />
             <wt-icon-action
@@ -157,8 +160,9 @@ const {
 
 const add = () => {
 	return router.push({
-		...route,
+		name: route.name,
 		params: {
+			...route.params,
 			conditionId: 'new',
 		},
 	});
