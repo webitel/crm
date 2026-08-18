@@ -17,14 +17,14 @@
     <contacts-table
       :header="t('contacts.allContacts', 2)"
       :table-store="tableStore"
-      :empty-data="{ primaryAction: () => isShowPopup = true }"
+      :empty-data="{ primaryAction: openAddPopup }"
     >
       <template #action-bar>
         <wt-action-bar
           :disabled:add="!hasCreateAccess || !groupId"
           :disabled:delete="!hasDeleteAccess || !selected.length || !groupId"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="isShowPopup = true"
+          @click:add="openAddPopup"
           @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
@@ -98,7 +98,7 @@ const {
 
 const tableStore = useContactGroupContactsDatalistStore();
 
-const { selected, filtersManager, isFiltersRestoring } =
+const { dataList, selected, filtersManager, isFiltersRestoring } =
 	storeToRefs(tableStore);
 
 const {
@@ -110,7 +110,15 @@ const {
 	updateSelected,
 } = tableStore;
 
+const openAddPopup = () => {
+	if (!props.groupId) return;
+
+	isShowPopup.value = true;
+};
+
 const deleteEls = async (ids: string[]) => {
+	if (!props.groupId) return;
+
 	await ContactGroupsAPI.removeContactsFromGroup({
 		id: props.groupId,
 		contactIds: ids,
@@ -121,11 +129,14 @@ const deleteEls = async (ids: string[]) => {
 watch(
 	() => props.groupId,
 	(val) => {
+		// clear stale data from the previous group before switching/unsetting,
+		// so a delete triggered mid-switch can never target the wrong group
+		dataList.value = [];
+		updateSelected([]);
+
 		if (!val) {
 			return;
 		}
-
-		updateSelected([]);
 
 		initialize({
 			parentId: val,
