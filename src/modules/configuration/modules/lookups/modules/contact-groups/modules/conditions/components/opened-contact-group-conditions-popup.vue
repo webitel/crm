@@ -30,7 +30,8 @@
           :model-value="modelValue.group"
           :regle-validation="validationFields?.group"
           :label="t('lookups.contactGroups.contactGroups', 1)"
-          :search-method="loadStaticContactGroupsList"
+          :disabled="!hasContactGroupsReadAccess"
+          :search-method="hasContactGroupsReadAccess && loadStaticContactGroupsList"
           required
           @update:model-value="handleGroupChange"
         />
@@ -38,9 +39,9 @@
         <wt-single-select
           :key="modelValue.group?.id"
           v-model:model-value="modelValue.assignee"
-          :disabled="!modelValue?.group?.id"
+          :disabled="!hasContactsReadAccess || !itemInstance.group?.id"
           :label="t('lookups.contactGroups.assignee')"
-          :search-method="loadContacts"
+          :search-method="hasContactsReadAccess && loadContacts"
         />
       </form>
     </template>
@@ -70,13 +71,14 @@ import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useNestedCardComponent } from '@webitel/ui-datalist/card';
 import { WtSingleSelect } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useContactGroupConditionsCardStore } from '../stores/card/contactGroupConditionsCardStore';
+import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
 const emit = defineEmits([
 	'load-data',
@@ -85,6 +87,13 @@ const emit = defineEmits([
 const route = useRoute();
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
+
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
 
 const {
 	modelValue,

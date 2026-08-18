@@ -52,6 +52,7 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { WtObject } from '@webitel/ui-sdk/enums';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
@@ -68,6 +69,10 @@ const {
 	hasUpdateAccess,
 	hasDeleteAccess,
 } = useUserAccessControl();
+
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
 
 const { itemId } = storeToRefs(useContactGroupsCardStore());
 
@@ -142,10 +147,17 @@ const tabs = computed(() => {
 		general,
 	];
 
-	if (!isNew.value) {
-		tabs.push(isDynamicGroup.value ? conditions : contacts);
-		tabs.push(permissions);
+	if (!modelValue.itemId.value) return tabs;
+
+	if (isDynamicGroup.value) {
+		tabs.push(conditions);
 	}
+
+	if (!isDynamicGroup.value && hasContactsReadAccess.value) {
+		tabs.push(contacts);
+	}
+
+	tabs.push(permissions);
 
 	return tabs;
 });
