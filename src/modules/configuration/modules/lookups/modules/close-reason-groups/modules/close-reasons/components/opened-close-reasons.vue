@@ -154,7 +154,7 @@ const {
 } = tableStore;
 
 initialize({
-	parentId: route.params.id,
+	parentId: route.params.id as string,
 });
 
 const {
