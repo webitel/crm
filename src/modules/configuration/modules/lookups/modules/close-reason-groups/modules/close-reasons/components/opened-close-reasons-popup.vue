@@ -1,38 +1,47 @@
 <template>
   <wt-popup
+    class="opened-close-reasons-popup"
     :shown="!!closeReasonsId"
     size="sm"
     @close="close"
   >
     <template #title>
-      {{ !isNew ? t('lookups.closeReasonGroups.editReason') : t('lookups.closeReasonGroups.addReason') }}
+      {{
+        !isNew
+          ? t('lookups.closeReasonGroups.editReason')
+          : t('lookups.closeReasonGroups.addReason')
+      }}
     </template>
+
     <template #main>
-      <form @submit.prevent="save">
+      <form
+        class="opened-card-input-grid opened-card-input-grid--1-col"
+        @submit.prevent="save"
+      >
         <wt-input-text
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :model-value="itemInstance.name"
-          :v="v$.itemInstance.name"
+          :regle-validation="validationFields?.name"
           :disabled="disableUserInput"
           required
-          @update:model-value="setItemProp({ path: 'name', value: $event })"
         />
 
         <wt-textarea
-          :disabled="disableUserInput"
+          v-model:model-value="modelValue.description"
           :label="t('vocabulary.description')"
-          :model-value="itemInstance.description"
-          @update:model-value="setItemProp({ path: 'description', value: $event })"
+          :disabled="disableUserInput"
         />
       </form>
     </template>
+
     <template #actions>
       <wt-button
-        :disabled="!hasSaveActionAccess || disabledSave"
+        :disabled="!hasSaveActionAccess || hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.save') }}
       </wt-button>
+
       <wt-button
         color="secondary"
         @click="close"
@@ -43,23 +52,17 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed, watch } from 'vue';
+<script lang="ts" setup>
+import type { WebitelCasesCloseReason } from '@webitel/api-services/gen/models';
+import { useNestedCardComponent } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
+import { useCaseCloseReasonsCardStore } from '../stores';
 
 const emit = defineEmits([
 	'load-data',
@@ -67,92 +70,38 @@ const emit = defineEmits([
 
 const route = useRoute();
 const { t } = useI18n();
+
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
+const { handleError } = useErrorRedirectHandler();
+
 const {
-	namespace: cardNamespace,
-	itemInstance,
-	resetState,
-	addItem,
-	loadItem,
-	updateItem,
-	setId,
-	setItemProp,
-	id,
-} = useCardStore(props.namespace);
+	modelValue,
+	validationFields,
+	isNew,
+	hasValidationErrors,
+	save: saveItem,
+} = useNestedCardComponent<WebitelCasesCloseReason>({
+	useCardStore: useCaseCloseReasonsCardStore,
+	routeParamName: 'closeReasonsId',
+	parentId: route.params.id as string,
+	onLoadErrorHandler: handleError,
+});
 
 const closeReasonsId = computed(() => route.params.closeReasonsId);
-const isNew = computed(() => closeReasonsId.value === 'new');
 
-const v$ = useVuelidate(
-	computed(() => ({
-		itemInstance: {
-			name: {
-				required,
-			},
-		},
-	})),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
-);
-
-v$.value.$touch();
-
-const { close } = useClose(`close-reasons`);
-
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty,
-);
-
-function loadDataList() {
-	emit('load-data');
-}
+const { close } = useClose('close-reasons');
 
 const save = async () => {
-	if (isNew.value) {
-		await addItem({
-			itemInstance,
-			parentId: id.value,
-		});
-	} else {
-		await updateItem({
-			itemInstance,
-			itemId: id.value,
-		});
-	}
-
+	await saveItem();
 	close();
-	loadDataList();
+	emit('load-data');
 };
-
-async function initializePopup() {
-	if (!isNew.value) {
-		await setId(closeReasonsId.value);
-		await loadItem();
-	}
-}
-
-watch(
-	() => closeReasonsId.value,
-	(value) => {
-		if (value) {
-			initializePopup();
-		} else {
-			resetState();
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>
