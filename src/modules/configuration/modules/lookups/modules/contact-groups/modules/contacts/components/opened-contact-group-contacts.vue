@@ -2,7 +2,7 @@
   <section class="table-page">
     <add-contacts-in-group-popup
       :shown="isShowPopup"
-      :group-ids="[itemInstance?.id]"
+      :group-ids="[groupId]"
       @load-data="loadDataList"
       @close="isShowPopup = false"
     />
@@ -17,14 +17,14 @@
     <contacts-table
       :header="t('contacts.allContacts', 2)"
       :table-store="tableStore"
-      :empty-data="{ primaryAction: () => isShowPopup = true }"
+      :empty-data="{ primaryAction: openAddPopup }"
     >
       <template #action-bar>
         <wt-action-bar
-          :disabled:add="!hasCreateAccess"
-          :disabled:delete="!hasDeleteAccess || !selected.length"
+          :disabled:add="!hasCreateAccess || !groupId"
+          :disabled:delete="!hasDeleteAccess || !selected.length || !groupId"
           :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
-          @click:add="isShowPopup = true"
+          @click:add="openAddPopup"
           @click:refresh="loadDataList"
           @click:delete="
           askDeleteConfirmation({
@@ -66,8 +66,7 @@ import { ContactGroupsAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
-import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup.js';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -75,17 +74,16 @@ import { useUserAccessControl } from '../../../../../../../../../app/composables
 
 import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
-import { useContactsGroupContactsStore } from '../stores/contacts';
+import { useContactGroupContactsDatalistStore } from '../stores/datalist/contactGroupContactsDatalistStore';
 
 const props = defineProps<{
-	namespace: string;
+	groupId?: string;
 }>();
 
 const { t } = useI18n();
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl(
 	WtObject.Contact,
 );
-const { itemInstance } = useCardStore(props.namespace);
 
 const isShowPopup = ref(false);
 
@@ -98,25 +96,44 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const tableStore = useContactsGroupContactsStore();
+const tableStore = useContactGroupContactsDatalistStore();
 
-const { selected, filtersManager, isFiltersRestoring } =
+const { dataList, selected, filtersManager, isFiltersRestoring } =
 	storeToRefs(tableStore);
 
-const { addFilter, updateFilter, deleteFilter, initialize, loadDataList } =
-	tableStore;
+const {
+	addFilter,
+	updateFilter,
+	deleteFilter,
+	initialize,
+	loadDataList,
+	updateSelected,
+} = tableStore;
+
+const openAddPopup = () => {
+	if (!props.groupId) return;
+
+	isShowPopup.value = true;
+};
 
 const deleteEls = async (ids: string[]) => {
+	if (!props.groupId) return;
+
 	await ContactGroupsAPI.removeContactsFromGroup({
-		id: itemInstance.value?.id,
+		id: props.groupId,
 		contactIds: ids,
 	});
 	await loadDataList();
 };
 
 watch(
-	() => itemInstance.value?.id,
+	() => props.groupId,
 	(val) => {
+		// clear stale data from the previous group before switching/unsetting,
+		// so a delete triggered mid-switch can never target the wrong group
+		dataList.value = [];
+		updateSelected([]);
+
 		if (!val) {
 			return;
 		}

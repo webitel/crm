@@ -17,33 +17,31 @@
       <wt-single-select
         v-model:model-value="modelValue.assignee"
         :label="t('lookups.contactGroups.assignee')"
-        :search-method="loadContact"
-        :disabled="
-          disableUserInput || modelValue.group?.type === ContactsGroupType.Dynamic
-        "
+        :search-method="hasContactsReadAccess && loadContact"
+        :disabled="disableAssigneeInput"
       />
 
       <wt-single-select
         v-model:model-value="modelValue.sla"
         :label="t('lookups.slas.slas')"
-        :search-method="loadSlaList"
+        :search-method="hasSlasReadAccess && loadSlaList"
         :regle-validation="validationFields?.sla"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasSlasReadAccess"
       />
 
       <wt-single-select
         v-model:model-value="modelValue.defaultPriority"
         :label="t('lookups.serviceCatalogs.defaultPriority')"
-        :search-method="loadPrioritiesList"
+        :search-method="hasPrioritiesReadAccess && loadPrioritiesList"
         :regle-validation="validationFields?.defaultPriority"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasPrioritiesReadAccess"
       />
 
       <wt-single-select
         v-model:model-value="modelValue.group"
         :label="t('lookups.contactGroups.contactGroups')"
-        :search-method="loadContactGroupsList"
-        :disabled="disableUserInput"
+        :search-method="hasContactGroupsReadAccess && loadContactGroupsList"
+        :disabled="disableUserInput || !hasContactGroupsReadAccess"
       />
 
       <wt-input-text
@@ -77,6 +75,8 @@ import {
 import type { WebitelCasesService } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import type { CardValidationFields } from '@webitel/ui-datalist/card';
+import { WtObject } from '@webitel/ui-sdk/enums';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
@@ -91,6 +91,25 @@ const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
+const { hasReadAccess: hasSlasReadAccess } = useUserAccessControl(
+	WtObject.Slas,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
+
+const disableAssigneeInput = computed(
+	() =>
+		disableUserInput.value ||
+		!hasContactsReadAccess.value ||
+		modelValue.value.group?.type === ContactsGroupType.Dynamic,
+);
 
 const loadSlaList = (params) => {
 	return SlasAPI.getLookup(params);

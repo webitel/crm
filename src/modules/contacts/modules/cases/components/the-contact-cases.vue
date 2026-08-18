@@ -125,7 +125,7 @@
         <template #createdBy="{ item }">
           {{ item.createdBy?.name }}
         </template>
-        <template #group="{ item }">
+        <template #groupPerformers="{ item }">
           {{ item.group?.name }}
         </template>
         <template #assignee="{ item }">

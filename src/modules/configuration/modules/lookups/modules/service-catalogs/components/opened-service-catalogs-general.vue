@@ -17,9 +17,9 @@
       <wt-single-select
         v-model:model-value="modelValue.status"
         :label="t('lookups.serviceCatalogs.statuses')"
-        :search-method="loadStatusesList"
+        :search-method="hasStatusesReadAccess && loadStatusesList"
         :regle-validation="validationFields?.status"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasStatusesReadAccess"
         required
       />
 
@@ -34,35 +34,35 @@
       <wt-single-select
         v-model:model-value="modelValue.closeReasonGroup"
         :label="t('lookups.closeReasonGroups.closeReasonGroups')"
-        :search-method="loadReasonList"
+        :search-method="hasCloseReasonGroupsReadAccess && loadReasonList"
         :regle-validation="validationFields?.closeReasonGroup"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasCloseReasonGroupsReadAccess"
         required
       />
 
       <wt-single-select
         v-model:model-value="modelValue.sla"
         :label="t('lookups.slas.slas')"
-        :search-method="loadSlaList"
+        :search-method="hasSlasReadAccess && loadSlaList"
         :regle-validation="validationFields?.sla"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasSlasReadAccess"
         required
       />
 
       <wt-single-select
         v-model:model-value="modelValue.defaultPriority"
         :label="t('lookups.serviceCatalogs.defaultPriority')"
-        :search-method="loadPrioritiesList"
+        :search-method="hasPrioritiesReadAccess && loadPrioritiesList"
         :regle-validation="validationFields?.defaultPriority"
-        :disabled="disableUserInput"
+        :disabled="disableUserInput || !hasPrioritiesReadAccess"
         required
       />
 
       <wt-multi-select
         v-model:model-value="modelValue.teams"
         :label="t('objects.team', 2)"
-        :search-method="loadTeamsList"
-        :disabled="disableUserInput"
+        :search-method="hasTeamsReadAccess && loadTeamsList"
+        :disabled="disableUserInput || !hasTeamsReadAccess"
       />
 
       <wt-input-text
@@ -81,8 +81,8 @@
         <wt-multi-select
           v-model:model-value="modelValue.skills"
           :label="t('lookups.serviceCatalogs.skills')"
-          :search-method="loadSkillsList"
-          :disabled="disableUserInput"
+          :search-method="hasSkillsReadAccess && loadSkillsList"
+          :disabled="disableUserInput || !hasSkillsReadAccess"
         />
 
         <wt-switcher
@@ -106,6 +106,7 @@ import {
 } from '@webitel/api-services/api';
 import type { WebitelCasesCatalog } from '@webitel/api-services/gen/models';
 import type { CardValidationFields } from '@webitel/ui-datalist/card';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -119,6 +120,24 @@ defineProps<{
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasStatusesReadAccess } = useUserAccessControl(
+	WtObject.Status,
+);
+const { hasReadAccess: hasCloseReasonGroupsReadAccess } = useUserAccessControl(
+	WtObject.CloseReasonGroup,
+);
+const { hasReadAccess: hasSlasReadAccess } = useUserAccessControl(
+	WtObject.Slas,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
+const { hasReadAccess: hasTeamsReadAccess } = useUserAccessControl(
+	WtObject.Team,
+);
+const { hasReadAccess: hasSkillsReadAccess } = useUserAccessControl(
+	WtObject.Skill,
+);
 
 function loadStatusesList(params) {
 	return CaseStatusesAPI.getLookup(params);
