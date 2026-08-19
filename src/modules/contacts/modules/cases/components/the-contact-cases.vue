@@ -276,12 +276,24 @@ const {
 const instance = getCurrentInstance();
 
 async function loadForContact(id) {
-	await loadCustomHeaders();
+	try {
+		await loadCustomHeaders();
+	} catch {
+		// the API layer already notifies on failure; don't block the cases list on it
+	}
 	await instance.appContext.app.runWithContext(async () => {
 		await initialize({
 			parentId: id,
 		});
 	});
+	// a newer contact navigation may have started while this one was in flight
+	if (parentId.value !== id) {
+		await instance.appContext.app.runWithContext(async () => {
+			await initialize({
+				parentId: parentId.value,
+			});
+		});
+	}
 	removeOutdatedCustomHeaders();
 }
 

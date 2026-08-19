@@ -142,11 +142,17 @@ const {
 
 watch(
 	parentId,
-	(id) => {
-		if (id)
-			initialize({
-				parentId: id,
+	async (id) => {
+		if (!id) return;
+		await initialize({
+			parentId: id,
+		});
+		// a newer contact navigation may have started while this one was in flight
+		if (parentId.value !== id) {
+			await initialize({
+				parentId: parentId.value,
 			});
+		}
 	},
 	{
 		immediate: true,
