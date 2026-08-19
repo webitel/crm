@@ -13,7 +13,6 @@
         delete: hasContactEditAccess,
         create: hasContactEditAccess,
       }"
-      :fields="customFields"
       :store="useContactPermissionsStore"
       :parent-id="itemId"
     />
@@ -21,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCardTabs } from '@webitel/ui-sdk/composables';
+import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed } from 'vue';

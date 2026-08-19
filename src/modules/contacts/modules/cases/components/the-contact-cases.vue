@@ -199,7 +199,7 @@ import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed, getCurrentInstance, inject, onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
@@ -273,17 +273,27 @@ const {
 	isLoading,
 });
 
-onMounted(async () => {
-	const instance = getCurrentInstance();
+const instance = getCurrentInstance();
 
+async function loadForContact(id) {
 	await loadCustomHeaders();
 	await instance.appContext.app.runWithContext(async () => {
 		await initialize({
-			parentId: parentId.value,
+			parentId: id,
 		});
 	});
 	removeOutdatedCustomHeaders();
-});
+}
+
+watch(
+	parentId,
+	(id) => {
+		if (id) loadForContact(id);
+	},
+	{
+		immediate: true,
+	},
+);
 
 const contactCase = (caseItem: { id?: string; etag?: string }) => {
 	if (isReadOnly) {

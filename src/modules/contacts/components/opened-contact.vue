@@ -35,6 +35,7 @@
         />
         <div class="opened-contact-content">
           <opened-contact-general
+            v-if="originalItemInstance"
             :model-value="originalItemInstance"
             @edit="isContactPopup = true"
             @delete="
@@ -151,8 +152,11 @@ async function deleteContact() {
 	close();
 }
 
-function onContactSaved() {
+async function onContactSaved() {
 	isContactPopup.value = false;
+	await initializeContactCard({
+		itemId: itemId.value as string,
+	});
 }
 
 onMounted(() => initializeCard());

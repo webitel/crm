@@ -27,8 +27,8 @@
 </template>
 
 <script setup>
+import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';

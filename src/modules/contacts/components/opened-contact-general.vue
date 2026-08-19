@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Contact } from '@webitel/api-services/validations';
+import type { ContactEntity } from '@webitel/api-services/api';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -113,7 +113,7 @@ import { useContactEditAccessControl } from '../composables/useContactEditAccess
 const { access, isReadOnly } = useContactEditAccessControl();
 
 const props = defineProps<{
-	modelValue: Contact;
+	modelValue: ContactEntity;
 }>();
 
 const emit = defineEmits<{

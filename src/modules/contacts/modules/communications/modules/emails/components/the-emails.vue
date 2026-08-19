@@ -100,7 +100,7 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -138,9 +138,18 @@ const { initialize, loadDataList, updateSize, updateSort, deleteEls } =
 	tableStore;
 
 updateSize(1000);
-initialize({
-	parentId: parentId.value,
-});
+watch(
+	parentId,
+	(id) => {
+		if (id)
+			initialize({
+				parentId: id,
+			});
+	},
+	{
+		immediate: true,
+	},
+);
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -195,7 +204,8 @@ async function setAsPrimary(item) {
   pointer-events: none;
 }
 
-.wt-table tr:hover .emails__set-primary-btn {
+.wt-table tr:hover .emails__set-primary-btn,
+.emails__set-primary-btn:focus-visible {
   opacity: 1;
   pointer-events: auto;
 }

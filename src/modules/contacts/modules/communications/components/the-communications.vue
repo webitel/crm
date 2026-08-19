@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCardTabs } from '@webitel/ui-sdk/composables';
+import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';

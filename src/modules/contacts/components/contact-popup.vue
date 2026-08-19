@@ -27,17 +27,17 @@
         />
 
         <wt-single-select
-          :model-value="modelValue.timezones[0]?.timezone"
+          :model-value="modelValue.timezones?.[0]?.timezone"
           :label="t('date.timezone', 1)"
           :search-method="CalendarsAPI.getTimezonesLookup"
-          @update:model-value="modelValue.timezones[0] = { timezone: $event }"
+          @update:model-value="modelValue.timezones = [{ timezone: $event }]"
         />
 
         <wt-single-select
-          :model-value="modelValue.managers[0]?.user"
+          :model-value="modelValue.managers?.[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @update:model-value="modelValue.managers[0] = { user: $event }"
+          @update:model-value="modelValue.managers = [{ user: $event }]"
         />
 
         <wt-multi-select
@@ -80,13 +80,14 @@
 import { useRegleSchema } from '@regle/schemas';
 import {
 	CalendarsAPI,
+	type ContactEntity,
 	ContactGroupsAPI,
 	ContactsAPI,
 	LabelsAPI,
 	UsersAPI,
 } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { type Contact, contactSchema } from '@webitel/api-services/validations';
+import { contactSchema } from '@webitel/api-services/validations';
 import { ComponentSize } from '@webitel/ui-sdk/enums';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -115,7 +116,7 @@ const { t } = useI18n();
 
 const userInfoStore = useUserinfoStore();
 
-function generateNewDraft(): Contact {
+function generateNewDraft(): ContactEntity {
 	return {
 		name: '',
 		timezones: [],
@@ -133,7 +134,7 @@ function generateNewDraft(): Contact {
 	};
 }
 
-const draft = ref<Contact>(generateNewDraft());
+const draft = ref<ContactEntity>(generateNewDraft());
 
 const validationSchema = ref(
 	useRegleSchema(draft, contactSchema, {
@@ -175,7 +176,7 @@ async function save() {
 			});
 			id = newContact.id;
 		}
-		emit('saved', id);
+		if (id) emit('saved', id);
 		close();
 	} finally {
 		isSaving.value = false;
