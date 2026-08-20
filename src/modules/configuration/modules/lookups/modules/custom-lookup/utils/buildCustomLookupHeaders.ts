@@ -1,7 +1,7 @@
 import type { DataField } from '@webitel/api-services/gen/models';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 
 // table headers for the currently open dictionary's schema — multiselect
 // columns aren't sortable, `id` isn't shown as its own column

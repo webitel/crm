@@ -26,7 +26,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 import { customLookupFields } from '../stores/_internals/customLookupFields';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
 

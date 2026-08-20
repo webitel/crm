@@ -2,7 +2,7 @@ import type { DataField } from '@webitel/api-services/gen/models';
 import { requiredLookupSchema } from '@webitel/api-services/validations';
 import { z } from 'zod';
 
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 
 function buildFieldSchema(field: DataField): z.ZodType {
 	switch (field.kind) {

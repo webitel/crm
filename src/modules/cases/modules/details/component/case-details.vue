@@ -18,7 +18,7 @@
       v-else
       class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50 case-details-container"
     >
-      <wt-display-content
+      <field-extension-display
         v-for="field in fields"
         :key="field.id"
         :field="field"
@@ -36,9 +36,8 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import get from 'lodash/get';
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
-
+import FieldExtensionDisplay from '../../../../configuration/modules/customization/modules/field-extensions/components/field-extension-display.vue';
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
-import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 import { useCaseAccessState } from '../../../composables/useCaseAccessState';
 
 const router = useRouter();

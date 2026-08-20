@@ -1,0 +1,75 @@
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
+import type { RouteRecordRaw } from 'vue-router';
+
+import OpenedCustomLookup from '../modules/custom-lookups/components/opened-custom-lookup.vue';
+import OpenedCustomLookupColumns from '../modules/custom-lookups/components/opened-custom-lookup-columns.vue';
+import OpenedCustomLookupGeneral from '../modules/custom-lookups/components/opened-custom-lookup-general.vue';
+import TheCustomLookups from '../modules/custom-lookups/components/the-custom-lookups.vue';
+import TheFieldExtensions from '../modules/field-extensions/components/the-field-extensions.vue';
+
+const customizationRoutes: RouteRecordRaw[] = [
+	{
+		path: 'configuration/customization',
+		name: 'customization',
+		redirect: {
+			name: 'configuration',
+		},
+		children: [
+			{
+				path: 'custom-lookups',
+				name: CrmSections.CustomLookups,
+				component: TheCustomLookups,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: CrmSections.CustomLookups,
+				},
+			},
+			{
+				path: 'custom-lookups/:id',
+				name: `${CrmSections.CustomLookups}-card`,
+				component: OpenedCustomLookup,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: CrmSections.CustomLookups,
+				},
+				redirect: {
+					name: `${CrmSections.CustomLookups}-general`,
+				},
+				children: [
+					{
+						path: 'general',
+						name: `${CrmSections.CustomLookups}-general`,
+						component: OpenedCustomLookupGeneral,
+					},
+					{
+						path: 'columns',
+						name: `${CrmSections.CustomLookups}-columns`,
+						component: OpenedCustomLookupColumns,
+					},
+				],
+			},
+			{
+				path: 'types-extensions/:id',
+				name: 'types-extensions',
+				component: TheFieldExtensions,
+				meta: {
+					WtObject: WtObject.CustomLookup,
+					UiSection: (thisRoute) => {
+						const repo = thisRoute.params.id;
+
+						switch (repo) {
+							case 'cases':
+								return CrmSections.CasesExtensions;
+							case 'contacts':
+								return CrmSections.ContactsExtensions;
+							default:
+								return `unknown type extension repo: ${repo}`;
+						}
+					},
+				},
+			},
+		],
+	},
+];
+
+export default customizationRoutes;

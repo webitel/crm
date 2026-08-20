@@ -31,7 +31,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { useContactEditAccessControl } from '../composables/useContactEditAccessControl';
 import { CONTACT_VIEW_NAME } from '../router/contactViewName';
 import { contactCustomFields } from '../stores/_internals/contactCustomFields';

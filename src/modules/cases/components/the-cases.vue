@@ -265,7 +265,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import DisplayDynamicFieldExtension from '../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
+import DisplayDynamicFieldExtension from '../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
 import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
