@@ -24,10 +24,8 @@
 
 <script setup>
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
-import { displayText } from '@webitel/ui-sdk/utils';
+import { displayText, prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
-
-import prettifyDate from '../../../../../../cases/utils/prettifyDate';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 
 const props = defineProps({

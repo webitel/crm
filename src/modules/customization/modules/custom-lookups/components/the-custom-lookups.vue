@@ -125,12 +125,12 @@ import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-
 import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
+import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import prettifyDate from '../../../../cases/utils/prettifyDate.js';
 
 const baseNamespace = 'customization/customLookups';
 
