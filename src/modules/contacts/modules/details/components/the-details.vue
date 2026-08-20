@@ -18,7 +18,8 @@
           v-for="field in fields"
           :key="field.id"
           :field="field"
-          :namespace="namespace"
+          :item-instance="props.itemInstance"
+          :regle-validation="props.validationFields?.custom?.[field.id]"
           :disabled="isReadOnly"
           path-to-field="custom"
         />
@@ -31,7 +32,7 @@
           v-for="field in fields"
           :key="field.id"
           :field="field"
-          :value="get(itemInstance, `custom.${field.id}`)"
+          :value="get(props.itemInstance, `custom.${field.id}`)"
         />
       </div>
     </div>
@@ -42,9 +43,7 @@
   setup
   lang="ts"
 >
-import { useVuelidate } from '@vuelidate/core';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import { type ComputedRef, computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -52,6 +51,7 @@ import { useRouter } from 'vue-router';
 
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
+import { useContactCardStore } from '../../../stores/card/contactCardStore';
 
 const access =
 	inject<
@@ -61,44 +61,23 @@ const access =
 	>('access');
 const isReadOnly = inject<boolean>('isReadOnly');
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	fields: {
-		type: Object,
-		required: true,
-	},
-});
+const props = defineProps<{
+	fields: Array<Record<string, any>>;
+	itemInstance: Record<string, any>;
+	validationFields?: Record<string, any>;
+}>();
 
 const hasEditAccess = computed(() => access.value?.hasRbacEditAccess);
 
 const router = useRouter();
 const { t } = useI18n();
 
-const { itemInstance, updateItem } = useCardStore(props.namespace);
+const { saveItem } = useContactCardStore();
 
-const v$ = useVuelidate(
-	{},
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
-
-v$.value.$touch();
-
-const disabledSave = computed(
-	() => v$.value?.$invalid || !itemInstance.value._dirty || isReadOnly,
-);
+const disabledSave = computed(() => isReadOnly);
 
 const saveDetails = () => {
-	updateItem({
-		custom: itemInstance.value.custom,
-	});
+	saveItem(props.itemInstance);
 };
 
 watch(

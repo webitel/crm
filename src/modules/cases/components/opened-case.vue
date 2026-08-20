@@ -58,24 +58,20 @@ import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useCaseAccessState } from '../composables/useCaseAccessState';
-import { CasesCardNamespace, CasesNamespace } from '../namespace';
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
 
-const store = useStore();
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
 
@@ -97,15 +93,6 @@ watch(
 const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
-
-/**
- * Legacy Vuex card bridge, kept alive only for `case-details.vue` (custom-lookup
- * dynamic fields tab) — that tab renders `custom-lookup-dynamic-field.vue`, a
- * component shared with the still-Vuex `custom-lookup` admin module, so it can't
- * read/write through the Pinia store until that module migrates too.
- */
-const { itemInstance: legacyItemInstance, setId: setLegacyId } =
-	useCardStore(CasesNamespace);
 
 const casesCardStore = useCasesCardStore();
 const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
@@ -132,11 +119,6 @@ const { setEditMode } = useCasesEditModeStore();
 const toggleEditMode = (value: boolean) => {
 	setEditMode(value);
 };
-
-watch(originalItemInstance, (value) => {
-	if (itemId.value) setLegacyId(itemId.value);
-	store.commit(`${CasesCardNamespace}/SET_ITEM`, value);
-});
 
 /**
  * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
@@ -246,10 +228,6 @@ async function assignCaseToMe() {
 }
 
 const saveCase = async () => {
-	// custom-lookup dynamic fields (case-details tab) still write into the
-	// legacy Vuex card module — pull their edits in before saving the new store
-	itemInstance.value.custom = legacyItemInstance.value.custom;
-
 	await saveCardStore();
 	await toggleEditMode(false);
 };

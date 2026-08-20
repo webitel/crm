@@ -16,6 +16,8 @@
       :fields="customFields"
       :store="useContactPermissionsStore"
       :parent-id="itemId"
+      :item-instance="draftItemInstance"
+      :validation-fields="validationFields"
     />
   </article>
 </template>
@@ -24,7 +26,7 @@
 import { useCardTabs } from '@webitel/ui-sdk/composables';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -32,11 +34,14 @@ import { useUserAccessControl } from '../../../app/composables/useUserAccessCont
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { useContactEditAccessControl } from '../composables/useContactEditAccessControl';
 import { CONTACT_VIEW_NAME } from '../router/contactViewName';
+import { contactCustomFields } from '../stores/_internals/contactCustomFields';
 import { useContactCardStore } from '../stores/card/contactCardStore';
 import { useContactPermissionsStore } from '../stores/permissions/contactPermissionsStore';
 
 const contactCardStore = useContactCardStore();
-const { itemId } = storeToRefs(contactCardStore as unknown as StoreGeneric);
+const { itemId, draftItemInstance, validationFields } = storeToRefs(
+	contactCardStore as unknown as StoreGeneric,
+);
 
 const { hasContactEditAccess } = useContactEditAccessControl();
 
@@ -48,6 +53,15 @@ const { fields: customFields, getFields } = useExtensionFields({
 });
 
 getFields();
+watch(
+	customFields,
+	(fields) => {
+		contactCustomFields.value = fields;
+	},
+	{
+		immediate: true,
+	},
+);
 const currentCardRoute = computed(() => {
 	return typeof route.name === 'string' &&
 		route.name.includes(CONTACT_VIEW_NAME)

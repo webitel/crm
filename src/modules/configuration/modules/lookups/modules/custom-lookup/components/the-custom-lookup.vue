@@ -28,20 +28,23 @@
           <wt-action-bar
             :include="[IconAction.ADD, IconAction.REFRESH, IconAction.DELETE]"
             :disabled:add="!hasCreateAccess"
-            :disabled:delete="!selected.length"
-            @click:refresh="loadData"
+            :disabled:delete="!hasDeleteAccess || !selected.length"
+            @click:refresh="loadDataList"
             @click:add="add"
             @click:delete="
               askDeleteConfirmation({
                 deleted: selected,
-                callback: () => deleteData(selected),
+                callback: () => deleteEls(selected),
               })
             "
           >
             <template #search-bar>
-              <filter-search
-                :namespace="filtersNamespace"
-                name="search"
+              <dynamic-filter-search
+                :filters-manager="filtersManager"
+                single-search-name="search"
+                @filter:add="addFilter"
+                @filter:update="updateFilter"
+                @filter:delete="deleteFilter"
               />
               <wt-upload-file-icon-btn
                 v-if="hasCreateAccess"
@@ -76,14 +79,14 @@
           <wt-table
             v-show="dataList.length && !isLoading"
             :data="dataList"
-            :headers="headers"
+            :headers="shownHeaders"
             :selected="selected"
             sortable
-            @sort="sort"
-            @update:selected="setSelected"
+            @sort="updateSort"
+            @update:selected="updateSelected"
           >
             <template
-              v-for="header in headers"
+              v-for="header in shownHeaders"
               :key="header.value"
               #[header.value]="{ item }"
             >
@@ -104,16 +107,21 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteData(item),
+                    callback: () => deleteEls(item),
                   })
                 "
               />
             </template>
           </wt-table>
 
-          <filter-pagination
-            :namespace="filtersNamespace"
-            :is-next="isNext"
+          <wt-pagination
+            :next="next"
+            :prev="page > 1"
+            :size="size"
+            debounce
+            @change="updateSize"
+            @next="updatePage(page + 1)"
+            @prev="updatePage(page - 1)"
           />
         </div>
       </section>
@@ -121,76 +129,38 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { AdjunctTypesAPI } from '@webitel/api-services/api';
+import type { DataInputDictionary } from '@webitel/api-services/gen/models';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import WtUploadFileIconBtn from '@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue';
-import { WtObject } from '@webitel/ui-sdk/enums';
-import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import { useClose } from '@webitel/ui-sdk/composables';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType.js';
+import { customLookupFields } from '../stores/_internals/customLookupFields';
+import { useCustomLookupDatalistStore } from '../stores/datalist/customLookupDatalistStore';
+import { buildCustomLookupHeaders } from '../utils/buildCustomLookupHeaders';
 import DisplayDynamicField from './display-dynamic-field.vue';
 import UploadCustomLookupPopup from './upload-custom-lookup-popup.vue';
 
-const baseNamespace = 'configuration/lookups/customLookup';
-
 const { t } = useI18n();
 const router = useRouter();
-
-const store = useStore();
-
 const route = useRoute();
 
-const dictionary = ref(null);
-const repo = ref(route.params.repo);
-
-const loadDictionary = async () => {
-	try {
-		dictionary.value = await AdjunctTypesAPI.get({
-			itemId: repo.value,
-		});
-
-		store.commit(`${baseNamespace}/table/SET`, {
-			path: 'headers',
-			value: dictionary.value.fields
-				.filter((field) => !field.hidden && field.id !== 'id')
-				.map((field) => ({
-					value: field.id,
-					locale: field.name,
-					readonly: field.readonly,
-					required: field.required,
-					show: true,
-					field: field.id,
-					kind: field.kind,
-					sort:
-						field.kind === FieldType.Multiselect ? undefined : SortSymbols.NONE,
-				})),
-		});
-	} catch (e) {
-		console.error(e);
-	}
-};
-
-store.commit(`${baseNamespace}/table/SET`, {
-	path: 'repo',
-	value: repo.value,
-});
+const repo = computed(() => route.params.repo as string);
+const dictionary = ref<DataInputDictionary | null>(null);
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
-	useUserAccessControl(WtObject.CustomLookup);
+	useUserAccessControl();
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -201,46 +171,60 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const {
-	namespace,
+const tableStore = useCustomLookupDatalistStore();
 
+const {
 	dataList,
 	selected,
-	isLoading,
-	headers,
-	isNext,
 	error,
-
-	loadData,
-	deleteData,
-	sort,
-	setSelected,
-	onFilterEvent,
-} = useTableStore(baseNamespace);
+	isLoading,
+	page,
+	size,
+	next,
+	headers,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-	namespace: filtersNamespace,
-	restoreFilters,
-	filtersValue,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+	updateShownHeaders,
+	resetInfiniteScrollTableParamsToDefaults,
+} = tableStore;
 
-	subscribe,
-	flushSubscribers,
-} = useTableFilters(namespace);
+// the `:repo` route param is shared by every custom-lookup dictionary (same
+// route record), so switching dictionaries does NOT remount this component —
+// re-fetch the schema and re-init the store explicitly on every repo change
+watch(
+	repo,
+	async (newRepo) => {
+		if (!newRepo) return;
 
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
-});
+		resetInfiniteScrollTableParamsToDefaults();
 
-restoreFilters();
+		dictionary.value = await AdjunctTypesAPI.get({
+			itemId: newRepo,
+		});
+		customLookupFields.value = dictionary.value?.fields ?? [];
+		updateShownHeaders(buildCustomLookupHeaders(customLookupFields.value));
 
-onMounted(async () => {
-	await loadDictionary();
-});
-
-onUnmounted(() => {
-	flushSubscribers();
-});
+		await initialize({
+			parentId: newRepo,
+		});
+	},
+	{
+		immediate: true,
+	},
+);
 
 const path = computed(() => [
 	{
@@ -272,13 +256,13 @@ const {
 } = useTableEmpty({
 	dataList,
 	error,
-	filters: filtersValue,
+	filters: computed(() => filtersManager.value.getAllValues()),
 	isLoading,
 });
 
-const csvFile = ref(null);
+const csvFile = ref<File | null>(null);
 
-const processCSV = (files) => {
+const processCSV = (files: FileList) => {
 	const file = files[0];
 	if (file) {
 		csvFile.value = file;
@@ -287,7 +271,7 @@ const processCSV = (files) => {
 
 const closeCSVPopup = () => {
 	csvFile.value = null;
-	loadData();
+	loadDataList();
 };
 
 const add = () => {
@@ -299,7 +283,7 @@ const add = () => {
 	});
 };
 
-const edit = (item) => {
+const edit = (item: { id: string }) => {
 	router.push({
 		name: 'custom-lookup-record',
 		params: {

@@ -22,22 +22,20 @@
   </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { DataField } from '@webitel/api-services/gen/models';
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { displayText, prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
+
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 
-const props = defineProps({
-	field: {
-		type: Object,
-		required: true,
-	},
-	value: {
-		type: Object,
-		required: true,
-	},
-});
+const props = defineProps<{
+	field: DataField & {
+		value: string;
+	};
+	value: Record<string, any>;
+}>();
 
 const showText = computed(() => {
 	if (!props.value) {

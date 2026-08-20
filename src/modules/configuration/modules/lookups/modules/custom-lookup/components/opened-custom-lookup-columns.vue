@@ -12,36 +12,35 @@
         v-for="field in fields"
         :key="field.id"
         :field="field"
-        :namespace="namespace"
+        :item-instance="modelValue"
+        :regle-validation="validationFields?.[field.id]"
         :disabled="disableUserInput"
       />
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import type { DataField } from '@webitel/api-services/gen/models';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { customLookupFields } from '../stores/_internals/customLookupFields';
 import CustomLookupDynamicField from './custom-lookup-dynamic-field.vue';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+defineProps<{
+	modelValue: Record<string, any>;
+	validationFields?: Record<string, any>;
+}>();
 
 const { disableUserInput } = useUserAccessControl();
 
-const store = useStore();
-
 const { t } = useI18n();
 
-const fields = computed(() =>
-	store.getters[`${props.namespace}/LOOKUP_FIELDS`]?.filter(
+const fields = computed<DataField[]>(() =>
+	customLookupFields.value.filter(
 		(field) =>
 			!field.hidden &&
 			(!field.readonly || field.kind === FieldType.Boolean) &&

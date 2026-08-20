@@ -8,7 +8,8 @@
         v-for="field in fields"
         :key="field.id"
         :field="field"
-        :namespace="CasesCardNamespace"
+        :item-instance="props.itemInstance"
+        :regle-validation="props.validationFields?.custom?.[field.id]"
         path-to-field="custom"
         timezone="utc"
       />
@@ -21,7 +22,7 @@
         v-for="field in fields"
         :key="field.id"
         :field="field"
-        :value="get(itemInstance, `custom.${field.id}`)"
+        :value="get(props.itemInstance, `custom.${field.id}`)"
       />
     </div>
   </template>
@@ -32,7 +33,6 @@
   lang="ts"
 >
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/store';
 import get from 'lodash/get';
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -40,7 +40,6 @@ import { useRouter } from 'vue-router';
 import CustomLookupDynamicField from '../../../../configuration/modules/lookups/modules/custom-lookup/components/custom-lookup-dynamic-field.vue';
 import WtDisplayContent from '../../../../customization/modules/wt-type-extension/components/wt-display-content.vue';
 import { useCaseAccessState } from '../../../composables/useCaseAccessState';
-import { CasesCardNamespace } from '../../../namespace';
 
 const router = useRouter();
 
@@ -48,8 +47,9 @@ const { isEditable } = useCaseAccessState();
 
 const props = defineProps<{
 	fields: Array<Record<string, any>>;
+	itemInstance: Record<string, any>;
+	validationFields?: Record<string, any>;
 }>();
-const { itemInstance } = useCardStore(CasesCardNamespace);
 
 watch(
 	() => props.fields,

@@ -2,7 +2,7 @@
   <wt-input-text
     v-if="field.kind === FieldType.Text"
     :model-value="value"
-    :v="validation"
+    :regle-validation="regleValidation"
     :label="label"
     :required="isRequired"
     :disabled="props.disabled"
@@ -11,7 +11,7 @@
   <wt-input-number
     v-else-if="field.kind === FieldType.Number"
     :model-value="value"
-    :v="validation"
+    :regle-validation="regleValidation"
     :label="label"
     :required="isRequired"
     :disabled="props.disabled"
@@ -21,7 +21,6 @@
     v-else-if="field.kind === FieldType.Boolean"
     :label="label"
     :model-value="!!value"
-    :v="validation"
     :required="isRequired"
     :disabled="props.disabled"
     @update:model-value="setValue($event)"
@@ -30,7 +29,7 @@
     v-else-if="field.kind === FieldType.Select"
     :label="label"
     :model-value="value"
-    :v="validation"
+    :regle-validation="regleValidation"
     :search-method="loadLookupList(field.lookup)"
     data-key="id"
     :required="isRequired"
@@ -41,7 +40,7 @@
     v-else-if="field.kind === FieldType.Multiselect"
     :label="label"
     :model-value="value"
-    :v="validation"
+    :regle-validation="regleValidation"
     :search-method="loadLookupList(field.lookup)"
     data-key="id"
     :required="isRequired"
@@ -52,7 +51,7 @@
     v-else-if="field.kind === FieldType.Calendar"
     :label="label"
     :model-value="value"
-    :v="validation"
+    :regle-validation="regleValidation"
     show-time
 		clearable
     :timezone="timezone"
@@ -62,111 +61,39 @@
   />
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+<script setup lang="ts">
+import type { SuperCompatibleRegleFieldStatus } from '@regle/core';
 import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import type { DataField } from '@webitel/api-services/gen/models';
 import get from 'lodash/get';
 import set from 'lodash/set';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	field: {
-		type: Object,
-		required: true,
-	},
+const props = defineProps<{
+	// loosely typed: rendered by 3 different parents (custom-lookup, cases,
+	// contacts), each with its own shape for a dictionary field definition
+	field: Partial<DataField> & Record<string, any>;
+	itemInstance: Record<string, any>;
 	// If the field is nested in the itemInstance object
-	// eslint-disable-next-line vue/require-default-prop
-	pathToField: {
-		type: String,
-	},
-	disabled: {
-		type: Boolean,
-		default: false,
-	},
-	timezone: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
+	pathToField?: string;
+	// pre-resolved by the parent card store's own regle validation schema —
+	// this component doesn't know about the parent's field nesting/naming
+	regleValidation?: SuperCompatibleRegleFieldStatus;
+	disabled?: boolean;
+	timezone?: string;
+}>();
 
 const { t } = useI18n();
 
-const v$ = useVuelidate(
-	computed(() => {
-		let rules;
-
-		if (props.pathToField) {
-			rules = {
-				itemInstance: {
-					[props.pathToField]: {},
-				},
-			};
-		} else {
-			rules = {
-				itemInstance: {},
-			};
-		}
-
-		if (
-			props.pathToField &&
-			!rules.itemInstance[props.pathToField][props.field.id]
-		) {
-			rules.itemInstance[props.pathToField][props.field.id] = {};
-		}
-
-		if (!props.pathToField && !rules.itemInstance[props.field.id]) {
-			rules.itemInstance[props.field.id] = {};
-		}
-
-		if (props.field.required) {
-			if (props.pathToField) {
-				set(
-					rules,
-					`itemInstance.${props.pathToField}.${props.field.id}.required`,
-					required,
-				);
-			} else {
-				set(rules, `itemInstance.${props.field.id}.required`, required);
-			}
-		}
-
-		return rules;
-	}),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
-);
-
-v$.value.$touch();
-
 const value = computed(() => {
 	if (props.pathToField) {
-		return get(itemInstance.value, `${props.pathToField}.${props.field.id}`);
+		return get(props.itemInstance, `${props.pathToField}.${props.field.id}`);
 	}
 
-	return itemInstance.value[props.field.id];
-});
-
-const validation = computed(() => {
-	if (props.pathToField) {
-		return v$.value.itemInstance[props.pathToField][props.field.id];
-	}
-
-	return v$.value.itemInstance[props.field.id];
+	return props.itemInstance[props.field.id];
 });
 
 const label = computed(() => {
@@ -177,17 +104,22 @@ const isRequired = computed(() => {
 	return props.field.required;
 });
 
-const setValue = (value) => {
-	setItemProp({
-		path: props.pathToField
+const setValue = (value: unknown) => {
+	set(
+		props.itemInstance,
+		props.pathToField
 			? `${props.pathToField}.${props.field.id}`
 			: props.field.id,
 		value,
-	});
+	);
 };
 
-const loadLookupList = ({ path, display, primary }) => {
-	return (params) => {
+const loadLookupList = ({
+	path,
+	display,
+	primary,
+}: NonNullable<DataField['lookup']>) => {
+	return (params: Record<string, unknown>) => {
 		return AdjunctTypeRecordsAPI.getLookup({
 			...params,
 			path,
@@ -197,8 +129,13 @@ const loadLookupList = ({ path, display, primary }) => {
 	};
 };
 
-const selectElement = (value) => {
-	if (Object.values(value).length === 0) {
+const selectElement = (
+	value: {
+		id?: unknown;
+		name?: unknown;
+	} | null,
+) => {
+	if (!value || Object.values(value).length === 0) {
 		return setValue(null);
 	}
 
@@ -208,7 +145,12 @@ const selectElement = (value) => {
 	});
 };
 
-const selectElements = (value) => {
+const selectElements = (
+	value: Array<{
+		id: unknown;
+		name: unknown;
+	}>,
+) => {
 	setValue(
 		value.map((item) => ({
 			id: item.id,
