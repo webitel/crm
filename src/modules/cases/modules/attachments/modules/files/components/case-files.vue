@@ -43,7 +43,7 @@
           :data="currentDataList"
           :headers="headers"
           :selected="selected"
-          :selectable="editMode"
+          :selectable="isEditable"
           headless
           @update:selected="updateSelected"
         >
@@ -129,7 +129,7 @@ const props = defineProps<{
 	itemId: string;
 }>();
 
-const { editMode, isReadOnly } = useCaseAccessState();
+const { isEditable, isReadOnly } = useCaseAccessState();
 const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,
@@ -280,7 +280,7 @@ const hasNonDirectFileSelected = computed(() =>
 const isBulkDeleteDisabled = computed(() => {
 	return (
 		!hasDeleteAccess.value ||
-		!editMode.value ||
+		!isEditable.value ||
 		!selected.value.length ||
 		hasNonDirectFileSelected.value ||
 		isPendingItemsLoading.value
@@ -295,7 +295,7 @@ const isTableActionDownloadDisabled = computed(() => {
 
 const isTableActionAddDisabled = computed(() => {
 	return (
-		!hasCreateAccess.value || !editMode.value || isPendingItemsLoading.value
+		!hasCreateAccess.value || !isEditable.value || isPendingItemsLoading.value
 	);
 });
 
@@ -312,7 +312,7 @@ const isFileDeleteAction = computed(() => (item) => {
 });
 
 const isFileDeleteActionDisabled = computed(() => {
-	return !editMode.value || !hasDeleteAccess.value;
+	return !isEditable.value || !hasDeleteAccess.value;
 });
 
 // Function to handle single file deletion (pending or existing)

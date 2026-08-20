@@ -10,7 +10,7 @@
       />
 
       <editable-field
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.reporter')"
         :link="getContactLinkPreview(modelValue.reporter?.id)"
         :model-value="modelValue.reporter"
@@ -36,7 +36,7 @@
 
       <editable-field
         v-model="modelValue.impacted"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.impacted')"
         :link="getContactLinkPreview(modelValue.impacted?.id)"
         icon="impacted"
@@ -56,7 +56,7 @@
       </editable-field>
 
       <editable-field
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.assignee')"
         :link="getContactLinkPreview(modelValue.assignee?.id)"
         :model-value="modelValue.assignee"
@@ -81,7 +81,7 @@
 
       <editable-field
         v-model="modelValue.group"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.groupPerformers')"
         :disabled="disableUserInput"
         color="success"
@@ -126,7 +126,7 @@ import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 const { t } = useI18n();
 const router = useRouter();
 
-const { editMode, isReadOnly } = useCaseAccessState();
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
 
@@ -164,7 +164,7 @@ function handleReporterInput(value) {
 
 const isAssignMeDisabled = ref(false);
 
-function resetAssignee(value) {
+function resetAssignee(value = undefined) {
 	modelValue.value.assignee = value;
 }
 

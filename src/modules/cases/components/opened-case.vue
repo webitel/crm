@@ -7,7 +7,7 @@
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!isNew && !editMode"
+        :hide-primary="!isNew && !isEditable"
         :primary-action="saveCase"
         :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="t('reusable.save')"
@@ -26,7 +26,7 @@
             </wt-button>
 
             <wt-button
-              v-if="!isNew && !editMode"
+              v-if="!isNew && !isEditable"
               :disabled="!hasUpdateAccess"
               color="secondary"
               @click="toggleEditMode(true)"
@@ -60,7 +60,7 @@ import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCa
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/store';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed, onUnmounted, provide, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
@@ -94,9 +94,7 @@ watch(
 	},
 );
 
-const { editMode, isReadOnly } = useCaseAccessState();
-provide('namespace', CasesNamespace);
-provide('customFields', customFields);
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
@@ -223,7 +221,7 @@ async function assignCaseToMe() {
 		return;
 	}
 
-	if (editMode.value) {
+	if (isEditable.value) {
 		itemInstance.value.assignee = {
 			id: userContact.value.id,
 			name: userContact.value.name,

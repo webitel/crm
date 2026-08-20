@@ -10,11 +10,11 @@ export function useCaseAccessState() {
 	);
 	const { isEditMode } = storeToRefs(useCasesEditModeStore());
 
-	const editMode = computed(() => !itemId.value || isEditMode.value);
+	const isEditable = computed(() => !itemId.value || isEditMode.value);
 	const isReadOnly = inject<boolean>('isReadOnly');
 
 	return {
-		editMode,
+		isEditable,
 		isReadOnly,
 	};
 }

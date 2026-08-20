@@ -4,7 +4,7 @@
     <div>
       <editable-field
         v-model="modelValue.priority"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
       >
         <template #default="props">
           <wt-single-select
@@ -36,7 +36,7 @@ import EditableField from '../../case-info/components/editable-field.vue';
 
 const { t } = useI18n();
 
-const { editMode } = useCaseAccessState();
+const { isEditable } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
 

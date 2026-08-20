@@ -19,14 +19,9 @@ import CaseService from '../modules/service/components/case-service.vue';
 import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
 
-withDefaults(
-	defineProps<{
-		isNew?: boolean;
-	}>(),
-	{
-		isNew: false,
-	},
-);
+defineProps<{
+	isNew: boolean;
+}>();
 </script>
 <style
   lang="scss"

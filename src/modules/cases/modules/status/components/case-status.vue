@@ -53,7 +53,7 @@ import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 import CaseResultPopup from './case-result-popup.vue';
 
-const { editMode, isReadOnly } = useCaseAccessState();
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { t } = useI18n();
 
@@ -105,7 +105,7 @@ const confirmChangingStatusToFinal = async ({ reason, result }) => {
 
 	await patchStatusCondition(pendingFinalStatusCondition.value);
 
-	if (!editMode.value) {
+	if (!isEditable.value) {
 		await CasesAPI.patch({
 			changes: {
 				closeReason: reason,
@@ -157,7 +157,7 @@ const fetchStatusConditions = async (params = {}) => {
 async function patchStatusCondition(condition) {
 	updateLocalProperties(condition);
 
-	if (!isNew.value && !editMode.value) {
+	if (!isNew.value && !isEditable.value) {
 		await patchRemoteChanges(condition);
 		await reloadCase();
 	}
@@ -167,7 +167,7 @@ function updateLocalProperties(condition) {
 	modelValue.value.statusCondition = condition;
 	modelValue.value.status = status.value;
 
-	if (editMode.value && !condition.final) {
+	if (isEditable.value && !condition.final) {
 		modelValue.value.closeReason = {};
 		modelValue.value.closeResult = '';
 	}

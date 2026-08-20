@@ -25,9 +25,6 @@ import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 
 const props = withDefaults(
 	defineProps<{
-		/* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
-
-		 * Description why data is thrown props and have a default value */
 		tableStore?: ReturnType<typeof useCasesDatalistStore>;
 	}>(),
 	{

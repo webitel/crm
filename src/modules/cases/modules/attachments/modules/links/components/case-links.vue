@@ -65,7 +65,7 @@
           :data="currentDataList"
           :headers="headers"
           :selected="selected"
-          :selectable="editMode"
+          :selectable="isEditable"
           headless
           @update:selected="updateSelected"
         >
@@ -137,7 +137,7 @@ const props = defineProps<{
 	itemId: string;
 }>();
 
-const { editMode, isReadOnly } = useCaseAccessState();
+const { isEditable, isReadOnly } = useCaseAccessState();
 const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,
@@ -173,14 +173,14 @@ const isTableActionAddDisabled = computed(() => {
 		!hasCreateAccess.value ||
 		formState.isAdding ||
 		formState.editingLink ||
-		!editMode.value ||
+		!isEditable.value ||
 		isPendingItemsLoading.value
 	);
 });
 
 const isTableActionDeleteDisabled = computed(() => {
 	return (
-		!editMode.value ||
+		!isEditable.value ||
 		!hasDeleteAccess.value ||
 		!selected.value.length ||
 		isPendingItemsLoading.value
@@ -204,11 +204,11 @@ const isTableVisible = computed(() => {
 });
 
 const isLinkEditActionDisabled = computed(() => {
-	return !editMode.value || !hasUpdateAccess.value || formState.isAdding;
+	return !isEditable.value || !hasUpdateAccess.value || formState.isAdding;
 });
 
 const isLinkDeleteActionDisabled = computed(() => {
-	return !editMode.value || !hasDeleteAccess.value;
+	return !isEditable.value || !hasDeleteAccess.value;
 });
 
 // Transform and process functions for links

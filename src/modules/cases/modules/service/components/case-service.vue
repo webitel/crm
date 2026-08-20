@@ -32,7 +32,7 @@
       />
     </div>
     <wt-button
-      v-if="editMode"
+      v-if="isEditable"
       :disabled="disableUserInput"
       class="case-service__button"
       color="success"
@@ -62,7 +62,7 @@ import CaseServicePopup from './case-service-popup.vue';
 import ServicePath from './service-path.vue';
 import SlaRecalculationPopup from './sla-recalculation-popup.vue';
 
-const { editMode, isReadOnly } = useCaseAccessState();
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
 

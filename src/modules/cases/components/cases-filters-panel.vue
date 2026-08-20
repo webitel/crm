@@ -31,9 +31,6 @@ const emit = defineEmits<{
 
 const props = withDefaults(
 	defineProps<{
-		/* https://webitel.atlassian.net/browse/WTEL-6419?focusedCommentId=666054
-
-		 * Description why data is thrown props and have a default value */
 		namespace?: string;
 		tableStore?: ReturnType<typeof useCasesDatalistStore>;
 		presetsStore?: typeof useCaseFilterPresetsStore;

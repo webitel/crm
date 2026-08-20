@@ -68,30 +68,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const props = withDefaults(
-	defineProps<{
-		editMode?: boolean;
-		modelValue?: any;
-		label?: string;
-		required?: boolean;
-		horizontalView?: boolean;
-		icon?: string;
-		color?: string;
-		link?: Record<string, any> | null;
-		disableLink?: boolean;
-	}>(),
-	{
-		editMode: false,
-		modelValue: '',
-		label: '',
-		required: false,
-		horizontalView: false,
-		icon: '',
-		color: '',
-		link: null,
-		disableLink: false,
-	},
-);
+const props = defineProps<{
+	editMode?: boolean;
+	modelValue?: any;
+	label?: string;
+	required?: boolean;
+	horizontalView?: boolean;
+	icon?: string;
+	color?: string;
+	link?: Record<string, any> | null;
+	disableLink?: boolean;
+}>();
 
 const emit = defineEmits<{
 	'update:modelValue': [

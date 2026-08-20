@@ -3,7 +3,7 @@
     <div class="opened-card-input-grid opened-card-input-grid--1-col">
       <editable-field
         v-model="modelValue.closeReason"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.closureReason')"
       >
         <template #default="props">
@@ -22,7 +22,7 @@
 
       <editable-field
         v-model="modelValue.closeResult"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.result')"
       >
         <template #default="props">
@@ -64,7 +64,7 @@ import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import EditableField from '../../case-info/components/editable-field.vue';
 import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 
-const { editMode } = useCaseAccessState();
+const { isEditable } = useCaseAccessState();
 
 const { t } = useI18n();
 

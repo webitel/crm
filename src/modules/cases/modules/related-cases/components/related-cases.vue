@@ -17,7 +17,7 @@
           v-if="!isReadOnly"
           :include="[IconAction.ADD, IconAction.DELETE]"
           :disabled:add="isAddDisabled"
-          :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
+          :disabled:delete="!hasDeleteAccess || !isEditable || !selected.length"
           @click:add="startAddingRelatedCase"
           @click:delete="
             askDeleteConfirmation({
@@ -80,7 +80,7 @@
           :data="dataList"
           :headers="shownHeaders"
           :selected="selected"
-          :selectable="editMode"
+          :selectable="isEditable"
           headless
           sortable
           @sort="updateSort"
@@ -128,7 +128,7 @@
           <template #actions="{ item }">
             <wt-icon-action
               v-if="!isReadOnly"
-              :disabled="!hasDeleteAccess || !editMode"
+              :disabled="!hasDeleteAccess || !isEditable"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -175,7 +175,7 @@ const props = defineProps<{
 	parentId: string;
 }>();
 
-const { isReadOnly, editMode } = useCaseAccessState();
+const { isReadOnly, isEditable } = useCaseAccessState();
 
 const { t } = useI18n();
 
@@ -227,7 +227,7 @@ const defaultState = reactive({
 const isAddDisabled = computed(
 	() =>
 		!hasCreateAccess.value ||
-		!editMode.value ||
+		!isEditable.value ||
 		defaultState.isAdding ||
 		defaultState.createMode,
 );

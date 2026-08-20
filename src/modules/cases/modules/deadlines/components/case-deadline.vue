@@ -28,18 +28,12 @@ import { computed } from 'vue';
 
 import convertDurationWithDays from '../../../../../app/scripts/convertDurationWithDays.js';
 
-const props = withDefaults(
-	defineProps<{
-		title: string;
-		time?: string;
-		timeDifference?: string | number | null;
-		timeZone?: string;
-	}>(),
-	{
-		time: '',
-		timeDifference: null,
-	},
-);
+const props = defineProps<{
+	title: string;
+	time?: string;
+	timeDifference?: string | number | null;
+	timeZone?: string;
+}>();
 
 const showTimeDifference = computed(() => {
 	return [

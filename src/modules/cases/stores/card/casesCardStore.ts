@@ -3,7 +3,7 @@ import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
 import { CasesCardNamespace } from '../../namespace';
-import { caseValidationSchema } from '../_internals/buildCaseValidationSchema';
+import { caseValidationSchema } from '../../validations/buildCaseValidationSchema';
 
 export const useCasesCardStore = createCardStore<WebitelCasesCase>({
 	namespace: CasesCardNamespace,

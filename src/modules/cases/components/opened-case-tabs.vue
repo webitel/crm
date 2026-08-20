@@ -18,7 +18,7 @@
             delete: actionAllow,
             create: actionAllow,
           }"
-          :fields="customFields"
+          :fields="caseCustomFields"
           :store="useCasePermissionsStore"
           :parent-id="itemId"
         />
@@ -31,18 +31,17 @@
 import { type CardTab, useCardTabs } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { type ComputedRef, computed, inject } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useCaseAccessState } from '../composables/useCaseAccessState';
 import { CASE_VIEW_NAME } from '../router/caseViewName';
+import { caseCustomFields } from '../stores/_internals/caseCustomFields';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasePermissionsStore } from '../stores/permissions/casePermissionsStore';
 
-const { editMode, isReadOnly } = useCaseAccessState();
-const customFields =
-	inject<ComputedRef<Array<Record<string, any>>>>('customFields');
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { t } = useI18n();
 const route = useRoute();
@@ -53,7 +52,7 @@ const casesCardStore = useCasesCardStore();
 const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
 
 const actionAllow = computed(
-	() => !disableUserInput.value && editMode.value && !isReadOnly,
+	() => !disableUserInput.value && isEditable.value && !isReadOnly,
 );
 
 const currentCardRoute = computed(() => {
@@ -89,7 +88,7 @@ const tabs = computed<CardTab[]>(() => {
 
 	if (itemId.value) tabs.push(timeline);
 
-	if (customFields.value.length) {
+	if (caseCustomFields.value.length) {
 		tabs.push({
 			text: t('cases.details.details'),
 			value: 'details',

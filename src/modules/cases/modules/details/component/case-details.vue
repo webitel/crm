@@ -1,7 +1,7 @@
 <template>
   <template>
     <div
-      v-if="editMode"
+      v-if="isEditable"
       class="opened-card-input-grid opened-card-input-grid--2-col opened-card-input-grid--w50 case-details-container"
     >
       <custom-lookup-dynamic-field
@@ -44,7 +44,7 @@ import { CasesCardNamespace } from '../../../namespace';
 
 const router = useRouter();
 
-const { editMode } = useCaseAccessState();
+const { isEditable } = useCaseAccessState();
 
 const props = defineProps<{
 	fields: Array<Record<string, any>>;

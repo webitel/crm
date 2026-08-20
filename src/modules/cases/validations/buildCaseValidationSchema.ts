@@ -2,7 +2,7 @@ import { caseSchema } from '@webitel/api-services/validations';
 import { computed } from 'vue';
 import { z } from 'zod';
 
-import { caseCustomFields } from './caseCustomFields';
+import { caseCustomFields } from '../stores/_internals/caseCustomFields';
 
 function requiredIssue(path) {
 	return {

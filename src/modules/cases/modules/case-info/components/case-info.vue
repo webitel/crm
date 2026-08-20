@@ -2,7 +2,7 @@
   <div class="case-info">
     <editable-field
       v-model="modelValue.subject"
-      :edit-mode="editMode"
+      :edit-mode="isEditable"
       :label="t('cases.subject')"
       required
     >
@@ -20,7 +20,7 @@
 
     <editable-field
       v-model="modelValue.description"
-      :edit-mode="editMode"
+      :edit-mode="isEditable"
       :label="t('vocabulary.description')"
     >
       <template #default="props">
@@ -39,7 +39,7 @@
         v-model="modelValue.source"
         color="info"
         :icon="modelValue.source?.type"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.source')"
         required
       >
@@ -57,7 +57,7 @@
 
       <editable-field
         v-model="modelValue.contactInfo"
-        :edit-mode="editMode"
+        :edit-mode="isEditable"
         :label="t('cases.caseInfo.contactInfo')"
       >
         <template #default="props">
@@ -98,7 +98,7 @@ import CaseComments from '../../comments/components/case-comments.vue';
 import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
-const { editMode } = useCaseAccessState();
+const { isEditable } = useCaseAccessState();
 
 const { t } = useI18n();
 
