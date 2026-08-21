@@ -30,7 +30,7 @@
     </timeline-row-dropdown-transition>
   </section>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
 import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';

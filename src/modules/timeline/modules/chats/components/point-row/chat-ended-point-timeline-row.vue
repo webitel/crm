@@ -9,7 +9,7 @@
         </template>
         <template #subtitle>
           <timeline-task-status
-            :status="TimelineTaskStatusEnum.ENDED"
+            :status="TimelineTaskStatusEnum.Ended"
           />
         </template>
       </timeline-row-info>
@@ -17,7 +17,7 @@
 
     <template #pin>
       <timeline-pin
-        :type="TimelinePinType.CHAT_END"
+        :type="TimelinePinType.ChatEnd"
         :last="last"
         collapsed
       />
@@ -25,13 +25,13 @@
   </timeline-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
-import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 
 const props = defineProps({
 	point: {

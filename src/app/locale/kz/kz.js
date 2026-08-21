@@ -7,7 +7,7 @@ import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
-import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../modules/timeline/enums/TimelineTaskStatus.enum';
 
 export default {
 	crm: 'CRM',
@@ -63,12 +63,12 @@ export default {
 			transcription: 'Транскрипция',
 		},
 		status: {
-			[TimelineTaskStatusEnum.STARTED]: 'Басталды',
-			[TimelineTaskStatusEnum.MISSED]: 'Өткізіп жіберілді',
-			[TimelineTaskStatusEnum.TRANSFERRED]: 'Ауыстырылды',
-			[TimelineTaskStatusEnum.ENDED]: 'Аяқталды',
-			[TimelineTaskStatusEnum.SENT]: 'Жіберілді',
-			[TimelineTaskStatusEnum.RECEIVED]: 'Алынды',
+			[TimelineTaskStatusEnum.Started]: 'Басталды',
+			[TimelineTaskStatusEnum.Missed]: 'Өткізіп жіберілді',
+			[TimelineTaskStatusEnum.Transferred]: 'Ауыстырылды',
+			[TimelineTaskStatusEnum.Ended]: 'Аяқталды',
+			[TimelineTaskStatusEnum.Sent]: 'Жіберілді',
+			[TimelineTaskStatusEnum.Received]: 'Алынды',
 		},
 		eventType: {
 			[TimelineEventType.Call]: 'Қоңырау | Қоңыраулар',

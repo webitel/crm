@@ -37,15 +37,24 @@
   </wt-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CallTranscriptAPI } from '@webitel/api-services/api';
 import { saveAs } from 'file-saver';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, type PropType, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+export interface CallTranscript {
+	file: {
+		name: string;
+		id: string;
+	};
+	id: string;
+	locale: string;
+}
 
 const props = defineProps({
 	transcripts: {
-		type: Array,
+		type: Array as PropType<CallTranscript[]>,
 	},
 	createdAt: {
 		type: String,

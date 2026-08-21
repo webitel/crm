@@ -5,7 +5,6 @@ import appearance from '../../modules/appearance/store/appearance';
 import cases from '../../modules/cases/store/cases';
 import configuration from '../../modules/configuration/store/configuration';
 import customization from '../../modules/customization/store/customization';
-import timeline from '../../modules/timeline/store/timeline';
 
 export default createStore({
 	state: {
@@ -25,6 +24,5 @@ export default createStore({
 		configuration,
 		customization,
 		cases,
-		timeline,
 	},
 });

@@ -5,36 +5,38 @@
         v-if="parentId"
         :list="dataList"
         :parent-id="parentId"
-        :filters-namespace="filtersNamespace"
       />
     </template>
 
     <template #content>
+      <wt-empty
+        v-show="showEmpty"
+        :image="imageEmpty"
+      />
+
       <div
-        v-if="isLoading"
+        v-show="isLoading"
         class="loader-wrapper"
       >
         <wt-loader />
       </div>
 
-      <wt-dummy
-        v-else-if="!dataList.length"
-        :src="darkMode ? dummyDark : dummyLight"
-      />
-
-      <day-timeline-row
-        v-for="({ dayTimestamp, callsCount, chatsCount, emailsCount, items }, key) of dataList"
-        v-else
-        :key="dayTimestamp"
-        :timestamp="dayTimestamp"
-        :calls-count="callsCount"
-        :chats-count="chatsCount"
-        :emails-count="emailsCount"
-        :tasks="items"
-        :first="!key"
-        :last="!next && key === dataList.length - 1"
-      />
-
+      <div
+        v-show="!isLoading && dataList.length"
+        class="the-timeline__days"
+      >
+        <day-timeline-row
+          v-for="({ dayTimestamp, callsCount, chatsCount, emailsCount, items }, key) of dataList"
+          :key="dayTimestamp"
+          :timestamp="dayTimestamp"
+          :calls-count="callsCount"
+          :chats-count="chatsCount"
+          :emails-count="emailsCount"
+          :tasks="items"
+          :first="!key"
+          :last="!next && key === dataList.length - 1"
+        />
+      </div>
     </template>
 
     <template #after-content>
@@ -48,14 +50,13 @@
 </template>
 
 <script lang="ts" setup>
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import { computed, onUnmounted, provide, ref } from 'vue';
-import { useStore } from 'vuex';
-
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { storeToRefs } from 'pinia';
+import { computed, onUnmounted, ref } from 'vue';
 import dummyDark from '../assets/timeline-dummy-dark.svg';
 import dummyLight from '../assets/timeline-dummy-light.svg';
 import type { TimelineMode } from '../enums/TimelineMode';
+import { useTimelineStore } from '../stores/timeline';
 import DayTimelineRow from './day-row/day-timeline-row.vue';
 import TimelineContainer from './timeline-container.vue';
 import TimelineHeader from './timeline-header.vue';
@@ -67,80 +68,49 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const timelineNamespace = 'timeline';
+const timelineStore = useTimelineStore();
+const { dataList, isLoading, next } = storeToRefs(timelineStore);
+const { initialize, loadNext: loadNextPage, resetState } = timelineStore;
 
-provide<TimelineMode>('mode', props.mode);
-provide('namespace', timelineNamespace);
-
-const store = useStore();
-
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-
-const dataList = computed(
-	() => getNamespacedState(store.state, timelineNamespace).dataList,
+const { showEmpty, image: imageEmpty } = useTableEmpty(
+	{
+		dataList,
+		isLoading,
+	},
+	computed(() => ({
+		image: {
+			empty: {
+				dark: dummyDark,
+				light: dummyLight,
+			},
+		},
+	})),
 );
-const isLoading = computed(
-	() => getNamespacedState(store.state, timelineNamespace).isLoading,
-);
-const next = computed(
-	() => getNamespacedState(store.state, timelineNamespace).next,
-);
 
-const setParentId = (parentId) => {
-	return store.commit(`${timelineNamespace}/SET`, {
-		path: 'parentId',
-		value: parentId,
-	});
-};
-const setMode = (mode) => {
-	return store.commit(`${timelineNamespace}/SET`, {
-		path: 'mode',
-		value: mode,
-	});
-};
-
-setParentId(props.parentId);
-setMode(props.mode);
-
-function initializeList() {
-	return store.dispatch(`${timelineNamespace}/INITIALIZE_LIST`);
-}
-
-const {
-	namespace: filtersNamespace,
-	subscribe,
-	flushSubscribers,
-	restoreFilters,
-} = useTableFilters(timelineNamespace);
-
-subscribe({
-	event: '*',
-	callback: initializeList,
+initialize({
+	parentId: props.parentId,
+	mode: props.mode,
 });
-
-restoreFilters();
 
 const nextLoading = ref(false);
 
 async function loadNext() {
 	nextLoading.value = true;
-	await store.dispatch(`${timelineNamespace}/LOAD_NEXT`);
+	await loadNextPage();
 	nextLoading.value = false;
 }
 
 onUnmounted(() => {
-	flushSubscribers();
-
 	/* https://webitel.atlassian.net/browse/WTEL-4843 */
 	/* Store must be reset to prevent multiple calls TimelineAPI */
 	/* Caching doesn't work because of this code, a fix later. See the task for more details */
 
-	store.dispatch(`${timelineNamespace}/RESET_STATE`);
+	resetState();
 });
 </script>
 
 <style lang="scss" scoped>
-.wt-dummy {
+.wt-empty {
   height: 100%;
 }
 

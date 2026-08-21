@@ -16,7 +16,7 @@
     />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import CallTaskTimelineActionHistoryLink from './call-task-timeline-action-history-link.vue';
 import CallTaskTimelineActionPlayRecording from './call-task-timeline-action-play-recording.vue';
 import CallTaskTimelineActionTranscription from './call-task-timeline-action-transcription.vue';
