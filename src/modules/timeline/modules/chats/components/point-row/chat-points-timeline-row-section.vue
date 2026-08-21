@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+
 import { useTaskPoints } from '../../../../composables/useTaskPoints';
 import { useChatsHistoryStore } from '../../stores/chatsHistoryStore';
 import ChatEndedPointTimelineRow from './chat-ended-point-timeline-row.vue';
@@ -32,9 +34,14 @@ const props = withDefaults(defineProps<Props>(), {
 	last: false,
 });
 
+const chatsHistoryStore = useChatsHistoryStore();
+const { historyById } = storeToRefs(chatsHistoryStore);
+const { loadHistory } = chatsHistoryStore;
+
 const { points } = useTaskPoints({
 	taskId: props.taskId,
-	useHistoryStore: useChatsHistoryStore,
+	historyById,
+	loadHistory,
 });
 </script>
 

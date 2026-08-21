@@ -22,13 +22,13 @@
   </header>
 </template>
 <script setup lang="ts">
-import type { eventBus as EventBus } from '@webitel/ui-sdk/scripts';
+import { useEventBus } from '@webitel/ui-sdk/composables';
 import capitalize from 'lodash/capitalize';
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
-import { useTimelineStore } from '../stores/timelineStore';
+import { useTimelineStore } from '../stores/timeline';
 
 interface Props {
 	parentId: string;
@@ -37,7 +37,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const timelineStore = useTimelineStore();
-const eventBus = inject<typeof EventBus>('$eventBus');
+const eventBus = useEventBus();
 
 const { d, t } = useI18n();
 

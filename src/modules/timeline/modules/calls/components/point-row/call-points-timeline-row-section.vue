@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+
 import { useTaskPoints } from '../../../../composables/useTaskPoints';
 import { useCallsHistoryStore } from '../../stores/callsHistoryStore';
 import CallPointTimelineRow from './call-point-timeline-row.vue';
@@ -23,9 +25,14 @@ const props = withDefaults(defineProps<Props>(), {
 	last: false,
 });
 
+const callsHistoryStore = useCallsHistoryStore();
+const { historyById } = storeToRefs(callsHistoryStore);
+const { loadHistory } = callsHistoryStore;
+
 const { points } = useTaskPoints({
 	taskId: props.taskId,
-	useHistoryStore: useCallsHistoryStore,
+	historyById,
+	loadHistory,
 });
 </script>
 

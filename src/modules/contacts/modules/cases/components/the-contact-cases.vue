@@ -125,7 +125,7 @@
         <template #createdBy="{ item }">
           {{ item.createdBy?.name }}
         </template>
-        <template #group="{ item }">
+        <template #groupPerformers="{ item }">
           {{ item.group?.name }}
         </template>
         <template #assignee="{ item }">
@@ -200,7 +200,7 @@ import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed, getCurrentInstance, inject, onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
@@ -273,17 +273,39 @@ const {
 	isLoading,
 });
 
-onMounted(async () => {
-	const instance = getCurrentInstance();
+const instance = getCurrentInstance();
 
-	await loadCustomHeaders();
+async function loadForContact(id) {
+	try {
+		await loadCustomHeaders();
+	} catch {
+		// the API layer already notifies on failure; don't block the cases list on it
+	}
 	await instance.appContext.app.runWithContext(async () => {
 		await initialize({
-			parentId: parentId.value,
+			parentId: id,
 		});
 	});
+	// a newer contact navigation may have started while this one was in flight
+	if (parentId.value !== id) {
+		await instance.appContext.app.runWithContext(async () => {
+			await initialize({
+				parentId: parentId.value,
+			});
+		});
+	}
 	removeOutdatedCustomHeaders();
-});
+}
+
+watch(
+	parentId,
+	(id) => {
+		if (id) loadForContact(id);
+	},
+	{
+		immediate: true,
+	},
+);
 
 const contactCase = (caseItem: { id?: string; etag?: string }) => {
 	if (isReadOnly) {

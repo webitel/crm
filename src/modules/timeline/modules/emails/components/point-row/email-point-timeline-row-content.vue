@@ -46,7 +46,7 @@ const props = defineProps({
 const { t } = useI18n();
 
 const content = computed(() => {
-	return dompurify.sanitize(md.render(props.body));
+	return dompurify.sanitize(md.render(props.body ?? ''));
 });
 </script>
 

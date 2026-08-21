@@ -29,7 +29,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="hasValidationErrors"
+        :disabled="hasValidationErrors || isSaving"
         @click="save"
       >
         {{ isNew ? t('reusable.add') : t('reusable.edit') }}
@@ -88,10 +88,18 @@ const popupTitle = computed(
 		`${isNew.value ? t('reusable.add') : t('reusable.edit')} ${t('contacts.attributes', 1).toLowerCase()}`,
 );
 
+const isSaving = ref(false);
+
 const save = async () => {
-	await saveItem();
-	emit('saved');
-	close();
+	if (isSaving.value) return;
+	isSaving.value = true;
+	try {
+		await saveItem();
+		emit('saved');
+		close();
+	} finally {
+		isSaving.value = false;
+	}
 };
 
 function close() {

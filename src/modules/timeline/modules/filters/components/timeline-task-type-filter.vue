@@ -28,7 +28,7 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
 import { TimelineEventType } from '../../../enums/TimelineEventType';
-import { useTimelineStore } from '../../../stores/timelineStore';
+import { useTimelineStore } from '../../../stores/timeline';
 
 interface Props {
 	callsCount?: number | string;

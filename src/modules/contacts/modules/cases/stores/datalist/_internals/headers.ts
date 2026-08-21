@@ -62,7 +62,7 @@ export const headers: DatalistTableHeader[] = [
 		sort: SortSymbols.NONE,
 	},
 	{
-		value: 'group',
+		value: 'groupPerformers',
 		locale: 'cases.groupPerformers',
 		show: true,
 		field: 'group',

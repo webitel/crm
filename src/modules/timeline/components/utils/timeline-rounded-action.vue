@@ -2,23 +2,32 @@
   <wt-button
     :color="ButtonColor.SECONDARY"
     :icon="icon"
+    :icon-color="iconColor"
     class="timeline-rounded-action"
-    :class="[`timeline-rounded-action--${color}`]"
+    :style="{
+      '--timeline-rounded-action-color': `var(--${color}-color)`,
+      '--timeline-rounded-action-hover-color': `var(--${color}-hover-color)`,
+    }"
     @click="emit('click')"
   />
 </template>
 
 <script setup lang="ts">
-import { ButtonColor } from '@webitel/ui-sdk/enums';
+import { ButtonColor, IconColor } from '@webitel/ui-sdk/enums';
+import { computed } from 'vue';
 
 interface Props {
 	icon: string;
 	color?: 'primary' | 'success' | 'error' | 'chat' | 'secondary' | 'email';
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
 	color: 'secondary',
 });
+
+const iconColor = computed(() =>
+	props.color === 'secondary' ? undefined : IconColor.ON_DARK,
+);
 
 const emit = defineEmits<{
 	click: [];
@@ -30,101 +39,13 @@ const emit = defineEmits<{
   &.wt-button {
     border-radius: 50%;
     border: 2px solid;
-  }
-
-  &--primary.wt-button {
-    border-color: var(--primary-color);
-    background-color: var(--primary-color);
+    border-color: var(--timeline-rounded-action-color);
+    background-color: var(--timeline-rounded-action-color);
 
     &:hover,
     &:active {
-      border-color: var(--primary-hover-color);
-      background-color: var(--primary-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
-    }
-  }
-
-  &--secondary.wt-button {
-    border-color: var(--secondary-color);
-    background-color: var(--secondary-color);
-
-    &:hover,
-    &:active {
-      border-color: var(--secondary-hover-color);
-      background-color: var(--secondary-hover-color);
-    }
-  }
-
-  &--success.wt-button {
-    border-color: var(--success-color);
-    background-color: var(--success-color);
-
-    &:hover,
-    &:active {
-      border-color: var(--success-hover-color);
-      background-color: var(--success-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
-    }
-  }
-
-  &--error.wt-button {
-    border-color: var(--error-color);
-    background-color: var(--error-color);
-
-    &:hover,
-    &:active {
-      border-color: var(--error-hover-color);
-      background-color: var(--error-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
-    }
-  }
-
-  &--chat.wt-button {
-    border-color: var(--chat-color);
-    background-color: var(--chat-color);
-
-    &:hover,
-    &:active {
-      border-color: var(--chat-hover-color);
-      background-color: var(--chat-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
-    }
-  }
-
-  &--email.wt-button {
-    border-color: var(--email-color);
-    background-color: var(--email-color);
-
-    &:hover,
-    &:active {
-      border-color: var(--email-hover-color);
-      background-color: var(--email-hover-color);
-    }
-
-    /* wt-icon sets its own fill via a color class (.wt-icon--color-default);
-       !important guarantees this override wins regardless of stylesheet load order */
-    :deep(.wt-icon) {
-      fill: var(--icon-on-dark-color) !important;
+      border-color: var(--timeline-rounded-action-hover-color);
+      background-color: var(--timeline-rounded-action-hover-color);
     }
   }
 }

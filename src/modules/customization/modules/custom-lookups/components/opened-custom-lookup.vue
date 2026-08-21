@@ -55,9 +55,9 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
+import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed } from 'vue';
