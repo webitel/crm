@@ -5,7 +5,12 @@
     :hide-header="true"
   >
     <template #actions-panel>
-      <cases-filters-panel @hide="showActionsPanel = false" />
+      <cases-filters-panel
+        :namespace="CasesNamespace"
+        :table-store="tableStore"
+        :presets-store="useCaseFilterPresetsStore"
+        @hide="showActionsPanel = false"
+      />
     </template>
     <template #main>
       <delete-confirmation-popup
@@ -27,6 +32,7 @@
 
           <cases-filter-search-bar
             v-if="!isInitialEmpty"
+            :table-store="tableStore"
             class="cases__search-filter"
           />
 
@@ -269,8 +275,10 @@ import DisplayDynamicFieldExtension from '../../configuration/modules/customizat
 import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
+import { CasesNamespace } from '../namespace';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
+import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 import CaseDetailsTable from './case-details-table.vue';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
