@@ -7,43 +7,39 @@
     />
     <router-view
       class="opened-contact-tab"
-      :namespace="namespace"
       :access="/*is used by permissions tab*/{
         read: true,
-        update: actionAllow,
-        delete: actionAllow,
-        create: actionAllow,
+        update: hasContactEditAccess,
+        delete: hasContactEditAccess,
+        create: hasContactEditAccess,
       }"
-      :fields="customFields"
+      :store="useContactPermissionsStore"
+      :parent-id="itemId"
     />
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { computed, inject } from 'vue';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
-import { useUserAccessControl } from '../../../app/composables/useUserAccessControl.js';
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+import { useContactEditAccessControl } from '../composables/useContactEditAccessControl';
+import { CONTACT_VIEW_NAME } from '../router/contactViewName';
+import { useContactCardStore } from '../stores/card/contactCardStore';
+import { useContactPermissionsStore } from '../stores/permissions/contactPermissionsStore';
 
-defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+const contactCardStore = useContactCardStore();
+const { itemId } = storeToRefs(contactCardStore as unknown as StoreGeneric);
 
-const access = inject('access');
-const isReadOnly = inject('isReadOnly');
-
-const actionAllow = computed(
-	() => !!access.value?.hasRbacEditAccess && !isReadOnly,
-);
+const { hasContactEditAccess } = useContactEditAccessControl();
 
 const { t } = useI18n();
-const router = useRouter();
 const route = useRoute();
 
 const { fields: customFields, getFields } = useExtensionFields({
@@ -51,7 +47,6 @@ const { fields: customFields, getFields } = useExtensionFields({
 });
 
 getFields();
-const CONTACT_VIEW_NAME = 'contact_view';
 const currentCardRoute = computed(() => {
 	return typeof route.name === 'string' &&
 		route.name.includes(CONTACT_VIEW_NAME)
@@ -107,17 +102,7 @@ const tabs = computed(() => {
 	return tabList;
 });
 
-const currentTab = computed(() => {
-	return tabs.value.find(({ pathName }) =>
-		route?.matched?.find(({ name }) => name === pathName),
-	);
-});
-
-function changeTab(tab) {
-	return router.push({
-		name: tab.pathName,
-	});
-}
+const { currentTab, changeTab } = useCardTabs(tabs);
 </script>
 
 <style

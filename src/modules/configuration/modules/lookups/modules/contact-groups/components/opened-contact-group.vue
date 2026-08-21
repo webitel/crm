@@ -46,8 +46,8 @@
 <script lang="ts" setup>
 import type { ContactsGroup } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { useCardComponent } from '@webitel/ui-datalist/card';
-import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
+import { useCardComponent, useCardTabs } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';

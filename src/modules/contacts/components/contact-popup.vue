@@ -2,7 +2,7 @@
   <wt-popup
     class="contact-popup"
     :shown="shown"
-    size="sm"
+    :size="ComponentSize.SM"
     @close="close"
   >
     <template #title>
@@ -13,36 +13,35 @@
     <template #main>
       <form class="contact-popup-form">
         <wt-input-text
-          :model-value="draft.name"
+          v-model:model-value="modelValue.name"
           :label="t('reusable.name')"
-          :v="v$.draft.name"
+          :regle-validation="validationFields.name"
           required
           prevent-trim
-          @update:model-value="draft.name = $event"
         />
 
         <wt-multi-select
-          v-model:model-value="draft.groups"
+          v-model:model-value="modelValue.groups"
           :label="t('cases.groupPerformers')"
           :search-method="loadStaticContactGroupsList"
         />
 
         <wt-single-select
-          :model-value="draft.timezones[0]?.timezone"
+          :model-value="modelValue.timezones?.[0]?.timezone"
           :label="t('date.timezone', 1)"
           :search-method="CalendarsAPI.getTimezonesLookup"
-          @update:model-value="draft.timezones[0] = { timezone: $event }"
+          @update:model-value="modelValue.timezones = [{ timezone: $event }]"
         />
 
         <wt-single-select
-          :model-value="draft.managers[0]?.user"
+          :model-value="modelValue.managers?.[0]?.user"
           :label="t('contacts.manager', 1)"
           :search-method="UsersAPI.getLookup"
-          @update:model-value="draft.managers[0] = { user: $event }"
+          @update:model-value="modelValue.managers = [{ user: $event }]"
         />
 
         <wt-multi-select
-          v-model:model-value="draft.labels"
+          v-model:model-value="modelValue.labels"
           :label="t('vocabulary.labels', 1)"
           :search-method="LabelsAPI.getList"
           option-label="label"
@@ -52,16 +51,15 @@
         />
 
         <wt-textarea
-          :model-value="draft.about"
+          v-model:model-value="modelValue.about"
           :label="t('vocabulary.description')"
-          @update:model-value="draft.about = $event"
         />
       </form>
     </template>
 
     <template #actions>
       <wt-button
-        :disabled="v$.$invalid"
+        :disabled="hasValidationErrors"
         :loading="isSaving"
         @click="save"
       >
@@ -78,74 +76,79 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+<script setup lang="ts">
+import { useRegleSchema } from '@regle/schemas';
 import {
 	CalendarsAPI,
+	type ContactEntity,
 	ContactGroupsAPI,
 	ContactsAPI,
 	LabelsAPI,
 	UsersAPI,
 } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { storeToRefs } from 'pinia';
+import { contactSchema } from '@webitel/api-services/validations';
+import { ComponentSize } from '@webitel/ui-sdk/enums';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
-const props = defineProps({
-	id: {
+const props = withDefaults(
+	defineProps<{
 		// if id is passed, that's an edit
-		type: [
-			String,
-			null,
-		],
+		id?: string | null;
+		shown?: boolean;
+	}>(),
+	{
+		id: null,
+		shown: false,
 	},
-	shown: {
-		type: Boolean,
-		default: false,
-	},
-});
-const emit = defineEmits([
-	'saved',
-	'close',
-]);
+);
+const emit = defineEmits<{
+	saved: [
+		id: string,
+	];
+	close: [];
+}>();
 
 const { t } = useI18n();
 
 const userInfoStore = useUserinfoStore();
-const { userInfo } = storeToRefs(userInfoStore);
 
-const generateNewDraft = () => ({
-	name: '',
-	timezones: [],
-	managers: [],
-	labels: [],
-	groups: [],
-	about: '',
-	createdBy: '',
-});
-
-const draft = ref(generateNewDraft());
-
-const v$ = useVuelidate(
-	computed(() => ({
-		draft: {
-			name: {
-				required,
+function generateNewDraft(): ContactEntity {
+	return {
+		name: '',
+		timezones: [],
+		managers: [
+			{
+				user: {
+					id: userInfoStore.userInfo?.userId,
+					name: userInfoStore.userInfo?.name,
+				},
 			},
+		],
+		labels: [],
+		groups: [],
+		about: '',
+	};
+}
+
+const draft = ref<ContactEntity>(generateNewDraft());
+
+const validationSchema = ref(
+	useRegleSchema(draft, contactSchema, {
+		autoDirty: true,
+		syncState: {
+			onValidate: true,
 		},
-	})),
-	{
-		draft,
-	},
-	{
-		$autoDirty: true,
-	},
+	}),
 );
 
-v$.value.$touch();
+const modelValue = computed(() => validationSchema.value.r$.$value);
+const validationFields = computed(() => validationSchema.value.r$.$fields);
+const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
+const validate = () => validationSchema.value.r$.$validate();
 
 const isSaving = ref(false);
 
@@ -154,37 +157,30 @@ function close() {
 }
 
 async function save() {
-	let newContact = '';
+	const { valid, data } = await validate();
+	if (!valid) return;
+
+	isSaving.value = true;
 	try {
-		isSaving.value = false;
+		let id = props.id;
 		if (props.id) {
 			await ContactsAPI.update({
 				itemInstance: {
-					...draft.value,
+					...data,
 					id: props.id,
 				},
 			});
 		} else {
-			newContact = await ContactsAPI.add({
-				itemInstance: {
-					...draft.value,
-				},
+			const newContact = await ContactsAPI.add({
+				itemInstance: data,
 			});
+			id = newContact.id;
 		}
-		emit('saved', props.id || newContact.id);
+		if (id) emit('saved', id);
 		close();
 	} finally {
 		isSaving.value = false;
 	}
-}
-
-function setDefaultManager() {
-	draft.value.managers[0] = {
-		user: {
-			id: userInfo.value?.userId,
-			name: userInfo.value?.name,
-		},
-	};
 }
 
 async function loadItem(id = props.id) {
@@ -205,10 +201,7 @@ watch(
 	(value) => {
 		if (value) {
 			if (props.id) loadItem(props.id);
-			else {
-				draft.value = generateNewDraft();
-				setDefaultManager();
-			}
+			else draft.value = generateNewDraft();
 		}
 	},
 );

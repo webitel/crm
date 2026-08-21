@@ -44,8 +44,8 @@
 
 <script lang="ts" setup>
 import type { WebitelCasesStatus } from '@webitel/api-services/gen/models';
-import { useCardComponent } from '@webitel/ui-datalist/card';
-import { useCardTabs, useClose } from '@webitel/ui-sdk/composables';
+import { useCardComponent, useCardTabs } from '@webitel/ui-datalist/card';
+import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
