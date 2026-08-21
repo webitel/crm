@@ -32,6 +32,12 @@
 			"@webitel/ui-sdk/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue": [
 				"./node_modules/@webitel/ui-sdk/types/components/on-demand/wt-upload-file-icon-btn/wt-upload-file-icon-btn.vue.d.ts"
 			],
+			// ui-sdk's exports map redirects "src/validators*" to
+			// "src/validations/vuelidate/validators*", which the generic
+			// "src/*" fallback below doesn't account for.
+			"@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator": [
+				"./node_modules/@webitel/ui-sdk/types/validations/vuelidate/validators/variableSearchValidator/variableSearchValidator.d.ts"
+			],
 			"@webitel/ui-sdk/src/*": [
 				"./node_modules/@webitel/ui-sdk/types/*",
 				"./node_modules/@webitel/ui-sdk/src/*"
