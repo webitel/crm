@@ -21,6 +21,8 @@
           :fields="caseCustomFields"
           :store="useCasePermissionsStore"
           :parent-id="itemId"
+          :item-instance="draftItemInstance"
+          :validation-fields="validationFields"
         />
       </keep-alive>
     </router-view>
@@ -49,7 +51,9 @@ const route = useRoute();
 const { disableUserInput } = useUserAccessControl();
 
 const casesCardStore = useCasesCardStore();
-const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
+const { itemId, draftItemInstance, validationFields } = storeToRefs(
+	casesCardStore as unknown as StoreGeneric,
+);
 
 const actionAllow = computed(
 	() => !disableUserInput.value && isEditable.value && !isReadOnly,

@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import customizationRoutes from '../../customization/router';
 import TheConfiguration from '../components/the-configuration.vue';
+import customizationRoutes from '../modules/customization/router';
 import lookupsRoutes from '../modules/lookups/router';
 
 const configurationRoutes: RouteRecordRaw[] = [

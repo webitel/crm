@@ -58,7 +58,7 @@ export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 
 	// Helper function to fetch custom headers from API
 	const fetchCustomHeadersFromAPI = async () => {
-		const response = await WtTypeExtensionAPI.getList({
+		const response = await WtTypeExtensionAPI.get({
 			itemId: 'cases',
 		});
 		return response?.fields || [];

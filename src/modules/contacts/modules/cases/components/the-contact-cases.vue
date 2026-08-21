@@ -208,7 +208,7 @@ import CasesFilterSearchBar from '../../../../cases/components/cases-filter-sear
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
-import DisplayDynamicFieldExtension from '../../../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
+import DisplayDynamicFieldExtension from '../../../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
 import { useContactCardStore } from '../../../stores/card/contactCardStore';
 import { ContactCasesNamespace } from '../namespace';
 import { useContactCasesDatalistStore } from '../stores/datalist/contactCasesDatalistStore';
