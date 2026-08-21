@@ -30,7 +30,7 @@
 
       <wt-empty
         v-show="showEmpty && !isPendingItemsLoading"
-        :text="emptyText"
+        :text="t('cases.attachments.emptyFilesText')"
       />
 
       <wt-loader v-show="isLoading || isPendingItemsLoading" />
@@ -43,9 +43,9 @@
           :data="currentDataList"
           :headers="headers"
           :selected="selected"
-          :selectable="editMode"
+          :selectable="isEditable"
           headless
-          @update:selected="setSelected"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             <div class="case-files__name-wrapper">
@@ -99,45 +99,41 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
-import { computed, inject, onUnmounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import downloadFile from '../../../../../../../app/utils/downloadFile.js';
-import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip.js';
-import getFileIcon from '../../../../../../../app/utils/fileTypeIcon.js';
-import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab.js';
-import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
+import downloadFile from '../../../../../../../app/utils/downloadFile';
+import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip';
+import getFileIcon from '../../../../../../../app/utils/fileTypeIcon';
+import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab';
+import { useCaseAccessState } from '../../../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../../../stores/card/casesCardStore';
+import { useCaseAttachments } from '../../../composables/useCaseAttachments';
 import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
-import { FileSources } from '../enums/FileSources.js';
+import { FileSources } from '../enums/FileSources';
+import { useCaseFilesDatalistStore } from '../stores/datalist/caseFilesDatalistStore';
 
-const props = defineProps({
-	filesNamespace: {
-		type: String,
-		required: true,
-	},
-	namespace: {
-		type: String,
-		required: true,
-	},
-	itemId: {
-		type: String,
-		required: true,
-	},
+const props = defineProps<{
+	itemId: string;
+}>();
+
+const { isEditable, isReadOnly } = useCaseAccessState();
+const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
 });
-
-const isReadOnly = inject('isReadOnly');
-const editMode = inject('editMode');
 const store = useStore();
 
 const { t } = useI18n();
@@ -148,21 +144,15 @@ const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
-// Original table store logic
+const filesStore = useCaseFilesDatalistStore();
 const {
-	namespace: linksFilesNamespace,
 	dataList,
 	selected,
 	isLoading,
-	headers,
-	loadData,
-	deleteData,
-	setSelected,
-	onFilterEvent,
-} = useTableStore(props.filesNamespace);
-
-const { restoreFilters, subscribe, flushSubscribers } =
-	useTableFilters(linksFilesNamespace);
+	shownHeaders: headers,
+} = storeToRefs(filesStore);
+const { loadDataList, deleteEls, updateSelected, updateSize, initialize } =
+	filesStore;
 
 const {
 	isVisible: isConfirmationPopup,
@@ -193,9 +183,7 @@ const addFile = async (file) => {
 	);
 };
 
-// Use attachment creation composable
 const {
-	isNew,
 	pendingItems: pendingFiles,
 	isPendingItemsLoading,
 	addNewItem,
@@ -203,13 +191,13 @@ const {
 	deletePendingItem,
 	deleteMultiplePendingItems,
 } = useCaseAttachments({
-	cardNamespace: props.namespace,
-	itemId: props.itemId,
-	storePath: AttachmentsTypes.FILES,
-	loadData,
+	itemInstance: modelValue,
+	isNew,
+	storePath: AttachmentsTypes.Files,
+	loadData: loadDataList,
 	transformStoreItemToPending,
 	processItemToAPI: addFile,
-	deleteData,
+	deleteData: deleteEls,
 });
 
 const currentDataList = computed(() =>
@@ -218,10 +206,6 @@ const currentDataList = computed(() =>
 const { showEmpty } = useTableEmpty({
 	dataList: currentDataList,
 	isLoading,
-});
-
-const emptyText = computed(() => {
-	return t('cases.attachments.emptyFilesText');
 });
 
 const filteredActions = computed(() => {
@@ -234,22 +218,12 @@ const filteredActions = computed(() => {
 	return actions;
 });
 
-subscribe({
-	event: '*',
-	callback: (...args) => {
-		if (!isNew.value) {
-			onFilterEvent(...args);
-		}
-	},
-});
-
+updateSize(100);
 if (!isNew.value) {
-	restoreFilters();
+	initialize({
+		parentId: props.itemId,
+	});
 }
-
-onUnmounted(() => {
-	flushSubscribers();
-});
 
 async function handleSelectedFilesDownload() {
 	const token = localStorage.getItem('access-token');
@@ -306,7 +280,7 @@ const hasNonDirectFileSelected = computed(() =>
 const isBulkDeleteDisabled = computed(() => {
 	return (
 		!hasDeleteAccess.value ||
-		!editMode.value ||
+		!isEditable.value ||
 		!selected.value.length ||
 		hasNonDirectFileSelected.value ||
 		isPendingItemsLoading.value
@@ -321,7 +295,7 @@ const isTableActionDownloadDisabled = computed(() => {
 
 const isTableActionAddDisabled = computed(() => {
 	return (
-		!hasCreateAccess.value || !editMode.value || isPendingItemsLoading.value
+		!hasCreateAccess.value || !isEditable.value || isPendingItemsLoading.value
 	);
 });
 
@@ -338,7 +312,7 @@ const isFileDeleteAction = computed(() => (item) => {
 });
 
 const isFileDeleteActionDisabled = computed(() => {
-	return !editMode.value || !hasDeleteAccess.value;
+	return !isEditable.value || !hasDeleteAccess.value;
 });
 
 // Function to handle single file deletion (pending or existing)

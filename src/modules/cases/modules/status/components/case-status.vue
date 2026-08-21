@@ -1,6 +1,5 @@
 <template>
   <case-result-popup
-    :namespace="namespace"
     :shown="isResultPopup"
     @save="confirmChangingStatusToFinal"
     @cancel="cancelChangingStatusToFinal"
@@ -13,7 +12,7 @@
       <wt-single-select
         :key="status?.id"
         :disabled="disableStatusSelect"
-        :v="v$.value.itemInstance.statusCondition"
+        :regle-validation="validationFields.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="fetchStatusConditions"
         :model-value="displayedStatusCondition"
@@ -40,26 +39,23 @@
   </div>
 </template>
 
-<script setup>
-import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
+<script setup lang="ts">
+import { CaseStatusConditionsAPI, CasesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { isEmpty } from '@webitel/ui-sdk/scripts';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { computed, inject, ref, watch } from 'vue';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
-
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import CasesAPI from '../../../api/CasesAPI.js';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
+import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 import CaseResultPopup from './case-result-popup.vue';
 
-const namespace = inject('namespace');
-const editMode = inject('editMode');
-const isReadOnly = inject('isReadOnly');
-const v$ = inject('v$');
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { t } = useI18n();
-const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
 
@@ -67,36 +63,21 @@ const disableStatusSelect = computed(
 	() => disableUserInput.value || isReadOnly,
 );
 
-const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-
-	loadItem,
-	addItem,
-	updateItem,
-	setId,
-	resetState,
-	setItemProp,
-} = useCardStore(namespace);
-
-const { isNew } = useCardComponent({
-	id,
-	itemInstance,
-	loadItem,
-	addItem,
-	updateItem,
-	setId,
-	resetState,
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
+const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
 });
+
+const isNew = computed(() => !itemId.value);
 
 const isResultPopup = ref(false);
 
 const pendingFinalStatusCondition = ref(null);
 
 const displayedStatusCondition = computed(
-	() =>
-		pendingFinalStatusCondition.value ?? itemInstance.value?.statusCondition,
+	() => pendingFinalStatusCondition.value ?? modelValue.value?.statusCondition,
 );
 
 const openCaseResultPopup = () => {
@@ -112,29 +93,29 @@ const startChangingStatusToFinal = (statusCondition) => {
 	openCaseResultPopup();
 };
 
+async function reloadCase() {
+	await casesCardStore.initialize({
+		itemId: itemId.value,
+	});
+}
+
 const confirmChangingStatusToFinal = async ({ reason, result }) => {
-	await setItemProp({
-		path: 'closeReason',
-		value: reason,
-	});
-	await setItemProp({
-		path: 'closeResult',
-		value: result,
-	});
+	modelValue.value.closeReason = reason;
+	modelValue.value.closeResult = result;
 
 	await patchStatusCondition(pendingFinalStatusCondition.value);
 
-	if (!editMode.value) {
+	if (!isEditable.value) {
 		await CasesAPI.patch({
 			changes: {
 				closeReason: reason,
 				closeResult: result,
 			},
-			etag: itemInstance.value.etag,
+			etag: modelValue.value.etag,
 		});
 
 		//NOTE: needed to get new etag so new patch will work correctly
-		await loadItem();
+		await reloadCase();
 	}
 
 	pendingFinalStatusCondition.value = null;
@@ -152,9 +133,9 @@ const getIndicatorColor = (option) => {
 	return 'other-status';
 };
 
-const status = computed(() => store.getters[`${cardNamespace}/service/STATUS`]);
+const { status } = storeToRefs(useCaseServiceStore());
 
-const fetchStatusConditions = async (params) => {
+const fetchStatusConditions = async (params = {}) => {
 	if (!status?.value?.id) {
 		return {
 			items: [],
@@ -174,38 +155,26 @@ const fetchStatusConditions = async (params) => {
 };
 
 async function patchStatusCondition(condition) {
-	await updateLocalProperties(condition);
+	updateLocalProperties(condition);
 
-	if (!isNew.value && !editMode.value) {
+	if (!isNew.value && !isEditable.value) {
 		await patchRemoteChanges(condition);
-		await loadItem();
+		await reloadCase();
 	}
 }
 
-async function updateLocalProperties(condition) {
-	await setItemProp({
-		path: 'statusCondition',
-		value: condition,
-	});
-	await setItemProp({
-		path: 'status',
-		value: status.value,
-	});
+function updateLocalProperties(condition) {
+	modelValue.value.statusCondition = condition;
+	modelValue.value.status = status.value;
 
-	if (editMode.value && !condition.final) {
-		await setItemProp({
-			path: 'closeReason',
-			value: {},
-		});
-		await setItemProp({
-			path: 'closeResult',
-			value: '',
-		});
+	if (isEditable.value && !condition.final) {
+		modelValue.value.closeReason = {};
+		modelValue.value.closeResult = '';
 	}
 }
 
 async function patchRemoteChanges(condition) {
-	const changes = {
+	const changes: Record<string, unknown> = {
 		statusCondition: condition,
 		status: status.value,
 	};
@@ -217,7 +186,7 @@ async function patchRemoteChanges(condition) {
 
 	await CasesAPI.patch({
 		changes,
-		etag: itemInstance.value.etag,
+		etag: modelValue.value.etag,
 	});
 }
 
@@ -238,13 +207,10 @@ async function updateStatusCondition(isValidationRequired = true) {
 		return;
 	}
 
-	if (isValidationRequired && itemInstance.value.statusCondition.id) return;
+	if (isValidationRequired && modelValue.value.statusCondition?.id) return;
 
-	if (!isValidationRequired && itemInstance.value.statusCondition.initial) {
-		await setItemProp({
-			path: 'statusCondition',
-			value: {},
-		});
+	if (!isValidationRequired && modelValue.value.statusCondition?.initial) {
+		modelValue.value.statusCondition = {};
 	}
 
 	const { items } = await CaseStatusConditionsAPI.getList({
@@ -262,7 +228,7 @@ watch(
 	async (newStatusId, oldStatusId) => {
 		if (
 			!newStatusId ||
-			(itemInstance.value.statusCondition.final && !isNew.value)
+			(modelValue.value.statusCondition?.final && !isNew.value)
 		)
 			return;
 

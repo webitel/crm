@@ -1,13 +1,13 @@
 <template>
   <wt-dual-panel
-    v-if="!isLoading"
+    v-if="!debouncedIsLoading"
     :actions-panel="false"
     :hide-header="isReadOnly"
     class="opened-case"
   >
     <template #header>
       <wt-page-header
-        :hide-primary="!isNew && !editMode"
+        :hide-primary="!isNew && !isEditable"
         :primary-action="saveCase"
         :primary-disabled="!hasSaveActionAccess || disabledSave"
         :primary-text="t('reusable.save')"
@@ -26,7 +26,7 @@
             </wt-button>
 
             <wt-button
-              v-if="!isNew && !editMode"
+              v-if="!isNew && !isEditable"
               :disabled="!hasUpdateAccess"
               color="secondary"
               @click="toggleEditMode(true)"
@@ -43,10 +43,7 @@
     </template>
 
     <template #main>
-      <opened-case-tabs
-        :namespace="namespace"
-        :v="v$"
-      />
+      <opened-case-tabs />
     </template>
   </wt-dual-panel>
 </template>
@@ -55,147 +52,89 @@
   lang="ts"
   setup
 >
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { UsersAPI } from '@webitel/api-services/api';
+import { CasesAPI, UsersAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { isEmpty } from '@webitel/ui-sdk/scripts';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
-import casesAPI from '../api/CasesAPI.js';
+import { useCaseAccessState } from '../composables/useCaseAccessState';
+import { caseCustomFields } from '../stores/_internals/caseCustomFields';
+import { useCasesCardStore } from '../stores/card/casesCardStore';
+import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import OpenedCaseGeneral from './opened-case-general.vue';
 import OpenedCaseTabs from './opened-case-tabs.vue';
 
-const namespace = 'cases';
-
-const store = useStore();
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
-
-const editMode = computed(() => {
-	return isNew.value || store.getters[`${cardNamespace}/EDIT_MODE`];
-});
 
 const { fields: customFields, getFields } = useExtensionFields({
 	type: 'cases',
 });
 
 getFields();
+watch(
+	customFields,
+	(fields) => {
+		caseCustomFields.value = fields;
+	},
+	{
+		immediate: true,
+	},
+);
 
-const isReadOnly = inject('isReadOnly');
-provide('namespace', namespace);
-provide('editMode', editMode);
-provide('customFields', customFields);
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
+
 const {
-	namespace: cardNamespace,
-	id,
-	itemInstance,
-
-	loadItem,
-	addItem,
-	updateItem,
-	setId,
-	resetState,
-	setItemProp,
-} = useCardStore(namespace, {
+	modelValue: itemInstance,
+	debouncedIsLoading,
+	originalItemInstance,
+	isNew,
+	hasValidationErrors,
+	isAnyFieldEdited,
+	save: saveCardStore,
+} = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
 	onLoadErrorHandler: handleError,
 });
 
-function requiredIfFinal(value, state, siblings) {
-	if (!state.statusCondition?.final) {
-		return true;
-	}
-	return required.$validator(value, state, siblings);
-}
-
-const v$ = useVuelidate(
-	computed(() => {
-		// reduce custom fields for set validation rules
-		const custom = customFields.value.reduce((acc, field) => {
-			if (field.required) {
-				acc[field.id] = {
-					required,
-				};
-			}
-
-			return acc;
-		}, {});
-
-		return {
-			itemInstance: {
-				subject: {
-					required,
-				},
-				// sla: { required }, /* sla is required, but cannot be changed in the ui */
-				priority: {
-					required,
-				} /* priority is required, but set automatically by default and can't be cleared in the ui */,
-				source: {
-					required,
-				},
-				reporter: {
-					required: (v) => {
-						return !isEmpty(v);
-					},
-				},
-				custom,
-				// impacted: { required }, /* is required, but set to "reporter" by default and can't be cleared in the ui */
-				service: {
-					required,
-				},
-				statusCondition: {
-					required,
-				} /* status is required, but set automatically after user selects a service */,
-				closeReason: {
-					required: requiredIfFinal,
-				} /* closeReason is required if status is final, if status is !final this must be empty field */,
-				closeResult: {
-					required: requiredIfFinal,
-				} /* closeResult is required if status is final, if status is !final this must be empty field  */,
-			},
-		};
-	}),
-	{
-		itemInstance,
-	},
-	{
-		$autoDirty: true,
-	},
+const disabledSave = computed(
+	() => hasValidationErrors.value || !isAnyFieldEdited.value,
 );
 
-provide(
-	'v$',
-	computed(() => v$),
+const { setEditMode } = useCasesEditModeStore();
+
+const toggleEditMode = (value: boolean) => {
+	setEditMode(value);
+};
+
+/**
+ * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
+ *
+ * In readonly mode we have an etag as the route param, and some tabs can't
+ * get data from an etag, so we need to set the real id from the card's get
+ * response.
+ * */
+watch(
+	() => originalItemInstance.value?.id,
+	(value) => {
+		if (value && isReadOnly) {
+			casesCardStore.itemId = value;
+		}
+	},
 );
-
-v$.value.$touch();
-
-const { isNew, disabledSave, isLoading, save, initialize } = useCardComponent({
-	id,
-	itemInstance,
-	loadItem,
-	addItem,
-	updateItem,
-	setId,
-	resetState,
-	onLoadErrorHandler: handleError,
-
-	invalid: computed(() => v$.value.$invalid),
-});
-
-initialize();
 
 const { close } = useClose(CrmSections.Cases);
 
@@ -216,7 +155,7 @@ const path = computed(() => {
 			route: baseUrl,
 		},
 		{
-			name: id.value
+			name: itemId.value
 				? `${itemInstance.value?.name} ${breadcrumbSubject.value}`
 				: t('reusable.new'),
 		},
@@ -259,41 +198,19 @@ watch(
 	},
 );
 
-/**
- * @author @Oleksandr Palonnyi
- *
- * [WTEL-6779] (https://webitel.atlassian.net/browse/WTEL-6779)
- *
- * This watcher is needed to set the id of the casesCard in readonly mode
- * because in readonly mode we have etag as param in url,
- * and some tabs cant get data from etag, so we need to set id from card get response
- *
- * */
-watch(
-	() => itemInstance.value.id,
-	(val) => {
-		if (val && isReadOnly) {
-			setId(val);
-		}
-	},
-);
-
 async function assignCaseToMe() {
 	if (!userContact.value?.id) {
 		return;
 	}
 
-	if (editMode.value) {
-		await setItemProp({
-			path: 'assignee',
-			value: {
-				id: userContact.value.id,
-				name: userContact.value.name,
-			},
-		});
+	if (isEditable.value) {
+		itemInstance.value.assignee = {
+			id: userContact.value.id,
+			name: userContact.value.name,
+		};
 	} else {
 		try {
-			await casesAPI.patch({
+			await CasesAPI.patch({
 				changes: {
 					assignee: {
 						id: userContact.value.id,
@@ -303,17 +220,15 @@ async function assignCaseToMe() {
 				etag: itemInstance.value.etag,
 			});
 		} finally {
-			await loadItem();
+			await casesCardStore.initialize({
+				itemId: itemId.value,
+			});
 		}
 	}
 }
 
-const toggleEditMode = (value) => {
-	return store.dispatch(`${cardNamespace}/TOGGLE_EDIT_MODE`, value);
-};
-
 const saveCase = async () => {
-	await save();
+	await saveCardStore();
 	await toggleEditMode(false);
 };
 

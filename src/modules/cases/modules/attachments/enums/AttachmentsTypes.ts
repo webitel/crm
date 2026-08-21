@@ -1,6 +1,6 @@
 export const AttachmentsTypes = {
-	FILES: 'files',
-	LINKS: 'links',
+	Files: 'files',
+	Links: 'links',
 } as const;
 
 export type AttachmentsTypes =

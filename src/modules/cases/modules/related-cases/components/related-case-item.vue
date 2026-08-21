@@ -25,24 +25,17 @@
 <script setup lang="ts">
 import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
 
-const props = defineProps({
-	color: {
-		type: String,
-		required: true,
+const props = withDefaults(
+	defineProps<{
+		color: string;
+		name: string;
+		subject: string;
+		relationType?: string;
+	}>(),
+	{
+		relationType: '',
 	},
-	name: {
-		type: String,
-		required: true,
-	},
-	subject: {
-		type: String,
-		required: true,
-	},
-	relationType: {
-		type: String,
-		default: '',
-	},
-});
+);
 </script>
 
 <style scoped lang="scss">

@@ -2,9 +2,7 @@ import webSocketClientController from '@webitel/ui-sdk/src/api/websocket/WebSock
 import { createStore } from 'vuex';
 
 import appearance from '../../modules/appearance/store/appearance';
-import cases from '../../modules/cases/store/cases';
 import configuration from '../../modules/configuration/store/configuration';
-import customization from '../../modules/customization/store/customization';
 
 export default createStore({
 	state: {
@@ -22,7 +20,5 @@ export default createStore({
 	modules: {
 		appearance,
 		configuration,
-		customization,
-		cases,
 	},
 });

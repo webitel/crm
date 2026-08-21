@@ -1,4 +1,4 @@
-import PermissionsTab from '@webitel/ui-sdk/src/modules/ObjectPermissions/components/permissions-tab.vue';
+import { PermissionsTab } from '@webitel/ui-datalist/permissions-page';
 import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedCaseWrapper from '../components/opened-case-wrapper.vue';
@@ -7,8 +7,7 @@ import CaseInfo from '../modules/case-info/components/case-info.vue';
 import CaseDetails from '../modules/details/component/case-details.vue';
 import CaseResult from '../modules/result/components/case-result.vue';
 import CaseTimeline from '../modules/timeline/components/case-timeline.vue';
-
-const CASE_VIEW_NAME = 'case_view';
+import { CASE_VIEW_NAME } from './caseViewName';
 
 const casesChildrenRoutes: RouteRecordRaw[] = [
 	{

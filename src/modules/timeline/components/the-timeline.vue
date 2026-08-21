@@ -96,8 +96,11 @@ const nextLoading = ref(false);
 
 async function loadNext() {
 	nextLoading.value = true;
-	await loadNextPage();
-	nextLoading.value = false;
+	try {
+		await loadNextPage();
+	} finally {
+		nextLoading.value = false;
+	}
 }
 
 onUnmounted(() => {

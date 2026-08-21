@@ -22,30 +22,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
 import convertDurationWithDays from '../../../../../app/scripts/convertDurationWithDays.js';
-import prettifyDate from '../../../utils/prettifyDate.js';
 
-const props = defineProps({
-	title: {
-		type: String,
-		required: true,
-	},
-	time: {
-		type: String,
-		default: '',
-	},
-	timeDifference: {
-		type: String,
-		default: null,
-	},
-	timeZone: {
-		type: String,
-		default: undefined,
-	},
-});
+const props = defineProps<{
+	title: string;
+	time?: string;
+	timeDifference?: string | number | null;
+	timeZone?: string;
+}>();
 
 const showTimeDifference = computed(() => {
 	return [
