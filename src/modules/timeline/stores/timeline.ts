@@ -2,7 +2,7 @@ import { TimelineAPI } from '@webitel/api-services/api';
 import { createTableStore } from '@webitel/ui-datalist';
 import deepCopy from 'deep-copy';
 import { defineStore, storeToRefs } from 'pinia';
-import { computed, ref, toRaw } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { TimelineEventType } from '../enums/TimelineEventType';
 import type { TimelineMode } from '../enums/TimelineMode';
@@ -31,9 +31,6 @@ function listHandler(days) {
 }
 
 const timelineApiModule = {
-	// filtersManager stores filter values inside a reactive Map, so `type` here
-	// is a reactive array proxy, not a plain array — strip that before it
-	// leaves the store (axios params / deepmerge in the api client don't expect it).
 	getList: async ({ mode, parentId, page, size, type }) => {
 		const { days, next } = await TimelineAPI.getList({
 			entity: mode,
@@ -42,7 +39,7 @@ const timelineApiModule = {
 			size,
 			...(type?.length
 				? {
-						type: toRaw(type),
+						type,
 					}
 				: {}),
 		});
