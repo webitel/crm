@@ -79,7 +79,7 @@ const { handleError } = useErrorRedirectHandler();
 
 const {
 	modelValue,
-	validationFields: rawValidationFields,
+	validationFields,
 	isNew,
 	hasValidationErrors,
 	save: saveItem,
@@ -89,18 +89,6 @@ const {
 	parentId: route.params.id as string,
 	onLoadErrorHandler: handleError,
 });
-
-// TODO(types): Regle infers an empty-object arm into the validationFields
-// union; narrow to the named-fields arm so template access typechecks.
-const validationFields = computed(
-	() =>
-		rawValidationFields.value as Extract<
-			(typeof rawValidationFields)['value'],
-			{
-				name: unknown;
-			}
-		>,
-);
 
 const statusConditionId = computed(() => route.params.statusConditionId);
 

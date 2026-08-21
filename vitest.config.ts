@@ -3,6 +3,15 @@ import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+	resolve: {
+		dedupe: [
+			'vue',
+			'@vue/compat',
+			'zod',
+			'pinia',
+			'vidstack',
+		],
+	},
 	plugins: [
 		vue({
 			template: {

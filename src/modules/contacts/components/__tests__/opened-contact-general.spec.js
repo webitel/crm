@@ -6,7 +6,9 @@ describe('OpenedContactGeneral', () => {
 	it('renders a component', () => {
 		const wrapper = shallowMount(OpenedContactGeneral, {
 			props: {
-				name: 'jest',
+				modelValue: {
+					name: 'jest',
+				},
 			},
 			global: {
 				provide: {

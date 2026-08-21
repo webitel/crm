@@ -22,18 +22,20 @@
             :disabled:delete="!hasDeleteAccess || !selected.length"
             :disabled:add="!hasCreateAccess"
             @click:add="addNewService"
-            @click:refresh="loadData"
+            @click:refresh="loadDataList"
             @click:delete="
               askDeleteConfirmation({
                 deleted: selected,
-                callback: () => deleteData(selected),
+                callback: () => deleteEls(selected),
               })
-              "
+            "
           >
             <template #search-bar>
-              <filter-search
-                :namespace="filtersNamespace"
-                name="search"
+              <dynamic-filter-search
+                :filters-manager="filtersManager"
+                @filter:add="addFilter"
+                @filter:update="updateFilter"
+                @filter:delete="deleteFilter"
               />
             </template>
           </wt-action-bar>
@@ -61,11 +63,11 @@
           <wt-table
             v-show="dataList.length && !isLoading"
             :data="dataList"
-            :headers="headers"
+            :headers="shownHeaders"
             :selected="selected"
             sortable
-            @sort="sort"
-            @update:selected="setSelected"
+            @sort="updateSort"
+            @update:selected="updateSelected"
           >
             <template #name="{ item }">
               <wt-item-link
@@ -90,7 +92,7 @@
               {{ displayText(item.group?.name) }}
             </template>
             <template #defaultPriority="{ item }">
-              {{ displayText(item.default_priority?.name) }}
+              {{ displayText(item.defaultPriority?.name) }}
             </template>
             <template #assignee="{ item }">
               <wt-item-link
@@ -107,13 +109,11 @@
                 {{ displayText(item.assignee?.name) }}
               </template>
             </template>
-            <template #state="{ item, index }">
+            <template #state="{ item }">
               <wt-switcher
                 :model-value="item.state"
                 :disabled="!hasUpdateAccess || disableStateSwitcher(item)"
-                @update:model-value="
-                  patchProperty({ index, prop: 'state', value: $event })
-                  "
+                @update:model-value="changeState(item, $event)"
               />
             </template>
             <template #actions="{ item }">
@@ -128,16 +128,21 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteData(item),
+                    callback: () => deleteEls(item),
                   })
-                  "
+                "
               />
             </template>
           </wt-table>
 
-          <filter-pagination
-            :namespace="filtersNamespace"
-            :is-next="isNext"
+          <wt-pagination
+            :next="next"
+            :prev="page > 1"
+            :size="size"
+            debounce
+            @change="updateSize"
+            @next="updatePage(page + 1)"
+            @prev="updatePage(page - 1)"
           />
         </div>
       </section>
@@ -145,40 +150,33 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
-import { ServiceCatalogsAPI } from '@webitel/api-services/api';
+<script lang="ts" setup>
+import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
 import { displayText } from '@webitel/ui-sdk/utils';
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { checkDisableState } from '../../../utils/checkDisableState.js';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
-import ServicesAPI from '../api/services.js';
+import { useCaseServicesDatalistStore } from '../stores';
 import {
 	buildServiceCrumbs,
 	findServicePath,
 } from '../utils/breadcrumbUtils.js';
 
 const route = useRoute();
-const store = useStore();
-
-const baseNamespace = 'configuration/lookups/services';
-
-const { t } = useI18n();
 const router = useRouter();
+const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl({
@@ -197,37 +195,32 @@ const {
 const rootService = ref(null);
 const catalog = ref(null);
 
-const {
-	namespace,
+const tableStore = useCaseServicesDatalistStore();
 
+const {
 	dataList,
 	selected,
-	isLoading,
-	headers,
-	isNext,
 	error,
-
-	loadData,
-	deleteData,
-	sort,
-	setSelected,
-	onFilterEvent,
-	patchProperty,
-} = useTableStore(baseNamespace);
+	isLoading,
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-	namespace: filtersNamespace,
-	restoreFilters,
-	filtersValue,
-
-	subscribe,
-	flushSubscribers,
-} = useTableFilters(namespace);
-
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
-});
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+} = tableStore;
 
 const path = computed(() => {
 	const baseRoutes = [
@@ -291,7 +284,7 @@ const {
 	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
 	dataList,
-	filters: filtersValue,
+	filters: computed(() => filtersManager.value.getAllValues()),
 	error,
 	isLoading,
 });
@@ -309,13 +302,13 @@ const addNewService = () => {
 
 const loadRootService = async () => {
 	rootService.value = await ServicesAPI.get({
-		itemId: route.params.rootId,
+		itemId: route.params.rootId as string,
 	});
 };
 
 const loadCatalog = async () => {
 	catalog.value = await ServiceCatalogsAPI.get({
-		itemId: route.params.catalogId,
+		itemId: route.params.catalogId as string,
 	});
 };
 
@@ -334,26 +327,28 @@ const initializeBreadcrumbs = async () => {
 		});
 	}
 };
-const setRootForServices = () => {
-	store.commit(`${baseNamespace}/table/SET`, {
-		path: 'rootId',
-		value: route.params.rootId,
-	});
-};
 
 const loadServices = async () => {
 	await initializeBreadcrumbs();
-	setRootForServices();
-	await restoreFilters();
+	await initialize({
+		parentId: route.params.rootId as string,
+	});
 };
 
 const disableStateSwitcher = computed(() => (item) => {
 	return checkDisableState(catalog.value, item);
 });
 
-onUnmounted(() => {
-	flushSubscribers();
-});
+const changeState = async (item, value) => {
+	await ServicesAPI.patch({
+		changes: {
+			state: value,
+		},
+		id: item.id,
+	});
+
+	item.state = value;
+};
 
 loadServices();
 

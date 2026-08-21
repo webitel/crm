@@ -58,7 +58,7 @@ import {
 	useNestedCardComponent,
 } from '@webitel/ui-datalist/card';
 import { ComponentSize } from '@webitel/ui-sdk/enums';
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { EngineCommunicationChannels } from 'webitel-sdk';
@@ -83,9 +83,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 const route = useRoute();
-
-// animate popup appearance after f5 with popup opened
-const shown = ref(false);
 
 const communicationOptions = [
 	{
@@ -113,6 +110,7 @@ const destinationField = computed(() =>
 );
 
 const commId = computed(() => route.params.commId as string);
+const shown = computed(() => !!commId.value);
 
 const {
 	modelValue,
@@ -151,22 +149,6 @@ const save = async () => {
 function close() {
 	emit('close');
 }
-
-watch(
-	commId,
-	() => {
-		if (commId.value) {
-			setTimeout(() => {
-				shown.value = !!commId.value;
-			}, 300);
-		} else {
-			shown.value = !!commId.value;
-		}
-	},
-	{
-		immediate: true,
-	},
-);
 </script>
 
 <style lang="scss" scoped>

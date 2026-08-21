@@ -7,104 +7,109 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input-text
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.assignee"
         :label="t('lookups.contactGroups.assignee')"
-        :search-method="loadContact"
-        :model-value="itemInstance.assignee"
-        :disabled="
-          disableUserInput || itemInstance.group?.type === ContactsGroupType.Dynamic
-        "
-        @update:model-value="setItemProp({ path: 'assignee', value: $event })"
+        :search-method="hasContactsReadAccess && loadContact"
+        :disabled="disableAssigneeInput"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.sla"
         :label="t('lookups.slas.slas')"
-        :search-method="loadSlaList"
-        :model-value="itemInstance.sla"
-        :disabled="disableUserInput"
-        :v="v.itemInstance.sla"
-        @update:model-value="setItemProp({ path: 'sla', value: $event })"
+        :search-method="hasSlasReadAccess && loadSlaList"
+        :regle-validation="validationFields?.sla"
+        :disabled="disableUserInput || !hasSlasReadAccess"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.defaultPriority"
         :label="t('lookups.serviceCatalogs.defaultPriority')"
-        :search-method="loadPrioritiesList"
-        :model-value="itemInstance.defaultPriority"
-        :v="v.itemInstance.defaultPriority"
-        :disabled="disableUserInput"
-        @update:model-value="setItemProp({ path: 'defaultPriority', value: $event })"
+        :search-method="hasPrioritiesReadAccess && loadPrioritiesList"
+        :regle-validation="validationFields?.defaultPriority"
+        :disabled="disableUserInput || !hasPrioritiesReadAccess"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.group"
         :label="t('lookups.contactGroups.contactGroups')"
-        :search-method="loadContactGroupsList"
-        :model-value="itemInstance.group"
-        :disabled="disableUserInput"
-        @update:model-value="setItemProp({ path: 'group', value: $event })"
+        :search-method="hasContactGroupsReadAccess && loadContactGroupsList"
+        :disabled="disableUserInput || !hasContactGroupsReadAccess"
       />
 
       <wt-input-text
+        v-model:model-value="modelValue.code"
         :label="t('lookups.serviceCatalogs.code')"
-        :model-value="itemInstance.code"
         :disabled="disableUserInput"
-        @update:model-value="setItemProp({ path: 'code', value: $event })"
       />
 
       <wt-switcher
+        v-model:model-value="modelValue.state"
         :label="t('reusable.state')"
         :disabled="disableUserInput"
-        :model-value="itemInstance.state"
-        @update:model-value="setItemProp({ path: 'state', value: $event })"
       />
 
       <wt-textarea
-        :disabled="disableUserInput"
+        v-model:model-value="modelValue.description"
         :label="t('vocabulary.description')"
-        :model-value="itemInstance.description"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
+        :disabled="disableUserInput"
       />
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
 	CasePrioritiesAPI,
 	ContactGroupsAPI,
 	ContactsAPI,
 	SlasAPI,
 } from '@webitel/api-services/api';
+import type { WebitelCasesService } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
-import { useCardStore } from '@webitel/ui-sdk/store';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
+import { WtObject } from '@webitel/ui-sdk/enums';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<WebitelCasesService>();
+
+defineProps<{
+	validationFields: CardValidationFields<WebitelCasesService>;
+}>();
 
 const { t } = useI18n();
 const { disableUserInput } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
+const { hasReadAccess: hasSlasReadAccess } = useUserAccessControl(
+	WtObject.Slas,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
 
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
+const disableAssigneeInput = computed(
+	() =>
+		disableUserInput.value ||
+		!hasContactsReadAccess.value ||
+		modelValue.value.group?.type === ContactsGroupType.Dynamic,
+);
 
 const loadSlaList = (params) => {
 	return SlasAPI.getLookup(params);

@@ -83,11 +83,10 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import { useContactEditAccessControl } from '../../../../../composables/useContactEditAccessControl';
 import { useUserinfoStore } from '../../../../../../userinfo/store/userinfoStore';
+import { useContactEditAccessControl } from '../../../../../composables/useContactEditAccessControl';
 import { useContactCardStore } from '../../../../../stores/card/contactCardStore';
 import dummyDark from '../assets/messaging-dummy-dark.svg';
 import dummyLight from '../assets/messaging-dummy-light.svg';
@@ -112,9 +111,24 @@ const { dataList, error, isLoading, shownHeaders, filtersManager } =
 const { initialize, updateSort, updateSize, deleteEls } = tableStore;
 
 updateSize(1000);
-initialize({
-	parentId: parentId.value,
-});
+watch(
+	parentId,
+	async (id) => {
+		if (!id) return;
+		await initialize({
+			parentId: id,
+		});
+		// a newer contact navigation may have started while this one was in flight
+		if (parentId.value !== id) {
+			await initialize({
+				parentId: parentId.value,
+			});
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 
 const {
 	isVisible: isConfirmationPopup,
@@ -171,7 +185,7 @@ function closeChat() {
 }
 
 function isDisabledChatAction(item) {
-	return !availableProviders.includes(item.protocol) && disabledUpdate.value;
+	return !availableProviders.includes(item.protocol) || disabledUpdate.value;
 }
 </script>
 
