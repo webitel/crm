@@ -42,7 +42,7 @@
 		"linkify-html": "^4.x",
 		"linkifyjs": "^4.x",
 		"lodash-es": "^4.x",
-		"markdown-it": "^14.1.0",
+		"markdown-it": "^15.0.0",
 		"pinia": "^3.0.4",
 		"qs": "^6.14.x",
 		"sortablejs": "^1.15.6",
