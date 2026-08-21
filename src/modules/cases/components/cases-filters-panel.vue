@@ -22,7 +22,6 @@ import { storeToRefs } from 'pinia';
 
 import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { filtersOptions } from '../configs/filtersOptions';
-import { CasesNamespace } from '../namespace';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 
@@ -30,18 +29,11 @@ const emit = defineEmits<{
 	hide: [];
 }>();
 
-const props = withDefaults(
-	defineProps<{
-		namespace?: string;
-		tableStore?: ReturnType<typeof useCasesDatalistStore>;
-		presetsStore?: typeof useCaseFilterPresetsStore;
-	}>(),
-	{
-		namespace: CasesNamespace,
-		tableStore: () => useCasesDatalistStore(),
-		presetsStore: () => useCaseFilterPresetsStore,
-	},
-);
+const props = defineProps<{
+	namespace: string;
+	tableStore: ReturnType<typeof useCasesDatalistStore>;
+	presetsStore: typeof useCaseFilterPresetsStore;
+}>();
 
 const { filtersManager } = storeToRefs(props.tableStore);
 

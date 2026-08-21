@@ -23,14 +23,9 @@ import { EngineSystemSettingName } from 'webitel-sdk';
 import { SearchMode } from '../enums/SearchMode';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 
-const props = withDefaults(
-	defineProps<{
-		tableStore?: ReturnType<typeof useCasesDatalistStore>;
-	}>(),
-	{
-		tableStore: () => useCasesDatalistStore(),
-	},
-);
+const props = defineProps<{
+	tableStore: ReturnType<typeof useCasesDatalistStore>;
+}>();
 
 const { t } = useI18n();
 
