@@ -28,7 +28,7 @@
 
     <wt-avatar
       size="3xl"
-      :username="modelValue.name"
+      :username="modelValue.name?.commonName"
     />
 
     <div class="opened-contact-general-name typo-subtitle-1">
@@ -37,7 +37,7 @@
         icon="webitel-logo"
       />
 
-      {{ modelValue.name }}
+      {{ modelValue.name?.commonName }}
     </div>
 
     <wt-divider />
@@ -59,10 +59,10 @@
         {{ t('date.timezone', 1) }}
       </p>
       <p
-        v-if="modelValue.timezones?.length"
+        v-if="modelValue.timezones?.data?.length"
         class="opened-contact-general-item__value"
       >
-        {{ modelValue.timezones[0].timezone?.name }}
+        {{ modelValue.timezones.data[0].timezone?.name }}
       </p>
     </div>
 
@@ -73,7 +73,7 @@
         {{ t('contacts.manager', 1) }}
       </p>
       <p class="opened-contact-general-item__value">
-        {{ modelValue.managers?.[0]?.user?.name }}
+        {{ modelValue.managers?.data?.[0]?.user?.name }}
       </p>
     </div>
 
@@ -93,7 +93,7 @@
     <div class="opened-contact-general-item">
       <div class="opened-contact-general-item__value opened-contact-general-item__value--labels">
         <wt-chip
-          v-for="{ label, id } of modelValue.labels"
+          v-for="{ label, id } of modelValue.labels?.data"
           :key="id"
         >
           {{ label }}
@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ContactEntity } from '@webitel/api-services/api';
+import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -113,7 +113,7 @@ import { useContactEditAccessControl } from '../composables/useContactEditAccess
 const { access, isReadOnly } = useContactEditAccessControl();
 
 const props = defineProps<{
-	modelValue: ContactEntity;
+	modelValue: WebitelContactsContact;
 }>();
 
 const emit = defineEmits<{
@@ -143,7 +143,11 @@ const actionOptions = computed(() => {
 });
 
 const groupsList = computed(
-	() => props.modelValue.groups?.map((el) => el.name).join(', ') ?? '',
+	() =>
+		props.modelValue.groups?.data
+			?.map((el) => el.group?.name)
+			.filter(Boolean)
+			.join(', ') ?? '',
 );
 </script>
 
