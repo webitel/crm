@@ -23,10 +23,9 @@
 </template>
 
 <script setup lang="ts">
+import { convertDurationWithDays } from '@webitel/ui-sdk/scripts';
 import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
-
-import convertDurationWithDays from '../../../../../app/scripts/convertDurationWithDays.js';
 
 const props = defineProps<{
 	title: string;

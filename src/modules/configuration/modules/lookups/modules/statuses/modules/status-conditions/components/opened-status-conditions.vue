@@ -143,7 +143,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import { useCaseStatusConditionsDatalistStore } from '../stores';
+import { useCaseStatusConditionsDatalistStore } from '../stores/datalist/caseStatusConditionsDatalistStore';
 import ConditionPopup from './opened-status-condition-popup.vue';
 import OpenedStatusConditionWarningPopup from './opened-status-condition-warning-popup.vue';
 

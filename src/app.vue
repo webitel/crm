@@ -7,15 +7,15 @@
 import { WtNotificationsBar } from '@webitel/ui-sdk/components';
 import { computed, onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+import { useAppearanceStore } from './modules/appearance/store/appearanceStore';
 import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
 const { locale, fallbackLocale } = useI18n();
 const { showUserNotifications } = useUserinfoStore();
 
-const store = useStore();
+const appearanceStore = useAppearanceStore();
 
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
+const darkMode = computed(() => appearanceStore.darkMode);
 
 provide('darkMode', darkMode);
 

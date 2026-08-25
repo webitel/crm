@@ -12,7 +12,7 @@
           :dark-mode="darkMode"
           :logo-href="startPageHref"
         />
-        <wt-dark-mode-switcher />
+        <wt-dark-mode-switcher @changed-mode="appearanceStore.setTheme" />
         <wt-app-navigator
           :apps="apps"
           :current-app="currentApp"
@@ -32,16 +32,15 @@
   </main>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { WtNavigationBar } from '@webitel/ui-sdk/components';
-import { CrmSections, WtApplication } from '@webitel/ui-sdk/enums';
+import { WtApplication } from '@webitel/ui-sdk/enums';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
-import { storeToRefs } from 'pinia';
-import { computed, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed, inject, type ComputedRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
 import packageJson from './../../../package.json' with { type: 'json' };
+import { useAppearanceStore } from '../../modules/appearance/store/appearanceStore';
 import StartPageRoutePaths from '../../modules/start-page/router/internals/start-page-route-paths';
 import { useNavStore } from '../../modules/start-page/stores/navStore';
 import { useUserinfoStore } from '../../modules/userinfo/store/userinfoStore';
@@ -50,19 +49,17 @@ const route = useRoute();
 const release = packageJson.version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
 
-const store = useStore();
+const appearanceStore = useAppearanceStore();
 const navStore = useNavStore();
 
 const currentApp = WtApplication.Crm;
 
 const userInfoStore = useUserinfoStore();
 const { hasApplicationVisibility, logoutUser } = userInfoStore;
-const { userInfo } = storeToRefs(userInfoStore);
+const { userInfo } = storeToRefs(userInfoStore as unknown as StoreGeneric);
 
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
+const darkMode = inject<ComputedRef<boolean>>('darkMode');
 const shouldHideHeader = computed(() => !!route.meta.hideHeader);
-
-const { t } = useI18n();
 
 const startPageHref = computed(() => import.meta.env.VITE_APPLICATION_HUB_URL);
 
@@ -105,9 +102,14 @@ const apps = computed(() => {
 		href: import.meta.env.VITE_CRM_URL,
 	};
 
-	const config = inject('$config');
+	const config = inject<{
+		ON_SITE?: boolean;
+	}>('$config');
 
-	const allApps = [
+	const allApps: {
+		name: WtApplication;
+		href: string;
+	}[] = [
 		admin,
 		supervisor,
 		agent,

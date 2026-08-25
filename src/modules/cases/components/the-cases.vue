@@ -269,7 +269,7 @@ import { storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import ColorComponentWrapper from '../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../app/components/_shared/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import DisplayDynamicFieldExtension from '../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
 import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';

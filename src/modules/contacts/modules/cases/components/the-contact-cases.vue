@@ -203,7 +203,7 @@ import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../../../app/components/_shared/color-component-wrapper.vue';
 import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';

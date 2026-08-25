@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { type CardTab, useCardTabs } from '@webitel/ui-sdk/composables';
+import { type CardTab, useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed } from 'vue';

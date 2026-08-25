@@ -125,8 +125,8 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
+import { convertDurationWithDays as ConvertDurationWithDays } from '@webitel/ui-sdk/scripts';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays';
 import { useSLAConditionsDatalistStore } from '../stores';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 
