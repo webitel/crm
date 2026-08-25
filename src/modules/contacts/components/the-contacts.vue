@@ -103,8 +103,8 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
 import { SearchMode } from '../../cases/enums/SearchMode';
+import ContactsTable from '../_shared/components/contacts-table.vue';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsFiltersPanel from './contacts-filters-panel.vue';

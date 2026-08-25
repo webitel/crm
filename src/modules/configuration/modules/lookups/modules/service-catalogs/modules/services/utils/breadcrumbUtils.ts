@@ -1,8 +1,26 @@
+import type { WebitelCasesService } from '@webitel/api-services/gen/models';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 
-import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName';
 
-export function findServicePath(currentServiceId, catalog, path = []) {
+interface ServiceCrumb {
+	name?: string;
+	route?: {
+		name: string;
+		params: {
+			catalogId?: string;
+			rootId?: string;
+		};
+	};
+}
+
+export function findServicePath(
+	currentServiceId: string,
+	catalog: {
+		service?: WebitelCasesService[];
+	},
+	path: WebitelCasesService[] = [],
+): WebitelCasesService[] | null {
 	const services = catalog?.service;
 
 	if (!Array.isArray(services)) return null;
@@ -23,7 +41,10 @@ export function findServicePath(currentServiceId, catalog, path = []) {
 	return null;
 }
 
-export function buildServiceCrumbs(servicePath, catalogId) {
+export function buildServiceCrumbs(
+	servicePath: WebitelCasesService[],
+	catalogId?: string,
+): ServiceCrumb[] {
 	if (!servicePath || servicePath.length === 0) return [];
 
 	if (servicePath.length > 2) {
@@ -48,7 +69,7 @@ export function buildServiceCrumbs(servicePath, catalogId) {
 	}
 
 	return servicePath.map((service, index) => {
-		const crumb = {
+		const crumb: ServiceCrumb = {
 			name: prettifyBreadcrumbName(service.name),
 		};
 		if (index < servicePath.length - 1) {

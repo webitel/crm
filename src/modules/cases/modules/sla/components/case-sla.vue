@@ -22,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
+import { SLAConditionsAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import ConditionsAPI from '../../../../configuration/modules/lookups/modules/slas/modules/conditions/api/conditions.js';
 import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 
@@ -51,7 +51,7 @@ const updateSlaCondition = async (slaId, priorityId) => {
 		return;
 	}
 	try {
-		const response = await ConditionsAPI.getList({
+		const response = await SLAConditionsAPI.getList({
 			parentId: slaId,
 			priorityId,
 		});
