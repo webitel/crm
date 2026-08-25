@@ -15,7 +15,7 @@
         :disabled="disableStatusSelect"
         :v="v$.value.itemInstance.statusCondition"
         :placeholder="t('cases.status')"
-        :search-method="fetchStatusConditions"
+        :search-method="hasStatusReadAccess && fetchStatusConditions"
         :model-value="displayedStatusCondition"
         strict-api-options
 				:show-clear="false"
@@ -42,6 +42,7 @@
 
 <script setup>
 import { CaseStatusConditionsAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { isEmpty } from '@webitel/ui-sdk/scripts';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
@@ -62,9 +63,12 @@ const { t } = useI18n();
 const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasStatusReadAccess } = useUserAccessControl(
+	WtObject.Status,
+);
 
 const disableStatusSelect = computed(
-	() => disableUserInput.value || isReadOnly,
+	() => disableUserInput.value || isReadOnly || !hasStatusReadAccess.value,
 );
 
 const {
@@ -234,7 +238,7 @@ async function handleSelect(selectedStatusCondition) {
 }
 
 async function updateStatusCondition(isValidationRequired = true) {
-	if (!status?.value?.id) {
+	if (!hasStatusReadAccess.value || !status?.value?.id) {
 		return;
 	}
 

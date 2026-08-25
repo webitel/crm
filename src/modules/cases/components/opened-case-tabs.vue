@@ -28,9 +28,9 @@
 
 <script setup>
 import { useCardTabs } from '@webitel/ui-datalist/card';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
-import { computed, inject } from 'vue';
+import { computed, inject, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -51,6 +51,12 @@ const { t } = useI18n();
 const route = useRoute();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasRolesReadAccess } = useUserAccessControl(
+	WtObject.Role,
+);
+
+provide('hasRolesReadAccess', hasRolesReadAccess);
+
 const { namespace: cardNamespace, id } = useCardStore(props.namespace);
 
 const actionAllow = computed(

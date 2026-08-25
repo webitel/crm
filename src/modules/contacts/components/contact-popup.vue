@@ -22,8 +22,9 @@
 
         <wt-multi-select
           v-model:model-value="modelValue.groups"
+          :disabled="!hasContactGroupsReadAccess"
           :label="t('cases.groupPerformers')"
-          :search-method="loadStaticContactGroupsList"
+          :search-method="hasContactGroupsReadAccess && loadStaticContactGroupsList"
         />
 
         <wt-single-select
@@ -35,8 +36,9 @@
 
         <wt-single-select
           :model-value="modelValue.managers?.[0]?.user"
+          :disabled="!hasUsersReadAccess"
           :label="t('contacts.manager', 1)"
-          :search-method="UsersAPI.getLookup"
+          :search-method="hasUsersReadAccess && UsersAPI.getLookup"
           @update:model-value="modelValue.managers = [{ user: $event }]"
         />
 
@@ -88,10 +90,11 @@ import {
 } from '@webitel/api-services/api';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { contactSchema } from '@webitel/api-services/validations';
-import { ComponentSize } from '@webitel/ui-sdk/enums';
+import { ComponentSize, WtObject } from '@webitel/ui-sdk/enums';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../app/composables/useUserAccessControl';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
 const props = withDefaults(
@@ -113,6 +116,13 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+const { hasReadAccess: hasUsersReadAccess } = useUserAccessControl(
+	WtObject.User,
+);
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
 
 const userInfoStore = useUserinfoStore();
 
