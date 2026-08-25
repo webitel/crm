@@ -94,7 +94,7 @@ import { ComponentSize, WtObject } from '@webitel/ui-sdk/enums';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useUserAccessControl } from '../../app/composables/useUserAccessControl';
+import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 
 const props = withDefaults(
