@@ -23,7 +23,7 @@
 import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -57,6 +57,11 @@ const currentCardRoute = computed(() => {
 const { hasReadAccess: hasCaseReadAccess } = useUserAccessControl({
 	resource: WtObject.Case,
 });
+const { hasReadAccess: hasRolesReadAccess } = useUserAccessControl({
+	resource: WtObject.Role,
+});
+
+provide('hasRolesReadAccess', hasRolesReadAccess);
 
 const tabs = computed(() => {
 	const tabList = [
