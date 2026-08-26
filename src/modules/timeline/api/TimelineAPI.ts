@@ -102,13 +102,40 @@ const getCounters = (getTimelineCounter) => async (params) => {
 	}
 };
 
+const getInfo = (getTimelineInfo) => async (params) => {
+	const { parentId, type, id } = applyTransform(params, [
+		sanitize([
+			'parentId',
+			'type',
+			'id',
+		]),
+	]);
+	try {
+		const response = await getTimelineInfo(parentId, type, id);
+		return applyTransform(response.data, [
+			snakeToCamel(),
+		]);
+	} catch (err) {
+		throw applyTransform(err, [
+			notify,
+		]);
+	}
+};
+
 const contactTimeline = TimelineApiFactory(configuration, '', instance);
 const caseTimeline = CaseTimelineApiFactory(configuration, '', instance);
+
+contactTimeline.getTimelineInfo = (contactId, type, id, options) =>
+	instance.get(
+		`${configuration.basePath}/contacts/${contactId}/timeline/${type}/${id}/info`,
+		options,
+	);
 
 const ApiModeMap = {
 	[TimelineMode.Contact]: {
 		getList: getList(contactTimeline.getTimeline),
 		getCounters: getCounters(contactTimeline.getTimelineCounter),
+		getInfo: getInfo(contactTimeline.getTimelineInfo),
 	},
 	[TimelineMode.Case]: {
 		getList: getList(caseTimeline.getTimeline),
@@ -119,4 +146,5 @@ const ApiModeMap = {
 export default {
 	getList: ({ mode, ...rest }) => ApiModeMap[mode].getList(rest),
 	getCounters: ({ mode, ...rest }) => ApiModeMap[mode].getCounters(rest),
+	getInfo: ({ mode, ...rest }) => ApiModeMap[mode].getInfo(rest),
 };
