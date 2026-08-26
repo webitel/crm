@@ -3,7 +3,7 @@ import type { Contact } from '@webitel/api-services/validations';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
 import { ContactsNamespace } from '../../namespace';
-import { contactValidationSchema } from '../../validations/buildContactValidationSchema';
+import { contactValidationSchema } from '../../validations/contact.validations';
 
 export const useContactCardStore = createCardStore<Contact>({
 	namespace: `${ContactsNamespace}/card`,
