@@ -13,7 +13,7 @@ import {
 	sanitize,
 	snakeToCamel,
 } from '@webitel/api-services/api/transformers';
-import { getCases } from '@webitel/api-services/gen';
+import { getCases } from '@webitel/api-services/gen-wire';
 import { snakeToKebab } from '@webitel/ui-sdk/scripts';
 import { CasesApiFactory } from 'webitel-sdk';
 
