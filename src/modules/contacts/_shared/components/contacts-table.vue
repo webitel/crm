@@ -62,7 +62,7 @@
           <template #groups="{ item }">
             <wt-display-chip-items
               v-if="item.groups?.data"
-              :items="item.groups.data.map(({ group }) => group).filter(Boolean)"
+              :items="getGroupItems(item)"
             />
           </template>
 
@@ -108,6 +108,7 @@
 </template>
 
 <script setup lang="ts">
+import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { createTableStore } from '@webitel/ui-datalist';
 import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
@@ -148,6 +149,10 @@ const {
 	columnResize,
 	columnReorder,
 } = props.tableStore;
+
+function getGroupItems(item: WebitelContactsContact) {
+	return item.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [];
+}
 
 const defaultEmptyProps = useTableEmpty({
 	dataList,
