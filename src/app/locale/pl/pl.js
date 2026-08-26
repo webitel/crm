@@ -61,6 +61,7 @@ export default {
 		actions: {
 			playRecording: 'Odtwórz nagranie',
 			transcription: 'Transkrypcja',
+			showInfo: 'Pokaż informacje',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Rozpoczęte',

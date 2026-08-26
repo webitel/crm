@@ -61,6 +61,7 @@ export default {
 		actions: {
 			playRecording: 'Redă înregistrarea',
 			transcription: 'Transcriere',
+			showInfo: 'Afișează informații',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Început',

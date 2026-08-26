@@ -61,6 +61,7 @@ export default {
 		actions: {
 			playRecording: 'Yozuvni ijro etish',
 			transcription: 'Transkripsiya',
+			showInfo: "Ma'lumotni ko'rsatish",
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Boshlandi',
