@@ -68,6 +68,7 @@ import { computed, inject, onUnmounted, provide, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { FieldType } from '../../customization/modules/custom-lookups/enums/FieldType';
 import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
@@ -313,6 +314,12 @@ const toggleEditMode = (value) => {
 };
 
 const saveCase = async () => {
+	for (const { id, kind } of customFields.value) {
+		if (kind === FieldType.Boolean) {
+			itemInstance.value.custom[id] ??= false;
+		}
+	}
+
 	await save();
 	await toggleEditMode(false);
 };
