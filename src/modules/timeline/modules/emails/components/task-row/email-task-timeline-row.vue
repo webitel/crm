@@ -26,9 +26,14 @@
 
     <template #content>
       <task-timeline-row-content-wrapper>
-        <email-point-timeline-row
-          :task="task" />
+        <div class="email-task-timeline-row-info">
+          <email-point-timeline-row
+            :task="task" />
+        </div>
 
+        <timeline-action-menu
+          :id="task.id"
+        />
       </task-timeline-row-content-wrapper>
     </template>
 
@@ -38,6 +43,7 @@
 import { computed, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
+import TimelineActionMenu from '../../../../components/task-row/timeline-action-menu.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
@@ -92,3 +98,9 @@ const pinType = computed(() => {
 	}
 });
 </script>
+
+<style scoped>
+.email-task-timeline-row-info {
+  flex: 1;
+}
+</style>

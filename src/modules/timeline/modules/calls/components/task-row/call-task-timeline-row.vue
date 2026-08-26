@@ -27,30 +27,32 @@
     <template #content>
         <task-timeline-row-content-wrapper>
           <div class="call-task-timeline-row-content-wrapper">
-            <timeline-row-initiator
-              :text="initiator.name"
-              :type="initiatorType"
-            />
+            <div class="call-task-timeline-row-info">
+              <timeline-row-initiator
+                :text="initiator.name"
+                :type="initiatorType"
+              />
 
-        <wt-display-chip-items v-if="hiddenParticipants.length" :items="hiddenParticipants" hide-first-item>
-          <template #items>
-            <timeline-row-initiator
-              v-for="({ id, name }) of hiddenParticipants"
-              :key="id"
-              :text="name"
-            />
-          </template>
-        </wt-display-chip-items>
+              <wt-display-chip-items v-if="hiddenParticipants.length" :items="hiddenParticipants" hide-first-item>
+                <template #items>
+                  <timeline-row-initiator
+                    v-for="({ id, name }) of hiddenParticipants"
+                    :key="id"
+                    :text="name"
+                  />
+                </template>
+              </wt-display-chip-items>
 
-            <timeline-row-duration
-              :duration="duration"
-            />
+              <timeline-row-duration
+                :duration="duration"
+              />
 
-            <timeline-row-duration
-              v-if="totalDuration"
-              is-total-duration
-              :duration="totalDuration"
-            />
+              <timeline-row-duration
+                v-if="totalDuration"
+                is-total-duration
+                :duration="totalDuration"
+              />
+            </div>
 
             <call-task-timeline-actions
               :task="task"
@@ -256,15 +258,18 @@ const showVideoPlayer = computed(
 );
 </script>
 
-<style lang="scss" scoped>
-.call-task-timeline-actions {
-  margin-left: auto;
-}
-
+<style scoped>
 .call-task-timeline-row-content-wrapper {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.call-task-timeline-row-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
 }
 
 .task-timeline-row-content-wrapper {

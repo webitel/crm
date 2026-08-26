@@ -11,13 +11,13 @@
       :transcripts="task.transcripts"
     />
 
-    <call-task-timeline-action-history-link
+    <timeline-action-menu
       :id="task.id"
     />
   </div>
 </template>
 <script setup>
-import CallTaskTimelineActionHistoryLink from './call-task-timeline-action-history-link.vue';
+import TimelineActionMenu from '../../../../../components/task-row/timeline-action-menu.vue';
 import CallTaskTimelineActionPlayRecording from './call-task-timeline-action-play-recording.vue';
 import CallTaskTimelineActionTranscription from './call-task-timeline-action-transcription.vue';
 
@@ -29,7 +29,7 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .call-task-timeline-actions {
   display: flex;
   align-items: center;
