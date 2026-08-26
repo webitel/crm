@@ -1,3 +1,3 @@
-import { createAppearanceStore } from '@webitel/ui-sdk/modules/Appearance/pinia/store/AppearanceStore';
+import { createAppearanceStore } from '@webitel/ui-sdk/modules/Appearance';
 
 export const useAppearanceStore = createAppearanceStore();

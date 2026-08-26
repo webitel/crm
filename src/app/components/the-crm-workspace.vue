@@ -37,7 +37,7 @@ import { WtNavigationBar } from '@webitel/ui-sdk/components';
 import { WtApplication } from '@webitel/ui-sdk/enums';
 import WtDarkModeSwitcher from '@webitel/ui-sdk/src/modules/Appearance/components/wt-dark-mode-switcher.vue';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed, inject, type ComputedRef } from 'vue';
+import { computed, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import packageJson from './../../../package.json' with { type: 'json' };
 import { useAppearanceStore } from '../../modules/appearance/store/appearanceStore';
@@ -50,6 +50,7 @@ const release = packageJson.version;
 const build = import.meta.env.VITE_BUILD_NUMBER;
 
 const appearanceStore = useAppearanceStore();
+const { darkMode } = storeToRefs(appearanceStore as unknown as StoreGeneric);
 const navStore = useNavStore();
 
 const currentApp = WtApplication.Crm;
@@ -58,7 +59,6 @@ const userInfoStore = useUserinfoStore();
 const { hasApplicationVisibility, logoutUser } = userInfoStore;
 const { userInfo } = storeToRefs(userInfoStore as unknown as StoreGeneric);
 
-const darkMode = inject<ComputedRef<boolean>>('darkMode');
 const shouldHideHeader = computed(() => !!route.meta.hideHeader);
 
 const startPageHref = computed(() => import.meta.env.VITE_APPLICATION_HUB_URL);
