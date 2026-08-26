@@ -43,6 +43,7 @@
             <template #add="{ action, onClick }">
               <wt-icon-action
                 :action="action"
+                :disabled="!hasCreateAccess"
                 @click="onClick"
               />
               <wt-icon-btn
@@ -159,7 +160,7 @@
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
             </template>
-            <template #group="{ item }">
+            <template #groupPerformers="{ item }">
               {{ item.group?.name }}
             </template>
             <template #assignee="{ item }">

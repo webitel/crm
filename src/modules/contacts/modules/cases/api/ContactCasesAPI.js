@@ -1,3 +1,5 @@
+// TODO: прибрати після рефактору таймлайнів
+
 import {
 	getDefaultGetListResponse,
 	getDefaultGetParams,

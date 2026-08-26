@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Dodaj email',
 				editTitle: 'Edytuj email',
-				dummy: 'Nie ma jeszcze adresów email',
+				empty: 'Nie ma jeszcze adresów email',
 			},
 			phones: {
 				addTitle: 'Dodaj numer telefonu',
 				editTitle: 'Edytuj numer telefonu',
-				dummy: 'Nie ma jeszcze numerów telefonów',
+				empty: 'Nie ma jeszcze numerów telefonów',
 			},
 			messaging: {
 				gateway: 'Bramka',
 				provider: 'Dostawca ',
 				username: 'Nazwa użytkownika',
-				dummy: 'Nie ma jeszcze opcji wiadomości',
+				empty: 'Nie ma jeszcze opcji wiadomości',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Bot Telegram',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Aplikacja Telegram',

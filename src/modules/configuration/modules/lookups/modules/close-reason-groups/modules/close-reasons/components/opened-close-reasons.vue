@@ -1,15 +1,16 @@
 <template>
   <section class="table-page opened-close-reasons">
     <opened-close-reasons-popup
-      :namespace="namespace"
-      @load-data="loadData"
+      @load-data="loadDataList"
     />
+
     <delete-confirmation-popup
       :shown="isDeleteConfirmationPopup"
       :delete-count="deleteCount"
       :callback="deleteCallback"
       @close="closeDelete"
     />
+
     <header class="table-title">
       <h3 class="table-title__title">
         {{ t('lookups.closeReasonGroups.reason', 2) }}
@@ -20,23 +21,26 @@
         :disabled:delete="!hasDeleteAccess || !selected.length"
         :disabled:add="!hasCreateAccess"
         @click:add="add"
-        @click:refresh="loadData"
-        @click:delete="askDeleteConfirmation({
-                  deleted: selected,
-                  callback: () => deleteData(selected),
-                })"
+        @click:refresh="loadDataList"
+        @click:delete="
+          askDeleteConfirmation({
+            deleted: selected,
+            callback: () => deleteEls(selected),
+          })
+        "
       >
         <template #search-bar>
-          <filter-search
-            :namespace="filtersNamespace"
-            name="search"
+          <dynamic-filter-search
+            :filters-manager="filtersManager"
+            @filter:add="addFilter"
+            @filter:update="updateFilter"
+            @filter:delete="deleteFilter"
           />
         </template>
       </wt-action-bar>
     </header>
 
     <div class="table-section__table-wrapper">
-
       <wt-empty
         v-show="showEmpty"
         :image="imageEmpty"
@@ -51,108 +55,107 @@
       <wt-table
         v-show="dataList.length && !isLoading"
         :data="dataList"
-        :headers="headers"
+        :headers="shownHeaders"
         :selected="selected"
         sortable
-        @sort="sort"
-        @update:selected="setSelected"
+        @sort="updateSort"
+        @update:selected="updateSelected"
       >
         <template #name="{ item }">
           {{ item.name }}
         </template>
+
         <template #description="{ item }">
           {{ item.description }}
         </template>
+
         <template #actions="{ item }">
           <wt-icon-action
             :disabled="!hasUpdateAccess"
             action="edit"
-            @click="router.push({ ...route, params: { closeReasonsId: item.id } })"
+            @click="edit(item)"
           />
           <wt-icon-action
-            action="delete"
             :disabled="!hasDeleteAccess"
-            @click="askDeleteConfirmation({
-              deleted: [item],
-              callback: () => deleteData(item),
-            })"
+            action="delete"
+            @click="
+              askDeleteConfirmation({
+                deleted: [item],
+                callback: () => deleteEls(item),
+              })
+            "
           />
         </template>
       </wt-table>
-      <filter-pagination
-        :namespace="filtersNamespace"
-        :next="isNext"
+
+      <wt-pagination
+        :next="next"
+        :prev="page > 1"
+        :size="size"
+        debounce
+        @change="updateSize"
+        @next="updatePage(page + 1)"
+        @prev="updatePage(page - 1)"
       />
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import FilterSearch from '@webitel/ui-sdk/src/modules/Filters/components/filter-search.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/store/new/modules/tableStoreModule/useTableStore';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { onUnmounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
+import { useCaseCloseReasonsDatalistStore } from '../stores';
 import OpenedCloseReasonsPopup from './opened-close-reasons-popup.vue';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+const router = useRouter();
+const route = useRoute();
+const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl({
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
-const { namespace: parentCardNamespace, id: parentId } = useCardStore(
-	props.namespace,
-);
-
-const namespace = `${parentCardNamespace}/closeReasons`;
-
-const router = useRouter();
-const route = useRoute();
-const { t } = useI18n();
+const tableStore = useCaseCloseReasonsDatalistStore();
 
 const {
-	namespace: tableNamespace,
-
 	dataList,
 	selected,
-	isLoading,
-	headers,
-	isNext,
 	error,
-
-	loadData,
-	deleteData,
-	setSelected,
-	onFilterEvent,
-	sort,
-} = useTableStore(namespace);
+	isLoading,
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-	namespace: filtersNamespace,
-	restoreFilters,
-	filtersValue,
-	resetFilters,
+	initialize,
+	loadDataList,
+	updateSelected,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+	addFilter,
+	updateFilter,
+	deleteFilter,
+} = tableStore;
 
-	subscribe,
-	flushSubscribers,
-} = useTableFilters(tableNamespace);
+initialize({
+	parentId: route.params.id as string,
+});
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -170,32 +173,33 @@ const {
 	primaryActionText: primaryActionTextEmpty,
 } = useTableEmpty({
 	dataList,
-	filters: filtersValue,
+	filters: computed(() => filtersManager.value.getAllValues()),
 	error,
 	isLoading,
 });
 
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-	flushSubscribers();
-	resetFilters();
-});
-
-const add = () => {
-	return router.push({
-		...route,
+const add = () =>
+	router.push({
+		name: route.name,
 		params: {
+			...route.params,
 			closeReasonsId: 'new',
 		},
+		query: route.query,
 	});
-};
+
+const edit = (item) =>
+	router.push({
+		name: route.name,
+		params: {
+			...route.params,
+			closeReasonsId: item.id,
+		},
+		query: route.query,
+	});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style
+  lang="scss"
+  scoped
+></style>

@@ -22,10 +22,9 @@
         style="display: contents"
       >
         <contact-popup
-          :id="id"
+          :id="contactId"
           :shown="isContactPopup"
-          :namespace="baseNamespace"
-          @saved="loadItem"
+          @saved="onContactSaved"
           @close="isContactPopup = false"
         />
         <delete-confirmation-popup
@@ -36,68 +35,61 @@
         />
         <div class="opened-contact-content">
           <opened-contact-general
-            :name="itemInstance.name"
-            :timezones="itemInstance.timezones ? itemInstance.timezones : []"
-            :managers="itemInstance.managers ? itemInstance.managers : []"
-            :groups="itemInstance.groups"
-            :user="itemInstance.user"
-            :about="itemInstance.about"
-            :labels="itemInstance.labels ? itemInstance.labels : []"
+            v-if="originalItemInstance"
+            :model-value="originalItemInstance"
             @edit="isContactPopup = true"
             @delete="
               askDeleteConfirmation({
-                deleted: [itemInstance],
-                callback: () => deleteContact(itemInstance),
+                deleted: [originalItemInstance],
+                callback: deleteContact,
               })
             "
           />
-          <opened-contact-tabs :namespace="namespace" />
+          <opened-contact-tabs />
         </div>
       </div>
     </template>
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ContactsAPI } from '@webitel/api-services/api';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
+import { useContactEditAccessControl } from '../composables/useContactEditAccessControl';
+import { useContactCardStore } from '../stores/card/contactCardStore';
 import ContactPopup from './contact-popup.vue';
 import OpenedContactGeneral from './opened-contact-general.vue';
 import OpenedContactTabs from './opened-contact-tabs.vue';
 
-const baseNamespace = 'contacts';
-const isReadOnly = inject('isReadOnly');
+const { isReadOnly } = useContactEditAccessControl();
 
-const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
 
-const {
-	namespace,
-	id,
-	itemInstance,
+const contactCardStore = useContactCardStore();
+const { itemId, originalItemInstance } = storeToRefs(
+	contactCardStore as unknown as StoreGeneric,
+);
+const { initialize: initializeContactCard, $reset: resetContactCard } =
+	contactCardStore;
+const contactId = computed(() => itemId.value as string | null);
 
-	loadItem,
-	setId,
-	resetState,
-	deleteItem,
-} = useCardStore(baseNamespace, {
-	onLoadErrorHandler: handleError,
-});
+const isLoading = ref(true);
 
 provide(
 	'access',
 	computed(() => ({
-		hasRbacEditAccess: itemInstance.value?.access?.edit,
-		hasRbacDeleteAccess: itemInstance.value?.access?.delete,
+		hasRbacEditAccess: originalItemInstance.value?.access?.edit,
+		hasRbacDeleteAccess: originalItemInstance.value?.access?.delete,
 	})),
 );
 
@@ -112,8 +104,6 @@ const {
 
 const isContactPopup = ref(false);
 
-const isLoading = ref(true);
-
 const path = computed(() => {
 	const baseUrl = '/contacts';
 
@@ -127,8 +117,8 @@ const path = computed(() => {
 			route: baseUrl,
 		},
 		{
-			name: itemInstance.value?.name || 'Contact',
-			route: `/contacts/${id.value}`,
+			name: originalItemInstance.value?.name || 'Contact',
+			route: `/contacts/${itemId.value}`,
 		},
 	];
 });
@@ -137,22 +127,15 @@ async function initializeCard() {
 	try {
 		isLoading.value = true;
 
-		const { id: itemId } = route.params;
-		await setId(itemId);
-		await loadItem();
+		await initializeContactCard({
+			itemId: route.params.id as string,
+		});
 
-		/**
-		 * @author Oleksandr Palonnyi
-		 *
-		 * [WTEL-6929](https://webitel.atlassian.net/browse/WTEL-6929)
-		 *
-		 * we need to set parentId as itemInstance.id because in readOnly mode we have etag instead of id in route params
-		 * and the rest of request do not work with etag
-		 *
-		 * */
-		if (isReadOnly) {
-			await setId(itemInstance.value?.id);
+		if (isReadOnly && originalItemInstance.value?.id) {
+			itemId.value = originalItemInstance.value.id;
 		}
+	} catch (err) {
+		handleError(err);
 	} finally {
 		setTimeout(() => {
 			isLoading.value = false;
@@ -162,13 +145,24 @@ async function initializeCard() {
 
 const { close } = useClose('contacts');
 
-async function deleteContact(item) {
-	await deleteItem(item);
+async function deleteContact() {
+	await ContactsAPI.delete({
+		id: itemId.value,
+	});
 	close();
 }
 
+async function onContactSaved() {
+	isContactPopup.value = false;
+	await initializeContactCard({
+		itemId: itemId.value as string,
+	});
+}
+
 onMounted(() => initializeCard());
-onUnmounted(() => resetState());
+onUnmounted(() => {
+	resetContactCard();
+});
 </script>
 
 <style lang="scss" scoped>

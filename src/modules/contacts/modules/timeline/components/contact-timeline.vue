@@ -7,24 +7,16 @@
 </template>
 
 <script setup lang="ts">
-import getNamespacedState from '@webitel/ui-sdk/src/store/helpers/getNamespacedState';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { type StoreGeneric, storeToRefs } from 'pinia';
 
 import TheTimeline from '../../../../timeline/components/the-timeline.vue';
 import { TimelineMode } from '../../../../timeline/enums/TimelineMode';
+import { useContactCardStore } from '../../../stores/card/contactCardStore';
 
-interface Props {
-	namespace: string;
-}
-
-const props = defineProps<Props>();
-
-const store = useStore();
-
-const parentId = computed(() => {
-	return getNamespacedState(store.state, props.namespace).itemId;
-});
+const contactCardStore = useContactCardStore();
+const { itemId: parentId } = storeToRefs(
+	contactCardStore as unknown as StoreGeneric,
+);
 </script>
 
 <style scoped lang="scss">

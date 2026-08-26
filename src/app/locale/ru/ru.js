@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Добавить электронный адрес',
 				editTitle: 'Редактировать электронный адрес',
-				dummy: 'Электронные адреса еще не добавлены',
+				empty: 'Электронные адреса еще не добавлены',
 			},
 			phones: {
 				addTitle: 'Добавить номер телефона',
 				editTitle: 'Редактировать номер телефона',
-				dummy: 'Телефонные номера еще не добавлены',
+				empty: 'Телефонные номера еще не добавлены',
 			},
 			messaging: {
 				gateway: 'Шлюз',
 				provider: 'Провайдер',
 				username: 'Имя пользователя',
-				dummy: 'Пока еще не было текстовых диалогов',
+				empty: 'Пока еще не было текстовых диалогов',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Бот',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Приложение',

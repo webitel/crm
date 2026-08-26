@@ -25,7 +25,7 @@
           :text="textEmpty"
         />
 
-        <div v-show="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
+        <div v-if="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
           <wt-table
             :data="dataList"
             :headers="headers"
@@ -107,7 +107,7 @@ import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { createAddContactsInGroupComposableTableStore } from '../stores/addContactsInGroup';
+import { createAddContactsInGroupDatalistStore } from '../stores/datalist/addContactsInGroupDatalistStore';
 import AddContactInGroupSearchBar from './add-contact-in-group-search-bar.vue';
 import AddContactsInGroupFiltersPanel from './add-contacts-in-group-filters-panel.vue';
 
@@ -121,7 +121,7 @@ const emit = defineEmits([
 
 const { t } = useI18n();
 
-const useTableStore = createAddContactsInGroupComposableTableStore();
+const useTableStore = createAddContactsInGroupDatalistStore();
 const tableStore = useTableStore();
 const isFirstLoad = ref(false);
 
@@ -159,6 +159,7 @@ const save = async () => {
 };
 
 function close() {
+	updateSelected([]);
 	emit('close');
 }
 </script>

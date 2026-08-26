@@ -2,6 +2,15 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+	resolve: {
+		dedupe: [
+			'vue',
+			'@vue/compat',
+			'zod',
+			'pinia',
+			'vidstack',
+		],
+	},
 	plugins: [
 		vue({
 			template: {

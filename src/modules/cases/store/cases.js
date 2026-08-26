@@ -47,6 +47,7 @@ const resetCardState = {
 		subject: '',
 		reactedAt: '',
 		resolvedAt: '',
+		custom: {},
 	},
 };
 

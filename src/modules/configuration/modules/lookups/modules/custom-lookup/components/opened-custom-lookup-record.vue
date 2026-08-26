@@ -54,9 +54,9 @@
 <script setup>
 import { useVuelidate } from '@vuelidate/core';
 import { AdjunctTypesAPI } from '@webitel/api-services/api';
+import { useCardTabs } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/index';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';

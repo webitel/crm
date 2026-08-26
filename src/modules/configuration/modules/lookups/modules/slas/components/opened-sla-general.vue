@@ -7,121 +7,102 @@
     </header>
     <div class="opened-card-input-grid">
       <wt-input-text
+        v-model:model-value="modelValue.name"
         :label="t('reusable.name')"
-        :model-value="itemInstance.name"
-        :v="v.itemInstance.name"
+        :regle-validation="validationFields?.name"
         :disabled="disableUserInput"
         required
-        @update:model-value="setItemProp({ path: 'name', value: $event })"
       />
 
       <wt-single-select
+        v-model:model-value="modelValue.calendar"
         :label="t('objects.calendar')"
         :search-method="hasCalendarsReadAccess && loadCalendarsList"
-        :model-value="itemInstance.calendar"
-        :v="v.itemInstance.calendar"
+        :regle-validation="validationFields?.calendar"
         :disabled="disableUserInput || !hasCalendarsReadAccess"
         required
-        @update:model-value="setItemProp({ path: 'calendar', value: $event })"
       />
 
       <wt-textarea
+        v-model:model-value="modelValue.description"
         :label="t('vocabulary.description')"
         :disabled="disableUserInput"
-        :model-value="itemInstance.description"
-        @update:model-value="setItemProp({ path: 'description', value: $event })"
       />
 
       <div class="opened-card-input-grid opened-sla-general__wrapper">
         <wt-timepicker
+          :model-value="modelValue.reactionTime"
           :label="t('lookups.slas.reactionTime')"
-          :model-value="itemInstance.reactionTime"
-          :v="v.itemInstance.reactionTime"
+          :regle-validation="validationFields?.reactionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'reactionTime', value: +$event })"
+          @update:model-value="modelValue.reactionTime = String($event)"
         />
 
         <wt-timepicker
+          :model-value="modelValue.resolutionTime"
           :label="t('lookups.slas.resolutionTime')"
-          :model-value="itemInstance.resolutionTime"
-          :v="v.itemInstance.resolutionTime"
+          :regle-validation="validationFields?.resolutionTime"
           :disabled="disableUserInput"
           format="hh:mm"
           required
-          @update:model-value="setItemProp({ path: 'resolutionTime', value: +$event })"
+          @update:model-value="modelValue.resolutionTime = String($event)"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
-          :model-value="itemInstance.validFrom"
+          :model-value="modelValue.validFrom"
           :disabled="disableUserInput"
-          :v="v.itemInstance.validFrom"
-          :custom-validators="customValidation"
+          :regle-validation="validationFields?.validFrom"
           show-time
           clearable
-          @update:model-value="setItemProp({ path: 'validFrom', value: +$event })"
+          @update:model-value="modelValue.validFrom = String($event)"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
-          :model-value="itemInstance.validTo"
+          :model-value="modelValue.validTo"
           :disabled="disableUserInput"
+          :regle-validation="validationFields?.validTo"
           show-time
           clearable
-          @update:model-value="setItemProp({ path: 'validTo', value: +$event })"
+          @update:model-value="onValidToChange"
         />
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { CalendarsAPI } from '@webitel/api-services/api';
+import type { WebitelCasesSLA } from '@webitel/api-services/gen/models';
+import type { CardValidationFields } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/store';
-import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	v: {
-		type: Object,
-		required: true,
-	},
-});
+const modelValue = defineModel<WebitelCasesSLA>();
+
+const props = defineProps<{
+	validationFields?: CardValidationFields<WebitelCasesSLA>;
+}>();
 
 const { t } = useI18n();
-
 const { disableUserInput } = useUserAccessControl();
 const { hasReadAccess: hasCalendarsReadAccess } = useUserAccessControl(
 	WtObject.Calendar,
 );
 
-const { itemInstance, setItemProp } = useCardStore(props.namespace);
-
 function loadCalendarsList(search) {
 	return CalendarsAPI.getLookup(search);
 }
 
-const customValidation = computed(() => {
-	if (!itemInstance.value.validTo) return [];
-
-	return [
-		{
-			name: 'maxValue',
-			text: t('validation.maxValue', {
-				max: new Date(itemInstance.value.validTo).toLocaleString(),
-			}),
-		},
-	];
-});
+function onValidToChange(value?: number) {
+	modelValue.value.validTo = String(value);
+	props.validationFields?.validFrom?.$touch();
+}
 </script>
 
 <style lang="scss" scoped>
