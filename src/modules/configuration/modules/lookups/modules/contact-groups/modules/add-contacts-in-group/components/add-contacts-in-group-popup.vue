@@ -25,7 +25,7 @@
           :text="textEmpty"
         />
 
-        <div v-show="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
+        <div v-if="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
           <wt-table
             :data="dataList"
             :headers="headers"
