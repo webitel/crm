@@ -159,6 +159,7 @@ const save = async () => {
 };
 
 function close() {
+	updateSelected([]);
 	emit('close');
 }
 </script>
