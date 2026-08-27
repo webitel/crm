@@ -1,5 +1,5 @@
-import { computed } from 'vue';
 import type { Ref } from 'vue';
+import { computed } from 'vue';
 
 import type { TaskPoint } from '../stores/createTaskPointsHistoryStore';
 
