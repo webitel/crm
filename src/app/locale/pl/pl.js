@@ -63,6 +63,9 @@ export default {
 			transcription: 'Transkrypcja',
 			showInfo: 'Pokaż informacje',
 		},
+		info: {
+			title: 'Informacje',
+		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Rozpoczęte',
 			[TimelineTaskStatusEnum.MISSED]: 'Nieodebrane',

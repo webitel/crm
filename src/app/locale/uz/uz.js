@@ -63,6 +63,9 @@ export default {
 			transcription: 'Transkripsiya',
 			showInfo: "Ma'lumotni ko'rsatish",
 		},
+		info: {
+			title: "Ma'lumot",
+		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Boshlandi',
 			[TimelineTaskStatusEnum.MISSED]: "O'tkazib yuborildi",

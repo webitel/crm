@@ -63,6 +63,9 @@ export default {
 			transcription: 'Transcriere',
 			showInfo: 'Afișează informații',
 		},
+		info: {
+			title: 'Informații',
+		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Început',
 			[TimelineTaskStatusEnum.MISSED]: 'Ratat',

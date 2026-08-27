@@ -63,6 +63,9 @@ export default {
 			transcription: 'Транскрипция',
 			showInfo: 'Ақпаратты көрсету',
 		},
+		info: {
+			title: 'Ақпарат',
+		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Басталды',
 			[TimelineTaskStatusEnum.MISSED]: 'Өткізіп жіберілді',

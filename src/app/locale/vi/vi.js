@@ -63,6 +63,9 @@ export default {
 			transcription: 'Bản ghi âm',
 			showInfo: 'Hiển thị thông tin',
 		},
+		info: {
+			title: 'Thông tin',
+		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Đã bắt đầu',
 			[TimelineTaskStatusEnum.MISSED]: 'Bỏ lỡ',
