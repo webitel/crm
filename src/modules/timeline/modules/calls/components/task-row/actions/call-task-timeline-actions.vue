@@ -12,7 +12,7 @@
     />
 
     <timeline-action-menu
-      :id="task.id"
+      :task="task"
     />
   </div>
 </template>

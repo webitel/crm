@@ -51,7 +51,7 @@
         </div>
 
         <timeline-action-menu
-          :id="task.id"
+          :task="task"
         />
       </task-timeline-row-content-wrapper>
     </template>
