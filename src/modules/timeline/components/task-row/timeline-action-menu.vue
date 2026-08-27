@@ -22,12 +22,14 @@
   <timeline-task-info-modal
     v-model:shown="showInfoModal"
     :task="task"
+    :parent-id="parentId"
   />
 </template>
 
 <script setup>
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 
 import TimelineTaskInfoModal from '../task-info/timeline-task-info-modal.vue';
 
@@ -39,6 +41,10 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+
+const store = useStore();
+
+const parentId = computed(() => store.getters['timeline/PARENT_ID']);
 
 const showInfoModal = ref(false);
 

@@ -14,10 +14,12 @@
         @change="changeTab"
       />
 
-      <div class="timeline-task-info-modal__content">
+      <wt-loader v-if="isLoading" />
+
+      <div v-else class="timeline-task-info-modal__content">
         <timeline-task-info-variables
           v-if="currentTab.value === 'variables'"
-          :task="task"
+          :variables="info?.variables"
         />
       </div>
     </template>
@@ -25,18 +27,23 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import TimelineAPI from '../../api/TimelineAPI';
 import TimelineTaskInfoVariables from './timeline-task-info-variables.vue';
 
-defineProps({
+const props = defineProps({
 	shown: {
 		type: Boolean,
 		default: false,
 	},
 	task: {
 		type: Object,
+		required: true,
+	},
+	parentId: {
+		type: String,
 		required: true,
 	},
 });
@@ -59,6 +66,32 @@ const currentTab = ref(tabs.value[0]);
 function changeTab(tab) {
 	currentTab.value = tab;
 }
+
+const mode = inject('mode');
+
+const info = ref(null);
+const isLoading = ref(false);
+
+async function loadInfo() {
+	isLoading.value = true;
+	try {
+		info.value = await TimelineAPI.getInfo({
+			mode,
+			parentId: props.parentId,
+			type: props.task.type,
+			id: props.task.id,
+		});
+	} finally {
+		isLoading.value = false;
+	}
+}
+
+watch(
+	() => props.shown,
+	(shown) => {
+		if (shown) loadInfo();
+	},
+);
 </script>
 
 <style scoped>

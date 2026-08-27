@@ -8,19 +8,17 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 defineProps({
-	task: {
-		type: Object,
-		required: true,
+	variables: {
+		type: Array,
+		default: () => [],
 	},
 });
 
 const { t } = useI18n();
-
-const variables = ref([]);
 
 const headers = computed(() => [
 	{
