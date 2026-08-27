@@ -21,6 +21,10 @@
           v-if="currentTab.value === 'variables'"
           :variables="info?.variables"
         />
+        <timeline-task-info-postprocessing
+          v-if="currentTab.value === 'postprocessing'"
+          :postprocessing="info?.postprocessing"
+        />
       </div>
     </template>
   </wt-popup>
@@ -31,6 +35,7 @@ import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import TimelineAPI from '../../api/TimelineAPI';
+import TimelineTaskInfoPostprocessing from './timeline-task-info-postprocessing.vue';
 import TimelineTaskInfoVariables from './timeline-task-info-variables.vue';
 
 const props = defineProps({
@@ -58,6 +63,10 @@ const tabs = computed(() => [
 	{
 		text: t('vocabulary.variables', 2),
 		value: 'variables',
+	},
+	{
+		text: t('timeline.info.postprocessing'),
+		value: 'postprocessing',
 	},
 ]);
 
