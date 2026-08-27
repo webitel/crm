@@ -33,7 +33,7 @@
     </div>
     <wt-button
       v-if="editMode"
-      :disabled="disableUserInput"
+      :disabled="disableUserInput || !hasServiceCatalogReadAccess"
       class="case-service__button"
       color="success"
       @click="isServicePopup = true"
@@ -45,6 +45,7 @@
 
 <script setup>
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { computed, inject, onUnmounted, ref, watch } from 'vue';
@@ -62,6 +63,12 @@ const editMode = inject('editMode');
 const isReadOnly = inject('isReadOnly');
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasServiceCatalogReadAccess } = useUserAccessControl(
+	WtObject.ServiceCatalog,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
 
 const {
 	namespace: cardNamespace,
@@ -147,6 +154,8 @@ const setDefaultPriority = async ({ catalog, service }) => {
 			value: defaultPriority,
 		});
 	} else {
+		if (!hasPrioritiesReadAccess.value) return;
+
 		const firstDefaultPriority = (await CasePrioritiesAPI.getLookup({}))
 			.items[0];
 

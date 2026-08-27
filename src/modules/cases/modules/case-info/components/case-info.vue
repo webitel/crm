@@ -51,8 +51,8 @@
             v-bind="props"
             :model-value="props.value"
             :v="v$.value.itemInstance.source"
-            :disabled="disableUserInput"
-            :search-method="CaseSourcesAPI.getLookup"
+            :disabled="disableUserInput || !hasSourcesReadAccess"
+            :search-method="hasSourcesReadAccess && CaseSourcesAPI.getLookup"
             @update:model-value="props.updateValue($event)"
           />
         </template>
@@ -116,6 +116,9 @@ const { disableUserInput } = useUserAccessControl();
 const { hasReadAccess: hasCaseCommentsReadAccess } = useUserAccessControl({
 	resource: WtObject.CaseComment,
 });
+const { hasReadAccess: hasSourcesReadAccess } = useUserAccessControl(
+	WtObject.Source,
+);
 
 const { itemInstance, setItemProp, id } = useCardStore(props.namespace);
 
