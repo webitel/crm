@@ -10,11 +10,12 @@
 
 <script setup lang="ts">
 import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
+import type { CsvMappingField } from '@webitel/ui-sdk/src/modules/UploadCsvPopup';
 import WtUploadCsvPopup from '@webitel/ui-sdk/src/modules/UploadCsvPopup/components/wt-upload-csv-popup.vue';
 import { ref, watch } from 'vue';
 
 import { useCsvImportResult } from '../composables/useCsvImportResult';
-import { type CsvMappingField, type LookupCsvField } from '../types/csvImport';
+import { type LookupCsvField } from '../types/csvImport';
 import { prepareCsvLookupRows } from '../utils/prepareCsvLookupRows';
 
 const props = defineProps<{
