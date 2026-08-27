@@ -12,7 +12,7 @@
           :dark-mode="darkMode"
           :logo-href="startPageHref"
         />
-        <wt-dark-mode-switcher @changed-mode="appearanceStore.setTheme" />
+        <wt-dark-mode-switcher @changed-mode="setTheme" />
         <wt-app-navigator
           :apps="apps"
           :current-app="currentApp"
@@ -51,7 +51,11 @@ const build = import.meta.env.VITE_BUILD_NUMBER;
 
 const appearanceStore = useAppearanceStore();
 const { darkMode } = storeToRefs(appearanceStore);
+const { setTheme } = useAppearanceStore();
+
 const navStore = useNavStore();
+const { initializeNav } = navStore;
+const { nav } = storeToRefs(navStore);
 
 const currentApp = WtApplication.Crm;
 
@@ -64,9 +68,7 @@ const shouldHideHeader = computed(() => !!route.meta.hideHeader);
 const startPageHref = computed(() => import.meta.env.VITE_APPLICATION_HUB_URL);
 
 // Initialize nav, if not initialized yet
-navStore.initializeNav();
-
-const { nav } = storeToRefs(navStore);
+initializeNav();
 
 const accessibleNav = computed(() =>
 	nav.value.filter(({ disabled }) => !disabled),

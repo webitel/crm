@@ -52,7 +52,7 @@ import {
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -73,7 +73,8 @@ const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
 	WtObject.Priorities,
 );
 
-const { itemId } = storeToRefs(useCasesCardStore() as unknown as StoreGeneric);
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore);
 const { modelValue } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,
@@ -87,6 +88,7 @@ const isSlaRecalculationPopup = ref(false);
 const catalogData = ref(null);
 
 const caseServiceStore = useCaseServiceStore();
+const { setService, setCatalog, $reset } = caseServiceStore;
 
 const hasServiceValidationError = computed(() => {
 	if (isReadOnly) return false; // skip errors on read-only mode
@@ -159,8 +161,8 @@ async function addServiceToStore(serviceCatalogData) {
 		return console.error('No serviceCatalogData provided');
 
 	const { service, catalog } = serviceCatalogData;
-	caseServiceStore.setService(service);
-	caseServiceStore.setCatalog(catalog);
+	setService(service);
+	setCatalog(catalog);
 
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
@@ -229,7 +231,7 @@ watch(
 );
 
 onUnmounted(() => {
-	caseServiceStore.$reset();
+	$reset();
 	catalogData.value = null;
 });
 </script>

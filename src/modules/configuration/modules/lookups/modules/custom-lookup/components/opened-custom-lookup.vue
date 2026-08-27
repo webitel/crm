@@ -70,6 +70,7 @@ const repo = computed(() => route.params.repo as string);
 const { hasSaveActionAccess, disableUserInput } = useUserAccessControl();
 
 const cardStore = useCustomLookupCardStore();
+const { initialize, $reset } = cardStore;
 
 const {
 	modelValue,
@@ -152,14 +153,14 @@ watch(
 	async ([newRepo, id]) => {
 		if (!newRepo) return;
 
-		cardStore.$reset();
+		$reset();
 
 		dictionary.value = await AdjunctTypesAPI.get({
 			itemId: newRepo as string,
 		});
 		customLookupFields.value = dictionary.value?.fields ?? [];
 
-		await cardStore.initialize({
+		await initialize({
 			itemId: id as string,
 			parentId: newRepo as string,
 		});
@@ -170,7 +171,7 @@ watch(
 );
 
 onUnmounted(() => {
-	cardStore.$reset();
+	$reset();
 });
 </script>
 

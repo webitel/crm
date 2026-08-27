@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import { CustomLookupAPI } from '../../api/customLookup';
 import { CustomLookupNamespace } from '../../namespace';
-import { buildCustomLookupValidationSchema } from '../../validations/buildCustomLookupValidationSchema';
+import { buildCustomLookupValidationSchema } from '../../validations/customLookup.validations';
 import { customLookupFields } from '../_internals/customLookupFields';
 
 export const useCustomLookupCardStore = createCardStore({

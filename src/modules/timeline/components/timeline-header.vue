@@ -37,6 +37,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const timelineStore = useTimelineStore();
+const { getCounters } = timelineStore;
 const eventBus = useEventBus();
 
 const { d, t } = useI18n();
@@ -72,7 +73,7 @@ async function loadCounters() {
 		callsCount: sourceCallsCount,
 		chatsCount: sourceChatsCount,
 		emailsCount: sourceEmailsCount,
-	} = await timelineStore.getCounters(props.parentId);
+	} = await getCounters(props.parentId);
 
 	callsCount.value = sourceCallsCount;
 	chatsCount.value = sourceChatsCount;

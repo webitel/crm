@@ -16,7 +16,6 @@
       :store="useContactPermissionsStore"
       :parent-id="itemId"
       :item-instance="draftItemInstance"
-      :validation-fields="validationFields"
     />
   </article>
 </template>
@@ -24,7 +23,7 @@
 <script setup lang="ts">
 import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -38,9 +37,7 @@ import { useContactCardStore } from '../stores/card/contactCardStore';
 import { useContactPermissionsStore } from '../stores/permissions/contactPermissionsStore';
 
 const contactCardStore = useContactCardStore();
-const { itemId, draftItemInstance, validationFields } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId, draftItemInstance } = storeToRefs(contactCardStore);
 
 const { hasContactEditAccess } = useContactEditAccessControl();
 

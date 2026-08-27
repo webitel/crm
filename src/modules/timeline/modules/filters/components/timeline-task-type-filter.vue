@@ -44,6 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const timelineStore = useTimelineStore();
 const { typeFilter } = storeToRefs(timelineStore);
+const { setTypeFilter } = timelineStore;
 
 function toggleFilterValue(value: TimelineEventType) {
 	const newValue = typeFilter.value.includes(value)
@@ -53,7 +54,7 @@ function toggleFilterValue(value: TimelineEventType) {
 				value,
 			];
 
-	return timelineStore.setTypeFilter(newValue);
+	return setTypeFilter(newValue);
 }
 
 const filters = computed(() => [

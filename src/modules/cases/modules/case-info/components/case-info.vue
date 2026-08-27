@@ -88,7 +88,7 @@ import { CaseSourcesAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -110,7 +110,8 @@ const { hasReadAccess: hasSourcesReadAccess } = useUserAccessControl(
 	WtObject.Source,
 );
 
-const { itemId } = storeToRefs(useCasesCardStore() as unknown as StoreGeneric);
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore);
 const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,

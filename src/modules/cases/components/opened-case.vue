@@ -58,7 +58,7 @@ import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
@@ -96,7 +96,8 @@ const { isEditable, isReadOnly } = useCaseAccessState();
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
 
 const casesCardStore = useCasesCardStore();
-const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
+const { itemId } = storeToRefs(casesCardStore);
+const { initialize } = casesCardStore;
 
 const {
 	modelValue: itemInstance,
@@ -132,7 +133,7 @@ watch(
 	() => originalItemInstance.value?.id,
 	(value) => {
 		if (value && isReadOnly) {
-			casesCardStore.itemId = value;
+			itemId.value = value;
 		}
 	},
 );
@@ -221,7 +222,7 @@ async function assignCaseToMe() {
 				etag: itemInstance.value.etag,
 			});
 		} finally {
-			await casesCardStore.initialize({
+			await initialize({
 				itemId: itemId.value,
 			});
 		}

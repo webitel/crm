@@ -46,6 +46,7 @@ const route = useRoute();
 const repo = computed(() => route.params.id as string);
 
 const cardStore = useFieldExtensionsCardStore();
+const { initialize, $reset } = cardStore;
 
 const {
 	modelValue,
@@ -89,8 +90,8 @@ watch(
 	(newRepo) => {
 		if (!newRepo) return;
 
-		cardStore.$reset();
-		cardStore.initialize({
+		$reset();
+		initialize({
 			itemId: newRepo,
 		});
 	},
@@ -100,7 +101,7 @@ watch(
 );
 
 onUnmounted(() => {
-	cardStore.$reset();
+	$reset();
 });
 </script>
 

@@ -45,7 +45,7 @@ import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
 import { isEmpty } from '@webitel/ui-sdk/scripts';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -68,7 +68,8 @@ const disableStatusSelect = computed(
 );
 
 const casesCardStore = useCasesCardStore();
-const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
+const { itemId } = storeToRefs(casesCardStore);
+const { initialize } = casesCardStore;
 const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,
@@ -98,7 +99,7 @@ const startChangingStatusToFinal = (statusCondition) => {
 };
 
 async function reloadCase() {
-	await casesCardStore.initialize({
+	await initialize({
 		itemId: itemId.value,
 	});
 }

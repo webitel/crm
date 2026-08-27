@@ -110,7 +110,7 @@ import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -136,7 +136,8 @@ const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
 	WtObject.ContactGroup,
 );
 
-const { itemId } = storeToRefs(useCasesCardStore() as unknown as StoreGeneric);
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore);
 const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,

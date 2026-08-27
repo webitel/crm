@@ -22,7 +22,6 @@
           :store="useCasePermissionsStore"
           :parent-id="itemId"
           :item-instance="draftItemInstance"
-          :validation-fields="validationFields"
         />
       </keep-alive>
     </router-view>
@@ -32,7 +31,7 @@
 <script setup lang="ts">
 import { type CardTab, useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -56,9 +55,7 @@ const { hasReadAccess: hasRolesReadAccess } = useUserAccessControl(
 provide('hasRolesReadAccess', hasRolesReadAccess);
 
 const casesCardStore = useCasesCardStore();
-const { itemId, draftItemInstance, validationFields } = storeToRefs(
-	casesCardStore as unknown as StoreGeneric,
-);
+const { itemId, draftItemInstance } = storeToRefs(casesCardStore);
 
 const actionAllow = computed(
 	() => !disableUserInput.value && isEditable.value && !isReadOnly,

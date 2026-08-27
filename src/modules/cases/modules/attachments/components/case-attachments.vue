@@ -5,14 +5,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 
 import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import CaseFiles from '../modules/files/components/case-files.vue';
 import CaseLinks from '../modules/links/components/case-links.vue';
 
 const casesCardStore = useCasesCardStore();
-const { itemId } = storeToRefs(casesCardStore as unknown as StoreGeneric);
+const { itemId } = storeToRefs(casesCardStore);
 </script>
 <style lang="scss" scoped>
 </style>

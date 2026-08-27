@@ -72,8 +72,15 @@ export const useTimelineStore = defineStore('timeline', () => {
 
 	const { dataList, page, size, next, isLoading, filtersManager } =
 		storeToRefs(tableStore);
-	const { hasFilter, addFilter, updateFilter, updateSize, appendToDataList } =
-		tableStore;
+	const {
+		hasFilter,
+		addFilter,
+		updateFilter,
+		updateSize,
+		appendToDataList,
+		$patch,
+		initialize: initializeTable,
+	} = tableStore;
 
 	const parentId = ref<string | null>(null);
 	const mode = ref<TimelineMode | null>(null);
@@ -135,7 +142,7 @@ export const useTimelineStore = defineStore('timeline', () => {
 	}
 
 	function resetState() {
-		tableStore.$patch({
+		$patch({
 			dataList: [],
 			page: 1,
 			size: 15,
@@ -180,7 +187,7 @@ export const useTimelineStore = defineStore('timeline', () => {
 
 		updateSize(15);
 
-		return tableStore.initialize({
+		return initializeTable({
 			parentId: newParentId,
 		});
 	}

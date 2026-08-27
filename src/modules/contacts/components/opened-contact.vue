@@ -60,7 +60,7 @@ import {
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -79,9 +79,7 @@ const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
 
 const contactCardStore = useContactCardStore();
-const { itemId, originalItemInstance } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId, originalItemInstance } = storeToRefs(contactCardStore);
 const { initialize: initializeContactCard, $reset: resetContactCard } =
 	contactCardStore;
 const contactId = computed(() => itemId.value as string | null);

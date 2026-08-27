@@ -199,7 +199,7 @@ import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { prettifyDate } from '@webitel/ui-sdk/utils';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -218,9 +218,7 @@ const { t } = useI18n();
 const isReadOnly = inject('isReadOnly');
 
 const contactCardStore = useContactCardStore();
-const { itemId: parentId } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId: parentId } = storeToRefs(contactCardStore);
 
 const tableStore = useContactCasesDatalistStore();
 

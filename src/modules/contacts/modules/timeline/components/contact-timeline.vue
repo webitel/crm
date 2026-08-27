@@ -1,21 +1,19 @@
 <template>
   <the-timeline
-    v-if="parentId"
-    :parent-id="parentId"
+    v-if="itemId"
+    :parent-id="itemId"
     :mode="TimelineMode.Contact"
   />
 </template>
 
 <script setup lang="ts">
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import TheTimeline from '../../../../timeline/components/the-timeline.vue';
 import { TimelineMode } from '../../../../timeline/enums/TimelineMode';
 import { useContactCardStore } from '../../../stores/card/contactCardStore';
 
 const contactCardStore = useContactCardStore();
-const { itemId: parentId } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId } = storeToRefs(contactCardStore);
 </script>
 
 <style scoped lang="scss">
