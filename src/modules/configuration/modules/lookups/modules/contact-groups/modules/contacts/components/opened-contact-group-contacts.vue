@@ -48,7 +48,7 @@
 
       <template #actions="{ item }">
         <wt-icon-action
-          :disabled="!item.access.delete"
+          :disabled="!getContactAccessFromMode(item.mode).delete"
           action="delete"
           @click="
             askDeleteConfirmation({
@@ -62,7 +62,10 @@
   </section>
 </template>
 <script setup lang="ts">
-import { ContactGroupsAPI } from '@webitel/api-services/api';
+import {
+	ContactGroupsAPI,
+	getContactAccessFromMode,
+} from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
