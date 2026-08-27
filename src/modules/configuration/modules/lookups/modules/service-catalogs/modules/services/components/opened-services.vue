@@ -48,7 +48,7 @@ import { useI18n } from 'vue-i18n';
 import { type RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName';
 import { useCaseServicesCardStore } from '../stores';
 
 const { t } = useI18n();

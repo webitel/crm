@@ -22,11 +22,13 @@ function listHandler(days) {
 	if (!copy.length) return [];
 	return copy.map((day) => ({
 		...day,
-		items: day.items.map((item) => ({
-			...item[item.type || TimelineEventType.Chat],
-			type: item.type || TimelineEventType.Chat,
-			createdAt: item.createdAt,
-		})),
+		items: day.items
+			.map((item) => ({
+				...item[item.type || TimelineEventType.Chat],
+				type: item.type || TimelineEventType.Chat,
+				createdAt: item.createdAt,
+			}))
+			.filter((item) => typeof item.id === 'string'),
 	}));
 }
 

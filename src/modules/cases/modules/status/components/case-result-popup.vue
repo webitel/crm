@@ -12,13 +12,13 @@
         v-model:model-value="draft.reason"
         :label="t('cases.closureReason')"
         :search-method="searchCloseReasons"
-        :v="reasonValidation"
+        :regle-validation="validationFields.reason"
         required
       />
 
       <wt-textarea
         :label="t('cases.result')"
-        :v="resultValidation"
+        :regle-validation="validationFields.result"
         :rows="10"
         :model-value="draft.result"
         required
@@ -27,7 +27,7 @@
     </template>
     <template #actions>
       <wt-button
-        :disabled="v$.$invalid"
+        :disabled="hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.ok') }}
@@ -43,97 +43,60 @@
 </template>
 
 <script lang="ts" setup>
-import { type BaseValidation, useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { useRegleSchema } from '@regle/schemas';
 import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
+import {
+	type CaseClose,
+	caseCloseSchema,
+} from '@webitel/api-services/validations';
 import { WtTextarea } from '@webitel/ui-sdk/components';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { computed, reactive, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 
-const createDraftData = () => ({
+import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
+
+const createDraftData = (): CaseClose => ({
 	reason: null,
 	result: null,
 });
 
-const props = defineProps({
-	shown: {
-		type: Boolean,
-		required: true,
-	},
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+const props = defineProps<{
+	shown: boolean;
+}>();
 
 const emit = defineEmits<{
 	save: [
-		{
-			result: ReturnType<typeof createDraftData>;
-			reason?: string;
-		},
+		CaseClose,
 	];
 	cancel: [];
 }>();
 
-const { namespace: cardNamespace } = useCardStore(props.namespace);
-
-const store = useStore();
-
 const { t } = useI18n();
 
-const draft = reactive(createDraftData());
+const draft = ref<CaseClose>(createDraftData());
 
 watch(
 	() => props.shown,
 	() => {
-		Object.assign(draft, createDraftData());
+		draft.value = createDraftData();
 	},
 );
 
-const v$ = useVuelidate(
-	computed(() => {
-		return {
-			draft: {
-				reason: {
-					required,
-				},
-				result: {
-					required,
-				},
-			},
-		};
+const validationSchema = ref(
+	useRegleSchema(draft, caseCloseSchema, {
+		autoDirty: true,
+		syncState: {
+			onValidate: true,
+		},
 	}),
-	{
-		draft,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
 );
 
-v$.value.$touch();
+const validationFields = computed(() => validationSchema.value.r$.$fields);
+const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
+const validate = () => validationSchema.value.r$.$validate();
 
-// TODO(types): vuelidate cannot infer nested rule keys when rules are
-// passed as a computed, so v$.draft is typed as plain `undefined`.
-const draftValidation = computed(
-	() =>
-		v$.value.draft as
-			| {
-					reason: BaseValidation;
-					result: BaseValidation;
-			  }
-			| undefined,
-);
-const reasonValidation = computed(() => draftValidation.value?.reason);
-const resultValidation = computed(() => draftValidation.value?.result);
-
-const closeReasonId = computed(
-	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
-);
+const { closeReasonId } = storeToRefs(useCaseServiceStore());
 
 async function searchCloseReasons(params) {
 	if (!closeReasonId.value) {
@@ -151,12 +114,11 @@ function cancel() {
 	emit('cancel');
 }
 
-function save() {
-	const finalStatusData = {
-		reason: draft.reason,
-		result: draft.result,
-	};
-	emit('save', finalStatusData);
+async function save() {
+	const { valid, data } = await validate();
+	if (!valid) return;
+
+	emit('save', data);
 }
 </script>
 

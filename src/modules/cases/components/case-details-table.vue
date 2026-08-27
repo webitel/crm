@@ -7,34 +7,34 @@
       :grid-actions="false"
 
     >
-      <template #description="{ item: rowItem }">
-        {{ rowItem.description }}
+      <template #description="{ item }">
+        {{ item.description }}
       </template>
-      <template #comments="{ item: rowItem }">
-        {{ rowItem.text }}
+      <template #comments="{ item }">
+        {{ item.text }}
       </template>
-      <template #author="{ item: rowItem }">
-        {{ rowItem.author }}
+      <template #author="{ item }">
+        {{ item.author }}
       </template>
-      <template #createdAt="{ item: rowItem }">
-        {{ prettifyDate(rowItem.createdAt) }}
+      <template #createdAt="{ item }">
+        {{ prettifyDate(item.createdAt) }}
       </template>
     </wt-table>
   </div>
 </template>
 
-<script setup>
-import { WtTable } from '@webitel/ui-sdk/components';
+<script setup lang="ts">
+import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
-import prettifyDate from '../utils/prettifyDate';
-
-const props = defineProps({
-	item: {
-		type: Object,
-		default: () => ({}),
+const props = withDefaults(
+	defineProps<{
+		item;
+	}>(),
+	{
+		item: () => ({}),
 	},
-});
+);
 
 const headers = [
 	{

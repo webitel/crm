@@ -1,11 +1,12 @@
-import { type ContactEntity, ContactsAPI } from '@webitel/api-services/api';
-import { contactSchema as standardValidationSchema } from '@webitel/api-services/validations';
+import { ContactsAPI } from '@webitel/api-services/api';
+import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { createCardStore } from '@webitel/ui-datalist/card';
 
 import { ContactsNamespace } from '../../namespace';
+import { contactValidationSchema } from '../../validations/contact.validations';
 
-export const useContactCardStore = createCardStore<ContactEntity>({
+export const useContactCardStore = createCardStore<WebitelContactsContact>({
 	namespace: `${ContactsNamespace}/card`,
 	apiModule: ContactsAPI,
-	standardValidationSchema,
+	standardValidationSchema: contactValidationSchema,
 });

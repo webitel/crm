@@ -48,7 +48,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
-import { useCaseSourcesCardStore } from '../stores';
+import { useCaseSourcesCardStore } from '../stores/card/caseSourcesCardStore';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();

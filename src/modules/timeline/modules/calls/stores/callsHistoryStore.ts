@@ -15,6 +15,7 @@ async function getList({ taskId }: { taskId: string }) {
 				'created_at',
 			],
 		},
+		options: {},
 	});
 	return {
 		items: items.reverse(),

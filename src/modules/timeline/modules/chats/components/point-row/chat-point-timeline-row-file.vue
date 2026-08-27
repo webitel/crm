@@ -5,15 +5,14 @@
       />
       <span
         class="chat-point-timeline-row-file__name"
-        @click="downloadFile({ id: file?.id, name: file?.name, type: file?.type, url: file?.url })"
+        @click="downloadStorageFile({ id: file?.id, name: file?.name, type: file?.type, url: file?.url })"
       >{{ props.file.name }}</span>
     </div>
 </template>
 
 <script setup lang="ts">
+import { downloadStorageFile, getFileTypeIcon } from '@webitel/ui-sdk/scripts';
 import { computed } from 'vue';
-
-import downloadFile from '../../../../../../app/utils/downloadFile.js';
 
 const props = defineProps({
 	file: {
@@ -22,12 +21,7 @@ const props = defineProps({
 	},
 });
 
-const icon = computed(() => {
-	if (props.file.type.includes('image')) return 'preview-tag-image';
-	if (props.file.type.includes('video')) return 'preview-tag-video';
-	if (props.file.type.includes('audio')) return 'preview-tag-audio';
-	return 'attach';
-});
+const icon = computed(() => getFileTypeIcon(props.file.type));
 </script>
 
 <style scoped lang="scss">

@@ -137,7 +137,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseSourcesDatalistStore } from '../stores';
+import { useCaseSourcesDatalistStore } from '../stores/datalist/caseSourcesDatalistStore';
 
 const { t } = useI18n();
 const router = useRouter();
