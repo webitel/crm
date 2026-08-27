@@ -94,18 +94,13 @@ const recordingTypeIcon = computed(() => {
 	return hasVideoFile ? 'preview-tag-video' : 'play';
 });
 
-const isPlayableRecording = (file: EngineCallFile) => {
-	if (file.type) {
-		return (
+const recordingFiles = computed(() =>
+	props.files.filter(
+		(file) =>
 			file.type === EngineCallFileType.FileTypeAudio ||
-			file.type === EngineCallFileType.FileTypeVideo
-		);
-	}
-
-	return isMimeTypeAudio(file.mimeType) || isMimeTypeVideo(file.mimeType);
-};
-
-const recordingFiles = computed(() => props.files.filter(isPlayableRecording));
+			file.type === EngineCallFileType.FileTypeVideo,
+	),
+);
 
 const closePlayer = () => {
 	selectedRecording.value = null;
