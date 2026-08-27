@@ -62,7 +62,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../../../error-pages/composable/useErrorRedirectHandler';
-import { useCaseStatusConditionsCardStore } from '../stores';
+import { useCaseStatusConditionsCardStore } from '../stores/card/caseStatusConditionsCardStore';
 
 const emit = defineEmits([
 	'load-data',

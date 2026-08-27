@@ -51,12 +51,12 @@
             <div class="case-files__name-wrapper">
               <wt-icon
                 class="case-files__icon"
-                :icon="getFileIcon(item.mime)"
+                :icon="getFileTypeIcon(item.mime)"
               />
               <span
                 class="case-files__name"
                 :class="{ 'case-files__name--disabled': isNew }"
-                @click="!isNew && openFileInNewTab(item)"
+                @click="!isNew && openStorageFileInNewTab(item)"
               >{{ item?.name }}</span
               >
             </div>
@@ -74,7 +74,7 @@
               :disabled="isNew"
               action="download"
               @click="
-                downloadFile({
+                downloadStorageFile({
                   id: item?.id,
                   name: item?.name,
                   type: item?.mime,
@@ -104,6 +104,13 @@ import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
+import {
+	downloadFilesAsZip,
+	downloadStorageFile,
+	getFileTypeIcon,
+	openStorageFileInNewTab,
+} from '@webitel/ui-sdk/scripts';
+import webSocketClientController from '@webitel/ui-sdk/src/api/websocket/WebSocketClientController';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -111,13 +118,8 @@ import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import downloadFile from '../../../../../../../app/utils/downloadFile';
-import downloadFilesInZip from '../../../../../../../app/utils/downloadFilesInZip';
-import getFileIcon from '../../../../../../../app/utils/fileTypeIcon';
-import openFileInNewTab from '../../../../../../../app/utils/openFileInNewTab';
 import { useCaseAccessState } from '../../../../../composables/useCaseAccessState';
 import { useCasesCardStore } from '../../../../../stores/card/casesCardStore';
 import { useCaseAttachments } from '../../../composables/useCaseAttachments';
@@ -134,11 +136,7 @@ const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,
 });
-const store = useStore();
-
 const { t } = useI18n();
-
-const client = computed(() => store.getters.CLIENT);
 
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
@@ -172,7 +170,7 @@ const transformStoreItemToPending = (fileData) => ({
 });
 
 const addFile = async (file) => {
-	const cliInstance = await client.value.getCliInstance();
+	const cliInstance = await webSocketClientController.getCliInstance();
 	await cliInstance.storeFile(
 		props.itemId,
 		[
@@ -233,7 +231,7 @@ async function handleSelectedFilesDownload() {
 		? selected.value
 		: dataList.value;
 
-	await downloadFilesInZip({
+	await downloadFilesAsZip({
 		filesToDownload,
 		apiUrl,
 		token,

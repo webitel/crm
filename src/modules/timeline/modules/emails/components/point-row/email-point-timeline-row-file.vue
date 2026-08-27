@@ -5,7 +5,7 @@
       <wt-icon
         :icon="icon"
       />
-      <span class="email-points-timeline-row-file__name" @click="openFileInNewTab(props.file)">{{ file.name }}</span>
+      <span class="email-points-timeline-row-file__name" @click="openStorageFileInNewTab(props.file)">{{ file.name }}</span>
     </div>
 
     <span >{{ prettifyFileSize(file.size) }}</span>
@@ -13,19 +13,20 @@
     <wt-icon-btn
       icon="download"
       class="email-points-timeline-row-file__icon"
-      @click="downloadFile({ id: file?.id, name: file?.name, type: file?.mime })"
+      @click="downloadStorageFile({ id: file?.id, name: file?.name, type: file?.mime })"
     ></wt-icon-btn>
 
   </div>
 </template>
 
 <script setup lang="ts">
+import {
+	downloadStorageFile,
+	getFileTypeIcon,
+	openStorageFileInNewTab,
+} from '@webitel/ui-sdk/scripts';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { computed, type PropType } from 'vue';
-
-import downloadFile from '../../../../../../app/utils/downloadFile.js';
-import getFileIcon from '../../../../../../app/utils/fileTypeIcon.js';
-import openFileInNewTab from '../../../../../../app/utils/openFileInNewTab.js';
 
 export interface EmailFile {
 	id: string;
@@ -41,7 +42,7 @@ const props = defineProps({
 	},
 });
 
-const icon = computed(() => getFileIcon(props.file.mime));
+const icon = computed(() => getFileTypeIcon(props.file.mime));
 </script>
 
 <style scoped lang="scss">

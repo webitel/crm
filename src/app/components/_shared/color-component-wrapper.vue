@@ -41,7 +41,25 @@ const colorVariable = computed(
 </script>
 
 <style lang="scss">
-@use '../../css/variables/case-priority-colors';
+:root {
+  --case-priority-color-default: var(--grey-darken-2);
+  --case-priority-color-red: var(--red-darken-2);
+  --case-priority-color-pink: var(--pink-darken-2);
+  --case-priority-color-purple: var(--purple-darken-2);
+  --case-priority-color-deep-purple: var(--deep-purple-darken-2);
+  --case-priority-color-indigo: var(--indigo-darken-2);
+  --case-priority-color-blue: var(--blue-darken-2);
+  --case-priority-color-light-blue: var(--light-blue-darken-2);
+  --case-priority-color-cyan: var(--cyan-darken-2);
+  --case-priority-color-teal: var(--teal-darken-2);
+  --case-priority-color-green: var(--green-darken-2);
+  --case-priority-color-light-green: var(--light-green-darken-2);
+  --case-priority-color-lime: var(--lime-darken-2);
+  --case-priority-color-yellow: var(--yellow-darken-2);
+  --case-priority-color-amber: var(--amber-darken-2);
+  --case-priority-color-orange: var(--orange-darken-2);
+  --case-priority-color-deep-orange: var(--deep-orange-darken-2);
+}
 </style>
 
 <style scoped lang="scss">

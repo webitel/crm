@@ -5,17 +5,15 @@
 <script setup>
 import { WtStartPage } from '@webitel/ui-sdk/components';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { inject } from 'vue';
 
 import LogoDark from '../assets/crm-logo-dark.svg';
 import LogoLight from '../assets/crm-logo-light.svg';
 import { useNavStore } from '../stores/navStore';
 
-const store = useStore();
 const navStore = useNavStore();
 
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
+const darkMode = inject('darkMode');
 
 const logo = {
 	light: LogoLight,

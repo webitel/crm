@@ -47,7 +47,7 @@ import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useErrorRedirectHandler } from '../../../../../../error-pages/composable/useErrorRedirectHandler';
 import { useCaseServiceCatalogsCardStore } from '../stores';
-import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName.js';
+import prettifyBreadcrumbName from '../utils/prettifyBreadcrumbName';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();

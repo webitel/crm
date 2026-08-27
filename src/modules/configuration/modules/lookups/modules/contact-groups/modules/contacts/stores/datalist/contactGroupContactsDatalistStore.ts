@@ -1,6 +1,6 @@
 import { createTableStore } from '@webitel/ui-datalist';
 
-import { headers } from '../../../../../../../../../_shared/modules/contacts/store/_internals/headers';
+import { headers } from '../../../../../../../../../contacts/_shared/store/_internals/headers';
 import ContactGroupContactsAPI from '../../api/ContactGroupContactsAPI';
 import { ContactsGroupContactsNamespace } from '../../namespace';
 

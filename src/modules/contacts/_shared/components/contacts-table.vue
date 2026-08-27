@@ -38,7 +38,7 @@
             <div class="username-wrapper">
               <wt-avatar
                 size="xs"
-                :username="item.name"
+                :username="item.name?.commonName"
               />
 
               <wt-item-link
@@ -47,7 +47,7 @@
                   params: { id: item.id },
                 }"
               >
-                {{ item.name }}
+                {{ item.name?.commonName }}
               </wt-item-link>
             </div>
           </template>
@@ -60,7 +60,10 @@
           </template>
 
           <template #groups="{ item }">
-            <wt-display-chip-items v-if="item.groups" :items="item.groups" />
+            <wt-display-chip-items
+              v-if="item.groups?.data"
+              :items="getGroupItems(item)"
+            />
           </template>
 
           <template #about="{ item }">
@@ -68,16 +71,16 @@
           </template>
 
           <template #managers="{ item }">
-            {{ item.managers?.[0]?.user?.name }}
+            {{ item.managers?.data?.[0]?.user?.name }}
           </template>
 
           <template #labels="{ item }">
             <div
-              v-if="item.labels"
+              v-if="item.labels?.data"
               class="contacts-labels-wrapper"
             >
               <wt-chip
-                v-for="{ label, id } of item.labels"
+                v-for="{ label, id } of item.labels.data"
                 :key="id"
               >
                 {{ label }}
@@ -105,6 +108,7 @@
 </template>
 
 <script setup lang="ts">
+import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { createTableStore } from '@webitel/ui-datalist';
 import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
@@ -145,6 +149,10 @@ const {
 	columnResize,
 	columnReorder,
 } = props.tableStore;
+
+function getGroupItems(item: WebitelContactsContact) {
+	return item.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [];
+}
 
 const defaultEmptyProps = useTableEmpty({
 	dataList,

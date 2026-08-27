@@ -1,6 +1,22 @@
+import type { WebitelCasesCatalog } from '@webitel/api-services/gen/models';
+
+interface DisableStateService {
+	id?: string;
+	state?: boolean;
+	service?: DisableStateService[];
+}
+
 // https://webitel.atlassian.net/browse/WTEL-6057?focusedCommentId=655370
-export const checkDisableState = (catalog, targetItem) => {
-	const findServicePath = (serviceList, rootId) => {
+export const checkDisableState = (
+	catalog: WebitelCasesCatalog,
+	targetItem: {
+		id?: string;
+	},
+): boolean => {
+	const findServicePath = (
+		serviceList: DisableStateService[],
+		rootId?: string,
+	): DisableStateService[] | null => {
 		for (const service of serviceList) {
 			// we didn't need add to pah for target item
 			if (service.id === targetItem.id) {

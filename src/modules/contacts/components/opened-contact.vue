@@ -53,7 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import { ContactsAPI } from '@webitel/api-services/api';
+import {
+	ContactsAPI,
+	getContactAccessFromMode,
+} from '@webitel/api-services/api';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -87,10 +90,15 @@ const isLoading = ref(true);
 
 provide(
 	'access',
-	computed(() => ({
-		hasRbacEditAccess: originalItemInstance.value?.access?.edit,
-		hasRbacDeleteAccess: originalItemInstance.value?.access?.delete,
-	})),
+	computed(() => {
+		const contactAccess = getContactAccessFromMode(
+			originalItemInstance.value?.mode,
+		);
+		return {
+			hasRbacEditAccess: contactAccess.edit,
+			hasRbacDeleteAccess: contactAccess.delete,
+		};
+	}),
 );
 
 const {
@@ -117,7 +125,7 @@ const path = computed(() => {
 			route: baseUrl,
 		},
 		{
-			name: originalItemInstance.value?.name || 'Contact',
+			name: originalItemInstance.value?.name?.commonName || 'Contact',
 			route: `/contacts/${itemId.value}`,
 		},
 	];

@@ -50,8 +50,7 @@
 <script lang="ts" setup>
 import { AdjunctTypesAPI } from '@webitel/api-services/api';
 import type { DataInputDictionary } from '@webitel/api-services/gen/models';
-import { useCardComponent } from '@webitel/ui-datalist/card';
-import { useCardTabs } from '@webitel/ui-sdk/src/composables/useCard/useCardTabs';
+import { useCardComponent, useCardTabs } from '@webitel/ui-datalist/card';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
