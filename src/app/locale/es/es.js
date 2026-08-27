@@ -65,6 +65,7 @@ export default {
 		},
 		info: {
 			title: 'Información',
+			postprocessing: 'Posprocesamiento',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Iniciado',

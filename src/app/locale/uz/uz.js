@@ -65,6 +65,7 @@ export default {
 		},
 		info: {
 			title: "Ma'lumot",
+			postprocessing: 'Qayta ishlash',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Boshlandi',

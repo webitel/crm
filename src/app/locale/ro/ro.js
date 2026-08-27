@@ -65,6 +65,7 @@ export default {
 		},
 		info: {
 			title: 'Informații',
+			postprocessing: 'Postprocesare',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Început',

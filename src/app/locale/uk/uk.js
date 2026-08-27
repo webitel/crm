@@ -65,6 +65,7 @@ export default {
 		},
 		info: {
 			title: 'Інформація',
+			postprocessing: 'Постобробка',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Початок',

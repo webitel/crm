@@ -65,6 +65,7 @@ export default {
 		},
 		info: {
 			title: 'Thông tin',
+			postprocessing: 'Hậu xử lý',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Đã bắt đầu',

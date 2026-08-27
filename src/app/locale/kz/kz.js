@@ -65,6 +65,7 @@ export default {
 		},
 		info: {
 			title: 'Ақпарат',
+			postprocessing: 'Постөңдеу',
 		},
 		status: {
 			[TimelineTaskStatusEnum.STARTED]: 'Басталды',
