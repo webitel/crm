@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Add the email',
 				editTitle: 'Edit the email',
-				dummy: 'There are no email addresses yet',
+				empty: 'There are no email addresses yet',
 			},
 			phones: {
 				addTitle: 'Add the phone number',
 				editTitle: 'Edit the phone number',
-				dummy: 'There are no phone numbers yet',
+				empty: 'There are no phone numbers yet',
 			},
 			messaging: {
 				gateway: 'Gateway',
 				provider: 'Provider ',
 				username: 'Username',
-				dummy: 'There are no messaging options yet',
+				empty: 'There are no messaging options yet',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',

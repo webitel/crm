@@ -7,7 +7,6 @@
       <contact-popup
         :id="editedContactId"
         :shown="isContactPopup"
-        :namespace="ContactsNamespace"
         @close="closeContactPopup"
         @saved="saved"
       />
@@ -91,7 +90,7 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ContactsSearchMode } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
@@ -106,8 +105,7 @@ import { useRouter } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
 import { SearchMode } from '../../cases/enums/SearchMode';
-import { ContactsNamespace } from '../namespace';
-import { useContactsStore } from '../stores/contacts';
+import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsFiltersPanel from './contacts-filters-panel.vue';
 
@@ -127,7 +125,7 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const tableStore = useContactsStore();
+const tableStore = useContactsDatalistStore();
 
 const { selected, filtersManager, isFiltersRestoring, searchMode } =
 	storeToRefs(tableStore);

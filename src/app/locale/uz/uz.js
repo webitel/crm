@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: "Emailni qo'shish",
 				editTitle: 'Emailni tahrirlash',
-				dummy: "Hali email manzillari yo'q",
+				empty: "Hali email manzillari yo'q",
 			},
 			phones: {
 				addTitle: "Telefon raqamini qo'shish",
 				editTitle: 'Telefon raqamini tahrirlash',
-				dummy: "Hali telefon raqamlari yo'q",
+				empty: "Hali telefon raqamlari yo'q",
 			},
 			messaging: {
 				gateway: 'Shlyuz',
 				provider: 'Provider',
 				username: 'Foydalanuvchi nomi',
-				dummy: "Hali xabar almashish variantlari yo'q",
+				empty: "Hali xabar almashish variantlari yo'q",
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram Ilova',

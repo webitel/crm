@@ -1,134 +1,163 @@
 <template>
   <div class="variables">
-    <header class="variables-header">
-      <variable-popup
-        :namespace="namespace"
-        @close="closeItemPopup"
-      />
-      <wt-icon-action
-        :disabled="isActionDisabled"
-        action="add"
-        @click="addItem"
-      />
-    </header>
+    <variable-popup
+      :parent-id="parentId"
+      @close="close"
+      @saved="loadDataList"
+    />
 
     <delete-confirmation-popup
+      :shown="isConfirmationPopup"
       :callback="deleteCallback"
       :delete-count="deleteCount"
-      :shown="isConfirmationPopup"
       @close="closeDelete"
     />
 
-    <wt-loader v-show="isLoading" />
+    <section class="table-section">
+      <header class="table-title">
+        <h3 class="table-title__title">
+          {{ t('contacts.attributes', 2) }}
+        </h3>
+        <wt-action-bar
+          :include="[IconAction.ADD]"
+          :disabled:add="disabledAdd"
+          @click:add="open"
+        />
+      </header>
 
-    <wt-dummy
-      v-if="!isLoading && showDummy"
-      :dark-mode="darkMode"
-    />
+      <div class="table-section__table-wrapper">
+        <wt-empty
+          v-show="showEmpty"
+          :image="imageEmpty"
+          :text="textEmpty"
+          :primary-action-text="primaryActionTextEmpty"
+          :disabled-primary-action="disabledAdd"
+          @click:primary="open()"
+        />
 
-    <div
-      v-show="!isLoading && !showDummy"
-      class="table-wrapper"
-    >
-      <wt-table
-        :data="dataList"
-        :headers="headers"
-        :selectable="false"
-        sortable
-        @sort="sort"
-      >
-        <template #key="{ item }">
-          {{ item.key }}
-        </template>
-        <template #value="{ item }">
-          {{ item.value }}
-        </template>
-        <template #actions="{ item }">
-          <wt-icon-action
-            :disabled="isActionDisabled"
-            action="edit"
-            @click="editItem(item)"
-          />
-          <wt-icon-action
-            :disabled="isActionDisabled"
-            action="delete"
-            @click="
-              askDeleteConfirmation({
-                deleted: [item],
-                callback: () => deleteData(item),
-              })
-            "
-          />
-        </template>
-      </wt-table>
-      <filter-pagination
-        :is-next="isNext"
-        :namespace="filtersNamespace"
-      />
-    </div>
+        <wt-loader v-show="isLoading" />
+
+        <wt-table
+          v-show="dataList.length && !isLoading"
+          :data="dataList"
+          :headers="shownHeaders"
+          :selectable="false"
+          sortable
+          @sort="updateSort"
+        >
+          <template #key="{ item }">
+            {{ item.key }}
+          </template>
+          <template #value="{ item }">
+            {{ item.value }}
+          </template>
+          <template #actions="{ item }">
+            <wt-icon-action
+              :disabled="disabledUpdate"
+              action="edit"
+              @click="open(item.id)"
+            />
+            <wt-icon-action
+              :disabled="disabledDelete"
+              action="delete"
+              @click="
+                askDeleteConfirmation({
+                  deleted: [item],
+                  callback: () => deleteEls(item),
+                })
+              "
+            />
+          </template>
+        </wt-table>
+
+        <wt-pagination
+          :next="next"
+          :prev="page > 1"
+          :size="size"
+          debounce
+          @change="updateSize"
+          @next="updatePage(page + 1)"
+          @prev="updatePage(page - 1)"
+        />
+      </div>
+    </section>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { useCardListNavigation } from '@webitel/ui-datalist/card';
+import { WtEmpty } from '@webitel/ui-sdk/components';
+import { useClose } from '@webitel/ui-sdk/composables';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import FilterPagination from '@webitel/ui-sdk/src/modules/Filters/components/filter-pagination.vue';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, inject, onUnmounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import { type StoreGeneric, storeToRefs } from 'pinia';
+import { computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
+import { useContactEditAccessControl } from '../../../composables/useContactEditAccessControl';
+import { useContactCardStore } from '../../../stores/card/contactCardStore';
+import { useVariablesDatalistStore } from '../stores/datalist/variablesDatalistStore';
 import VariablePopup from './variable-popup.vue';
 
-const access = inject('access');
-const isReadOnly = inject('isReadOnly');
+const { t } = useI18n();
+const route = useRoute();
 
-const isActionDisabled = computed(
-	() => !access.value.hasRbacEditAccess || isReadOnly,
+const { disabledAdd, disabledUpdate, disabledDelete } =
+	useContactEditAccessControl();
+
+const { open } = useCardListNavigation({
+	routeParamName: 'variableId',
+});
+const { close } = useClose(route.name);
+
+const contactCardStore = useContactCardStore();
+const { itemId: parentId } = storeToRefs(
+	contactCardStore as unknown as StoreGeneric,
 );
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
-
-const store = useStore();
-const router = useRouter();
-const route = useRoute();
-const variablesNamespace = `${props.namespace}/variables`;
+const tableStore = useVariablesDatalistStore();
 
 const {
-	namespace,
 	dataList,
+	error,
 	isLoading,
-	headers,
-	isNext,
-
-	sort,
-	deleteData,
-	onFilterEvent,
-} = useTableStore(variablesNamespace);
+	page,
+	size,
+	next,
+	shownHeaders,
+	filtersManager,
+} = storeToRefs(tableStore);
 
 const {
-	namespace: filtersNamespace,
-	subscribe,
-	flushSubscribers,
-	restoreFilters,
-} = useTableFilters(`${variablesNamespace}/table`);
+	initialize,
+	loadDataList,
+	updatePage,
+	updateSize,
+	updateSort,
+	deleteEls,
+} = tableStore;
 
-subscribe({
-	event: '*',
-	callback: onFilterEvent,
-});
-
-restoreFilters();
-
-onUnmounted(() => {
-	flushSubscribers();
-});
+watch(
+	parentId,
+	async (id) => {
+		if (!id) return;
+		await initialize({
+			parentId: id,
+		});
+		// a newer contact navigation may have started while this one was in flight
+		if (parentId.value !== id) {
+			await initialize({
+				parentId: parentId.value,
+			});
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 
 const {
 	isVisible: isConfirmationPopup,
@@ -139,66 +168,17 @@ const {
 	closeDelete,
 } = useDeleteConfirmationPopup();
 
-const showDummy = computed(() => !dataList.value.length);
-const darkMode = computed(() => store.getters['appearance/DARK_MODE']);
-
-async function save(item) {
-	if (item.id) {
-		await store.dispatch(`${variablesNamespace}/table/UPDATE_VARIABLE`, {
-			etag: item.etag,
-			itemInstance: {
-				...item,
-			},
-		});
-	} else {
-		await store.dispatch(`${variablesNamespace}/table/ADD_VARIABLE`, {
-			itemInstance: {
-				...item,
-			},
-		});
-	}
-}
-
-function addItem() {
-	return router.push({
-		...route,
-		params: {
-			variableId: 'new',
-		},
-	});
-}
-
-function editItem({ id }) {
-	return router.push({
-		...route,
-		params: {
-			variableId: id,
-		},
-	});
-}
-
-function closeItemPopup() {
-	const params = {
-		...route.params,
-	};
-	delete params.variableId;
-
-	return router.push({
-		...route,
-		params,
-	});
-}
+const {
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+	primaryActionText: primaryActionTextEmpty,
+} = useTableEmpty({
+	dataList,
+	error,
+	filters: computed(() => filtersManager.value.getAllValues()),
+	isLoading,
+});
 </script>
 
-<style lang="scss" scoped>
-.variables {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.variables-header {
-  display: flex;
-  justify-content: flex-end;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -28,16 +28,16 @@
 
     <wt-avatar
       size="3xl"
-      :username="name"
+      :username="modelValue.name"
     />
 
     <div class="opened-contact-general-name typo-subtitle-1">
       <wt-icon
-        v-if="user"
+        v-if="modelValue.user"
         icon="webitel-logo"
       />
 
-      {{ name }}
+      {{ modelValue.name }}
     </div>
 
     <wt-divider />
@@ -59,10 +59,10 @@
         {{ t('date.timezone', 1) }}
       </p>
       <p
-        v-if="timezones.length"
+        v-if="modelValue.timezones?.length"
         class="opened-contact-general-item__value"
       >
-        {{ timezones[0].timezone.name }}
+        {{ modelValue.timezones[0].timezone?.name }}
       </p>
     </div>
 
@@ -73,7 +73,7 @@
         {{ t('contacts.manager', 1) }}
       </p>
       <p class="opened-contact-general-item__value">
-        {{ managers[0]?.user.name }}
+        {{ modelValue.managers?.[0]?.user?.name }}
       </p>
     </div>
 
@@ -84,7 +84,7 @@
         {{ t('vocabulary.description') }}
       </p>
       <p class="opened-contact-general-item__value">
-        {{ about }}
+        {{ modelValue.about }}
       </p>
     </div>
 
@@ -93,7 +93,7 @@
     <div class="opened-contact-general-item">
       <div class="opened-contact-general-item__value opened-contact-general-item__value--labels">
         <wt-chip
-          v-for="{ label, id } of labels"
+          v-for="{ label, id } of modelValue.labels"
           :key="id"
         >
           {{ label }}
@@ -103,48 +103,23 @@
   </article>
 </template>
 
-<script setup>
-import { computed, inject } from 'vue';
+<script setup lang="ts">
+import type { ContactEntity } from '@webitel/api-services/api';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const access = inject('access');
-const isReadOnly = inject('isReadOnly');
+import { useContactEditAccessControl } from '../composables/useContactEditAccessControl';
 
-const props = defineProps({
-	name: {
-		type: String,
-		default: '',
-	},
-	timezones: {
-		type: Array,
-		default: () => [],
-	},
-	managers: {
-		type: Array,
-		default: () => [],
-	},
-	about: {
-		type: String,
-		default: '',
-	},
-	labels: {
-		type: Array,
-		default: () => [],
-	},
-	groups: {
-		type: Array,
-		default: () => [],
-	},
-	user: {
-		type: Object,
-		default: null,
-	},
-});
+const { access, isReadOnly } = useContactEditAccessControl();
 
-const emit = defineEmits([
-	'edit',
-	'delete',
-]);
+const props = defineProps<{
+	modelValue: ContactEntity;
+}>();
+
+const emit = defineEmits<{
+	edit: [];
+	delete: [];
+}>();
 
 const { t } = useI18n();
 
@@ -153,13 +128,13 @@ const actionOptions = computed(() => {
 		text: t('reusable.edit'),
 		icon: 'edit',
 		handler: () => emit('edit'),
-		disabled: !access.value.hasRbacEditAccess,
+		disabled: !access?.value?.hasRbacEditAccess,
 	};
 	const deleteAction = {
 		text: t('reusable.delete'),
 		icon: 'bucket',
 		handler: () => emit('delete'),
-		disabled: !access.value.hasRbacDeleteAccess,
+		disabled: !access?.value?.hasRbacDeleteAccess,
 	};
 	return [
 		editAction,
@@ -167,7 +142,9 @@ const actionOptions = computed(() => {
 	];
 });
 
-const groupsList = computed(() => props.groups.map((el) => el.name).join(', '));
+const groupsList = computed(
+	() => props.modelValue.groups?.map((el) => el.name).join(', ') ?? '',
+);
 </script>
 
 <style

@@ -12,10 +12,10 @@
             v-bind="props"
             :model-value="props.value"
             :key="closeReasonId"
-            :disabled="disableUserInput || !itemInstance.statusCondition.final"
+            :disabled="isCloseReasonDisabled"
             required
             :v="v$.value.itemInstance.closeReason"
-            :search-method="searchCloseReasons"
+            :search-method="hasCloseReasonGroupsReadAccess && searchCloseReasons"
             @update:model-value="props.updateValue($event)"
           />
         </template>
@@ -55,6 +55,7 @@
 </template>
 <script setup>
 import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -77,6 +78,9 @@ const { t } = useI18n();
 const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasCloseReasonGroupsReadAccess } = useUserAccessControl(
+	WtObject.CloseReasonGroup,
+);
 
 const {
 	namespace: cardNamespace,
@@ -86,6 +90,13 @@ const {
 
 const closeReasonId = computed(
 	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
+);
+
+const isCloseReasonDisabled = computed(
+	() =>
+		disableUserInput.value ||
+		!itemInstance.value.statusCondition.final ||
+		!hasCloseReasonGroupsReadAccess.value,
 );
 
 async function searchCloseReasons(params) {

@@ -11,10 +11,10 @@
           <wt-single-select
             v-bind="props"
             :model-value="props.value"
-            :disabled="disableUserInput"
+            :disabled="disableUserInput || !hasPrioritiesReadAccess"
             :v="v$.value.itemInstance.priority"
             :placeholder="t('cases.priority')"
-            :search-method="CasePrioritiesAPI.getLookup"
+            :search-method="hasPrioritiesReadAccess && CasePrioritiesAPI.getLookup"
             class="case-priority__select"
             @update:model-value="props.updateValue($event)"
           />
@@ -26,6 +26,7 @@
 
 <script setup>
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
 import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
 import { inject } from 'vue';
@@ -41,6 +42,9 @@ const editMode = inject('editMode');
 const v$ = inject('v$');
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
 
 const { itemInstance, setItemProp } = useCardStore(namespace);
 

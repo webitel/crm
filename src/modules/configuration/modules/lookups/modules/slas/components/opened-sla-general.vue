@@ -52,17 +52,16 @@
 
         <wt-datepicker
           :label="t('lookups.slas.validFrom')"
-          :model-value="modelValue.validFrom"
+          v-model:model-value="modelValue.validFrom"
           :disabled="disableUserInput"
           :regle-validation="validationFields?.validFrom"
           show-time
           clearable
-          @update:model-value="modelValue.validFrom = String($event)"
         />
 
         <wt-datepicker
           :label="t('lookups.slas.validTo')"
-          :model-value="modelValue.validTo"
+          v-model:model-value="modelValue.validTo"
           :disabled="disableUserInput"
           :regle-validation="validationFields?.validTo"
           show-time
@@ -100,7 +99,7 @@ function loadCalendarsList(search) {
 }
 
 function onValidToChange(value?: number) {
-	modelValue.value.validTo = String(value);
+	modelValue.value.validTo = value;
 	props.validationFields?.validFrom?.$touch();
 }
 </script>

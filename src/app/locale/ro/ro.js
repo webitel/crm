@@ -28,18 +28,18 @@ export default {
 			emails: {
 				addTitle: 'Adaugă email',
 				editTitle: 'Editează email',
-				dummy: 'Nu există adrese de email încă',
+				empty: 'Nu există adrese de email încă',
 			},
 			phones: {
 				addTitle: 'Adaugă număr de telefon',
 				editTitle: 'Editează număr de telefon',
-				dummy: 'Nu există numere de telefon încă',
+				empty: 'Nu există numere de telefon încă',
 			},
 			messaging: {
 				gateway: 'Gateway',
 				provider: 'Furnizor ',
 				username: 'Nume utilizator',
-				dummy: 'Nu există opțiuni de mesagerie încă',
+				empty: 'Nu există opțiuni de mesagerie încă',
 				messengers: {
 					[ChatGatewayProvider.TELEGRAM_BOT]: 'Telegram Bot',
 					[ChatGatewayProvider.TELEGRAM_APP]: 'Telegram App',
