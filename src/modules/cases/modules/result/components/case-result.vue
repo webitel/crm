@@ -11,10 +11,10 @@
             v-bind="props"
             :model-value="props.modelValue"
             :key="closeReasonId"
-            :disabled="disableUserInput || !modelValue.statusCondition?.final"
+            :disabled="isCloseReasonDisabled"
             required
             :regle-validation="validationFields.closeReason"
-            :search-method="searchCloseReasons"
+            :search-method="hasCloseReasonGroupsReadAccess && searchCloseReasons"
             @update:model-value="props.updateValue($event)"
           />
         </template>
@@ -55,7 +55,9 @@
 import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
@@ -69,12 +71,22 @@ const { isEditable } = useCaseAccessState();
 const { t } = useI18n();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasCloseReasonGroupsReadAccess } = useUserAccessControl(
+	WtObject.CloseReasonGroup,
+);
 
 const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
 	manualSetup: true,
 });
 const { closeReasonId } = storeToRefs(useCaseServiceStore());
+
+const isCloseReasonDisabled = computed(
+	() =>
+		disableUserInput.value ||
+		!modelValue.value.statusCondition?.final ||
+		!hasCloseReasonGroupsReadAccess.value,
+);
 
 async function searchCloseReasons(params) {
 	if (!closeReasonId.value) {

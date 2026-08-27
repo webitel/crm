@@ -49,6 +49,7 @@
             <template #add="{ action, onClick }">
               <wt-icon-action
                 :action="action"
+                :disabled="!hasCreateAccess"
                 @click="onClick"
               />
               <wt-icon-btn

@@ -25,8 +25,8 @@
           <wt-single-select
             v-bind="props"
             :model-value="props.modelValue"
-            :search-method="getContactsLookup"
-            :disabled="disableUserInput"
+            :search-method="hasContactsReadAccess && getContactsLookup"
+            :disabled="disableUserInput || !hasContactsReadAccess"
             :regle-validation="validationFields.reporter"
             class="case-persons__select"
             @update:model-value="props.updateValue($event)"
@@ -47,8 +47,8 @@
           <wt-single-select
             v-bind="props"
             :model-value="props.modelValue"
-            :disabled="disableUserInput"
-            :search-method="ContactsAPI.getLookup"
+            :disabled="disableUserInput || !hasContactsReadAccess"
+            :search-method="hasContactsReadAccess && ContactsAPI.getLookup"
             class="case-persons__select"
             @update:model-value="props.updateValue($event)"
           />
@@ -68,8 +68,8 @@
       >
         <template #default="props">
           <wt-single-select
-            :search-method="ContactsAPI.getLookup"
-            :disabled="disableUserInput || isAssignMeDisabled"
+            :search-method="hasContactsReadAccess && ContactsAPI.getLookup"
+            :disabled="isAssigneeDisabled"
             class="case-persons__select"
             v-bind="props"
             :model-value="props.modelValue"
@@ -90,8 +90,8 @@
       >
         <template #default="props">
           <wt-single-select
-            :disabled="disableUserInput"
-            :search-method="loadStaticContactGroupsList"
+            :disabled="disableUserInput || !hasContactGroupsReadAccess"
+            :search-method="hasContactGroupsReadAccess && loadStaticContactGroupsList"
             class="case-persons__select"
             v-bind="props"
             :model-value="props.modelValue"
@@ -108,7 +108,7 @@ import { ContactGroupsAPI, ContactsAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { isEmpty } from '@webitel/ui-sdk/src/scripts/index';
 import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
@@ -129,6 +129,12 @@ const router = useRouter();
 const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasContactsReadAccess } = useUserAccessControl(
+	WtObject.Contact,
+);
+const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
+	WtObject.ContactGroup,
+);
 
 const { itemId } = storeToRefs(useCasesCardStore() as unknown as StoreGeneric);
 const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
@@ -163,6 +169,13 @@ function handleReporterInput(value) {
 }
 
 const isAssignMeDisabled = ref(false);
+
+const isAssigneeDisabled = computed(
+	() =>
+		disableUserInput.value ||
+		isAssignMeDisabled.value ||
+		!hasContactsReadAccess.value,
+);
 
 function resetAssignee(value = undefined) {
 	modelValue.value.assignee = value;

@@ -48,8 +48,8 @@
             v-bind="props"
             :model-value="props.modelValue"
             :regle-validation="validationFields.source"
-            :disabled="disableUserInput"
-            :search-method="CaseSourcesAPI.getLookup"
+            :disabled="disableUserInput || !hasSourcesReadAccess"
+            :search-method="hasSourcesReadAccess && CaseSourcesAPI.getLookup"
             @update:model-value="props.updateValue($event)"
           />
         </template>
@@ -106,6 +106,9 @@ const { disableUserInput } = useUserAccessControl();
 const { hasReadAccess: hasCaseCommentsReadAccess } = useUserAccessControl({
 	resource: WtObject.CaseComment,
 });
+const { hasReadAccess: hasSourcesReadAccess } = useUserAccessControl(
+	WtObject.Source,
+);
 
 const { itemId } = storeToRefs(useCasesCardStore() as unknown as StoreGeneric);
 const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({

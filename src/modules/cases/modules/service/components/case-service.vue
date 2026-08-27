@@ -33,7 +33,7 @@
     </div>
     <wt-button
       v-if="isEditable"
-      :disabled="disableUserInput"
+      :disabled="disableUserInput || !hasServiceCatalogReadAccess"
       class="case-service__button"
       color="success"
       @click="isServicePopup = true"
@@ -51,6 +51,7 @@ import {
 } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -65,6 +66,12 @@ import SlaRecalculationPopup from './sla-recalculation-popup.vue';
 const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasServiceCatalogReadAccess } = useUserAccessControl(
+	WtObject.ServiceCatalog,
+);
+const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
+	WtObject.Priorities,
+);
 
 const { itemId } = storeToRefs(useCasesCardStore() as unknown as StoreGeneric);
 const { modelValue } = useCardComponent<WebitelCasesCase>({
@@ -136,6 +143,8 @@ const setDefaultPriority = async ({ catalog, service }) => {
 		// Set default priority from selected Service
 		modelValue.value.priority = defaultPriority;
 	} else {
+		if (!hasPrioritiesReadAccess.value) return;
+
 		const firstDefaultPriority = (await CasePrioritiesAPI.getLookup({}))
 			.items[0];
 

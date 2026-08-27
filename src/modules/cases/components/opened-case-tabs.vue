@@ -31,9 +31,9 @@
 
 <script setup lang="ts">
 import { type CardTab, useCardTabs } from '@webitel/ui-datalist/card';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
@@ -49,6 +49,11 @@ const { t } = useI18n();
 const route = useRoute();
 
 const { disableUserInput } = useUserAccessControl();
+const { hasReadAccess: hasRolesReadAccess } = useUserAccessControl(
+	WtObject.Role,
+);
+
+provide('hasRolesReadAccess', hasRolesReadAccess);
 
 const casesCardStore = useCasesCardStore();
 const { itemId, draftItemInstance, validationFields } = storeToRefs(
