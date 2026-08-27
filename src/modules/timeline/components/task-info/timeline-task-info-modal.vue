@@ -27,6 +27,15 @@
         />
       </div>
     </template>
+
+    <template #actions>
+      <wt-button
+        color="secondary"
+        @click="emit('update:shown', false)"
+      >
+        {{ t('reusable.close') }}
+      </wt-button>
+    </template>
   </wt-popup>
 </template>
 
@@ -104,6 +113,10 @@ watch(
 </script>
 
 <style scoped>
+.timeline-task-info-modal :deep(.wt-popup__popup) {
+  height: 600px;
+}
+
 .timeline-task-info-modal__content {
   margin-top: var(--spacing-sm);
 }
