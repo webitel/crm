@@ -38,6 +38,8 @@
 		"deepmerge": "^4.x",
 		"dompurify": "^3.x",
 		"file-saver": "^2.0.5",
+		"jszip": "^3.10.1",
+		"jszip-utils": "^0.1.0",
 		"linkify-html": "^4.x",
 		"linkifyjs": "^4.x",
 		"lodash-es": "^4.x",
@@ -49,6 +51,7 @@
 		"vue": "^3.5.x",
 		"vue-i18n": "^11.x",
 		"vue-router": "^4.x",
+		"vuex": "^4.1.0",
 		"webitel-sdk": "^26.4.8",
 		"zod": "^4.x"
 	},
