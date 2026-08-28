@@ -1,7 +1,7 @@
 <template>
   <wt-popup
     :shown="shown"
-    class="timeline-task-info-modal"
+    class="timeline-task-info-modal wt-scrollbar"
     @close="emit('update:shown', false)"
   >
     <template #title>
@@ -117,7 +117,16 @@ watch(
   height: 600px;
 }
 
+.timeline-task-info-modal :deep(.wt-popup__main) {
+  display: flex;
+  flex-direction: column;
+}
+
 .timeline-task-info-modal__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   margin-top: var(--spacing-sm);
+  min-height: 0;
 }
 </style>

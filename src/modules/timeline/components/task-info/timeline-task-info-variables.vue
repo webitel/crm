@@ -1,5 +1,6 @@
 <template>
   <wt-table
+    class="timeline-task-info-variables wt-scrollbar"
     :data="variables"
     :headers="headers"
     :selectable="false"
@@ -31,3 +32,10 @@ const headers = computed(() => [
 	},
 ]);
 </script>
+
+<style scoped>
+.timeline-task-info-variables {
+  flex: 1;
+  min-height: 0;
+}
+</style>

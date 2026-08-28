@@ -43,13 +43,11 @@ function entryFields(entry) {
 
 <style scoped>
 .timeline-task-info-postprocessing {
-  --scrollbar-width: 4px;
-  --scrollbar-thumb-width: 4px;
-
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--spacing-sm);
-  max-height: 40vh;
+  min-height: 0;
   overflow: auto;
 }
 
