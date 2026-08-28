@@ -1,4 +1,4 @@
-import { generatePermissionsApi } from '@webitel/api-services/api';
+import { FtsAPI, generatePermissionsApi } from '@webitel/api-services/api';
 import {
 	getDefaultGetListResponse,
 	getDefaultGetParams,
@@ -17,7 +17,6 @@ import { getCases } from '@webitel/api-services/gen-wire';
 import { snakeToKebab } from '@webitel/ui-sdk/scripts';
 import { CasesApiFactory } from 'webitel-sdk';
 
-import ftsServiceAPI from './FTSServiceAPI.js';
 import { stringifyCaseFilters } from './stringifyCaseFilters.js';
 
 const instance = getDefaultInstance();
@@ -98,7 +97,7 @@ const getCasesList = async (params) => {
 	const { fts } = params;
 	if (fts) {
 		try {
-			const { items } = await ftsServiceAPI.getList({
+			const { items } = await FtsAPI.getList({
 				page: params.page,
 				size: params.size,
 				fts: params.fts,

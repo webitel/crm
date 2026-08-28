@@ -1,5 +1,6 @@
 // TODO: прибрати після рефактору таймлайнів
 
+import { FtsAPI } from '@webitel/api-services/api';
 import {
 	getDefaultGetListResponse,
 	getDefaultGetParams,
@@ -16,7 +17,6 @@ import {
 import { snakeToKebab } from '@webitel/ui-sdk/src/scripts/index';
 
 import instance from '../../../../../app/api/instance.js';
-import ftsServiceAPI from '../../../../cases/api/FTSServiceAPI.js';
 import { stringifyCaseFilters } from '../../../../cases/api/stringifyCaseFilters.js';
 
 function transformSourceType(data) {
@@ -50,7 +50,7 @@ const getContactCasesList = async (params) => {
 	const { fts } = params;
 	if (fts) {
 		try {
-			const { items } = await ftsServiceAPI.getList({
+			const { items } = await FtsAPI.getList({
 				page: params.page,
 				size: params.size,
 				fts: params.fts,
