@@ -166,13 +166,10 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import { checkDisableState } from '../../../utils/checkDisableState.js';
-import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
+import { checkDisableState } from '../../../utils/checkDisableState';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName';
 import { useCaseServicesDatalistStore } from '../stores';
-import {
-	buildServiceCrumbs,
-	findServicePath,
-} from '../utils/breadcrumbUtils.js';
+import { buildServiceCrumbs, findServicePath } from '../utils/breadcrumbUtils';
 
 const route = useRoute();
 const router = useRouter();

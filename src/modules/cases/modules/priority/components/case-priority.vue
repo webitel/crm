@@ -3,16 +3,15 @@
     <span class="case-priority__title case-section-title">{{ t('cases.priority') }}</span>
     <div>
       <editable-field
-        :edit-mode="editMode"
-        :value="itemInstance.priority"
-        @update:value="setItemProp({ path: 'priority', value: $event })"
+        v-model="modelValue.priority"
+        :edit-mode="isEditable"
       >
         <template #default="props">
           <wt-single-select
             v-bind="props"
-            :model-value="props.value"
+            :model-value="props.modelValue"
             :disabled="disableUserInput || !hasPrioritiesReadAccess"
-            :v="v$.value.itemInstance.priority"
+            :regle-validation="validationFields.priority"
             :placeholder="t('cases.priority')"
             :search-method="hasPrioritiesReadAccess && CasePrioritiesAPI.getLookup"
             class="case-priority__select"
@@ -24,32 +23,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CasePrioritiesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import EditableField from '../../case-info/components/editable-field.vue';
 
 const { t } = useI18n();
 
-const namespace = inject('namespace');
-const editMode = inject('editMode');
-const v$ = inject('v$');
+const { isEditable } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
 const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
 	WtObject.Priorities,
 );
 
-const { itemInstance, setItemProp } = useCardStore(namespace);
-
-const { isNew } = useCardComponent({
-	itemInstance,
+const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
 });
 </script>
 

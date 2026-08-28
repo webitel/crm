@@ -41,9 +41,9 @@
               <div class="add-contacts-in-group-popup__username-wrapper">
                 <wt-avatar
                   size="xs"
-                  :username="item.name"
+                  :username="item.name?.commonName"
                 />
-                {{ item.name }}
+                {{ item.name?.commonName }}
               </div>
             </template>
 

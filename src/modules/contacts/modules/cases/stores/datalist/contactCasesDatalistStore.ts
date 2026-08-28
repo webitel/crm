@@ -1,6 +1,6 @@
+import { ContactCasesAPI } from '@webitel/api-services/api';
 import { createTableStore } from '@webitel/ui-datalist';
 
-import ContactCasesAPI from '../../api/ContactCasesAPI';
 import { ContactCasesNamespace } from '../../namespace';
 import { headers } from './_internals/headers';
 

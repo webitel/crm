@@ -82,7 +82,7 @@ import { ProviderIconType } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserinfoStore } from '../../../../../../userinfo/store/userinfoStore';
@@ -97,9 +97,7 @@ const { t } = useI18n();
 const { disabledUpdate, disabledDelete } = useContactEditAccessControl();
 
 const contactCardStore = useContactCardStore();
-const { itemId: parentId } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId: parentId } = storeToRefs(contactCardStore);
 
 const { userId } = useUserinfoStore();
 

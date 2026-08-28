@@ -64,10 +64,6 @@ body {
 	max-height: 100%;
 }
 
-.wt-dummy {
-	flex-grow: 1;
-}
-
 .wt-page-wrapper {
 	width: 100%;
 }

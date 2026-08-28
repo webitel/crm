@@ -1,31 +1,18 @@
 <template>
   <div class="case-attachments">
-    <case-files :item-id="id" :namespace="props.namespace" :files-namespace="filesNamespace" />
-    <case-links :item-id="id" :namespace="props.namespace" :links-namespace="linksNamespace" />
+    <case-files :item-id="itemId" />
+    <case-links :item-id="itemId" />
   </div>
 </template>
-<script setup>
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
 
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import CaseFiles from '../modules/files/components/case-files.vue';
 import CaseLinks from '../modules/links/components/case-links.vue';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
-const { itemInstance, id } = useCardStore(props.namespace);
-
-const { isNew } = useCardComponent({
-	id,
-	itemInstance,
-});
-
-const linksNamespace = `${props.namespace}/links`;
-const filesNamespace = `${props.namespace}/files`;
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore);
 </script>
 <style lang="scss" scoped>
 </style>

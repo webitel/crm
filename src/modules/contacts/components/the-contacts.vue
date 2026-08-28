@@ -68,13 +68,13 @@
 
           <template #actions="{ item }">
             <wt-icon-action
-              :disabled="!item.access.edit"
+              :disabled="!getContactAccessFromMode(item.mode).edit"
               action="edit"
               @click="edit(item)"
             />
 
             <wt-icon-action
-              :disabled="!item.access.delete"
+              :disabled="!getContactAccessFromMode(item.mode).delete"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -91,7 +91,10 @@
 </template>
 
 <script setup lang="ts">
-import { ContactsSearchMode } from '@webitel/api-services/api';
+import {
+	ContactsSearchMode,
+	getContactAccessFromMode,
+} from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -103,8 +106,8 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import ContactsTable from '../../_shared/modules/contacts/components/contacts-table.vue';
 import { SearchMode } from '../../cases/enums/SearchMode';
+import ContactsTable from '../_shared/components/contacts-table.vue';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsFiltersPanel from './contacts-filters-panel.vue';
@@ -193,7 +196,7 @@ const searchModeOpts = computed(() => [
 ]);
 
 const deletableSelectedItems = computed(() =>
-	selected.value.filter((item) => item.access.delete),
+	selected.value.filter((item) => getContactAccessFromMode(item.mode).delete),
 );
 
 function create() {

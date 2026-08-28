@@ -8,7 +8,7 @@
       />
       <timeline-row-initiator
         :text="initiator"
-        :type="isInitiatorBot ? TimelineInitiatorType.BOT : TimelineInitiatorType.CONTACT"
+        :type="isInitiatorBot ? TimelineInitiatorType.Bot : TimelineInitiatorType.Contact"
       />
     </header>
 
@@ -41,14 +41,14 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import purify from 'dompurify';
 import linkifyHtml from 'linkify-html';
 import { computed, ref } from 'vue';
 
 import TimelineRowDropdownTransition from '../../../../components/utils/timeline-row-dropdown-transition.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
-import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
+import { TimelineInitiatorType } from '../../../../enums/TimelineInitiatorType.enum';
 import ChatPointTimelineRowFile from './chat-point-timeline-row-file.vue';
 
 const props = defineProps({

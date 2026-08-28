@@ -83,7 +83,7 @@ import {
 import { ComponentSize } from '@webitel/ui-sdk/enums';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../../../../../app/components/_shared/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { PrioritiesColors } from '../enums/PrioritiesColors';
 

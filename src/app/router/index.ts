@@ -15,7 +15,7 @@ import startPageRoutes from '../../modules/start-page/router';
 
 const TheCrmWorkspace = () => import('../components/the-crm-workspace.vue');
 const AccessDenied = () =>
-	import('../components/utils/access-denied-component.vue');
+	import('../components/_shared/access-denied-component.vue');
 const NotFound = () =>
 	import('../../modules/error-pages/components/the-not-found-component.vue');
 

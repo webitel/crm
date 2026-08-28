@@ -23,80 +23,56 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 
 import { TimelineEventType } from '../../../enums/TimelineEventType';
+import { useTimelineStore } from '../../../stores/timeline';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-	callsCount: {
-		type: [
-			Number,
-			String,
-		],
-		default: 0,
-	},
-	chatsCount: {
-		type: [
-			Number,
-			String,
-		],
-		default: 0,
-	},
-	emailsCount: {
-		type: [
-			Number,
-			String,
-		],
-		default: 0,
-	},
-});
-
-const store = useStore();
-
-const filterValue = computed(() =>
-	store.getters[`${props.namespace}/GET_FILTER`]('type'),
-);
-
-function setFilter(payload) {
-	return store.dispatch(`${props.namespace}/SET_FILTER`, payload);
+interface Props {
+	callsCount?: number | string;
+	chatsCount?: number | string;
+	emailsCount?: number | string;
 }
 
-function toggleFilterValue(value) {
-	const newValue = filterValue.value.includes(value)
-		? filterValue.value.filter((item) => item !== value)
+const props = withDefaults(defineProps<Props>(), {
+	callsCount: 0,
+	chatsCount: 0,
+	emailsCount: 0,
+});
+
+const timelineStore = useTimelineStore();
+const { typeFilter } = storeToRefs(timelineStore);
+const { setTypeFilter } = timelineStore;
+
+function toggleFilterValue(value: TimelineEventType) {
+	const newValue = typeFilter.value.includes(value)
+		? typeFilter.value.filter((item) => item !== value)
 		: [
-				...filterValue.value,
+				...typeFilter.value,
 				value,
 			];
 
-	return setFilter({
-		name: 'type',
-		value: newValue,
-	});
+	return setTypeFilter(newValue);
 }
 
 const filters = computed(() => [
 	{
 		icon: 'call',
-		selected: filterValue.value.includes(TimelineEventType.Call),
+		selected: typeFilter.value.includes(TimelineEventType.Call),
 		set: () => toggleFilterValue(TimelineEventType.Call),
 		count: props.callsCount,
 	},
 	{
 		icon: 'chat',
-		selected: filterValue.value.includes(TimelineEventType.Chat),
+		selected: typeFilter.value.includes(TimelineEventType.Chat),
 		set: () => toggleFilterValue(TimelineEventType.Chat),
 		count: props.chatsCount,
 	},
 	{
 		icon: 'email',
-		selected: filterValue.value.includes(TimelineEventType.Email),
+		selected: typeFilter.value.includes(TimelineEventType.Email),
 		set: () => toggleFilterValue(TimelineEventType.Email),
 		count: props.emailsCount,
 	},

@@ -10,7 +10,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CaseNumber from '../modules/case-number/components/case-number.vue';
 import CaseDeadlines from '../modules/deadlines/components/case-deadline-list.vue';
 import CasePersons from '../modules/persons/components/case-persons.vue';
@@ -19,12 +19,9 @@ import CaseService from '../modules/service/components/case-service.vue';
 import CaseSla from '../modules/sla/components/case-sla.vue';
 import CaseStatus from '../modules/status/components/case-status.vue';
 
-const props = defineProps({
-	isNew: {
-		type: Boolean,
-		default: false,
-	},
-});
+defineProps<{
+	isNew: boolean;
+}>();
 </script>
 <style
   lang="scss"

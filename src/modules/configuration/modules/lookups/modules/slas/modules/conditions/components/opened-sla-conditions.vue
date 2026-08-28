@@ -116,6 +116,7 @@
 <script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
+import { convertDurationWithDays as ConvertDurationWithDays } from '@webitel/ui-sdk/scripts';
 import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -124,9 +125,7 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import ConvertDurationWithDays from '../../../../../../../../../app/scripts/convertDurationWithDays';
 import { useSLAConditionsDatalistStore } from '../stores';
 import ConditionPopup from './opened-sla-condition-popup.vue';
 

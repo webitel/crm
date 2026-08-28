@@ -8,7 +8,7 @@
       <template #name>
         <timeline-row-initiator
           :text="task.owner.name"
-          :type="TimelineInitiatorType.CONTACT"
+          :type="TimelineInitiatorType.Contact"
         />
       </template>
     </email-task-timeline-header-section>
@@ -39,12 +39,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
-import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
+import { TimelineInitiatorType } from '../../../../enums/TimelineInitiatorType.enum';
 import EmailTaskTimelineHeaderSection from './email-task-timeline-header-section.vue';
 
 const props = defineProps({

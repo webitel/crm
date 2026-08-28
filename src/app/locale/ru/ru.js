@@ -7,7 +7,7 @@ import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
-import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../modules/timeline/enums/TimelineTaskStatus.enum';
 
 export default {
 	crm: 'CRM',
@@ -63,12 +63,12 @@ export default {
 			transcription: 'Транскрипция',
 		},
 		status: {
-			[TimelineTaskStatusEnum.STARTED]: 'Начало',
-			[TimelineTaskStatusEnum.MISSED]: 'Пропущен',
-			[TimelineTaskStatusEnum.TRANSFERRED]: 'Переведено',
-			[TimelineTaskStatusEnum.ENDED]: 'Конец',
-			[TimelineTaskStatusEnum.SENT]: 'Отправлено',
-			[TimelineTaskStatusEnum.RECEIVED]: 'Получено',
+			[TimelineTaskStatusEnum.Started]: 'Начало',
+			[TimelineTaskStatusEnum.Missed]: 'Пропущен',
+			[TimelineTaskStatusEnum.Transferred]: 'Переведено',
+			[TimelineTaskStatusEnum.Ended]: 'Конец',
+			[TimelineTaskStatusEnum.Sent]: 'Отправлено',
+			[TimelineTaskStatusEnum.Received]: 'Получено',
 		},
 		eventType: {
 			[TimelineEventType.Call]: 'Звонок | Звонки',

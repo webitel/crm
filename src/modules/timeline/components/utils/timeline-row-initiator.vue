@@ -1,7 +1,7 @@
 <template>
   <div class="timeline-row-initiator typo-subtitle-1">
     <div
-      v-if="type === TimelineInitiatorType.BOT"
+      v-if="type === TimelineInitiatorType.Bot"
       class="timeline-row-initiator__wrapper"
     >
       <wt-icon icon="bot" />
@@ -10,7 +10,7 @@
     </div>
 
     <div
-      v-else-if="type === TimelineInitiatorType.FLOW"
+      v-else-if="type === TimelineInitiatorType.Flow"
       class="timeline-row-initiator__wrapper"
     >
       <wt-chip color="secondary">
@@ -31,8 +31,8 @@
   </div>
 </template>
 
-<script setup>
-import TimelineInitiatorType from '../../enums/TimelineInitiatorType.enum.js';
+<script setup lang="ts">
+import { TimelineInitiatorType } from '../../enums/TimelineInitiatorType.enum';
 
 const props = defineProps({
 	text: {
@@ -41,8 +41,11 @@ const props = defineProps({
 	},
 	type: {
 		type: String,
-		default: TimelineInitiatorType.CONTACT,
-		validator: (value) => Object.values(TimelineInitiatorType).includes(value),
+		default: TimelineInitiatorType.Contact,
+		validator: (value: string) =>
+			Object.values(TimelineInitiatorType).includes(
+				value as TimelineInitiatorType,
+			),
 	},
 });
 </script>

@@ -16,7 +16,7 @@
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 
-import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 

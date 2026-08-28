@@ -49,8 +49,6 @@ vi.doMock('@aliasedDeps/api-services/axios', () => ({
 }));
 
 beforeAll(async () => {
-	const store = (await import('../../src/app/store/index.js')).default;
-	const router = (await import('../../src/app/router')).default;
 	const { createUserAccessControl } = await import(
 		'../../src/app/composables/useUserAccessControl'
 	);
@@ -58,5 +56,4 @@ beforeAll(async () => {
 		'../../src/modules/userinfo/store/userinfoStore'
 	);
 	createUserAccessControl(useUserinfoStore);
-	store.commit('SET_ROUTER', router);
 });

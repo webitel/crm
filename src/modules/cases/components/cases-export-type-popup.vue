@@ -10,25 +10,25 @@
     <template #main>
       <div class="wt-cases-export-type-popup__form">
         <wt-single-select
-          v-model:model-value="type"
+          v-model:model-value="draft.type"
           :label="t('vocabulary.format')"
           required
-          :v="v$.type"
+          :regle-validation="validationFields.type"
           data-key="name"
           :options="options"
         />
         <wt-input-text
           v-if="isExportSettingsFormatCSV"
-          v-model:model-value="separator"
+          v-model:model-value="draft.separator"
           :label="t('objects.CSV.separator')"
-          :v="v$.separator"
+          :regle-validation="validationFields.separator"
           required
         />
       </div>
     </template>
     <template #actions>
       <wt-button
-        :disabled="v$.$invalid"
+        :disabled="hasValidationErrors"
         @click="save"
       >
         {{ t('reusable.export') }}
@@ -43,29 +43,36 @@
   </wt-popup>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required, requiredIf } from '@vuelidate/validators';
+<script setup lang="ts">
+import { useRegleSchema } from '@regle/schemas';
+import {
+	type CaseExportOptions,
+	caseExportOptionsSchema,
+} from '@webitel/api-services/validations';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps({
-	shown: {
-		type: Boolean,
-		required: true,
-	},
-});
+defineProps<{
+	shown: boolean;
+}>();
 
-const emit = defineEmits([
-	'save',
-	'close',
-]);
+const emit = defineEmits<{
+	save: [
+		{
+			format?: string;
+			separator?: string;
+		},
+	];
+	close: [];
+}>();
 
 const { t } = useI18n();
 
-const type = ref(null);
-const separator = ref(',');
-const isExportSettingsFormatCSV = computed(() => type.value?.value === 'csv');
+const draft = ref<CaseExportOptions>({
+	type: null,
+	separator: ',',
+});
+
 const options = ref([
 	{
 		name: 'csv',
@@ -77,33 +84,30 @@ const options = ref([
 	},
 ]);
 
-const v$ = useVuelidate(
-	computed(() => {
-		return {
-			type: {
-				required,
-			},
-			separator: {
-				requiredIfRef: requiredIf(isExportSettingsFormatCSV.value),
-			},
-		};
-	}),
-	{
-		type,
-		separator,
-	},
-	{
-		$autoDirty: true,
-		$stopPropagation: true,
-	},
+const isExportSettingsFormatCSV = computed(
+	() => draft.value.type?.value === 'csv',
 );
 
-v$.value.$touch();
+const validationSchema = ref(
+	useRegleSchema(draft, caseExportOptionsSchema, {
+		autoDirty: true,
+		syncState: {
+			onValidate: true,
+		},
+	}),
+);
+
+const validationFields = computed(() => validationSchema.value.r$.$fields);
+const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
+const validate = () => validationSchema.value.r$.$validate();
 
 const save = async () => {
+	const { valid, data } = await validate();
+	if (!valid) return;
+
 	emit('save', {
-		format: type.value?.value,
-		separator: separator.value,
+		format: data.type?.value,
+		separator: data.separator,
 	});
 	close();
 };

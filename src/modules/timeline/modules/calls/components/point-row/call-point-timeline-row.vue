@@ -39,7 +39,7 @@
   </timeline-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
@@ -49,9 +49,8 @@ import TimelineRowDuration from '../../../../components/utils/timeline-row-durat
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
-import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
-import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 
 const props = defineProps({
 	point: {
@@ -65,11 +64,11 @@ const props = defineProps({
 });
 
 const pointStatus = computed(() => {
-	return TimelineTaskStatusEnum.TRANSFERRED;
+	return TimelineTaskStatusEnum.Transferred;
 });
 
 const pinType = computed(() => {
-	return TimelinePinType.CALL_TRANSFER;
+	return TimelinePinType.CallTransfer;
 });
 
 const initiatorType = computed(() => {
