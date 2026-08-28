@@ -13,6 +13,7 @@
         delete: hasContactEditAccess,
         create: hasContactEditAccess,
       }"
+      :fields="customFields"
       :store="useContactPermissionsStore"
       :parent-id="itemId"
       :item-instance="draftItemInstance"
