@@ -10,7 +10,7 @@
       </div>
 
       <template
-        v-for="[key, value] in entryFields(entry)"
+        v-for="[key, value] in entryFields(entry.form)"
         :key="key"
       >
         <div class="timeline-task-info-postprocessing__field">
