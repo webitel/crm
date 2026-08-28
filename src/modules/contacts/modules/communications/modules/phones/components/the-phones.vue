@@ -2,7 +2,7 @@
   <div class="phones">
     <communication-popup
       :store="usePhonesCardStore"
-      :parent-id="parentId"
+      :parent-id="(parentId as unknown as string)"
       :channel="CommunicationChannel.Number"
       :is-first-record="!dataList.length"
       @close="close"

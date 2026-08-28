@@ -1,13 +1,20 @@
+import type { DataField } from '@webitel/api-services/gen/models';
+
 import type { FieldType } from '../enums/FieldType';
+
+export type ColumnField = Partial<DataField> &
+	Record<string, any> & {
+		position?: number;
+	};
 
 export interface CustomLookupField {
 	name: string;
 	id: string;
-	kind: FieldType;
+	kind: FieldType | '';
 	required: boolean;
 	lookup: null | CustomLookupLookup;
 	list: null;
-	default: null | string | CustomLookupValue;
+	default: null | string | boolean | CustomLookupValue;
 	_dirty: boolean;
 }
 

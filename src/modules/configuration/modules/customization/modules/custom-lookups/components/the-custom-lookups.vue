@@ -100,7 +100,7 @@
                 @click="
                   askDeleteConfirmation({
                     deleted: [item],
-                    callback: () => deleteEls(item),
+                    callback: () => deleteEls([item]),
                   })
                   "
               />
@@ -216,10 +216,13 @@ function edit(item: { repo: string }) {
 const deleteMany = async (
 	items: Array<{
 		repo: string;
+		id: string;
 	}>,
 ) => {
 	for (const item of items) {
-		await deleteEls(item);
+		await deleteEls([
+			item,
+		]);
 	}
 };
 

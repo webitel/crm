@@ -1,7 +1,7 @@
 <template>
   <div class="case-attachments">
-    <case-files :item-id="itemId" />
-    <case-links :item-id="itemId" />
+    <case-files :item-id="(itemId as unknown as string)" />
+    <case-links :item-id="(itemId as unknown as string)" />
   </div>
 </template>
 <script setup lang="ts">

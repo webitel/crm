@@ -23,10 +23,11 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { FieldType } from '../../custom-lookups/enums/FieldType';
+import type { DynamicFieldValue } from '../types/dynamicFieldValue';
 import DisplayDynamicFieldExtension from './display-dynamic-field-extension.vue';
 
 const props = defineProps<{
-	value: string;
+	value: DynamicFieldValue;
 	field: Record<string, any>;
 }>();
 

@@ -241,7 +241,10 @@ const path = computed(() => {
 
 	if (!catalog.value) return baseRoutes;
 
-	const servicePath = findServicePath(route.params.rootId, catalog.value);
+	const servicePath = findServicePath(
+		route.params.rootId as string,
+		catalog.value,
+	);
 
 	const routes = [
 		...baseRoutes,
@@ -255,7 +258,7 @@ const path = computed(() => {
 				},
 			},
 		},
-		...buildServiceCrumbs(servicePath, route.params.catalogId),
+		...buildServiceCrumbs(servicePath, route.params.catalogId as string),
 	];
 
 	return routes;
