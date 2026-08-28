@@ -1,30 +1,29 @@
 <template>
   <div class="timeline-task-info-postprocessing wt-scrollbar">
-    <template
+    <div
       v-for="(entry, index) in postprocessing"
       :key="index"
+      class="timeline-task-info-postprocessing__agent"
     >
       <div class="timeline-task-info-postprocessing__agent-name typo-subtitle-1">
         <wt-icon icon="agent" />
         {{ entry.agent?.name }}
       </div>
-
-      <template
-        v-for="[key, value] in entryFields(entry.form)"
-        :key="key"
+      <div
+        class="timeline-task-info-postprocessing__changes"
       >
-        <div class="timeline-task-info-postprocessing__field">
-          <p class="typo-subtitle-1">
-            {{ key }}:
-          </p>
-          <p class="typo-body-1">
-            {{ JSON.stringify(value) }}
-          </p>
-        </div>
-
-        <wt-divider />
-      </template>
-    </template>
+        <template
+          v-for="([key, value], index) in entryFields(entry.form)"
+          :key="key"
+        >
+          <wt-divider v-if="index" />
+          <div class="timeline-task-info-postprocessing__field">
+            <p class="typo-subtitle-1">{{ key }}:</p>
+            <p class="typo-body-1">{{ formatValue(value) }}</p>
+          </div>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -38,6 +37,10 @@ defineProps({
 
 function entryFields(entry) {
 	return Object.entries(entry).filter(([key]) => key !== 'agent');
+}
+
+function formatValue(value) {
+	return JSON.stringify(value).replace(/^"|"$/g, '');
 }
 </script>
 
@@ -54,11 +57,18 @@ function entryFields(entry) {
 .timeline-task-info-postprocessing__agent-name {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2xs);
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
+.timeline-task-info-postprocessing__changes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .timeline-task-info-postprocessing__field {
   display: flex;
-  gap: var(--spacing-2xs);
+  gap: var(--spacing-xs);
 }
 </style>

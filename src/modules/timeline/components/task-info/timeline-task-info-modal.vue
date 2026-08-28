@@ -126,7 +126,7 @@ watch(
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin-top: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
   min-height: 0;
 }
 </style>
