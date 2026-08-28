@@ -2,7 +2,7 @@
   <div class="emails">
     <communication-popup
       :store="useEmailsCardStore"
-      :parent-id="parentId"
+      :parent-id="(parentId as unknown as string)"
       :channel="CommunicationChannel.Email"
       :is-first-record="!dataList.length"
       @close="close"

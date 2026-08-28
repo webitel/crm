@@ -107,7 +107,6 @@
 </template>
 
 <script setup lang="ts">
-import type { DataField } from '@webitel/api-services/gen/models';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -117,12 +116,8 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
+import type { ColumnField } from '../types/customLookupField';
 import CustomFieldPopup from './custom-field-popup.vue';
-
-type ColumnField = Partial<DataField> &
-	Record<string, any> & {
-		position?: number;
-	};
 
 // this component is bound generically alongside sibling card tabs (e.g. the
 // "general" tab), which pass along their own model-value/validation-fields/

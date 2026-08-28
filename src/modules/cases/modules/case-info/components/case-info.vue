@@ -74,12 +74,12 @@
 
     <related-cases
       v-if="itemId"
-      :parent-id="itemId"
+      :parent-id="(itemId as unknown as string)"
     />
 
     <case-comments
       v-if="hasCaseCommentsReadAccess && itemId"
-      :parent-id="itemId"
+      :parent-id="(itemId as unknown as string)"
     />
   </div>
 </template>

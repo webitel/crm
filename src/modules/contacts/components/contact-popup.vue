@@ -165,7 +165,9 @@ const validationSchema = ref(
 	}),
 );
 
-const modelValue = computed(() => validationSchema.value.r$.$value);
+const modelValue = computed(
+	() => validationSchema.value.r$.$value as ContactDraft,
+);
 const validationFields = computed(() => validationSchema.value.r$.$fields);
 const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 const validate = () => validationSchema.value.r$.$validate();

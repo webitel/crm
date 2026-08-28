@@ -17,7 +17,7 @@
         <wt-input-text
           v-model:model-value="value.name"
           :label="t('reusable.title')"
-          :v="v$.value.name"
+          :v="(v$.value as any).name"
           required
         />
 
@@ -25,7 +25,7 @@
           v-model:model-value="value.id"
           :label="t('customization.customLookups.code')"
           :disabled="!isNew"
-          :v="v$.value.id"
+          :v="(v$.value as any).id"
           :custom-validators="[
             {
               name: 'checkId',
@@ -42,10 +42,10 @@
 
         <default-value-input
           v-if="value.required"
-          :value="value"
+          :value="(value as CustomLookupField)"
           :disabledDefaultValue="disabledDefaultValue"
           :is-new="isNew"
-          :v="v$"
+          :v="(v$ as any)"
         />
 
         <wt-switcher
@@ -81,6 +81,7 @@ import deepCopy from 'deep-copy';
 import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { FieldType } from '../enums/FieldType';
+import type { CustomLookupField } from '../types/customLookupField';
 import DefaultValueInput from './shared/default-value-input.vue';
 import TypeFieldSelect from './shared/type-field-select.vue';
 
@@ -96,7 +97,7 @@ const emit = defineEmits<{
 	close: [];
 }>();
 
-const draft = {
+const draft: CustomLookupField = {
 	name: '',
 	id: '',
 	kind: '',
@@ -113,7 +114,16 @@ const checkId = (repo: string) => {
 	return regex.test(repo);
 };
 
-const value = ref(Object.assign(deepCopy(draft), deepCopy(props.field)));
+function buildInitialValue(
+	field?: Record<string, any> | null,
+): CustomLookupField {
+	return {
+		...deepCopy(draft),
+		...deepCopy(field),
+	};
+}
+
+const value = ref(buildInitialValue(props.field));
 const isNew = computed(() => !props.field);
 
 const disabledDefaultValue = ref(!isNew.value);
@@ -141,7 +151,7 @@ const v$ = useVuelidate(
 	})),
 	{
 		value,
-	},
+	} as any,
 	{
 		$autoDirty: true,
 	},

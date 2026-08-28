@@ -1,7 +1,7 @@
 <template>
   <the-timeline
     v-if="itemId"
-    :parent-id="itemId"
+    :parent-id="(itemId as unknown as string)"
     :mode="TimelineMode.Contact"
   />
 </template>

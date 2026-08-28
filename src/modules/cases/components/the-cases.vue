@@ -207,12 +207,12 @@
             </template>
             <template
               v-for="header in customHeaders"
-              #[header.value]="{ item }"
+              #[header.value]="slotProps"
               :key="header.field"
             >
               <display-dynamic-field-extension
                 :field="header"
-                :value="getCustomValues(item, header)"
+                :value="getCustomValues((slotProps as { item: any }).item, header)"
               />
             </template>
             <template #expansion="{ item }">
@@ -261,10 +261,11 @@ import {
 	FormatDateMode,
 	IconAction,
 } from '@webitel/ui-sdk/enums';
-import { downloadFile } from '@webitel/ui-sdk/scripts';
+import { downloadFile, FileFormat } from '@webitel/ui-sdk/scripts';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
+import type { DownloadFileResponse } from '@webitel/ui-sdk/src/scripts/downloadFile/types/downloadFile.types';
 import { formatDate, prettifyDate } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
@@ -432,7 +433,7 @@ const exportCases = async ({
 	format,
 	separator,
 }: {
-	format?: string;
+	format?: FileFormat;
 	separator?: string | null;
 }) => {
 	const exportParams = {
@@ -453,9 +454,9 @@ const exportCases = async ({
 	const filename = `cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
 
 	downloadFile({
-		response,
+		response: response as unknown as DownloadFileResponse,
 		filename,
-		fileFormat: format,
+		fileFormat: format as FileFormat,
 	});
 };
 

@@ -1,7 +1,7 @@
 <template>
   <div class="variables">
     <variable-popup
-      :parent-id="parentId"
+      :parent-id="(parentId as unknown as string)"
       @close="close"
       @saved="loadDataList"
     />

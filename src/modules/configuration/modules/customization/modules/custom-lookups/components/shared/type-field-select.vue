@@ -3,7 +3,7 @@
     :model-value="value.kind"
     :options="options"
     :label="t('vocabulary.type')"
-    :v="v$.value.kind"
+    :v="(v$.value as any).kind"
     :disabled="disabled"
     required
     data-key="name"
@@ -19,7 +19,7 @@
     :disabled="disabled"
     :label="t('reusable.object')"
     :search-method="loadLookupList"
-    :v="v$.value.lookup"
+    :v="(v$.value as any).lookup"
     data-key="name"
     :show-clear="false"
     @update:model-value="selectObject($event)"
@@ -37,7 +37,6 @@
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { ObjectsAPI } from '@webitel/api-services/api';
-import { snakeToCamel } from '@webitel/ui-sdk/scripts';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -48,7 +47,7 @@ const props = defineProps<{
 	disabled?: boolean;
 }>();
 
-const { t, te } = useI18n();
+const { t } = useI18n();
 
 const v$ = useVuelidate(
 	computed(() => ({
@@ -72,7 +71,7 @@ const v$ = useVuelidate(
 	})),
 	{
 		value: props.value,
-	},
+	} as any,
 	{
 		$autoDirty: true,
 	},
@@ -107,7 +106,7 @@ const options = [
 	},
 ];
 
-const changeType = (value: string) => {
+const changeType = (value: FieldType) => {
 	if (value === FieldType.Select || value === FieldType.Multiselect) {
 		props.value.list = null;
 		props.value.lookup = null;
@@ -128,28 +127,5 @@ const selectObject = (value: Record<string, any>) => {
 };
 const loadLookupList = (params: Record<string, unknown>) => {
 	return ObjectsAPI.getLookup(params);
-};
-
-const getOptionLocale = (option: Record<string, any> | null) => {
-	if (!option) return '';
-
-	const objectCode = snakeToCamel(option.repo || option.path);
-
-	// From backend got repo with 's' at the end of the word which means plural, so need to remove it to get the singular form translation
-	const singleObjectCode = objectCode.endsWith('s')
-		? objectCode.slice(0, -1)
-		: objectCode;
-
-	const hasTranslationInSameKeyByObject = te(
-		`objects.${singleObjectCode}.${singleObjectCode}`,
-	);
-
-	if (hasTranslationInSameKeyByObject) {
-		return t(`objects.${singleObjectCode}.${singleObjectCode}`);
-	}
-
-	return te(`objects.${singleObjectCode}`)
-		? t(`objects.${singleObjectCode}`)
-		: option.name;
 };
 </script>

@@ -207,7 +207,7 @@ const { showEmpty } = useTableEmpty({
 });
 
 const filteredActions = computed(() => {
-	const actions = [
+	const actions: Array<(typeof IconAction)[keyof typeof IconAction]> = [
 		IconAction.DOWNLOAD,
 	];
 	if (!isReadOnly) {

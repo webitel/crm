@@ -22,7 +22,7 @@
         @submit.prevent="save"
       >
         <opened-custom-lookup-columns
-          :item-instance="modelValue"
+          :item-instance="(modelValue as { fields: ColumnField[] })"
           :title="t(`customization.extensions.${repo}`)"
         />
       </form>
@@ -38,6 +38,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import OpenedCustomLookupColumns from '../../custom-lookups/components/opened-custom-lookup-columns.vue';
+import type { ColumnField } from '../../custom-lookups/types/customLookupField';
 import { useFieldExtensionsCardStore } from '../stores/card/fieldExtensionsCardStore';
 
 const { t } = useI18n();

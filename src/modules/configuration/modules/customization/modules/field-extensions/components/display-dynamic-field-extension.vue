@@ -1,10 +1,10 @@
 <template>
   <template v-if="field.kind === FieldType.Select">
-    {{ displayText(value?.name) }}
+    {{ displayText((value as { name?: string })?.name) }}
   </template>
   <wt-display-chip-items
     v-else-if="field.kind === FieldType.Multiselect"
-    :items="value"
+    :items="(value as Array<{ id?: string; name?: string }>)"
   />
   <wt-switcher
     v-else-if="field.kind === FieldType.Boolean"
@@ -30,14 +30,15 @@ import { displayText } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
 import { FieldType } from '../../custom-lookups/enums/FieldType';
+import type { DynamicFieldValue } from '../types/dynamicFieldValue';
 
 const props = defineProps<{
 	field: Record<string, any>;
-	value: Record<string, any>;
+	value: DynamicFieldValue;
 	label?: string;
 }>();
 
-const showText = computed(() => displayText(props?.value));
+const showText = computed(() => displayText(props?.value as string | null));
 </script>
 
 <style lang="scss" scoped>

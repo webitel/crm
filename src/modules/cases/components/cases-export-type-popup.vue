@@ -49,6 +49,7 @@ import {
 	type CaseExportOptions,
 	caseExportOptionsSchema,
 } from '@webitel/api-services/validations';
+import { FileFormat } from '@webitel/ui-sdk/scripts';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -59,7 +60,7 @@ defineProps<{
 const emit = defineEmits<{
 	save: [
 		{
-			format?: string;
+			format?: FileFormat;
 			separator?: string;
 		},
 	];
@@ -76,11 +77,11 @@ const draft = ref<CaseExportOptions>({
 const options = ref([
 	{
 		name: 'csv',
-		value: 'csv',
+		value: FileFormat.CSV,
 	},
 	{
 		name: 'xlsx',
-		value: 'xlsx',
+		value: FileFormat.XLSX,
 	},
 ]);
 
@@ -106,7 +107,7 @@ const save = async () => {
 	if (!valid) return;
 
 	emit('save', {
-		format: data.type?.value,
+		format: data.type?.value as FileFormat | undefined,
 		separator: data.separator,
 	});
 	close();
