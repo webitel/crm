@@ -70,7 +70,7 @@ const { t } = useI18n();
 
 const tabs = computed(() => [
 	{
-		text: t('vocabulary.variables', 2),
+		text: t('timeline.info.title', 2),
 		value: 'variables',
 	},
 	{
