@@ -9,7 +9,7 @@
 
     <wt-send-message-popup
       v-if="isOpenChatPopup"
-      :chat-item="selectItem"
+      :chat-item="selectItem as any"
       :user-id="userId"
       @close="closeChat"
     />
@@ -76,7 +76,9 @@
 </template>
 
 <script lang="ts" setup>
+import { IMClientsAPI } from '@webitel/api-services/api';
 import { ChatGatewayProvider } from '@webitel/api-services/enums';
+import type { ContactsIMClient } from '@webitel/api-services/gen/models';
 import { WtEmpty, WtSendMessagePopup } from '@webitel/ui-sdk/components';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -162,7 +164,7 @@ const {
 );
 
 const isOpenChatPopup = ref(false);
-const selectItem = ref(null);
+const selectItem = ref<ContactsIMClient | null>(null);
 
 const availableProviders = [
 	ChatGatewayProvider.TELEGRAM_BOT,
@@ -172,9 +174,15 @@ const availableProviders = [
 	ChatGatewayProvider.CUSTOM,
 ];
 
-function openChat(item) {
+async function openChat(item: ContactsIMClient) {
+	const { items } = await IMClientsAPI.getList({
+		parentId: parentId.value,
+		id: [
+			item.id,
+		],
+	});
+	selectItem.value = items[0] ?? item;
 	isOpenChatPopup.value = true;
-	selectItem.value = item;
 }
 
 function closeChat() {
