@@ -2,19 +2,18 @@
   <div class="case-result">
     <div class="opened-card-input-grid opened-card-input-grid--1-col">
       <editable-field
-        :edit-mode="editMode"
+        v-model="modelValue.closeReason"
+        :edit-mode="isEditable"
         :label="t('cases.closureReason')"
-        :value="itemInstance.closeReason"
-        @update:value="setItemProp({ path: 'closeReason', value: $event })"
       >
         <template #default="props">
           <wt-single-select
             v-bind="props"
-            :model-value="props.value"
+            :model-value="props.modelValue"
             :key="closeReasonId"
             :disabled="isCloseReasonDisabled"
             required
-            :v="v$.value.itemInstance.closeReason"
+            :regle-validation="validationFields.closeReason"
             :search-method="hasCloseReasonGroupsReadAccess && searchCloseReasons"
             @update:model-value="props.updateValue($event)"
           />
@@ -22,18 +21,17 @@
       </editable-field>
 
       <editable-field
-        :edit-mode="editMode"
+        v-model="modelValue.closeResult"
+        :edit-mode="isEditable"
         :label="t('cases.result')"
-        :value="itemInstance.closeResult"
-        @update:value="setItemProp({ path: 'closeResult', value: $event })"
       >
         <template #default="props">
           <wt-textarea
             v-bind="props"
             required
-            :v="v$.value.itemInstance.closeResult"
-            :disabled="disableUserInput || !itemInstance.statusCondition.final"
-            :model-value="props.value"
+            :regle-validation="validationFields.closeResult"
+            :disabled="disableUserInput || !modelValue.statusCondition?.final"
+            :model-value="props.modelValue"
             @update:model-value="props.updateValue($event)"
           />
         </template>
@@ -42,60 +40,51 @@
       <div class="opened-card-input-grid">
         <editable-field
           :label="t('cases.rating')"
-          :value="itemInstance.rating"
+          :model-value="modelValue.rating"
         />
 
         <editable-field
           :label="t('cases.ratingComment')"
-          :value="itemInstance.ratingComment"
+          :model-value="modelValue.ratingComment"
         />
       </div>
     </div>
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { CaseCloseReasonsAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
-import { computed, inject } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import EditableField from '../../case-info/components/editable-field.vue';
+import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
-
-const editMode = inject('editMode');
-const v$ = inject('v$');
+const { isEditable } = useCaseAccessState();
 
 const { t } = useI18n();
-const store = useStore();
 
 const { disableUserInput } = useUserAccessControl();
 const { hasReadAccess: hasCloseReasonGroupsReadAccess } = useUserAccessControl(
 	WtObject.CloseReasonGroup,
 );
 
-const {
-	namespace: cardNamespace,
-	itemInstance,
-	setItemProp,
-} = useCardStore(props.namespace);
-
-const closeReasonId = computed(
-	() => store.getters[`${cardNamespace}/service/CLOSE_REASON_ID`],
-);
+const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
+});
+const { closeReasonId } = storeToRefs(useCaseServiceStore());
 
 const isCloseReasonDisabled = computed(
 	() =>
 		disableUserInput.value ||
-		!itemInstance.value.statusCondition.final ||
+		!modelValue.value.statusCondition?.final ||
 		!hasCloseReasonGroupsReadAccess.value,
 );
 

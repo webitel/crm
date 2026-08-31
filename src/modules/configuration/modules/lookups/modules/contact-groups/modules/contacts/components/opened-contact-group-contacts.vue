@@ -48,7 +48,7 @@
 
       <template #actions="{ item }">
         <wt-icon-action
-          :disabled="!item.access.delete"
+          :disabled="!getContactAccessFromMode(item.mode).delete"
           action="delete"
           @click="
             askDeleteConfirmation({
@@ -62,7 +62,10 @@
   </section>
 </template>
 <script setup lang="ts">
-import { ContactGroupsAPI } from '@webitel/api-services/api';
+import {
+	ContactGroupsAPI,
+	getContactAccessFromMode,
+} from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
@@ -72,7 +75,7 @@ import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
 
-import ContactsTable from '../../../../../../../../_shared/modules/contacts/components/contacts-table.vue';
+import ContactsTable from '../../../../../../../../contacts/_shared/components/contacts-table.vue';
 import AddContactsInGroupPopup from '../../add-contacts-in-group/components/add-contacts-in-group-popup.vue';
 import { useContactGroupContactsDatalistStore } from '../stores/datalist/contactGroupContactsDatalistStore';
 

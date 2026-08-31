@@ -16,8 +16,8 @@
         <wt-action-bar
           v-if="!isReadOnly"
           :include="[IconAction.ADD, IconAction.DELETE]"
-          :disabled:add="!hasCreateAccess || !editMode || defaultState.isAdding || defaultState.createMode"
-          :disabled:delete="!hasDeleteAccess || !editMode || !selected.length"
+          :disabled:add="isAddDisabled"
+          :disabled:delete="!hasDeleteAccess || !isEditable || !selected.length"
           @click:add="startAddingRelatedCase"
           @click:delete="
             askDeleteConfirmation({
@@ -67,7 +67,7 @@
 
       <wt-empty
         v-show="showEmpty"
-        :text="emptyText"
+        :text="t('cases.relatedCases.emptyText')"
       />
 
       <wt-loader v-show="isLoading" />
@@ -80,7 +80,7 @@
           :data="dataList"
           :headers="shownHeaders"
           :selected="selected"
-          :selectable="editMode"
+          :selectable="isEditable"
           headless
           sortable
           @sort="updateSort"
@@ -128,7 +128,7 @@
           <template #actions="{ item }">
             <wt-icon-action
               v-if="!isReadOnly"
-              :disabled="!hasDeleteAccess || !editMode"
+              :disabled="!hasDeleteAccess || !isEditable"
               action="delete"
               @click="
                 askDeleteConfirmation({
@@ -153,33 +153,29 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { CasesAPI, RelatedCasesAPI } from '@webitel/api-services/api';
 import { WebitelCasesRelationType } from '@webitel/api-services/gen/models';
-import { CrmSections } from '@webitel/ui-sdk/enums';
-import { IconAction } from '@webitel/ui-sdk/src/enums/index';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
-import { computed, inject, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../../../app/components/_shared/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import CasesAPI from '../../../api/CasesAPI';
-import { RelatedCasesAPI } from '../api/RelatedCasesAPI';
-import { useCaseRelatedCasesStore } from '../stores/relatedCases';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { CASE_VIEW_NAME } from '../../../router/caseViewName';
+import { useCaseRelatedCasesDatalistStore } from '../stores/datalist/caseRelatedCasesDatalistStore';
 import RelatedCaseItem from './related-case-item.vue';
 
-const props = defineProps({
-	parentId: {
-		type: String,
-		required: true,
-	},
-});
+const props = defineProps<{
+	parentId: string;
+}>();
 
-const isReadOnly = inject('isReadOnly');
-const editMode = inject('editMode');
+const { isReadOnly, isEditable } = useCaseAccessState();
 
 const { t } = useI18n();
 
@@ -187,7 +183,7 @@ const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
 });
 
-const tableStore = useCaseRelatedCasesStore();
+const tableStore = useCaseRelatedCasesDatalistStore();
 
 const { dataList, error, selected, isLoading, shownHeaders, next } =
 	storeToRefs(tableStore);
@@ -199,7 +195,6 @@ const {
 	updateSize,
 	updateSort,
 	updatePage,
-	deleteEls,
 	appendToDataList,
 } = tableStore;
 
@@ -222,16 +217,20 @@ const { showEmpty } = useTableEmpty({
 	isLoading,
 });
 
-const emptyText = computed(() => {
-	return t('cases.relatedCases.emptyText');
-});
-
 const defaultState = reactive({
 	createMode: false,
 	isAdding: false,
 	relatedCase: null,
 	relationType: null,
 });
+
+const isAddDisabled = computed(
+	() =>
+		!hasCreateAccess.value ||
+		!isEditable.value ||
+		defaultState.isAdding ||
+		defaultState.createMode,
+);
 
 const relatedTypesOptions = computed(() => {
 	const types = Object.values(WebitelCasesRelationType).map((type) => {
@@ -252,7 +251,6 @@ const onRelatedCasesSearch = async (params) => {
 
 function startAddingRelatedCase() {
 	defaultState.createMode = true;
-	defaultState.editingComment = null;
 	defaultState.relationType = relatedTypesOptions.value[0].id;
 }
 
@@ -270,7 +268,6 @@ function getRevertedCase(item) {
 	return !isNeedToRevert(item) ? item.relatedCase : item.primaryCase;
 }
 
-const CASE_VIEW_NAME = 'case_view';
 const createRouteLinkParams = (name, id) => {
 	return {
 		name,

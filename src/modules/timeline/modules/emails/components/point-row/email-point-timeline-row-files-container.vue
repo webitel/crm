@@ -13,12 +13,16 @@
   </div>
 </template>
 
-<script setup>
-import EmailPointTimelineRowFile from './email-point-timeline-row-file.vue';
+<script setup lang="ts">
+import { type PropType } from 'vue';
+
+import EmailPointTimelineRowFile, {
+	type EmailFile,
+} from './email-point-timeline-row-file.vue';
 
 const props = defineProps({
 	files: {
-		type: Array,
+		type: Array as PropType<EmailFile[]>,
 		required: true,
 	},
 });

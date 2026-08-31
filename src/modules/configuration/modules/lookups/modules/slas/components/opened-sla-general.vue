@@ -99,7 +99,7 @@ function loadCalendarsList(search) {
 }
 
 function onValidToChange(value?: number) {
-	modelValue.value.validTo = value;
+	modelValue.value.validTo = value !== undefined ? String(value) : undefined;
 	props.validationFields?.validFrom?.$touch();
 }
 </script>

@@ -2,11 +2,11 @@
   <div class="case-sla">
     <span class="case-sla__title case-section-title">{{ t('cases.appliedSLA') }}</span>
     <div
-      v-if="itemInstance.sla"
+      v-if="modelValue.sla"
       class="case-sla__content"
     >
       <div class="case-sla__name typo-body-1">
-        <span>{{ itemInstance?.sla?.name }}</span>
+        <span>{{ modelValue?.sla?.name }}</span>
       </div>
       <template v-if="slaConditionName">
         <div class="case-sla__condition">
@@ -21,87 +21,71 @@
   </div>
 </template>
 
-<script setup>
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { computed, inject, watch } from 'vue';
+<script setup lang="ts">
+import { SLAConditionsAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
+import { storeToRefs } from 'pinia';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 
-import ConditionsAPI from '../../../../configuration/modules/lookups/modules/slas/modules/conditions/api/conditions.js';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
+import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 
-const namespace = inject('namespace');
-
-const {
-	namespace: cardNamespace,
-
-	itemInstance,
-	setItemProp,
-} = useCardStore(namespace);
+const { modelValue } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
+});
 
 const { t } = useI18n();
 
-const store = useStore();
-const serviceSLA = computed(
-	() => store.getters[`${cardNamespace}/service/SLA`],
-);
+const { sla: serviceSLA } = storeToRefs(useCaseServiceStore());
 
 const slaConditionName = computed(
-	() => itemInstance?.value?.slaCondition?.name || '',
+	() => modelValue?.value?.slaCondition?.name || '',
 );
 
 const updateSlaCondition = async (slaId, priorityId) => {
 	if (!slaId || !priorityId) {
-		await resetSlaCondition();
+		resetSlaCondition();
 		return;
 	}
 	try {
-		const response = await ConditionsAPI.getList({
+		const response = await SLAConditionsAPI.getList({
 			parentId: slaId,
 			priorityId,
 		});
 		//NOTE: slaConditionsAPI.getList returns an array of items, but we need FIRST item
-		await setItemProp({
-			path: 'slaCondition',
-			value: response.items[0],
-		});
+		modelValue.value.slaCondition = response.items[0];
 	} catch (err) {
-		await resetSlaCondition();
+		resetSlaCondition();
 		throw err;
 	}
 };
 
-const resetSlaCondition = async () => {
-	await setItemProp({
-		path: 'slaCondition',
-		value: null,
-	});
+const resetSlaCondition = () => {
+	modelValue.value.slaCondition = null;
 };
 
-const resetSla = async () => {
-	await setItemProp({
-		path: 'sla',
-		value: null,
-	});
+const resetSla = () => {
+	modelValue.value.sla = null;
 };
 
 watch(
 	() => serviceSLA.value?.id,
 	async (newSlaId) => {
 		if (!newSlaId) {
-			await resetSla();
+			resetSla();
 			return;
 		}
 
-		await setItemProp({
-			path: 'sla',
-			value: serviceSLA.value,
-		});
-		await updateSlaCondition(newSlaId, itemInstance.value.priority?.id);
+		modelValue.value.sla = serviceSLA.value;
+		await updateSlaCondition(newSlaId, modelValue.value.priority?.id);
 	},
 );
 
 watch(
-	() => itemInstance.value.priority?.id,
+	() => modelValue.value.priority?.id,
 	async (newPriorityId) => {
 		await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
 	},

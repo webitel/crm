@@ -40,7 +40,7 @@
   </timeline-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
@@ -48,8 +48,8 @@ import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
-import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 import ChatPointRowContent from './chat-point-timeline-row-content.vue';
 
 const props = defineProps({
@@ -64,17 +64,13 @@ const props = defineProps({
 });
 
 const pinType = computed(() => {
-	if (props.point.peer?.type === 'user') return TimelinePinType.AGENT;
-	if (props.point.peer?.type === 'bot') return TimelinePinType.BOT;
-	return TimelinePinType.USER;
+	if (props.point.peer?.type === 'user') return TimelinePinType.Agent;
+	if (props.point.peer?.type === 'bot') return TimelinePinType.Bot;
+	return TimelinePinType.User;
 });
 
-// transfer is not implemented
-const pointStatus = computed(() => {
-	// biome-ignore lint/correctness/noConstantCondition: transfer is not implemented
-	if (false) return TimelineTaskStatusEnum.TRANSFERRED;
-	return false;
-});
+// TODO: transfer status is not implemented yet
+const pointStatus = computed<TimelineTaskStatusEnum | false>(() => false);
 </script>
 
 <style lang="scss" scoped>

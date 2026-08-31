@@ -1,18 +1,17 @@
 <template>
   <div class="case-info">
     <editable-field
-      :edit-mode="editMode"
+      v-model="modelValue.subject"
+      :edit-mode="isEditable"
       :label="t('cases.subject')"
-      :value="itemInstance.subject"
       required
-      @update:value="setItemProp({ path: 'subject', value: $event })"
     >
       <template #default="props">
         <wt-input-text
           :label="props.label"
           :required="props.required"
-          :model-value="props.value"
-          :v="v$.value.itemInstance.subject"
+          :model-value="props.modelValue"
+          :regle-validation="validationFields.subject"
           :disabled="disableUserInput"
           @update:model-value="props.updateValue($event)"
         />
@@ -20,17 +19,16 @@
     </editable-field>
 
     <editable-field
-      :edit-mode="editMode"
+      v-model="modelValue.description"
+      :edit-mode="isEditable"
       :label="t('vocabulary.description')"
-      :value="itemInstance.description"
-      @update:value="setItemProp({ path: 'description', value: $event })"
     >
       <template #default="props">
         <wt-textarea
           :rows="8"
           v-bind="props"
           :disabled="disableUserInput"
-          :model-value="props.value"
+          :model-value="props.modelValue"
           @update:model-value="props.updateValue($event)"
         />
       </template>
@@ -38,19 +36,18 @@
 
     <div class="opened-card-input-grid">
       <editable-field
+        v-model="modelValue.source"
         color="info"
-        :icon="itemInstance.source?.type"
-        :edit-mode="editMode"
+        :icon="modelValue.source?.type"
+        :edit-mode="isEditable"
         :label="t('cases.source')"
-        :value="itemInstance.source"
         required
-        @update:value="setItemProp({ path: 'source', value: $event })"
       >
         <template #default="props">
           <wt-single-select
             v-bind="props"
-            :model-value="props.value"
-            :v="v$.value.itemInstance.source"
+            :model-value="props.modelValue"
+            :regle-validation="validationFields.source"
             :disabled="disableUserInput || !hasSourcesReadAccess"
             :search-method="hasSourcesReadAccess && CaseSourcesAPI.getLookup"
             @update:model-value="props.updateValue($event)"
@@ -59,16 +56,15 @@
       </editable-field>
 
       <editable-field
-        :edit-mode="editMode"
+        v-model="modelValue.contactInfo"
+        :edit-mode="isEditable"
         :label="t('cases.caseInfo.contactInfo')"
-        :value="itemInstance.contactInfo"
-        @update:value="setItemProp({ path: 'contactInfo', value: $event })"
       >
         <template #default="props">
           <wt-input-text
             :label="props.label"
             :required="props.required"
-            :model-value="props.value"
+            :model-value="props.modelValue"
             :disabled="disableUserInput"
             @update:model-value="props.updateValue($event)"
           />
@@ -77,38 +73,32 @@
     </div>
 
     <related-cases
-      v-if="id"
-      :parent-id="id"
+      v-if="itemId"
+      :parent-id="(itemId as unknown as string)"
     />
 
     <case-comments
-      v-if="hasCaseCommentsReadAccess && id"
-      :parent-id="id"
+      v-if="hasCaseCommentsReadAccess && itemId"
+      :parent-id="(itemId as unknown as string)"
     />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { CaseSourcesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/src/store/new/modules/cardStoreModule/useCardStore';
-import { inject, provide } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
 import CaseComments from '../../comments/components/case-comments.vue';
 import RelatedCases from '../../related-cases/components/related-cases.vue';
 import EditableField from './editable-field.vue';
 
-const editMode = inject('editMode');
-const v$ = inject('v$');
-
-const props = defineProps({
-	namespace: {
-		type: String,
-		required: true,
-	},
-});
+const { isEditable } = useCaseAccessState();
 
 const { t } = useI18n();
 
@@ -120,11 +110,11 @@ const { hasReadAccess: hasSourcesReadAccess } = useUserAccessControl(
 	WtObject.Source,
 );
 
-const { itemInstance, setItemProp, id } = useCardStore(props.namespace);
-
-const { isNew } = useCardComponent({
-	id,
-	itemInstance,
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore);
+const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
 });
 </script>
 

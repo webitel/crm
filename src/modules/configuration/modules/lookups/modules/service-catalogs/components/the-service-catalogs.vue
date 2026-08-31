@@ -126,7 +126,7 @@
               <template #prefix="{ item }">
                 {{ displayText(item.prefix) }}
               </template>
-              <template #state="{ item, index }">
+              <template #state="{ item }">
                 <wt-switcher
                   :model-value="item.state"
                   :disabled="
@@ -136,7 +136,7 @@
                       item,
                     })
                   "
-                  @update:model-value="changeState(item, index)"
+                  @update:model-value="changeState(item)"
                 />
               </template>
               <template #code="{ item }">
@@ -192,7 +192,7 @@
   </wt-page-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import {

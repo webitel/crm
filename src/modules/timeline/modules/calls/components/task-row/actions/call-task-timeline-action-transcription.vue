@@ -15,15 +15,17 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { type PropType, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import TaskTimelineTranscriptionPopup from './task-timeline-transcription-popup.vue';
+import TaskTimelineTranscriptionPopup, {
+	type CallTranscript,
+} from './task-timeline-transcription-popup.vue';
 
 const props = defineProps({
 	transcripts: {
-		type: Array,
+		type: Array as PropType<CallTranscript[]>,
 		required: true,
 	},
 	createdAt: {

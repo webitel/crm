@@ -7,7 +7,7 @@ import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
-import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../modules/timeline/enums/TimelineTaskStatus.enum';
 
 export default {
 	crm: 'CRM',
@@ -63,12 +63,12 @@ export default {
 			transcription: 'Bản ghi âm',
 		},
 		status: {
-			[TimelineTaskStatusEnum.STARTED]: 'Đã bắt đầu',
-			[TimelineTaskStatusEnum.MISSED]: 'Bỏ lỡ',
-			[TimelineTaskStatusEnum.TRANSFERRED]: 'Đã chuyển',
-			[TimelineTaskStatusEnum.ENDED]: 'Đã kết thúc',
-			[TimelineTaskStatusEnum.SENT]: 'Đã gửi',
-			[TimelineTaskStatusEnum.RECEIVED]: 'Đã nhận',
+			[TimelineTaskStatusEnum.Started]: 'Đã bắt đầu',
+			[TimelineTaskStatusEnum.Missed]: 'Bỏ lỡ',
+			[TimelineTaskStatusEnum.Transferred]: 'Đã chuyển',
+			[TimelineTaskStatusEnum.Ended]: 'Đã kết thúc',
+			[TimelineTaskStatusEnum.Sent]: 'Đã gửi',
+			[TimelineTaskStatusEnum.Received]: 'Đã nhận',
 		},
 		eventType: {
 			[TimelineEventType.Call]: 'Cuộc gọi | Cuộc gọi',

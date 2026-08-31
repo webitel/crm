@@ -16,7 +16,7 @@
     <template #pin="{ toggle, collapsed }">
       <timeline-pin
         :collapsed="collapsed"
-        :type="TimelinePinType.DAY"
+        :type="TimelinePinType.Day"
         :text="dayNumber"
         :first="first"
         :last="last && collapsed"
@@ -43,10 +43,10 @@
   </timeline-row>
 </template>
 
-<script setup>
-import { computed } from 'vue';
+<script setup lang="ts">
+import { computed, type PropType } from 'vue';
 
-import TimelinePinType from '../../enums/TimelinePinType.enum.js';
+import { TimelinePinType } from '../../enums/TimelinePinType.enum';
 import TaskTimelineRow from '../task-row/task-timeline-row.vue';
 import TimelinePin from '../utils/timeline-pin.vue';
 import TimelineRow from '../utils/timeline-row.vue';
@@ -71,7 +71,11 @@ const props = defineProps({
 		default: 0,
 	},
 	tasks: {
-		type: Array,
+		type: Array as PropType<
+			{
+				id: string;
+			}[]
+		>,
 		default: () => [],
 	},
 	first: {

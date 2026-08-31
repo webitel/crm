@@ -9,32 +9,30 @@
   </div>
 </template>
 
-<script setup>
-import { inject } from 'vue';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
 
-import { useTaskPoints } from '../../../../composables/useTaskPoints.js';
+import { useTaskPoints } from '../../../../composables/useTaskPoints';
+import { useCallsHistoryStore } from '../../stores/callsHistoryStore';
 import CallPointTimelineRow from './call-point-timeline-row.vue';
 
-const props = defineProps({
-	taskId: {
-		type: [
-			String,
-		],
-		required: true,
-	},
-	last: {
-		type: Boolean,
-		default: false,
-	},
+interface Props {
+	taskId: string;
+	last?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+	last: false,
 });
 
-const timelineNamespace = inject('namespace');
-
-const namespace = `${timelineNamespace}/calls`;
+const callsHistoryStore = useCallsHistoryStore();
+const { historyById } = storeToRefs(callsHistoryStore);
+const { loadHistory } = callsHistoryStore;
 
 const { points } = useTaskPoints({
-	namespace,
 	taskId: props.taskId,
+	historyById,
+	loadHistory,
 });
 </script>
 

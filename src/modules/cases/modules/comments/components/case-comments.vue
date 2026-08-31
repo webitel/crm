@@ -13,7 +13,7 @@
           {{ t('cases.comments.comments') }}
         </h3>
         <wt-action-bar
-          :disabled:add="!hasCreateAccess || formState.isAdding || formState.editingComment"
+          :disabled:add="isAddDisabled"
           :include="[IconAction.ADD, IconAction.SORT]"
           :sort:order="currentSortOrder"
           @click:add="startAddingComment"
@@ -37,7 +37,7 @@
 
       <wt-empty
         v-show="showEmpty"
-        :text="emptyText"
+        :text="t('cases.comments.emptyText')"
       />
 
       <wt-loader v-show="isLoading" />
@@ -96,6 +96,7 @@
 </template>
 
 <script lang="ts" setup>
+import { CommentsAPI } from '@webitel/api-services/api';
 import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { WtActionBar, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
@@ -103,21 +104,18 @@ import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmat
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
-import { computed, inject, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import CommentsAPI from '../api/CommentsAPI';
-import { createCaseCommentsComposableTableStore } from '../stores/comments';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { createCaseCommentsComposableTableStore } from '../stores/datalist/caseCommentsDatalistStore';
 import CaseCommentRow from './case-comment-row.vue';
 
-const props = defineProps({
-	parentId: {
-		type: String,
-		required: true,
-	},
-});
+const props = defineProps<{
+	parentId: string;
+}>();
 
-const isReadOnly = inject('isReadOnly');
+const { isReadOnly } = useCaseAccessState();
 const { t } = useI18n();
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
@@ -161,10 +159,6 @@ const { showEmpty } = useTableEmpty({
 	isLoading,
 });
 
-const emptyText = computed(() => {
-	return t('cases.comments.emptyText');
-});
-
 const createdAtHeader = computed(() =>
 	(headers.value as DatalistTableHeader[]).find(
 		(header) => header.field === 'created_at',
@@ -187,6 +181,11 @@ const formState = reactive({
 	editingComment: null,
 	commentText: '',
 });
+
+const isAddDisabled = computed(
+	() =>
+		!hasCreateAccess.value || formState.isAdding || formState.editingComment,
+);
 
 function startAddingComment() {
 	formState.isAdding = true;

@@ -3,7 +3,7 @@ import { snakeToCamel } from '@webitel/api-services/utils';
 import get from 'lodash-es/get';
 import { computed, ref, watch } from 'vue';
 
-import { headers as baseHeadersConfig } from '../store/_internals/headers';
+import { headers as baseHeadersConfig } from '../stores/datalist/_internals/headers';
 
 export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 	// Reactive reference for custom headers from API
@@ -58,7 +58,7 @@ export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 
 	// Helper function to fetch custom headers from API
 	const fetchCustomHeadersFromAPI = async () => {
-		const response = await WtTypeExtensionAPI.getList({
+		const response = await WtTypeExtensionAPI.get({
 			itemId: 'cases',
 		});
 		return response?.fields || [];
