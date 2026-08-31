@@ -60,7 +60,7 @@ const contextOptions = computed(() => [
 	{
 		id: 'showInfo',
 		text: t('timeline.actions.showInfo'),
-		icon: 'rounded-info',
+		icon: 'call-info',
 		handler: showInfo,
 	},
 	{
