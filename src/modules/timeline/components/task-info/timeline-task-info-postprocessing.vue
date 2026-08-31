@@ -1,5 +1,8 @@
 <template>
-  <div class="timeline-task-info-postprocessing wt-scrollbar">
+  <div
+    v-if="postprocessing.length"
+    class="timeline-task-info-postprocessing wt-scrollbar"
+  >
     <div
       v-for="(entry, index) in postprocessing"
       :key="index"
@@ -25,15 +28,23 @@
       </div>
     </div>
   </div>
+  <wt-empty
+    v-else
+    :text="t('webitelUI.empty.text.empty')"
+  />
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
 defineProps({
 	postprocessing: {
 		type: Array,
 		default: () => [],
 	},
 });
+
+const { t } = useI18n();
 
 function entryFields(entry) {
 	return Object.entries(entry).filter(([key]) => key !== 'agent');

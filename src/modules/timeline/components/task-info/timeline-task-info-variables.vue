@@ -1,10 +1,15 @@
 <template>
   <wt-table
+    v-if="variables.length"
     class="timeline-task-info-variables wt-scrollbar"
     :data="variables"
     :headers="headers"
     :selectable="false"
     :grid-actions="false"
+  />
+  <wt-empty
+    v-else
+    :text="t('webitelUI.empty.text.empty')"
   />
 </template>
 

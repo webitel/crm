@@ -1,5 +1,8 @@
 <template>
-  <div class="timeline-task-info-transcription">
+  <div
+    v-if="activeTranscriptOptions.length"
+    class="timeline-task-info-transcription"
+  >
     <div class="timeline-task-info-transcription__options">
       <wt-single-select
         v-model:model-value="activeTranscript"
@@ -31,6 +34,10 @@
       headless
     />
   </div>
+  <wt-empty
+    v-else
+    :text="t('webitelUI.empty.text.empty')"
+  />
 </template>
 
 <script setup>
