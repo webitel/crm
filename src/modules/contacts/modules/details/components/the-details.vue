@@ -43,8 +43,10 @@
   setup
   lang="ts"
 >
+import { useCardAnyFieldEditedWatcher } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import get from 'lodash/get';
+import { storeToRefs } from 'pinia';
 import { type ComputedRef, computed, inject, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -71,9 +73,15 @@ const hasEditAccess = computed(() => access.value?.hasRbacEditAccess);
 const router = useRouter();
 const { t } = useI18n();
 
-const { saveItem } = useContactCardStore();
+const contactCardStore = useContactCardStore();
+const { saveItem } = contactCardStore;
+const { draftItemInstance } = storeToRefs(contactCardStore);
 
-const disabledSave = computed(() => isReadOnly);
+const { isAnyFieldEdited } = useCardAnyFieldEditedWatcher({
+	value: draftItemInstance as any,
+});
+
+const disabledSave = computed(() => isReadOnly || !isAnyFieldEdited.value);
 
 const saveDetails = () => {
 	saveItem(props.itemInstance);
