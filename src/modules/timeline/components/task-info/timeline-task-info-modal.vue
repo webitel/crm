@@ -25,6 +25,10 @@
           v-if="currentTab.value === 'postprocessing'"
           :postprocessing="info?.postprocessing"
         />
+        <timeline-task-info-transcription
+          v-if="currentTab.value === 'transcription'"
+          :task="task"
+        />
       </div>
     </template>
 
@@ -45,6 +49,7 @@ import { useI18n } from 'vue-i18n';
 
 import TimelineAPI from '../../api/TimelineAPI';
 import TimelineTaskInfoPostprocessing from './timeline-task-info-postprocessing.vue';
+import TimelineTaskInfoTranscription from './timeline-task-info-transcription.vue';
 import TimelineTaskInfoVariables from './timeline-task-info-variables.vue';
 
 const props = defineProps({
@@ -77,6 +82,14 @@ const tabs = computed(() => [
 		text: t('timeline.info.postprocessing'),
 		value: 'postprocessing',
 	},
+	...(props.task.transcripts?.length
+		? [
+				{
+					text: t('timeline.actions.transcription'),
+					value: 'transcription',
+				},
+			]
+		: []),
 ]);
 
 const currentTab = ref(tabs.value[0]);
