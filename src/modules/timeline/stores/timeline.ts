@@ -17,7 +17,7 @@ export interface TimelineDay {
 	items: unknown[];
 }
 
-function listHandler(days) {
+export function listHandler(days) {
 	const copy = deepCopy(days);
 	if (!copy.length) return [];
 	return copy.map((day) => ({
