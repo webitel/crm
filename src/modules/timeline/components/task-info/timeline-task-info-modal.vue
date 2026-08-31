@@ -2,7 +2,7 @@
   <wt-popup
     :shown="shown"
     class="timeline-task-info-modal wt-scrollbar"
-    @close="emit('update:shown', false)"
+    @close="closeModal"
   >
     <template #title>
       {{ t('timeline.info.title') }}
@@ -17,17 +17,9 @@
       <wt-loader v-if="isLoading" />
 
       <div v-else class="timeline-task-info-modal__content">
-        <timeline-task-info-variables
-          v-if="currentTab.value === 'variables'"
-          :variables="info?.variables"
-        />
-        <timeline-task-info-postprocessing
-          v-if="currentTab.value === 'postprocessing'"
-          :postprocessing="info?.postprocessing"
-        />
-        <timeline-task-info-transcription
-          v-if="currentTab.value === 'transcription'"
-          :task="task"
+        <component
+          :is="tabComponents[currentTab.value]"
+          v-bind="tabProps"
         />
       </div>
     </template>
@@ -35,7 +27,7 @@
     <template #actions>
       <wt-button
         color="secondary"
-        @click="emit('update:shown', false)"
+        @click="closeModal"
       >
         {{ t('reusable.close') }}
       </wt-button>
@@ -97,6 +89,36 @@ const currentTab = ref(tabs.value[0]);
 function changeTab(tab) {
 	currentTab.value = tab;
 }
+
+function closeModal() {
+	currentTab.value = tabs.value[0];
+	emit('update:shown', false);
+}
+
+const tabComponents = {
+	variables: TimelineTaskInfoVariables,
+	postprocessing: TimelineTaskInfoPostprocessing,
+	transcription: TimelineTaskInfoTranscription,
+};
+
+const tabProps = computed(() => {
+	switch (currentTab.value.value) {
+		case 'variables':
+			return {
+				variables: info.value?.variables,
+			};
+		case 'postprocessing':
+			return {
+				postprocessing: info.value?.postprocessing,
+			};
+		case 'transcription':
+			return {
+				task: props.task,
+			};
+		default:
+			return {};
+	}
+});
 
 const mode = inject('mode');
 
