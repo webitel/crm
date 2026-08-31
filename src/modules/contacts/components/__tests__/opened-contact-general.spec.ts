@@ -1,5 +1,5 @@
-import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { shallowMount } from '@vue/test-utils';
+import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 
 import OpenedContactGeneral from '../opened-contact-general.vue';
 
