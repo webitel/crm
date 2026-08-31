@@ -1,6 +1,6 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { createPinia, setActivePinia } from 'pinia';
 
 import { CONTACT_VIEW_NAME } from '../../router/contactViewName';
 import OpenedContactTabs from '../opened-contact-tabs.vue';
@@ -38,6 +38,13 @@ vi.mock('vue-router', async (importOriginal) => ({
 function mountOpenedContactTabs() {
 	return shallowMount(OpenedContactTabs, {
 		global: {
+			plugins: [
+				// a fresh instance per mount keeps each test's store state isolated,
+				// while `stubActions: false` keeps real store logic (API calls, etc.) running
+				createTestingPinia({
+					stubActions: false,
+				}),
+			],
 			stubs: {
 				RouterLink: true,
 				RouterView: true,
@@ -48,7 +55,6 @@ function mountOpenedContactTabs() {
 
 describe('OpenedContactTabs', () => {
 	beforeEach(() => {
-		setActivePinia(createPinia());
 		routeMock.name = 'crm-contacts-card-timeline';
 		getExtensionFieldsMock.mockReset();
 		getExtensionFieldsMock.mockResolvedValue({});

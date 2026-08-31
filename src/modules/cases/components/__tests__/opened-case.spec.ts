@@ -1,5 +1,5 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
-import { createPinia, setActivePinia } from 'pinia';
 
 import { useCasesCardStore } from '../../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../../stores/card/casesEditModeStore';
@@ -32,6 +32,13 @@ vi.mock('vue-router', async (importOriginal) => ({
 async function mountOpenedCase() {
 	const wrapper = shallowMount(OpenedCase, {
 		global: {
+			plugins: [
+				// a fresh instance per mount keeps each test's store state isolated,
+				// while `stubActions: false` keeps real store logic (API calls, etc.) running
+				createTestingPinia({
+					stubActions: false,
+				}),
+			],
 			stubs: {
 				RouterLink: true,
 				RouterView: true,
@@ -45,16 +52,7 @@ async function mountOpenedCase() {
 
 describe('OpenedCase', () => {
 	beforeEach(() => {
-		setActivePinia(createPinia());
 		patchMock.mockClear();
-	});
-
-	afterEach(() => {
-		// the app-level pinia (installed via `global.plugins` in tests/config/config.js)
-		// is a shared singleton across tests, so state written to it here must be
-		// cleaned up explicitly to avoid leaking into unrelated tests.
-		useCasesCardStore().itemId = undefined;
-		useCasesEditModeStore().$reset();
 	});
 
 	it('renders a component', async () => {

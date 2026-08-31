@@ -1,5 +1,5 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
-import { createPinia, setActivePinia } from 'pinia';
 
 import { TimelineMode } from '../../enums/TimelineMode';
 import { useTimelineStore } from '../../stores/timeline';
@@ -34,24 +34,25 @@ function mountTheTimeline(
 ) {
 	return shallowMount(TheTimeline, {
 		props,
+		global: {
+			plugins: [
+				// a fresh instance per mount keeps each test's store state isolated,
+				// while `stubActions: false` keeps real store logic (API calls, etc.) running
+				createTestingPinia({
+					stubActions: false,
+				}),
+			],
+		},
 	});
 }
 
 describe('TheTimeline', () => {
 	beforeEach(() => {
-		setActivePinia(createPinia());
 		getListMock.mockClear();
 		getListMock.mockResolvedValue({
 			days: [],
 			next: false,
 		});
-	});
-
-	afterEach(() => {
-		// the app-level pinia (installed via `global.plugins` in tests/config/config.js)
-		// is a shared singleton across tests, so state written to it here must be
-		// cleaned up explicitly to avoid leaking into unrelated tests.
-		useTimelineStore().resetState();
 	});
 
 	it('renders a component', () => {
@@ -64,11 +65,15 @@ describe('TheTimeline', () => {
 		expect(() => wrapper.unmount()).not.toThrow();
 	});
 
-	it('initializes the timeline store with its parentId and mode props', () => {
+	it('initializes the timeline store with its parentId and mode props', async () => {
 		mountTheTimeline({
 			parentId: 'contact-42',
 			mode: TimelineMode.Contact,
 		});
+		// createTestingPinia wraps every action in a spy, which pushes the
+		// resulting call onto a fresh microtask - a synchronous assertion right
+		// after mount can otherwise run before it lands.
+		await new Promise((resolve) => setTimeout(resolve, 0));
 
 		expect(getListMock).toHaveBeenCalledWith(
 			expect.objectContaining({

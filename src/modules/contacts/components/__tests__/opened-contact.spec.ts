@@ -1,5 +1,5 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
-import { createPinia, setActivePinia } from 'pinia';
 
 import { useContactCardStore } from '../../stores/card/contactCardStore';
 import OpenedContact from '../opened-contact.vue';
@@ -41,6 +41,13 @@ vi.mock('vue-router', async (importOriginal) => ({
 function mountOpenedContact() {
 	return shallowMount(OpenedContact, {
 		global: {
+			plugins: [
+				// a fresh instance per mount keeps each test's store state isolated,
+				// while `stubActions: false` keeps real store logic (API calls, etc.) running
+				createTestingPinia({
+					stubActions: false,
+				}),
+			],
 			stubs: {
 				RouterLink: true,
 				RouterView: true,
@@ -51,18 +58,10 @@ function mountOpenedContact() {
 
 describe('OpenedContact', () => {
 	beforeEach(() => {
-		setActivePinia(createPinia());
 		pushMock.mockClear();
 		deleteMock.mockClear();
 		getMock.mockClear();
 		routeMock.params = {};
-	});
-
-	afterEach(() => {
-		// the app-level pinia (installed via `global.plugins` in tests/config/config.js)
-		// is a shared singleton across tests, so state written to it here must be
-		// cleaned up explicitly to avoid leaking into unrelated tests.
-		useContactCardStore().$reset();
 	});
 
 	it('renders a component', async () => {

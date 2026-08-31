@@ -1,6 +1,6 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import { createPinia, setActivePinia } from 'pinia';
 
 import { useContactsDatalistStore } from '../../stores/datalist/contactsDatalistStore';
 import TheContacts from '../the-contacts.vue';
@@ -36,6 +36,13 @@ vi.mock('vue-router', async (importOriginal) => ({
 function mountTheContacts() {
 	return shallowMount(TheContacts, {
 		global: {
+			plugins: [
+				// a fresh instance per mount keeps each test's store state isolated,
+				// while `stubActions: false` keeps real store logic (API calls, etc.) running
+				createTestingPinia({
+					stubActions: false,
+				}),
+			],
 			stubs: {
 				RouterLink: true,
 				RouterView: true,
@@ -46,18 +53,8 @@ function mountTheContacts() {
 
 describe('TheContacts', () => {
 	beforeEach(() => {
-		setActivePinia(createPinia());
 		pushMock.mockClear();
 		deleteMock.mockClear();
-	});
-
-	afterEach(() => {
-		// the app-level pinia (installed via `global.plugins` in tests/config/config.js)
-		// is a shared singleton across tests, so state written to it here must be
-		// cleaned up explicitly to avoid leaking into unrelated tests.
-		useContactsDatalistStore().$patch({
-			selected: [],
-		});
 	});
 
 	it('renders a component', () => {
