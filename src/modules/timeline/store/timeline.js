@@ -118,6 +118,15 @@ const mutations = {
 	SET: (state, { path, value }) => {
 		set(state, path, value);
 	},
+	REMOVE_TRANSCRIPT: (state, { taskId, fileId }) => {
+		const task = state.dataList
+			.flatMap((dayGroup) => dayGroup.items)
+			.find((item) => item.id === taskId);
+		if (!task) return;
+		task.transcripts = task.transcripts.filter(
+			(transcript) => transcript.file.id !== fileId,
+		);
+	},
 };
 
 const api = new ApiStoreModule().generateAPIActions(TimelineAPI).getModule();

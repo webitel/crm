@@ -43,8 +43,9 @@
 <script setup>
 import { CallTranscriptAPI } from '@webitel/api-services/api';
 import { saveAs } from 'file-saver';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 
 const props = defineProps({
 	task: {
@@ -54,6 +55,7 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const store = useStore();
 
 const phrases = ref([]);
 const isLoading = ref(false);
@@ -68,7 +70,7 @@ const headers = [
 	},
 ];
 
-const activeTranscriptOptions = ref(
+const activeTranscriptOptions = computed(() =>
 	props.task.transcripts.map((transcript) => ({
 		fileName: transcript.file.name,
 		fileId: transcript.file.id,
@@ -120,9 +122,10 @@ async function deleteActiveTranscript() {
 		await CallTranscriptAPI.delete({
 			fileId: activeTranscript.value.fileId,
 		});
-		activeTranscriptOptions.value = activeTranscriptOptions.value.filter(
-			(transcript) => transcript.fileId !== activeTranscript.value.fileId,
-		);
+		store.commit('timeline/REMOVE_TRANSCRIPT', {
+			taskId: props.task.id,
+			fileId: activeTranscript.value.fileId,
+		});
 		activeTranscript.value = activeTranscriptOptions.value[0] ?? null;
 	} finally {
 		isLoading.value = false;
