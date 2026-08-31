@@ -31,6 +31,7 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
+import { TimelineEventType } from '../../enums/TimelineEventType';
 import TimelineTaskInfoModal from '../task-info/timeline-task-info-modal.vue';
 
 const props = defineProps({
@@ -63,12 +64,16 @@ const contextOptions = computed(() => [
 		icon: 'call-info',
 		handler: showInfo,
 	},
-	{
-		id: 'openInHistory',
-		text: t('reusable.openInHistory'),
-		icon: 'history',
-		handler: openInHistory,
-	},
+	...(props.task.type === TimelineEventType.Call
+		? [
+				{
+					id: 'openInHistory',
+					text: t('reusable.openInHistory'),
+					icon: 'history',
+					handler: openInHistory,
+				},
+			]
+		: []),
 ]);
 
 function handleOptionSelect({ option }) {
