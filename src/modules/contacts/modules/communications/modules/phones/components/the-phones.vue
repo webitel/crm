@@ -18,10 +18,8 @@
 
     <section class="table-section">
       <header class="table-title">
-        <h3 class="table-title__title">
-          {{ t('vocabulary.phones', 2) }}
-        </h3>
         <wt-action-bar
+          class="phones__action"
           :include="[IconAction.ADD]"
           :disabled:add="disabledAdd"
           @click:add="open"
@@ -202,6 +200,10 @@ async function setAsPrimary(item) {
 </script>
 
 <style lang="scss" scoped>
+.phones__action {
+  margin-left: auto;
+}
+
 .phones__set-primary-btn {
   opacity: 0;
   transition: var(--transition);
