@@ -24,7 +24,7 @@ import {
 	downloadStorageFile,
 	getFileTypeIcon,
 	openStorageFileInNewTab,
-} from '@webitel/ui-sdk/scripts';
+} from '@webitel/ui-sdk/scripts/file';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { computed, type PropType } from 'vue';
 

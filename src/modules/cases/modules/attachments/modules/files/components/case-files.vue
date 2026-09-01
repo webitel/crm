@@ -109,7 +109,7 @@ import {
 	downloadStorageFile,
 	getFileTypeIcon,
 	openStorageFileInNewTab,
-} from '@webitel/ui-sdk/scripts';
+} from '@webitel/ui-sdk/scripts/file';
 import webSocketClientController from '@webitel/ui-sdk/src/api/websocket/WebSocketClientController';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';

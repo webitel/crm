@@ -258,14 +258,17 @@ import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
 import {
 	CrmSections,
 	EmptyCause,
+	ExportFormat,
 	FormatDateMode,
 	IconAction,
 } from '@webitel/ui-sdk/enums';
-import { downloadFile, FileFormat } from '@webitel/ui-sdk/scripts';
+import {
+	type DownloadFileResponse,
+	downloadFile,
+} from '@webitel/ui-sdk/scripts/file';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import type { DownloadFileResponse } from '@webitel/ui-sdk/src/scripts/downloadFile/types/downloadFile.types';
 import { formatDate, prettifyDate } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
@@ -433,7 +436,7 @@ const exportCases = async ({
 	format,
 	separator,
 }: {
-	format?: FileFormat;
+	format?: ExportFormat;
 	separator?: string | null;
 }) => {
 	const exportParams = {
@@ -456,7 +459,7 @@ const exportCases = async ({
 	downloadFile({
 		response: response as unknown as DownloadFileResponse,
 		filename,
-		fileFormat: format as FileFormat,
+		fileFormat: format as ExportFormat,
 	});
 };
 

@@ -11,7 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import { downloadStorageFile, getFileTypeIcon } from '@webitel/ui-sdk/scripts';
+import {
+	downloadStorageFile,
+	getFileTypeIcon,
+} from '@webitel/ui-sdk/scripts/file';
 import { computed } from 'vue';
 
 const props = defineProps({
