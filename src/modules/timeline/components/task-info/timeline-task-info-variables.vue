@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty";
 
@@ -44,7 +44,7 @@ const {
   image: emptyImage,
   text: emptyText,
 } = useTableEmpty({
-  dataList: props.variables,
+  dataList: toRef(props.variables),
 });
 </script>
 
