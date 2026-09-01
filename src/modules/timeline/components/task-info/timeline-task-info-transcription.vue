@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { CallTranscriptAPI } from '@webitel/api-services/api';
-import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty';
 import { saveAs } from 'file-saver';
 import { computed, ref, watch } from 'vue';
 

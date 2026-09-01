@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty';
 import { toRef } from 'vue';
 
 import type { TimelinePostprocessingEntry } from '../../types/timeline.types';
