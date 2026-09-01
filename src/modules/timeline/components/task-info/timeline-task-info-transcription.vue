@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="activeTranscriptOptions.length"
-    class="timeline-task-info-transcription"
-  >
+  <div class="timeline-task-info-transcription">
     <div class="timeline-task-info-transcription__options">
       <wt-single-select
         v-model:model-value="activeTranscript"
@@ -22,9 +19,14 @@
         @click="deleteActiveTranscript"
       />
     </div>
+    <wt-empty
+      v-show="showEmpty"
+      :image="emptyImage"
+      :text="emptyText"
+    />
     <wt-loader v-show="isLoading" />
     <wt-table
-      v-show="!isLoading"
+      v-show="!showEmpty && !isLoading"
       class="timeline-task-info-transcription__table wt-scrollbar"
       :data="phrases"
       :headers="headers"
@@ -34,18 +36,14 @@
       headless
     />
   </div>
-  <wt-empty
-    v-else
-    :text="t('webitelUI.empty.text.empty')"
-  />
 </template>
 
 <script setup>
 import { CallTranscriptAPI } from '@webitel/api-services/api';
 import { saveAs } from 'file-saver';
 import { computed, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js";
 
 const props = defineProps({
 	task: {
@@ -54,7 +52,6 @@ const props = defineProps({
 	},
 });
 
-const { t } = useI18n();
 const store = useStore();
 
 const phrases = ref([]);
@@ -80,6 +77,14 @@ const activeTranscriptOptions = computed(() =>
 );
 
 const activeTranscript = ref(activeTranscriptOptions.value[0] ?? null);
+
+const {
+  showEmpty,
+  image: emptyImage,
+  text: emptyText,
+} = useTableEmpty({
+  dataList: phrases,
+});
 
 function downloadTxt(phrases) {
 	const text = phrases
