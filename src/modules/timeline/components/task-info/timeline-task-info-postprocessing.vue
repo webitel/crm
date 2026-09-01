@@ -1,6 +1,11 @@
 <template>
+  <wt-empty
+    v-if="showEmpty"
+    :image="emptyImage"
+    :text="emptyText"
+  />
   <div
-    v-if="postprocessing.length"
+    v-else
     class="timeline-task-info-postprocessing wt-scrollbar"
   >
     <div
@@ -28,16 +33,14 @@
       </div>
     </div>
   </div>
-  <wt-empty
-    v-else
-    :text="t('webitelUI.empty.text.empty')"
-  />
 </template>
 
 <script setup>
+import { toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty";
 
-defineProps({
+const props = defineProps({
 	postprocessing: {
 		type: Array,
 		default: () => [],
@@ -45,6 +48,14 @@ defineProps({
 });
 
 const { t } = useI18n();
+
+const {
+  showEmpty,
+  image: emptyImage,
+  text: emptyText,
+} = useTableEmpty({
+  dataList: toRef(props.postprocessing),
+});
 
 function entryFields(entry) {
 	return Object.entries(entry).filter(([key]) => key !== 'agent');
