@@ -43,8 +43,8 @@ import { CallTranscriptAPI } from '@webitel/api-services/api';
 import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
 import { saveAs } from 'file-saver';
 import { computed, ref, watch } from 'vue';
-import { useStore } from 'vuex';
 
+import { useTimelineStore } from '../../stores/timeline';
 import type { TimelineTask } from '../../types/timeline.types';
 import type {
 	TranscriptOption,
@@ -59,7 +59,7 @@ const emit = defineEmits<{
 	'empty-transcriptions-list': [];
 }>();
 
-const store = useStore();
+const timelineStore = useTimelineStore();
 
 const phrases = ref<TranscriptPhrase[]>([]);
 const isLoading = ref(false);
@@ -136,7 +136,7 @@ async function deleteActiveTranscript() {
 		await CallTranscriptAPI.delete({
 			fileId: activeTranscript.value.id,
 		});
-		store.commit('timeline/REMOVE_TRANSCRIPT', {
+		timelineStore.removeTranscript({
 			taskId: props.task.id,
 			id: activeTranscript.value.id,
 		});
