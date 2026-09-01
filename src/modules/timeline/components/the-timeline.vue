@@ -12,6 +12,7 @@
       <wt-empty
         v-show="showEmpty"
         :image="imageEmpty"
+        :text="textEmpty"
       />
 
       <div
@@ -72,7 +73,11 @@ const timelineStore = useTimelineStore();
 const { dataList, isLoading, next } = storeToRefs(timelineStore);
 const { initialize, loadNext: loadNextPage, resetState } = timelineStore;
 
-const { showEmpty, image: imageEmpty } = useTableEmpty(
+const {
+	showEmpty,
+	image: imageEmpty,
+	text: textEmpty,
+} = useTableEmpty(
 	{
 		dataList,
 		isLoading,
