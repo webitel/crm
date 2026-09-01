@@ -1,8 +1,8 @@
 <template>
   <wt-popup
     :shown="shown"
-    class="timeline-task-info-modal wt-scrollbar"
-    @close="closeModal"
+    class="timeline-task-info-popup wt-scrollbar"
+    @close="closePopup"
   >
     <template #title>
       {{ t('timeline.info.title') }}
@@ -16,11 +16,11 @@
 
       <wt-loader v-if="isLoading" />
 
-      <div v-else class="timeline-task-info-modal__content">
+      <div v-else class="timeline-task-info-popup__content">
         <component
           :is="tabComponents[currentTab.value]"
           v-bind="tabProps"
-          @empty-transcriptions-list="handleEmptyTranscriptionsList"
+          @empty-list="handleEmptyList"
         />
       </div>
     </template>
@@ -28,7 +28,7 @@
     <template #actions>
       <wt-button
         color="secondary"
-        @click="closeModal"
+        @click="closePopup"
       >
         {{ t('reusable.close') }}
       </wt-button>
@@ -91,12 +91,12 @@ function changeTab(tab: TimelineTab) {
 	currentTab.value = tab;
 }
 
-function closeModal() {
+function closePopup() {
 	currentTab.value = tabs.value[0];
 	emit('update:shown', false);
 }
 
-function handleEmptyTranscriptionsList() {
+function handleEmptyList() {
 	currentTab.value = tabs.value[0];
 }
 
@@ -150,16 +150,16 @@ watch(
 </script>
 
 <style scoped>
-.timeline-task-info-modal :deep(.wt-popup__popup) {
+.timeline-task-info-popup :deep(.wt-popup__popup) {
   height: 600px;
 }
 
-.timeline-task-info-modal :deep(.wt-popup__main) {
+.timeline-task-info-popup :deep(.wt-popup__main) {
   display: flex;
   flex-direction: column;
 }
 
-.timeline-task-info-modal__content {
+.timeline-task-info-popup__content {
   display: flex;
   flex: 1;
   flex-direction: column;

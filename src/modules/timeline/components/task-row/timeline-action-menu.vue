@@ -19,8 +19,8 @@
     </template>
   </wt-context-menu>
 
-  <timeline-task-info-modal
-    v-model:shown="showInfoModal"
+  <timeline-task-info-popup
+    v-model:shown="showInfoPopup"
     :task="task"
     :parent-id="parentId"
   />
@@ -36,7 +36,7 @@ import type {
 	TimelineActionOption,
 	TimelineTask,
 } from '../../types/timeline.types';
-import TimelineTaskInfoModal from '../task-info/timeline-task-info-modal.vue';
+import TimelineTaskInfoPopup from '../task-info/timeline-task-info-popup.vue';
 
 const props = defineProps<{
 	task: TimelineTask;
@@ -48,10 +48,10 @@ const timelineStore = useTimelineStore();
 
 const parentId = computed(() => timelineStore.parentId);
 
-const showInfoModal = ref(false);
+const showInfoPopup = ref(false);
 
 function showInfo() {
-	showInfoModal.value = true;
+	showInfoPopup.value = true;
 }
 
 function openInHistory() {

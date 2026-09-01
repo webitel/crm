@@ -56,7 +56,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-	'empty-transcriptions-list': [];
+	'empty-list': [];
 }>();
 
 const timelineStore = useTimelineStore();
@@ -143,7 +143,7 @@ async function deleteActiveTranscript() {
 		if (activeTranscriptOptions.value.length) {
 			activeTranscript.value = activeTranscriptOptions.value[0];
 		} else {
-			emit('empty-transcriptions-list');
+			emit('empty-list');
 		}
 	} finally {
 		isLoading.value = false;
