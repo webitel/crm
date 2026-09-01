@@ -59,7 +59,7 @@ const emit = defineEmits<{
 	'empty-list': [];
 }>();
 
-const timelineStore = useTimelineStore();
+const { removeTranscript } = useTimelineStore();
 
 const phrases = ref<TranscriptPhrase[]>([]);
 const isLoading = ref(false);
@@ -136,7 +136,7 @@ async function deleteActiveTranscript() {
 		await CallTranscriptAPI.delete({
 			fileId: activeTranscript.value.id,
 		});
-		timelineStore.removeTranscript({
+		removeTranscript({
 			taskId: props.task.id,
 			id: activeTranscript.value.id,
 		});
