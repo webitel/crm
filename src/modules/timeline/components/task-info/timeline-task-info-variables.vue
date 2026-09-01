@@ -1,23 +1,25 @@
 <template>
+  <wt-empty
+    v-if="showEmpty"
+    :image="emptyImage"
+    :text="emptyText"
+  />
   <wt-table
-    v-if="variables.length"
+    v-else
     class="timeline-task-info-variables wt-scrollbar"
     :data="variables"
     :headers="headers"
     :selectable="false"
     :grid-actions="false"
   />
-  <wt-empty
-    v-else
-    :text="t('webitelUI.empty.text.empty')"
-  />
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty";
 
-defineProps({
+const props = defineProps({
 	variables: {
 		type: Array,
 		default: () => [],
@@ -36,6 +38,14 @@ const headers = computed(() => [
 		text: t('vocabulary.values'),
 	},
 ]);
+
+const {
+  showEmpty,
+  image: emptyImage,
+  text: emptyText,
+} = useTableEmpty({
+  dataList: props.variables,
+});
 </script>
 
 <style scoped>
