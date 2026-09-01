@@ -1,4 +1,4 @@
-import { FieldType } from '../../../../../../customization/modules/custom-lookups/enums/FieldType';
+import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 import type { LookupCsvField } from '../types/csvImport';
 
 const looksLikeJsonArray = (value: string): boolean =>

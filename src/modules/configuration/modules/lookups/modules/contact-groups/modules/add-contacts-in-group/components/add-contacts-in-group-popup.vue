@@ -19,14 +19,18 @@
           <add-contacts-in-group-filters-panel :use-table-store="useTableStore" />
         </div>
 
-        <wt-empty
-          v-show="showEmpty"
-          :image="imageEmpty"
-          :text="textEmpty"
-        />
+        
 
-        <div v-if="dataList.length" class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
+        <div class="add-contacts-in-group-popup__scroll-wrapper wt-scrollbar">
+          <wt-empty
+            v-show="showEmpty"
+            :image="imageEmpty"
+            :text="textEmpty"
+          />
+
           <wt-table
+            v-if="dataList.length"
+            class="add-contacts-in-group-popup__table"
             :data="dataList"
             :headers="headers"
             :selected="selected"
@@ -41,9 +45,9 @@
               <div class="add-contacts-in-group-popup__username-wrapper">
                 <wt-avatar
                   size="xs"
-                  :username="item.name"
+                  :username="item.name?.commonName"
                 />
-                {{ item.name }}
+                {{ item.name?.commonName }}
               </div>
             </template>
 
@@ -164,43 +168,41 @@ function close() {
 }
 </script>
 
-<style
-  lang="scss"
-  scoped
->
-@use '@webitel/ui-sdk/src/css/main' as *;
+<style scoped>
+.add-contacts-in-group-popup__scroll-wrapper {
+  height: 440px;
+  display: flex;
+}
 
-.add-contacts-in-group-popup {
-  &__scroll-wrapper {
-    height: 440px;
-  }
+.add-contacts-in-group-popup__table {
+  width: 100%;
+}
 
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
+.add-contacts-in-group-popup__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
 
-  &__filters,
-  &__group-wrapper {
-    display: flex;
-    gap: var(--spacing-xs);
-  }
+.add-contacts-in-group-popup__filters,
+.add-contacts-in-group-popup__group-wrapper {
+  display: flex;
+  gap: var(--spacing-xs);
+}
 
-  &__labels-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-2xs);
-  }
+.add-contacts-in-group-popup__labels-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2xs);
+}
 
-  &__username-wrapper {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-xs);
+.add-contacts-in-group-popup__username-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+}
 
-    .wt-avatar {
-      flex: 0 0 var(--wt-avatar-size--size-xs);
-    }
-  }
+.add-contacts-in-group-popup__username-wrapper .wt-avatar {
+  flex: 0 0 var(--wt-avatar-size--size-xs);
 }
 </style>

@@ -1,14 +1,28 @@
 import { config } from '@vue/test-utils';
 import axiosMock from '@webitel/ui-sdk/src/tests/mocks/axiosMock'; // import instance from '../../src/app/api/instance.js';
 import { createPinia } from 'pinia';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 import i18n from '../../src/app/locale/i18n';
 import WebitelUi from '../../src/app/plugins/webitel/ui-sdk';
+
+const router = createRouter({
+	history: createMemoryHistory(),
+	routes: [
+		{
+			path: '/:pathMatch(.*)*',
+			component: {
+				template: '<div />',
+			},
+		},
+	],
+});
 
 config.global.plugins = [
 	WebitelUi,
 	i18n,
 	createPinia(),
+	router,
 ];
 
 window.scrollTo = () => {};
@@ -49,8 +63,6 @@ vi.doMock('@aliasedDeps/api-services/axios', () => ({
 }));
 
 beforeAll(async () => {
-	const store = (await import('../../src/app/store/index.js')).default;
-	const router = (await import('../../src/app/router')).default;
 	const { createUserAccessControl } = await import(
 		'../../src/app/composables/useUserAccessControl'
 	);
@@ -58,5 +70,4 @@ beforeAll(async () => {
 		'../../src/modules/userinfo/store/userinfoStore'
 	);
 	createUserAccessControl(useUserinfoStore);
-	store.commit('SET_ROUTER', router);
 });

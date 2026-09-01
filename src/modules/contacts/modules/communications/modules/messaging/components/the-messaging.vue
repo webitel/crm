@@ -9,18 +9,12 @@
 
     <wt-send-message-popup
       v-if="isOpenChatPopup"
-      :chat-item="selectItem"
+      :chat-item="selectItem as any"
       :user-id="userId"
       @close="closeChat"
     />
 
     <section class="table-section">
-      <header class="table-title">
-        <h3 class="table-title__title">
-          {{ t('vocabulary.messaging') }}
-        </h3>
-      </header>
-
       <div class="table-section__table-wrapper">
         <wt-empty
           v-show="showEmpty"
@@ -76,13 +70,15 @@
 </template>
 
 <script lang="ts" setup>
+import { IMClientsAPI } from '@webitel/api-services/api';
 import { ChatGatewayProvider } from '@webitel/api-services/enums';
+import type { ContactsIMClient } from '@webitel/api-services/gen/models';
 import { WtEmpty, WtSendMessagePopup } from '@webitel/ui-sdk/components';
 import { ProviderIconType } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserinfoStore } from '../../../../../../userinfo/store/userinfoStore';
@@ -97,9 +93,7 @@ const { t } = useI18n();
 const { disabledUpdate, disabledDelete } = useContactEditAccessControl();
 
 const contactCardStore = useContactCardStore();
-const { itemId: parentId } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId: parentId } = storeToRefs(contactCardStore);
 
 const { userId } = useUserinfoStore();
 
@@ -164,7 +158,7 @@ const {
 );
 
 const isOpenChatPopup = ref(false);
-const selectItem = ref(null);
+const selectItem = ref<ContactsIMClient | null>(null);
 
 const availableProviders = [
 	ChatGatewayProvider.TELEGRAM_BOT,
@@ -174,9 +168,15 @@ const availableProviders = [
 	ChatGatewayProvider.CUSTOM,
 ];
 
-function openChat(item) {
+async function openChat(item: ContactsIMClient) {
+	const { items } = await IMClientsAPI.getList({
+		parentId: parentId.value,
+		id: [
+			item.id,
+		],
+	});
+	selectItem.value = items[0] ?? item;
 	isOpenChatPopup.value = true;
-	selectItem.value = item;
 }
 
 function closeChat() {

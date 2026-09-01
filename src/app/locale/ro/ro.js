@@ -7,7 +7,7 @@ import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
-import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../modules/timeline/enums/TimelineTaskStatus.enum';
 
 export default {
 	crm: 'CRM',
@@ -68,12 +68,12 @@ export default {
 			postprocessing: 'Postprocesare',
 		},
 		status: {
-			[TimelineTaskStatusEnum.STARTED]: 'Început',
-			[TimelineTaskStatusEnum.MISSED]: 'Ratat',
-			[TimelineTaskStatusEnum.TRANSFERRED]: 'Transferat',
-			[TimelineTaskStatusEnum.ENDED]: 'Încheiat',
-			[TimelineTaskStatusEnum.SENT]: 'Trimis',
-			[TimelineTaskStatusEnum.RECEIVED]: 'Primit',
+			[TimelineTaskStatusEnum.Started]: 'Început',
+			[TimelineTaskStatusEnum.Missed]: 'Ratat',
+			[TimelineTaskStatusEnum.Transferred]: 'Transferat',
+			[TimelineTaskStatusEnum.Ended]: 'Încheiat',
+			[TimelineTaskStatusEnum.Sent]: 'Trimis',
+			[TimelineTaskStatusEnum.Received]: 'Primit',
 		},
 		eventType: {
 			[TimelineEventType.Call]: 'Apel | Apeluri',

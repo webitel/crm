@@ -7,7 +7,7 @@ import { ChatGatewayProvider, CrmSections } from '@webitel/ui-sdk/enums';
 
 import { SearchMode } from '../../../modules/cases/enums/SearchMode.ts';
 import { TimelineEventType } from '../../../modules/timeline/enums/TimelineEventType';
-import TimelineTaskStatusEnum from '../../../modules/timeline/enums/TimelineTaskStatus.enum.js';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../modules/timeline/enums/TimelineTaskStatus.enum';
 
 export default {
 	crm: 'CRM',
@@ -68,12 +68,12 @@ export default {
 			postprocessing: 'Qayta ishlash',
 		},
 		status: {
-			[TimelineTaskStatusEnum.STARTED]: 'Boshlandi',
-			[TimelineTaskStatusEnum.MISSED]: "O'tkazib yuborildi",
-			[TimelineTaskStatusEnum.TRANSFERRED]: "O'tkazildi",
-			[TimelineTaskStatusEnum.ENDED]: 'Tugadi',
-			[TimelineTaskStatusEnum.SENT]: 'Yuborildi',
-			[TimelineTaskStatusEnum.RECEIVED]: 'Qabul qilindi',
+			[TimelineTaskStatusEnum.Started]: 'Boshlandi',
+			[TimelineTaskStatusEnum.Missed]: "O'tkazib yuborildi",
+			[TimelineTaskStatusEnum.Transferred]: "O'tkazildi",
+			[TimelineTaskStatusEnum.Ended]: 'Tugadi',
+			[TimelineTaskStatusEnum.Sent]: 'Yuborildi',
+			[TimelineTaskStatusEnum.Received]: 'Qabul qilindi',
 		},
 		eventType: {
 			[TimelineEventType.Call]: "Qo'ng'iroq | Qo'ng'iroqlar",

@@ -16,6 +16,9 @@
 
 		"allowJs": false,
 		"skipLibCheck": true,
+		"types": [
+			"vitest/globals"
+		],
 
 		"moduleResolution": "Bundler",
 		"baseUrl": ".",

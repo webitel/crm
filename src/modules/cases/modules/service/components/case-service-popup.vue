@@ -4,7 +4,7 @@
     @close="close"
   >
     <template #header>
-      {{ $t('cases.selectAService') }}
+      {{ t('cases.selectAService') }}
     </template>
     <template #main>
       <wt-search-bar
@@ -37,7 +37,7 @@
       </wt-tree>
       <wt-empty
         v-else
-        :text="$t('webitelUI.empty.text.empty')"
+        :text="t('webitelUI.empty.text.empty')"
       />
     </template>
     <template #actions>
@@ -45,48 +45,48 @@
         :disabled="!selectedElement"
         @click="save"
       >
-        {{ $t('reusable.ok') }}
+        {{ t('reusable.ok') }}
       </wt-button>
       <wt-button
         color="secondary"
         @click="close"
       >
-        {{ $t('reusable.close') }}
+        {{ t('reusable.close') }}
       </wt-button>
     </template>
   </wt-popup>
 </template>
 
-<script setup>
-import { ServiceCatalogsAPI } from '@webitel/api-services/api';
-import { ComponentSize } from '@webitel/ui-sdk/enums/ComponentSize/ComponentSize';
+<script setup lang="ts">
+import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
+import { ComponentSize } from '@webitel/ui-sdk/enums';
 import deepCopy from 'deep-copy';
 import { onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import ServiceAPI from '../api/ServiceAPI.js';
+const props = defineProps<{
+	value: any;
+	shown: boolean;
+}>();
 
-const props = defineProps({
-	value: {
-		type: Object,
-		required: true,
-	},
-	shown: {
-		type: Boolean,
-		required: true,
-	},
-});
+const emit = defineEmits<{
+	save: [
+		{
+			service;
+			catalog;
+		},
+	];
+	close: [];
+}>();
 
-const emit = defineEmits([
-	'save',
-	'close',
-]);
+const { t } = useI18n();
 
 const selectedElement = ref(props.value?.id ?? null);
 const search = ref('');
 const loading = ref(false);
 
 const save = async () => {
-	const service = await ServiceAPI.get({
+	const service = await ServicesAPI.get({
 		itemId: selectedElement.value,
 	});
 	const catalog = await ServiceCatalogsAPI.get({

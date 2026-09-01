@@ -8,7 +8,6 @@
     </p>
     <div class="timeline-header-actions">
       <timeline-task-type-filter
-        :namespace="filtersNamespace"
         :calls-count="callsCount"
         :chats-count="chatsCount"
         :emails-count="emailsCount"
@@ -22,29 +21,26 @@
     </div>
   </header>
 </template>
-<script setup>
+<script setup lang="ts">
+import { useEventBus } from '@webitel/ui-sdk/composables';
 import capitalize from 'lodash/capitalize';
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import TimelineAPI from '../api/TimelineAPI';
 import TimelineTaskTypeFilter from '../modules/filters/components/timeline-task-type-filter.vue';
+import { useTimelineStore } from '../stores/timeline';
 
-const props = defineProps({
-	parentId: {
-		type: String,
-		required: true,
-	},
-	filtersNamespace: {
-		type: String,
-		required: true,
-	},
-});
+interface Props {
+	parentId: string;
+}
 
-const mode = inject('mode');
-const eventBus = inject('$eventBus');
+const props = defineProps<Props>();
 
-const { d, t, locale } = useI18n();
+const timelineStore = useTimelineStore();
+const { getCounters } = timelineStore;
+const eventBus = useEventBus();
+
+const { d, t } = useI18n();
 
 const showHeader = computed(() => true);
 
@@ -77,10 +73,7 @@ async function loadCounters() {
 		callsCount: sourceCallsCount,
 		chatsCount: sourceChatsCount,
 		emailsCount: sourceEmailsCount,
-	} = await TimelineAPI.getCounters({
-		mode,
-		parentId: props.parentId,
-	});
+	} = await getCounters(props.parentId);
 
 	callsCount.value = sourceCallsCount;
 	chatsCount.value = sourceChatsCount;

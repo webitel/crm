@@ -4,19 +4,19 @@
     </span>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 
-const props = defineProps({
-	service: {
-		type: Object,
-		default: null,
+const props = withDefaults(
+	defineProps<{
+		service?: Record<string, any> | null;
+		catalog?: Record<string, any> | null;
+	}>(),
+	{
+		service: null,
+		catalog: null,
 	},
-	catalog: {
-		type: Object,
-		default: null,
-	},
-});
+);
 
 /**
  * @description Traverses a nested service object to build a breadcrumb-style path string.

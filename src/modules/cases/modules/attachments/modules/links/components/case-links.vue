@@ -38,7 +38,6 @@
         <wt-input-text
           :placeholder="t('cases.attachments.url')"
           :model-value="formState.linkUrl"
-          :v="v$.linkUrl"
           class="link-form__input"
           @update:model-value="updateLinkUrl"
         />
@@ -53,7 +52,7 @@
 
       <wt-empty
         v-show="showEmpty && !isPendingItemsLoading"
-        :text="emptyText"
+        :text="t('cases.attachments.emptyLinksText')"
       />
 
       <wt-loader v-show="isLoading || isPendingItemsLoading" />
@@ -66,9 +65,9 @@
           :data="currentDataList"
           :headers="headers"
           :selected="selected"
-          :selectable="editMode"
+          :selectable="isEditable"
           headless
-          @update:selected="setSelected"
+          @update:selected="updateSelected"
         >
           <template #name="{ item }">
             <a
@@ -115,40 +114,34 @@
   </div>
 </template>
 
-<script setup>
-import { useVuelidate } from '@vuelidate/core';
-import { required, url } from '@vuelidate/validators';
+<script setup lang="ts">
+import { CaseLinksAPI } from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtInlineAddPanel } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
-import { useTableFilters } from '@webitel/ui-sdk/src/modules/Filters/composables/useTableFilters';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { useTableStore } from '@webitel/ui-sdk/src/modules/TableStoreModule/composables/useTableStore';
-import { computed, inject, onUnmounted, reactive } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCaseAttachments } from '../../../composables/useCaseAttachments.js';
+import { useCaseAccessState } from '../../../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../../../stores/card/casesCardStore';
+import { useCaseAttachments } from '../../../composables/useCaseAttachments';
 import { AttachmentsTypes } from '../../../enums/AttachmentsTypes';
-import LinksAPI from '../api/LinksAPI.js';
+import { useCaseLinksDatalistStore } from '../stores/datalist/caseLinksDatalistStore';
 
-const props = defineProps({
-	linksNamespace: {
-		type: String,
-		required: true,
-	},
-	namespace: {
-		type: String,
-		required: true,
-	},
-	itemId: {
-		type: String,
-		required: true,
-	},
+const props = defineProps<{
+	itemId: string;
+}>();
+
+const { isEditable, isReadOnly } = useCaseAccessState();
+const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
 });
-
-const isReadOnly = inject('isReadOnly');
-const editMode = inject('editMode');
 
 const { t } = useI18n();
 
@@ -157,20 +150,15 @@ const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 		useUpdateAccessAsAllMutableChecksSource: true,
 	});
 
+const linksStore = useCaseLinksDatalistStore();
 const {
-	namespace: linksTableNamespace,
 	dataList,
 	selected,
 	isLoading,
-	headers,
-	loadData,
-	deleteData,
-	setSelected,
-	onFilterEvent,
-} = useTableStore(props.linksNamespace);
-
-const { restoreFilters, subscribe, flushSubscribers } =
-	useTableFilters(linksTableNamespace);
+	shownHeaders: headers,
+} = storeToRefs(linksStore);
+const { loadDataList, deleteEls, updateSelected, updateSize, initialize } =
+	linksStore;
 
 const {
 	isVisible: isConfirmationPopup,
@@ -185,14 +173,14 @@ const isTableActionAddDisabled = computed(() => {
 		!hasCreateAccess.value ||
 		formState.isAdding ||
 		formState.editingLink ||
-		!editMode.value ||
+		!isEditable.value ||
 		isPendingItemsLoading.value
 	);
 });
 
 const isTableActionDeleteDisabled = computed(() => {
 	return (
-		!editMode.value ||
+		!isEditable.value ||
 		!hasDeleteAccess.value ||
 		!selected.value.length ||
 		isPendingItemsLoading.value
@@ -216,11 +204,11 @@ const isTableVisible = computed(() => {
 });
 
 const isLinkEditActionDisabled = computed(() => {
-	return !editMode.value || !hasUpdateAccess.value || formState.isAdding;
+	return !isEditable.value || !hasUpdateAccess.value || formState.isAdding;
 });
 
 const isLinkDeleteActionDisabled = computed(() => {
-	return !editMode.value || !hasDeleteAccess.value;
+	return !isEditable.value || !hasDeleteAccess.value;
 });
 
 // Transform and process functions for links
@@ -230,7 +218,7 @@ const transformStoreItemToPending = (linkData) => ({
 });
 
 const addLink = async (link) => {
-	await LinksAPI.add({
+	await CaseLinksAPI.add({
 		parentId: props.itemId,
 		input: {
 			name: link.name,
@@ -240,7 +228,6 @@ const addLink = async (link) => {
 };
 
 const {
-	isNew,
 	pendingItems: pendingLinks,
 	isPendingItemsLoading,
 	addNewItem,
@@ -249,13 +236,13 @@ const {
 	updatePendingItem,
 	deleteMultiplePendingItems,
 } = useCaseAttachments({
-	cardNamespace: props.namespace,
-	itemId: props.itemId,
-	storePath: AttachmentsTypes.LINKS,
-	loadData,
+	itemInstance: modelValue,
+	isNew,
+	storePath: AttachmentsTypes.Links,
+	loadData: loadDataList,
 	transformStoreItemToPending,
 	processItemToAPI: addLink,
-	deleteData,
+	deleteData: deleteEls,
 });
 
 const currentDataList = computed(() =>
@@ -266,26 +253,12 @@ const { showEmpty } = useTableEmpty({
 	isLoading,
 });
 
-const emptyText = computed(() => {
-	return t('cases.attachments.emptyLinksText');
-});
-
-subscribe({
-	event: '*',
-	callback: (...args) => {
-		if (!isNew.value) {
-			onFilterEvent(...args);
-		}
-	},
-});
-
+updateSize(100);
 if (!isNew.value) {
-	restoreFilters();
+	initialize({
+		parentId: props.itemId,
+	});
 }
-
-onUnmounted(() => {
-	flushSubscribers();
-});
 
 // Form state for links
 const formState = reactive({
@@ -295,24 +268,21 @@ const formState = reactive({
 	linkUrl: '',
 });
 
-function requiredIfIsAdding(value, state, siblings) {
-	if (!formState.isAdding) {
-		return true;
+function isValidUrl(value: string) {
+	try {
+		return [
+			'http:',
+			'https:',
+			'ftp:',
+		].includes(new URL(value).protocol);
+	} catch {
+		return false;
 	}
-	return required.$validator(value, state, siblings);
 }
 
-const rules = computed(() => ({
-	linkUrl: {
-		requiredIfIsAdding,
-		url,
-	},
-}));
-
-const v$ = useVuelidate(rules, formState);
-v$.value.$touch();
-
-const isUrlInvalid = computed(() => v$.value.linkUrl.$invalid);
+const isUrlInvalid = computed(
+	() => formState.isAdding && !isValidUrl(formState.linkUrl),
+);
 
 function startAddingLink() {
 	formState.isAdding = true;
@@ -369,7 +339,7 @@ async function submitLink() {
 }
 
 async function updateExistingLink(editingLink, name, linkUrl) {
-	await LinksAPI.patch({
+	await CaseLinksAPI.patch({
 		parentId: props.itemId,
 		linkId: editingLink.etag,
 		changes: {
@@ -377,7 +347,7 @@ async function updateExistingLink(editingLink, name, linkUrl) {
 			url: linkUrl,
 		},
 	});
-	await loadData();
+	await loadDataList();
 }
 
 // Function to handle deletion of pending links

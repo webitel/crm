@@ -27,12 +27,12 @@
 
       <service-path
         class="case-service__path typo-body-1"
-        :service="itemInstance?.service"
+        :service="modelValue?.service"
         :catalog="catalogData"
       />
     </div>
     <wt-button
-      v-if="editMode"
+      v-if="isEditable"
       :disabled="disableUserInput || !hasServiceCatalogReadAccess"
       class="case-service__button"
       color="success"
@@ -43,24 +43,27 @@
   </div>
 </template>
 
-<script setup>
-import { CasePrioritiesAPI } from '@webitel/api-services/api';
+<script setup lang="ts">
+import {
+	CasePrioritiesAPI,
+	ServiceCatalogsAPI,
+	ServicesAPI,
+} from '@webitel/api-services/api';
+import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtObject } from '@webitel/ui-sdk/enums';
-import { useCardComponent } from '@webitel/ui-sdk/src/composables/useCard/useCardComponent';
-import { useCardStore } from '@webitel/ui-sdk/src/modules/CardStoreModule/composables/useCardStore';
-import { computed, inject, onUnmounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
 import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
-import CatalogAPI from '../api/CatalogAPI.js';
-import ServiceAPI from '../api/ServiceAPI.js';
+import { useCaseAccessState } from '../../../composables/useCaseAccessState';
+import { useCasesCardStore } from '../../../stores/card/casesCardStore';
+import { useCaseServiceStore } from '../stores/caseServiceStore';
 import CaseServicePopup from './case-service-popup.vue';
 import ServicePath from './service-path.vue';
 import SlaRecalculationPopup from './sla-recalculation-popup.vue';
 
-const namespace = inject('namespace');
-const editMode = inject('editMode');
-const isReadOnly = inject('isReadOnly');
+const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { disableUserInput } = useUserAccessControl();
 const { hasReadAccess: hasServiceCatalogReadAccess } = useUserAccessControl(
@@ -70,37 +73,28 @@ const { hasReadAccess: hasPrioritiesReadAccess } = useUserAccessControl(
 	WtObject.Priorities,
 );
 
-const {
-	namespace: cardNamespace,
-	itemInstance,
-	setItemProp,
-} = useCardStore(namespace);
-
-const { isNew } = useCardComponent({
-	itemInstance,
+const casesCardStore = useCasesCardStore();
+const { itemId } = storeToRefs(casesCardStore);
+const { modelValue } = useCardComponent<WebitelCasesCase>({
+	useCardStore: useCasesCardStore,
+	manualSetup: true,
 });
 
+const isNew = computed(() => !itemId.value);
+
 const { t } = useI18n();
-const store = useStore();
 const isServicePopup = ref(false);
 const isSlaRecalculationPopup = ref(false);
 const catalogData = ref(null);
 
-const serviceNamespace = `${cardNamespace}/service`;
+const caseServiceStore = useCaseServiceStore();
+const { setService, setCatalog, $reset } = caseServiceStore;
 
 const hasServiceValidationError = computed(() => {
 	if (isReadOnly) return false; // skip errors on read-only mode
 
-	return !itemInstance?.value?.service?.name;
+	return !modelValue?.value?.service?.name;
 });
-
-function setServiceToStore(service) {
-	return store.dispatch(`${serviceNamespace}/SET_SERVICE`, service);
-}
-
-function setCatalogToStore(catalog) {
-	return store.dispatch(`${serviceNamespace}/SET_CATALOG`, catalog);
-}
 
 // This function returns the defaultPriority for a selected service by traversing up the service hierarchy.
 // It first checks the selected service, then its parent services using rootId,
@@ -149,10 +143,7 @@ const setDefaultPriority = async ({ catalog, service }) => {
 
 	if (defaultPriority) {
 		// Set default priority from selected Service
-		await setItemProp({
-			path: 'priority',
-			value: defaultPriority,
-		});
+		modelValue.value.priority = defaultPriority;
 	} else {
 		if (!hasPrioritiesReadAccess.value) return;
 
@@ -160,10 +151,7 @@ const setDefaultPriority = async ({ catalog, service }) => {
 			.items[0];
 
 		// Set first priority from get list case priorities
-		await setItemProp({
-			path: 'priority',
-			value: firstDefaultPriority,
-		});
+		modelValue.value.priority = firstDefaultPriority;
 	}
 };
 
@@ -173,26 +161,20 @@ async function addServiceToStore(serviceCatalogData) {
 		return console.error('No serviceCatalogData provided');
 
 	const { service, catalog } = serviceCatalogData;
-	await setServiceToStore(service);
-	await setCatalogToStore(catalog);
+	setService(service);
+	setCatalog(catalog);
 
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
 
-	await setItemProp({
-		path: 'close_reason_group',
-		value: {
-			id: catalog.closeReasonGroup.id,
-		},
-	});
+	modelValue.value.closeReasonGroup = {
+		id: catalog.closeReasonGroup.id,
+	};
 
-	await setItemProp({
-		path: 'service',
-		value: {
-			id: service.id,
-			name: service.name,
-		},
-	});
+	modelValue.value.service = {
+		id: service.id,
+		name: service.name,
+	};
 }
 
 /**
@@ -229,13 +211,13 @@ async function onSlaRecalculationSave() {
 const serviceResponse = ref(null);
 
 watch(
-	() => itemInstance.value?.service?.id,
+	() => modelValue.value?.service?.id,
 	async (newService) => {
 		if (!newService) return;
-		serviceResponse.value = await ServiceAPI.get({
+		serviceResponse.value = await ServicesAPI.get({
 			itemId: newService,
 		});
-		const catalogResponse = await CatalogAPI.get({
+		const catalogResponse = await ServiceCatalogsAPI.get({
 			itemId: serviceResponse.value.catalogId,
 		});
 		await addServiceToStore({
@@ -249,8 +231,7 @@ watch(
 );
 
 onUnmounted(() => {
-	setServiceToStore(null);
-	setCatalogToStore(null);
+	$reset();
 	catalogData.value = null;
 });
 </script>

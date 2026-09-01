@@ -166,13 +166,10 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../../../../../../../app/composables/useUserAccessControl';
-import { checkDisableState } from '../../../utils/checkDisableState.js';
-import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName.js';
+import { checkDisableState } from '../../../utils/checkDisableState';
+import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName';
 import { useCaseServicesDatalistStore } from '../stores';
-import {
-	buildServiceCrumbs,
-	findServicePath,
-} from '../utils/breadcrumbUtils.js';
+import { buildServiceCrumbs, findServicePath } from '../utils/breadcrumbUtils';
 
 const route = useRoute();
 const router = useRouter();
@@ -244,7 +241,10 @@ const path = computed(() => {
 
 	if (!catalog.value) return baseRoutes;
 
-	const servicePath = findServicePath(route.params.rootId, catalog.value);
+	const servicePath = findServicePath(
+		route.params.rootId as string,
+		catalog.value,
+	);
 
 	const routes = [
 		...baseRoutes,
@@ -258,7 +258,7 @@ const path = computed(() => {
 				},
 			},
 		},
-		...buildServiceCrumbs(servicePath, route.params.catalogId),
+		...buildServiceCrumbs(servicePath, route.params.catalogId as string),
 	];
 
 	return routes;

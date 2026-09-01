@@ -198,17 +198,17 @@
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { prettifyDate } from '@webitel/ui-sdk/utils';
+import { storeToRefs } from 'pinia';
 import { computed, getCurrentInstance, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import ColorComponentWrapper from '../../../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../../../app/components/_shared/color-component-wrapper.vue';
 import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
 import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
-import prettifyDate from '../../../../cases/utils/prettifyDate';
-import DisplayDynamicFieldExtension from '../../../../customization/modules/wt-type-extension/components/display-dynamic-field-extension.vue';
+import DisplayDynamicFieldExtension from '../../../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
 import { useContactCardStore } from '../../../stores/card/contactCardStore';
 import { ContactCasesNamespace } from '../namespace';
 import { useContactCasesDatalistStore } from '../stores/datalist/contactCasesDatalistStore';
@@ -218,9 +218,7 @@ const { t } = useI18n();
 const isReadOnly = inject('isReadOnly');
 
 const contactCardStore = useContactCardStore();
-const { itemId: parentId } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId: parentId } = storeToRefs(contactCardStore);
 
 const tableStore = useContactCasesDatalistStore();
 

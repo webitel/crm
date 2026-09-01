@@ -10,7 +10,7 @@
 
         <template #subtitle>
           <timeline-task-status
-            :status="TimelineTaskStatusEnum.STARTED"
+            :status="TimelineTaskStatusEnum.Started"
           />
         </template>
       </timeline-row-info>
@@ -68,7 +68,7 @@
 
 <script setup>
 import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
-import { computed, inject, toRefs } from 'vue';
+import { computed, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
 import TimelineActionMenu from '../../../../components/task-row/timeline-action-menu.vue';
@@ -78,10 +78,10 @@ import TimelineRowDuration from '../../../../components/utils/timeline-row-durat
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineRowInitiator from '../../../../components/utils/timeline-row-initiator.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
-import TimelineInitiatorType from '../../../../enums/TimelineInitiatorType.enum.js';
-import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
-import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import { TimelineInitiatorType } from '../../../../enums/TimelineInitiatorType.enum';
+import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
+import { TimelineTaskKind } from '../../../../enums/TimelineTaskKind.enum';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 import ChatPointsRowSection from '../point-row/chat-points-timeline-row-section.vue';
 
 const props = defineProps({
@@ -99,8 +99,6 @@ const props = defineProps({
 	},
 });
 
-const namespace = inject('namespace');
-
 const {
 	createdAt,
 	participants,
@@ -110,26 +108,26 @@ const {
 } = toRefs(props.task);
 
 const taskType = computed(() => {
-	return TimelineTaskKind.CHAT_INBOUND;
+	return TimelineTaskKind.ChatInbound;
 });
 
 const pinType = computed(() => {
 	switch (taskType.value) {
-		case TimelineTaskKind.CHAT_INBOUND:
-			return TimelinePinType.CHAT_INBOUND;
+		case TimelineTaskKind.ChatInbound:
+			return TimelinePinType.ChatInbound;
 		default:
 			throw new Error(`Unknown task type: ${taskType.value}`);
 	}
 });
 
 const initiatorType = computed(() => {
-	if (!participants?.value) return TimelineInitiatorType.BOT;
-	return TimelineInitiatorType.CONTACT;
+	if (!participants?.value) return TimelineInitiatorType.Bot;
+	return TimelineInitiatorType.Contact;
 });
 
 const initiator = computed(() => {
 	switch (initiatorType.value) {
-		case TimelineInitiatorType.BOT:
+		case TimelineInitiatorType.Bot:
 			return flowScheme?.value;
 		default:
 			return participants?.value.at(0);

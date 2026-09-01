@@ -4,6 +4,7 @@ export const headers = [
 	{
 		value: 'icon',
 		show: true,
+		field: 'protocol',
 		width: '24px',
 	},
 	{

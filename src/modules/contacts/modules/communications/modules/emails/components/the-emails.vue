@@ -2,7 +2,7 @@
   <div class="emails">
     <communication-popup
       :store="useEmailsCardStore"
-      :parent-id="parentId"
+      :parent-id="(parentId as unknown as string)"
       :channel="CommunicationChannel.Email"
       :is-first-record="!dataList.length"
       @close="close"
@@ -18,10 +18,8 @@
 
     <section class="table-section">
       <header class="table-title">
-        <h3 class="table-title__title">
-          {{ t('vocabulary.emails', 2) }}
-        </h3>
         <wt-action-bar
+          class="emails__action"
           :include="[IconAction.ADD]"
           :disabled:add="disabledAdd"
           @click:add="open"
@@ -99,7 +97,7 @@ import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { type StoreGeneric, storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -125,9 +123,7 @@ const { open } = useCardListNavigation({
 const { close } = useClose(route.name);
 
 const contactCardStore = useContactCardStore();
-const { itemId: parentId } = storeToRefs(
-	contactCardStore as unknown as StoreGeneric,
-);
+const { itemId: parentId } = storeToRefs(contactCardStore);
 
 const tableStore = useEmailsDatalistStore();
 
@@ -204,6 +200,10 @@ async function setAsPrimary(item) {
 </script>
 
 <style lang="scss" scoped>
+.emails__action {
+  margin-left: auto;
+}
+
 .emails__set-primary-btn {
   opacity: 0;
   transition: var(--transition);

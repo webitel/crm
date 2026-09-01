@@ -130,9 +130,9 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import ColorComponentWrapper from '../../../../../../../app/components/utils/color-component-wrapper.vue';
+import ColorComponentWrapper from '../../../../../../../app/components/_shared/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { useCasePrioritiesDatalistStore } from '../stores';
+import { useCasePrioritiesDatalistStore } from '../stores/datalist/casePrioritiesDatalistStore';
 
 const { t } = useI18n();
 const router = useRouter();

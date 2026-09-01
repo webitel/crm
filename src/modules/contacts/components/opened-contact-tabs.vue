@@ -13,8 +13,10 @@
         delete: hasContactEditAccess,
         create: hasContactEditAccess,
       }"
+      :fields="customFields"
       :store="useContactPermissionsStore"
       :parent-id="itemId"
+      :item-instance="draftItemInstance"
     />
   </article>
 </template>
@@ -22,20 +24,21 @@
 <script setup lang="ts">
 import { useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import { type StoreGeneric, storeToRefs } from 'pinia';
-import { computed, provide } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { useExtensionFields } from '../../customization/modules/wt-type-extension/composable/useExtensionFields';
+import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { useContactEditAccessControl } from '../composables/useContactEditAccessControl';
 import { CONTACT_VIEW_NAME } from '../router/contactViewName';
+import { contactCustomFields } from '../stores/_internals/contactCustomFields';
 import { useContactCardStore } from '../stores/card/contactCardStore';
 import { useContactPermissionsStore } from '../stores/permissions/contactPermissionsStore';
 
 const contactCardStore = useContactCardStore();
-const { itemId } = storeToRefs(contactCardStore as unknown as StoreGeneric);
+const { itemId, draftItemInstance } = storeToRefs(contactCardStore);
 
 const { hasContactEditAccess } = useContactEditAccessControl();
 
@@ -47,6 +50,15 @@ const { fields: customFields, getFields } = useExtensionFields({
 });
 
 getFields();
+watch(
+	customFields,
+	(fields) => {
+		contactCustomFields.value = fields;
+	},
+	{
+		immediate: true,
+	},
+);
 const currentCardRoute = computed(() => {
 	return typeof route.name === 'string' &&
 		route.name.includes(CONTACT_VIEW_NAME)

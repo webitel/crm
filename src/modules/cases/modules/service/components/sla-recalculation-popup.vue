@@ -31,20 +31,17 @@
   </wt-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps({
-	shown: {
-		type: Boolean,
-		required: true,
-	},
-});
+defineProps<{
+	shown: boolean;
+}>();
 
-const emit = defineEmits([
-	'save',
-	'close',
-]);
+const emit = defineEmits<{
+	save: [];
+	close: [];
+}>();
 
 const { t } = useI18n();
 

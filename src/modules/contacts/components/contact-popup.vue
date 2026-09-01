@@ -13,7 +13,7 @@
     <template #main>
       <form class="contact-popup-form">
         <wt-input-text
-          v-model:model-value="modelValue.name"
+          v-model:model-value="modelValue.name.commonName"
           :label="t('reusable.name')"
           :regle-validation="validationFields.name"
           required
@@ -31,7 +31,7 @@
           :model-value="modelValue.timezones?.[0]?.timezone"
           :label="t('date.timezone', 1)"
           :search-method="CalendarsAPI.getTimezonesLookup"
-          @update:model-value="modelValue.timezones = [{ timezone: $event }]"
+          @update:model-value="modelValue.timezones = [{ etag: '', timezone: $event }]"
         />
 
         <wt-single-select
@@ -39,7 +39,7 @@
           :disabled="!hasUsersReadAccess"
           :label="t('contacts.manager', 1)"
           :search-method="hasUsersReadAccess && UsersAPI.getLookup"
-          @update:model-value="modelValue.managers = [{ user: $event }]"
+          @update:model-value="modelValue.managers = [{ etag: '', user: $event }]"
         />
 
         <wt-multi-select
@@ -82,12 +82,15 @@
 import { useRegleSchema } from '@regle/schemas';
 import {
 	CalendarsAPI,
-	type ContactEntity,
 	ContactGroupsAPI,
 	ContactsAPI,
 	LabelsAPI,
 	UsersAPI,
 } from '@webitel/api-services/api';
+import type {
+	ContactsInputContact,
+	WebitelContactsLookup,
+} from '@webitel/api-services/gen/models';
 import { ContactsGroupType } from '@webitel/api-services/gen/models';
 import { contactSchema } from '@webitel/api-services/validations';
 import { ComponentSize, WtObject } from '@webitel/ui-sdk/enums';
@@ -126,12 +129,19 @@ const { hasReadAccess: hasContactGroupsReadAccess } = useUserAccessControl(
 
 const userInfoStore = useUserinfoStore();
 
-function generateNewDraft(): ContactEntity {
+type ContactDraft = Omit<ContactsInputContact, 'groups'> & {
+	groups?: WebitelContactsLookup[];
+};
+
+function generateNewDraft(): ContactDraft {
 	return {
-		name: '',
+		name: {
+			commonName: '',
+		},
 		timezones: [],
 		managers: [
 			{
+				etag: '',
 				user: {
 					id: userInfoStore.userInfo?.userId,
 					name: userInfoStore.userInfo?.name,
@@ -144,7 +154,7 @@ function generateNewDraft(): ContactEntity {
 	};
 }
 
-const draft = ref<ContactEntity>(generateNewDraft());
+const draft = ref<ContactDraft>(generateNewDraft());
 
 const validationSchema = ref(
 	useRegleSchema(draft, contactSchema, {
@@ -155,7 +165,9 @@ const validationSchema = ref(
 	}),
 );
 
-const modelValue = computed(() => validationSchema.value.r$.$value);
+const modelValue = computed(
+	() => validationSchema.value.r$.$value as ContactDraft,
+);
 const validationFields = computed(() => validationSchema.value.r$.$fields);
 const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 const validate = () => validationSchema.value.r$.$validate();
@@ -194,9 +206,20 @@ async function save() {
 }
 
 async function loadItem(id = props.id) {
-	draft.value = await ContactsAPI.get({
+	const contact = await ContactsAPI.get({
 		itemId: id,
 	});
+	draft.value = {
+		...contact,
+		name: contact.name ?? {
+			commonName: '',
+		},
+		timezones: contact.timezones?.data ?? [],
+		managers: contact.managers?.data ?? [],
+		labels: contact.labels?.data ?? [],
+		groups:
+			contact.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [],
+	};
 }
 
 function loadStaticContactGroupsList(params) {

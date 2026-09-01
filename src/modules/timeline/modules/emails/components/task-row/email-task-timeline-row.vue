@@ -39,7 +39,7 @@
 
   </timeline-row>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
@@ -48,9 +48,9 @@ import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
-import TimelinePinType from '../../../../enums/TimelinePinType.enum.js';
-import TimelineTaskKind from '../../../../enums/TimelineTaskKind.enum.js';
-import TimelineTaskStatusEnum from '../../../../enums/TimelineTaskStatus.enum.js';
+import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
+import { TimelineTaskKind } from '../../../../enums/TimelineTaskKind.enum';
+import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 import EmailPointTimelineRow from '../point-row/email-point-timeline-row.vue';
 
 const props = defineProps({
@@ -72,16 +72,16 @@ const { createdAt, isInbound } = toRefs(props.task);
 
 const taskType = computed(() =>
 	isInbound?.value
-		? TimelineTaskKind.EMAIL_INBOUND
-		: TimelineTaskKind.EMAIL_OUTBOUND,
+		? TimelineTaskKind.EmailInbound
+		: TimelineTaskKind.EmailOutbound,
 );
 
 const taskStatus = computed(() => {
 	switch (taskType.value) {
-		case TimelineTaskKind.EMAIL_INBOUND:
-			return TimelineTaskStatusEnum.RECEIVED;
-		case TimelineTaskKind.EMAIL_OUTBOUND:
-			return TimelineTaskStatusEnum.SENT;
+		case TimelineTaskKind.EmailInbound:
+			return TimelineTaskStatusEnum.Received;
+		case TimelineTaskKind.EmailOutbound:
+			return TimelineTaskStatusEnum.Sent;
 		default:
 			throw new Error(`Unknown task type: ${taskType.value}`);
 	}
@@ -89,10 +89,10 @@ const taskStatus = computed(() => {
 
 const pinType = computed(() => {
 	switch (taskType.value) {
-		case TimelineTaskKind.EMAIL_INBOUND:
-			return TimelinePinType.EMAIL_INBOUND;
-		case TimelineTaskKind.EMAIL_OUTBOUND:
-			return TimelinePinType.EMAIL_OUTBOUND;
+		case TimelineTaskKind.EmailInbound:
+			return TimelinePinType.EmailInbound;
+		case TimelineTaskKind.EmailOutbound:
+			return TimelinePinType.EmailOutbound;
 		default:
 			throw new Error(`Unknown task type: ${taskType.value}`);
 	}

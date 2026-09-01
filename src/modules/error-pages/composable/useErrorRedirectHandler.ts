@@ -1,5 +1,5 @@
 import { type Router, useRouter } from 'vue-router';
-import { ErrorRedirectMap } from '../enems/ErrorRedirectMap.enum';
+import { ErrorRedirectMap } from '../enums/ErrorRedirectMap.enum';
 
 const HTTP_METHODS = {
 	GET: 'get',
