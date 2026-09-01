@@ -11,7 +11,7 @@
       <wt-icon-btn
         :disabled="!activeTranscript"
         icon="stt-download"
-        @click="downloadTxt(phrases)"
+        @click="downloadTxt(dataList)"
       />
       <wt-icon-btn
         :disabled="!activeTranscript"
@@ -28,7 +28,7 @@
     <wt-table
       v-show="!showEmpty && !isLoading"
       class="timeline-task-info-transcription__table wt-scrollbar"
-      :data="phrases"
+      :data="dataList"
       :headers="headers"
       :selectable="false"
       :grid-actions="false"
@@ -61,7 +61,7 @@ const emit = defineEmits<{
 
 const { removeTranscript } = useTimelineStore();
 
-const phrases = ref<TranscriptPhrase[]>([]);
+const dataList = ref<TranscriptPhrase[]>([]);
 const isLoading = ref(false);
 
 const headers = [
@@ -92,7 +92,7 @@ const {
 	image: emptyImage,
 	text: emptyText,
 } = useTableEmpty({
-	dataList: phrases,
+	dataList,
 });
 
 function downloadTxt(phrases: TranscriptPhrase[]) {
@@ -119,12 +119,12 @@ async function loadCallTranscript() {
 		const callTranscripts = await CallTranscriptAPI.get({
 			id: activeTranscript.value?.id,
 		});
-		phrases.value = callTranscripts.map(({ startSec, endSec, phrase }) => ({
+		dataList.value = callTranscripts.map(({ startSec, endSec, phrase }) => ({
 			time: `${startSec} - ${endSec}`,
 			phrase,
 		}));
 	} catch {
-		phrases.value = [];
+		dataList.value = [];
 	} finally {
 		isLoading.value = false;
 	}
@@ -154,7 +154,7 @@ watch(
 	() => activeTranscript.value,
 	(value) => {
 		if (value) return loadCallTranscript();
-		phrases.value = [];
+		dataList.value = [];
 	},
 	{
 		immediate: true,
