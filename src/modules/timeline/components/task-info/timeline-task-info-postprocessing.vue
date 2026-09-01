@@ -11,7 +11,7 @@
     <div
       v-for="(entry, index) in postprocessing"
       :key="index"
-      class="timeline-task-info-postprocessing__agent"
+      class="timeline-task-info-postprocessing__agent-wrapper"
     >
       <div class="timeline-task-info-postprocessing__agent-name typo-subtitle-1">
         <wt-icon icon="agent" />
