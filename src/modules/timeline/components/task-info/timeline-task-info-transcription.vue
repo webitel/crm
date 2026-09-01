@@ -120,7 +120,7 @@ async function deleteActiveTranscript() {
 	try {
 		isLoading.value = true;
 		await CallTranscriptAPI.delete({
-			fileId: activeTranscript.value.fileId,
+			fileId: activeTranscript.value.id,
 		});
 		store.commit('timeline/REMOVE_TRANSCRIPT', {
 			taskId: props.task.id,
