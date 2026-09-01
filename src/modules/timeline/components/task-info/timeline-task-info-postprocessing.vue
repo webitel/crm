@@ -36,14 +36,13 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactsTimelinePostprocessingResult } from '@webitel/api-services/gen/models';
 import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty';
 import { toRef } from 'vue';
 
-import type { TimelinePostprocessingEntry } from '../../types/timeline.types';
-
 const props = withDefaults(
 	defineProps<{
-		postprocessing?: TimelinePostprocessingEntry[];
+		postprocessing?: ContactsTimelinePostprocessingResult[];
 	}>(),
 	{
 		postprocessing: () => [],
@@ -58,8 +57,9 @@ const {
 	dataList: toRef(props.postprocessing),
 });
 
-function entryFields(entry: Record<string, unknown>) {
-	return Object.entries(entry).filter(([key]) => key !== 'agent');
+function entryFields(form: unknown) {
+	if (typeof form !== 'object' || form === null) return [];
+	return Object.entries(form).filter(([key]) => key !== 'agent');
 }
 
 function formatValue(value: unknown) {

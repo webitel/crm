@@ -38,14 +38,11 @@
 
 <script setup lang="ts">
 import { TimelineAPI } from '@webitel/api-services/api';
+import type { ContactsGetTimelineItemInfoResponse } from '@webitel/api-services/gen/models';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type {
-	TimelineInfo,
-	TimelineTab,
-	TimelineTask,
-} from '../../types/timeline.types';
+import type { TimelineTab, TimelineTask } from '../../types/timeline.types';
 import TimelineTaskInfoPostprocessing from './timeline-task-info-postprocessing.vue';
 import TimelineTaskInfoTranscription from './timeline-task-info-transcription.vue';
 import TimelineTaskInfoVariables from './timeline-task-info-variables.vue';
@@ -128,7 +125,7 @@ const tabProps = computed<Record<string, unknown>>(() => {
 	}
 });
 
-const info = ref<TimelineInfo | null>(null);
+const info = ref<ContactsGetTimelineItemInfoResponse | null>(null);
 const isLoading = ref(false);
 
 async function loadInfo() {

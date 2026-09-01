@@ -1,4 +1,4 @@
-import type { WebitelContactsTranscriptLookup } from 'webitel-sdk';
+import type { ContactsTranscriptLookup } from '@webitel/api-services/gen/models';
 
 import type { TimelineEventType } from '../enums/TimelineEventType';
 
@@ -6,30 +6,11 @@ export interface TimelineTask {
 	id: string;
 	type: TimelineEventType;
 	createdAt: string;
-	transcripts?: WebitelContactsTranscriptLookup[];
+	transcripts?: ContactsTranscriptLookup[];
 }
 
 export interface EmailTimelineTask extends TimelineTask {
 	isInbound?: boolean;
-}
-
-export interface TimelineVariable {
-	key: string;
-	value: string;
-}
-
-export interface TimelinePostprocessingEntry {
-	agent?: {
-		id: string;
-		name: string;
-	};
-	form: Record<string, unknown>;
-	reportingAt?: number;
-}
-
-export interface TimelineInfo {
-	variables?: TimelineVariable[];
-	postprocessing?: TimelinePostprocessingEntry[];
 }
 
 export interface TimelineActionOption {
