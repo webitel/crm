@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -44,9 +45,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 
-const timelineStore = useTimelineStore();
-
-const parentId = computed(() => timelineStore.parentId);
+const { parentId } = storeToRefs(useTimelineStore());
 
 const showInfoPopup = ref(false);
 
