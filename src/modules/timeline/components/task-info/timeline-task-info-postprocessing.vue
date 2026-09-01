@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import type { ContactsTimelinePostprocessingResult } from '@webitel/api-services/gen/models';
-import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { toRef } from 'vue';
 
 const props = withDefaults(

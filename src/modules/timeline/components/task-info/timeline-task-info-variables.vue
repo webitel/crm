@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import type { ContactsTimelineVariable } from '@webitel/api-services/gen/models';
-import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
+import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
