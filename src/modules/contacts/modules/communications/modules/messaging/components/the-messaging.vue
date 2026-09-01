@@ -15,12 +15,6 @@
     />
 
     <section class="table-section">
-      <header class="table-title">
-        <h3 class="table-title__title">
-          {{ t('vocabulary.messaging') }}
-        </h3>
-      </header>
-
       <div class="table-section__table-wrapper">
         <wt-empty
           v-show="showEmpty"
