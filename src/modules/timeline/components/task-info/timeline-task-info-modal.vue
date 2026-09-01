@@ -36,37 +36,41 @@
   </wt-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import TimelineAPI from '../../api/TimelineAPI';
+import type { TimelineMode } from '../../enums/TimelineMode';
+import type {
+	TimelineInfo,
+	TimelineTab,
+	TimelineTask,
+} from '../../types/timeline.types';
 import TimelineTaskInfoPostprocessing from './timeline-task-info-postprocessing.vue';
 import TimelineTaskInfoTranscription from './timeline-task-info-transcription.vue';
 import TimelineTaskInfoVariables from './timeline-task-info-variables.vue';
 
-const props = defineProps({
-	shown: {
-		type: Boolean,
-		default: false,
+const props = withDefaults(
+	defineProps<{
+		shown?: boolean;
+		task: TimelineTask;
+		parentId: string;
+	}>(),
+	{
+		shown: false,
 	},
-	task: {
-		type: Object,
-		required: true,
-	},
-	parentId: {
-		type: String,
-		required: true,
-	},
-});
+);
 
-const emit = defineEmits([
-	'update:shown',
-]);
+const emit = defineEmits<{
+	'update:shown': [
+		shown: boolean,
+	];
+}>();
 
 const { t } = useI18n();
 
-const tabs = computed(() => [
+const tabs = computed<TimelineTab[]>(() => [
 	{
 		text: t('timeline.info.title', 2),
 		value: 'variables',
@@ -85,9 +89,9 @@ const tabs = computed(() => [
 		: []),
 ]);
 
-const currentTab = ref(tabs.value[0]);
+const currentTab = ref<TimelineTab>(tabs.value[0]);
 
-function changeTab(tab) {
+function changeTab(tab: TimelineTab) {
 	currentTab.value = tab;
 }
 
@@ -106,7 +110,7 @@ const tabComponents = {
 	transcription: TimelineTaskInfoTranscription,
 };
 
-const tabProps = computed(() => {
+const tabProps = computed<Record<string, unknown>>(() => {
 	switch (currentTab.value.value) {
 		case 'variables':
 			return {
@@ -125,9 +129,9 @@ const tabProps = computed(() => {
 	}
 });
 
-const mode = inject('mode');
+const mode = inject<TimelineMode>('mode');
 
-const info = ref(null);
+const info = ref<TimelineInfo | null>(null);
 const isLoading = ref(false);
 
 async function loadInfo() {

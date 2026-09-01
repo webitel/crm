@@ -38,27 +38,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CallTranscriptAPI } from '@webitel/api-services/api';
+import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
 import { saveAs } from 'file-saver';
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js";
 
-const props = defineProps({
-	task: {
-		type: Object,
-		required: true,
-	},
-});
+import type { TimelineTask } from '../../types/timeline.types';
+import type {
+	TranscriptOption,
+	TranscriptPhrase,
+} from '../../types/transcript.types';
 
-const emit = defineEmits([
-	'empty-transcriptions-list',
-]);
+const props = defineProps<{
+	task: TimelineTask;
+}>();
+
+const emit = defineEmits<{
+	'empty-transcriptions-list': [];
+}>();
 
 const store = useStore();
 
-const phrases = ref([]);
+const phrases = ref<TranscriptPhrase[]>([]);
 const isLoading = ref(false);
 
 const headers = [
@@ -71,8 +74,8 @@ const headers = [
 	},
 ];
 
-const activeTranscriptOptions = computed(() =>
-	props.task.transcripts.map((transcript) => ({
+const activeTranscriptOptions = computed<TranscriptOption[]>(() =>
+	(props.task.transcripts ?? []).map((transcript) => ({
 		fileName: transcript.file.name,
 		fileId: transcript.file.id,
 		id: transcript.id,
@@ -80,17 +83,19 @@ const activeTranscriptOptions = computed(() =>
 	})),
 );
 
-const activeTranscript = ref(activeTranscriptOptions.value[0] ?? null);
+const activeTranscript = ref<TranscriptOption | null>(
+	activeTranscriptOptions.value[0] ?? null,
+);
 
 const {
-  showEmpty,
-  image: emptyImage,
-  text: emptyText,
+	showEmpty,
+	image: emptyImage,
+	text: emptyText,
 } = useTableEmpty({
-  dataList: phrases,
+	dataList: phrases,
 });
 
-function downloadTxt(phrases) {
+function downloadTxt(phrases: TranscriptPhrase[]) {
 	const text = phrases
 		.map(({ phrase, time }) => `${time} ${phrase || ''}`)
 		.join('\n');

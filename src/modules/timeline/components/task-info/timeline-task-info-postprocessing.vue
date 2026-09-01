@@ -35,33 +35,34 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
 import { toRef } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty";
 
-const props = defineProps({
-	postprocessing: {
-		type: Array,
-		default: () => [],
+import type { TimelinePostprocessingEntry } from '../../types/timeline.types';
+
+const props = withDefaults(
+	defineProps<{
+		postprocessing?: TimelinePostprocessingEntry[];
+	}>(),
+	{
+		postprocessing: () => [],
 	},
-});
-
-const { t } = useI18n();
+);
 
 const {
-  showEmpty,
-  image: emptyImage,
-  text: emptyText,
+	showEmpty,
+	image: emptyImage,
+	text: emptyText,
 } = useTableEmpty({
-  dataList: toRef(props.postprocessing),
+	dataList: toRef(props.postprocessing),
 });
 
-function entryFields(entry) {
+function entryFields(entry: Record<string, unknown>) {
 	return Object.entries(entry).filter(([key]) => key !== 'agent');
 }
 
-function formatValue(value) {
+function formatValue(value: unknown) {
 	return JSON.stringify(value).replace(/^"|"$/g, '');
 }
 </script>

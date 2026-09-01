@@ -1,6 +1,6 @@
 <template>
   <wt-context-menu
-    :options="contextOptions"
+    :options="timelineActionOptions"
     class="timeline-action-menu"
     @click="handleOptionSelect"
   >
@@ -26,20 +26,21 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 import { TimelineEventType } from '../../enums/TimelineEventType';
+import type {
+	TimelineActionOption,
+	TimelineTask,
+} from '../../types/timeline.types';
 import TimelineTaskInfoModal from '../task-info/timeline-task-info-modal.vue';
 
-const props = defineProps({
-	task: {
-		type: Object,
-		required: true,
-	},
-});
+const props = defineProps<{
+	task: TimelineTask;
+}>();
 
 const { t } = useI18n();
 
@@ -57,7 +58,7 @@ function openInHistory() {
 	window.open(`${import.meta.env.VITE_HISTORY_URL}/${props.task.id}`, '_blank');
 }
 
-const contextOptions = computed(() => [
+const timelineActionOptions = computed<TimelineActionOption[]>(() => [
 	{
 		id: 'showInfo',
 		text: t('timeline.actions.showInfo'),
@@ -76,7 +77,7 @@ const contextOptions = computed(() => [
 		: []),
 ]);
 
-function handleOptionSelect({ option }) {
+function handleOptionSelect({ option }: { option: TimelineActionOption }) {
 	option.handler();
 }
 </script>

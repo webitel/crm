@@ -14,17 +14,21 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { useTableEmpty } from '@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useTableEmpty } from "@webitel/ui-sdk/modules/TableComponentModule/composables/useTableEmpty";
 
-const props = defineProps({
-	variables: {
-		type: Array,
-		default: () => [],
+import type { TimelineVariable } from '../../types/timeline.types';
+
+const props = withDefaults(
+	defineProps<{
+		variables?: TimelineVariable[];
+	}>(),
+	{
+		variables: () => [],
 	},
-});
+);
 
 const { t } = useI18n();
 
@@ -40,11 +44,11 @@ const headers = computed(() => [
 ]);
 
 const {
-  showEmpty,
-  image: emptyImage,
-  text: emptyText,
+	showEmpty,
+	image: emptyImage,
+	text: emptyText,
 } = useTableEmpty({
-  dataList: toRef(props.variables),
+	dataList: toRef(props.variables),
 });
 </script>
 
