@@ -118,13 +118,13 @@ const mutations = {
 	SET: (state, { path, value }) => {
 		set(state, path, value);
 	},
-	REMOVE_TRANSCRIPT: (state, { taskId, fileId }) => {
+	REMOVE_TRANSCRIPT: (state, { taskId, id }) => {
 		const task = state.dataList
 			.flatMap((dayGroup) => dayGroup.items)
 			.find((item) => item.id === taskId);
 		if (!task) return;
 		task.transcripts = task.transcripts.filter(
-			(transcript) => transcript.file.id !== fileId,
+			(transcript) => transcript.id !== id,
 		);
 	},
 };

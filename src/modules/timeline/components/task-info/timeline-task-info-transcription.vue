@@ -52,6 +52,10 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits([
+	'empty-transcriptions-list',
+]);
+
 const store = useStore();
 
 const phrases = ref([]);
@@ -129,9 +133,13 @@ async function deleteActiveTranscript() {
 		});
 		store.commit('timeline/REMOVE_TRANSCRIPT', {
 			taskId: props.task.id,
-			fileId: activeTranscript.value.fileId,
+			id: activeTranscript.value.id,
 		});
-		activeTranscript.value = activeTranscriptOptions.value[0] ?? null;
+		if (activeTranscriptOptions.value.length) {
+			activeTranscript.value = activeTranscriptOptions.value[0];
+		} else {
+			emit('empty-transcriptions-list');
+		}
 	} finally {
 		isLoading.value = false;
 	}

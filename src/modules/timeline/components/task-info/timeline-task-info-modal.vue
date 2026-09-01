@@ -20,6 +20,7 @@
         <component
           :is="tabComponents[currentTab.value]"
           v-bind="tabProps"
+          @empty-transcriptions-list="handleEmptyTranscriptionsList"
         />
       </div>
     </template>
@@ -93,6 +94,10 @@ function changeTab(tab) {
 function closeModal() {
 	currentTab.value = tabs.value[0];
 	emit('update:shown', false);
+}
+
+function handleEmptyTranscriptionsList() {
+	currentTab.value = tabs.value[0];
 }
 
 const tabComponents = {
