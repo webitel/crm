@@ -37,11 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref, watch } from 'vue';
+import { TimelineAPI } from '@webitel/api-services/api';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import TimelineAPI from '../../api/TimelineAPI';
-import type { TimelineMode } from '../../enums/TimelineMode';
 import type {
 	TimelineInfo,
 	TimelineTab,
@@ -129,8 +128,6 @@ const tabProps = computed<Record<string, unknown>>(() => {
 	}
 });
 
-const mode = inject<TimelineMode>('mode');
-
 const info = ref<TimelineInfo | null>(null);
 const isLoading = ref(false);
 
@@ -138,7 +135,6 @@ async function loadInfo() {
 	isLoading.value = true;
 	try {
 		info.value = await TimelineAPI.getInfo({
-			mode,
 			parentId: props.parentId,
 			type: props.task.type,
 			id: props.task.id,
