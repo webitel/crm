@@ -9,6 +9,10 @@ export interface TimelineTask {
 	transcripts?: WebitelContactsTranscriptLookup[];
 }
 
+export interface EmailTimelineTask extends TimelineTask {
+	isInbound?: boolean;
+}
+
 export interface TimelineVariable {
 	key: string;
 	value: string;

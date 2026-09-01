@@ -51,22 +51,20 @@ import TimelineTaskStatus from '../../../../components/utils/timeline-task-statu
 import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
 import { TimelineTaskKind } from '../../../../enums/TimelineTaskKind.enum';
 import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
+import type { EmailTimelineTask } from '../../../../types/timeline.types';
 import EmailPointTimelineRow from '../point-row/email-point-timeline-row.vue';
 
-const props = defineProps({
-	task: {
-		type: Object,
-		required: true,
+const props = withDefaults(
+	defineProps<{
+		task: EmailTimelineTask;
+		detailed?: boolean;
+		last?: boolean;
+	}>(),
+	{
+		detailed: false,
+		last: false,
 	},
-	detailed: {
-		type: Boolean,
-		default: false,
-	},
-	last: {
-		type: Boolean,
-		default: false,
-	},
-});
+);
 
 const { createdAt, isInbound } = toRefs(props.task);
 
