@@ -27,7 +27,12 @@ export function buildCustomLookupValidationSchema(
 	fields: DataField[] = [],
 ): z.ZodType {
 	const shape = fields.reduce<Record<string, z.ZodType>>((acc, field) => {
-		if (!field.id || field.hidden || field.always) {
+		if (
+			!field.id ||
+			field.hidden ||
+			field.always ||
+			(field.readonly && field.kind !== FieldType.Boolean)
+		) {
 			return acc;
 		}
 
