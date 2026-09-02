@@ -45,7 +45,9 @@ const props = defineProps<{
 
 const { t } = useI18n();
 
-const { parentId } = storeToRefs(useTimelineStore());
+const timelineStore = useTimelineStore();
+
+const { parentId } = storeToRefs(timelineStore);
 
 const showInfoPopup = ref(false);
 

@@ -20,7 +20,7 @@
         <component
           :is="tabComponents[currentTab.value]"
           v-bind="tabProps"
-          @empty-list="handleEmptyList"
+          @empty-list="resetTab"
         />
       </div>
     </template>
@@ -92,11 +92,11 @@ function changeTab(tab: TimelineTab) {
 }
 
 function closePopup() {
-	currentTab.value = tabs.value[0];
+  resetTab();
 	emit('update:shown', false);
 }
 
-function handleEmptyList() {
+function resetTab() {
 	currentTab.value = tabs.value[0];
 }
 
