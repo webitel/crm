@@ -15,7 +15,7 @@ function buildFieldSchema(field: DataField): z.ZodType {
 		case FieldType.Multiselect:
 			return z.array(requiredLookupSchema);
 		case FieldType.Calendar:
-		case FieldType.Text:
+			return z.number();
 		default:
 			return z.string();
 	}

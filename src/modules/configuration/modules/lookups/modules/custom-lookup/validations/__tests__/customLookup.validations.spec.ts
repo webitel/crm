@@ -48,6 +48,29 @@ describe('buildCustomLookupValidationSchema', () => {
 		).toBe(true);
 	});
 
+	it('accepts the timestamp number wt-datepicker writes for a required calendar field', () => {
+		const fields = [
+			{
+				id: 'meetingAt',
+				kind: FieldType.Calendar,
+				required: true,
+			},
+		] as DataField[];
+
+		const schema = buildCustomLookupValidationSchema(fields);
+
+		expect(
+			schema.safeParse({
+				meetingAt: Date.now(),
+			}).success,
+		).toBe(true);
+		expect(
+			schema.safeParse({
+				meetingAt: '2026-09-02T12:00:00.000Z',
+			}).success,
+		).toBe(false);
+	});
+
 	it('still skips an always-set field regardless of readonly', () => {
 		const fields = [
 			{
