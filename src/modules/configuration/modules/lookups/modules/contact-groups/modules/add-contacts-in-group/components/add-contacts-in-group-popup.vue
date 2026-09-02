@@ -71,7 +71,7 @@
                 class="add-contacts-in-group-popup__labels-wrapper"
               >
                 <wt-chip
-                  v-for="{ label, id } of item.labels"
+                  v-for="{ label, id } of item.labels.data"
                   :key="id"
                 >
                   {{ label }}
