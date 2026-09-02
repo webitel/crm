@@ -155,15 +155,17 @@ const sortFields = (fields: ColumnField[]) => {
 const search = ref('');
 
 const fields = computed(() => {
+	const itemFields = props.itemInstance.fields ?? [];
+
 	if (search.value) {
 		return sortFields(
-			props.itemInstance.fields.filter((field) => {
+			itemFields.filter((field) => {
 				return field.name?.toLowerCase().includes(search.value?.toLowerCase());
 			}),
 		);
 	}
 
-	return sortFields(props.itemInstance.fields);
+	return sortFields(itemFields);
 });
 
 const selected = ref<ColumnField[]>([]);
