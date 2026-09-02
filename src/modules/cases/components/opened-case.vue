@@ -43,7 +43,7 @@
     </template>
 
     <template #main>
-      <opened-case-tabs />
+      <opened-case-tabs :validation-fields="validationFields" />
     </template>
   </wt-dual-panel>
 </template>
@@ -106,6 +106,7 @@ const {
 	isNew,
 	hasValidationErrors,
 	isAnyFieldEdited,
+	validationFields,
 	save: saveCardStore,
 } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,

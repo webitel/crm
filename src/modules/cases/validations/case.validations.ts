@@ -8,7 +8,9 @@ function requiredIssue(path) {
 	return {
 		code: 'custom',
 		path,
-		message: 'required',
+		params: {
+			i18nKey: 'required',
+		},
 	};
 }
 
@@ -78,7 +80,9 @@ export const caseValidationSchema = computed(() => {
 				.refine(
 					(value) => value !== null && value !== undefined && value !== '',
 					{
-						message: 'required',
+						params: {
+							i18nKey: 'required',
+						},
 					},
 				);
 		}

@@ -66,6 +66,8 @@ const props = defineProps<{
 	fields: Array<Record<string, any>>;
 	itemInstance: Record<string, any>;
 	validationFields?: Record<string, any>;
+	save?: () => Promise<unknown>;
+	hasValidationErrors?: boolean;
 }>();
 
 const hasEditAccess = computed(() => access.value?.hasRbacEditAccess);
@@ -81,10 +83,14 @@ const { isAnyFieldEdited } = useCardAnyFieldEditedWatcher({
 	value: draftItemInstance as any,
 });
 
-const disabledSave = computed(() => isReadOnly || !isAnyFieldEdited.value);
+const disabledSave = computed(
+	() => isReadOnly || !isAnyFieldEdited.value || props.hasValidationErrors,
+);
 
 const saveDetails = () => {
-	saveItem(props.itemInstance);
+	if (props.save) return props.save();
+
+	return saveItem(props.itemInstance);
 };
 
 watch(
