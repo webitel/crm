@@ -61,6 +61,11 @@ export default {
 		actions: {
 			playRecording: 'Phát bản ghi',
 			transcription: 'Bản ghi âm',
+			showInfo: 'Hiển thị thông tin',
+		},
+		info: {
+			title: 'Thông tin',
+			postprocessing: 'Hậu xử lý',
 		},
 		status: {
 			[TimelineTaskStatusEnum.Started]: 'Đã bắt đầu',

@@ -61,6 +61,11 @@ export default {
 		actions: {
 			playRecording: 'Yozuvni ijro etish',
 			transcription: 'Transkripsiya',
+			showInfo: "Ma'lumotni ko'rsatish",
+		},
+		info: {
+			title: "Ma'lumot",
+			postprocessing: 'Qayta ishlash',
 		},
 		status: {
 			[TimelineTaskStatusEnum.Started]: 'Boshlandi',

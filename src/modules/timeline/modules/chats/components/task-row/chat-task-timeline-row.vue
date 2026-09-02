@@ -28,24 +28,30 @@
 
     <template #content>
       <task-timeline-row-content-wrapper>
-        <timeline-row-initiator
-          :text="initiator.name"
-          :type="initiatorType"
-        />
+        <div class="chat-task-timeline-row-info">
+          <timeline-row-initiator
+            :text="initiator.name"
+            :type="initiatorType"
+          />
 
-        <wt-display-chip-items v-if="hiddenParticipants.length" :items="hiddenParticipants">
-          <template #items>
-            <timeline-row-initiator
-              v-for="({ id, name }) of hiddenParticipants"
-              :key="id"
-              :text="name"
-            />
-          </template>
-        </wt-display-chip-items>
+          <wt-display-chip-items v-if="hiddenParticipants.length" :items="hiddenParticipants">
+            <template #items>
+              <timeline-row-initiator
+                v-for="({ id, name }) of hiddenParticipants"
+                :key="id"
+                :text="name"
+              />
+            </template>
+          </wt-display-chip-items>
 
-        <timeline-row-duration
-          v-if="task.closedAt"
-          :duration="duration"
+          <timeline-row-duration
+            v-if="task.closedAt"
+            :duration="duration"
+          />
+        </div>
+
+        <timeline-action-menu
+          :task="task"
         />
       </task-timeline-row-content-wrapper>
     </template>
@@ -65,6 +71,7 @@ import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
 import { computed, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
+import TimelineActionMenu from '../../../../components/task-row/timeline-action-menu.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowDuration from '../../../../components/utils/timeline-row-duration.vue';
@@ -134,6 +141,11 @@ const hiddenParticipants = computed(() =>
 );
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.chat-task-timeline-row-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
 </style>

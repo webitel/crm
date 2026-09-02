@@ -61,6 +61,11 @@ export default {
 		actions: {
 			playRecording: 'Жазбаны ойнату',
 			transcription: 'Транскрипция',
+			showInfo: 'Ақпаратты көрсету',
+		},
+		info: {
+			title: 'Ақпарат',
+			postprocessing: 'Постөңдеу',
 		},
 		status: {
 			[TimelineTaskStatusEnum.Started]: 'Басталды',

@@ -61,6 +61,11 @@ export default {
 		actions: {
 			playRecording: 'Play recording',
 			transcription: 'Transcription',
+			showInfo: 'Show info',
+		},
+		info: {
+			title: 'Information',
+			postprocessing: 'Postprocessing',
 		},
 		status: {
 			[TimelineTaskStatusEnum.Started]: 'Started',

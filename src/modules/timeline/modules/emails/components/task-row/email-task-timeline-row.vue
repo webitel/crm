@@ -26,9 +26,14 @@
 
     <template #content>
       <task-timeline-row-content-wrapper>
-        <email-point-timeline-row
-          :task="task" />
+        <div class="email-task-timeline-row-info">
+          <email-point-timeline-row
+            :task="task" />
+        </div>
 
+        <timeline-action-menu
+          :task="task"
+        />
       </task-timeline-row-content-wrapper>
     </template>
 
@@ -38,6 +43,7 @@
 import { computed, toRefs } from 'vue';
 
 import TaskTimelineRowContentWrapper from '../../../../components/task-row/task-timeline-row-content-wrapper.vue';
+import TimelineActionMenu from '../../../../components/task-row/timeline-action-menu.vue';
 import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
@@ -45,22 +51,20 @@ import TimelineTaskStatus from '../../../../components/utils/timeline-task-statu
 import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
 import { TimelineTaskKind } from '../../../../enums/TimelineTaskKind.enum';
 import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
+import type { EmailTimelineTask } from '../../../../types/timeline.types';
 import EmailPointTimelineRow from '../point-row/email-point-timeline-row.vue';
 
-const props = defineProps({
-	task: {
-		type: Object,
-		required: true,
+const props = withDefaults(
+	defineProps<{
+		task: EmailTimelineTask;
+		detailed?: boolean;
+		last?: boolean;
+	}>(),
+	{
+		detailed: false,
+		last: false,
 	},
-	detailed: {
-		type: Boolean,
-		default: false,
-	},
-	last: {
-		type: Boolean,
-		default: false,
-	},
-});
+);
 
 const { createdAt, isInbound } = toRefs(props.task);
 
@@ -92,3 +96,9 @@ const pinType = computed(() => {
 	}
 });
 </script>
+
+<style scoped>
+.email-task-timeline-row-info {
+  flex: 1;
+}
+</style>

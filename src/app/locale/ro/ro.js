@@ -61,6 +61,11 @@ export default {
 		actions: {
 			playRecording: 'Redă înregistrarea',
 			transcription: 'Transcriere',
+			showInfo: 'Afișează informații',
+		},
+		info: {
+			title: 'Informații',
+			postprocessing: 'Postprocesare',
 		},
 		status: {
 			[TimelineTaskStatusEnum.Started]: 'Început',

@@ -29,9 +29,9 @@ vi.mock('@webitel/api-services/api', async (importOriginal) => {
 	};
 });
 
-vi.mock('@webitel/ui-sdk/scripts', async (importOriginal) => {
+vi.mock('@webitel/ui-sdk/scripts/file', async (importOriginal) => {
 	const actual =
-		await importOriginal<typeof import('@webitel/ui-sdk/scripts')>();
+		await importOriginal<typeof import('@webitel/ui-sdk/scripts/file')>();
 	return {
 		...actual,
 		downloadFile: downloadFileMock,

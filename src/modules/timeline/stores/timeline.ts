@@ -150,6 +150,20 @@ export const useTimelineStore = defineStore('timeline', () => {
 		});
 	}
 
+	function removeTranscript({ taskId, id }: { taskId: string; id: string }) {
+		const items = dataList.value.flatMap((day) => day.items) as Array<{
+			id?: string;
+			transcripts?: Array<{
+				id?: string;
+			}>;
+		}>;
+		const task = items.find((item) => item.id === taskId);
+		if (!task?.transcripts) return;
+		task.transcripts = task.transcripts.filter(
+			(transcript) => transcript.id !== id,
+		);
+	}
+
 	function initialize({
 		parentId: newParentId,
 		mode: newMode,
@@ -209,5 +223,6 @@ export const useTimelineStore = defineStore('timeline', () => {
 		resetState,
 		setTypeFilter,
 		getCounters,
+		removeTranscript,
 	};
 });
