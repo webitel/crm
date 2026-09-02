@@ -92,7 +92,7 @@ function changeTab(tab: TimelineTab) {
 }
 
 function closePopup() {
-  resetTab();
+	resetTab();
 	emit('update:shown', false);
 }
 
