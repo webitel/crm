@@ -17,12 +17,16 @@
       :store="useContactPermissionsStore"
       :parent-id="itemId"
       :item-instance="draftItemInstance"
+      :validation-fields="validationFields"
+      :save="save"
+      :has-validation-errors="hasValidationErrors"
     />
   </article>
 </template>
 
 <script setup lang="ts">
-import { useCardTabs } from '@webitel/ui-datalist/card';
+import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
+import { useCardComponent, useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
 import { computed, provide, watch } from 'vue';
@@ -39,6 +43,12 @@ import { useContactPermissionsStore } from '../stores/permissions/contactPermiss
 
 const contactCardStore = useContactCardStore();
 const { itemId, draftItemInstance } = storeToRefs(contactCardStore);
+
+const { validationFields, hasValidationErrors, save } =
+	useCardComponent<WebitelContactsContact>({
+		useCardStore: useContactCardStore,
+		manualSetup: true,
+	});
 
 const { hasContactEditAccess } = useContactEditAccessControl();
 

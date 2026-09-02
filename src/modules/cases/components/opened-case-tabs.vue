@@ -22,6 +22,7 @@
           :store="useCasePermissionsStore"
           :parent-id="itemId"
           :item-instance="draftItemInstance"
+          :validation-fields="validationFields"
         />
       </keep-alive>
     </router-view>
@@ -41,6 +42,10 @@ import { CASE_VIEW_NAME } from '../router/caseViewName';
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasePermissionsStore } from '../stores/permissions/casePermissionsStore';
+
+const props = defineProps<{
+	validationFields?: Record<string, any>;
+}>();
 
 const { isEditable, isReadOnly } = useCaseAccessState();
 

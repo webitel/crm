@@ -12,7 +12,9 @@ export const contactValidationSchema = computed(() => {
 				.refine(
 					(value) => value !== null && value !== undefined && value !== '',
 					{
-						message: 'required',
+						params: {
+							i18nKey: 'required',
+						},
 					},
 				);
 		}
