@@ -112,5 +112,18 @@ export const initRouter = async ({
 		router.beforeEach(guard);
 	});
 
+	// Reload on a stale chunk after a new deploy invalidates old asset hashes
+	// https://webitel.atlassian.net/browse/WTEL-10245
+	router.onError((err) => {
+		const msg = String(err?.message || err);
+		if (
+			msg.includes('Failed to fetch dynamically imported module') ||
+			msg.includes('Failed to load module script') ||
+			msg.includes('ChunkLoadError')
+		) {
+			window.location.reload();
+		}
+	});
+
 	return router;
 };
