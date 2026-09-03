@@ -3,8 +3,8 @@
     <span class="case-priority__title case-section-title">{{ t('cases.priority') }}</span>
     <div>
       <editable-field
-        v-model="modelValue.priority"
         :edit-mode="isEditable"
+        v-model:model-value="modelValue.priority"
       >
         <template #default="props">
           <wt-single-select
