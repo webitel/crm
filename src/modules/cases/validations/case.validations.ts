@@ -1,60 +1,40 @@
-import { caseSchema } from '@webitel/api-services/validations';
+import {
+	caseSchema,
+	filledLookupSchema,
+} from '@webitel/api-services/validations';
 import { computed } from 'vue';
 import { z } from 'zod';
 
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
 
+const requiredParams = {
+	params: {
+		i18nKey: 'required',
+	},
+};
+
 function requiredIssue(path) {
 	return {
 		code: 'custom',
 		path,
-		params: {
-			i18nKey: 'required',
-		},
+		...requiredParams,
 	};
 }
 
+// build on caseSchema's own shapes instead of retyping them, so a change to
+// the library schema can't silently drift out of sync with these
+const requiredSubjectShape = caseSchema.shape.subject.refine(
+	(value) => Boolean(value),
+	requiredParams,
+);
+
+const requiredStatusConditionShape = caseSchema.shape.statusCondition.refine(
+	(value) => Boolean(value?.id),
+	requiredParams,
+);
+
 function applyCaseRequiredFields(schema): z.ZodType {
 	return schema.superRefine((data, ctx) => {
-		if (!data.subject)
-			ctx.addIssue(
-				requiredIssue([
-					'subject',
-				]),
-			);
-		if (!data.source?.id)
-			ctx.addIssue(
-				requiredIssue([
-					'source',
-				]),
-			);
-		if (!data.reporter?.id)
-			ctx.addIssue(
-				requiredIssue([
-					'reporter',
-				]),
-			);
-		if (!data.service?.id)
-			ctx.addIssue(
-				requiredIssue([
-					'service',
-				]),
-			);
-		if (!data.statusCondition?.id)
-			ctx.addIssue(
-				requiredIssue([
-					'statusCondition',
-				]),
-			);
-		/* priority is required, but set automatically by default and can't be
-		 * cleared in the ui */
-		if (!data.priority?.id)
-			ctx.addIssue(
-				requiredIssue([
-					'priority',
-				]),
-			);
-
 		if (!data.statusCondition?.final) return;
 
 		if (!data.closeReason?.id)
@@ -79,23 +59,26 @@ export const caseValidationSchema = computed(() => {
 				.any()
 				.refine(
 					(value) => value !== null && value !== undefined && value !== '',
-					{
-						params: {
-							i18nKey: 'required',
-						},
-					},
+					requiredParams,
 				);
 		}
 		return acc;
 	}, {});
 
-	if (!Object.keys(requiredCustomShape).length) {
-		return applyCaseRequiredFields(caseSchema);
+	let schemaWithRequiredFields = caseSchema.extend({
+		subject: requiredSubjectShape,
+		source: filledLookupSchema,
+		reporter: filledLookupSchema,
+		service: filledLookupSchema,
+		priority: filledLookupSchema,
+		statusCondition: requiredStatusConditionShape,
+	});
+
+	if (Object.keys(requiredCustomShape).length) {
+		schemaWithRequiredFields = schemaWithRequiredFields.extend({
+			custom: z.object(requiredCustomShape).passthrough().default({}),
+		});
 	}
 
-	return applyCaseRequiredFields(
-		caseSchema.extend({
-			custom: z.object(requiredCustomShape).passthrough().default({}),
-		}),
-	);
+	return applyCaseRequiredFields(schemaWithRequiredFields);
 });

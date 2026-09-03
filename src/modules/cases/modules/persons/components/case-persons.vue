@@ -23,7 +23,8 @@
       >
         <template #default="props">
           <wt-single-select
-            v-bind="props"
+            :label="props.label"
+            :required="props.required"
             :model-value="props.modelValue"
             :search-method="hasContactsReadAccess && getContactsLookup"
             :disabled="disableUserInput || !hasContactsReadAccess"
@@ -35,17 +36,19 @@
       </editable-field>
 
       <editable-field
-        v-model="modelValue.impacted"
+        :model-value="modelValue.impacted"
         :edit-mode="isEditable"
         :label="t('cases.impacted')"
         :link="getContactLinkPreview(modelValue.impacted?.id)"
         icon="impacted"
         horizontal-view
+        @update:model-value="modelValue.impacted = $event"
         @open-link="getContactLink(modelValue.impacted?.id)"
       >
         <template #default="props">
           <wt-single-select
-            v-bind="props"
+            :label="props.label"
+            :required="props.required"
             :model-value="props.modelValue"
             :disabled="disableUserInput || !hasContactsReadAccess"
             :search-method="hasContactsReadAccess && ContactsAPI.getLookup"
@@ -68,10 +71,11 @@
       >
         <template #default="props">
           <wt-single-select
+            :label="props.label"
+            :required="props.required"
             :search-method="hasContactsReadAccess && ContactsAPI.getLookup"
             :disabled="isAssigneeDisabled"
             class="case-persons__select"
-            v-bind="props"
             :model-value="props.modelValue"
             @update:model-value="props.updateValue($event)"
             @reset="resetAssignee"
@@ -80,20 +84,22 @@
       </editable-field>
 
       <editable-field
-        v-model="modelValue.group"
+        :model-value="modelValue.group"
         :edit-mode="isEditable"
         :label="t('cases.groupPerformers')"
         :disabled="disableUserInput"
         color="success"
         icon="group"
         horizontal-view
+        @update:model-value="modelValue.group = $event"
       >
         <template #default="props">
           <wt-single-select
+            :label="props.label"
+            :required="props.required"
             :disabled="disableUserInput || !hasContactGroupsReadAccess"
             :search-method="hasContactGroupsReadAccess && loadStaticContactGroupsList"
             class="case-persons__select"
-            v-bind="props"
             :model-value="props.modelValue"
             @update:model-value="props.updateValue($event)"
           />

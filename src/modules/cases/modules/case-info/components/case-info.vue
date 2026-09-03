@@ -1,10 +1,11 @@
 <template>
   <div class="case-info">
     <editable-field
-      v-model="modelValue.subject"
+      :model-value="modelValue.subject"
       :edit-mode="isEditable"
       :label="t('cases.subject')"
       required
+      @update:model-value="modelValue.subject = $event"
     >
       <template #default="props">
         <wt-input-text
@@ -19,14 +20,16 @@
     </editable-field>
 
     <editable-field
-      v-model="modelValue.description"
+      :model-value="modelValue.description"
       :edit-mode="isEditable"
       :label="t('vocabulary.description')"
+      @update:model-value="modelValue.description = $event"
     >
       <template #default="props">
         <wt-textarea
           :rows="8"
-          v-bind="props"
+          :label="props.label"
+          :required="props.required"
           :disabled="disableUserInput"
           :model-value="props.modelValue"
           @update:model-value="props.updateValue($event)"
@@ -36,16 +39,18 @@
 
     <div class="opened-card-input-grid">
       <editable-field
-        v-model="modelValue.source"
+        :model-value="modelValue.source"
         color="info"
         :icon="modelValue.source?.type"
         :edit-mode="isEditable"
         :label="t('cases.source')"
         required
+        @update:model-value="modelValue.source = $event"
       >
         <template #default="props">
           <wt-single-select
-            v-bind="props"
+            :label="props.label"
+            :required="props.required"
             :model-value="props.modelValue"
             :regle-validation="validationFields.source"
             :disabled="disableUserInput || !hasSourcesReadAccess"
@@ -56,9 +61,10 @@
       </editable-field>
 
       <editable-field
-        v-model="modelValue.contactInfo"
+        :model-value="modelValue.contactInfo"
         :edit-mode="isEditable"
         :label="t('cases.caseInfo.contactInfo')"
+        @update:model-value="modelValue.contactInfo = $event"
       >
         <template #default="props">
           <wt-input-text
