@@ -3,12 +3,12 @@
     <span class="case-priority__title case-section-title">{{ t('cases.priority') }}</span>
     <div>
       <editable-field
+        :model-value="modelValue.priority"
         :edit-mode="isEditable"
-        v-model:model-value="modelValue.priority"
+        @update:model-value="modelValue.priority = $event"
       >
         <template #default="props">
           <wt-single-select
-            v-bind="props"
             :model-value="props.modelValue"
             :disabled="disableUserInput || !hasPrioritiesReadAccess"
             :regle-validation="validationFields.priority"

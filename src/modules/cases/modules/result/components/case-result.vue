@@ -2,13 +2,14 @@
   <div class="case-result">
     <div class="opened-card-input-grid opened-card-input-grid--1-col">
       <editable-field
-        v-model="modelValue.closeReason"
+        :model-value="modelValue.closeReason"
         :edit-mode="isEditable"
         :label="t('cases.closureReason')"
+        @update:model-value="modelValue.closeReason = $event"
       >
         <template #default="props">
           <wt-single-select
-            v-bind="props"
+            :label="props.label"
             :model-value="props.modelValue"
             :key="closeReasonId"
             :disabled="isCloseReasonDisabled"
@@ -21,13 +22,14 @@
       </editable-field>
 
       <editable-field
-        v-model="modelValue.closeResult"
+        :model-value="modelValue.closeResult"
         :edit-mode="isEditable"
         :label="t('cases.result')"
+        @update:model-value="modelValue.closeResult = $event"
       >
         <template #default="props">
           <wt-textarea
-            v-bind="props"
+            :label="props.label"
             required
             :regle-validation="validationFields.closeResult"
             :disabled="disableUserInput || !modelValue.statusCondition?.final"
