@@ -23,7 +23,7 @@ describe('caseValidationSchema required fields', () => {
 		let r$: any;
 
 		scope.run(() => {
-			({ r$ } = useRegleSchema(state, caseValidationSchema.value as never));
+			({ r$ } = useRegleSchema(state, caseValidationSchema.value, {}));
 		});
 
 		const result = await r$.$validate();
