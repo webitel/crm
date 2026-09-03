@@ -59,7 +59,7 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../configuration/modules/customization/modules/custom-lookups/enums/FieldType';
@@ -81,15 +81,6 @@ const { fields: customFields, getFields } = useExtensionFields({
 });
 
 getFields();
-watch(
-	customFields,
-	(fields) => {
-		caseCustomFields.value = fields;
-	},
-	{
-		immediate: true,
-	},
-);
 
 const { isEditable, isReadOnly } = useCaseAccessState();
 
@@ -112,6 +103,21 @@ const {
 	useCardStore: useCasesCardStore,
 	onLoadErrorHandler: handleError,
 });
+
+watch(
+	customFields,
+	async (fields) => {
+		caseCustomFields.value = fields;
+		if (fields.some((field) => field.required) && !itemInstance.value.custom) {
+			itemInstance.value.custom = {};
+			await nextTick();
+			validationFields.value?.custom?.$touch?.();
+		}
+	},
+	{
+		immediate: true,
+	},
+);
 
 const disabledSave = computed(
 	() => hasValidationErrors.value || !isAnyFieldEdited.value,

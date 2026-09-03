@@ -29,7 +29,7 @@ import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { useCardComponent, useCardTabs } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
-import { computed, provide, watch } from 'vue';
+import { computed, nextTick, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
@@ -62,8 +62,14 @@ const { fields: customFields, getFields } = useExtensionFields({
 getFields();
 watch(
 	customFields,
-	(fields) => {
+	async (fields) => {
 		contactCustomFields.value = fields;
+		const draft = draftItemInstance.value as Record<string, any>;
+		if (fields.some((field) => field.required) && !draft.custom) {
+			draft.custom = {};
+			await nextTick();
+			(validationFields.value as Record<string, any>)?.custom?.$touch?.();
+		}
 	},
 	{
 		immediate: true,
