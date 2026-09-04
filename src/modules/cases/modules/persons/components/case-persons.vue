@@ -3,6 +3,7 @@
     <span class="case-persons__title case-section-title">{{ t('cases.persons') }}</span>
     <div class="case-persons__wrapper">
       <editable-field
+        :label="t('cases.author')"
         :model-value="modelValue.createdBy?.name || userInfo?.name"
         color="info"
         icon="case-author"
