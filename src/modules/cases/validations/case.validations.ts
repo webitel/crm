@@ -28,10 +28,9 @@ const requiredSubjectShape = caseSchema.shape.subject.refine(
 	requiredParams,
 );
 
-const requiredStatusConditionShape = caseSchema.shape.statusCondition.refine(
-	(value) => Boolean(value?.id),
-	requiredParams,
-);
+const requiredStatusConditionShape = caseSchema.shape.statusCondition
+	.removeDefault()
+	.refine((value) => Boolean(value?.id), requiredParams);
 
 function applyCaseRequiredFields(schema): z.ZodType {
 	return schema.superRefine((data, ctx) => {
