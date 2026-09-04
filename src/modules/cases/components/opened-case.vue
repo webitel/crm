@@ -108,8 +108,10 @@ watch(
 	customFields,
 	async (fields) => {
 		caseCustomFields.value = fields;
-		if (fields.some((field) => field.required) && !itemInstance.value.custom) {
-			itemInstance.value.custom = {};
+		if (fields.some((field) => field.required)) {
+			if (!itemInstance.value.custom) {
+				itemInstance.value.custom = {};
+			}
 			await nextTick();
 			validationFields.value?.custom?.$touch?.();
 		}

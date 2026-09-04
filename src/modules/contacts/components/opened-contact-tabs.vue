@@ -65,8 +65,10 @@ watch(
 	async (fields) => {
 		contactCustomFields.value = fields;
 		const draft = draftItemInstance.value as Record<string, any>;
-		if (fields.some((field) => field.required) && !draft.custom) {
-			draft.custom = {};
+		if (fields.some((field) => field.required)) {
+			if (!draft.custom) {
+				draft.custom = {};
+			}
 			await nextTick();
 			(validationFields.value as Record<string, any>)?.custom?.$touch?.();
 		}
