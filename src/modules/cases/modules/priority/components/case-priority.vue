@@ -1,14 +1,17 @@
 <template>
   <div class="case-priority">
-    <span class="case-priority__title case-section-title">{{ t('cases.priority') }}</span>
     <div>
       <editable-field
         :model-value="modelValue.priority"
         :edit-mode="isEditable"
+        :label="t('cases.priority')"
+        required
         @update:model-value="modelValue.priority = $event"
       >
         <template #default="props">
           <wt-single-select
+            :label="props.label"
+            :required="props.required"
             :model-value="props.modelValue"
             :disabled="disableUserInput || !hasPrioritiesReadAccess"
             :regle-validation="validationFields.priority"
@@ -59,12 +62,7 @@ const { modelValue, validationFields } = useCardComponent<WebitelCasesCase>({
 .case-priority {
   width: 100%;
 
-  &__title {
-    display: block;
-  }
-
-  &__select,
-  &__title {
+  &__select {
     padding: var(--spacing-xs);
   }
 }

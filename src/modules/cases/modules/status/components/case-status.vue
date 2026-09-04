@@ -5,13 +5,13 @@
     @cancel="cancelChangingStatusToFinal"
   />
   <div class="case-status">
-    <span class="case-status__title case-section-title">{{ t('cases.status') }}</span>
-
     <div>
       <!-- NOTE: key is used to force re-render the select component if statusId changed so search-method updates with new statusId -->
       <wt-single-select
         :key="status?.id"
         :disabled="disableStatusSelect"
+        :label="t('cases.status')"
+        required
         :regle-validation="validationFields.statusCondition"
         :placeholder="t('cases.status')"
         :search-method="hasStatusReadAccess && fetchStatusConditions"
@@ -257,12 +257,7 @@ watch(
 .case-status {
   width: 100%;
 
-  &__title {
-    display: block;
-  }
-
-  &__select,
-  &__title {
+  &__select {
     padding: var(--spacing-xs);
   }
 }
