@@ -65,7 +65,7 @@
 		"@vitest/coverage-v8": "^4.x",
 		"@vue/test-utils": "^2.4.6",
 		"@vue/tsconfig": "^0.8.x",
-		"csv-parse": "^6.1.0",
+		"csv-parse": "^7.0.2",
 		"globals": "^17.x",
 		"happy-dom": "^20.10.6",
 		"husky": "^9.1.7",
