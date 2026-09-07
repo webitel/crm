@@ -96,6 +96,7 @@
             :data="dataList"
             :headers="shownHeaders"
             :selected="selected"
+            :active-filters="activeFilters"
             :row-class="rowClass"
             fixed-actions
             sortable
@@ -215,6 +216,24 @@
                 :value="getCustomValues((slotProps as { item: any }).item, header)"
               />
             </template>
+            <template #column-filter="{ header, hide }">
+              <column-filter
+                :header="header"
+                :filters-manager="filtersManager"
+                :filterable-extension-fields="customFields"
+                @add:filter="addFilter"
+                @update:filter="updateFilter"
+                @delete:filter="deleteFilter"
+                @close="hide"
+              />
+            </template>
+            <template #column-filter-preview="{ header }">
+              <column-filter-preview
+                :header="header"
+                :filters-manager="filtersManager"
+                :filterable-extension-fields="customFields"
+              />
+            </template>
             <template #expansion="{ item }">
               <case-details-table :item="item" />
             </template>
@@ -254,6 +273,10 @@
 
 <script setup lang="ts">
 import { CasesAPI } from '@webitel/api-services/api';
+import {
+	ColumnFilterComponent as ColumnFilter,
+	ColumnFilterPreviewComponent as ColumnFilterPreview,
+} from '@webitel/ui-datalist/filters';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
 import {
 	CrmSections,
@@ -323,10 +346,14 @@ const {
 	updateShownHeaders,
 	columnResize,
 	columnReorder,
+	addFilter,
+	updateFilter,
+	deleteFilter,
 } = tableStore;
 
 const {
 	customHeaders,
+	customFields,
 	mergedHeaders,
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
@@ -384,6 +411,9 @@ const displayIncludeActions = computed(() => {
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
+// filter names applied right now: highlights the column header filter icons (WTEL-7727)
+const activeFilters = computed(() => filtersManager.value.getAllKeys());
+
 const anyFiltersOnFiltersPanel = computed(() => {
 	/*
 	 * ...excluding search filters, which shown in other panel

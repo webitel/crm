@@ -1,6 +1,6 @@
 <template>
   <wt-page-wrapper
-    :actions-panel="showActionsPanel"
+    :actions-panel="false"
     class="contacts"
   >
     <template #header>
@@ -12,10 +12,6 @@
       />
 
       <wt-breadcrumb :path="path" />
-    </template>
-
-    <template #actions-panel>
-      <contacts-filters-panel @hide="showActionsPanel = false" />
     </template>
 
     <template #main>
@@ -38,11 +34,18 @@
               :disabled:delete="!hasDeleteAccess || !deletableSelectedItems.length"
               :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.DELETE]"
               @click:add="create"
-              @click:filters="showActionsPanel = !showActionsPanel"
               @click:refresh="loadDataList"
               @click:delete="deleteSelectedItems"
             >
 
+              <!-- no filters panel here: reset (and presets, if any) live in the icon's menu -->
+              <template #filters>
+                <filters-actions-menu
+                  :filters-manager="filtersManager"
+                  :filter-options="filtersOptions"
+                  @filter:reset-all="resetFilters"
+                />
+              </template>
               <template #search-bar>
                 <dynamic-filter-search
                   :filters-manager="filtersManager"
@@ -55,15 +58,27 @@
                   @update:search-mode="updateSearchMode"
                 />
               </template>
-              <template #filters="{ action, onClick }">
-                <wt-badge :hidden="!anyFiltersOnFiltersPanel">
-                  <wt-icon-action
-                    :action="action"
-                    @click="onClick"
-                  />
-                </wt-badge>
-              </template>
             </wt-action-bar>
+          </template>
+
+          <!-- filters live in the column headers only, there is no filters panel on this page -->
+          <template #column-filter="{ header, hide }">
+            <column-filter
+              :header="header"
+              :filters-manager="filtersManager"
+              :filter-options="filtersOptions"
+              @add:filter="addFilter"
+              @update:filter="updateFilter"
+              @delete:filter="deleteFilter"
+              @close="hide"
+            />
+          </template>
+          <template #column-filter-preview="{ header }">
+            <column-filter-preview
+              :header="header"
+              :filters-manager="filtersManager"
+              :filter-options="filtersOptions"
+            />
           </template>
 
           <template #actions="{ item }">
@@ -95,7 +110,12 @@ import {
 	ContactsSearchMode,
 	getContactAccessFromMode,
 } from '@webitel/api-services/api';
-import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
+import {
+	ColumnFilterComponent as ColumnFilter,
+	ColumnFilterPreviewComponent as ColumnFilterPreview,
+	DynamicFilterSearchComponent as DynamicFilterSearch,
+	FiltersActionsMenuComponent as FiltersActionsMenu,
+} from '@webitel/ui-datalist/filters';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -106,18 +126,15 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { SearchMode } from '../../cases/enums/SearchMode';
 import ContactsTable from '../_shared/components/contacts-table.vue';
+import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
-import ContactsFiltersPanel from './contacts-filters-panel.vue';
 
 const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl();
-
-const showActionsPanel = ref(true);
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -143,20 +160,15 @@ const {
 	updateSearchMode,
 } = tableStore;
 
+// search filters live in the same manager, keep them
+const resetFilters = () => {
+	filtersManager.value.reset({
+		exclude: Object.values(ContactsSearchMode),
+	});
+};
+
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
-
-/*
- * show "toggle filters panel" badge if any filters are applied...
- * */
-const anyFiltersOnFiltersPanel = computed(() => {
-	/*
-	 * ...excluding search filters, which shown in other panel
-	 * */
-	return filtersManager.value.getAllKeys().some((filterName) => {
-		return !Object.values(SearchMode).some((mode) => mode === filterName);
-	});
-});
 
 const path = computed(() => [
 	{
