@@ -15,6 +15,65 @@ import { caseValidationSchema } from '../case.validations';
  *
  * [WTEL-10323] (https://webitel.atlassian.net/browse/WTEL-10323)
  */
+describe('caseValidationSchema identity fields', () => {
+	const validateDraft = async (draft: Record<string, unknown>) => {
+		const state = ref(draft);
+		const scope = effectScope(true);
+		// biome-ignore lint/suspicious/noExplicitAny: regle's inferred state type
+		let r$: any;
+
+		scope.run(() => {
+			({ r$ } = useRegleSchema(state, caseValidationSchema.value, {}));
+		});
+
+		return r$.$validate();
+	};
+
+	const filledDraft = {
+		etag: 'SVQwkSh',
+		id: '1353',
+		subject: 'a subject',
+		source: {
+			id: '1',
+			name: 'Phone',
+		},
+		reporter: {
+			id: '2',
+			name: 'Reporter',
+		},
+		service: {
+			id: '3',
+			name: 'Service',
+		},
+		priority: {
+			id: '4',
+			name: 'Priority',
+		},
+		statusCondition: {
+			id: '5',
+			name: 'New',
+			initial: true,
+		},
+	};
+
+	/**
+	 * `$validate()`'s returned data is sent straight to the update API call
+	 * (see `useCardSaveAction`), which reads `etag` off it to build the request
+	 * URL. `caseSchema` doesn't declare `etag`/`id` — without passthrough, zod
+	 * silently strips them and every save fails with "etag:undefined" from
+	 * the backend.
+	 */
+	it('keeps etag and id (and other fields the form does not declare) through validation', async () => {
+		const { valid, data } = await validateDraft(filledDraft);
+
+		expect(valid).toBe(true);
+		expect(data).toMatchObject({
+			etag: 'SVQwkSh',
+			id: '1353',
+		});
+	});
+});
+
 describe('caseValidationSchema required fields', () => {
 	const validateDraft = async (draft: Record<string, unknown>) => {
 		const state = ref(draft);
