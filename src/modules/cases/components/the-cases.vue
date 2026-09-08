@@ -216,22 +216,14 @@
                 :value="getCustomValues((slotProps as { item: any }).item, header)"
               />
             </template>
-            <template #column-filter="{ header, hide }">
+            <template #column-filter="scope">
               <column-filter
-                :header="header"
+                v-bind="scope"
                 :filters-manager="filtersManager"
                 :filterable-extension-fields="customFields"
                 @add:filter="addFilter"
                 @update:filter="updateFilter"
                 @delete:filter="deleteFilter"
-                @close="hide"
-              />
-            </template>
-            <template #column-filter-preview="{ header }">
-              <column-filter-preview
-                :header="header"
-                :filters-manager="filtersManager"
-                :filterable-extension-fields="customFields"
               />
             </template>
             <template #expansion="{ item }">
@@ -273,10 +265,7 @@
 
 <script setup lang="ts">
 import { CasesAPI } from '@webitel/api-services/api';
-import {
-	ColumnFilterComponent as ColumnFilter,
-	ColumnFilterPreviewComponent as ColumnFilterPreview,
-} from '@webitel/ui-datalist/filters';
+import { ColumnFilterComponent as ColumnFilter } from '@webitel/ui-datalist/filters';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
 import {
 	CrmSections,

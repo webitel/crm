@@ -62,22 +62,14 @@
           </template>
 
           <!-- filters live in the column headers only, there is no filters panel on this page -->
-          <template #column-filter="{ header, hide }">
+          <template #column-filter="scope">
             <column-filter
-              :header="header"
+              v-bind="scope"
               :filters-manager="filtersManager"
               :filter-options="filtersOptions"
               @add:filter="addFilter"
               @update:filter="updateFilter"
               @delete:filter="deleteFilter"
-              @close="hide"
-            />
-          </template>
-          <template #column-filter-preview="{ header }">
-            <column-filter-preview
-              :header="header"
-              :filters-manager="filtersManager"
-              :filter-options="filtersOptions"
             />
           </template>
 
@@ -112,7 +104,6 @@ import {
 } from '@webitel/api-services/api';
 import {
 	ColumnFilterComponent as ColumnFilter,
-	ColumnFilterPreviewComponent as ColumnFilterPreview,
 	DynamicFilterSearchComponent as DynamicFilterSearch,
 	FiltersActionsMenuComponent as FiltersActionsMenu,
 } from '@webitel/ui-datalist/filters';

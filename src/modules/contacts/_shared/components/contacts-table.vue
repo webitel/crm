@@ -100,12 +100,6 @@
           >
             <slot name="column-filter" v-bind="scope" />
           </template>
-          <template
-            v-if="$slots['column-filter-preview']"
-            #column-filter-preview="scope"
-          >
-            <slot name="column-filter-preview" v-bind="scope" />
-          </template>
         </wt-table>
 
         <wt-pagination
