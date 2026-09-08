@@ -13,6 +13,20 @@
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
+        <template
+          v-if="isEditable && !isNew"
+          #primary-action
+        >
+          <wt-button-select
+            :color="(!hasSaveActionAccess || disabledSave) && 'secondary'"
+            :disabled="!hasSaveActionAccess || disabledSave"
+            :options="saveOptions"
+            @click="saveCase"
+            @click:option="({ callback }) => callback()"
+          >
+            {{ t('reusable.save') }}
+          </wt-button-select>
+        </template>
         <wt-breadcrumb :path="path" />
 
         <template #actions>
@@ -45,7 +59,13 @@
     <template #main>
       <opened-case-tabs :validation-fields="validationFields" />
     </template>
+
   </wt-dual-panel>
+	<save-copy-popup
+		:shown="isSaveCopyPopupShown"
+		@close="closeSaveCopyPopup"
+		@save="saveCopy"
+	/>
 </template>
 
 <script
@@ -58,6 +78,7 @@ import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
+import SaveCopyPopup from '@webitel/ui-sdk/src/modules/SaveCopyPopup/components/save-copy-popup.vue';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -248,6 +269,41 @@ const saveCase = async () => {
 	await saveCardStore();
 	await toggleEditMode(false);
 };
+
+const isSaveCopyPopupShown = ref(false);
+
+const openSaveCopyPopup = () => {
+	isSaveCopyPopupShown.value = true;
+};
+
+const closeSaveCopyPopup = () => {
+	isSaveCopyPopupShown.value = false;
+};
+
+const saveCopy = async (subject: string) => {
+	await CasesAPI.add({
+		itemInstance: {
+			...itemInstance.value,
+			subject,
+			id: undefined,
+			etag: undefined,
+			ver: undefined,
+			// GET-only paginated wrappers ({ items, next, page }); the create
+			// endpoint expects a plain array here, so a copy can't carry these
+			// over as-is. Comments/files aren't accepted on create at all.
+			links: undefined,
+			related: undefined,
+		},
+	});
+	closeSaveCopyPopup();
+};
+
+const saveOptions = computed(() => [
+	{
+		text: t('webitelUI.saveCopyPopup.title'),
+		callback: openSaveCopyPopup,
+	},
+]);
 
 onUnmounted(() => {
 	toggleEditMode(false);
