@@ -51,7 +51,7 @@ import {
 } from '@webitel/api-services/validations';
 import { WtTextarea } from '@webitel/ui-sdk/components';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
@@ -76,13 +76,6 @@ const { t } = useI18n();
 
 const draft = ref<CaseClose>(createDraftData());
 
-watch(
-	() => props.shown,
-	() => {
-		draft.value = createDraftData();
-	},
-);
-
 const validationSchema = ref(
 	useRegleSchema(draft, caseCloseSchema, {
 		autoDirty: true,
@@ -95,6 +88,17 @@ const validationSchema = ref(
 const validationFields = computed(() => validationSchema.value.r$.$fields);
 const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 const validate = () => validationSchema.value.r$.$validate();
+
+validationSchema.value.r$.$touch();
+
+watch(
+	() => props.shown,
+	async () => {
+		draft.value = createDraftData();
+		await nextTick();
+		validationSchema.value.r$.$touch();
+	},
+);
 
 const { closeReasonId } = storeToRefs(useCaseServiceStore());
 
