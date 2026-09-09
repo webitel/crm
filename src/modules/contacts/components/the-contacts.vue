@@ -63,14 +63,7 @@
 
           <!-- filters live in the column headers only, there is no filters panel on this page -->
           <template #column-filter="scope">
-            <column-filter
-              v-bind="scope"
-              :filters-manager="filtersManager"
-              :filter-options="filtersOptions"
-              @add:filter="addFilter"
-              @update:filter="updateFilter"
-              @delete:filter="deleteFilter"
-            />
+            <contacts-column-filter v-bind="scope" />
           </template>
 
           <template #actions="{ item }">
@@ -103,7 +96,6 @@ import {
 	getContactAccessFromMode,
 } from '@webitel/api-services/api';
 import {
-	ColumnFilterComponent as ColumnFilter,
 	DynamicFilterSearchComponent as DynamicFilterSearch,
 	FiltersActionsMenuComponent as FiltersActionsMenu,
 } from '@webitel/ui-datalist/filters';
@@ -121,6 +113,7 @@ import ContactsTable from '../_shared/components/contacts-table.vue';
 import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
+import ContactsColumnFilter from './contacts-column-filter.vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -175,10 +168,6 @@ const searchModeOpts = computed(() => [
 	{
 		value: ContactsSearchMode.NAME,
 		text: t('reusable.name'),
-	},
-	{
-		value: ContactsSearchMode.LABELS,
-		text: t('vocabulary.labels', 1),
 	},
 	{
 		value: ContactsSearchMode.ABOUT,

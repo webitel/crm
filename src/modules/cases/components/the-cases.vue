@@ -217,13 +217,9 @@
               />
             </template>
             <template #column-filter="scope">
-              <column-filter
+              <cases-column-filter
                 v-bind="scope"
-                :filters-manager="filtersManager"
                 :filterable-extension-fields="customFields"
-                @add:filter="addFilter"
-                @update:filter="updateFilter"
-                @delete:filter="deleteFilter"
               />
             </template>
             <template #expansion="{ item }">
@@ -265,7 +261,6 @@
 
 <script setup lang="ts">
 import { CasesAPI } from '@webitel/api-services/api';
-import { ColumnFilterComponent as ColumnFilter } from '@webitel/ui-datalist/filters';
 import { WtEmpty, WtTable } from '@webitel/ui-sdk/components';
 import {
 	CrmSections,
@@ -297,6 +292,7 @@ import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 import CaseDetailsTable from './case-details-table.vue';
+import CasesColumnFilter from './cases-column-filter.vue';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
@@ -335,9 +331,6 @@ const {
 	updateShownHeaders,
 	columnResize,
 	columnReorder,
-	addFilter,
-	updateFilter,
-	deleteFilter,
 } = tableStore;
 
 const {
