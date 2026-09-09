@@ -79,6 +79,7 @@ import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import SaveCopyPopup from '@webitel/ui-sdk/src/modules/SaveCopyPopup/components/save-copy-popup.vue';
+import { useSaveCopyPopup } from '@webitel/ui-sdk/src/modules/SaveCopyPopup/composables/useSaveCopyPopup';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -270,40 +271,23 @@ const saveCase = async () => {
 	await toggleEditMode(false);
 };
 
-const isSaveCopyPopupShown = ref(false);
-
-const openSaveCopyPopup = () => {
-	isSaveCopyPopupShown.value = true;
-};
-
-const closeSaveCopyPopup = () => {
-	isSaveCopyPopupShown.value = false;
-};
-
-const saveCopy = async (subject: string) => {
-	await CasesAPI.add({
-		itemInstance: {
-			...itemInstance.value,
-			subject,
-			id: undefined,
-			etag: undefined,
-			ver: undefined,
-			// GET-only paginated wrappers ({ items, next, page }); the create
-			// endpoint expects a plain array here, so a copy can't carry these
-			// over as-is. Comments/files aren't accepted on create at all.
-			links: undefined,
-			related: undefined,
-		},
-	});
-	closeSaveCopyPopup();
-};
-
-const saveOptions = computed(() => [
-	{
-		text: t('webitelUI.saveCopyPopup.title'),
-		callback: openSaveCopyPopup,
-	},
-]);
+const { isSaveCopyPopupShown, saveOptions, closeSaveCopyPopup, saveCopy } =
+	useSaveCopyPopup((subject) =>
+		CasesAPI.add({
+			itemInstance: {
+				...itemInstance.value,
+				subject,
+				id: undefined,
+				etag: undefined,
+				ver: undefined,
+				// GET-only paginated wrappers ({ items, next, page }); the create
+				// endpoint expects a plain array here, so a copy can't carry these
+				// over as-is. Comments/files aren't accepted on create at all.
+				links: undefined,
+				related: undefined,
+			},
+		}),
+	);
 
 onUnmounted(() => {
 	toggleEditMode(false);
