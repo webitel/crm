@@ -279,9 +279,6 @@ const { isSaveCopyPopupShown, saveOptions, closeSaveCopyPopup, saveCopy } =
 			itemInstance: {
 				...itemInstance.value,
 				subject,
-				id: undefined,
-				etag: undefined,
-				ver: undefined,
 				// GET-only paginated wrappers ({ items, next, page }); the create
 				// endpoint expects a plain array here, so a copy can't carry these
 				// over as-is. Comments/files aren't accepted on create at all.
