@@ -30,13 +30,14 @@
         <contacts-table
           :header="t('contacts.contact', 2)"
           :table-store="tableStore"
+          :custom-headers="customHeaders"
           :empty-data="{ primaryAction: create }"
         >
           <template #action-bar>
             <wt-action-bar
               :disabled:add="!hasCreateAccess"
               :disabled:delete="!hasDeleteAccess || !deletableSelectedItems.length"
-              :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.DELETE]"
+              :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.COLUMNS, IconAction.VARIABLES, IconAction.DELETE]"
               @click:add="create"
               @click:filters="showActionsPanel = !showActionsPanel"
               @click:refresh="loadDataList"
@@ -62,6 +63,20 @@
                     @click="onClick"
                   />
                 </wt-badge>
+              </template>
+              <template #columns>
+                <wt-table-column-select
+                  :headers="mergedHeaders"
+                  enable-search
+                  @change="updateShownHeaders"
+                />
+              </template>
+              <template #variables>
+                <wt-table-variable-column-select
+                  storage-key="contacts/datalist/attribute-headers"
+                  :title="t('contacts.attributeColumnSelect.title')"
+                  @update:variable-headers="updateVariableHeaders"
+                />
               </template>
             </wt-action-bar>
           </template>
@@ -96,18 +111,25 @@ import {
 	getContactAccessFromMode,
 } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
+import { WtTableVariableColumnSelect } from '@webitel/ui-sdk/components';
+import {
+	isVariableHeader,
+	useTableVariableHeaders,
+} from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { SearchMode } from '../../cases/enums/SearchMode';
+import { useTypeExtensionHeaders } from '../../configuration/modules/customization/composables/useTypeExtensionHeaders';
 import ContactsTable from '../_shared/components/contacts-table.vue';
+import { headers as contactBaseHeaders } from '../_shared/store/_internals/headers';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsFiltersPanel from './contacts-filters-panel.vue';
@@ -130,7 +152,7 @@ const {
 
 const tableStore = useContactsDatalistStore();
 
-const { selected, filtersManager, isFiltersRestoring, searchMode } =
+const { selected, filtersManager, isFiltersRestoring, searchMode, headers } =
 	storeToRefs(tableStore);
 
 const {
@@ -141,7 +163,26 @@ const {
 	updateFilter,
 	deleteFilter,
 	updateSearchMode,
+	updateShownHeaders,
 } = tableStore;
+
+const { updateVariableHeaders } = useTableVariableHeaders({
+	headers,
+	updateShownHeaders,
+});
+
+const {
+	customHeaders,
+	mergedHeaders,
+	loadCustomHeaders,
+	removeOutdatedCustomHeaders,
+} = useTypeExtensionHeaders({
+	headers,
+	updateShownHeaders,
+	itemId: 'contacts',
+	baseHeadersConfig: contactBaseHeaders,
+	isDynamicHeader: isVariableHeader,
+});
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -232,7 +273,15 @@ function deleteSelectedItems() {
 	});
 }
 
-initialize();
+onMounted(async () => {
+	const instance = getCurrentInstance();
+
+	await loadCustomHeaders();
+	await instance?.appContext.app.runWithContext(async () => {
+		await initialize();
+	});
+	removeOutdatedCustomHeaders();
+});
 </script>
 
 <style
