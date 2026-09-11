@@ -206,11 +206,12 @@ import { useI18n } from 'vue-i18n';
 import ColorComponentWrapper from '../../../../../app/components/_shared/color-component-wrapper.vue';
 import CasesFilterSearchBar from '../../../../cases/components/cases-filter-search-bar.vue';
 import CasesFiltersPanel from '../../../../cases/components/cases-filters-panel.vue';
-import { useCasesCustomHeaders } from '../../../../cases/composables/useCasesCustomHeaders';
 import { SearchMode } from '../../../../cases/enums/SearchMode';
+import { useTypeExtensionHeaders } from '../../../../configuration/modules/customization/composables/useTypeExtensionHeaders';
 import DisplayDynamicFieldExtension from '../../../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
 import { useContactCardStore } from '../../../stores/card/contactCardStore';
 import { ContactCasesNamespace } from '../namespace';
+import { headers as contactCasesBaseHeaders } from '../stores/datalist/_internals/headers';
 import { useContactCasesDatalistStore } from '../stores/datalist/contactCasesDatalistStore';
 import { useContactCaseFilterPresetsStore } from '../stores/presets/contactCaseFilterPresetsStore';
 
@@ -253,9 +254,11 @@ const {
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
 	getCustomValues,
-} = useCasesCustomHeaders({
+} = useTypeExtensionHeaders({
 	headers,
 	updateShownHeaders,
+	itemId: 'cases',
+	baseHeadersConfig: contactCasesBaseHeaders,
 });
 
 const {

@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Detalii',
 		attributes: 'Atribut | Atribute',
+		attributeColumnSelect: {
+			title: 'Selectează coloanele de atribute',
+		},
 	},
 	timeline: {
 		timeline: 'Cronologie',

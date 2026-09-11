@@ -52,4 +52,28 @@ export const headers: DatalistTableHeader[] = [
 		field: 'about',
 		sort: SortSymbols.NONE,
 	},
+	{
+		value: 'phones',
+		locale: [
+			'vocabulary.phones',
+			2,
+		],
+		show: false,
+		field: 'phones',
+	},
+	{
+		value: 'emails',
+		locale: [
+			'vocabulary.emails',
+			2,
+		],
+		show: false,
+		field: 'emails',
+	},
+	{
+		value: 'imclients',
+		locale: 'vocabulary.messaging',
+		show: false,
+		field: 'imclients',
+	},
 ];

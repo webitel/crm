@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Tafsilotlar',
 		attributes: 'Atribut | Atributlar',
+		attributeColumnSelect: {
+			title: 'Atribut ustunlarini tanlash',
+		},
 	},
 	timeline: {
 		timeline: "Vaqt chizig'i",
