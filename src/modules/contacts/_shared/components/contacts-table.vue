@@ -26,6 +26,7 @@
           :data="dataList"
           :headers="headers"
           :selected="selected"
+          :active-filters="activeFilters"
           sortable
           resizable-columns
           reorderable-columns
@@ -91,6 +92,14 @@
           <template #actions="{ item }">
             <slot name="actions" :item="item" />
           </template>
+
+          <!-- column filters (WTEL-7727): rendered only when the page provides them -->
+          <template
+            v-if="$slots['column-filter']"
+            #column-filter="scope"
+          >
+            <slot name="column-filter" v-bind="scope" />
+          </template>
         </wt-table>
 
         <wt-pagination
@@ -110,7 +119,11 @@
 <script setup lang="ts">
 import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { createTableStore } from '@webitel/ui-datalist';
-import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
+import {
+	WtDisplayChipItems,
+	WtEmpty,
+	WtTable,
+} from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
@@ -149,6 +162,9 @@ const {
 	columnResize,
 	columnReorder,
 } = props.tableStore;
+
+// names of applied filters → badges on the column filter icons
+const activeFilters = computed(() => filtersManager.value.getAllKeys());
 
 function getGroupItems(item: WebitelContactsContact) {
 	return item.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [];

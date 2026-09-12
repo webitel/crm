@@ -96,6 +96,7 @@
             :data="dataList"
             :headers="shownHeaders"
             :selected="selected"
+            :active-filters="activeFilters"
             :row-class="rowClass"
             fixed-actions
             sortable
@@ -215,6 +216,12 @@
                 :value="getCustomValues((slotProps as { item: any }).item, header)"
               />
             </template>
+            <template #column-filter="scope">
+              <cases-column-filter
+                v-bind="scope"
+                :filterable-extension-fields="customFields"
+              />
+            </template>
             <template #expansion="{ item }">
               <case-details-table :item="item" />
             </template>
@@ -285,6 +292,7 @@ import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 import CaseDetailsTable from './case-details-table.vue';
+import CasesColumnFilter from './cases-column-filter.vue';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
@@ -327,6 +335,7 @@ const {
 
 const {
 	customHeaders,
+	customFields,
 	mergedHeaders,
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
@@ -384,6 +393,9 @@ const displayIncludeActions = computed(() => {
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
+// filter names applied right now: highlights the column header filter icons (WTEL-7727)
+const activeFilters = computed(() => filtersManager.value.getAllKeys());
+
 const anyFiltersOnFiltersPanel = computed(() => {
 	/*
 	 * ...excluding search filters, which shown in other panel
