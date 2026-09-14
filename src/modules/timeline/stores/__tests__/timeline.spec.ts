@@ -20,15 +20,22 @@ vi.mock('@webitel/api-services/api', () => ({
 	},
 }));
 
-const TYPE_FILTER_STORAGE_KEY = 'timelineDataList/type';
+/*
+ the underlying table store's filters persist as one combined snapshot under
+  this key — `type_val` is the snapshot key FiltersManager gives the `type`
+  filter's value (see `filterValueToSnapshotKey` in @webitel/ui-datalist)
+ */
+const FILTERS_STORAGE_KEY = 'timelineDataList/filters';
 
 async function createTimelineStore(initialStoredType?: unknown[]) {
 	if (initialStoredType === undefined) {
-		sessionStorage.removeItem(TYPE_FILTER_STORAGE_KEY);
+		sessionStorage.removeItem(FILTERS_STORAGE_KEY);
 	} else {
 		sessionStorage.setItem(
-			TYPE_FILTER_STORAGE_KEY,
-			JSON.stringify(initialStoredType),
+			FILTERS_STORAGE_KEY,
+			JSON.stringify({
+				type_val: initialStoredType,
+			}),
 		);
 	}
 	const { useTimelineStore } = await import('../timeline');
@@ -208,6 +215,39 @@ describe('useTimelineStore', () => {
 		);
 	});
 
+	/*
+   `mode` is captured by closure, not persisted as a filter — a stale mode
+    restored from a previous record's session must never leak into the API
+    call for the record now open
+
+   [WTEL-10404](https://webitel.atlassian.net/browse/WTEL-10404)
+   */
+	it('ignores a stale mode value found in a persisted filters snapshot', async () => {
+		sessionStorage.setItem(
+			FILTERS_STORAGE_KEY,
+			JSON.stringify({
+				mode_val: 'case',
+				type_val: [
+					'call',
+				],
+			}),
+		);
+
+		const { useTimelineStore } = await import('../timeline');
+		const store = useTimelineStore();
+
+		await store.initialize({
+			parentId: 'contact-1',
+			mode: 'contact',
+		});
+
+		expect(getListMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				entity: 'contact',
+			}),
+		);
+	});
+
 	it('updates the filter and persists it in sessionStorage, not the route query', async () => {
 		const store = await createTimelineStore();
 
@@ -218,14 +258,13 @@ describe('useTimelineStore', () => {
 		store.setTypeFilter([
 			TimelineEventType.Email,
 		]);
+		await new Promise((resolve) => setTimeout(resolve));
 
 		expect(store.typeFilter).toEqual([
 			TimelineEventType.Email,
 		]);
-		expect(sessionStorage.getItem(TYPE_FILTER_STORAGE_KEY)).toBe(
-			JSON.stringify([
-				TimelineEventType.Email,
-			]),
+		expect(sessionStorage.getItem(FILTERS_STORAGE_KEY)).toContain(
+			TimelineEventType.Email,
 		);
 	});
 

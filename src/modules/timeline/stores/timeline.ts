@@ -7,8 +7,6 @@ import { TimelineEventType } from '../enums/TimelineEventType';
 import type { TimelineMode } from '../enums/TimelineMode';
 import { headers } from './_internals/headers';
 
-const FILTER_STORAGE_KEY = 'timeline/type';
-
 export interface TimelineDay {
 	id: number;
 	dayTimestamp: number;
@@ -33,40 +31,60 @@ export function listHandler(days) {
 	}));
 }
 
-const timelineApiModule = {
-	getList: async ({ mode, parentId, page, size, type }) => {
-		const { days, next } = await TimelineAPI.getList({
-			entity: mode,
-			parentId,
+export const useTimelineStore = defineStore('timeline', () => {
+	const parentId = ref<string | null>(null);
+	const mode = ref<TimelineMode | null>(null);
+	const isLoadingMore = ref(false);
+
+	/*
+   `mode` addresses the API entity for the record currently open — it must
+    never come from persisted filter state (a restored value would belong to
+    whichever record was open last). Captured by closure instead of added to
+    filtersManager, so only `type` rides the standard nested-list persistence
+
+   [WTEL-10404](https://webitel.atlassian.net/browse/WTEL-10404)
+   */
+	const timelineApiModule = {
+		getList: async ({
+			parentId: reqParentId,
 			page,
 			size,
-			...(type?.length
-				? {
-						type,
-					}
-				: {}),
-		});
-		return {
-			items: listHandler(days).map((day) => ({
-				...day,
-				id: day.dayTimestamp,
-			})),
-			next,
-		};
-	},
-};
+			type,
+		}: {
+			parentId: string;
+			page: number;
+			size: number;
+			type?: TimelineEventType[];
+		}) => {
+			const { days, next } = await TimelineAPI.getList({
+				entity: mode.value,
+				parentId: reqParentId,
+				page,
+				size,
+				...(type?.length
+					? {
+							type,
+						}
+					: {}),
+			});
+			return {
+				items: listHandler(days).map((day) => ({
+					...day,
+					id: day.dayTimestamp,
+				})),
+				next,
+			};
+		},
+	};
 
-const useTimelineDataListStore = createTableStore<TimelineDay>(
-	'timelineDataList',
-	{
-		apiModule: timelineApiModule,
-		headers,
-		disablePersistence: true,
-		isAppendDataList: true,
-	},
-);
-
-export const useTimelineStore = defineStore('timeline', () => {
+	const useTimelineDataListStore = createTableStore<TimelineDay>(
+		'timelineDataList',
+		{
+			apiModule: timelineApiModule,
+			headers,
+			isAppendDataList: true,
+		},
+	);
 	const tableStore = useTimelineDataListStore();
 
 	const { dataList, page, size, next, isLoading, filtersManager } =
@@ -81,34 +99,17 @@ export const useTimelineStore = defineStore('timeline', () => {
 		initialize: initializeTable,
 	} = tableStore;
 
-	const parentId = ref<string | null>(null);
-	const mode = ref<TimelineMode | null>(null);
-	const isLoadingMore = ref(false);
-
 	const typeFilter = computed<TimelineEventType[]>(
 		() =>
 			(filtersManager.value.getFilter('type')?.value as TimelineEventType[]) ??
 			[],
 	);
 
-	function restoreTypeFilter(): TimelineEventType[] {
-		const raw = sessionStorage.getItem(FILTER_STORAGE_KEY);
-		if (!raw) {
-			return [
-				TimelineEventType.Call,
-				TimelineEventType.Chat,
-				TimelineEventType.Email,
-			];
-		}
-		return JSON.parse(raw) as TimelineEventType[];
-	}
-
 	function setTypeFilter(value: TimelineEventType[]) {
 		updateFilter({
 			name: 'type',
 			value,
 		});
-		sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(value));
 	}
 
 	function getCounters(counterParentId: string) {
@@ -161,28 +162,18 @@ export const useTimelineStore = defineStore('timeline', () => {
 		parentId.value = newParentId;
 		mode.value = newMode;
 
-		if (hasFilter('mode')) {
-			updateFilter({
-				name: 'mode',
-				value: newMode,
-			});
-		} else {
-			addFilter({
-				name: 'mode',
-				value: newMode,
-			});
-		}
-
-		const restoredType = restoreTypeFilter();
-		if (hasFilter('type')) {
-			updateFilter({
-				name: 'type',
-				value: restoredType,
-			});
-		} else {
+		/*
+     seeded before initializeTable() restores persisted state below, so a
+      value restored from sessionStorage (if any) wins over this default
+     */
+		if (!hasFilter('type')) {
 			addFilter({
 				name: 'type',
-				value: restoredType,
+				value: [
+					TimelineEventType.Call,
+					TimelineEventType.Chat,
+					TimelineEventType.Email,
+				],
 			});
 		}
 
