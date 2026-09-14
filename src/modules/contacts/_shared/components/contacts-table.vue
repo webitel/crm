@@ -140,11 +140,11 @@
 import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { createTableStore } from '@webitel/ui-datalist';
 import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
+import { CrmSections } from '@webitel/ui-sdk/enums';
 import {
 	isVariableHeader,
 	VARIABLE_FIELD_PREFIX,
-} from '@webitel/ui-sdk/composables';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+} from '@webitel/ui-sdk/modules/TableVariableColumnSelect';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
 import get from 'lodash-es/get';

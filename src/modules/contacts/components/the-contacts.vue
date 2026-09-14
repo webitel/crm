@@ -111,12 +111,12 @@ import {
 	getContactAccessFromMode,
 } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { WtTableVariableColumnSelect } from '@webitel/ui-sdk/components';
+import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import {
 	isVariableHeader,
 	useTableVariableHeaders,
-} from '@webitel/ui-sdk/composables';
-import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
+	WtTableVariableColumnSelect,
+} from '@webitel/ui-sdk/modules/TableVariableColumnSelect';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
