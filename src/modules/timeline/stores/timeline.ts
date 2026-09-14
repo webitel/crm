@@ -3,10 +3,11 @@ import { createTableStore } from '@webitel/ui-datalist';
 import deepCopy from 'deep-copy';
 import { defineStore, storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import { TimelineEventType } from '../enums/TimelineEventType';
 import type { TimelineMode } from '../enums/TimelineMode';
 import { headers } from './_internals/headers';
+
+const FILTER_STORAGE_KEY = 'timeline/type';
 
 export interface TimelineDay {
 	id: number;
@@ -66,8 +67,6 @@ const useTimelineDataListStore = createTableStore<TimelineDay>(
 );
 
 export const useTimelineStore = defineStore('timeline', () => {
-	const route = useRoute();
-	const router = useRouter();
 	const tableStore = useTimelineDataListStore();
 
 	const { dataList, page, size, next, isLoading, filtersManager } =
@@ -92,22 +91,16 @@ export const useTimelineStore = defineStore('timeline', () => {
 			[],
 	);
 
-	function restoreTypeFilterFromQuery(): TimelineEventType[] {
-		const raw = route.query.type;
-		if (raw === undefined) {
+	function restoreTypeFilter(): TimelineEventType[] {
+		const raw = sessionStorage.getItem(FILTER_STORAGE_KEY);
+		if (!raw) {
 			return [
 				TimelineEventType.Call,
 				TimelineEventType.Chat,
 				TimelineEventType.Email,
 			];
 		}
-		return (
-			Array.isArray(raw)
-				? raw
-				: [
-						raw,
-					]
-		) as TimelineEventType[];
+		return JSON.parse(raw) as TimelineEventType[];
 	}
 
 	function setTypeFilter(value: TimelineEventType[]) {
@@ -115,13 +108,7 @@ export const useTimelineStore = defineStore('timeline', () => {
 			name: 'type',
 			value,
 		});
-		return router.replace({
-			name: route.name,
-			query: {
-				...route.query,
-				type: value,
-			},
-		});
+		sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(value));
 	}
 
 	function getCounters(counterParentId: string) {
@@ -186,7 +173,7 @@ export const useTimelineStore = defineStore('timeline', () => {
 			});
 		}
 
-		const restoredType = restoreTypeFilterFromQuery();
+		const restoredType = restoreTypeFilter();
 		if (hasFilter('type')) {
 			updateFilter({
 				name: 'type',

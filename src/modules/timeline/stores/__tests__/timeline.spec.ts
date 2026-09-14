@@ -3,27 +3,15 @@ import { createPinia, setActivePinia } from 'pinia';
 import { TimelineEventType } from '../../enums/TimelineEventType';
 import { listHandler } from '../timeline';
 
-const { getListMock, getCountersMock, routeMock, routerMock } = vi.hoisted(
-	() => ({
-		getListMock: vi.fn(() =>
-			Promise.resolve({
-				days: [],
-				next: false,
-			}),
-		),
-		getCountersMock: vi.fn(() => Promise.resolve({})),
-		routeMock: {
-			name: 'contacts-card',
-			query: {} as Record<string, unknown>,
-		},
-		routerMock: {
-			replace: vi.fn((to: { query?: Record<string, unknown> }) => {
-				routeMock.query = to.query ?? {};
-				return Promise.resolve();
-			}),
-		},
-	}),
-);
+const { getListMock, getCountersMock } = vi.hoisted(() => ({
+	getListMock: vi.fn(() =>
+		Promise.resolve({
+			days: [],
+			next: false,
+		}),
+	),
+	getCountersMock: vi.fn(() => Promise.resolve({})),
+}));
 
 vi.mock('@webitel/api-services/api', () => ({
 	TimelineAPI: {
@@ -32,18 +20,17 @@ vi.mock('@webitel/api-services/api', () => ({
 	},
 }));
 
-// `useTimelineStore` reads `useRoute()`/`useRouter()` directly (not just
-// inside a mounted component's injection context), so the plain hooks are
-// stubbed here to keep the store's route/query behavior controllable and
-// synchronous in a unit test.
-vi.mock('vue-router', async (importOriginal) => ({
-	...(await importOriginal<typeof import('vue-router')>()),
-	useRoute: () => routeMock,
-	useRouter: () => routerMock,
-}));
+const TYPE_FILTER_STORAGE_KEY = 'timelineDataList/type';
 
-async function createTimelineStore(initialQuery: Record<string, unknown> = {}) {
-	routeMock.query = initialQuery;
+async function createTimelineStore(initialStoredType?: unknown[]) {
+	if (initialStoredType === undefined) {
+		sessionStorage.removeItem(TYPE_FILTER_STORAGE_KEY);
+	} else {
+		sessionStorage.setItem(
+			TYPE_FILTER_STORAGE_KEY,
+			JSON.stringify(initialStoredType),
+		);
+	}
 	const { useTimelineStore } = await import('../timeline');
 	return useTimelineStore();
 }
@@ -144,8 +131,7 @@ describe('useTimelineStore', () => {
 		setActivePinia(createPinia());
 		getListMock.mockClear();
 		getCountersMock.mockClear();
-		routerMock.replace.mockClear();
-		routeMock.query = {};
+		sessionStorage.clear();
 	});
 
 	it('starts with no parent/mode selected and not loading', async () => {
@@ -157,7 +143,7 @@ describe('useTimelineStore', () => {
 		expect(store.isLoadingMore).toBe(false);
 	});
 
-	it('defaults the type filter to call/chat/email when the URL has no ?type=', async () => {
+	it('defaults the type filter to call/chat/email when sessionStorage has nothing stored', async () => {
 		const store = await createTimelineStore();
 
 		await store.initialize({
@@ -174,10 +160,10 @@ describe('useTimelineStore', () => {
 		expect(store.mode).toBe('contact');
 	});
 
-	it('restores the type filter from a single ?type= query value', async () => {
-		const store = await createTimelineStore({
-			type: 'call',
-		});
+	it('restores the type filter stored in sessionStorage', async () => {
+		const store = await createTimelineStore([
+			'call',
+		]);
 
 		await store.initialize({
 			parentId: 'contact-1',
@@ -189,13 +175,11 @@ describe('useTimelineStore', () => {
 		]);
 	});
 
-	it('restores the type filter from multiple ?type= query values', async () => {
-		const store = await createTimelineStore({
-			type: [
-				'call',
-				'chat',
-			],
-		});
+	it('restores multiple stored type filter values', async () => {
+		const store = await createTimelineStore([
+			'call',
+			'chat',
+		]);
 
 		await store.initialize({
 			parentId: 'contact-1',
@@ -224,28 +208,24 @@ describe('useTimelineStore', () => {
 		);
 	});
 
-	it('updates the filter and replaces the URL query on setTypeFilter', async () => {
+	it('updates the filter and persists it in sessionStorage, not the route query', async () => {
 		const store = await createTimelineStore();
 
 		await store.initialize({
 			parentId: 'contact-1',
 			mode: 'contact',
 		});
-		await store.setTypeFilter([
+		store.setTypeFilter([
 			TimelineEventType.Email,
 		]);
 
 		expect(store.typeFilter).toEqual([
 			TimelineEventType.Email,
 		]);
-		expect(routerMock.replace).toHaveBeenCalledWith(
-			expect.objectContaining({
-				query: expect.objectContaining({
-					type: [
-						TimelineEventType.Email,
-					],
-				}),
-			}),
+		expect(sessionStorage.getItem(TYPE_FILTER_STORAGE_KEY)).toBe(
+			JSON.stringify([
+				TimelineEventType.Email,
+			]),
 		);
 	});
 
