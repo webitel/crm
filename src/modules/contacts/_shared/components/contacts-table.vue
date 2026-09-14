@@ -1,9 +1,11 @@
 <template>
   <section class="table-section">
     <header class="table-title">
-      <h3 class="table-title__title">
-        {{ props.header }}
-      </h3>
+      <slot name="title">
+        <h3 class="table-title__title">
+          {{ props.header }}
+        </h3>
+      </slot>
 
       <slot name="action-bar" />
     </header>
@@ -12,14 +14,8 @@
       class="table-section__table-wrapper">
       <wt-loader v-show="isLoading" />
 
-      <wt-empty
-        v-if="emptyProps.showEmpty"
-        v-bind="emptyProps"
-        @click:primary="emptyProps.primaryAction"
-      />
-
       <div
-        v-show="!isLoading && dataList.length"
+        v-show="!isLoading"
         class="table-wrapper"
       >
         <wt-table
@@ -100,9 +96,17 @@
           >
             <slot name="column-filter" v-bind="scope" />
           </template>
+
+          <template #empty>
+            <wt-empty
+              v-bind="emptyProps"
+              @click:primary="emptyProps.primaryAction"
+            />
+          </template>
         </wt-table>
 
         <wt-pagination
+          v-show="dataList.length"
           :next="next"
           :prev="page > 1"
           :size="size"
@@ -131,7 +135,7 @@ import { storeToRefs } from 'pinia';
 import { computed, isRef } from 'vue';
 
 interface Props {
-	header: string;
+	header?: string;
 	tableStore: ReturnType<ReturnType<typeof createTableStore>>;
 	emptyData?: {
 		primaryActionText?: string | boolean;

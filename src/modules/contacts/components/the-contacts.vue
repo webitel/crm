@@ -1,9 +1,14 @@
 <template>
   <wt-page-wrapper
-    :actions-panel="false"
+    :actions-panel="showActionsPanel"
+    :hide-header="true"
     class="contacts"
   >
-    <template #header>
+    <template #actions-panel>
+      <contacts-filters-panel @hide="showActionsPanel = false" />
+    </template>
+
+    <template #main>
       <contact-popup
         :id="editedContactId"
         :shown="isContactPopup"
@@ -11,10 +16,6 @@
         @saved="saved"
       />
 
-      <wt-breadcrumb :path="path" />
-    </template>
-
-    <template #main>
       <section class="table-page">
         <delete-confirmation-popup
           :shown="isDeleteConfirmationPopup"
@@ -24,10 +25,12 @@
         />
 
         <contacts-table
-          :header="t('contacts.contact', 2)"
           :table-store="tableStore"
           :empty-data="{ primaryAction: create }"
         >
+          <template #title>
+            <wt-breadcrumb :path="path" />
+          </template>
           <template #action-bar>
             <wt-action-bar
               :disabled:add="!hasCreateAccess"
@@ -36,15 +39,16 @@
               @click:add="create"
               @click:refresh="loadDataList"
               @click:delete="deleteSelectedItems"
+              @click:filters="showActionsPanel = !showActionsPanel"
             >
 
-              <!-- no filters panel here: reset (and presets, if any) live in the icon's menu -->
-              <template #filters>
-                <filters-actions-menu
-                  :filters-manager="filtersManager"
-                  :filter-options="filtersOptions"
-                  @filter:reset-all="resetFilters"
-                />
+              <template #filters="{ action, onClick }">
+                <wt-badge :hidden="!anyFiltersOnFiltersPanel">
+                  <wt-icon-action
+                    :action="action"
+                    @click="onClick"
+                  />
+                </wt-badge>
               </template>
               <template #search-bar>
                 <dynamic-filter-search
@@ -61,7 +65,6 @@
             </wt-action-bar>
           </template>
 
-          <!-- filters live in the column headers only, there is no filters panel on this page -->
           <template #column-filter="scope">
             <contacts-column-filter v-bind="scope" />
           </template>
@@ -95,10 +98,7 @@ import {
 	ContactsSearchMode,
 	getContactAccessFromMode,
 } from '@webitel/api-services/api';
-import {
-	DynamicFilterSearchComponent as DynamicFilterSearch,
-	FiltersActionsMenuComponent as FiltersActionsMenu,
-} from '@webitel/ui-datalist/filters';
+import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
@@ -110,10 +110,10 @@ import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import ContactsTable from '../_shared/components/contacts-table.vue';
-import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsColumnFilter from './contacts-column-filter.vue';
+import ContactsFiltersPanel from './contacts-filters-panel.vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -144,12 +144,16 @@ const {
 	updateSearchMode,
 } = tableStore;
 
-// search filters live in the same manager, keep them
-const resetFilters = () => {
-	filtersManager.value.reset({
-		exclude: Object.values(ContactsSearchMode),
-	});
-};
+const showActionsPanel = ref(true);
+
+const anyFiltersOnFiltersPanel = computed(() =>
+	filtersManager.value
+		.getAllKeys()
+		.some(
+			(filterName) =>
+				!Object.values(ContactsSearchMode).some((mode) => mode === filterName),
+		),
+);
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);

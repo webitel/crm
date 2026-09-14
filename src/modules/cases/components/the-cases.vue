@@ -77,19 +77,8 @@
         </header>
         <wt-loader v-show="isLoading" />
 
-        <wt-empty
-          v-if="showEmpty && isInitializedTableStore"
-          :image="emptyImage"
-          :headline="emptyHeadline"
-          :title="emptyTitle"
-          :text="emptyText"
-          :primary-action-text="emptyPrimaryActionText"
-          :disabled-primary-action="!hasCreateAccess"
-          @click:primary="add"
-        />
-
         <div
-          v-show="!isLoading && dataList?.length"
+          v-show="!isLoading"
           class="table-section__table-wrapper"
         >
           <wt-table
@@ -222,6 +211,17 @@
                 :filterable-extension-fields="customFields"
               />
             </template>
+            <template #empty>
+              <wt-empty
+                :image="emptyImage"
+                :headline="emptyHeadline"
+                :title="emptyTitle"
+                :text="emptyText"
+                :primary-action-text="emptyPrimaryActionText"
+                :disabled-primary-action="!hasCreateAccess"
+                @click:primary="add"
+              />
+            </template>
             <template #expansion="{ item }">
               <case-details-table :item="item" />
             </template>
@@ -245,6 +245,7 @@
           </wt-table>
 
           <wt-pagination
+            v-show="dataList?.length"
             :next="next"
             :prev="page > 1"
             :size="size"
@@ -354,7 +355,6 @@ const {
 } = useDeleteConfirmationPopup();
 
 const {
-	showEmpty,
 	emptyCause,
 	image: emptyImage,
 	headline: emptyHeadline,
@@ -371,8 +371,6 @@ const {
 const showActionsPanel = ref(true);
 
 const isInitialEmpty = ref(false);
-
-const isInitializedTableStore = ref(false); // https://webitel.atlassian.net/browse/WTEL-7518?focusedCommentId=726522
 
 const displayIncludeActions = computed(() => {
 	const baseActions = [
@@ -506,7 +504,6 @@ onMounted(async () => {
 	});
 	// https://webitel.atlassian.net/browse/WTEL-9014
 	removeOutdatedCustomHeaders();
-	isInitializedTableStore.value = true;
 });
 
 watch(
