@@ -53,6 +53,7 @@ import type {
 	ContactsEmailAddress,
 	ContactsPhoneNumber,
 } from '@webitel/api-services/gen/models';
+import { EngineCommunicationChannels } from '@webitel/api-services/gen/models';
 import {
 	type createCardStore,
 	useNestedCardComponent,
@@ -61,7 +62,6 @@ import { ComponentSize } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { EngineCommunicationChannels } from 'webitel-sdk';
 
 import { CommunicationChannel } from '../enums/CommunicationChannel';
 
