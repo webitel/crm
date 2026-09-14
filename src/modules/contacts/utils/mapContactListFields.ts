@@ -1,22 +1,9 @@
-export const CONTACT_LIST_FIELDS = [
-	'id',
-	'etag',
-	'mode',
-	'name',
-	'about',
-	'labels',
-	'groups',
-	'managers',
-	'timezones',
-	'phones',
-	'emails',
-	'imclients',
-	'user',
-	'variables',
-	'custom',
-] as const;
+import { contactFieldsToSend } from '@webitel/api-services/api';
 
-const CONTACT_LIST_FIELDS_SET = new Set<string>(CONTACT_LIST_FIELDS);
+const CONTACT_LIST_FIELDS_SET = new Set<string>([
+	'id',
+	...contactFieldsToSend,
+]);
 
 export const mapContactListFields = (fields: string[] = []): string[] => {
 	const mapped = new Set<string>();

@@ -141,8 +141,8 @@ import type { WebitelContactsContact } from '@webitel/api-services/gen/models';
 import { createTableStore } from '@webitel/ui-datalist';
 import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
 import {
-	getVariableValue,
 	isVariableHeader,
+	VARIABLE_FIELD_PREFIX,
 } from '@webitel/ui-sdk/composables';
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -152,6 +152,10 @@ import { storeToRefs } from 'pinia';
 import { computed, isRef } from 'vue';
 
 import DisplayDynamicFieldExtension from '../../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
+import {
+	CommunicationType,
+	communicationListFieldByType,
+} from '../../modules/communications/enums/CommunicationType';
 
 interface Props {
 	header: string;
@@ -196,17 +200,22 @@ function getGroupItems(item: WebitelContactsContact) {
 	return item.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [];
 }
 
+const getVariableValue = (item: WebitelContactsContact, field: string) => {
+	const key = field.replace(VARIABLE_FIELD_PREFIX, '');
+	return item.variables?.data?.find((variable) => variable.key === key)?.value;
+};
+
 const communicationColumns = [
 	{
-		value: 'phones',
+		value: communicationListFieldByType[CommunicationType.Phones],
 		getName: (phone) => phone.number,
 	},
 	{
-		value: 'emails',
+		value: communicationListFieldByType[CommunicationType.Emails],
 		getName: (email) => email.email,
 	},
 	{
-		value: 'imclients',
+		value: communicationListFieldByType[CommunicationType.Messaging],
 		getName: (client) => client.user?.name,
 	},
 ] as const;
