@@ -1,7 +1,6 @@
 <template>
   <column-filter
     :header="header"
-    :index="index"
     :form-view="formView"
     :hide="hide"
     :filters-manager="filtersManager"
@@ -23,7 +22,6 @@ import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistSto
 defineProps<{
 	header: DatalistTableHeader;
 	formView?: boolean;
-	index?: number;
 	hide?: () => void;
 }>();
 

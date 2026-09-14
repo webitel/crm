@@ -1,7 +1,6 @@
 <template>
   <column-filter
     :header="header"
-    :index="index"
     :form-view="formView"
     :hide="hide"
     :filters-manager="filtersManager"
@@ -24,7 +23,6 @@ defineProps<{
 	header: DatalistTableHeader;
 	filterableExtensionFields?: DataField[];
 	formView?: boolean;
-	index?: number;
 	hide?: () => void;
 }>();
 
