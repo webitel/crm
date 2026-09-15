@@ -116,8 +116,8 @@
 <script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtDisplayChipItems, WtEmpty } from '@webitel/ui-sdk/components';
+import { IconAction } from '@webitel/ui-sdk/enums';
 import { convertDurationWithDays as ConvertDurationWithDays } from '@webitel/ui-sdk/scripts';
-import IconAction from '@webitel/ui-sdk/src/enums/IconAction/IconAction.enum';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';

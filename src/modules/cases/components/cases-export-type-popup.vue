@@ -102,6 +102,8 @@ const validationFields = computed(() => validationSchema.value.r$.$fields);
 const hasValidationErrors = computed(() => validationSchema.value.r$.$error);
 const validate = () => validationSchema.value.r$.$validate();
 
+validationSchema.value.r$.$touch();
+
 const save = async () => {
 	const { valid, data } = await validate();
 	if (!valid) return;

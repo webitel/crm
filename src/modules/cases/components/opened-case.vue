@@ -13,6 +13,20 @@
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
+        <template
+          v-if="isEditable && !isNew"
+          #primary-action
+        >
+          <wt-button-select
+            :color="(!hasSaveActionAccess || disabledSave) && 'secondary'"
+            :disabled="!hasSaveActionAccess || disabledSave"
+            :options="saveOptions"
+            @click="saveCase"
+            @click:option="({ callback }) => callback()"
+          >
+            {{ t('reusable.save') }}
+          </wt-button-select>
+        </template>
         <wt-breadcrumb :path="path" />
 
         <template #actions>
@@ -45,7 +59,13 @@
     <template #main>
       <opened-case-tabs :validation-fields="validationFields" />
     </template>
+
   </wt-dual-panel>
+	<save-copy-popup
+		:shown="isSaveCopyPopupShown"
+		@close="closeSaveCopyPopup"
+		@save="saveCopy"
+	/>
 </template>
 
 <script
@@ -56,6 +76,10 @@ import { CasesAPI, UsersAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
+import {
+	SaveCopyPopup,
+	useSaveCopyPopup,
+} from '@webitel/ui-sdk/modules/SaveCopyPopup';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
@@ -248,6 +272,21 @@ const saveCase = async () => {
 	await saveCardStore();
 	await toggleEditMode(false);
 };
+
+const { isSaveCopyPopupShown, saveOptions, closeSaveCopyPopup, saveCopy } =
+	useSaveCopyPopup((subject) =>
+		CasesAPI.add({
+			itemInstance: {
+				...itemInstance.value,
+				subject,
+				// GET-only paginated wrappers ({ items, next, page }); the create
+				// endpoint expects a plain array here, so a copy can't carry these
+				// over as-is. Comments/files aren't accepted on create at all.
+				links: undefined,
+				related: undefined,
+			},
+		}),
+	);
 
 onUnmounted(() => {
 	toggleEditMode(false);
