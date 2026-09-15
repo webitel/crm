@@ -36,14 +36,6 @@ export const useTimelineStore = defineStore('timeline', () => {
 	const mode = ref<TimelineMode | null>(null);
 	const isLoadingMore = ref(false);
 
-	/*
-   `mode` addresses the API entity for the record currently open — it must
-    never come from persisted filter state (a restored value would belong to
-    whichever record was open last). Captured by closure instead of added to
-    filtersManager, so only `type` rides the standard nested-list persistence
-
-   [WTEL-10404](https://webitel.atlassian.net/browse/WTEL-10404)
-   */
 	const timelineApiModule = {
 		getList: async ({
 			parentId: reqParentId,
@@ -162,10 +154,6 @@ export const useTimelineStore = defineStore('timeline', () => {
 		parentId.value = newParentId;
 		mode.value = newMode;
 
-		/*
-     seeded before initializeTable() restores persisted state below, so a
-      value restored from sessionStorage (if any) wins over this default
-     */
 		if (!hasFilter('type')) {
 			addFilter({
 				name: 'type',
@@ -191,8 +179,6 @@ export const useTimelineStore = defineStore('timeline', () => {
 		page,
 		size,
 		next,
-		// false while appendToDataList (loadNext) is in flight, even though the underlying
-		// table store's own isLoading flips true for both the initial load and appends
 		isLoading: computed(() => isLoading.value && !isLoadingMore.value),
 		isLoadingMore: computed(() => isLoadingMore.value),
 		typeFilter,

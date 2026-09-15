@@ -20,11 +20,6 @@ vi.mock('@webitel/api-services/api', () => ({
 	},
 }));
 
-/*
- the underlying table store's filters persist as one combined snapshot under
-  this key — `type_val` is the snapshot key FiltersManager gives the `type`
-  filter's value (see `filterValueToSnapshotKey` in @webitel/ui-datalist)
- */
 const FILTERS_STORAGE_KEY = 'timelineDataList/filters';
 
 async function createTimelineStore(initialStoredType?: unknown[]) {
@@ -215,13 +210,6 @@ describe('useTimelineStore', () => {
 		);
 	});
 
-	/*
-   `mode` is captured by closure, not persisted as a filter — a stale mode
-    restored from a previous record's session must never leak into the API
-    call for the record now open
-
-   [WTEL-10404](https://webitel.atlassian.net/browse/WTEL-10404)
-   */
 	it('ignores a stale mode value found in a persisted filters snapshot', async () => {
 		sessionStorage.setItem(
 			FILTERS_STORAGE_KEY,
