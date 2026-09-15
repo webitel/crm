@@ -14,11 +14,11 @@
 
 <script lang="ts" setup>
 import { ConfigurationsAPI } from '@webitel/api-services/api';
+import { EngineSystemSettingName } from '@webitel/api-services/gen/models';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { EngineSystemSettingName } from 'webitel-sdk';
 
 import { SearchMode } from '../enums/SearchMode';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';

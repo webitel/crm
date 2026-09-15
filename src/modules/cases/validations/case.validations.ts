@@ -64,19 +64,23 @@ export const caseValidationSchema = computed(() => {
 		return acc;
 	}, {});
 
-	let schemaWithRequiredFields = caseSchema.extend({
-		subject: requiredSubjectShape,
-		source: filledLookupSchema,
-		reporter: filledLookupSchema,
-		service: filledLookupSchema,
-		priority: filledLookupSchema,
-		statusCondition: requiredStatusConditionShape,
-	});
+	let schemaWithRequiredFields = caseSchema
+		.extend({
+			subject: requiredSubjectShape,
+			source: filledLookupSchema,
+			reporter: filledLookupSchema,
+			service: filledLookupSchema,
+			priority: filledLookupSchema,
+			statusCondition: requiredStatusConditionShape,
+		})
+		.passthrough();
 
 	if (Object.keys(requiredCustomShape).length) {
-		schemaWithRequiredFields = schemaWithRequiredFields.extend({
-			custom: z.object(requiredCustomShape).passthrough().default({}),
-		});
+		schemaWithRequiredFields = schemaWithRequiredFields
+			.extend({
+				custom: z.object(requiredCustomShape).passthrough().default({}),
+			})
+			.passthrough();
 	}
 
 	return applyCaseRequiredFields(schemaWithRequiredFields);

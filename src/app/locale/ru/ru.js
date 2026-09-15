@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Детали',
 		attributes: 'Атрибут | Атрибуты',
+		attributeColumnSelect: {
+			title: 'Выбор колонок атрибутов',
+		},
 	},
 	timeline: {
 		timeline: 'Хронология',

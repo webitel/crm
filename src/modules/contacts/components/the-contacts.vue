@@ -26,6 +26,7 @@
 
         <contacts-table
           :table-store="tableStore"
+          :custom-headers="customHeaders"
           :empty-data="{ primaryAction: create }"
         >
           <template #title>
@@ -35,7 +36,7 @@
             <wt-action-bar
               :disabled:add="!hasCreateAccess"
               :disabled:delete="!hasDeleteAccess || !deletableSelectedItems.length"
-              :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.DELETE]"
+              :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.COLUMNS, IconAction.VARIABLES, IconAction.DELETE]"
               @click:add="create"
               @click:refresh="loadDataList"
               @click:delete="deleteSelectedItems"
@@ -60,6 +61,20 @@
                   @filter:update="updateFilter"
                   @filter:delete="deleteFilter"
                   @update:search-mode="updateSearchMode"
+                />
+              </template>
+              <template #columns>
+                <wt-table-column-select
+                  :headers="mergedHeaders"
+                  enable-search
+                  @change="updateShownHeaders"
+                />
+              </template>
+              <template #variables>
+                <wt-table-variable-column-select
+                  storage-key="contacts/datalist/attribute-headers"
+                  :title="t('contacts.attributeColumnSelect.title')"
+                  @update:variable-headers="updateVariableHeaders"
                 />
               </template>
             </wt-action-bar>
@@ -100,16 +115,25 @@ import {
 } from '@webitel/api-services/api';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
+import {
+	isVariableHeader,
+	type TableVariableHeader,
+	useTableVariableHeaders,
+	WtTableVariableColumnSelect,
+} from '@webitel/ui-sdk/modules/TableVariableColumnSelect';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import variableSearchValidator from '@webitel/ui-sdk/src/validators/variableSearchValidator/variableSearchValidator';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { SearchMode } from '../../cases/enums/SearchMode';
+import { useTypeExtensionHeaders } from '../../configuration/modules/customization/composables/useTypeExtensionHeaders';
 import ContactsTable from '../_shared/components/contacts-table.vue';
+import { headers as contactBaseHeaders } from '../_shared/store/_internals/headers';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsColumnFilter from './contacts-column-filter.vue';
@@ -131,7 +155,7 @@ const {
 
 const tableStore = useContactsDatalistStore();
 
-const { selected, filtersManager, isFiltersRestoring, searchMode } =
+const { selected, filtersManager, isFiltersRestoring, searchMode, headers } =
 	storeToRefs(tableStore);
 
 const {
@@ -142,18 +166,48 @@ const {
 	updateFilter,
 	deleteFilter,
 	updateSearchMode,
+	updateShownHeaders,
 } = tableStore;
 
 const showActionsPanel = ref(true);
 
-const anyFiltersOnFiltersPanel = computed(() =>
-	filtersManager.value
-		.getAllKeys()
-		.some(
-			(filterName) =>
-				!Object.values(ContactsSearchMode).some((mode) => mode === filterName),
-		),
-);
+/**
+ * `updateShownHeaders` genuinely accepts `DatalistTableHeader[]` (its `field` is required, its
+ * `filter` wider than `WtTableHeader`'s); `useTableVariableHeaders` only ever calls it with our
+ * own `headers.value` merged with headers this popup builds (always `field`-complete in
+ * practice) — safe to widen the static type to what the composable expects.
+ */
+const { updateVariableHeaders } = useTableVariableHeaders({
+	headers,
+	updateShownHeaders: updateShownHeaders as (
+		headers: TableVariableHeader[],
+	) => void,
+});
+
+const {
+	customHeaders,
+	mergedHeaders,
+	loadCustomHeaders,
+	removeOutdatedCustomHeaders,
+} = useTypeExtensionHeaders({
+	headers,
+	updateShownHeaders,
+	itemId: 'contacts',
+	baseHeadersConfig: contactBaseHeaders,
+	isDynamicHeader: isVariableHeader,
+});
+
+/*
+ * show "toggle filters panel" badge if any filters are applied...
+ * */
+const anyFiltersOnFiltersPanel = computed(() => {
+	/*
+	 * ...excluding search filters, which shown in other panel
+	 * */
+	return filtersManager.value.getAllKeys().some((filterName) => {
+		return !Object.values(SearchMode).some((mode) => mode === filterName);
+	});
+});
 
 const isContactPopup = ref(false);
 const editedContactId = ref(null);
@@ -228,7 +282,15 @@ function deleteSelectedItems() {
 	});
 }
 
-initialize();
+onMounted(async () => {
+	const instance = getCurrentInstance();
+
+	await loadCustomHeaders();
+	await instance?.appContext.app.runWithContext(async () => {
+		await initialize();
+	});
+	removeOutdatedCustomHeaders();
+});
 </script>
 
 <style

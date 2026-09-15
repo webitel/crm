@@ -20,7 +20,7 @@
       >
         <wt-table
           :data="dataList"
-          :headers="headers"
+          :headers="shownHeaders"
           :selected="selected"
           sortable
           resizable-columns
@@ -84,6 +84,35 @@
             </div>
           </template>
 
+          <template
+            v-for="column in communicationColumns"
+            #[column.value]="{ item }"
+            :key="column.value"
+          >
+            <wt-display-chip-items
+              :items="toChipItems(item[column.value], column.getName)"
+            />
+          </template>
+
+          <template
+            v-for="header in variableHeaders"
+            #[header.value]="{ item }"
+            :key="header.field"
+          >
+            {{ getVariableValue(item, header.field ?? header.value) }}
+          </template>
+
+          <template
+            v-for="header in customHeaders"
+            #[header.value]="{ item }"
+            :key="header.field"
+          >
+            <display-dynamic-field-extension
+              :field="header"
+              :value="get(item, ['custom', header.field])"
+            />
+          </template>
+
           <template #actions="{ item }">
             <slot name="actions" :item="item" />
           </template>
@@ -128,14 +157,29 @@ import {
 	WtTable,
 } from '@webitel/ui-sdk/components';
 import { CrmSections } from '@webitel/ui-sdk/enums';
+import {
+	isVariableHeader,
+	VARIABLE_FIELD_PREFIX,
+} from '@webitel/ui-sdk/modules/TableVariableColumnSelect';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import deepmerge from 'deepmerge';
+import get from 'lodash-es/get';
 import { storeToRefs } from 'pinia';
 import { computed, isRef } from 'vue';
+
+import DisplayDynamicFieldExtension from '../../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
+import {
+	CommunicationType,
+	communicationListFieldByType,
+} from '../../modules/communications/enums/CommunicationType';
 
 interface Props {
 	header?: string;
 	tableStore: ReturnType<ReturnType<typeof createTableStore>>;
+	customHeaders?: {
+		value: string;
+		field: string;
+	}[];
 	emptyData?: {
 		primaryActionText?: string | boolean;
 		disabledPrimaryAction?: boolean;
@@ -143,13 +187,15 @@ interface Props {
 	};
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+	customHeaders: () => [],
+});
 
 const {
 	dataList,
 	selected,
 	isLoading,
-	headers,
+	shownHeaders,
 	page,
 	size,
 	next,
@@ -169,6 +215,39 @@ const {
 function getGroupItems(item: WebitelContactsContact) {
 	return item.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [];
 }
+
+const getVariableValue = (item: WebitelContactsContact, field: string) => {
+	const key = field.replace(VARIABLE_FIELD_PREFIX, '');
+	return item.variables?.data?.find((variable) => variable.key === key)?.value;
+};
+
+const communicationColumns = [
+	{
+		value: communicationListFieldByType[CommunicationType.Phones],
+		getName: (phone) => phone.number,
+	},
+	{
+		value: communicationListFieldByType[CommunicationType.Emails],
+		getName: (email) => email.email,
+	},
+	{
+		value: communicationListFieldByType[CommunicationType.Messaging],
+		getName: (client) => client.user?.name,
+	},
+] as const;
+
+const variableHeaders = computed(() =>
+	(shownHeaders.value || []).filter(isVariableHeader),
+);
+
+const toChipItems = (list, getName) =>
+	(list?.data ?? list ?? [])
+		.slice()
+		.sort((a, b) => Number(Boolean(b.primary)) - Number(Boolean(a.primary)))
+		.map((item) => ({
+			id: item.id,
+			name: getName(item),
+		}));
 
 const defaultEmptyProps = useTableEmpty({
 	dataList,
