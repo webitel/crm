@@ -2,6 +2,8 @@ import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { FilterOption } from '@webitel/ui-datalist/filters';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
+import { contactGroupFilterConfig } from '../../../configs/filtersOptions';
+
 export const headers: DatalistTableHeader[] = [
 	{
 		value: 'name',
@@ -27,7 +29,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'groups',
 		width: '170px',
-		filter: FilterOption.ContactGroup,
+		filter: contactGroupFilterConfig,
 	},
 	{
 		value: 'labels',

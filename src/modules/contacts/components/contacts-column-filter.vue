@@ -4,7 +4,6 @@
     :form-view="formView"
     :hide="hide"
     :filters-manager="filtersManager"
-    :filter-options="filtersOptions"
     @add:filter="addFilter"
     @update:filter="updateFilter"
     @delete:filter="deleteFilter"
@@ -16,7 +15,6 @@ import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { ColumnFilterComponent as ColumnFilter } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 
-import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 
 defineProps<{
