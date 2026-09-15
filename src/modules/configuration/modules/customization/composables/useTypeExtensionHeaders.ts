@@ -3,9 +3,21 @@ import { snakeToCamel } from '@webitel/api-services/utils';
 import get from 'lodash-es/get';
 import { computed, ref, watch } from 'vue';
 
-import { headers as baseHeadersConfig } from '../stores/datalist/_internals/headers';
-
-export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
+export function useTypeExtensionHeaders({
+	headers,
+	updateShownHeaders,
+	itemId,
+	baseHeadersConfig,
+	isDynamicHeader,
+}: {
+	headers;
+	updateShownHeaders;
+	itemId: string;
+	baseHeadersConfig: {
+		field?: string;
+	}[];
+	isDynamicHeader?: (header: { field?: string; value?: string }) => boolean;
+}) {
 	// Reactive reference for custom headers from API
 	const customHeaders = ref([]);
 	const customHeadersLoaded = ref(false);
@@ -59,7 +71,7 @@ export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 	// Helper function to fetch custom headers from API
 	const fetchCustomHeadersFromAPI = async () => {
 		const response = await WtTypeExtensionAPI.get({
-			itemId: 'cases',
+			itemId,
 		});
 		return response?.fields || [];
 	};
@@ -98,6 +110,9 @@ export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 		const validFields = new Set([
 			...baseHeadersConfig.map((h) => h.field),
 			...customHeaders.value.map((h) => h.field),
+			...(isDynamicHeader
+				? headers.value.filter(isDynamicHeader).map((h) => h.field)
+				: []),
 		]);
 
 		const current = headers.value;
@@ -128,7 +143,12 @@ export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 		if (!isLoaded) return;
 
 		// "updateHeaders" doesnt mix in custom headers if those are present (already restored) in headers
-		const notInitialized = headers.value.filter((h) => h.shouldBeInitialized);
+		const notInitialized = headers.value.filter(
+			(h) =>
+				h.shouldBeInitialized &&
+				// Attributes/variables restore via wt-table-variable-column-select, not Details API
+				!isDynamicHeader?.(h),
+		);
 		if (!notInitialized.length) return;
 
 		// ... so, we can just extend those restored (but not initialized yet) headers with custom headers
@@ -136,6 +156,8 @@ export function useCasesCustomHeaders({ headers, updateShownHeaders }) {
 			const customHeader = customHeaders.value.find(
 				(c) => c.field === header.field,
 			);
+			if (!customHeader) return;
+
 			Object.assign(header, {
 				...customHeader,
 				shouldBeInitialized: false,

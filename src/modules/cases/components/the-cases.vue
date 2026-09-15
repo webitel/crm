@@ -276,12 +276,13 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import ColorComponentWrapper from '../../../app/components/_shared/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { useTypeExtensionHeaders } from '../../configuration/modules/customization/composables/useTypeExtensionHeaders';
 import DisplayDynamicFieldExtension from '../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
-import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { CasesNamespace } from '../namespace';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
+import { headers as casesBaseHeaders } from '../stores/datalist/_internals/headers';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 import CaseDetailsTable from './case-details-table.vue';
@@ -331,9 +332,11 @@ const {
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
 	getCustomValues,
-} = useCasesCustomHeaders({
+} = useTypeExtensionHeaders({
 	headers,
 	updateShownHeaders,
+	itemId: 'cases',
+	baseHeadersConfig: casesBaseHeaders,
 });
 
 const {

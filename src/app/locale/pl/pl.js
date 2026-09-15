@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Szczegóły',
 		attributes: 'Atrybut | Atrybuty',
+		attributeColumnSelect: {
+			title: 'Wybierz kolumny atrybutów',
+		},
 	},
 	timeline: {
 		timeline: 'Oś czasu',
