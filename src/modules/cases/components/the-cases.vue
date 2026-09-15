@@ -85,7 +85,6 @@
             :data="dataList"
             :headers="shownHeaders"
             :selected="selected"
-            :active-filters="activeFilters"
             :row-class="rowClass"
             fixed-actions
             sortable
@@ -391,9 +390,6 @@ const displayIncludeActions = computed(() => {
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
-// filter names applied right now: highlights the column header filter icons (WTEL-7727)
-const activeFilters = computed(() => filtersManager.value.getAllKeys());
-
 const anyFiltersOnFiltersPanel = computed(() => {
 	/*
 	 * ...excluding search filters, which shown in other panel

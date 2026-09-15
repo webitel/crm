@@ -22,7 +22,6 @@
           :data="dataList"
           :headers="headers"
           :selected="selected"
-          :active-filters="activeFilters"
           sortable
           resizable-columns
           reorderable-columns
@@ -166,9 +165,6 @@ const {
 	columnResize,
 	columnReorder,
 } = props.tableStore;
-
-// names of applied filters → badges on the column filter icons
-const activeFilters = computed(() => filtersManager.value.getAllKeys());
 
 function getGroupItems(item: WebitelContactsContact) {
 	return item.groups?.data?.map(({ group }) => group).filter(Boolean) ?? [];
