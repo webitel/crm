@@ -159,6 +159,7 @@ import {
 import { CrmSections } from '@webitel/ui-sdk/enums';
 import {
 	isVariableHeader,
+	type TableVariableHeader,
 	VARIABLE_FIELD_PREFIX,
 } from '@webitel/ui-sdk/modules/TableVariableColumnSelect';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -236,7 +237,7 @@ const communicationColumns = [
 	},
 ] as const;
 
-const variableHeaders = computed(() =>
+const variableHeaders = computed<TableVariableHeader[]>(() =>
 	(shownHeaders.value || []).filter(isVariableHeader),
 );
 
