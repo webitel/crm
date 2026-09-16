@@ -4,11 +4,13 @@ import {
 	FilterOption,
 } from '@webitel/ui-datalist/filters';
 
+export const contactGroupFilterConfig = createFilterConfig({
+	name: FilterOption.ContactGroup,
+	hideUnassigned: true,
+});
+
 export const filtersOptions: FilterConfigDefinition[] = [
-	createFilterConfig({
-		name: FilterOption.ContactGroup,
-		hideUnassigned: true,
-	}),
+	contactGroupFilterConfig,
 	FilterOption.ContactOwner,
 	FilterOption.ContactLabel,
 	FilterOption.HasUser,

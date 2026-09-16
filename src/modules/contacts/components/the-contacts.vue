@@ -1,9 +1,14 @@
 <template>
   <wt-page-wrapper
     :actions-panel="showActionsPanel"
+    :hide-header="true"
     class="contacts"
   >
-    <template #header>
+    <template #actions-panel>
+      <contacts-filters-panel @hide="showActionsPanel = false" />
+    </template>
+
+    <template #main>
       <contact-popup
         :id="editedContactId"
         :shown="isContactPopup"
@@ -11,14 +16,6 @@
         @saved="saved"
       />
 
-      <wt-breadcrumb :path="path" />
-    </template>
-
-    <template #actions-panel>
-      <contacts-filters-panel @hide="showActionsPanel = false" />
-    </template>
-
-    <template #main>
       <section class="table-page">
         <delete-confirmation-popup
           :shown="isDeleteConfirmationPopup"
@@ -28,22 +25,32 @@
         />
 
         <contacts-table
-          :header="t('contacts.contact', 2)"
           :table-store="tableStore"
           :custom-headers="customHeaders"
           :empty-data="{ primaryAction: create }"
         >
+          <template #title>
+            <wt-breadcrumb :path="path" />
+          </template>
           <template #action-bar>
             <wt-action-bar
               :disabled:add="!hasCreateAccess"
               :disabled:delete="!hasDeleteAccess || !deletableSelectedItems.length"
               :include="[IconAction.ADD, IconAction.FILTERS, IconAction.REFRESH, IconAction.COLUMNS, IconAction.VARIABLES, IconAction.DELETE]"
               @click:add="create"
-              @click:filters="showActionsPanel = !showActionsPanel"
               @click:refresh="loadDataList"
               @click:delete="deleteSelectedItems"
+              @click:filters="showActionsPanel = !showActionsPanel"
             >
 
+              <template #filters="{ action, onClick }">
+                <wt-badge :hidden="!anyFiltersOnFiltersPanel">
+                  <wt-icon-action
+                    :action="action"
+                    @click="onClick"
+                  />
+                </wt-badge>
+              </template>
               <template #search-bar>
                 <dynamic-filter-search
                   :filters-manager="filtersManager"
@@ -55,14 +62,6 @@
                   @filter:delete="deleteFilter"
                   @update:search-mode="updateSearchMode"
                 />
-              </template>
-              <template #filters="{ action, onClick }">
-                <wt-badge :hidden="!anyFiltersOnFiltersPanel">
-                  <wt-icon-action
-                    :action="action"
-                    @click="onClick"
-                  />
-                </wt-badge>
               </template>
               <template #columns>
                 <wt-table-column-select
@@ -79,6 +78,10 @@
                 />
               </template>
             </wt-action-bar>
+          </template>
+
+          <template #column-filter="scope">
+            <contacts-column-filter v-bind="scope" />
           </template>
 
           <template #actions="{ item }">
@@ -114,6 +117,7 @@ import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import {
 	isVariableHeader,
+	type TableVariableHeader,
 	useTableVariableHeaders,
 	WtTableVariableColumnSelect,
 } from '@webitel/ui-sdk/modules/TableVariableColumnSelect';
@@ -132,14 +136,13 @@ import ContactsTable from '../_shared/components/contacts-table.vue';
 import { headers as contactBaseHeaders } from '../_shared/store/_internals/headers';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
+import ContactsColumnFilter from './contacts-column-filter.vue';
 import ContactsFiltersPanel from './contacts-filters-panel.vue';
 
 const { t } = useI18n();
 const router = useRouter();
 
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl();
-
-const showActionsPanel = ref(true);
 
 const {
 	isVisible: isDeleteConfirmationPopup,
@@ -166,9 +169,19 @@ const {
 	updateShownHeaders,
 } = tableStore;
 
+const showActionsPanel = ref(true);
+
+/**
+ * `updateShownHeaders` genuinely accepts `DatalistTableHeader[]` (its `field` is required, its
+ * `filter` wider than `WtTableHeader`'s); `useTableVariableHeaders` only ever calls it with our
+ * own `headers.value` merged with headers this popup builds (always `field`-complete in
+ * practice) — safe to widen the static type to what the composable expects.
+ */
 const { updateVariableHeaders } = useTableVariableHeaders({
 	headers,
-	updateShownHeaders,
+	updateShownHeaders: updateShownHeaders as (
+		headers: TableVariableHeader[],
+	) => void,
 });
 
 const {
@@ -184,9 +197,6 @@ const {
 	isDynamicHeader: isVariableHeader,
 });
 
-const isContactPopup = ref(false);
-const editedContactId = ref(null);
-
 /*
  * show "toggle filters panel" badge if any filters are applied...
  * */
@@ -198,6 +208,9 @@ const anyFiltersOnFiltersPanel = computed(() => {
 		return !Object.values(SearchMode).some((mode) => mode === filterName);
 	});
 });
+
+const isContactPopup = ref(false);
+const editedContactId = ref(null);
 
 const path = computed(() => [
 	{
@@ -213,10 +226,6 @@ const searchModeOpts = computed(() => [
 	{
 		value: ContactsSearchMode.NAME,
 		text: t('reusable.name'),
-	},
-	{
-		value: ContactsSearchMode.LABELS,
-		text: t('vocabulary.labels', 1),
 	},
 	{
 		value: ContactsSearchMode.ABOUT,

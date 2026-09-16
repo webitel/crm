@@ -47,7 +47,7 @@
       >
         <wt-table
           :data="dataList"
-          :headers="shownHeaders"
+          :headers="tableHeaders"
           :selected="selected"
           :selectable="false"
           headless
@@ -100,6 +100,7 @@ import { CommentsAPI } from '@webitel/api-services/api';
 import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { WtActionBar, WtTable } from '@webitel/ui-sdk/components';
 import { IconAction, WtObject } from '@webitel/ui-sdk/enums';
+import type { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtTable';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -158,6 +159,8 @@ const { showEmpty } = useTableEmpty({
 	dataList,
 	isLoading,
 });
+
+const tableHeaders = computed(() => shownHeaders.value as WtTableHeader[]);
 
 const createdAtHeader = computed(() =>
 	(headers.value as DatalistTableHeader[]).find(
