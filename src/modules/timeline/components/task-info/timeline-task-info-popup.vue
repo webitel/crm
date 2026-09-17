@@ -68,7 +68,7 @@ const { t } = useI18n();
 
 const tabs = computed<TimelineTab[]>(() => [
 	{
-		text: t('timeline.info.title', 2),
+		text: t('vocabulary.variables', 2),
 		value: 'variables',
 	},
 	{
