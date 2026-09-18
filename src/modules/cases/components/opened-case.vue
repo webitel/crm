@@ -61,11 +61,6 @@
     </template>
 
   </wt-dual-panel>
-	<save-copy-popup
-		:shown="isSaveCopyPopupShown"
-		@close="closeSaveCopyPopup"
-		@save="saveCopy"
-	/>
 </template>
 
 <script
@@ -76,10 +71,7 @@ import { CasesAPI, UsersAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections } from '@webitel/ui-sdk/enums';
-import {
-	SaveCopyPopup,
-	useSaveCopyPopup,
-} from '@webitel/ui-sdk/modules/SaveCopyPopup';
+import { useSaveCopy } from '@webitel/ui-sdk/modules/SaveCopy';
 import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
@@ -273,20 +265,18 @@ const saveCase = async () => {
 	await toggleEditMode(false);
 };
 
-const { isSaveCopyPopupShown, saveOptions, closeSaveCopyPopup, saveCopy } =
-	useSaveCopyPopup((subject) =>
-		CasesAPI.add({
-			itemInstance: {
-				...itemInstance.value,
-				subject,
-				// GET-only paginated wrappers ({ items, next, page }); the create
-				// endpoint expects a plain array here, so a copy can't carry these
-				// over as-is. Comments/files aren't accepted on create at all.
-				links: undefined,
-				related: undefined,
-			},
-		}),
-	);
+const { saveOptions } = useSaveCopy(() =>
+	CasesAPI.add({
+		itemInstance: {
+			...itemInstance.value,
+			// GET-only paginated wrappers ({ items, next, page }); the create
+			// endpoint expects a plain array here, so a copy can't carry these
+			// over as-is. Comments/files aren't accepted on create at all.
+			links: undefined,
+			related: undefined,
+		},
+	}),
+);
 
 onUnmounted(() => {
 	toggleEditMode(false);
