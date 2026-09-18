@@ -27,7 +27,7 @@
           <wt-divider v-if="index" />
           <div class="timeline-task-info-postprocessing__field">
             <p class="typo-subtitle-1">{{ key }}:</p>
-            <p class="typo-body-1">{{ formatValue(value) }}</p>
+            <p class="timeline-task-info-postprocessing__field-value typo-body-1">{{ formatValue(value) }}</p>
           </div>
         </template>
       </div>
@@ -93,5 +93,10 @@ function formatValue(value: unknown) {
 .timeline-task-info-postprocessing__field {
   display: flex;
   gap: var(--spacing-xs);
+}
+
+.timeline-task-info-postprocessing__field-value {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 </style>
