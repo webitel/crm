@@ -97,6 +97,6 @@ function formatValue(value: unknown) {
 
 .timeline-task-info-postprocessing__field-value {
   min-width: 0;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 </style>
