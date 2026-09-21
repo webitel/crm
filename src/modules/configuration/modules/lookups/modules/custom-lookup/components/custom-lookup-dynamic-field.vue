@@ -30,7 +30,7 @@
     :label="label"
     :model-value="value"
     :regle-validation="regleValidation"
-    :search-method="hasLookupReadAccess ? loadLookupList(field.lookup) : undefined"
+    :search-method="lookupSearchMethod"
     data-key="id"
     :required="isRequired"
     :disabled="isDisabled"
@@ -41,7 +41,7 @@
     :label="label"
     :model-value="value"
     :regle-validation="regleValidation"
-    :search-method="hasLookupReadAccess ? loadLookupList(field.lookup) : undefined"
+    :search-method="lookupSearchMethod"
     data-key="id"
     :required="isRequired"
     :disabled="isDisabled"
@@ -135,6 +135,12 @@ const loadLookupList = ({
 		});
 	};
 };
+
+const lookupSearchMethod = computed(() =>
+	hasLookupReadAccess.value && props.field.lookup
+		? loadLookupList(props.field.lookup)
+		: undefined,
+);
 
 const selectElement = (
 	value: {
