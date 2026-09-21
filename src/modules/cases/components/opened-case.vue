@@ -75,7 +75,7 @@
 import { CasesAPI, UsersAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
-import { CrmSections } from '@webitel/ui-sdk/enums';
+import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import {
 	SaveCopyPopup,
 	useSaveCopyPopup,
@@ -109,6 +109,9 @@ getFields();
 const { isEditable, isReadOnly } = useCaseAccessState();
 
 const { hasUpdateAccess, hasSaveActionAccess } = useUserAccessControl();
+const { hasReadAccess: hasUsersReadAccess } = useUserAccessControl(
+	WtObject.User,
+);
 
 const casesCardStore = useCasesCardStore();
 const { itemId } = storeToRefs(casesCardStore);
@@ -211,7 +214,7 @@ const isCaseAssignable = computed(() => {
 });
 
 async function fetchUserContact(userId) {
-	if (!userId) {
+	if (!userId || !hasUsersReadAccess.value) {
 		userContact.value = {};
 		return;
 	}
