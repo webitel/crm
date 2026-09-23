@@ -195,6 +195,7 @@ const {
 	itemId: 'contacts',
 	baseHeadersConfig: contactBaseHeaders,
 	isDynamicHeader: isVariableHeader,
+	filterableColumns: false,
 });
 
 /*
