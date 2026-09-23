@@ -1,6 +1,7 @@
+import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
-export const headers = [
+export const headers: DatalistTableHeader[] = [
 	{
 		value: 'name',
 		show: true,
@@ -12,6 +13,7 @@ export const headers = [
 		value: 'subject',
 		show: true,
 		sort: SortSymbols.NONE,
+		field: 'related_case',
 	},
 	{
 		value: 'relationType',

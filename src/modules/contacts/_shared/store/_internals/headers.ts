@@ -1,5 +1,8 @@
 import type { DatalistTableHeader } from '@webitel/ui-datalist';
+import { FilterOption } from '@webitel/ui-datalist/filters';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
+
+import { filterConfigs } from '../../../configs/filtersOptions';
 
 export const headers: DatalistTableHeader[] = [
 	{
@@ -18,6 +21,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'user',
 		width: '100px',
+		filter: filterConfigs[FilterOption.HasUser],
 	},
 	{
 		value: 'groups',
@@ -25,6 +29,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'groups',
 		width: '170px',
+		filter: filterConfigs[FilterOption.ContactGroup],
 	},
 	{
 		value: 'labels',
@@ -34,6 +39,7 @@ export const headers: DatalistTableHeader[] = [
 		],
 		show: true,
 		field: 'labels',
+		filter: filterConfigs[FilterOption.ContactLabel],
 	},
 	{
 		value: 'managers',
@@ -44,6 +50,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'managers',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.ContactOwner],
 	},
 	{
 		value: 'about',

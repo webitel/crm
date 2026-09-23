@@ -20,6 +20,8 @@ export function useTypeExtensionHeaders({
 }) {
 	// Reactive reference for custom headers from API
 	const customHeaders = ref([]);
+	// raw API fields behind customHeaders: column filters build their filter configs from them
+	const customFields = ref([]);
 	const customHeadersLoaded = ref(false);
 
 	// Helper function to filter out duplicate headers based on field property
@@ -52,6 +54,8 @@ export function useTypeExtensionHeaders({
 		kind: field.kind,
 		field: field.id,
 		locale: field.name,
+		// the filters panel names extension filters by field id (createTypeExtensionFilterConfig)
+		filter: field.id,
 	});
 
 	// Helper function to transform API field objects into table header format
@@ -96,6 +100,7 @@ export function useTypeExtensionHeaders({
 
 		// Transform API fields to header format
 		const transformed = transformFieldsToHeaders(fields);
+		customFields.value = fields;
 		customHeaders.value = transformed;
 		customHeadersLoaded.value = true;
 
@@ -168,6 +173,7 @@ export function useTypeExtensionHeaders({
 
 	return {
 		customHeaders,
+		customFields,
 		customHeadersLoaded,
 		mergedHeaders,
 		loadCustomHeaders,

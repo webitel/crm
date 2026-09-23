@@ -77,19 +77,8 @@
         </header>
         <wt-loader v-show="isLoading" />
 
-        <wt-empty
-          v-if="showEmpty && isInitializedTableStore"
-          :image="emptyImage"
-          :headline="emptyHeadline"
-          :title="emptyTitle"
-          :text="emptyText"
-          :primary-action-text="emptyPrimaryActionText"
-          :disabled-primary-action="!hasCreateAccess"
-          @click:primary="add"
-        />
-
         <div
-          v-show="!isLoading && dataList?.length"
+          v-show="!isLoading"
           class="table-section__table-wrapper"
         >
           <wt-table
@@ -215,6 +204,23 @@
                 :value="getCustomValues((slotProps as { item: any }).item, header)"
               />
             </template>
+            <template #column-filter="scope">
+              <cases-column-filter
+                v-bind="scope"
+                :filterable-extension-fields="customFields"
+              />
+            </template>
+            <template #empty>
+              <wt-empty
+                :image="emptyImage"
+                :headline="emptyHeadline"
+                :title="emptyTitle"
+                :text="emptyText"
+                :primary-action-text="emptyPrimaryActionText"
+                :disabled-primary-action="!hasCreateAccess"
+                @click:primary="add"
+              />
+            </template>
             <template #expansion="{ item }">
               <case-details-table :item="item" />
             </template>
@@ -238,6 +244,7 @@
           </wt-table>
 
           <wt-pagination
+            v-show="dataList?.length"
             :next="next"
             :prev="page > 1"
             :size="size"
@@ -286,6 +293,7 @@ import { headers as casesBaseHeaders } from '../stores/datalist/_internals/heade
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 import CaseDetailsTable from './case-details-table.vue';
+import CasesColumnFilter from './cases-column-filter.vue';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
@@ -328,6 +336,7 @@ const {
 
 const {
 	customHeaders,
+	customFields,
 	mergedHeaders,
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
@@ -348,7 +357,6 @@ const {
 } = useDeleteConfirmationPopup();
 
 const {
-	showEmpty,
 	emptyCause,
 	image: emptyImage,
 	headline: emptyHeadline,
@@ -365,8 +373,6 @@ const {
 const showActionsPanel = ref(true);
 
 const isInitialEmpty = ref(false);
-
-const isInitializedTableStore = ref(false); // https://webitel.atlassian.net/browse/WTEL-7518?focusedCommentId=726522
 
 const displayIncludeActions = computed(() => {
 	const baseActions = [
@@ -497,7 +503,6 @@ onMounted(async () => {
 	});
 	// https://webitel.atlassian.net/browse/WTEL-9014
 	removeOutdatedCustomHeaders();
-	isInitializedTableStore.value = true;
 });
 
 watch(
