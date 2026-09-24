@@ -1,6 +1,7 @@
 <template>
   <wt-dual-panel
     v-if="!debouncedIsLoading"
+    :key="caseKey"
     :actions-panel="false"
     :hide-header="isReadOnly"
     class="opened-case"
@@ -100,6 +101,7 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../configuration/modules/customization/modules/custom-lookups/enums/FieldType';
 import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
@@ -111,6 +113,7 @@ import {
 	caseListParams,
 	caseNeighbors,
 	setCaseListParamsFromRoute,
+	useCaseNeighborNavigation,
 } from '../stores/_internals/caseListNavigation';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
@@ -284,9 +287,22 @@ async function assignCaseToMe() {
 	}
 }
 
-function goToPrev() {}
+const { goToPrev, goToNext } = useCaseNeighborNavigation(itemId);
 
-function goToNext() {}
+const route = useRoute();
+const caseKey = ref(route.params.id);
+
+watch(
+	() => route.params.id,
+	(id, prevId) => {
+		if (id && prevId && prevId !== 'new') {
+			caseKey.value = id;
+			initialize({
+				itemId: String(id),
+			});
+		}
+	},
+);
 
 const saveCase = async () => {
 	for (const { id, kind } of customFields.value) {
