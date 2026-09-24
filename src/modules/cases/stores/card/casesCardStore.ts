@@ -4,19 +4,26 @@ import { createCardStore } from '@webitel/ui-datalist/card';
 
 import { CasesCardNamespace } from '../../namespace';
 import { caseValidationSchema } from '../../validations/case.validations';
-import { caseListParams } from '../_internals/caseListNavigation';
-
-const getCaseWithListContext = (params: Parameters<typeof CasesAPI.get>[0]) =>
-	CasesAPI.get({
-		...params,
-		listParams: caseListParams.value ?? undefined,
-	});
+import {
+	caseListParams,
+	caseNeighbors,
+} from '../_internals/caseListNavigation';
 
 export const useCasesCardStore = createCardStore<WebitelCasesCase>({
 	namespace: CasesCardNamespace,
 	apiModule: {
 		...CasesAPI,
-		get: getCaseWithListContext,
+		get: async (params: Parameters<typeof CasesAPI.get>[0]) => {
+			const item = await CasesAPI.get({
+				...params,
+				listParams: caseListParams.value ?? undefined,
+			});
+			caseNeighbors.value = {
+				hasPrev: item.hasPrev ?? false,
+				hasNext: item.hasNext ?? false,
+			};
+			return item;
+		},
 	},
 	standardValidationSchema: caseValidationSchema as any,
 });

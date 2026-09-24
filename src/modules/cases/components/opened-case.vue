@@ -30,14 +30,18 @@
         <div class="opened-case__title">
           <wt-breadcrumb :path="path" />
 
-          <wt-icon-btn
-            icon="arrow-left"
-            @click="goToPrev"
-          />
-          <wt-icon-btn
-            icon="arrow-right"
-            @click="goToNext"
-          />
+          <template v-if="caseListParams">
+            <wt-icon-btn
+              :disabled="!caseNeighbors.hasPrev"
+              icon="arrow-left"
+              @click="goToPrev"
+            />
+            <wt-icon-btn
+              :disabled="!caseNeighbors.hasNext"
+              icon="arrow-right"
+              @click="goToNext"
+            />
+          </template>
         </div>
 
         <template #actions>
@@ -103,7 +107,11 @@ import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRe
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useCaseAccessState } from '../composables/useCaseAccessState';
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
-import { setCaseListParamsFromRoute } from '../stores/_internals/caseListNavigation';
+import {
+	caseListParams,
+	caseNeighbors,
+	setCaseListParamsFromRoute,
+} from '../stores/_internals/caseListNavigation';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import OpenedCaseGeneral from './opened-case-general.vue';

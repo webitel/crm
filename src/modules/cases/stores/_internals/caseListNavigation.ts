@@ -3,6 +3,11 @@ import { useRoute } from 'vue-router';
 
 export const caseListParams = ref<Record<string, unknown> | null>(null);
 
+export const caseNeighbors = ref({
+	hasPrev: false,
+	hasNext: false,
+});
+
 export const getCaseListQuery = (listParams: Record<string, unknown>) => ({
 	list: JSON.stringify(listParams),
 });
