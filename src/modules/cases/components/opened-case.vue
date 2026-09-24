@@ -27,7 +27,18 @@
             {{ t('reusable.save') }}
           </wt-button-select>
         </template>
-        <wt-breadcrumb :path="path" />
+        <div class="opened-case__title">
+          <wt-breadcrumb :path="path" />
+
+          <wt-icon-btn
+            icon="arrow-left"
+            @click="goToPrev"
+          />
+          <wt-icon-btn
+            icon="arrow-right"
+            @click="goToNext"
+          />
+        </div>
 
         <template #actions>
           <div class="opened-case__actions-wrapper">
@@ -262,6 +273,10 @@ async function assignCaseToMe() {
 	}
 }
 
+function goToPrev() {}
+
+function goToNext() {}
+
 const saveCase = async () => {
 	for (const { id, kind } of customFields.value) {
 		if (kind === FieldType.Boolean) {
@@ -298,6 +313,12 @@ onUnmounted(() => {
   scoped
 >
 .opened-case {
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
   &__actions-wrapper {
     display: flex;
     gap: var(--spacing-sm);
