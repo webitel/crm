@@ -103,6 +103,7 @@ import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRe
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useCaseAccessState } from '../composables/useCaseAccessState';
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
+import { setCaseListParamsFromRoute } from '../stores/_internals/caseListNavigation';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import OpenedCaseGeneral from './opened-case-general.vue';
@@ -110,6 +111,8 @@ import OpenedCaseTabs from './opened-case-tabs.vue';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
+
+setCaseListParamsFromRoute();
 
 const { fields: customFields, getFields } = useExtensionFields({
 	type: 'cases',

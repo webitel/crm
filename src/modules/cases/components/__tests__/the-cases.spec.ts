@@ -113,6 +113,9 @@ describe('TheCases', () => {
 			params: {
 				id: 'case-1',
 			},
+			query: {
+				list: expect.any(String),
+			},
 		});
 	});
 
