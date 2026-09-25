@@ -168,7 +168,10 @@ const createdAtHeader = computed(() =>
 	),
 );
 
-const currentSortOrder = computed(() => createdAtHeader.value?.sort);
+const currentSortOrder = computed(() => {
+	const sort = createdAtHeader.value?.sort;
+	return typeof sort === 'string' ? sort : null;
+});
 
 const toggleSort = () => {
 	updateSort(createdAtHeader.value, {

@@ -11,7 +11,8 @@
       <wt-single-select
         v-model:model-value="draft.reason"
         :label="t('cases.closureReason')"
-        :search-method="searchCloseReasons"
+        :disabled="!hasCloseReasonGroupsReadAccess"
+        :search-method="hasCloseReasonGroupsReadAccess && searchCloseReasons"
         :regle-validation="validationFields.reason"
         required
       />
@@ -50,10 +51,12 @@ import {
 	caseCloseSchema,
 } from '@webitel/api-services/validations';
 import { WtTextarea } from '@webitel/ui-sdk/components';
+import { WtObject } from '@webitel/ui-sdk/enums';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 import { useCaseServiceStore } from '../../service/stores/caseServiceStore';
 
 const createDraftData = (): CaseClose => ({
@@ -73,6 +76,9 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const { hasReadAccess: hasCloseReasonGroupsReadAccess } = useUserAccessControl(
+	WtObject.CloseReasonGroup,
+);
 
 const draft = ref<CaseClose>(createDraftData());
 
