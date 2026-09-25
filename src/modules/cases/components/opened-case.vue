@@ -294,12 +294,12 @@ const caseKey = ref(route.params.id);
 
 watch(
 	() => route.params.id,
-	(id, prevId) => {
+	async (id, prevId) => {
 		if (id && prevId && prevId !== 'new') {
-			caseKey.value = id;
-			initialize({
+			await initialize({
 				itemId: String(id),
 			});
+			caseKey.value = id;
 		}
 	},
 );
