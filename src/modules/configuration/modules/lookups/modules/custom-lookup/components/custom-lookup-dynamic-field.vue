@@ -70,9 +70,8 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 import { useUserinfoStore } from '../../../../../../userinfo/store/userinfoStore';
+import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 
 const props = defineProps<{
 	// loosely typed: rendered by 3 different parents (custom-lookup, cases,
