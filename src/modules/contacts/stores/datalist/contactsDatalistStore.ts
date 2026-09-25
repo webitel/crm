@@ -10,11 +10,15 @@ export const useContactsDatalistStore = createTableStore(
 	{
 		apiModule: {
 			...ContactsAPI,
-			getList: (params) =>
-				ContactsAPI.getList({
-					...params,
-					fields: mapContactListFields(params.fields),
-				}),
+			getList: (params) => {
+				const listParams = (params ?? {}) as {
+					fields?: string[];
+				};
+				return ContactsAPI.getList({
+					...listParams,
+					fields: mapContactListFields(listParams.fields),
+				});
+			},
 		},
 		headers,
 	},
