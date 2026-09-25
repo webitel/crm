@@ -12,16 +12,11 @@ export const getCaseListQuery = (listParams: Record<string, unknown>) => ({
 	list: JSON.stringify(listParams),
 });
 
-const parseCaseListQuery = (value: unknown) => {
-	if (typeof value !== 'string') return null;
-	try {
-		return JSON.parse(value);
-	} catch {
-		return null;
-	}
-};
-
 export const setCaseListParamsFromRoute = () => {
-	const route = useRoute();
-	caseListParams.value = parseCaseListQuery(route.query.list);
+	const { list } = useRoute().query;
+	try {
+		caseListParams.value = typeof list === 'string' ? JSON.parse(list) : null;
+	} catch {
+		caseListParams.value = null;
+	}
 };
