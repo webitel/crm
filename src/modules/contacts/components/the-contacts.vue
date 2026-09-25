@@ -5,7 +5,11 @@
     class="contacts"
   >
     <template #actions-panel>
-      <contacts-filters-panel @hide="showActionsPanel = false" />
+      <contacts-filters-panel
+        v-if="customHeadersLoaded"
+        :extension-fields="customFields"
+        @hide="showActionsPanel = false"
+      />
     </template>
 
     <template #main>
@@ -81,7 +85,10 @@
           </template>
 
           <template #column-filter="scope">
-            <contacts-column-filter v-bind="scope" />
+            <contacts-column-filter
+              v-bind="scope"
+              :filterable-extension-fields="customFields"
+            />
           </template>
 
           <template #actions="{ item }">
@@ -134,6 +141,7 @@ import { SearchMode } from '../../cases/enums/SearchMode';
 import { useTypeExtensionHeaders } from '../../configuration/modules/customization/composables/useTypeExtensionHeaders';
 import ContactsTable from '../_shared/components/contacts-table.vue';
 import { headers as contactBaseHeaders } from '../_shared/store/_internals/headers';
+import { contactCustomFields } from '../stores/_internals/contactCustomFields';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 import ContactPopup from './contact-popup.vue';
 import ContactsColumnFilter from './contacts-column-filter.vue';
@@ -186,6 +194,8 @@ const { updateVariableHeaders } = useTableVariableHeaders({
 
 const {
 	customHeaders,
+	customFields,
+	customHeadersLoaded,
 	mergedHeaders,
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
@@ -286,6 +296,7 @@ onMounted(async () => {
 	const instance = getCurrentInstance();
 
 	await loadCustomHeaders();
+	contactCustomFields.value = customFields.value;
 	await instance?.appContext.app.runWithContext(async () => {
 		await initialize();
 	});
