@@ -4,6 +4,7 @@
     :form-view="formView"
     :hide="hide"
     :filters-manager="filtersManager"
+    :has-read-access="userinfoStore.hasReadAccess"
     @add:filter="addFilter"
     @update:filter="updateFilter"
     @delete:filter="deleteFilter"
@@ -16,6 +17,7 @@ import { ColumnFilterComponent as ColumnFilter } from '@webitel/ui-datalist/filt
 import type { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtTable';
 import { storeToRefs } from 'pinia';
 
+import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 
 defineProps<{
@@ -24,6 +26,7 @@ defineProps<{
 	hide?: () => void;
 }>();
 
+const userinfoStore = useUserinfoStore();
 const tableStore = useContactsDatalistStore();
 const { filtersManager } = storeToRefs(tableStore);
 

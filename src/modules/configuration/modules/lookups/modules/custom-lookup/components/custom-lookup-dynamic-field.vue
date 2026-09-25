@@ -72,6 +72,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
+import { useUserinfoStore } from '../../../../../../userinfo/store/userinfoStore';
 
 const props = defineProps<{
 	// loosely typed: rendered by 3 different parents (custom-lookup, cases,
@@ -88,9 +89,11 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+const userinfoStore = useUserinfoStore();
 
 const { hasReadAccess: hasLookupReadAccess } = useLookupFieldReadAccess(
 	() => props.field,
+	userinfoStore.hasReadAccess,
 );
 
 const isDisabled = computed(() => props.disabled || !hasLookupReadAccess.value);

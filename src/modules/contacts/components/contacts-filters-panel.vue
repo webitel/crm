@@ -2,6 +2,7 @@
   <table-filters-panel
     :filters-manager="filtersManager"
     :filter-options="filtersOptions"
+    :has-read-access="userinfoStore.hasReadAccess"
     @filter:add="addFilter"
     @filter:update="updateFilter"
     @filter:delete="deleteFilter"
@@ -15,6 +16,7 @@ import { ContactsSearchMode } from '@webitel/api-services/api';
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 import { storeToRefs } from 'pinia';
 
+import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { filtersOptions } from '../configs/filtersOptions';
 import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistStore';
 
@@ -22,6 +24,7 @@ const emit = defineEmits<{
 	hide: [];
 }>();
 
+const userinfoStore = useUserinfoStore();
 const tableStore = useContactsDatalistStore();
 const { filtersManager } = storeToRefs(tableStore);
 const { addFilter, updateFilter, deleteFilter } = tableStore;
