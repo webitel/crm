@@ -108,12 +108,12 @@ import { useExtensionFields } from '../../configuration/modules/customization/mo
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useCaseAccessState } from '../composables/useCaseAccessState';
+import { useCaseNeighborNavigation } from '../composables/useCaseNeighborNavigation';
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
 import {
 	caseListParams,
 	caseNeighbors,
 	setCaseListParamsFromRoute,
-	useCaseNeighborNavigation,
 } from '../stores/_internals/caseListNavigation';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
