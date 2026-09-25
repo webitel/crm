@@ -282,7 +282,7 @@ import DisplayDynamicFieldExtension from '../../configuration/modules/customizat
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { CasesNamespace } from '../namespace';
-import { getCaseListQuery } from '../stores/_internals/caseListNavigation';
+import { buildCaseListQuery } from '../stores/_internals/caseListNavigation';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import { headers as casesBaseHeaders } from '../stores/datalist/_internals/headers';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
@@ -422,7 +422,7 @@ const caseListQuery = computed(() => {
 
 	return filters[SearchMode.Fts]
 		? {}
-		: getCaseListQuery({
+		: buildCaseListQuery({
 				...filters,
 				sort: sort.value,
 			});

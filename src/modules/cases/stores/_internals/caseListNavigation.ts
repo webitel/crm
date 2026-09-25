@@ -8,7 +8,7 @@ export const caseNeighbors = ref({
 	hasNext: false,
 });
 
-export const getCaseListQuery = (listParams: Record<string, unknown>) => ({
+export const buildCaseListQuery = (listParams: Record<string, unknown>) => ({
 	list: JSON.stringify(listParams),
 });
 
