@@ -4,6 +4,7 @@
     :form-view="formView"
     :hide="hide"
     :filters-manager="filtersManager"
+    :filterable-extension-fields="filterableExtensionFields"
     :has-read-access="userinfoStore.hasReadAccess"
     @add:filter="addFilter"
     @update:filter="updateFilter"
@@ -12,6 +13,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { DataField } from '@webitel/api-services/gen/models';
 import type { DatalistTableHeader } from '@webitel/ui-datalist';
 import { ColumnFilterComponent as ColumnFilter } from '@webitel/ui-datalist/filters';
 import type { WtTableHeader } from '@webitel/ui-sdk/src/components/wt-table/types/WtTable';
@@ -22,6 +24,7 @@ import { useContactsDatalistStore } from '../stores/datalist/contactsDatalistSto
 
 defineProps<{
 	header: WtTableHeader;
+	filterableExtensionFields?: DataField[];
 	formView?: boolean;
 	hide?: () => void;
 }>();
