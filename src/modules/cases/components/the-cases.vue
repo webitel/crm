@@ -100,10 +100,7 @@
             <template #name="{ item }">
               <wt-item-link
                 class="cases__link-name"
-                :link="{
-                  name: `${CrmSections.Cases}-card`,
-                  params: { id: item?.id },
-                }"
+                :link="getCaseLink(item?.id)"
               >
                 <div class="cases__link-content">
                   <color-component-wrapper
@@ -118,10 +115,7 @@
               </wt-item-link>
             </template>
             <template #subject="{ item }">
-              <wt-item-link :link="{
-                name: `${CrmSections.Cases}-card`,
-                params: { id: item?.id },
-              }">
+              <wt-item-link :link="getCaseLink(item?.id)">
                 {{ item.subject }}
               </wt-item-link>
             </template>
@@ -288,6 +282,7 @@ import DisplayDynamicFieldExtension from '../../configuration/modules/customizat
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { CasesNamespace } from '../namespace';
+import { buildCaseListQuery } from '../stores/_internals/caseListNavigation';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import { headers as casesBaseHeaders } from '../stores/datalist/_internals/headers';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
@@ -316,6 +311,7 @@ const {
 	size,
 	fields,
 	next,
+	sort,
 	headers,
 	shownHeaders,
 	filtersManager,
@@ -421,14 +417,30 @@ function add() {
 	});
 }
 
-function edit(item) {
-	setEditMode(true);
-	return router.push({
+const caseListQuery = computed(() => {
+	const filters = filtersManager.value.getAllValues();
+
+	return filters[SearchMode.Fts]
+		? {}
+		: buildCaseListQuery({
+				...filters,
+				sort: sort.value,
+			});
+});
+
+function getCaseLink(id) {
+	return {
 		name: `${CrmSections.Cases}-card`,
 		params: {
-			id: item.id,
+			id,
 		},
-	});
+		query: caseListQuery.value,
+	};
+}
+
+function edit(item) {
+	setEditMode(true);
+	return router.push(getCaseLink(item.id));
 }
 
 function deleteSelectedItems() {

@@ -1,6 +1,7 @@
 <template>
   <wt-dual-panel
     v-if="!debouncedIsLoading"
+    :key="caseKey"
     :actions-panel="false"
     :hide-header="isReadOnly"
     class="opened-case"
@@ -27,7 +28,22 @@
             {{ t('reusable.save') }}
           </wt-button-select>
         </template>
-        <wt-breadcrumb :path="path" />
+        <div class="opened-case__title">
+          <wt-breadcrumb :path="path" />
+
+          <template v-if="caseListParams">
+            <wt-icon-btn
+              :disabled="!caseNeighbors.hasPrev"
+              icon="arrow-left"
+              @click="goToPrev"
+            />
+            <wt-icon-btn
+              :disabled="!caseNeighbors.hasNext"
+              icon="arrow-right"
+              @click="goToNext"
+            />
+          </template>
+        </div>
 
         <template #actions>
           <div class="opened-case__actions-wrapper">
@@ -85,13 +101,20 @@ import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
 import { FieldType } from '../../configuration/modules/customization/modules/custom-lookups/enums/FieldType';
 import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { useCaseAccessState } from '../composables/useCaseAccessState';
+import { useCaseNeighborNavigation } from '../composables/useCaseNeighborNavigation';
 import { caseCustomFields } from '../stores/_internals/caseCustomFields';
+import {
+	caseListParams,
+	caseNeighbors,
+	setCaseListParamsFromRoute,
+} from '../stores/_internals/caseListNavigation';
 import { useCasesCardStore } from '../stores/card/casesCardStore';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
 import OpenedCaseGeneral from './opened-case-general.vue';
@@ -99,6 +122,8 @@ import OpenedCaseTabs from './opened-case-tabs.vue';
 
 const { t } = useI18n();
 const { handleError } = useErrorRedirectHandler();
+
+setCaseListParamsFromRoute();
 
 const { fields: customFields, getFields } = useExtensionFields({
 	type: 'cases',
@@ -265,6 +290,23 @@ async function assignCaseToMe() {
 	}
 }
 
+const { goToPrev, goToNext } = useCaseNeighborNavigation(itemId);
+
+const route = useRoute();
+const caseKey = ref(route.params.id);
+
+watch(
+	() => route.params.id,
+	async (id, prevId) => {
+		if (id && prevId && prevId !== 'new') {
+			await initialize({
+				itemId: String(id),
+			});
+			caseKey.value = id;
+		}
+	},
+);
+
 const saveCase = async () => {
 	for (const { id, kind } of customFields.value) {
 		if (kind === FieldType.Boolean) {
@@ -301,6 +343,12 @@ onUnmounted(() => {
   scoped
 >
 .opened-case {
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
   &__actions-wrapper {
     display: flex;
     gap: var(--spacing-sm);
