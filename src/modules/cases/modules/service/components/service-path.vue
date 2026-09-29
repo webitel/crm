@@ -5,6 +5,8 @@
 </template>
 
 <script setup lang="ts">
+import type { WebitelCasesService } from '@webitel/api-services/gen/models';
+import { findTreePath } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 
 const props = withDefaults(
@@ -46,34 +48,25 @@ function generateServicePath(service) {
  * @description Builds service path using catalog and service data.
  * @param {object} service - The service object.
  * @param {object} catalog - The catalog object containing service hierarchy.
- * @returns {string} The generated path including catalog name.
+ * @returns {string} The generated path including catalog name, e.g.
+ * "Catalog / Parent / Child"; a service the catalog does not contain is
+ * still named after the catalog.
  */
 function generateServicePathWithCatalog(service, catalog) {
 	if (!service || !catalog) return '';
 
-	const path = [];
-	let currentService = service;
+	const servicePath = findTreePath(
+		catalog.service as WebitelCasesService[],
+		(candidate) => candidate.id === service.id,
+		'service',
+	) ?? [
+		service,
+	];
 
-	// Find the parent service for the given service within a catalog.
-	function findParentService(currentService, parentServices) {
-		for (const parent of parentServices) {
-			if (parent.service?.some((child) => child.id === currentService.id))
-				return parent;
-			const foundParent =
-				parent.service && findParentService(currentService, parent.service);
-			if (foundParent) return foundParent;
-		}
-		return null;
-	}
-
-	// Builds the hierarchical path for the service within the catalog.
-	while (currentService) {
-		path.unshift(currentService.name);
-		currentService = findParentService(currentService, catalog.service || []);
-	}
-
-	path.unshift(catalog.name);
-	return path.join(' / ');
+	return [
+		catalog.name,
+		...servicePath.map(({ name }) => name),
+	].join(' / ');
 }
 
 // Computed path to show in template

@@ -1,4 +1,4 @@
-import { buildServiceCrumbs, findServicePath } from '../breadcrumbUtils';
+import { buildServiceCrumbs } from '../breadcrumbUtils';
 
 const catalog = {
 	service: [
@@ -20,23 +20,6 @@ const catalog = {
 		},
 	],
 };
-
-describe('findServicePath', () => {
-	it('returns the path from the catalog root down to the target service', () => {
-		expect(findServicePath('b', catalog)).toEqual([
-			catalog.service[0],
-			catalog.service[0].service[0],
-		]);
-	});
-
-	it('returns null when the target service does not exist', () => {
-		expect(findServicePath('missing', catalog)).toBeNull();
-	});
-
-	it('returns null when the catalog has no services', () => {
-		expect(findServicePath('a', {})).toBeNull();
-	});
-});
 
 describe('buildServiceCrumbs', () => {
 	it('returns an empty list for an empty path', () => {

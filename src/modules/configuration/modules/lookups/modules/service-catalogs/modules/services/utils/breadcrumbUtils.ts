@@ -14,33 +14,6 @@ interface ServiceCrumb {
 	};
 }
 
-export function findServicePath(
-	currentServiceId: string,
-	catalog: {
-		service?: WebitelCasesService[];
-	},
-	path: WebitelCasesService[] = [],
-): WebitelCasesService[] | null {
-	const services = catalog?.service;
-
-	if (!Array.isArray(services)) return null;
-
-	for (const service of services) {
-		const newPath = [
-			...path,
-			service,
-		];
-
-		if (service.id === currentServiceId) return newPath;
-
-		if (Array.isArray(service.service) && service.service.length > 0) {
-			const result = findServicePath(currentServiceId, service, newPath);
-			if (result) return result;
-		}
-	}
-	return null;
-}
-
 export function buildServiceCrumbs(
 	servicePath: WebitelCasesService[],
 	catalogId?: string,

@@ -1,11 +1,7 @@
 import type { WebitelCasesCatalog } from '@webitel/api-services/gen/models';
+import { findTreePath } from '@webitel/ui-sdk/utils';
 
-interface DisableStateService {
-	id?: string;
-	state?: boolean;
-	service?: DisableStateService[];
-}
-
+// A catalog item is disabled when its catalog is, or any service above it is.
 // https://webitel.atlassian.net/browse/WTEL-6057?focusedCommentId=655370
 export const checkDisableState = (
 	catalog: WebitelCasesCatalog,
@@ -13,44 +9,15 @@ export const checkDisableState = (
 		id?: string;
 	},
 ): boolean => {
-	const findServicePath = (
-		serviceList: DisableStateService[],
-		rootId?: string,
-	): DisableStateService[] | null => {
-		for (const service of serviceList) {
-			// we didn't need add to pah for target item
-			if (service.id === targetItem.id) {
-				return [];
-			}
-
-			// If we found path to root item we return it
-			if (service.id === rootId)
-				return [
-					service,
-				];
-
-			// Find path to root item in children
-			if (service.service) {
-				const path = findServicePath(service.service, rootId);
-				if (path)
-					return [
-						service,
-						...path,
-					];
-			}
-		}
-		return null;
-	};
-
 	if (!catalog.state) return true;
 
-	const services = catalog.service;
-
-	if (!Array.isArray(services)) return false;
-
-	const path = findServicePath(services, targetItem.id);
-
+	const path = findTreePath(
+		catalog.service,
+		(service) => service.id === targetItem.id,
+		'service',
+	);
 	if (!path) return false;
 
-	return path.some((service) => !service.state);
+	// the item's own state is not what disables it — only its ancestors'
+	return path.slice(0, -1).some((service) => !service.state);
 };
