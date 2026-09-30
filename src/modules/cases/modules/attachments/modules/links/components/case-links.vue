@@ -37,16 +37,14 @@
         <template>
         <wt-input-text
           :placeholder="t('cases.attachments.url')"
-          :model-value="linkDraft.url"
+          v-model="linkDraft.url"
           :regle-validation="linkValidation.$fields.url"
           class="link-form__input"
-          @update:model-value="linkDraft.url = $event"
         />
         <wt-input-text
           :placeholder="t('cases.attachments.linkText')"
-          :model-value="linkDraft.name"
+          v-model="linkDraft.name"
           class="link-form__input"
-          @update:model-value="linkDraft.name = $event"
         />
           </template>
       </wt-inline-add-panel>
