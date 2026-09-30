@@ -9,6 +9,7 @@ export function useTypeExtensionHeaders({
 	itemId,
 	baseHeadersConfig,
 	isDynamicHeader,
+	filterableColumns = true,
 }: {
 	headers;
 	updateShownHeaders;
@@ -17,6 +18,7 @@ export function useTypeExtensionHeaders({
 		field?: string;
 	}[];
 	isDynamicHeader?: (header: { field?: string; value?: string }) => boolean;
+	filterableColumns?: boolean;
 }) {
 	// Reactive reference for custom headers from API
 	const customHeaders = ref([]);
@@ -55,7 +57,11 @@ export function useTypeExtensionHeaders({
 		field: field.id,
 		locale: field.name,
 		// the filters panel names extension filters by field id (createTypeExtensionFilterConfig)
-		filter: field.id,
+		...(filterableColumns
+			? {
+					filter: field.id,
+				}
+			: {}),
 	});
 
 	// Helper function to transform API field objects into table header format
