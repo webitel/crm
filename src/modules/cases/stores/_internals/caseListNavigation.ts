@@ -1,22 +1,43 @@
 import { ref } from 'vue';
+import type { HistoryState } from 'vue-router';
 import { useRoute } from 'vue-router';
 
-export const caseListParams = ref<Record<string, unknown> | null>(null);
+export const CASE_LIST_PARAMS_STATE_KEY = 'caseListParams';
+
+export const caseListParams = ref<HistoryState | null>(null);
 
 export const caseNeighbors = ref({
 	hasPrev: false,
 	hasNext: false,
 });
 
-export const buildCaseListQuery = (listParams: Record<string, unknown>) => ({
+export const buildCaseListQuery = (listParams: HistoryState) => ({
 	list: JSON.stringify(listParams),
 });
 
-export const setCaseListParamsFromRoute = () => {
-	const { list } = useRoute().query;
+const parseListQuery = (list: unknown): HistoryState | null => {
 	try {
-		caseListParams.value = typeof list === 'string' ? JSON.parse(list) : null;
+		return typeof list === 'string' ? JSON.parse(list) : null;
 	} catch {
-		caseListParams.value = null;
+		return null;
+	}
+};
+
+export const setCaseListParamsFromRoute = () => {
+	const listParams =
+		parseListQuery(useRoute().query.list) ??
+		history.state?.[CASE_LIST_PARAMS_STATE_KEY] ??
+		null;
+
+	caseListParams.value = listParams;
+
+	if (listParams) {
+		history.replaceState(
+			{
+				...history.state,
+				[CASE_LIST_PARAMS_STATE_KEY]: listParams,
+			},
+			'',
+		);
 	}
 };
