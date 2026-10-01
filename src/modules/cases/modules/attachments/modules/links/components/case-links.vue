@@ -287,14 +287,14 @@ function startAddingLink() {
 	formState.isAdding = true;
 	formState.editingLink = null;
 	fillLinkDraft();
-	// linkValidation.$touch();
+	linkValidation.$touch();
 }
 
 function startEditingLink(link) {
 	formState.isAdding = false;
 	formState.editingLink = link;
 	fillLinkDraft(link);
-	// linkValidation.$touch();
+	linkValidation.$touch();
 }
 
 function resetForm() {
