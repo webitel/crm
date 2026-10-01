@@ -96,7 +96,6 @@ import {
 	SaveCopyPopup,
 	useSaveCopyPopup,
 } from '@webitel/ui-sdk/modules/SaveCopyPopup';
-import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
@@ -201,10 +200,6 @@ watch(
 
 const { close } = useClose(CrmSections.Cases);
 
-const { name: breadcrumbSubject } = useCachedItemInstanceName(itemInstance, {
-	namePath: 'subject',
-});
-
 const path = computed(() => {
 	const baseUrl = '/cases';
 
@@ -219,7 +214,7 @@ const path = computed(() => {
 		},
 		{
 			name: itemId.value
-				? `${itemInstance.value?.name} ${breadcrumbSubject.value}`
+				? `${itemInstance.value?.name} ${originalItemInstance.value?.subject}`
 				: t('reusable.new'),
 		},
 	];
