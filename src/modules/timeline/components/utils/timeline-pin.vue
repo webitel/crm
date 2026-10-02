@@ -97,7 +97,7 @@ const stateMap = {
 	[TimelinePinType.User]: {
 		component: 'wt-icon',
 		color: 'default',
-		icon: 'contacts',
+		icon: 'contacts--filled',
 	},
 	[TimelinePinType.Agent]: {
 		component: 'wt-icon',
@@ -136,7 +136,7 @@ const stateMap = {
 	[TimelinePinType.CallOutbound]: {
 		component: TimelineRoundedAction,
 		color: 'success',
-		icon: 'call-outbound',
+		icon: 'call',
 		arrow: true,
 		handler: handleClick,
 	},
