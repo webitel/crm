@@ -1,7 +1,7 @@
 import {
+	caseCloseFieldsChecks,
 	caseSchema,
 	filledLookupSchema,
-	refineCaseCloseFields,
 } from '@webitel/api-services/validations';
 import { computed } from 'vue';
 import { z } from 'zod';
@@ -57,5 +57,5 @@ export const caseValidationSchema = computed(() => {
 			.passthrough();
 	}
 
-	return schemaWithRequiredFields.superRefine(refineCaseCloseFields);
+	return schemaWithRequiredFields.check(...caseCloseFieldsChecks);
 });
