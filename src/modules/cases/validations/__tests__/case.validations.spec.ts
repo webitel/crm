@@ -221,6 +221,19 @@ describe('caseValidationSchema close fields', () => {
 		expect(Object.values(field.$errors).flat()).toHaveLength(1);
 	});
 
+	it('marks close fields invalid on a final case while other required fields are still empty', async () => {
+		const { valid, closeReason, closeResult } = await validateDraft({
+			subject: '',
+			statusCondition: filledFinalDraft.statusCondition,
+			closeReason: null,
+			closeResult: '',
+		});
+
+		expect(valid).toBe(false);
+		expect(closeReason.$error).toBe(true);
+		expect(closeResult.$error).toBe(true);
+	});
+
 	it('marks close result invalid on a final case when it is empty', async () => {
 		const { valid, closeResult } = await validateDraft({
 			...filledFinalDraft,
