@@ -11,6 +11,7 @@
       :is="state.component"
       :color="state.color"
       :icon="state.icon"
+      v-bind="state.attrs"
       class="timeline-pin-action"
       @click="!state.arrow && state.handler()"
     >
@@ -30,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
+import { ButtonVariant } from '@webitel/ui-sdk/enums';
 import { computed } from 'vue';
 
 import { TimelinePinType } from '../../enums/TimelinePinType.enum';
 import TimelineFlowLine from './timeline-flow-line.vue';
-import TimelineRoundedAction from './timeline-rounded-action.vue';
 
 const props = defineProps({
 	type: {
@@ -78,9 +79,17 @@ const handleClick = () => {
 
 if (props.first) handleClick();
 
+const roundedButtonOptions = {
+	component: 'wt-button',
+	attrs: {
+		rounded: true,
+		variant: ButtonVariant.OUTLINED,
+	},
+};
+
 const stateMap = {
 	[TimelinePinType.Close]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		icon: 'close',
 		color: 'secondary',
 		lineColor: 'default',
@@ -110,7 +119,7 @@ const stateMap = {
 		icon: 'bot',
 	},
 	[TimelinePinType.ChatInbound]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		color: 'chat',
 		icon: 'chat',
 		arrow: true,
@@ -127,21 +136,21 @@ const stateMap = {
 		icon: 'chat-end',
 	},
 	[TimelinePinType.CallInbound]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		color: 'primary',
 		icon: 'call-inbound',
 		arrow: true,
 		handler: handleClick,
 	},
 	[TimelinePinType.CallOutbound]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		color: 'success',
 		icon: 'call',
 		arrow: true,
 		handler: handleClick,
 	},
 	[TimelinePinType.CallMissed]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		color: 'error',
 		icon: 'call-missed',
 	},
@@ -151,12 +160,12 @@ const stateMap = {
 		icon: 'call-transfer',
 	},
 	[TimelinePinType.EmailInbound]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		color: 'email',
 		icon: 'email-inbound',
 	},
 	[TimelinePinType.EmailOutbound]: {
-		component: TimelineRoundedAction,
+		...roundedButtonOptions,
 		color: 'email',
 		icon: 'email-outbound',
 	},
