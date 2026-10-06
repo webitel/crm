@@ -10,7 +10,7 @@
       <wt-page-header
         :hide-primary="!isNew && !isEditable"
         :primary-action="saveCase"
-        :primary-disabled="!hasSaveActionAccess || disabledSave"
+        :primary-disabled="disabledSave"
         :primary-text="t('reusable.save')"
         :secondary-action="close"
       >
@@ -19,8 +19,8 @@
           #primary-action
         >
           <wt-button-select
-            :color="(!hasSaveActionAccess || disabledSave) && 'secondary'"
-            :disabled="!hasSaveActionAccess || disabledSave"
+            :color="disabledSave && 'secondary'"
+            :disabled="disabledSave"
             :options="saveOptions"
             @click="saveCase"
             @click:option="({ callback }) => callback()"
@@ -146,12 +146,12 @@ const {
 	debouncedIsLoading,
 	originalItemInstance,
 	isNew,
-	hasValidationErrors,
-	isAnyFieldEdited,
+	disabledSave,
 	validationFields,
 	save: saveCardStore,
 } = useCardComponent<WebitelCasesCase>({
 	useCardStore: useCasesCardStore,
+	hasSaveAccess: hasSaveActionAccess,
 	onLoadErrorHandler: handleError,
 });
 
@@ -170,10 +170,6 @@ watch(
 	{
 		immediate: true,
 	},
-);
-
-const disabledSave = computed(
-	() => hasValidationErrors.value || !isAnyFieldEdited.value,
 );
 
 const { setEditMode } = useCasesEditModeStore();

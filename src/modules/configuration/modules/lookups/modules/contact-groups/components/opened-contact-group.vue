@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="isPrimaryActionDisabled"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -94,24 +94,17 @@ const {
 
 	isNew,
 	saveText,
-	hasValidationErrors,
-	isAnyFieldEdited,
+	disabledSave,
 	validationFields,
 
 	save,
 } = useCardComponent<ContactsGroup>({
 	useCardStore: useContactGroupsCardStore,
+	hasSaveAccess: hasSaveActionAccess,
 	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.ContactGroups);
-
-const isPrimaryActionDisabled = computed(
-	() =>
-		!hasSaveActionAccess.value ||
-		!isAnyFieldEdited.value ||
-		hasValidationErrors.value,
-);
 
 const isDynamicGroup = computed(
 	() => modelValue.value?.type === ContactsGroupType.Dynamic,
