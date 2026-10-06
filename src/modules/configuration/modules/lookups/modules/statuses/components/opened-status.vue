@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="!hasSaveActionAccess || !isAnyFieldEdited || hasValidationErrors"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -67,13 +67,13 @@ const {
 
 	isNew,
 	saveText,
-	hasValidationErrors,
-	isAnyFieldEdited,
+	disabledSave,
 	validationFields,
 
 	save,
 } = useCardComponent<WebitelCasesStatus>({
 	useCardStore: useCaseStatusesCardStore,
+	hasSaveAccess: hasSaveActionAccess,
 	onLoadErrorHandler: handleError,
 });
 

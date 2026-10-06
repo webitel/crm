@@ -6,7 +6,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="isPrimaryDisabled"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -67,24 +67,17 @@ const {
 
 	isNew,
 	saveText,
-	hasValidationErrors,
-	isAnyFieldEdited,
+	disabledSave,
 	validationFields,
 
 	save: saveCard,
 } = useCardComponent<WebitelCasesService>({
 	useCardStore: useCaseServicesCardStore,
+	hasSaveAccess: hasSaveActionAccess,
 });
 
 const rootId = computed(() => route.params.rootId as string);
 const catalogId = computed(() => route.params.catalogId as string);
-
-const isPrimaryDisabled = computed(
-	() =>
-		!hasSaveActionAccess.value ||
-		!isAnyFieldEdited.value ||
-		hasValidationErrors.value,
-);
 
 const save = async () => {
 	modelValue.value.rootId = rootId.value;

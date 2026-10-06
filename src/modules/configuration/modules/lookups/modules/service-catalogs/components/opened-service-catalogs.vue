@@ -3,7 +3,7 @@
     <template #header>
       <wt-page-header
         :primary-action="save"
-        :primary-disabled="isPrimaryDisabled"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -62,24 +62,17 @@ const {
 
 	isNew,
 	saveText,
-	hasValidationErrors,
-	isAnyFieldEdited,
+	disabledSave,
 	validationFields,
 
 	save,
 } = useCardComponent<WebitelCasesCatalog>({
 	useCardStore: useCaseServiceCatalogsCardStore,
+	hasSaveAccess: hasSaveActionAccess,
 	onLoadErrorHandler: handleError,
 });
 
 const { close } = useClose(CrmSections.ServiceCatalogs);
-
-const isPrimaryDisabled = computed(
-	() =>
-		!hasSaveActionAccess.value ||
-		!isAnyFieldEdited.value ||
-		hasValidationErrors.value,
-);
 
 const path = computed(() => {
 	return [
