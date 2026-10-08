@@ -22,17 +22,14 @@
   <timeline-task-info-popup
     v-model:shown="showInfoPopup"
     :task="task"
-    :parent-id="parentId"
   />
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { TimelineEventType } from '../../enums/TimelineEventType';
-import { useTimelineStore } from '../../stores/timeline';
 import type {
 	TimelineActionOption,
 	TimelineTask,
@@ -44,10 +41,6 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
-
-const timelineStore = useTimelineStore();
-
-const { parentId } = storeToRefs(timelineStore);
 
 const showInfoPopup = ref(false);
 

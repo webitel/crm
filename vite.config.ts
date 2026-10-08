@@ -30,6 +30,7 @@ export default ({ mode }) => {
 				'clipboard-copy',
 				'deep-equal',
 				'deepmerge',
+				'webitel-sdk',
 			],
 		},
 		resolve: {

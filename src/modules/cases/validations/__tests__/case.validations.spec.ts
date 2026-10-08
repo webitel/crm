@@ -149,3 +149,118 @@ describe('caseValidationSchema required fields', () => {
 		expect(rootError).toBe(false);
 	});
 });
+
+describe('caseValidationSchema close fields', () => {
+	const filledFinalDraft = {
+		subject: 'a subject',
+		source: {
+			id: '1',
+			name: 'Phone',
+		},
+		reporter: {
+			id: '2',
+			name: 'Reporter',
+		},
+		service: {
+			id: '3',
+			name: 'Service',
+		},
+		priority: {
+			id: '4',
+			name: 'Priority',
+		},
+		statusCondition: {
+			id: '6',
+			name: 'Closed',
+			final: true,
+		},
+		closeReason: {
+			id: '7',
+			name: 'Resolved',
+		},
+		closeResult: 'a result',
+	};
+
+	const validateDraft = async (draft: Record<string, unknown>) => {
+		const state = ref(draft);
+		const scope = effectScope(true);
+		// biome-ignore lint/suspicious/noExplicitAny: regle's inferred state type
+		let r$: any;
+
+		scope.run(() => {
+			({ r$ } = useRegleSchema(state, caseValidationSchema.value, {}));
+		});
+
+		const { valid } = await r$.$validate();
+
+		return {
+			valid,
+			closeReason: r$.$fields.closeReason,
+			closeResult: r$.$fields.closeResult,
+		};
+	};
+
+	it('accepts a final case with close reason and result filled', async () => {
+		const { valid } = await validateDraft(filledFinalDraft);
+
+		expect(valid).toBe(true);
+	});
+
+	it.each([
+		{},
+		null,
+		undefined,
+	])('marks close reason invalid on a final case when it is %s', async (closeReason) => {
+		const { valid, closeReason: field } = await validateDraft({
+			...filledFinalDraft,
+			closeReason,
+		});
+
+		expect(valid).toBe(false);
+		expect(field.$error).toBe(true);
+		expect(Object.values(field.$errors).flat()).toHaveLength(1);
+	});
+
+	it('marks close fields invalid on a final case while other required fields are still empty', async () => {
+		const { valid, closeReason, closeResult } = await validateDraft({
+			subject: '',
+			statusCondition: filledFinalDraft.statusCondition,
+			closeReason: null,
+			closeResult: '',
+		});
+
+		expect(valid).toBe(false);
+		expect(closeReason.$error).toBe(true);
+		expect(closeResult.$error).toBe(true);
+	});
+
+	it('marks close result invalid on a final case when it is empty', async () => {
+		const { valid, closeResult } = await validateDraft({
+			...filledFinalDraft,
+			closeResult: '',
+		});
+
+		expect(valid).toBe(false);
+		expect(closeResult.$error).toBe(true);
+		expect(closeResult.$errors).toHaveLength(1);
+	});
+
+	it.each([
+		{},
+		null,
+		undefined,
+	])('does not require close reason on a non-final case when it is %s', async (closeReason) => {
+		const { valid } = await validateDraft({
+			...filledFinalDraft,
+			statusCondition: {
+				id: '5',
+				name: 'New',
+				initial: true,
+			},
+			closeReason,
+			closeResult: '',
+		});
+
+		expect(valid).toBe(true);
+	});
+});

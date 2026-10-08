@@ -1,6 +1,14 @@
 import type { DatalistTableHeader } from '@webitel/ui-datalist';
+import { FilterOption } from '@webitel/ui-datalist/filters';
 import { SortSymbols } from '@webitel/ui-sdk/src/scripts/sortQueryAdapters';
 
+import { filterConfigs } from '../../../configs/filtersOptions';
+
+/**
+ * `filter` — the filter shown in the column header popover (column filters, WTEL-7727),
+ * taken from `configs/filtersOptions.ts` so the header icon and the panel chip describe
+ * the same filter in the store. Columns without `filter` have no header filter.
+ */
 export const headers: DatalistTableHeader[] = [
 	{
 		value: 'name',
@@ -24,6 +32,7 @@ export const headers: DatalistTableHeader[] = [
 		field: 'priority',
 		sort: SortSymbols.NONE,
 		width: '100px',
+		filter: filterConfigs[FilterOption.CasePriority],
 	},
 	{
 		value: 'statusCondition',
@@ -31,6 +40,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'status_condition',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseStatus],
 	},
 	{
 		value: 'source',
@@ -39,6 +49,7 @@ export const headers: DatalistTableHeader[] = [
 		field: 'source',
 		sort: SortSymbols.NONE,
 		width: '150px',
+		filter: filterConfigs[FilterOption.CaseSource],
 	},
 	{
 		value: 'createdAt',
@@ -46,6 +57,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'created_at',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CreatedAt],
 	},
 	{
 		value: 'service',
@@ -53,6 +65,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'service',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseService],
 	},
 	{
 		value: 'createdBy',
@@ -60,6 +73,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'created_by',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseAuthor],
 	},
 	{
 		value: 'groupPerformers',
@@ -67,6 +81,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'group',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.ContactGroup],
 	},
 	{
 		value: 'assignee',
@@ -74,6 +89,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'assignee',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseAssignee],
 	},
 	{
 		value: 'reporter',
@@ -81,6 +97,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'reporter',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseReporter],
 	},
 	{
 		value: 'impacted',
@@ -88,6 +105,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'impacted',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseImpacted],
 	},
 	{
 		value: 'appliedSLA',
@@ -95,6 +113,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'sla',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseSla],
 	},
 	{
 		value: 'slaCondition',
@@ -102,6 +121,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'sla_condition',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseSlaCondition],
 	},
 	{
 		value: 'plannedReactionAt',
@@ -109,6 +129,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'planned_reaction_at',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseReactionTime],
 	},
 	{
 		value: 'plannedResolveAt',
@@ -116,6 +137,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'planned_resolve_at',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseResolutionTime],
 	},
 	{
 		value: 'actualReactionTime',
@@ -124,6 +146,7 @@ export const headers: DatalistTableHeader[] = [
 		field: 'reacted_at',
 		sort: SortSymbols.NONE,
 		width: '200px',
+		filter: filterConfigs[FilterOption.CaseActualReactionTime],
 	},
 	{
 		value: 'actualResolutionTime',
@@ -132,6 +155,7 @@ export const headers: DatalistTableHeader[] = [
 		field: 'resolved_at',
 		sort: SortSymbols.NONE,
 		width: '200px',
+		filter: filterConfigs[FilterOption.CaseActualResolutionTime],
 	},
 	{
 		value: 'closeReason',
@@ -139,6 +163,7 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'close_reason',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.CaseCloseReasonGroups],
 	},
 	{
 		value: 'closeResult',
@@ -153,5 +178,6 @@ export const headers: DatalistTableHeader[] = [
 		show: true,
 		field: 'rating',
 		sort: SortSymbols.NONE,
+		filter: filterConfigs[FilterOption.Rating],
 	},
 ];

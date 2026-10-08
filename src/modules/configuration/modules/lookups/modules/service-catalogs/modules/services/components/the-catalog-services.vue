@@ -152,6 +152,7 @@
 
 <script lang="ts" setup>
 import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
+import type { WebitelCasesService } from '@webitel/api-services/gen/models';
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
 import { WtEmpty } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
@@ -159,7 +160,7 @@ import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { displayText } from '@webitel/ui-sdk/utils';
+import { displayText, findTreePath } from '@webitel/ui-sdk/utils';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -169,7 +170,7 @@ import { useUserAccessControl } from '../../../../../../../../../app/composables
 import { checkDisableState } from '../../../utils/checkDisableState';
 import prettifyBreadcrumbName from '../../../utils/prettifyBreadcrumbName';
 import { useCaseServicesDatalistStore } from '../stores';
-import { buildServiceCrumbs, findServicePath } from '../utils/breadcrumbUtils';
+import { buildServiceCrumbs } from '../utils/breadcrumbUtils';
 
 const route = useRoute();
 const router = useRouter();
@@ -241,9 +242,10 @@ const path = computed(() => {
 
 	if (!catalog.value) return baseRoutes;
 
-	const servicePath = findServicePath(
-		route.params.rootId as string,
-		catalog.value,
+	const servicePath = findTreePath(
+		catalog.value.service as WebitelCasesService[],
+		(service) => service.id === route.params.rootId,
+		'service',
 	);
 
 	const routes = [

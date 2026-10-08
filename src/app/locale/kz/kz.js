@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Егжей-тегжейлі',
 		attributes: 'Атрибут | Атрибуттар',
+		attributeColumnSelect: {
+			title: 'Атрибут бағандарын таңдау',
+		},
 	},
 	timeline: {
 		timeline: 'Хронология',

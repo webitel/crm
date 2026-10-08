@@ -37,15 +37,16 @@
         <template>
         <wt-input-text
           :placeholder="t('cases.attachments.url')"
-          :model-value="formState.linkUrl"
+          :model-value="linkDraft.url"
+          :regle-validation="linkValidation.$fields.url"
           class="link-form__input"
-          @update:model-value="updateLinkUrl"
+          @update:model-value="linkDraft.url = $event"
         />
         <wt-input-text
           :placeholder="t('cases.attachments.linkText')"
-          :model-value="formState.linkText"
+          :model-value="linkDraft.name"
           class="link-form__input"
-          @update:model-value="updateLinkText"
+          @update:model-value="linkDraft.name = $event"
         />
           </template>
       </wt-inline-add-panel>
@@ -115,8 +116,10 @@
 </template>
 
 <script setup lang="ts">
+import { useRegleSchema } from '@regle/schemas';
 import { CaseLinksAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
+import { caseLinkSchema } from '@webitel/api-services/validations';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtInlineAddPanel } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
@@ -192,7 +195,7 @@ const isFormVisible = computed(() => {
 });
 
 const isFormAddActionDisabled = computed(() => {
-	return isUrlInvalid.value || isPendingItemsLoading.value;
+	return linkValidation.$invalid || isPendingItemsLoading.value;
 });
 
 const isTableVisible = computed(() => {
@@ -264,58 +267,47 @@ if (!isNew.value) {
 const formState = reactive({
 	isAdding: false,
 	editingLink: null,
-	linkText: '',
-	linkUrl: '',
 });
 
-function isValidUrl(value: string) {
-	try {
-		return [
-			'http:',
-			'https:',
-			'ftp:',
-		].includes(new URL(value).protocol);
-	} catch {
-		return false;
-	}
-}
+const linkDraft = reactive({
+	url: '',
+	name: '',
+});
 
-const isUrlInvalid = computed(
-	() => formState.isAdding && !isValidUrl(formState.linkUrl),
-);
+const { r$: linkValidation } = useRegleSchema(linkDraft, caseLinkSchema, {
+	autoDirty: true,
+});
+
+function fillLinkDraft({ url = '', name = '' } = {}) {
+	linkDraft.url = url;
+	linkDraft.name = name;
+}
 
 function startAddingLink() {
 	formState.isAdding = true;
 	formState.editingLink = null;
-	updateLinkText('');
-	updateLinkUrl('');
+	fillLinkDraft();
+	linkValidation.$touch();
 }
 
 function startEditingLink(link) {
 	formState.isAdding = false;
 	formState.editingLink = link;
-	updateLinkText(link.name);
-	updateLinkUrl(link.url);
+	fillLinkDraft(link);
+	linkValidation.$touch();
 }
 
 function resetForm() {
 	formState.isAdding = false;
 	formState.editingLink = null;
-	updateLinkText('');
-	updateLinkUrl('');
-}
-
-function updateLinkText(value) {
-	formState.linkText = value;
-}
-
-function updateLinkUrl(value) {
-	formState.linkUrl = value;
+	fillLinkDraft();
+	linkValidation.$reset();
 }
 
 async function submitLink() {
-	const { editingLink, linkText, linkUrl } = formState;
-	const name = linkText || linkUrl;
+	const { editingLink } = formState;
+	const { url: linkUrl } = linkDraft;
+	const name = linkDraft.name || linkUrl;
 
 	if (editingLink) {
 		// Handle editing existing or pending link
@@ -359,10 +351,10 @@ async function handleLinkDelete(link) {
 async function handleLinkEdit(link) {
 	await (isNew.value
 		? updatePendingItem(link, {
-				name: formState.linkText,
-				url: formState.linkUrl,
+				name: linkDraft.name,
+				url: linkDraft.url,
 			})
-		: updateExistingLink(link, formState.linkText, formState.linkUrl));
+		: updateExistingLink(link, linkDraft.name, linkDraft.url));
 }
 
 // Function to handle bulk deletion of links (pending or existing)

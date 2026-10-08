@@ -39,9 +39,11 @@
 <script setup lang="ts">
 import { TimelineAPI } from '@webitel/api-services/api';
 import type { ContactsGetTimelineItemInfoResponse } from '@webitel/api-services/gen/models';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useTimelineStore } from '../../stores/timeline';
 import type { TimelineTab, TimelineTask } from '../../types/timeline.types';
 import TimelineTaskInfoPostprocessing from './timeline-task-info-postprocessing.vue';
 import TimelineTaskInfoTranscription from './timeline-task-info-transcription.vue';
@@ -51,7 +53,6 @@ const props = withDefaults(
 	defineProps<{
 		shown?: boolean;
 		task: TimelineTask;
-		parentId: string;
 	}>(),
 	{
 		shown: false,
@@ -66,9 +67,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
+const timelineStore = useTimelineStore();
+
+const { parentId, mode } = storeToRefs(timelineStore);
+
 const tabs = computed<TimelineTab[]>(() => [
 	{
-		text: t('timeline.info.title', 2),
+		text: t('vocabulary.variables', 2),
 		value: 'variables',
 	},
 	{
@@ -132,7 +137,8 @@ async function loadInfo() {
 	isLoading.value = true;
 	try {
 		info.value = await TimelineAPI.getInfo({
-			parentId: props.parentId,
+			entity: mode.value,
+			parentId: parentId.value,
 			type: props.task.type,
 			id: props.task.id,
 		});

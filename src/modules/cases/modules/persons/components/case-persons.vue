@@ -197,7 +197,10 @@ watch(
 	],
 	([newServiceId, newGroup, newAssignee], [oldServiceId]) => {
 		// this if statement needed so when we enter old case we don't reset assignee and group
-		if ((oldServiceId && newServiceId !== oldServiceId) || isNew.value) {
+		if (
+			(oldServiceId && newServiceId && newServiceId !== oldServiceId) ||
+			isNew.value
+		) {
 			// @author @Lera24
 			// [WTEL-7279] (https://webitel.atlassian.net/browse/WTEL-7279)
 			if (modelValue.value.statusCondition?.final) return;

@@ -49,11 +49,15 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	defaultExpanded: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const slots = useSlots();
 
-const collapsed = ref(true);
+const collapsed = ref(!props.defaultExpanded);
 
 const toggle = () => {
 	collapsed.value = !collapsed.value;

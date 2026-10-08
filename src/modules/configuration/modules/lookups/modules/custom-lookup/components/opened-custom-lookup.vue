@@ -4,7 +4,7 @@
       <wt-page-header
         :hide-primary="!hasSaveActionAccess"
         :primary-action="save"
-        :primary-disabled="!isAnyFieldEdited || hasValidationErrors"
+        :primary-disabled="disabledSave"
         :primary-text="saveText"
         :secondary-action="close"
       >
@@ -78,12 +78,12 @@ const {
 	originalItemInstance,
 	isNew,
 	saveText,
-	hasValidationErrors,
-	isAnyFieldEdited,
+	disabledSave,
 	validationFields,
 	save,
 } = useCardComponent({
 	useCardStore: useCustomLookupCardStore,
+	hasSaveAccess: hasSaveActionAccess,
 	onLoadErrorHandler: handleError,
 	manualSetup: true,
 });

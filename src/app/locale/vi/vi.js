@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Chi tiết',
 		attributes: 'Thuộc tính | Thuộc tính',
+		attributeColumnSelect: {
+			title: 'Chọn cột thuộc tính',
+		},
 	},
 	timeline: {
 		timeline: 'Dòng thời gian',

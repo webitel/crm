@@ -54,6 +54,9 @@ export default {
 		},
 		details: 'Detalles',
 		attributes: 'Atributo | Atributos',
+		attributeColumnSelect: {
+			title: 'Seleccionar columnas de atributos',
+		},
 	},
 	timeline: {
 		timeline: 'Línea de tiempo',

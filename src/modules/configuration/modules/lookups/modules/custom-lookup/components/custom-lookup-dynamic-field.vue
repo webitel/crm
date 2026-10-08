@@ -5,7 +5,7 @@
     :regle-validation="regleValidation"
     :label="label"
     :required="isRequired"
-    :disabled="props.disabled"
+    :disabled="isDisabled"
     @update:model-value="setValue($event)"
   />
   <wt-input-number
@@ -14,7 +14,7 @@
     :regle-validation="regleValidation"
     :label="label"
     :required="isRequired"
-    :disabled="props.disabled"
+    :disabled="isDisabled"
     @update:model-value="setValue($event)"
   />
   <wt-switcher
@@ -22,7 +22,7 @@
     :label="label"
     :model-value="!!value"
     :required="isRequired"
-    :disabled="props.disabled"
+    :disabled="isDisabled"
     @update:model-value="setValue($event)"
   />
   <wt-single-select
@@ -30,10 +30,10 @@
     :label="label"
     :model-value="value"
     :regle-validation="regleValidation"
-    :search-method="hasLookupReadAccess && loadLookupList(field.lookup)"
+    :search-method="lookupSearchMethod"
     data-key="id"
     :required="isRequired"
-    :disabled="props.disabled || !hasLookupReadAccess"
+    :disabled="isDisabled"
     @update:model-value="selectElement"
   />
   <wt-multi-select
@@ -41,10 +41,10 @@
     :label="label"
     :model-value="value"
     :regle-validation="regleValidation"
-    :search-method="hasLookupReadAccess && loadLookupList(field.lookup)"
+    :search-method="lookupSearchMethod"
     data-key="id"
     :required="isRequired"
-    :disabled="props.disabled || !hasLookupReadAccess"
+    :disabled="isDisabled"
     @update:model-value="selectElements"
   />
   <wt-datepicker
@@ -56,7 +56,7 @@
 		clearable
     :timezone="timezone"
     :required="isRequired"
-    :disabled="props.disabled"
+    :disabled="isDisabled"
     @update:model-value="setValue($event)"
   />
 </template>
@@ -65,14 +65,12 @@
 import type { SuperCompatibleRegleFieldStatus } from '@regle/core';
 import { AdjunctTypeRecordsAPI } from '@webitel/api-services/api';
 import type { DataField } from '@webitel/api-services/gen/models';
-import { WtObject } from '@webitel/ui-sdk/enums';
+import { useLookupFieldReadAccess } from '@webitel/ui-sdk/modules/Userinfo';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
-import { getWtObjectByLookupPath } from '../../../../../../../app/scripts/getWtObjectByLookupPath';
+import { useUserinfoStore } from '../../../../../../userinfo/store/userinfoStore';
 import { FieldType } from '../../../../customization/modules/custom-lookups/enums/FieldType';
 
 const props = defineProps<{
@@ -90,11 +88,14 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+const userinfoStore = useUserinfoStore();
 
-// Check read access for lookup target object
-const { hasReadAccess: hasLookupReadAccess } = useUserAccessControl(
-	getWtObjectByLookupPath(props.field.lookup?.path) ?? WtObject.CustomLookup,
+const { hasReadAccess: hasLookupReadAccess } = useLookupFieldReadAccess(
+	() => props.field,
+	userinfoStore.hasReadAccess,
 );
+
+const isDisabled = computed(() => props.disabled || !hasLookupReadAccess.value);
 
 const value = computed(() => {
 	if (props.pathToField) {
@@ -136,6 +137,12 @@ const loadLookupList = ({
 		});
 	};
 };
+
+const lookupSearchMethod = computed(() =>
+	hasLookupReadAccess.value && props.field.lookup
+		? loadLookupList(props.field.lookup)
+		: undefined,
+);
 
 const selectElement = (
 	value: {

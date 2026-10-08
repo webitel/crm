@@ -6,7 +6,13 @@ import { headers } from './_internals/headers';
 
 export const createCaseCommentsComposableTableStore = () =>
 	createTableStore(CaseCommentsNamespace, {
-		apiModule: CommentsAPI,
+		apiModule: {
+			...CommentsAPI,
+			delete: (params) =>
+				CommentsAPI.delete({
+					etag: params.etag!,
+				}),
+		},
 		headers,
 		disablePersistence: true,
 		isAppendDataList: true,

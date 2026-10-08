@@ -59,10 +59,11 @@
 
 <script setup lang="ts">
 import { ServiceCatalogsAPI, ServicesAPI } from '@webitel/api-services/api';
-import { ComponentSize } from '@webitel/ui-sdk/enums';
+import { ComponentSize, WtObject } from '@webitel/ui-sdk/enums';
 import deepCopy from 'deep-copy';
 import { onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useUserAccessControl } from '../../../../../app/composables/useUserAccessControl';
 
 const props = defineProps<{
 	value: any;
@@ -80,6 +81,9 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const { hasReadAccess: hasServiceCatalogReadAccess } = useUserAccessControl(
+	WtObject.ServiceCatalog,
+);
 
 const selectedElement = ref(props.value?.id ?? null);
 const search = ref('');
@@ -107,6 +111,11 @@ function close() {
 const catalogData = ref([]);
 
 const loadCatalogs = async () => {
+	if (!hasServiceCatalogReadAccess.value) {
+		catalogData.value = [];
+		return;
+	}
+
 	try {
 		loading.value = true;
 

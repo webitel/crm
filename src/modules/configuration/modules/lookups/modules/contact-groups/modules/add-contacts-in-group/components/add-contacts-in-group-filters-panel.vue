@@ -2,6 +2,7 @@
   <table-filters-panel
     :filters-manager="filtersManager"
     :filter-options="filtersOptions"
+    :has-read-access="userinfoStore.hasReadAccess"
     static-mode
     @filter:add="addFilter"
     @filter:update="updateFilter"
@@ -13,6 +14,7 @@
 <script lang="ts" setup>
 import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-datalist/filters';
 
+import { useUserinfoStore } from '../../../../../../../../userinfo/store/userinfoStore';
 import { filtersOptions } from '../configs/filtersOptions';
 import { createAddContactsInGroupDatalistStore } from '../stores/datalist/addContactsInGroupDatalistStore';
 
@@ -20,6 +22,7 @@ const props = defineProps<{
 	useTableStore: ReturnType<typeof createAddContactsInGroupDatalistStore>;
 }>();
 
+const userinfoStore = useUserinfoStore();
 const tableStore = props.useTableStore();
 
 const { filtersManager } = tableStore;

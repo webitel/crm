@@ -77,19 +77,8 @@
         </header>
         <wt-loader v-show="isLoading" />
 
-        <wt-empty
-          v-if="showEmpty && isInitializedTableStore"
-          :image="emptyImage"
-          :headline="emptyHeadline"
-          :title="emptyTitle"
-          :text="emptyText"
-          :primary-action-text="emptyPrimaryActionText"
-          :disabled-primary-action="!hasCreateAccess"
-          @click:primary="add"
-        />
-
         <div
-          v-show="!isLoading && dataList?.length"
+          v-show="!isLoading"
           class="table-section__table-wrapper"
         >
           <wt-table
@@ -111,10 +100,7 @@
             <template #name="{ item }">
               <wt-item-link
                 class="cases__link-name"
-                :link="{
-                  name: `${CrmSections.Cases}-card`,
-                  params: { id: item?.id },
-                }"
+                :link="getCaseLink(item?.id)"
               >
                 <div class="cases__link-content">
                   <color-component-wrapper
@@ -129,10 +115,7 @@
               </wt-item-link>
             </template>
             <template #subject="{ item }">
-              <wt-item-link :link="{
-                name: `${CrmSections.Cases}-card`,
-                params: { id: item?.id },
-              }">
+              <wt-item-link :link="getCaseLink(item?.id)">
                 {{ item.subject }}
               </wt-item-link>
             </template>
@@ -215,6 +198,23 @@
                 :value="getCustomValues((slotProps as { item: any }).item, header)"
               />
             </template>
+            <template #column-filter="scope">
+              <cases-column-filter
+                v-bind="scope"
+                :filterable-extension-fields="customFields"
+              />
+            </template>
+            <template #empty>
+              <wt-empty
+                :image="emptyImage"
+                :headline="emptyHeadline"
+                :title="emptyTitle"
+                :text="emptyText"
+                :primary-action-text="emptyPrimaryActionText"
+                :disabled-primary-action="!hasCreateAccess"
+                @click:primary="add"
+              />
+            </template>
             <template #expansion="{ item }">
               <case-details-table :item="item" />
             </template>
@@ -238,6 +238,7 @@
           </wt-table>
 
           <wt-pagination
+            v-show="dataList?.length"
             :next="next"
             :prev="page > 1"
             :size="size"
@@ -276,15 +277,18 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import ColorComponentWrapper from '../../../app/components/_shared/color-component-wrapper.vue';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
+import { useTypeExtensionHeaders } from '../../configuration/modules/customization/composables/useTypeExtensionHeaders';
 import DisplayDynamicFieldExtension from '../../configuration/modules/customization/modules/field-extensions/components/display-dynamic-field-extension.vue';
-import { useCasesCustomHeaders } from '../composables/useCasesCustomHeaders';
 import { SearchMode } from '../enums/SearchMode';
 import ServicePath from '../modules/service/components/service-path.vue';
 import { CasesNamespace } from '../namespace';
+import { buildCaseListQuery } from '../stores/_internals/caseListNavigation';
 import { useCasesEditModeStore } from '../stores/card/casesEditModeStore';
+import { headers as casesBaseHeaders } from '../stores/datalist/_internals/headers';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
 import CaseDetailsTable from './case-details-table.vue';
+import CasesColumnFilter from './cases-column-filter.vue';
 import CasesExportTypePopup from './cases-export-type-popup.vue';
 import CasesFilterSearchBar from './cases-filter-search-bar.vue';
 import CasesFiltersPanel from './cases-filters-panel.vue';
@@ -307,6 +311,7 @@ const {
 	size,
 	fields,
 	next,
+	sort,
 	headers,
 	shownHeaders,
 	filtersManager,
@@ -327,13 +332,16 @@ const {
 
 const {
 	customHeaders,
+	customFields,
 	mergedHeaders,
 	loadCustomHeaders,
 	removeOutdatedCustomHeaders,
 	getCustomValues,
-} = useCasesCustomHeaders({
+} = useTypeExtensionHeaders({
 	headers,
 	updateShownHeaders,
+	itemId: 'cases',
+	baseHeadersConfig: casesBaseHeaders,
 });
 
 const {
@@ -345,7 +353,6 @@ const {
 } = useDeleteConfirmationPopup();
 
 const {
-	showEmpty,
 	emptyCause,
 	image: emptyImage,
 	headline: emptyHeadline,
@@ -362,8 +369,6 @@ const {
 const showActionsPanel = ref(true);
 
 const isInitialEmpty = ref(false);
-
-const isInitializedTableStore = ref(false); // https://webitel.atlassian.net/browse/WTEL-7518?focusedCommentId=726522
 
 const displayIncludeActions = computed(() => {
 	const baseActions = [
@@ -412,14 +417,30 @@ function add() {
 	});
 }
 
-function edit(item) {
-	setEditMode(true);
-	return router.push({
+const caseListQuery = computed(() => {
+	const filters = filtersManager.value.getAllValues();
+
+	return filters[SearchMode.Fts]
+		? {}
+		: buildCaseListQuery({
+				...filters,
+				sort: sort.value,
+			});
+});
+
+function getCaseLink(id) {
+	return {
 		name: `${CrmSections.Cases}-card`,
 		params: {
-			id: item.id,
+			id,
 		},
-	});
+		query: caseListQuery.value,
+	};
+}
+
+function edit(item) {
+	setEditMode(true);
+	return router.push(getCaseLink(item.id));
 }
 
 function deleteSelectedItems() {
@@ -494,7 +515,6 @@ onMounted(async () => {
 	});
 	// https://webitel.atlassian.net/browse/WTEL-9014
 	removeOutdatedCustomHeaders();
-	isInitializedTableStore.value = true;
 });
 
 watch(

@@ -6,6 +6,7 @@
     :preset-namespace="namespace"
     :use-presets-store="presetsStore"
     :filterable-extension-fields="extensionFields"
+    :has-read-access="userinfoStore.hasReadAccess"
     @filter:add="addFilter"
     @filter:update="updateFilter"
     @filter:delete="deleteFilter"
@@ -21,6 +22,7 @@ import { TableFiltersPanelComponent as TableFiltersPanel } from '@webitel/ui-dat
 import { storeToRefs } from 'pinia';
 
 import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
+import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
 import { filtersOptions } from '../configs/filtersOptions';
 import { useCasesDatalistStore } from '../stores/datalist/casesDatalistStore';
 import { useCaseFilterPresetsStore } from '../stores/presets/caseFilterPresetsStore';
@@ -35,6 +37,7 @@ const props = defineProps<{
 	presetsStore: typeof useCaseFilterPresetsStore;
 }>();
 
+const userinfoStore = useUserinfoStore();
 const { filtersManager } = storeToRefs(props.tableStore);
 
 const { addFilter, updateFilter, deleteFilter } = props.tableStore;

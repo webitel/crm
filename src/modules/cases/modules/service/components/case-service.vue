@@ -213,7 +213,7 @@ const serviceResponse = ref(null);
 watch(
 	() => modelValue.value?.service?.id,
 	async (newService) => {
-		if (!newService) return;
+		if (!newService || !hasServiceCatalogReadAccess.value) return;
 		serviceResponse.value = await ServicesAPI.get({
 			itemId: newService,
 		});

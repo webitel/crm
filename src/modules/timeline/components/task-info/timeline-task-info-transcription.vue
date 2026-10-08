@@ -4,6 +4,7 @@
       <wt-single-select
         v-model:model-value="activeTranscript"
         :show-clear="false"
+        :label="$t('vocabulary.file')"
         :options="activeTranscriptOptions"
         option-label="fileName"
         data-key="fileId"

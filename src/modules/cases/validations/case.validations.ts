@@ -1,4 +1,5 @@
 import {
+	caseCloseFieldsChecks,
 	caseSchema,
 	filledLookupSchema,
 } from '@webitel/api-services/validations';
@@ -13,14 +14,6 @@ const requiredParams = {
 	},
 };
 
-function requiredIssue(path) {
-	return {
-		code: 'custom',
-		path,
-		...requiredParams,
-	};
-}
-
 // build on caseSchema's own shapes instead of retyping them, so a change to
 // the library schema can't silently drift out of sync with these
 const requiredSubjectShape = caseSchema.shape.subject.refine(
@@ -31,25 +24,6 @@ const requiredSubjectShape = caseSchema.shape.subject.refine(
 const requiredStatusConditionShape = caseSchema.shape.statusCondition
 	.removeDefault()
 	.refine((value) => Boolean(value?.id), requiredParams);
-
-function applyCaseRequiredFields(schema): z.ZodType {
-	return schema.superRefine((data, ctx) => {
-		if (!data.statusCondition?.final) return;
-
-		if (!data.closeReason?.id)
-			ctx.addIssue(
-				requiredIssue([
-					'closeReason',
-				]),
-			);
-		if (!data.closeResult)
-			ctx.addIssue(
-				requiredIssue([
-					'closeResult',
-				]),
-			);
-	});
-}
 
 export const caseValidationSchema = computed(() => {
 	const requiredCustomShape = caseCustomFields.value.reduce((acc, field) => {
@@ -83,5 +57,5 @@ export const caseValidationSchema = computed(() => {
 			.passthrough();
 	}
 
-	return applyCaseRequiredFields(schemaWithRequiredFields);
+	return schemaWithRequiredFields.check(...caseCloseFieldsChecks);
 });

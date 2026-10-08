@@ -5,7 +5,14 @@ import { CaseLinksNamespace } from '../../namespace';
 import { headers } from './_internals/headers';
 
 export const useCaseLinksDatalistStore = createTableStore(CaseLinksNamespace, {
-	apiModule: CaseLinksAPI,
+	apiModule: {
+		...CaseLinksAPI,
+		delete: (params) =>
+			CaseLinksAPI.delete({
+				parentId: params.parentId!,
+				etag: params.etag!,
+			}),
+	},
 	headers,
 	disablePersistence: true,
 });

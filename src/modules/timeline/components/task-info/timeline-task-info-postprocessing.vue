@@ -4,41 +4,35 @@
     :image="emptyImage"
     :text="emptyText"
   />
-  <div
+  <wt-table
     v-else
     class="timeline-task-info-postprocessing wt-scrollbar"
+    :data="rows"
+    :headers="headers"
+    :selectable="false"
+    :grid-actions="false"
   >
-    <div
-      v-for="(entry, index) in postprocessing"
-      :key="index"
-      class="timeline-task-info-postprocessing__agent-wrapper"
-    >
-      <div class="timeline-task-info-postprocessing__agent-name typo-subtitle-1">
-        <wt-icon icon="agent" />
-        {{ entry.agent?.name }}
+    <template #key="{ item }">
+      <div class="timeline-task-info-postprocessing__label">
+        <wt-icon
+          v-if="item.isAgent"
+          icon="agent"
+        />
+        <p class="typo-body-1-bold">{{ item.label }}:</p>
       </div>
-      <div
-        class="timeline-task-info-postprocessing__changes"
-      >
-        <template
-          v-for="([key, value], index) in entryFields(entry.form)"
-          :key="key"
-        >
-          <wt-divider v-if="index" />
-          <div class="timeline-task-info-postprocessing__field">
-            <p class="typo-subtitle-1">{{ key }}:</p>
-            <p class="typo-body-1">{{ formatValue(value) }}</p>
-          </div>
-        </template>
-      </div>
-    </div>
-  </div>
+    </template>
+    <template #value="{ item }">
+      <p class="timeline-task-info-postprocessing__value typo-body-1">{{ item.value }}</p>
+    </template>
+  </wt-table>
 </template>
 
 <script setup lang="ts">
 import type { ContactsTimelinePostprocessingResult } from '@webitel/api-services/gen/models';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
-import { toRef } from 'vue';
+import upperFirst from 'lodash/upperFirst';
+import { computed, toRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = withDefaults(
 	defineProps<{
@@ -47,6 +41,32 @@ const props = withDefaults(
 	{
 		postprocessing: () => [],
 	},
+);
+
+const { t } = useI18n();
+
+const headers = computed(() => [
+	{
+		value: 'key',
+		text: t('vocabulary.keys'),
+	},
+	{
+		value: 'value',
+		text: t('vocabulary.values'),
+	},
+]);
+
+const rows = computed(() =>
+	props.postprocessing.flatMap((entry) => [
+		{
+			isAgent: true,
+			label: entry.agent?.name,
+		},
+		...entryFields(entry.form).map(([key, value]) => ({
+			label: upperFirst(key),
+			value: formatValue(value),
+		})),
+	]),
 );
 
 const {
@@ -69,29 +89,19 @@ function formatValue(value: unknown) {
 
 <style scoped>
 .timeline-task-info-postprocessing {
-  display: flex;
   flex: 1;
-  flex-direction: column;
-  gap: var(--spacing-sm);
   min-height: 0;
-  overflow: auto;
 }
 
-.timeline-task-info-postprocessing__agent-name {
+.timeline-task-info-postprocessing__label {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-xs);
+  overflow-wrap: anywhere;
 }
 
-.timeline-task-info-postprocessing__changes {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.timeline-task-info-postprocessing__field {
-  display: flex;
-  gap: var(--spacing-xs);
+.timeline-task-info-postprocessing__value {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 </style>
