@@ -86,9 +86,8 @@
 import { CasesAPI, UsersAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
-import { useSaveCopy } from '@webitel/ui-sdk/modules/SaveCopy';
-import { useCachedItemInstanceName } from '@webitel/ui-sdk/src/composables/useCachedItemInstanceName/useCachedItemInstanceName';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
+import { useSaveCopy } from '@webitel/ui-sdk/modules/SaveCopy';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
