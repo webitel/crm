@@ -8,7 +8,7 @@
       />
       <timeline-row-initiator
         :text="initiator"
-        :type="isInitiatorBot ? TimelineInitiatorType.Bot : TimelineInitiatorType.Contact"
+        :type="initiatorType"
       />
     </header>
 
@@ -68,8 +68,10 @@ const initiator = computed(() => {
 	return props.point.peer?.name || '';
 });
 
-const isInitiatorBot = computed(() => {
-	return props.point.peer?.type === 'bot';
+const initiatorType = computed(() => {
+	if (props.point.peer?.type === 'user') return TimelineInitiatorType.Agent;
+	if (props.point.peer?.type === 'bot') return TimelineInitiatorType.Bot;
+	return TimelineInitiatorType.Contact;
 });
 
 const showFooter = computed(() => {
