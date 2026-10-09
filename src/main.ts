@@ -13,6 +13,7 @@ import {
 	options as WebitelUiOptions,
 } from './app/plugins/webitel/ui-sdk';
 import { initRouter, router } from './app/router';
+import { reloadOnStaleChunk } from './app/scripts/reloadOnStaleChunk';
 import App from './app.vue';
 import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
@@ -41,6 +42,8 @@ const fetchConfig = async () => {
 	const response = await fetch(`${import.meta.env.BASE_URL}/config.json`);
 	return response.json();
 };
+
+reloadOnStaleChunk();
 
 const pinia = createPinia();
 
