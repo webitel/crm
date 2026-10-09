@@ -325,4 +325,8 @@ export default {
 			[SearchMode.Fts]: 'Búsqueda de texto completo',
 		},
 	},
+	errorNotifications: {
+		chunkLoadError:
+			'No se pudo cargar la página. Recargue la página o inténtelo más tarde.',
+	},
 };

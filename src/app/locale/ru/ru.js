@@ -318,4 +318,8 @@ export default {
 			[SearchMode.Fts]: 'Полнотекстовый поиск',
 		},
 	},
+	errorNotifications: {
+		chunkLoadError:
+			'Не удалось загрузить страницу. Обновите страницу или попробуйте позже.',
+	},
 };

@@ -318,4 +318,8 @@ export default {
 			[SearchMode.Fts]: 'Толық мәтінді іздеу',
 		},
 	},
+	errorNotifications: {
+		chunkLoadError:
+			'Бетті жүктеу мүмкін болмады. Бетті жаңартыңыз немесе кейінірек қайталап көріңіз.',
+	},
 };
