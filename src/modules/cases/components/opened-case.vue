@@ -94,7 +94,6 @@ import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { FieldType } from '../../configuration/modules/customization/modules/custom-lookups/enums/FieldType';
 import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
@@ -291,12 +290,6 @@ watch(
 );
 
 const saveCase = async () => {
-	for (const { id, kind } of customFields.value) {
-		if (kind === FieldType.Boolean) {
-			itemInstance.value.custom[id] ??= false;
-		}
-	}
-
 	await saveCardStore();
 	await toggleEditMode(false);
 };
