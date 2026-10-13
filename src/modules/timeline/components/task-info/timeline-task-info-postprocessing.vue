@@ -97,6 +97,7 @@ function formatValue(value: unknown) {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  word-break: normal;
   overflow-wrap: break-word;
 }
 
