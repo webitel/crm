@@ -1,5 +1,5 @@
 <template>
-  <timeline-row>
+  <timeline-row :default-expanded="detailed">
     <template #before-content>
       <timeline-row-info
         :timestamp="createdAt"

@@ -97,7 +97,8 @@ function formatValue(value: unknown) {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  overflow-wrap: anywhere;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .timeline-task-info-postprocessing__value {

@@ -77,11 +77,6 @@
     </template>
 
   </wt-dual-panel>
-	<save-copy-popup
-		:shown="isSaveCopyPopupShown"
-		@close="closeSaveCopyPopup"
-		@save="saveCopy"
-	/>
 </template>
 
 <script
@@ -92,17 +87,13 @@ import { CasesAPI, UsersAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
-import {
-	SaveCopyPopup,
-	useSaveCopyPopup,
-} from '@webitel/ui-sdk/modules/SaveCopyPopup';
+import { useSaveCopy } from '@webitel/ui-sdk/modules/SaveCopy';
 import { useClose } from '@webitel/ui-sdk/src/composables/useClose/useClose';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useUserAccessControl } from '../../../app/composables/useUserAccessControl';
-import { FieldType } from '../../configuration/modules/customization/modules/custom-lookups/enums/FieldType';
 import { useExtensionFields } from '../../configuration/modules/customization/modules/field-extensions/composables/useExtensionFields';
 import { useErrorRedirectHandler } from '../../error-pages/composable/useErrorRedirectHandler';
 import { useUserinfoStore } from '../../userinfo/store/userinfoStore';
@@ -299,30 +290,22 @@ watch(
 );
 
 const saveCase = async () => {
-	for (const { id, kind } of customFields.value) {
-		if (kind === FieldType.Boolean) {
-			itemInstance.value.custom[id] ??= false;
-		}
-	}
-
 	await saveCardStore();
 	await toggleEditMode(false);
 };
 
-const { isSaveCopyPopupShown, saveOptions, closeSaveCopyPopup, saveCopy } =
-	useSaveCopyPopup((subject) =>
-		CasesAPI.add({
-			itemInstance: {
-				...itemInstance.value,
-				subject,
-				// GET-only paginated wrappers ({ items, next, page }); the create
-				// endpoint expects a plain array here, so a copy can't carry these
-				// over as-is. Comments/files aren't accepted on create at all.
-				links: undefined,
-				related: undefined,
-			},
-		}),
-	);
+const { saveOptions } = useSaveCopy(() =>
+	CasesAPI.add({
+		itemInstance: {
+			...itemInstance.value,
+			// GET-only paginated wrappers ({ items, next, page }); the create
+			// endpoint expects a plain array here, so a copy can't carry these
+			// over as-is. Comments/files aren't accepted on create at all.
+			links: undefined,
+			related: undefined,
+		},
+	}),
+);
 
 onUnmounted(() => {
 	toggleEditMode(false);
