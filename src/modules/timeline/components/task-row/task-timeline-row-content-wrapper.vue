@@ -35,15 +35,15 @@ const senderTypeClass = computed(() => {
   gap: var(--spacing-sm);
 
   &--agent {
-    background-color: var(--grey-lighten-5);
+    background-color: var(--wt-crm-components-timeline-colors-operator-background);
   }
 
   &--contact {
-    background-color: var(--yellow-lighten-5);
+    background-color: var(--wt-crm-components-timeline-colors-client-background);
   }
 
   &--bot {
-    background-color: var(--info-surface-color);
+    background-color: var(--wt-crm-components-timeline-colors-bot-background);
   }
 }
 </style>
