@@ -1,5 +1,6 @@
 import './app/assets/icons/sprite';
 import './app/css/main.css';
+import '@webitel/styleguide/crm';
 
 import { setConfig as setApiServicesConfig } from '@webitel/api-services';
 import { eventBus } from '@webitel/ui-sdk/scripts';

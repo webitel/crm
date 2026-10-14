@@ -31,7 +31,9 @@
     </template>
 
     <template #content>
-      <task-timeline-row-content-wrapper>
+      <task-timeline-row-content-wrapper
+        :sender-type="senderType"
+      >
         <chat-point-row-content
           :point="point"
         />
@@ -48,6 +50,7 @@ import TimelinePin from '../../../../components/utils/timeline-pin.vue';
 import TimelineRow from '../../../../components/utils/timeline-row.vue';
 import TimelineRowInfo from '../../../../components/utils/timeline-row-info.vue';
 import TimelineTaskStatus from '../../../../components/utils/timeline-task-status.vue';
+import { TimelineInitiatorType } from '../../../../enums/TimelineInitiatorType.enum';
 import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
 import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
 import ChatPointRowContent from './chat-point-timeline-row-content.vue';
@@ -63,9 +66,17 @@ const props = defineProps({
 	},
 });
 
+const senderType = computed(() => {
+	if (props.point.peer?.type === 'user') return TimelineInitiatorType.Agent;
+	if (props.point.peer?.type === 'bot') return TimelineInitiatorType.Bot;
+	return TimelineInitiatorType.Contact;
+});
+
 const pinType = computed(() => {
-	if (props.point.peer?.type === 'user') return TimelinePinType.Agent;
-	if (props.point.peer?.type === 'bot') return TimelinePinType.Bot;
+	if (senderType.value === TimelineInitiatorType.Agent)
+		return TimelinePinType.Agent;
+	if (senderType.value === TimelineInitiatorType.Bot)
+		return TimelinePinType.Bot;
 	return TimelinePinType.User;
 });
 
