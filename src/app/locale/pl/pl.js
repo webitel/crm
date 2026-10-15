@@ -326,8 +326,4 @@ export default {
 			[SearchMode.Fts]: 'Wyszukiwanie pełnotekstowe',
 		},
 	},
-	errorNotifications: {
-		chunkLoadError:
-			'Nie udało się załadować strony. Odśwież stronę lub spróbuj ponownie później.',
-	},
 };

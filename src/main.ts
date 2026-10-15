@@ -3,7 +3,7 @@ import './app/css/main.css';
 import '@webitel/styleguide/crm';
 
 import { setConfig as setApiServicesConfig } from '@webitel/api-services';
-import { eventBus } from '@webitel/ui-sdk/scripts';
+import { eventBus, reloadOnStaleChunk } from '@webitel/ui-sdk/scripts';
 import { configureZod } from '@webitel/ui-sdk/validations';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
@@ -14,7 +14,6 @@ import {
 	options as WebitelUiOptions,
 } from './app/plugins/webitel/ui-sdk';
 import { initRouter, router } from './app/router';
-import { reloadOnStaleChunk } from './app/scripts/reloadOnStaleChunk';
 import App from './app.vue';
 import { useUserinfoStore } from './modules/userinfo/store/userinfoStore';
 
