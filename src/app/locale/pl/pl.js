@@ -88,6 +88,10 @@ export default {
 			cc: 'DW',
 			subject: 'Temat',
 		},
+		chats: {
+			newestFirst: 'Najpierw najnowsze',
+			oldestFirst: 'Najpierw najstarsze',
+		},
 	},
 	startPage: {
 		[CrmSections.Contacts]: {

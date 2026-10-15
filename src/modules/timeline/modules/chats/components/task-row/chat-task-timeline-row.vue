@@ -26,7 +26,7 @@
       />
     </template>
 
-    <template #content>
+    <template #content="{ collapsed }">
       <task-timeline-row-content-wrapper>
         <div class="chat-task-timeline-row-info">
           <timeline-row-initiator
@@ -50,9 +50,12 @@
           />
         </div>
 
-        <timeline-action-menu
-          :task="task"
-        />
+        <div class="chat-task-timeline-row-actions">
+          <chat-timeline-sort-button v-if="!collapsed" />
+          <timeline-action-menu
+            :task="task"
+          />
+        </div>
       </task-timeline-row-content-wrapper>
     </template>
 
@@ -82,7 +85,9 @@ import { TimelineInitiatorType } from '../../../../enums/TimelineInitiatorType.e
 import { TimelinePinType } from '../../../../enums/TimelinePinType.enum';
 import { TimelineTaskKind } from '../../../../enums/TimelineTaskKind.enum';
 import { TimelineTaskStatus as TimelineTaskStatusEnum } from '../../../../enums/TimelineTaskStatus.enum';
+import { useChatTimelineSort } from '../../composables/useChatTimelineSort';
 import ChatPointsRowSection from '../point-row/chat-points-timeline-row-section.vue';
+import ChatTimelineSortButton from './chat-timeline-sort-button.vue';
 
 const props = defineProps({
 	task: {
@@ -98,6 +103,9 @@ const props = defineProps({
 		default: false,
 	},
 });
+
+const { load } = useChatTimelineSort();
+load();
 
 const {
 	createdAt,
@@ -147,5 +155,11 @@ const hiddenParticipants = computed(() =>
   align-items: center;
   gap: var(--spacing-sm);
   flex: 1;
+}
+
+.chat-task-timeline-row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2xs);
 }
 </style>

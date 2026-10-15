@@ -88,6 +88,10 @@ export default {
 			cc: 'CC',
 			subject: 'Mavzu',
 		},
+		chats: {
+			newestFirst: 'Avval yangilari',
+			oldestFirst: 'Avval eskilari',
+		},
 	},
 	startPage: {
 		[CrmSections.Contacts]: {

@@ -88,6 +88,10 @@ export default {
 			cc: 'CC',
 			subject: 'Тема',
 		},
+		chats: {
+			newestFirst: 'Сначала новые',
+			oldestFirst: 'Сначала старые',
+		},
 	},
 	startPage: {
 		[CrmSections.Contacts]: {

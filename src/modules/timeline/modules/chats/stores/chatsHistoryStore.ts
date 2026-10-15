@@ -14,7 +14,7 @@ async function getList({ mode, parentId, taskId }) {
 		taskId,
 	});
 	return {
-		items: items.reverse(),
+		items,
 	};
 }
 
