@@ -31,6 +31,7 @@ import {
 	EngineCallFileType,
 } from '@webitel/api-services/gen/models';
 import type { eventBus as EventBus } from '@webitel/ui-sdk/scripts';
+import { getMediaUrlAuth } from '@webitel/ui-sdk/scripts';
 import {
 	assumeVidstackSupportedAudioType,
 	assumeVidstackSupportedVideoType,
@@ -113,7 +114,7 @@ const handleOptionSelect = ({ option: file }: { option: EngineCallFile }) => {
 		selectedRecording.value = file;
 	}
 	eventBus.$emit('media-source-handler', {
-		url: getCallMediaUrl(file.id),
+		url: getCallMediaUrl(file.id, getMediaUrlAuth()),
 		file,
 	});
 };
