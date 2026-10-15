@@ -325,8 +325,4 @@ export default {
 			[SearchMode.Fts]: 'Повнотекстовий пошук',
 		},
 	},
-	errorNotifications: {
-		chunkLoadError:
-			'Не вдалося завантажити сторінку. Оновіть сторінку або спробуйте пізніше.',
-	},
 };

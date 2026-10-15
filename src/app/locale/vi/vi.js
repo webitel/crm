@@ -325,8 +325,4 @@ export default {
 			[SearchMode.Fts]: 'Tìm kiếm toàn văn',
 		},
 	},
-	errorNotifications: {
-		chunkLoadError:
-			'Không thể tải trang. Vui lòng tải lại trang hoặc thử lại sau.',
-	},
 };

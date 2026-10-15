@@ -317,8 +317,4 @@ export default {
 			[SearchMode.Fts]: "To'liq matn qidirish",
 		},
 	},
-	errorNotifications: {
-		chunkLoadError:
-			'Sahifani yuklab bo‘lmadi. Sahifani yangilang yoki keyinroq urinib ko‘ring.',
-	},
 };

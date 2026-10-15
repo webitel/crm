@@ -324,8 +324,4 @@ export default {
 			[SearchMode.Fts]: 'Căutare în text complet',
 		},
 	},
-	errorNotifications: {
-		chunkLoadError:
-			'Pagina nu a putut fi încărcată. Reîncărcați pagina sau încercați mai târziu.',
-	},
 };

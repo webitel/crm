@@ -318,8 +318,4 @@ export default {
 			[SearchMode.Fts]: 'Full text search',
 		},
 	},
-	errorNotifications: {
-		chunkLoadError:
-			'Failed to load the page. Reload the page or try again later.',
-	},
 };
