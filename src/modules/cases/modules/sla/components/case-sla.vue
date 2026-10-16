@@ -79,14 +79,24 @@ watch(
 			return;
 		}
 
+		// [Claude] the case already has this SLA (e.g. the service store was just
+		// filled on load), so don't rewrite it and mark the card as edited
+		if (modelValue.value.sla?.id === newSlaId) return;
+
 		modelValue.value.sla = serviceSLA.value;
 		await updateSlaCondition(newSlaId, modelValue.value.priority?.id);
 	},
 );
 
 watch(
-	() => modelValue.value.priority?.id,
-	async (newPriorityId) => {
+	[
+		() => modelValue.value,
+		() => modelValue.value.priority?.id,
+	],
+	async ([draft, newPriorityId], [prevDraft]) => {
+		// [Claude] a new draft object means the case was (re)loaded, not that
+		// the priority was changed; the loaded case already has its slaCondition
+		if (draft !== prevDraft) return;
 		await updateSlaCondition(serviceSLA.value?.id, newPriorityId);
 	},
 );
