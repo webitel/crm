@@ -167,14 +167,22 @@ async function addServiceToStore(serviceCatalogData) {
 	// Store catalog data for the service-path component
 	catalogData.value = catalog;
 
-	modelValue.value.closeReasonGroup = {
-		id: catalog.closeReasonGroup.id,
-	};
+	// [Claude] write to the draft only on an actual change: an in-place write
+	// marks the card as edited, which enabled Save right after the case loaded.
+	// closeReasonGroup is immutable and only sent on create (the update body
+	// has no such field, and the case GET doesn't return it), so new cases only
+	if (isNew.value) {
+		modelValue.value.closeReasonGroup = {
+			id: catalog.closeReasonGroup.id,
+		};
+	}
 
-	modelValue.value.service = {
-		id: service.id,
-		name: service.name,
-	};
+	if (modelValue.value.service?.id !== service.id) {
+		modelValue.value.service = {
+			id: service.id,
+			name: service.name,
+		};
+	}
 }
 
 /**
