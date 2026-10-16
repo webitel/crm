@@ -88,6 +88,10 @@ export default {
 			cc: 'Көшірме',
 			subject: 'Тақырып',
 		},
+		chats: {
+			newestFirst: 'Алдымен жаңалары',
+			oldestFirst: 'Алдымен ескілері',
+		},
 	},
 	startPage: {
 		[CrmSections.Contacts]: {

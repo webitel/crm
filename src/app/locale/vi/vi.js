@@ -88,6 +88,10 @@ export default {
 			cc: 'CC',
 			subject: 'Chủ đề',
 		},
+		chats: {
+			newestFirst: 'Mới nhất trước',
+			oldestFirst: 'Cũ nhất trước',
+		},
 	},
 	startPage: {
 		[CrmSections.Contacts]: {
