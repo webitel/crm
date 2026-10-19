@@ -51,7 +51,10 @@
         </div>
 
         <div class="chat-task-timeline-row-actions">
-          <chat-timeline-sort-button v-if="!collapsed" />
+          <chat-timeline-sort-button
+            v-if="!collapsed"
+            :task-id="taskId"
+          />
           <timeline-action-menu
             :task="task"
           />

@@ -40,7 +40,7 @@ const chatsHistoryStore = useChatsHistoryStore();
 const { historyById } = storeToRefs(chatsHistoryStore);
 const { loadHistory } = chatsHistoryStore;
 
-const { newestFirst } = useChatTimelineSort();
+const { isNewestFirst } = useChatTimelineSort();
 
 const { points } = useTaskPoints({
 	taskId: props.taskId,
@@ -50,7 +50,7 @@ const { points } = useTaskPoints({
 
 const sortedPoints = computed(() => {
 	const list = points.value ?? [];
-	return newestFirst.value ? list : list.slice().reverse();
+	return isNewestFirst(props.taskId) ? list : list.slice().reverse();
 });
 </script>
 
