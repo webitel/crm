@@ -62,12 +62,10 @@ vi.doMock('@aliasedDeps/api-services/axios', () => ({
 	default: () => axios().default,
 }));
 
-beforeAll(async () => {
-	const { createUserAccessControl } = await import(
-		'../../src/app/composables/useUserAccessControl'
-	);
-	const { useUserinfoStore } = await import(
-		'../../src/modules/userinfo/store/userinfoStore'
-	);
-	createUserAccessControl(useUserinfoStore);
-});
+const { createUserAccessControl } = await import(
+	'../../src/app/composables/useUserAccessControl'
+);
+const { useUserinfoStore } = await import(
+	'../../src/modules/userinfo/store/userinfoStore'
+);
+createUserAccessControl(useUserinfoStore);
