@@ -2,7 +2,6 @@ import { WtApplication } from '@webitel/ui-sdk/enums';
 import {
 	createRouter,
 	createWebHistory,
-	type RouteLocationNormalized,
 	type RouteRecordRaw,
 } from 'vue-router';
 
@@ -12,6 +11,7 @@ import configurationRoutes from '../../modules/configuration/router';
 import contactsRoutes from '../../modules/contacts/router';
 import contactViewRoute from '../../modules/contacts/router/contact-view';
 import startPageRoutes from '../../modules/start-page/router';
+import { createAuthGuard } from './authGuard';
 
 const TheCrmWorkspace = () => import('../components/the-crm-workspace.vue');
 const AccessDenied = () =>
@@ -87,26 +87,11 @@ export const initRouter = async ({
 		routes,
 	});
 
-	router.beforeEach((to: RouteLocationNormalized) => {
-		if (!localStorage.getItem('access-token') && !to.query.accessToken) {
-			// @author @Lear24
-			// remove flag about shown notifications from localStorage
-			onUnauthorized();
-			const desiredUrl = encodeURIComponent(window.location.href);
-			const authUrl = import.meta.env.VITE_AUTH_URL;
-			window.location.href = `${authUrl}?redirectTo=${desiredUrl}`;
-		} else if (to.query.accessToken) {
-			// assume that access token was set from query before app initialization in main.js
-			const newQuery = {
-				...to.query,
-			};
-			delete newQuery.accessToken;
-			return {
-				...to,
-				query: newQuery,
-			};
-		}
-	});
+	router.beforeEach(
+		createAuthGuard({
+			onUnauthorized,
+		}),
+	);
 
 	beforeEach.forEach((guard) => {
 		router.beforeEach(guard);
