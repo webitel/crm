@@ -1,4 +1,4 @@
-import { PermissionsTab } from '@webitel/ui-datalist/permissions-page';
+import { PermissionsTab } from '@webitel/ui-datalist/permissions';
 import type { RouteRecordRaw } from 'vue-router';
 
 import OpenedCaseWrapper from '../components/opened-case-wrapper.vue';
