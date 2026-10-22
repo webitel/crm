@@ -17,6 +17,10 @@
     disabled
     :model-value="value[field.value]"
   ></wt-switcher>
+  <wt-time-tooltip
+    v-else-if="field.kind === FieldType.Calendar && value[field.value]"
+    :text="showText"
+  />
   <template v-else>
     {{ showText }}
   </template>
@@ -24,7 +28,7 @@
 
 <script setup lang="ts">
 import type { DataField } from '@webitel/api-services/gen/models';
-import { WtDisplayChipItems } from '@webitel/ui-sdk/components';
+import { WtDisplayChipItems, WtTimeTooltip } from '@webitel/ui-sdk/components';
 import { displayText, prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
 

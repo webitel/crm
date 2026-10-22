@@ -8,7 +8,12 @@
         v-if="time"
         class="case-deadline__value-wrapper"
       >
-        <span>{{ prettifyDate(time, props.timeZone) }}</span>
+        <span>
+          <wt-time-tooltip
+            :text="prettifyDate(time, props.timeZone)"
+            :label="props.timeZone"
+          />
+        </span>
       </div>
       <span
         v-if="showTimeDifference"
@@ -23,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import { WtTimeTooltip } from '@webitel/ui-sdk/components';
 import { convertDurationWithDays } from '@webitel/ui-sdk/scripts';
 import { prettifyDate } from '@webitel/ui-sdk/utils';
 import { computed } from 'vue';
