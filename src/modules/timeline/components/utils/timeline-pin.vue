@@ -106,7 +106,7 @@ const stateMap = {
 	[TimelinePinType.User]: {
 		component: 'wt-icon',
 		color: 'default',
-		icon: 'contacts--filled',
+		icon: 'user',
 	},
 	[TimelinePinType.Agent]: {
 		component: 'wt-icon',
