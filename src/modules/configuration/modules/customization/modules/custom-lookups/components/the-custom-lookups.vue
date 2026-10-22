@@ -83,7 +83,7 @@
               {{ item.about }}
             </template>
             <template #createdAt="{ item }">
-              {{ prettifyDate(item.createdAt) }}
+              <wt-time-tooltip :text="prettifyDate(item.createdAt)" />
             </template>
             <template #createdBy="{ item }">
               {{ item.createdBy?.name }}
@@ -124,7 +124,7 @@
 
 <script lang="ts" setup>
 import { DynamicFilterSearchComponent as DynamicFilterSearch } from '@webitel/ui-datalist/filters';
-import { WtEmpty } from '@webitel/ui-sdk/components';
+import { WtEmpty, WtTimeTooltip } from '@webitel/ui-sdk/components';
 import { useClose } from '@webitel/ui-sdk/composables';
 import { CrmSections, IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';

@@ -4,9 +4,6 @@
       <timeline-row-info
         :timestamp="point.date"
       >
-        <template #title="{ time }">
-          {{ time }}
-        </template>
         <template #subtitle>
           <timeline-task-status
             :status="TimelineTaskStatusEnum.Ended"

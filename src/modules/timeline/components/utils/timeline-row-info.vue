@@ -5,7 +5,7 @@
         name="title"
         v-bind="timesScope"
       >
-        {{ timestamp }}
+        <wt-time-tooltip :text="timestampTime" />
       </slot>
     </p>
 
@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+import { WtTimeTooltip } from '@webitel/ui-sdk/components';
 import { FormatDateMode } from '@webitel/ui-sdk/enums';
 import { formatDate } from '@webitel/ui-sdk/utils';
 import capitalize from 'lodash/capitalize';

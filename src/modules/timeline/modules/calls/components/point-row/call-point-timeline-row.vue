@@ -4,10 +4,6 @@
       <timeline-row-info
         :timestamp="point.createdAt"
       >
-        <template #title="{ time }">
-          {{ time }}
-        </template>
-
         <template #subtitle>
           <timeline-task-status
             :status="pointStatus"

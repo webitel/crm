@@ -117,7 +117,7 @@
           />
         </template>
         <template #createdAt="{ item }">
-          {{ prettifyDate(item.createdAt) }}
+          <wt-time-tooltip :text="prettifyDate(item.createdAt)" />
         </template>
         <template #service="{ item }">
           {{ item.service?.name }}
@@ -144,16 +144,16 @@
           {{ item.slaCondition?.name }}
         </template>
         <template #plannedReactionAt="{ item }">
-          {{ prettifyDate(item.plannedReactionAt) }}
+          <wt-time-tooltip :text="prettifyDate(item.plannedReactionAt)" />
         </template>
         <template #plannedResolveAt="{ item }">
-          {{ prettifyDate(item.plannedResolveAt) }}
+          <wt-time-tooltip :text="prettifyDate(item.plannedResolveAt)" />
         </template>
         <template #actualReactionTime="{ item }">
-          {{ prettifyDate(item.reactedAt) }}
+          <wt-time-tooltip :text="prettifyDate(item.reactedAt)" />
         </template>
         <template #actualResolutionTime="{ item }">
-          {{ prettifyDate(item.resolvedAt) }}
+          <wt-time-tooltip :text="prettifyDate(item.resolvedAt)" />
         </template>
         <template #closeReason="{ item }">
           {{ item.closeReason?.name }}
@@ -195,7 +195,7 @@
   lang="ts"
   setup
 >
-import { WtEmpty } from '@webitel/ui-sdk/components';
+import { WtEmpty, WtTimeTooltip } from '@webitel/ui-sdk/components';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { prettifyDate } from '@webitel/ui-sdk/utils';
