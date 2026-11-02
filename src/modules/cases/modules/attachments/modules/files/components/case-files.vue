@@ -33,7 +33,10 @@
         :text="t('cases.attachments.emptyFilesText')"
       />
 
-      <wt-loader v-show="isLoading || isPendingItemsLoading" />
+      <wt-loader
+        v-show="isLoading || isPendingItemsLoading"
+        size="sm"
+      />
 
       <div
         v-show="isTableVisible"
@@ -354,5 +357,9 @@ async function handleBulkDelete(files) {
       }
     }
   }
+}
+
+.wt-loader {
+  margin: auto;
 }
 </style>

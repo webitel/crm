@@ -56,7 +56,10 @@
         :text="t('cases.attachments.emptyLinksText')"
       />
 
-      <wt-loader v-show="isLoading || isPendingItemsLoading" />
+      <wt-loader
+        v-show="isLoading || isPendingItemsLoading"
+        size="sm"
+      />
 
       <div
         v-show="isTableVisible"
@@ -385,5 +388,9 @@ async function handleBulkDelete(links) {
   .link-form__input {
     flex: 1;
   }
+}
+
+.wt-loader {
+  margin: auto;
 }
 </style>

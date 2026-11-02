@@ -40,7 +40,10 @@
         :text="t('cases.comments.emptyText')"
       />
 
-      <wt-loader v-show="isLoading" />
+      <wt-loader
+        v-show="isLoading"
+        size="sm"
+      />
       <div
         v-show="!isLoading && dataList.length"
         class="table-section__table-wrapper"
@@ -261,5 +264,9 @@ const deleteComment = async (item) => {
     color: var(--link-color);
     cursor: pointer;
   }
+}
+
+.wt-loader {
+  margin: auto;
 }
 </style>

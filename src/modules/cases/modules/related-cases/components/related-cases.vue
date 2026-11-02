@@ -70,7 +70,10 @@
         :text="t('cases.relatedCases.emptyText')"
       />
 
-      <wt-loader v-show="isLoading" />
+      <wt-loader
+        v-show="isLoading"
+        size="sm"
+      />
 
       <div
         v-show="!isLoading && dataList.length"
@@ -421,5 +424,9 @@ const deleteRelatedCases = async (items) => {
     color: var(--link-color);
     cursor: pointer;
   }
+}
+
+.wt-loader {
+  margin: auto;
 }
 </style>
