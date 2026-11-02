@@ -1,4 +1,4 @@
-import { PermissionsTab as ContactPermissions } from '@webitel/ui-datalist/permissions-page';
+import { PermissionsTab as ContactPermissions } from '@webitel/ui-datalist/permissions';
 import { CrmSections, WtObject } from '@webitel/ui-sdk/enums';
 import type { RouteRecordRaw } from 'vue-router';
 
