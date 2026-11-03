@@ -1,4 +1,4 @@
-import { PermissionsTab as ContactPermissions } from '@webitel/ui-datalist/permissions-page';
+import { PermissionsTab as ContactPermissions } from '@webitel/ui-datalist/permissions';
 import type { RouteRecordRaw } from 'vue-router';
 import OpenedContactView from '../components/opened-contact-view.vue';
 import ContactCases from '../modules/cases/components/the-contact-cases.vue';
