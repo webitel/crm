@@ -43,7 +43,6 @@ import {
 	onUnmounted,
 	ref,
 } from 'vue';
-import { getMediaUrlAuth } from '../../../../../../../app/api/getMediaUrlAuth';
 
 const eventBus = inject<typeof EventBus>('$eventBus');
 // value from call-task-timeline-row.vue component
@@ -114,9 +113,7 @@ const handleOptionSelect = ({ option: file }: { option: EngineCallFile }) => {
 		selectedRecording.value = file;
 	}
 	eventBus.$emit('media-source-handler', {
-		url: getCallMediaUrl(file.id, {
-			auth: getMediaUrlAuth(),
-		}),
+		url: getCallMediaUrl(file.id),
 		file,
 	});
 };
