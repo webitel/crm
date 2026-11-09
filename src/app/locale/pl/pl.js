@@ -293,6 +293,13 @@ export default {
 			linkText: 'Tekst linku',
 			emptyFilesText: 'Nie ma jeszcze załączników',
 			emptyLinksText: 'Nie ma jeszcze linków',
+			notifications: {
+				attachmentAdded: 'Sprawa zapisana z załącznikiem.',
+				attachmentDeleted: 'Załącznik usunięty.',
+				linkAdded: 'Sprawa zapisana z linkiem.',
+				linkReplaced: 'Link zastąpiony.',
+				linkDeleted: 'Link usunięty.',
+			},
 		},
 		details: {
 			details: 'Szczegóły',

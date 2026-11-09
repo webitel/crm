@@ -31,6 +31,9 @@ export default ({ mode }) => {
 				'deep-equal',
 				'deepmerge',
 				'webitel-sdk',
+				// [Claude] ui-sdk src components (e.g. wt-notifications-bar) import primevue/usetoast directly,
+				// without prebundling it gets a separate PrimeVueToastSymbol and useToast() throws -> no toasts in dev
+				'primevue/usetoast',
 			],
 		},
 		resolve: {

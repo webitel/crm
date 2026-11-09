@@ -292,6 +292,13 @@ export default {
 			linkText: 'Текст посилання',
 			emptyFilesText: 'Тут ще немає вкладень',
 			emptyLinksText: 'Тут ще немає посилань',
+			notifications: {
+				attachmentAdded: 'Звернення збережено з вкладенням.',
+				attachmentDeleted: 'Вкладення видалено.',
+				linkAdded: 'Звернення збережено з посиланням.',
+				linkReplaced: 'Посилання замінено.',
+				linkDeleted: 'Посилання видалено.',
+			},
 		},
 		details: {
 			details: 'Деталі',

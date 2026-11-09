@@ -285,6 +285,13 @@ export default {
 			linkText: 'Текст ссылки',
 			emptyFilesText: 'Тут еще нет вложений',
 			emptyLinksText: 'Тут еще нет ссылок',
+			notifications: {
+				attachmentAdded: 'Обращение сохранено с вложением.',
+				attachmentDeleted: 'Вложение удалено.',
+				linkAdded: 'Обращение сохранено со ссылкой.',
+				linkReplaced: 'Ссылка заменена.',
+				linkDeleted: 'Ссылка удалена.',
+			},
 		},
 		details: {
 			details: 'Детали',
