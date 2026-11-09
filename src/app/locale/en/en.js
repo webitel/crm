@@ -285,6 +285,13 @@ export default {
 			linkText: 'Link text',
 			emptyFilesText: 'There are no attachments yet',
 			emptyLinksText: 'There are no links yet',
+			notifications: {
+				attachmentAdded: 'Case saved with attachment.',
+				attachmentDeleted: 'Attachment deleted.',
+				linkAdded: 'Case saved with link.',
+				linkReplaced: 'Link replaced.',
+				linkDeleted: 'Link deleted.',
+			},
 		},
 		details: {
 			details: 'Details',
