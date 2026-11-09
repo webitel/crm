@@ -284,6 +284,13 @@ export default {
 			linkText: 'Havola matni',
 			emptyFilesText: "Hali ilovalar yo'q",
 			emptyLinksText: "Hali havolalar yo'q",
+			notifications: {
+				attachmentAdded: 'Murojaat ilova bilan saqlandi.',
+				attachmentDeleted: "Ilova o'chirildi.",
+				linkAdded: 'Murojaat havola bilan saqlandi.',
+				linkReplaced: 'Havola almashtirildi.',
+				linkDeleted: "Havola o'chirildi.",
+			},
 		},
 		details: {
 			details: 'Tafsilotlar',

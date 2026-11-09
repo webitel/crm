@@ -103,6 +103,7 @@
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtEmpty } from '@webitel/ui-sdk/components';
+import type { EventBus } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import {
 	downloadFilesAsZip,
@@ -116,7 +117,7 @@ import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteCo
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import prettifyFileSize from '@webitel/ui-sdk/src/scripts/prettifyFileSize';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
@@ -137,6 +138,15 @@ const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
 	manualSetup: true,
 });
 const { t } = useI18n();
+const eventBus = inject<EventBus>('$eventBus');
+
+// [Claude] files are saved/deleted on existing case immediately, without "Save" click, so we inform user about it
+function showInfoNotification(textKey: string) {
+	eventBus?.$emit('notification', {
+		type: 'info',
+		text: t(textKey),
+	});
+}
 
 const { hasCreateAccess, hasDeleteAccess } = useUserAccessControl({
 	useUpdateAccessAsAllMutableChecksSource: true,
@@ -245,6 +255,10 @@ async function handleFileInput(event) {
 
 	await processMultipleFiles(files);
 	resetFileInput();
+
+	if (!isNew.value && files.length) {
+		showInfoNotification('cases.attachments.notifications.attachmentAdded');
+	}
 }
 
 async function processMultipleFiles(files) {
@@ -315,14 +329,24 @@ const isFileDeleteActionDisabled = computed(() => {
 
 // Function to handle single file deletion (pending or existing)
 async function handleFileDelete(file) {
-	await (isNew.value ? deletePendingItem(file) : handleDeleteData(file));
+	if (isNew.value) {
+		await deletePendingItem(file);
+		return;
+	}
+
+	await handleDeleteData(file);
+	showInfoNotification('cases.attachments.notifications.attachmentDeleted');
 }
 
 // Function to handle bulk deletion of files (pending or existing)
 async function handleBulkDelete(files) {
-	await (isNew.value
-		? deleteMultiplePendingItems(files)
-		: handleDeleteData(files));
+	if (isNew.value) {
+		await deleteMultiplePendingItems(files);
+		return;
+	}
+
+	await handleDeleteData(files);
+	showInfoNotification('cases.attachments.notifications.attachmentDeleted');
 }
 </script>
 

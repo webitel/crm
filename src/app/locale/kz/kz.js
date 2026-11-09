@@ -285,6 +285,13 @@ export default {
 			linkText: 'Сілтеме мәтіні',
 			emptyFilesText: 'Әзірге тіркемелер жоқ',
 			emptyLinksText: 'Әзірге сілтемелер жоқ',
+			notifications: {
+				attachmentAdded: 'Кейс тіркемемен сақталды.',
+				attachmentDeleted: 'Тіркеме жойылды.',
+				linkAdded: 'Кейс сілтемемен сақталды.',
+				linkReplaced: 'Сілтеме ауыстырылды.',
+				linkDeleted: 'Сілтеме жойылды.',
+			},
 		},
 		details: {
 			details: 'Егжей-тегжейлі',

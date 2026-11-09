@@ -122,12 +122,13 @@ import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { caseLinkSchema } from '@webitel/api-services/validations';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtInlineAddPanel } from '@webitel/ui-sdk/components';
+import type { EventBus } from '@webitel/ui-sdk/composables';
 import { IconAction } from '@webitel/ui-sdk/enums';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
 import { storeToRefs } from 'pinia';
-import { computed, reactive } from 'vue';
+import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserAccessControl } from '../../../../../../../app/composables/useUserAccessControl';
 import { useCaseAccessState } from '../../../../../composables/useCaseAccessState';
@@ -147,6 +148,15 @@ const { modelValue, isNew } = useCardComponent<WebitelCasesCase>({
 });
 
 const { t } = useI18n();
+const eventBus = inject<EventBus>('$eventBus');
+
+// [Claude] links are saved/edited/deleted on existing case immediately, without "Save" click, so we inform user about it
+function showInfoNotification(textKey: string) {
+	eventBus?.$emit('notification', {
+		type: 'info',
+		text: t(textKey),
+	});
+}
 
 const { hasCreateAccess, hasUpdateAccess, hasDeleteAccess } =
 	useUserAccessControl({
@@ -325,6 +335,10 @@ async function submitLink() {
 			},
 		};
 		await addNewItem(linkData, storeData);
+
+		if (!isNew.value) {
+			showInfoNotification('cases.attachments.notifications.linkAdded');
+		}
 	}
 
 	resetForm();
@@ -340,11 +354,18 @@ async function updateExistingLink(editingLink, name, linkUrl) {
 		},
 	});
 	await loadDataList();
+	showInfoNotification('cases.attachments.notifications.linkReplaced');
 }
 
 // Function to handle deletion of pending links
 async function handleLinkDelete(link) {
-	await (isNew.value ? deletePendingItem(link) : handleDeleteData(link));
+	if (isNew.value) {
+		await deletePendingItem(link);
+		return;
+	}
+
+	await handleDeleteData(link);
+	showInfoNotification('cases.attachments.notifications.linkDeleted');
 }
 
 // Function to handle editing of pending links
@@ -359,9 +380,13 @@ async function handleLinkEdit(link) {
 
 // Function to handle bulk deletion of links (pending or existing)
 async function handleBulkDelete(links) {
-	await (isNew.value
-		? deleteMultiplePendingItems(links)
-		: handleDeleteData(links));
+	if (isNew.value) {
+		await deleteMultiplePendingItems(links);
+		return;
+	}
+
+	await handleDeleteData(links);
+	showInfoNotification('cases.attachments.notifications.linkDeleted');
 }
 </script>
 

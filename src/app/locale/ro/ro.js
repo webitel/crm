@@ -291,6 +291,13 @@ export default {
 			linkText: 'Text link',
 			emptyFilesText: 'Nu există atașamente încă',
 			emptyLinksText: 'Nu există link-uri încă',
+			notifications: {
+				attachmentAdded: 'Caz salvat cu atașament.',
+				attachmentDeleted: 'Atașament șters.',
+				linkAdded: 'Caz salvat cu link.',
+				linkReplaced: 'Link înlocuit.',
+				linkDeleted: 'Link șters.',
+			},
 		},
 		details: {
 			details: 'Detalii',

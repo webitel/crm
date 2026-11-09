@@ -292,6 +292,13 @@ export default {
 			linkText: 'Văn bản liên kết',
 			emptyFilesText: 'Chưa có tệp đính kèm nào',
 			emptyLinksText: 'Chưa có liên kết nào',
+			notifications: {
+				attachmentAdded: 'Đã lưu vụ việc kèm tệp đính kèm.',
+				attachmentDeleted: 'Đã xóa tệp đính kèm.',
+				linkAdded: 'Đã lưu vụ việc kèm liên kết.',
+				linkReplaced: 'Đã thay thế liên kết.',
+				linkDeleted: 'Đã xóa liên kết.',
+			},
 		},
 		details: {
 			details: 'Chi tiết',
