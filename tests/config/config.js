@@ -41,7 +41,7 @@ window.scrollTo = () => {};
  *
  * Fix: doMock the `axios` package itself so every `axios.create(...)` and
  * direct method call returns the ui-sdk axios mock. This catches
- * api-services' internal `generateInstance`, ui-sdk's wrapper, and any
+ * [Claude] api-services' internal `generateInstance` and any
  * other axios consumer regardless of the import path they take.
  */
 const mockAxiosInstance = axiosMock()().default;
@@ -55,9 +55,6 @@ vi.doMock('axios', () => ({
 }));
 
 const axios = axiosMock();
-vi.doMock('@webitel/ui-sdk/src/api/axios/generateInstance.js', () => ({
-	default: () => axios().default,
-}));
 vi.doMock('@aliasedDeps/api-services/axios', () => ({
 	default: () => axios().default,
 }));

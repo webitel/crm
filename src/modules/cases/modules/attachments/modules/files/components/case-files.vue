@@ -103,6 +103,7 @@
 </template>
 
 <script setup lang="ts">
+import { FileServicesAPI } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtEmpty } from '@webitel/ui-sdk/components';
@@ -114,7 +115,6 @@ import {
 	getFileTypeIcon,
 	openStorageFileInNewTab,
 } from '@webitel/ui-sdk/scripts/file';
-import webSocketClientController from '@webitel/ui-sdk/src/api/websocket/WebSocketClientController';
 import DeleteConfirmationPopup from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/components/delete-confirmation-popup.vue';
 import { useDeleteConfirmationPopup } from '@webitel/ui-sdk/src/modules/DeleteConfirmationPopup/composables/useDeleteConfirmationPopup';
 import { useTableEmpty } from '@webitel/ui-sdk/src/modules/TableComponentModule/composables/useTableEmpty';
@@ -183,15 +183,13 @@ const transformStoreItemToPending = (fileData) => ({
 });
 
 const addFile = async (file) => {
-	const cliInstance = await webSocketClientController.getCliInstance();
-	await cliInstance.storeFile(
-		props.itemId,
-		[
+	await FileServicesAPI.upload({
+		id: props.itemId,
+		files: [
 			file.file,
 		],
-		null,
-		'case',
-	);
+		channel: 'case',
+	});
 };
 
 const {
