@@ -14,7 +14,6 @@
         <wt-action-bar
           :include="filteredActions"
           :disabled:delete="isBulkDeleteDisabled"
-          :disabled:download="isTableActionDownloadDisabled"
           :disabled:add="isTableActionAddDisabled"
           @click:add="openFileDialog"
           @click:download="handleSelectedFilesDownload"
@@ -25,6 +24,18 @@
             })
           "
         >
+          <template #download="{ action, onClick }">
+            <wt-loader
+              v-if="isZipDownloading"
+              :size="ComponentSize.SM"
+            />
+            <wt-icon-action
+              v-else
+              :action="action"
+              :disabled="isTableActionDownloadDisabled"
+              @click="onClick"
+            />
+          </template>
         </wt-action-bar>
       </header>
 
@@ -35,7 +46,8 @@
 
       <wt-loader
         v-show="isLoading || isPendingItemsLoading"
-        size="sm"
+        :size="ComponentSize.SM"
+        class="case-files__table-loader"
       />
 
       <div
@@ -73,16 +85,15 @@
           </template>
 
           <template #actions="{ item }">
+            <wt-loader
+              v-if="isFileDownloading(item?.id)"
+              :size="ComponentSize.SM"
+            />
             <wt-icon-action
+              v-else
               :disabled="isNew"
               action="download"
-              @click="
-                downloadStorageFile({
-                  id: item?.id,
-                  name: item?.name,
-                  type: item?.mime,
-                })
-              "
+              @click="downloadRowFile(item)"
             />
             <wt-icon-action
               v-if="isFileDeleteAction(item)"
@@ -103,14 +114,14 @@
 </template>
 
 <script setup lang="ts">
+import { downloadFile } from '@webitel/api-services/api';
 import type { WebitelCasesCase } from '@webitel/api-services/gen/models';
 import { useCardComponent } from '@webitel/ui-datalist/card';
 import { WtEmpty } from '@webitel/ui-sdk/components';
-import type { EventBus } from '@webitel/ui-sdk/composables';
-import { IconAction } from '@webitel/ui-sdk/enums';
+import { type EventBus, useDownloadAction } from '@webitel/ui-sdk/composables';
+import { ComponentSize, IconAction } from '@webitel/ui-sdk/enums';
 import {
 	downloadFilesAsZip,
-	downloadStorageFile,
 	getFileTypeIcon,
 	openStorageFileInNewTab,
 } from '@webitel/ui-sdk/scripts/file';
@@ -236,18 +247,34 @@ if (!isNew.value) {
 	});
 }
 
-async function handleSelectedFilesDownload() {
-	const token = localStorage.getItem('access-token');
-	const apiUrl = import.meta.env.VITE_API_URL;
+/* [Claude] separate instances: a row download must not spin the zip icon and vice versa */
+const { isLoading: isZipDownloading, runDownload: runZipDownload } =
+	useDownloadAction();
+const { isKeyLoading: isFileDownloading, runDownload: runFileDownload } =
+	useDownloadAction();
 
-	const filesToDownload = selected.value.length
-		? selected.value
-		: dataList.value;
+function handleSelectedFilesDownload() {
+	return runZipDownload(() => {
+		const token = localStorage.getItem('access-token');
+		const apiUrl = import.meta.env.VITE_API_URL;
 
-	await downloadFilesAsZip({
-		filesToDownload,
-		apiUrl,
-		token,
+		const filesToDownload = selected.value.length
+			? selected.value
+			: dataList.value;
+
+		return downloadFilesAsZip({
+			filesToDownload,
+			apiUrl,
+			token,
+		});
+	});
+}
+
+/* [Claude] fetched instead of a plain link, so we know when the download ends – for the loader and toasts */
+function downloadRowFile(item: { id?: string; name?: string }) {
+	if (!item?.id) return;
+	return runFileDownload(() => downloadFile(item.id, item.name), {
+		key: item.id,
 	});
 }
 
@@ -381,9 +408,10 @@ async function handleBulkDelete(files) {
       }
     }
   }
-}
 
-.wt-loader {
-  margin: auto;
+  // [Claude] only the table loader is centered; download loaders sit inline with the action icons
+  &__table-loader {
+    margin: auto;
+  }
 }
 </style>
