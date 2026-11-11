@@ -52,7 +52,12 @@
                 :disabled="!hasCreateAccess"
                 @click="onClick"
               />
+              <wt-loader
+                v-if="isExporting"
+                :size="ComponentSize.SM"
+              />
               <wt-icon-btn
+                v-else
                 v-tooltip.right="t('reusable.export')"
                 icon="export-exel"
                 @click="isExportTypePopup = true"
@@ -256,7 +261,9 @@
 <script setup lang="ts">
 import { CasesAPI } from '@webitel/api-services/api';
 import { WtEmpty, WtTable, WtTimeTooltip } from '@webitel/ui-sdk/components';
+import { useDownloadAction } from '@webitel/ui-sdk/composables';
 import {
+	ComponentSize,
 	CrmSections,
 	EmptyCause,
 	ExportFormat,
@@ -453,36 +460,39 @@ function deleteSelectedItems() {
 	});
 }
 
-const exportCases = async ({
+const { isLoading: isExporting, runDownload } = useDownloadAction();
+
+const exportCases = ({
 	format,
 	separator,
 }: {
 	format?: ExportFormat;
 	separator?: string | null;
-}) => {
-	const exportParams = {
-		page: page.value,
-		size: size.value,
-		fields: fields.value,
-		format,
-		separator,
-		...filtersManager.value.getAllValues(),
-	};
+}) =>
+	runDownload(async () => {
+		const exportParams = {
+			page: page.value,
+			size: size.value,
+			fields: fields.value,
+			format,
+			separator,
+			...filtersManager.value.getAllValues(),
+		};
 
-	if (selected.value.length) {
-		exportParams.ids = selected.value.map((item) => item.id);
-	}
+		if (selected.value.length) {
+			exportParams.ids = selected.value.map((item) => item.id);
+		}
 
-	const { response } = await CasesAPI.exportData(exportParams);
+		const { response } = await CasesAPI.exportData(exportParams);
 
-	const filename = `cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
+		const filename = `cases-${formatDate(Date.now(), FormatDateMode.DATE)}-${formatDate(Date.now(), FormatDateMode.TIME_SEC)}`;
 
-	downloadFile({
-		response: response as unknown as DownloadFileResponse,
-		filename,
-		fileFormat: format as ExportFormat,
+		downloadFile({
+			response: response as unknown as DownloadFileResponse,
+			filename,
+			fileFormat: format as ExportFormat,
+		});
 	});
-};
 
 const isExportTypePopup = ref(false);
 const closeExport = () => {
