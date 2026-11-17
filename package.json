@@ -77,7 +77,7 @@
 		"vite-plugin-checker": "^0.12.x",
 		"vite-plugin-node-polyfills": "^0.x",
 		"vite-plugin-vue-devtools": "^8.x",
-		"vitest": "^4.x",
+		"vitest": "^5.x",
 		"vue-tsc": "^3.x"
 	},
 	"optionalDependencies": {
