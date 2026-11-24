@@ -1,3 +1,5 @@
+// must stay the first import: wraps console/WebSocket/RTCPeerConnection before the SDK loads
+import './app/debug-recorder';
 import './app/assets/icons/sprite';
 import './app/css/main.css';
 import '@webitel/styleguide/crm';
